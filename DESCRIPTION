@@ -1,0 +1,32 @@
+Package: echolocatoR
+Type: Package
+Title: Automated genomic fine-mapping
+Version: 0.1.0
+Author: Brian M. Schilder
+Authors@R: as.person(c(
+    "Brian Schilder <brian_schilder@alumni.brown.edu> [aut, cre]"
+  ))
+Description: Automated statistical and functional fine-mapping pipeline with extensive API access to datasets.  
+License: MIT + file LICENSE
+URL: https://github.com/RajLabMSSM/echolocatoR
+BugReports: https://github.com/RajLabMSSM/echolocatoR/issues
+Encoding: UTF-8
+LazyData: true
+Depends: R (>= 3.1.0)
+Imports: 
+    dplyr,
+    data.table,
+    ggplot2,
+    patchwork,
+    pbmcapply,
+    ggrepel,
+    coloc
+Remotes:
+  bioc::3.3/SummarizedExperiment,
+  bioc::3.3/biomaRt
+Suggests: 
+    crayon,
+    knitr,
+    rmarkdown
+RoxygenNote: 7.1.0
+VignetteBuilder: knitr

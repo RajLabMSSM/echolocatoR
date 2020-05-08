@@ -1,0 +1,96 @@
+---
+title: "echolocatoR_vignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{echolocatoR_vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(echolocatoR)
+```
+
+# Quick fine-mapping example
+
+## Prepare `top_SNPs` data.frame
+
+```{r  Prepare `top_SNPs` data.frame}
+# dataset_name <- "Nalls23andMe_2019"
+# top_SNPs <- Nalls_top_SNPs <- import_topSNPs(
+#   topSS_path = Directory_info(dataset_name, "topSS"),
+#   chrom_col = "CHR", position_col = "BP", snp_col="SNP",
+#   pval_col="P, all studies", effect_col="Beta, all studies", gene_col="Nearest Gene",
+#   caption= "Nalls et al. (2018) w/ 23andMe PD GWAS Summary Stats",
+#   group_by_locus = T, 
+#   locus_col = "Locus Number",
+#   remove_variants = "rs34637584") 
+```
+
+## Manually add new loci of interest  
+
+```{r Manually add new loci of interest  }
+# top_SNPs <- data.table::rbindlist(list(top_SNPs, 
+#                                       data.frame(CHR=14,POS=55360203, SNP="rs3783642", 
+#                                                    P=2e-308, Effect=1, Gene="ATG14", Locus=NA ),
+#                                       data.frame(CHR=12,POS=53797236, SNP="rs34656641",
+#                                                    P=2e-308, Effect=1, Gene="SP1", Locus=NA ),
+#                                       data.frame(CHR=5,POS=126181862, SNP="rs959573",
+#                                                    P=2e-308, Effect=1, Gene="LMNB1", Locus=NA ),
+#                                       data.frame(CHR=17,POS=40609405, SNP="rs9897702",
+#                                                    P=2e-308, Effect=1, Gene="ATP6V0A1", Locus=NA ),
+#                                       data.frame(CHR=12,POS=40388109, SNP="rs140722239",
+#                                                    P=2.691e-37, Effect=0.3869, Gene="SLC2A13", Locus=NA )
+#                                       ), use.names = T)
+```
+
+# Run fine-mapping pipeline
+
+```{r Run fine-mapping pipeline}
+
+# Nalls23andMe_2019_results <- finemap_loci(top_SNPs = top_SNPs,
+#                                                loci = "LRRK2",#top_SNPs$Gene, #unique(c("LRRK2", loci)),
+#                                                trim_gene_limits = F,#c(T, rep(F,length(gene_list))),
+#                                                dataset_name = dataset_name,
+#                                                dataset_type = "GWAS",
+#                                                query_by ="tabix", # coordinates
+#                                                subset_path = "auto", 
+#                                                finemap_methods = c("ABF","SUSIE","POLYFUN_SUSIE","FINEMAP"),  
+#                                                force_new_subset = F,
+#                                                force_new_LD = F,
+#                                                force_new_finemap = F, 
+#                  fullSS_path = Directory_info(dataset_name, "fullSS.local"),
+#                  chrom_col = "CHR", position_col = "POS", snp_col = "RSID",
+#                  pval_col = "p", effect_col = "beta", stderr_col = "se", 
+#                  freq_col = "freq", MAF_col = "calculate",
+#                  A1_col = "A1",
+#                  A2_col = "A2",
+#                  bp_distance = 500000*2,
+#                  plot_window = 100000,
+#                  plot_Nott_binwidth = 100,
+#                  # max_snps=1000,
+#                  download_reference = T, 
+#                  LD_reference = "UKB",#"1KG_Phase1",
+#                  superpopulation = "EUR", 
+#                  LD_block = F, 
+#                  min_MAF = 0.001,
+#                  # min_POS = min_POS,
+#                  # max_POS = max_POS,
+#                  # remove_variants = c("rs34637584"),
+#                  # remove_correlates = c("rs34637584"),
+#                  conditioned_snps = "auto", # Use the lead SNP for each gene  
+#                  n_causal = 5, 
+#                  plot_types = c("simple"), #"fancy" 
+#                  Nott_bigwig_dir = "/pd-omics/data/Nott_2019",
+#                  PP_threshold = .95,
+#                  remove_tmps = T,  
+#                  server=F)  
+```
+
