@@ -363,17 +363,17 @@ limit_SNPs <- function(max_snps=500, subset_DT){
 #' Filter SNps by MAF, window size, min/max position, maxmimum number of SNPs, or gene coordinates.
 #' You can also explicitly remove certain variants.
 #' @examples
-#' echoR.filter_snps <- function(subset_DT, bp_distance, remove_variants="res, gene, min_POS=10000060, max_POS=1000260, max_snps=NULL, min_MAF=0.01, trim_gene_limits=F)
-echoR.filter_snps <- function(subset_DT,
-                              bp_distance,
-                              remove_variants,
-                              locus,
-                              verbose=T,
-                              min_POS=NULL,
-                              max_POS=NULL,
-                              max_snps=NULL,
-                              min_MAF=NULL,
-                              trim_gene_limits=F){
+#' filter_snps <- function(subset_DT, bp_distance, remove_variants="res, gene, min_POS=10000060, max_POS=1000260, max_snps=NULL, min_MAF=0.01, trim_gene_limits=F)
+filter_snps <- function(subset_DT,
+                        bp_distance,
+                        remove_variants,
+                        locus,
+                        verbose=T,
+                        min_POS=NULL,
+                        max_POS=NULL,
+                        max_snps=NULL,
+                        min_MAF=NULL,
+                        trim_gene_limits=F){
   if(remove_variants!=F){
     printer("Removing specified variants:",paste(remove_variants, collapse=','), v=verbose)
     try({subset_DT <- subset(subset_DT, !(SNP %in% remove_variants) )})
