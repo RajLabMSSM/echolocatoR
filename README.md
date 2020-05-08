@@ -17,36 +17,36 @@ Automated statistical and functional fine-mapping pipeline with extensive API ac
 - [PAINTOR](https://github.com/gkichaev/PAINTOR_V3.0)  
 - [coloc](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)
 
-### Planning to implement  
-- [CAVIAR](http://genetics.cs.ucla.edu/caviar/)  
-- [CAVIAR-BF](https://www.ncbi.nlm.nih.gov/pubmed/25948564)  
-- [eCAVIAR](http://genetics.cs.ucla.edu/caviar/)  
-- [DAP](https://github.com/xqwen/dap) 
-- [fGWAS](https://github.com/joepickrell/fgwas)  
-
 
 <br>
 
 
 ## Datasets
 
-### [Nott et al. (2019)](https://science.sciencemag.org/content/366/6469/1134.abstract)
+### Epigenomics & Genome-wide Annotations
+
+#### [Nott et al. (2019)](https://science.sciencemag.org/content/366/6469/1134.abstract)
 - Cell type-specific epigenomics from brain tissue, including:    
   + Epigenomic reads (as *GenomicRanges*)
   + Enhancer/promoter coordinates (as *GenomicRanges*)
-  + PLAC-seq interactome  
+  + PLAC-seq enhancer-promoter interactome   
   
-### [XGR](http://xgr.r-forge.r-project.org)    
-- API access to a diverse library of cell type/line-specific epigenomic (e.g. ENCODE) and other genome-wide annotations.  
-### [Roadmap](http://www.roadmapepigenomics.org)
-- API access to cell type-specific epigenomic data.
+#### [XGR](http://xgr.r-forge.r-project.org)    
+- API access to a diverse library of cell type/line-specific epigenomic (e.g. ENCODE) and other genome-wide annotations.    
+#### [Roadmap](http://www.roadmapepigenomics.org)  
+- API access to cell type-specific epigenomic data.  
 
-### [biomaRt](https://bioconductor.org/packages/release/bioc/html/biomaRt.html)
-- API access to various genome-wide SNP annotations (e.g. missense, nonsynonmous, intronic, enhancer)
+#### [biomaRt](https://bioconductor.org/packages/release/bioc/html/biomaRt.html)  
+- API access to various genome-wide SNP annotations (e.g. missense, nonsynonmous, intronic, enhancer).  
 
-### [HaploR](https://cran.r-project.org/web/packages/haploR/vignettes/haplor-vignette.html)  
-- API access to known per-SNP QTL and epigenomic data hits.
+#### [HaploR](https://cran.r-project.org/web/packages/haploR/vignettes/haplor-vignette.html)  
+- API access to known per-SNP QTL and epigenomic data hits.  
 
+### QTL
+
+#### [eQTL Catalogue](https://www.ebi.ac.uk/eqtl/)  
+- API access to full summary statistics from many standardized e/s/t-QTL datasets.  
+- Data access and colocalization tests facilitated through the [catalogueR](https://github.com/RajLabMSSM/catalogueR) R package.  
 
 <br>
 
