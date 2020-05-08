@@ -8,21 +8,21 @@ Automated statistical and functional fine-mapping pipeline with extensive API ac
 
 ## Fine-mapping Tools  
 
-Currently implemented: 
-### [ABF](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)
-### [susieR](https://github.com/stephenslab/susieR)  
-### [FINEMAP](http://www.christianbenner.com)  
-### [Polyfun+SusieR](https://github.com/omerwe/polyfun)
-### [GCTA-COJO](https://cnsgenomics.com/software/gcta/#COJO)
-### [PAINTOR](https://github.com/gkichaev/PAINTOR_V3.0)  
-### [coloc](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)   
+### Currently implemented  
+- [ABF](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)  
+- [susieR](https://github.com/stephenslab/susieR)  
+- [FINEMAP](http://www.christianbenner.com)  
+- [Polyfun+SusieR](https://github.com/omerwe/polyfun)
+- [GCTA-COJO](https://cnsgenomics.com/software/gcta/#COJO)
+- [PAINTOR](https://github.com/gkichaev/PAINTOR_V3.0)  
+- [coloc](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)
 
-Planning to implement:  
-### [CAVIAR](http://genetics.cs.ucla.edu/caviar/)  
-### [CAVIAR-BF](https://www.ncbi.nlm.nih.gov/pubmed/25948564)  
-### [eCAVIAR](http://genetics.cs.ucla.edu/caviar/)  
-### [DAP](https://github.com/xqwen/dap) 
-### [fGWAS](https://github.com/joepickrell/fgwas)  
+### Planning to implement  
+- [CAVIAR](http://genetics.cs.ucla.edu/caviar/)  
+- [CAVIAR-BF](https://www.ncbi.nlm.nih.gov/pubmed/25948564)  
+- [eCAVIAR](http://genetics.cs.ucla.edu/caviar/)  
+- [DAP](https://github.com/xqwen/dap) 
+- [fGWAS](https://github.com/joepickrell/fgwas)  
 
 
 <br>
