@@ -4,7 +4,7 @@ Automated statistical and functional fine-mapping pipeline with extensive API ac
 
 ## Workflow  
 
-![echoFlow](./inst/images/echolocatoR_flowchart.png)
+![echoFlow](./inst/images/PD Fine-mapping Flowchart_plus.png)
 
 ## Fine-mapping Tools  
 
