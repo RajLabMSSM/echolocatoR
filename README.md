@@ -1,6 +1,6 @@
 <center><h1> )))))))   echolocatoR   ((((((( </h1></center>  
 
-__*echolocatoR*__ is an R package to conduct automated statistical and functional fine-mapping pipeline with extensive API access to datasets.  
+__*echolocatoR*__ is an R package for conducting automated statistical and functional fine-mapping with extensive API access to datasets.  
 
 ## Installation  
 
