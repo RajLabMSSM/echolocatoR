@@ -65,7 +65,7 @@ devtools::install_github("RajLabMSSM/echolocatoR")
   ```
 - API access to full bigWig files on UCSC Genome Browser, which includes  
   + Epigenomic reads (as *GenomicRanges*)  
-  + Aggregate epigenomic *score* for each cell type  
+  + Aggregate epigenomic *score* for each cell type - assay combination  
   
   
 ### [Corces et al. (2020)](https://www.biorxiv.org/content/10.1101/2020.01.06.896159v1)  
