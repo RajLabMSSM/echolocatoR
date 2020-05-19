@@ -68,15 +68,15 @@ devtools::install_github("RajLabMSSM/echolocatoR")
   + Aggregate epigenomic *score* for each cell type - assay combination  
   
   
-### [Corces et al. (2020)](https://www.biorxiv.org/content/10.1101/2020.01.06.896159v1)  
+#### [Corces et al. (2020)](https://www.biorxiv.org/content/10.1101/2020.01.06.896159v1)  
 - Data from this preprint contains results from single-cell chromatin accessibility epigenomic assays in from 39 human brains. 
-```R
-data("CORCES_2020.bulkATACseq_peaks")
-data("CORCES_2020.cicero_coaccessibility")
-data("CORCES_2020.HiChIP_FitHiChIP_loop_calls")
-data("CORCES_2020.scATACseq_celltype_peaks")
-data("CORCES_2020.scATACseq_peaks")
-```
+  ```R
+  data("CORCES_2020.bulkATACseq_peaks")
+  data("CORCES_2020.cicero_coaccessibility")
+  data("CORCES_2020.HiChIP_FitHiChIP_loop_calls")
+  data("CORCES_2020.scATACseq_celltype_peaks")
+  data("CORCES_2020.scATACseq_peaks")
+  ```
   
 #### [XGR](http://xgr.r-forge.r-project.org)    
 - API access to a diverse library of cell type/line-specific epigenomic (e.g. ENCODE) and other genome-wide annotations.    
