@@ -42,7 +42,7 @@ echolocatoR::NOTT_2019.bigwig_metadata
 # Or 
 data("NOTT_2019.bigwig_metadata")
 ```  
-- Built-in access to , which includes:  
+- Built-in datasets:  
   + Enhancer/promoter coordinates (as *GenomicRanges*)  
   ```R
  data("NOTT_2019.interactome")
