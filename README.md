@@ -31,6 +31,12 @@ devtools::install_github("RajLabMSSM/echolocatoR")
 
 ## Datasets
 
+For more detailed information about each dataset, try:   
+```R
+library(echolocatoR)
+?NOTT_2019.interactome # example dataset
+```
+
 ### Epigenomic & Genome-wide Annotations
 
 #### [Nott et al. (2019)](https://science.sciencemag.org/content/366/6469/1134.abstract)
@@ -65,8 +71,7 @@ devtools::install_github("RajLabMSSM/echolocatoR")
   ```
 - API access to full bigWig files on UCSC Genome Browser, which includes  
   + Epigenomic reads (as *GenomicRanges*)  
-  + Aggregate epigenomic *score* for each cell type - assay combination  
-  
+  + Aggregate epigenomic *score* for each cell type - assay combination     
   
 #### [Corces et al. (2020)](https://www.biorxiv.org/content/10.1101/2020.01.06.896159v1)  
 - Data from this preprint contains results from single-cell chromatin accessibility epigenomic assays in from 39 human brains. 
