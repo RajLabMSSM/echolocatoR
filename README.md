@@ -40,7 +40,7 @@ devtools::install_github("RajLabMSSM/echolocatoR")
 ```R
 echolocatoR::NOTT_2019.bigwig_metadata
 # Or 
-data("bigwig_metadata")
+data("NOTT_2019.bigwig_metadata")
 ```  
 - Built-in access to , which includes:  
   + Enhancer/promoter coordinates (as *GenomicRanges*)  
