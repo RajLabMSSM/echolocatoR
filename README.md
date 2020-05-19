@@ -49,8 +49,9 @@ devtools::install_github("RajLabMSSM/echolocatoR")
   # Examples of the data nested in "NOTT_2019.interactome" object:
   NOTT_2019.interactome$`Neuronal promoters`
   NOTT_2019.interactome$`Neuronal enhancers`
-  NOTT_2019.interactome`Microglia promoters`
-  NOTT_2019.interactome`Microglia enhancers`
+  NOTT_2019.interactome$`Microglia promoters`
+  NOTT_2019.interactome$`Microglia enhancers`
+  ...
   ...
   ```
   + PLAC-seq enhancer-promoter interactome coordinates   
@@ -59,6 +60,7 @@ devtools::install_github("RajLabMSSM/echolocatoR")
   NOTT_2019.interactome$`Microglia interactome`
   NOTT_2019.interactome$`Neuronal interactome`
   NOTT_2019.interactome$`Oligo interactome`
+  ...
   ...
   ```
 - API access to full bigWig files on UCSC Genome Browser, which includes  
