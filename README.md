@@ -31,11 +31,11 @@ devtools::install_github("RajLabMSSM/echolocatoR")
 
 ## Datasets
 
-For more detailed information about each dataset, try:   
-```R
-library(echolocatoR)
-?NOTT_2019.interactome # example dataset
-```
+For more detailed information about each dataset, use `?`:   
+  ```R
+  library(echolocatoR)
+  ?NOTT_2019.interactome # example dataset
+  ```
 
 ### Epigenomic & Genome-wide Annotations
 
