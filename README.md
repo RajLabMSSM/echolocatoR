@@ -34,13 +34,52 @@ devtools::install_github("RajLabMSSM/echolocatoR")
 ### Epigenomic & Genome-wide Annotations
 
 #### [Nott et al. (2019)](https://science.sciencemag.org/content/366/6469/1134.abstract)
-- API access to cell type-specific epigenomics from brain tissue, including:    
-  + Epigenomic reads (as *GenomicRanges*)
-  + Enhancer/promoter coordinates (as *GenomicRanges*)
-  + PLAC-seq enhancer-promoter interactome   
+- Data from this publication contains results from cell type-specific (neurons, oligodendrocytes, astrocytes, microglia, & peripheral myeloid cells) epigenomic assays (H3K27ac, ATAC, H3K4me3) from human brain tissue.  
+
+- For detailed metadata, see:
+```R
+echolocatoR::NOTT_2019.bigwig_metadata
+# Or 
+data("bigwig_metadata")
+```  
+- Built-in access to , which includes:  
+  + Enhancer/promoter coordinates (as *GenomicRanges*)  
+  ```R
+ data("NOTT_2019.interactome")
+ # Examples of the data nested in "NOTT_2019.interactome" object:
+  NOTT_2019.interactome$`Neuronal promoters`
+  NOTT_2019.interactome$`Neuronal enhancers`
+  NOTT_2019.interactome`Microglia promoters`
+  NOTT_2019.interactome`Microglia enhancers`
+ ...
+  ```
+  + PLAC-seq enhancer-promoter interactome coordinates   
+  ```R
+  NOTT_2019.interactome$H3K4me3_around_TSS_annotated_pe
+  NOTT_2019.interactome$`Microglia interactome`
+  NOTT_2019.interactome$`Neuronal interactome`
+  NOTT_2019.interactome$`Oligo interactome`
+  ...
+  ```
+- API access to full bigWig files on UCSC Genome Browser, which includes  
+  + Epigenomic reads (as *GenomicRanges*)  
+  + Aggregate epigenomic *score* for each cell type  
+  
+  
+### [Corces et al. (2020)](https://www.biorxiv.org/content/10.1101/2020.01.06.896159v1)  
+- Data from this preprint contains results from single-cell chromatin accessibility epigenomic assays in from 39 human brains. 
+```R
+data("CORCES_2020.bulkATACseq_peaks")
+data("CORCES_2020.cicero_coaccessibility")
+data("CORCES_2020.HiChIP_FitHiChIP_loop_calls")
+data("CORCES_2020.scATACseq_celltype_peaks")
+data("CORCES_2020.scATACseq_peaks")
+```
   
 #### [XGR](http://xgr.r-forge.r-project.org)    
 - API access to a diverse library of cell type/line-specific epigenomic (e.g. ENCODE) and other genome-wide annotations.    
+
+
 #### [Roadmap](http://www.roadmapepigenomics.org)  
 - API access to cell type-specific epigenomic data.  
 
