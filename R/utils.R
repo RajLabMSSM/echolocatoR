@@ -4,6 +4,11 @@
 #### #### #### #### #### #### #### ####
 
 
+# Documenting itnernal functions:
+# https://www.r-bloggers.com/internal-functions-in-r-packages/
+
+
+
 #' @section general functions:
 #' General use functions for various points in the \emph{echolocatoR} pipeline.
 

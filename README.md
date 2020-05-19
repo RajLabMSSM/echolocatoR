@@ -1,6 +1,14 @@
-# echolocatoR
-Automated statistical and functional fine-mapping pipeline with extensive API access to datasets.
+# *echolocatoR*
+Automated statistical and functional fine-mapping pipeline with extensive API access to datasets.  
 
+*echolocatoR* is available as an R package.  
+
+## Installation  
+
+To install, run the following command in R:  
+```R
+devtools::install_github("RajLabMSSM/echolocatoR")
+```
 
 ## Workflow  
 
