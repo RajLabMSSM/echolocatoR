@@ -159,277 +159,6 @@
 
 
 
-#' @section \emph{echolocatoR} helper functions:
-#' General use functions for various points in the \emph{echolocatoR} pipeline.
-
-
-
-#' Ensembl IDs -> Gene symbols
-#'
-#' Convert HGNC gene symbols to Ensembl IDs.
-#'
-#' @param gene_symbols List of HGNC gene symbols.
-#' @return List of ensembl IDs.
-#' @examples
-#' gene_symbols <- c("FOXP2","BDNF","DCX","GFAP")
-#' ensembl_IDs <- hgnc_to_ensembl(gene_symbols)
-hgnc_to_ensembl <- function(gene_symbols){
-  gene_symbols[is.na(gene_symbols)] <- "NA"
-  conversion <- AnnotationDbi::mapIds(EnsDb.Hsapiens.v75::EnsDb.Hsapiens.v75,
-                                      keys = gene_symbols,
-                                      keytype = "SYMBOL",
-                                      column = "GENEID")
-  return(conversion)
-}
-
-#' Gene symbols -> Ensembl IDs
-#'
-#' Convert Ensembl IDs to HGNC gene symbols.
-#'
-#' @param ensembl_ids List of ensembl IDs.
-#' @return List of HGNC gene symbols.
-#' @examples
-#' ensembl_IDs <- c("ENSG00000128573","ENSG00000176697","ENSG00000077279","ENSG00000131095" )
-#' gene_symbols <- ensembl_to_hgnc(ensembl_IDs)
-ensembl_to_hgnc <- function(ensembl_ids){
-  ensembl_ids[is.na(ensembl_ids)] <- "NA"
-  conversion <- AnnotationDbi::mapIds(EnsDb.Hsapiens.v75::EnsDb.Hsapiens.v75,
-                                      keys = ensembl_ids,
-                                      keytype = "GENEID",
-                                      column = "SYMBOL")
-  return(conversion)
-}
-
-
-
-
-#' Calculate effective sample size
-#'
-#' This is an often-cited approximation for the effective sample size in a case-control study.
-#' i.e., this is the sample size required to identify an association with a
-#'  quantitative trait with the same power as in your present study.
-#'  (from email correpsondence with Omer Weissbrod)
-#'
-#' @param finemap_DT Preprocessed \emph{echolocatoR} locus subset file.
-#' Requires the columns \strong{N_cases} and \strong{N_controls}.
-#' @examples
-#' finemap_DT$effective_sample_size <- effective_sample_size(finemap_DT)
-effective_sample_size <- function(finemap_DT){
-  finemap_DT$N <- (4.0 / (1.0/finemap_DT$N_cases + 1.0/finemap_DT$N_controls) )
-  sample_size <- as.integer(median(finemap_DT$N))
-  return(sample_size)
-}
-
-
-
-
-#' Assign a lead GWAS SNP to a locus
-#'
-#' If none of the SNPs in the data.frame have \code{leadSNP==T},
-#' then sort by lowest p-value (and then highest Effect size) and assign the top SNP as the lead SNP.
-#'
-#' @param data.frame Fine-mapping results data.frame.
-#' @return Fine-mapping results data.frame with new boolean \strong{leadSNP} column,
-#'  indicating whether each SNPs is the lead GWAS SNP in that locus or not.
-#' @examples
-#' finemap_DT <- assign_lead_SNP(finemap_DT)
-assign_lead_SNP <- function(new_DT, verbose=T){
-  if(sum(new_DT$leadSNP)==0){
-    printer("+ leadSNP missing. Assigning new one by min p-value.", v=verbose)
-    top.snp <- head(arrange(new_DT, P, desc(Effect)))[1,]$SNP
-    new_DT$leadSNP <- ifelse(new_DT$SNP==top.snp,T,F)
-  }
-  return(new_DT)
-}
-
-
-
-
-#' Subset LD matrix and data.frame to only their shared SNPs
-#'
-#' Find the SNPs that are shared between an LD matrix and another data.frame with a `SNP` column.
-#' Then remove any non-shared SNPs from both objects.
-#'
-#' @param data.frame
-#' @return data.frame
-#' @example
-#' finemap_DT <- assign_lead_SNP(finemap_DT)
-subset_common_snps <- function(LD_matrix, finemap_DT, verbose=F){
-  printer("+ Subsetting LD matrix and finemap_DT to common SNPs...", v=verbose)
-  # Remove duplicate SNPs
-  dups <- which(!duplicated(LD_matrix))
-  LD_matrix <- LD_matrix[dups,dups]
-  ld.snps <- row.names(LD_matrix)
-
-  # Remove duplicate SNPs
-  finemap_DT <- finemap_DT[which(!duplicated(finemap_DT$SNP)),]
-  fm.snps <- finemap_DT$SNP
-  common.snps <- base::intersect(ld.snps, fm.snps)
-  printer("+ LD_matrix =",length(ld.snps),"SNPs.", v=verbose)
-  printer("+ finemap_DT =",length(fm.snps),"SNPs.", v=verbose)
-  printer("+",length(common.snps),"SNPs in common.", v=verbose)
-  # Subset/order LD matrix
-  new_LD <- LD_matrix[common.snps, common.snps]
-  new_LD[is.na(new_LD)] <- 0
-  # Subset/order finemap_DT
-  finemap_DT <- data.frame(finemap_DT)
-  row.names(finemap_DT) <- finemap_DT$SNP
-  new_DT <- data.table::as.data.table(finemap_DT[common.snps, ])
-  new_DT <- unique(new_DT)
-  # Reassign the lead SNP if it's missing
-  new_DT <- assign_lead_SNP(new_DT)
-  # Check dimensions are correct
-  if(nrow(new_DT)!=nrow(new_LD)){
-    warning("+ LD_matrix and finemap_DT do NOT have the same number of SNPs.",v=verbose)
-    warning("+ LD_matrix SNPs = ",nrow(new_LD),"; finemap_DT = ",nrow(finemap_DT), v=verbose)
-  }
-  printer("++ Subsetting complete.",v=verbose)
-  return(list(LD=new_LD,
-              DT=new_DT))
-}
-
-
-
-
-#' Remove all SNPs outside of of a given gene.
-#'
-#' Get the min/max coordinates of a given gene (including known regulatory regions, introns, and exons).
-#' Remove any SNPs from the data.frame that fall outside these coordinates.
-#'
-#' @examples
-#' subset_DT <- gene_trimmer(subset_DT, gene, min_POS=NULL, max_POS=NULL)
-gene_trimmer <- function(subset_DT,
-                         gene,
-                         min_POS=NULL,
-                         max_POS=NULL){
-    printer("BIOMART:: Trimming data to only include SNPs within gene coordinates.")
-    gene_info <- biomart_geneInfo(gene)
-    gene_info_sub <- subset(gene_info, hgnc_symbol==gene)
-    # Take most limiting min position
-    min_POS <- max(min_POS, gene_info_sub$start_position, na.rm = T)
-    # Take most limiting max position
-    max_POS <- min(max_POS, gene_info_sub$end_position, na.rm = T)
-    subset_DT <- subset(subset_DT, CHR==gene_info$chromosome_name[1] & POS>=min_POS & POS<=max_POS)
-    printer("BIOMART::",nrow(subset_DT),"SNPs left after trimming.")
-    return(subset_DT)
-}
-
-
-#' Limit the number of SNPs per locus.
-#'
-#' Start with the lead SNP and keep expanding the window until you reach the desired number of snps.
-#' \code{subset_DT} should only contain one locus from one chromosome.
-#'
-#' @param max_snps The maximum number of SNPs to keep in the resulting data.frame.
-#' @param subset_DT A data.frame that contains at least the following columns:
-#' \describe{
-#'   \item{SNP}{RSID for each SNP.}
-#'   \item{POS}{Each SNP's genomic position (in basepairs).}
-#' }
-#' @examples
-#' subset_DT <- limit_SNPs(max_snps=500, subset_DT)
-limit_SNPs <- function(max_snps=500, subset_DT){
-  printer("echolocator:: Limiting to only",max_snps,"SNPs.")
-  if(nrow(subset_DT)>max_snps){
-    orig_n <- nrow(subset_DT)
-    lead.index <- which(subset_DT$leadSNP==T)
-    i=1
-    tmp.sub<-data.frame()
-    while(nrow(tmp.sub)<max_snps-1){
-      # print(i)
-      snp.start <- max(1, lead.index-i)
-      snp.end <- min(nrow(subset_DT), lead.index+i)
-      tmp.sub <- subset_DT[snp.start:snp.end]
-      i=i+1
-    }
-    # Need to add that last row on only one end
-    snp.start <- max(1, lead.index-i+1) # +1 keep it the same index as before
-    snp.end <- min(nrow(subset_DT), lead.index+i)
-    tmp.sub <- subset_DT[snp.start:snp.end]
-
-  printer("+ Reduced number of SNPs:",orig_n,"==>",nrow(tmp.sub))
-  return(tmp.sub)
-  } else {
-    printer("+ Data already contains less SNPs than limit (",nrow(subset_DT),"<",max_snps,")")
-    return(subset_DT)
-  }
-}
-
-
-
-
-#' Filter SNPs
-#'
-#' Filter SNps by MAF, window size, min/max position, maxmimum number of SNPs, or gene coordinates.
-#' You can also explicitly remove certain variants.
-#' @examples
-#' filter_snps <- function(subset_DT, bp_distance, remove_variants="res, gene, min_POS=10000060, max_POS=1000260, max_snps=NULL, min_MAF=0.01, trim_gene_limits=F)
-filter_snps <- function(subset_DT,
-                        bp_distance,
-                        remove_variants,
-                        locus,
-                        verbose=T,
-                        min_POS=NULL,
-                        max_POS=NULL,
-                        max_snps=NULL,
-                        min_MAF=NULL,
-                        trim_gene_limits=F){
-  if(remove_variants!=F){
-    printer("Removing specified variants:",paste(remove_variants, collapse=','), v=verbose)
-    try({subset_DT <- subset(subset_DT, !(SNP %in% remove_variants) )})
-  }
-  # Trim subset according to annotations of where the gene's limit are
-  if(trim_gene_limits!=F){
-    subset_DT <- gene_trimmer(subset_DT=subset_DT,
-                              gene=trim_gene_limits,
-                              min_POS=min_POS,
-                              max_POS=min_POS)
-  }
-  if(!is.null(max_snps)){
-    subset_DT <- limit_SNPs(max_snps = max_snps, subset_DT = subset_DT)
-  }
-  if(!is.null(min_MAF) & length(min_MAF>0)>0){
-    printer("echolocatoR:: Removing SNPs w/ MAF <",min_MAF)
-    subset_DT <- subset(subset_DT, MAF>=min_MAF)
-  }
-  # Limit range
-  if(!is.null(bp_distance)){
-    lead.snp <- subset(subset_DT, leadSNP)
-    subset_DT <- subset(subset_DT,
-                        POS >= lead.snp$POS - bp_distance &
-                        POS <= lead.snp$POS + bp_distance)
-  }
-  if(!is.na(min_POS)){subset_DT <- subset(subset_DT, POS>=min_POS)}
-  if(!is.na(max_POS)){subset_DT <- subset(subset_DT, POS<=max_POS)}
-  printer("++ Post-filtered data:",paste(dim(subset_DT), collapse=" x "))
-  return(subset_DT)
-}
-
-
-
-
-arg_list_handler <- function(arg, i){
-  output <- if(length(arg)>1){arg[i]}else{arg}
-  return(output)
-}
-
-
-
-
-snps_to_condition <- function(conditioned_snps, top_SNPs, loci){
-  if(conditioned_snps=="auto"){
-    lead_SNPs_DT <- subset(top_SNPs, Locus %in% loci)
-    # Reorder
-    lead_SNPs_DT[order(factor(lead_SNPs_DT$Locus,levels= loci)),]
-    return(lead_SNPs_DT$SNP)
-  } else {return(conditioned_snps)}
-}
-
-
-
-
-
-
 #' @section \emph{echolocatoR} main functions:
 #' The primary functions of \emph{echolocatoR} that expedite fine-mapping
 #'  by wrapping many other \emph{echolocatoR} functions into one.
@@ -443,10 +172,12 @@ snps_to_condition <- function(conditioned_snps, top_SNPs, loci){
 
 
 
-#' Run echolocatoR pipeline on a single locus.
+#' Run \emph{echolocatoR} pipeline on a single locus
 #'
 #' Unlike \code{finemap_loci}, you don't need to provide a \code{top_SNPs} data.frame.
 #' Instead, just manually provide the coordinates of the locus you want to fine-map.
+#'
+#' @family MAIN
 #'
 #' @param loci Character list of loci in \strong{Locus} col of \code{top_SNPs}.
 #' @param fullSS_path Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.
@@ -504,13 +235,13 @@ snps_to_condition <- function(conditioned_snps, top_SNPs, loci){
 #' @param A1_col Name of the effect/risk allele column in the full summary stats.
 #' Unfortunately, different studies report different kinds of allele information in a non-standardized way.
 #' Meaning that A1/A2 can refer to any number of things:
-#'  \desribe{
-#'  \item{risk/non-risk alleles}{in the case of diseases}
+#'  \describe{
+#'  \item{effect/other alleles}{in the case of diseases}
 #'  \item{ref/alt alleles}{where ref is the reference genome being used}
-#'  \item{major/minor alleles}}
+#'  \item{major/minor alleles}{This dichotomy holds true for bi-allelic SNPs but not necessary multi-allelic SNPs}
 #'  }
 #'  This makes comparing summary stats across GWAS/QTL datasets very confusing for several reasons:
-#'  \desribe{
+#'  \describe{
 #'  \item{Multi-allelic SNPs}{SNPs can have more than just 2 possible alleles (multi-allelic SNPs). Even if you compare the same SNP between two studies, you may accidentally be comparing totally different alleles.}
 #'  \item{Valence}{The valence (+/-) of per-SNP GWAS effect sizes/beta can be relative to different allele types between studies.
 #'  For example, let's say in one GWAS study your effect size for SNP A is 1.5 relative to the major allele in one study,
@@ -537,13 +268,13 @@ snps_to_condition <- function(conditioned_snps, top_SNPs, loci){
 #'  @param LD_reference Which linkage disequilibrium reference panel do you want to use.
 #'  Options include:
 #'  \describe{
-#'  \item{"UKB"}{A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See \link[https://www.biorxiv.org/content/10.1101/807792v2]{Wiessbrod et al. (2019)} for more details.}
+#'  \item{"UKB"}{A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See \href{https://www.biorxiv.org/content/10.1101/807792v2}{Wiessbrod et al. (2019)} for more details.}
 #'  \item{"1KG_Phase1"}{Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.}
 #'  \item{"1KG_Phase3"}{Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.}
 #'  }
 #'  @param superpopulation Subset your LD reference panel by superopulation.
 #'  Setting the superpopulation is not currently possible when \code{LD_reference="UKB"}.
-#'  \link[https://www.internationalgenome.org/faq/which-populations-are-part-your-study/]{1KG_Phase1 options} include:
+#'  \href{https://www.internationalgenome.org/faq/which-populations-are-part-your-study/}{1KG_Phase1 options} include:
 #'  \describe{
 #'  \item{"AFR"}{African [descent]}
 #'  \item{"AMR"}{Ad-mixed American}
@@ -573,7 +304,7 @@ snps_to_condition <- function(conditioned_snps, top_SNPs, loci){
 #' This parameter is only necessary if \code{query_by!="tabix"}.
 #' @param min_r2 Remove any SNPs are below the LD r2 threshold with the lead SNP within their respective locus.
 #' @param LD_block Calculate LD blocks with \emph{plink} and only include the block to which the lead SNP belongs.
-#' @param block_size Adjust the granularity of block sizes when \code{LD_block=T}.
+#' @param LD_block_size Adjust the granularity of block sizes when \code{LD_block=T}.
 #' @param min_Dprime Remove any SNPs are below the LD D' threshold with the lead SNP within their respective locus.
 #' This is paramter currently only works when \code{LD_reference!="UKB"}.
 #' @param query_by Choose which method you want to use to extract locus subsets from the full summary stats file.
@@ -648,7 +379,7 @@ finemap_pipeline <- function(locus,
                              file_sep="\t",
                              min_r2=0,
                              LD_block=F,
-                             block_size=.7,
+                             LD_block_size=.7,
                              min_Dprime=F,
                              query_by="coordinates",
                              remove_variants=F,
@@ -668,7 +399,7 @@ finemap_pipeline <- function(locus,
    # Create paths
    results_path <- make_results_path(dataset_name, dataset_type, locus)
    # Extract subset
-   subset_DT <- extract_SNP_subset(gene = locus,
+   subset_DT <- extract_SNP_subset(locus = locus,
                                     top_SNPs = top_SNPs,
                                     fullSS_path = fullSS_path,
                                     results_path  =  results_path,
@@ -706,14 +437,14 @@ finemap_pipeline <- function(locus,
   message("--- Step 2: Calculate Linkage Disequilibrium ---")
   LD_matrix <- LD.load_or_create(results_path=results_path,
                                  subset_DT=subset_DT,
-                                 gene=locus,
+                                 locus=locus,
                                  force_new_LD=force_new_LD,
                                  LD_reference=LD_reference,
                                  superpopulation=superpopulation,
                                  download_reference=download_reference,
                                  min_r2=min_r2,
                                  LD_block=LD_block,
-                                 block_size=block_size,
+                                 LD_block_size=LD_block_size,
                                  min_Dprime=min_Dprime,
                                  remove_correlates=remove_correlates,
                                  verbose=verbose,
@@ -840,7 +571,10 @@ finemap_pipeline <- function(locus,
 
 #' Fine-map multiple loci.
 #'
-#' \emph{echolocatoR} will separately fine-map each locus included in the \code{top_SNPs} data.frame.
+#' \emph{echolocatoR} will automatically fine-map each locus.
+#' Uses the \code{top_SNPs} data.frame to define locus coordinates.
+#'
+#' @family MAIN
 #'
 #' @param loci The list of loci you want to fine-map
 #' @param subset_path The file you want your locus subset saved as.
@@ -849,6 +583,7 @@ finemap_pipeline <- function(locus,
 #' \url{Data/<dataset_type>/<dataset_name>/<locus>/Multi-finemap/<locus>_<dataset_name>_Multi-finemap.tsv.gz}
 #' @inheritParams finemap_pipeline
 #' @return A merged data.frame with all fine-mapping results from all loci.
+#' @export
 finemap_loci <- function(loci,
                          fullSS_path,
                          dataset_name,
@@ -890,7 +625,7 @@ finemap_loci <- function(loci,
                          trim_gene_limits=F,
                          max_snps=NULL,
                          file_sep="\t",
-                         min_r2=0, LD_block=F, block_size=.7, min_Dprime=F,
+                         min_r2=0, LD_block=F, LD_block_size=.7, min_Dprime=F,
                          query_by="coordinates",
                          remove_variants=F,
                          remove_correlates=F,
@@ -906,8 +641,8 @@ finemap_loci <- function(loci,
                          plot_window=NULL,
                          plot_Nott_binwidth=2500,
                          Nott_bigwig_dir=NULL){
-  fineMapped_topSNPs <- data.table()
-  fineMapped_allResults <- data.table()
+  fineMapped_topSNPs <- data.table::data.table()
+  fineMapped_allResults <- data.table::data.table()
   lead_SNPs <- snps_to_condition(conditioned_snps, top_SNPs, loci)
 
   for (i in 1:length(loci)){
@@ -915,9 +650,9 @@ finemap_loci <- function(loci,
     try({
       locus <- loci[i]
       message("🦇 🦇 🦇 ",locus," 🦇 🦇 🦇 ")
-      lead_SNP <- arg_list_handler(lead_SNPs, i)
-      gene_limits <- arg_list_handler(trim_gene_limits, i)
-      conditioned_snp <- arg_list_handler(conditioned_snps, i)
+      lead_SNP <- .arg_list_handler(lead_SNPs, i)
+      gene_limits <- .arg_list_handler(trim_gene_limits, i)
+      conditioned_snp <- .arg_list_handler(conditioned_snps, i)
       # message("^^^^^^^^^ Running echolocatoR on: ",locus," ^^^^^^^^^")
       # cat('  \n###', locus, '  \n')
       # Delete the old subset if force_new_subset == T
@@ -962,7 +697,7 @@ finemap_loci <- function(loci,
                                      file_sep=file_sep,
                                      min_r2=min_r2,
                                      LD_block=LD_block,
-                                     block_size=block_size,
+                                     LD_block_size=LD_block_size,
                                      min_Dprime=min_Dprime,
                                      query_by=query_by,
                                      remove_variants=remove_variants,
@@ -986,8 +721,7 @@ finemap_loci <- function(loci,
       cat('  \n')
     })
     end_gene <- Sys.time()
-    message(gene,"fine-mapped in", round(end_gene-start_gene, 2),"seconds", v=verbose)
-
+    message(locus,"fine-mapped in", round(end_gene-start_gene, 2),"seconds", v=verbose)
   }
   return(fineMapped_allResults)
 }

@@ -7,6 +7,7 @@
 #'
 #' @examples
 #' quick_finemap(locus="LRRK2", consensus_thresh = 2)
+#' @keywords internal
 quick_finemap <- function(locus="LRRK2", consensus_thresh = 2){
   gene <<- locus
   # locus <<- locus
@@ -34,6 +35,7 @@ quick_finemap <- function(locus="LRRK2", consensus_thresh = 2){
 #' Imports `gene` and `results_path` variables as global variables.
 #' @examples
 #' finemap_DT <- quick_finemap(locus="LRRK2", consensus_thresh = 2)
+#' @keywords internal
 quick_finemap_soft <- function(locus="LRRK2", consensus_thresh=2){
   gene <<- locus
   # locus <<- locus
@@ -53,8 +55,8 @@ quick_finemap_soft <- function(locus="LRRK2", consensus_thresh=2){
 #' @return data.frame
 #' @examples
 #' finemap_DT <- quick_finemap <- (locus="LRRK2", consensus_thresh = 2)
-#' dat <- rbind.file.list(file.list = file.list)
-#' @export
+#' dat <- .rbind.file.list(file.list = file.list)
+#' @keywords internal
 quick_merged_DT <- function(minimum_support = 1,
                             dataset = "./Data/GWAS/Nalls23andMe_2019",
                             no_no_loci = c("HLA-DRB5","MAPT","ATG14","SP1","LMNB1","ATP6V0A1",
@@ -80,6 +82,7 @@ quick_merged_DT <- function(minimum_support = 1,
 #'
 #' Assign global variables for rapid testing.
 #' @family developer functions
+#' @keywords internal
 quickstart <- function(){
   # reload()
   allResults <<- list()
@@ -137,7 +140,7 @@ quickstart <- function(){
 
 
   top_SNPs <- Nalls_top_SNPs <- import_topSNPs(
-    topSS_path = Directory_info(dataset_name, "topSS"),
+    topSS = Directory_info(dataset_name, "topSS"),
     chrom_col = "CHR", position_col = "BP", snp_col="SNP",
     pval_col="P, all studies", effect_col="Beta, all studies", gene_col="Nearest Gene",
     caption= "Nalls et al. (2018) w/ 23andMe PD GWAS Summary Stats",
@@ -148,7 +151,7 @@ quickstart <- function(){
 
 
   results_path <<- make_results_path(dataset_name, dataset_type, gene)
-  subset_path <<- get_subset_path(results_path, gene)
+  subset_path <<- .get_subset_path(results_path, gene)
   subset_DT <<- finemap_DT <<- data.table::fread("Data/GWAS/Nalls23andMe_2019/LRRK2/Multi-finemap/Multi-finemap_results.txt", sep="\t")
   multi <<- T
   subtitle=""
@@ -217,6 +220,7 @@ quickstart <- function(){
 #' @title echolocatoR
 #' @family developer functions
 #' @description Assign global variables for rapid testing (Alzheimer's Disease version).
+#' @keywords internal
 quickstart_AD <- function(locus="PTK2B", dataset_name="Kunkle_2019"){
   loci <<- "PTK2B"
   trim_gene_limits <<- F
@@ -272,3 +276,5 @@ quickstart_AD <- function(locus="PTK2B", dataset_name="Kunkle_2019"){
   polyfun<<-"./echolocatoR/tools/polyfun"
   force_new_priors <<- F
 }
+
+

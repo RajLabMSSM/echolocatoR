@@ -52,3 +52,18 @@ resulting in a locus that is ~1Mb long (depending on the dataset).}
 \description{
 Search full summary stats file by genomic coordinates.
 }
+\seealso{
+Other query functions: 
+\code{\link{TABIX.convert_file}()},
+\code{\link{TABIX.query}()},
+\code{\link{TABIX}()},
+\code{\link{extract_SNP_subset}()},
+\code{\link{import_topSNPs}()},
+\code{\link{query_by_coordinates_merged}()},
+\code{\link{query_by_gene}()},
+\code{\link{query_by_probe}()},
+\code{\link{query_fullSS}()},
+\code{\link{query_handler}()}
+}
+\concept{query functions}
+\keyword{internal}

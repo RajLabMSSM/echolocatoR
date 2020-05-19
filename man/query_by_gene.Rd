@@ -22,3 +22,18 @@ This parameter is only necessary if \code{query_by!="tabix"}.}
 To be used when gene name is a column in the full summary stats file.
 More commonly useful for QTL full summary stats files.
 }
+\seealso{
+Other query functions: 
+\code{\link{TABIX.convert_file}()},
+\code{\link{TABIX.query}()},
+\code{\link{TABIX}()},
+\code{\link{extract_SNP_subset}()},
+\code{\link{import_topSNPs}()},
+\code{\link{query_by_coordinates_merged}()},
+\code{\link{query_by_coordinates}()},
+\code{\link{query_by_probe}()},
+\code{\link{query_fullSS}()},
+\code{\link{query_handler}()}
+}
+\concept{query functions}
+\keyword{internal}

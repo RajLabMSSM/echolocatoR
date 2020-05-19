@@ -17,6 +17,16 @@ query_by_probe(
 )
 }
 \arguments{
+\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.}
+
+\item{chrom_col}{Name of the chromosome column in the full summary stats file.}
+
+\item{file_sep}{The separator in the full summary stats file.
+This parameter is only necessary if \code{query_by!="tabix"}.}
+
+\item{probe_path}{The location of the file containing translations between probe IDs and gene symbols.
+Only used for certain eQTL datasets.}
+
 \item{coordinates_merged}{Whether \strong{CHR} and \strong{POS} are merged into one column (e.g. chr12:12209944).}
 
 \item{location_sep}{The separator character when \strong{CHR} and \strong{POS} are merged into one column (e.g. ":" when formatted like chr12:12209944).}
@@ -26,3 +36,18 @@ To be used when probe name (but not gene name) is a column in the full summary s
 Requires a gene-probe key file (\strong{probe_path}).
 More commonly useful for QTL full summary stats files.
 }
+\seealso{
+Other query functions: 
+\code{\link{TABIX.convert_file}()},
+\code{\link{TABIX.query}()},
+\code{\link{TABIX}()},
+\code{\link{extract_SNP_subset}()},
+\code{\link{import_topSNPs}()},
+\code{\link{query_by_coordinates_merged}()},
+\code{\link{query_by_coordinates}()},
+\code{\link{query_by_gene}()},
+\code{\link{query_fullSS}()},
+\code{\link{query_handler}()}
+}
+\concept{query functions}
+\keyword{internal}

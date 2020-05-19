@@ -47,7 +47,7 @@ finemap_loci(
   file_sep = "\\t",
   min_r2 = 0,
   LD_block = F,
-  block_size = 0.7,
+  LD_block_size = 0.7,
   min_Dprime = F,
   query_by = "coordinates",
   remove_variants = F,
@@ -147,6 +147,57 @@ Can be inferred from \strong{freq_col} if missing from the dataset.}
 Effect allele frequency is preferred, but the non-effect allele can be provided instead (though this may be less accurate).
 This column is not necessary unless \code{MAF_col="calculate"} or the MAF column is missing.}
 
+\item{A1_col}{Name of the effect/risk allele column in the full summary stats.
+Unfortunately, different studies report different kinds of allele information in a non-standardized way.
+Meaning that A1/A2 can refer to any number of things:
+ \describe{
+ \item{effect/other alleles}{in the case of diseases}
+ \item{ref/alt alleles}{where ref is the reference genome being used}
+ \item{major/minor alleles}{This dichotomy holds true for bi-allelic SNPs but not necessary multi-allelic SNPs}
+ }
+ This makes comparing summary stats across GWAS/QTL datasets very confusing for several reasons:
+ \describe{
+ \item{Multi-allelic SNPs}{SNPs can have more than just 2 possible alleles (multi-allelic SNPs). Even if you compare the same SNP between two studies, you may accidentally be comparing totally different alleles.}
+ \item{Valence}{The valence (+/-) of per-SNP GWAS effect sizes/beta can be relative to different allele types between studies.
+ For example, let's say in one GWAS study your effect size for SNP A is 1.5 relative to the major allele in one study,
+  and the minor allele happens to be the one found in the reference genome.
+  You then try to compare that effect size to that of the same SNP in another GWAS.
+  But, the valence of the effect sizes in the 2nd GWAS study are all relative to the reference genome (instead of the minor allele),
+  giving the same SNP a value of -1.2. If you took the effect sizes at face value you'd say the signals are in opposite directions.
+  But once you take into account how the valences were determined in each study you realize that they're actually both positive relative to the major allele.}
+ }
+ This process of reversing per-SNP valences based on aligning the alleles is known as allele flipping. This is important when comparing individual SNPs, but can also have an impact on colocalization results.
+ @param N_cases_col Name of the column in the full summary stats that has the number of case subjects in the study.
+ This can either be per SNP sample sizes, or one number repeated across all rows.
+ Proxy cases (e.g. relatives of people with the disease being investigated) should be included in this estimate if any were used in the study.
+ This column is not necesssary if \code{N_cases} parameter is provided.
+ @param N_controls_col Name of the column in the full summary stats that has the number of control subjects in the study.
+ This can either be per SNP sample sizes, or one number repeated across all rows.
+ This column is not necesssary if \code{N_controls} parameter is provided.
+  @param N_cases The number of case subjects in the study.
+ Instead of providing a reudundant \strong{N_cases_col} column, you can simply enter one value here.
+ @param N_controls The number of control subjects in the study.
+ Instead of providing a reudundant \strong{N_controls_col} column, you can simply enter one value here.
+ @param proportion_cases The proportion of total subjects in the study that were cases.
+ if \code{proportion_cases="calculate"} then this is inferred:  \code{N_controls / N_controls}.
+ @param LD_reference Which linkage disequilibrium reference panel do you want to use.
+ Options include:
+ \describe{
+ \item{"UKB"}{A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See \href{https://www.biorxiv.org/content/10.1101/807792v2}{Wiessbrod et al. (2019)} for more details.}
+ \item{"1KG_Phase1"}{Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.}
+ \item{"1KG_Phase3"}{Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.}
+ }
+ @param superpopulation Subset your LD reference panel by superopulation.
+ Setting the superpopulation is not currently possible when \code{LD_reference="UKB"}.
+ \href{https://www.internationalgenome.org/faq/which-populations-are-part-your-study/}{1KG_Phase1 options} include:
+ \describe{
+ \item{"AFR"}{African [descent]}
+ \item{"AMR"}{Ad-mixed American}
+ \item{"EAS"}{East Asian}
+ \item{"EUR"}{European}
+ \item{"SAS"}{South Asian}
+ }}
+
 \item{download_reference}{When acquiring LD matrixes,
 the default is to delete the full vcf or npz files after \emph{echolocator} has extracted the necssary subset.
 However, if you wish to keep these full files (which can be quite large) set \code{download_reference=T}.}
@@ -178,7 +229,7 @@ This parameter is only necessary if \code{query_by!="tabix"}.}
 
 \item{LD_block}{Calculate LD blocks with \emph{plink} and only include the block to which the lead SNP belongs.}
 
-\item{block_size}{Adjust the granularity of block sizes when \code{LD_block=T}.}
+\item{LD_block_size}{Adjust the granularity of block sizes when \code{LD_block=T}.}
 
 \item{min_Dprime}{Remove any SNPs are below the LD D' threshold with the lead SNP within their respective locus.
 This is paramter currently only works when \code{LD_reference!="UKB"}.}
@@ -231,5 +282,11 @@ adjust the bin width of the histograms.}
 A merged data.frame with all fine-mapping results from all loci.
 }
 \description{
-\emph{echolocatoR} will separately fine-map each locus included in the \code{top_SNPs} data.frame.
+\emph{echolocatoR} will automatically fine-map each locus.
+Uses the \code{top_SNPs} data.frame to define locus coordinates.
 }
+\seealso{
+Other MAIN: 
+\code{\link{finemap_pipeline}()}
+}
+\concept{MAIN}

@@ -69,3 +69,18 @@ Only used for certain eQTL datasets.}
 \description{
 Handles which query method to use
 }
+\seealso{
+Other query functions: 
+\code{\link{TABIX.convert_file}()},
+\code{\link{TABIX.query}()},
+\code{\link{TABIX}()},
+\code{\link{extract_SNP_subset}()},
+\code{\link{import_topSNPs}()},
+\code{\link{query_by_coordinates_merged}()},
+\code{\link{query_by_coordinates}()},
+\code{\link{query_by_gene}()},
+\code{\link{query_by_probe}()},
+\code{\link{query_fullSS}()}
+}
+\concept{query functions}
+\keyword{internal}
