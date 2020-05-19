@@ -37,21 +37,21 @@ devtools::install_github("RajLabMSSM/echolocatoR")
 - Data from this publication contains results from cell type-specific (neurons, oligodendrocytes, astrocytes, microglia, & peripheral myeloid cells) epigenomic assays (H3K27ac, ATAC, H3K4me3) from human brain tissue.  
 
 - For detailed metadata, see:
-```R
-echolocatoR::NOTT_2019.bigwig_metadata
-# Or 
-data("NOTT_2019.bigwig_metadata")
-```  
-- Built-in datasets:  
-  + Enhancer/promoter coordinates (as *GenomicRanges*)  
   ```R
- data("NOTT_2019.interactome")
- # Examples of the data nested in "NOTT_2019.interactome" object:
+  echolocatoR::NOTT_2019.bigwig_metadata
+  # Or 
+  data("NOTT_2019.bigwig_metadata")
+  ```  
+- Built-in datasets:  
+  + Enhancer/promoter coordinates (as *GenomicRanges*)   
+  ```R
+  data("NOTT_2019.interactome")
+  # Examples of the data nested in "NOTT_2019.interactome" object:
   NOTT_2019.interactome$`Neuronal promoters`
   NOTT_2019.interactome$`Neuronal enhancers`
   NOTT_2019.interactome`Microglia promoters`
   NOTT_2019.interactome`Microglia enhancers`
- ...
+  ...
   ```
   + PLAC-seq enhancer-promoter interactome coordinates   
   ```R
