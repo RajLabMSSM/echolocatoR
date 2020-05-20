@@ -298,14 +298,13 @@ finemap_method_handler <- function(results_path,
                            GWAS_datasets=ifelse(dataset_type=="GWAS",
                                                 basename(dirname(results_path)),NULL),
                            QTL_datasets=NULL,
-                           gene=basename(results_path),
+                           locus=basename(results_path),
                            n_causal=n_causal,
                            use_annotations=F,
                            PP_threshold=PP_threshold,
                            GWAS_populations="EUR",
                            LD_matrix=LD_matrix,
-                           force_new_LD=F,
-                           PP_threshold=PP_threshold)
+                           force_new_LD=F)
   } else {
     stop("[::ERROR::] Enter valid finemap_method: 'SUSIE', 'ABF', 'FINEMAP', 'COJO', and 'PAINTOR' are currently available.")
   }

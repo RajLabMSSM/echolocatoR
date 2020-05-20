@@ -34,7 +34,7 @@
 # dat <- readxl::read_excel("~/Desktop/Fine_Mapping/echolocatoR/annotations/Coceres_2020/STable2_Features_bulkATAC-seq_Peaks.xlsx", skip = 18)
 # CORCES_2020.bulkATACseq_peaks <- data.table::data.table(dat)
 # usethis::use_data(CORCES_2020.bulkATACseq_peaks)
-#' bulkATACseq peaks from Alzheimer's disease brain tissue.
+#' bulkATACseq peaks from Alzheimer's disease brain tissue
 #'
 #' Each row represents an individual peak identified in the bulk ATAC-seq data.
 #'
@@ -51,7 +51,7 @@
 # dat <- readxl::read_excel("~/Desktop/Fine_Mapping/echolocatoR/annotations/Coceres_2020/STable5_Features_scATAC-seq_Peaks_all.xlsx", skip = 18)
 # CORCES_2020.scATACseq_peaks <- data.table::data.table(dat)
 # usethis::use_data(CORCES_2020.scATACseq_peaks, overwrite = T)
-#' scATACseq peaks from Alzheimer's disease brain tissue.
+#' scATACseq peaks from Alzheimer's disease brain tissue
 #'
 #' Each row represents an individual peak identified in the single-cell ATAC-seq data.
 #'
@@ -67,7 +67,7 @@
 # dat <- readxl::read_excel("~/Desktop/Fine_Mapping/echolocatoR/annotations/Coceres_2020/STable6_Features_scATAC-seq_celltype_Peaks.xlsx", skip = 15)
 # CORCES_2020.scATACseq_celltype_peaks <- data.table::data.table(dat)
 # usethis::use_data(CORCES_2020.scATACseq_celltype_peaks)
-#' scATACseq cell type-specific peaks from Alzheimer's disease brain tissue.
+#' scATACseq cell type-specific peaks from Alzheimer's disease brain tissue
 #'
 #' Each row represents an individual peak identified from the feature binarization analysis (see methods).
 #'
@@ -84,7 +84,7 @@
 # dat <- readxl::read_excel("~/Desktop/Fine_Mapping/echolocatoR/annotations/Coceres_2020/STable10_Coacessibility_Peak_loop_connection.xlsx", skip = 19, sheet=1)
 # CORCES_2020.HiChIP_FitHiChIP_loop_calls <- data.table::data.table(dat)
 # usethis::use_data(CORCES_2020.HiChIP_FitHiChIP_loop_calls)
-#' FitHiChIP loop calls from Alzheimer's disease brain tissue.
+#' FitHiChIP loop calls from Alzheimer's disease brain tissue
 #'
 #' FitHiChIP loop calls that overlap SNPs derived from analysis of H3K27ac HiChIP data.
 #' Each row represents an individual peak identified from the feature binarization analysis (see methods).
@@ -114,7 +114,7 @@
 # dat <- readxl::read_excel("~/Desktop/Fine_Mapping/echolocatoR/annotations/Coceres_2020/STable10_Coacessibility_Peak_loop_connection.xlsx", skip = 21, sheet=2)
 # CORCES_2020.cicero_coaccessibility <- data.table::data.table(dat)
 # usethis::use_data(CORCES_2020.cicero_coaccessibility)
-#' Cicero_coaccessibility from Alzheimer's disease brain tissue.
+#' Cicero_coaccessibility from Alzheimer's disease brain tissue
 #'
 #' Cicero coaccessibility analysis for peaks that overlap SNPs derived from analysis of scATAC-seq data.
 #' Each row represents an individual peak identified from the feature binarization analysis (see methods).
@@ -166,7 +166,7 @@
 # NOTT_2019.interactome <- lapply(sheets, function(s){readxl::read_excel(file, sheet=s, skip=2)})
 # names(NOTT_2019.interactome) <- sheets
 # usethis::use_data(NOTT_2019.interactome)
-#' Brain cell type-specific enhancers, promoters, and interactomes.
+#' Brain cell type-specific enhancers, promoters, and interactomes
 #'
 #' Originally from \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}.
 #' Specifically: \emph{aay0793-Nott-Table-S5.xlsx}.
@@ -180,7 +180,7 @@
 
 # NOTT_2019.superenhancer_interactome <- data.table::data.table(readxl::read_excel("~/Desktop/Fine_Mapping/echolocatoR/annotations/Nott_2019/aay0793-Nott-Table-S6.xlsx", skip=2)  )
 # usethis::use_data(NOTT_2019.superenhancer_interactome)
-#' Brain cell type-specific interactomes with superenhancers.
+#' Brain cell type-specific interactomes with superenhancers
 #'
 #' Originally from \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}.
 #' Specifically: \emph{aay0793-Nott-Table-S6.xlsx}.

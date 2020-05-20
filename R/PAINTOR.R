@@ -657,6 +657,7 @@ PAINTOR <- function(finemap_DT=NULL,
                     chromatin_state="TssA",
                     use_annotations=F,
                     PP_threshold=.95,
+                    consensus_thresh=2,
                     multi_finemap_col_name="PAINTOR",
                     trim_gene_limits=F,
                     force_new_subset=F,
@@ -737,6 +738,7 @@ PAINTOR <- function(finemap_DT=NULL,
                                          PT_results_path = PT_results_path,
                                          locus_name = locus_name,
                                          locus_DT = locus_DT,
+                                         locus = locus,
                                          LD_matrix=LD_matrix)
   } else{
     LD.list <- PAINTOR.prepare_LD.transethnic(subset_DT=subset(finemap_DT, SNP %in% locus_DT$RSID),
@@ -829,7 +831,9 @@ PAINTOR <- function(finemap_DT=NULL,
                                      paintor.results = paintor.results,
                                      PP_threshold = PP_threshold,
                                      multi_finemap_col_name = multi_finemap_col_name)
-  merged_DT <- find_consensus_SNPs(merged_DT, credset_thresh = 1)
+  merged_DT <- find_consensus_SNPs(merged_DT,
+                                   credset_thresh = PP_threshold,
+                                   consensus_thresh = consensus_thresh)
 
   # Update Consensus SNP col and Summarise
   # merged_DT <- find_consensus_SNPs(merged_DT, support_thresh = 2)
@@ -841,7 +845,6 @@ PAINTOR <- function(finemap_DT=NULL,
                    save_path = file.path(PT_results_path,"track_plot.enumerate2.png"),
                    PAINTOR.label="PAINTOR\nTrans-ethnic",
                    conditions = c("Nalls23andMe_2019","MESA_CAU","MESA_HIS"))
-
   return(merged_DT)
 }
 

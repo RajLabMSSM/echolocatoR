@@ -387,7 +387,6 @@ POLYFUN.compute_priors <- function(polyfun="./echolocatoR/tools/polyfun",
   # 1. Munge summary stats
   printer("PolyFun:: [1]  Create a munged summary statistics file in a PolyFun-friendly parquet format.")
   munged.path <- POLYFUN.munge_summ_stats(polyfun=polyfun,
-                                           python = python,
                                            dataset=dataset,
                                            sample.size=sample.size,
                                            min_INFO = min_INFO,

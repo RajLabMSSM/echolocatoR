@@ -4,8 +4,21 @@
 #### #### #### #### #### #### #### ####
 
 
-# Documenting itnernal functions:
+# Documenting internal functions:
 # https://www.r-bloggers.com/internal-functions-in-r-packages/
+
+
+
+#' @importFrom base within
+#' @importFrom grDevices colorRampPalette dev.off png
+#' @importFrom graphics hist
+#' @importFrom stats chisq.test complete.cases end fisher.test formula median p.adjust
+#' pairwise.t.test sd setNames start var
+#' @importFrom utils download.file find head install.packages installed.packages read.csv tail write.csv
+#' @importFrom utils sessionInfo
+#'  ‘AnnotationDbi’ ‘AnnotationFilter’ ‘BiocGenerics’ ‘DT’
+
+globalVariables(c("%>%"))
 
 
 
@@ -23,6 +36,7 @@
 #' n.snps <- 50
 #' printer("echolocatoR::","Processing",n.snps,"SNPs...")
 #' @keywords internal
+#' @noRd
 printer <- function(..., v=T){if(v){print(paste(...))}}
 
 #' Identify current operating system (OS).
@@ -98,9 +112,6 @@ startup_image  <- function(){
 #' Rapidly read a list of files from storage and concatenate them by rows.
 #'
 #' @family general functions
-#' @examples
-#' file.list <- c("data/file1.tsv", "data/file2.tsv","new_data/file3/tsv")
-#' dat <- .rbind.file.list(file.list = file.list)
 #' @keywords internal
 .rbind.file.list <- function(file.list,
                             verbose=T,
@@ -420,6 +431,7 @@ ensembl_to_hgnc <- function(ensembl_ids){
 #' @param finemap_DT Preprocessed \emph{echolocatoR} locus subset file.
 #' Requires the columns \strong{N_cases} and \strong{N_controls}.
 #' @examples
+#' data("finemap_DT")
 #' finemap_DT$effective_sample_size <- effective_sample_size(finemap_DT)
 #' @keywords internal
 effective_sample_size <- function(finemap_DT){

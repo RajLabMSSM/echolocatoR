@@ -14,20 +14,53 @@ Encoding: UTF-8
 LazyData: true
 Depends: R (>= 3.1.0)
 SystemRequirements: Python (>= 3.7.0)
+biocViews:
 Imports: 
+    R.utils,
     dplyr,
     data.table,
+    reticulate,
     ggplot2,
     patchwork,
     pbmcapply,
     ggrepel,
-    coloc
+    coloc,
+    susieR,
+    tidyr,
+    tidyverse,
+    RColorBrewer,
+    pals,
+    patchwork,
+    S4Vectors,
+    htmltools,
+    stringr, 
+    shades,
+    readxl,
+    openxlsx,
+    GenomicRanges,
+    BiocGenerics,
+    IRanges,
+    EnsDb.Hsapiens.v75,
+    GenomeInfoDb, 
+    XGR,
+    biomaRt,
+    haploR,
+    biovizBase,
+    ensembldb, 
+    ggbio,
+    rtracklayer,
+    ComplexHeatmap
 Remotes:
   bioc::3.3/SummarizedExperiment,
   bioc::3.3/biomaRt
 Suggests: 
+    Rsamtools,
     crayon,
+    png,
     knitr,
-    rmarkdown
+    rmarkdown,
+    SparkR,
+    gaston,
+    ggridges
 RoxygenNote: 7.1.0
 VignetteBuilder: knitr

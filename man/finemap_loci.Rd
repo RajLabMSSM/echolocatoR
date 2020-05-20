@@ -2,7 +2,7 @@
 % Please edit documentation in R/MAIN.R
 \name{finemap_loci}
 \alias{finemap_loci}
-\title{Fine-map multiple loci.}
+\title{Fine-map multiple loci}
 \usage{
 finemap_loci(
   loci,
@@ -117,7 +117,7 @@ This parameter is used somewhat differntly by different fine-mapping tools.
 See tool-specific functions for details.}
 
 \item{sample_size}{The overall sample size of the study.
-If none is given, and \strong{N_cases} and \sontrg{N_controls} columns are present,
+If none is given, and \strong{N_cases} and \strong{N_controls} columns are present,
 then sample_size is inferred to be \code{max(N_cases) + max(N_controls)}.}
 
 \item{chrom_col}{Name of the chromosome column in the full summary stats file.}

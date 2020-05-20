@@ -21,6 +21,7 @@ PAINTOR(
   chromatin_state = "TssA",
   use_annotations = F,
   PP_threshold = 0.95,
+  consensus_thresh = 2,
   multi_finemap_col_name = "PAINTOR",
   trim_gene_limits = F,
   force_new_subset = F,

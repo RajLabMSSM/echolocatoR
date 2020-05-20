@@ -12,5 +12,5 @@ so you need to limit the number of SNPs with span.
 If \code{span=10}, only 10 SNPs upstream and 10 SNPs downstream of the lead SNP will be plotted.}
 }
 \description{
-Uses \gaston{gaston} to plot a SNP-annotated LD matrix.
+Uses \code{gaston} to plot a SNP-annotated LD matrix.
 }

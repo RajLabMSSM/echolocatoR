@@ -246,11 +246,12 @@ psychENCODE.overlap_plots <- function(percent_df){
   # Plot
   p1 <- plot_percent_HITs(percent_df) + ylim(0,50)
   p2 <- plot_has_top_HIT(percent_df) + ylim(0,50)
-  cp <- cowplot::plot_grid(p1,p2,labels = LETTERS)
+  patchwork::wrap_plots(p1,p2)
+  # cp <- cowplot::plot_grid(p1,p2,labels = LETTERS)
   print(cp)
 }
 
- 
+
 
 psychENCODE.ENS_to_HGNC <- function(QTL, reference_genome="grch37"){
   print("+ Converting Ensembl IDs to HGNC Gene Symbols")
@@ -281,7 +282,7 @@ psychENCODE.ENS_to_HGNC <- function(QTL, reference_genome="grch37"){
 }
 
 
- 
+
 
 #
 # SNPs_that_are_QTLs <- function(QTL_type="eQTL"){

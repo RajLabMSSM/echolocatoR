@@ -3,7 +3,7 @@
 \docType{data}
 \name{NOTT_2019.interactome}
 \alias{NOTT_2019.interactome}
-\title{Brain cell type-specific enhancers, promoters, and interactomes.}
+\title{Brain cell type-specific enhancers, promoters, and interactomes}
 \format{
 An object of class \code{list} of length 12.
 }

@@ -3,7 +3,7 @@
 \docType{data}
 \name{CORCES_2020.bulkATACseq_peaks}
 \alias{CORCES_2020.bulkATACseq_peaks}
-\title{bulkATACseq peaks from Alzheimer's disease brain tissue.}
+\title{bulkATACseq peaks from Alzheimer's disease brain tissue}
 \format{
 An object of class \code{data.table} (inherits from \code{data.frame}) with 186559 rows and 10 columns.
 }

@@ -18,7 +18,6 @@ Other general functions:
 \code{\link{createDT_html}()},
 \code{\link{createDT}()},
 \code{\link{dt.replace}()},
-\code{\link{printer}()},
 \code{\link{startup_image}()},
 \code{\link{tryFunc}()}
 }

@@ -4,9 +4,9 @@
 # (merged_DT %>% subset(P<5e-8) %>%dplyr::group_by(Gene) %>% count())$n %>% mean()
 
 
-lead.SNP.coords <- function(){
+lead.SNP.coords <- function(consensus_thresh=2){
   annot <- readxl::read_excel("./Data/annotated_finemapping_results.xlsx")
-  annot <- find_consensus_SNPs(annot, support_thresh = 2)
+  annot <- find_consensus_SNPs(annot, consensus_thresh = consensus_thresh)
   annot[is.na(annot$mean.PP),"mean.PP"] <-0
 
   annot.sub <- subset(annot, leadSNP==T, select=c(Gene, SNP, CHR, POS)) %>%

@@ -1,0 +1,3 @@
+[submodule "inst/polyfun"]
+	path = inst/polyfun
+	url = https://github.com/RajLabMSSM/polyfun.git

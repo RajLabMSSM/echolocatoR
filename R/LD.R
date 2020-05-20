@@ -111,7 +111,7 @@ LD.translate_population <- function(superpopulation){
 
 #' Plot a subset of the LD matrix
 #'
-#' Uses \gaston{gaston} to plot a SNP-annotated LD matrix.
+#' Uses \code{gaston} to plot a SNP-annotated LD matrix.
 #' @inheritParams finemap_pipeline
 #' @param span This is very computationally intensive,
 #' so you need to limit the number of SNPs with span.

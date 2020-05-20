@@ -3,7 +3,7 @@
 \docType{data}
 \name{NOTT_2019.superenhancer_interactome}
 \alias{NOTT_2019.superenhancer_interactome}
-\title{Brain cell type-specific interactomes with superenhancers.}
+\title{Brain cell type-specific interactomes with superenhancers}
 \format{
 An object of class \code{data.table} (inherits from \code{data.frame}) with 2954 rows and 29 columns.
 }

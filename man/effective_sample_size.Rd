@@ -17,6 +17,7 @@ i.e., this is the sample size required to identify an association with a
  (from email correpsondence with Omer Weissbrod)
 }
 \examples{
+data("finemap_DT")
 finemap_DT$effective_sample_size <- effective_sample_size(finemap_DT)
 }
 \keyword{internal}

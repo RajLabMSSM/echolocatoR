@@ -15,7 +15,9 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-# library(echolocatoR)
+library(echolocatoR)
+
+library(dplyr)
 ```
 
 # Quick fine-mapping example
@@ -23,65 +25,49 @@ knitr::opts_chunk$set(
 ## Prepare `top_SNPs` data.frame
 
 ```{r  Prepare `top_SNPs` data.frame} 
-# data("Nalls_top_SNPs")
-# 
-# top_SNPs <- import_topSNPs(
-#   # topSS = "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/Nalls2019_TableS2.xlsx",
-#   topSS = Nalls_topSS,
-#   chrom_col = "CHR", position_col = "BP", snp_col="SNP",
-#   pval_col="P, all studies", effect_col="Beta, all studies", gene_col="Nearest Gene", 
-#   group_by_locus = T,
-#   locus_col = "Locus Number",
-#   remove_variants = "rs34637584")
-```
+data("Nalls_top_SNPs")
 
-## Manually add new loci of interest  
-
-```{r Manually add new loci of interest  }
-# top_SNPs <- data.table::rbindlist(list(top_SNPs,
-#                                       data.frame(CHR=14,POS=55360203, SNP="rs3783642",
-#                                                    P=2e-308, Effect=1, Gene="ATG14", Locus=NA ),
-#                                       data.frame(CHR=12,POS=53797236, SNP="rs34656641",
-#                                                    P=2e-308, Effect=1, Gene="SP1", Locus=NA ),
-#                                       data.frame(CHR=5,POS=126181862, SNP="rs959573",
-#                                                    P=2e-308, Effect=1, Gene="LMNB1", Locus=NA ),
-#                                       data.frame(CHR=17,POS=40609405, SNP="rs9897702",
-#                                                    P=2e-308, Effect=1, Gene="ATP6V0A1", Locus=NA ),
-#                                       data.frame(CHR=12,POS=40388109, SNP="rs140722239",
-#                                                    P=2.691e-37, Effect=0.3869, Gene="SLC2A13", Locus=NA )
-#                                       ), use.names = T)
+top_SNPs <- import_topSNPs(
+  # topSS = "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/Nalls2019_TableS2.xlsx",
+  topSS = Nalls_top_SNPs,
+  chrom_col = "CHR", position_col = "BP", snp_col="SNP",
+  pval_col="P, all studies", effect_col="Beta, all studies", gene_col="Nearest Gene",
+  group_by_locus = T,
+  locus_col = "Locus Number",
+  remove_variants = "rs34637584")
 ```
+ 
 
 # Run fine-mapping pipeline
 
 ```{r Run fine-mapping pipeline}
 
-# Nalls23andMe_2019_results <- finemap_loci(top_SNPs = top_SNPs,
-#                                            loci = "LRRK2",#top_SNPs$Gene, #unique(c("LRRK2", loci)),
-#                                            trim_gene_limits = F,#c(T, rep(F,length(gene_list))),
-#                                            dataset_name = dataset_name,
-#                                            dataset_type = "GWAS",
-#                                            query_by ="tabix", # coordinates
-#                                            subset_path = "auto",
-#                                            finemap_methods = c("ABF","SUSIE","POLYFUN_SUSIE","FINEMAP"),
-#                                            force_new_subset = F,
-#                                            force_new_LD = F,
-#                                            force_new_finemap = F,
-#                  fullSS_path = "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/nallsEtAl2019_allSamples_allVariants.mod.txt.gz",
-#                  chrom_col = "CHR", position_col = "POS", snp_col = "RSID",
-#                  pval_col = "p", effect_col = "beta", stderr_col = "se",
-#                  freq_col = "freq", MAF_col = "calculate",
-#                  A1_col = "A1",
-#                  A2_col = "A2",
-#                  bp_distance = 500000*2,
-#                  plot_window = 100000,
-#                  plot_Nott_binwidth = 100, 
-#                  LD_reference = "UKB",#"1KG_Phase1",
-#                  superpopulation = "EUR", 
-#                  min_MAF = 0.001,  
-#                  n_causal = 5, 
-#                  PP_threshold = .95,
-#                  remove_tmps = T,
-#                  server=F)
+Nalls23andMe_2019_results <- finemap_loci(top_SNPs = top_SNPs,
+                                           loci = "LRRK2",#top_SNPs$Gene, #unique(c("LRRK2", loci)),
+                                           trim_gene_limits = F,#c(T, rep(F,length(gene_list))),
+                                           dataset_name = dataset_name,
+                                           dataset_type = "GWAS",
+                                           query_by ="tabix", # coordinates
+                                           subset_path = "auto",
+                                           finemap_methods = c("ABF","SUSIE","POLYFUN_SUSIE","FINEMAP"),
+                                           force_new_subset = F,
+                                           force_new_LD = F,
+                                           force_new_finemap = F,
+                 fullSS_path = "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/nallsEtAl2019_allSamples_allVariants.mod.txt.gz",
+                 chrom_col = "CHR", position_col = "POS", snp_col = "RSID",
+                 pval_col = "p", effect_col = "beta", stderr_col = "se",
+                 freq_col = "freq", MAF_col = "calculate",
+                 A1_col = "A1",
+                 A2_col = "A2",
+                 bp_distance = 500000*2,
+                 plot_window = 100000,
+                 plot_Nott_binwidth = 100,
+                 LD_reference = "UKB",#"1KG_Phase1",
+                 superpopulation = "EUR",
+                 min_MAF = 0.001,
+                 n_causal = 5,
+                 PP_threshold = .95,
+                 remove_tmps = T,
+                 server=F)
 ```
 

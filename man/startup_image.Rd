@@ -19,7 +19,6 @@ Other general functions:
 \code{\link{createDT}()},
 \code{\link{dt.replace}()},
 \code{\link{get_os}()},
-\code{\link{printer}()},
 \code{\link{tryFunc}()}
 }
 \concept{general functions}

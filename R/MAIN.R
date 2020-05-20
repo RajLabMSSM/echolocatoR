@@ -110,7 +110,7 @@
 
 # library(pbmcapply); #devtools::install_github("kvnkuang/pbmcapply", ref = "dev")
 
-# library(cowplot)
+
 # library(ggrepel)
 # library(curl)
 # library(gaston)
@@ -213,7 +213,7 @@
 #' This parameter is used somewhat differntly by different fine-mapping tools.
 #' See tool-specific functions for details.
 #' @param sample_size The overall sample size of the study.
-#' If none is given, and \strong{N_cases} and \sontrg{N_controls} columns are present,
+#' If none is given, and \strong{N_cases} and \strong{N_controls} columns are present,
 #' then sample_size is inferred to be \code{max(N_cases) + max(N_controls)}.
 #' @param chrom_col Name of the chromosome column in the full summary stats file.
 #' @param position_col Name of the genomic position column in the full summary stats file.
@@ -569,13 +569,12 @@ finemap_pipeline <- function(locus,
 
 
 
-#' Fine-map multiple loci.
+#' Fine-map multiple loci
 #'
 #' \emph{echolocatoR} will automatically fine-map each locus.
 #' Uses the \code{top_SNPs} data.frame to define locus coordinates.
 #'
 #' @family MAIN
-#'
 #' @param loci The list of loci you want to fine-map
 #' @param subset_path The file you want your locus subset saved as.
 #' Only use when fine-mapping one locus at a time.
@@ -583,7 +582,6 @@ finemap_pipeline <- function(locus,
 #' \url{Data/<dataset_type>/<dataset_name>/<locus>/Multi-finemap/<locus>_<dataset_name>_Multi-finemap.tsv.gz}
 #' @inheritParams finemap_pipeline
 #' @return A merged data.frame with all fine-mapping results from all loci.
-#' @export
 finemap_loci <- function(loci,
                          fullSS_path,
                          dataset_name,
