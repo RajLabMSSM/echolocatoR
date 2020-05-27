@@ -4,26 +4,14 @@
 #### #### #### #### #### #### #### ####
 
 
-# Documenting internal functions:
-# https://www.r-bloggers.com/internal-functions-in-r-packages/
+## Documenting internal functions:
+## https://www.r-bloggers.com/internal-functions-in-r-packages/
 
+## Documenting Imports:
+## https://laderast.github.io/2019/02/12/package-building-description-namespace/
+# usethis::use_dev_package("tidyverse/dplyr")
+# usethis::use_package("biomaRt")
 
-
-#' @importFrom base within
-#' @importFrom grDevices colorRampPalette dev.off png
-#' @importFrom graphics hist
-#' @importFrom stats chisq.test complete.cases end fisher.test formula median p.adjust
-#' pairwise.t.test sd setNames start var
-#' @importFrom utils download.file find head install.packages installed.packages read.csv tail write.csv
-#' @importFrom utils sessionInfo
-#'  ‘AnnotationDbi’ ‘AnnotationFilter’ ‘BiocGenerics’ ‘DT’
-
-globalVariables(c("%>%"))
-
-
-
-#' @section general functions:
-#' General use functions for various points in the \emph{echolocatoR} pipeline.
 
 
 
@@ -484,9 +472,6 @@ assign_lead_SNP <- function(new_DT, verbose=T){
 
 # --------------------------
 
-#' @section SNP filters:
-#' Functions to filter subset_DT/finemap_DT with.
-
 
 
 #' Subset LD matrix and dataframe to only their shared SNPs
@@ -668,10 +653,6 @@ snps_to_condition <- function(conditioned_snps, top_SNPs, loci){
 # ---------------
 
 
-#' @section directory functions:
-#' Functions for storing and extracting info about summary statistic dataset paths and metadata attributes.
-
-
 #' @family directory functions
 directory_info <- function(info_path=NULL,
                            dataset_name,
@@ -708,6 +689,7 @@ delete_subset <- function (force_new_subset, subset_path){
 
 
 
+
 #' Make paths for results and subsets
 #'
 #' @family directory functions
@@ -734,4 +716,50 @@ make_results_path <- function(dataset_name,
   } else{return(subset_path)}
 }
 
+
+# -----GenomicRanges ------
+#' Find overlap between genomic coordinates/ranges
+#'
+#'
+GRanges_overlap <- function(finemap_DT,
+                            regions,
+                            chrom_col.1="CHR",
+                            start_col.1="POS",
+                            end_col.1="POS",
+
+                            chrom_col.2="CHR",
+                            start_col.2="start",
+                            end_col.2="end"){
+  library(GenomicRanges)
+  library(BiocGenerics)
+  # consensus.snps <- subset(finemap_DT, Consensus_SNP==T)
+  gr.finemap <- GenomicRanges::makeGRangesFromDataFrame(finemap_DT,
+                                                        seqnames.field = chrom_col.1,
+                                                        start.field = start_col.1,
+                                                        end.field = end_col.1,
+                                                        ignore.strand = T,
+                                                        keep.extra.columns = T)
+
+  if(class(regions)[1]=="GRanges"){
+    gr.regions <- regions
+    GenomeInfoDb::seqlevelsStyle(gr.regions) <- "NCBI"
+  } else{
+    gr.regions <- GenomicRanges::makeGRangesFromDataFrame(regions,
+                                                          seqnames.field = chrom_col.2,
+                                                          start.field = start_col.2,
+                                                          end.field = end_col.2,
+                                                          ignore.strand = T,
+                                                          keep.extra.columns = T)
+  }
+  hits <- GenomicRanges::findOverlaps(query = gr.finemap,
+                                      subject = gr.regions)
+  gr.hits <- gr.regions[ S4Vectors::subjectHits(hits), ]
+  mcols(gr.hits) <- cbind(mcols(gr.hits),
+                          mcols(gr.finemap[S4Vectors::queryHits(hits),]) )
+  # gr.hits <- cbind(mcols(gr.regions[ S4Vectors::subjectHits(hits), ] ),
+  #                         mcols(gr.consensus[S4Vectors::queryHits(hits),]) )
+  message("",nrow(mcols(gr.hits))," query SNP(s) detected with reference overlap." )
+  # print(data.frame(mcols(gr.hits[,c("Name","SNP")])) )
+  return(gr.hits)
+}
 

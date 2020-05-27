@@ -2,8 +2,6 @@
 # Multi-finemap
 # ---------------
 
-#' @section fine-mapping functions:
-#' Functions to conduct fine-mapping and standardize the results.
 
 
 #' Adds fine-mapping summary columns

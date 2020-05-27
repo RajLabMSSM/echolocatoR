@@ -36,9 +36,9 @@ GR.name_filter_convert <- function(GR.final, GR.names, min_hits=1){
   names(GR.final) <- GR.names
   grl <- GR.final[!as.logical(lapply(GR.final, is.null))]
   # Filter to those that had at least N hits
-  grl <- grl[as.logical(lapply(grl, function(g, min_hits.=min_hits){length(seqnames(g)) >= min_hits.}))]
+  grl <- grl[as.logical(lapply(grl, function(g, min_hits.=min_hits){length(GenomicRanges::seqnames(g)) >= min_hits.}))]
   # Convert to GRangesList (important)
-  grl <- GRangesList(grl)
+  grl <- GenomicRanges::GRangesList(grl)
   return(grl)
 }
 
@@ -59,15 +59,15 @@ SNP_track <- function(gr.snp,
   }
   dat <- as.data.frame(gr.snp)
   ### Label set
-  labelSNPs <- construct_SNPs_labels(subset_DT = dat, 
-                                     lead="Lead SNP" %in% labels_subset, 
-                                     consensus="Consensus SNP" %in% labels_subset, 
-                                     method=T,  
+  labelSNPs <- construct_SNPs_labels(subset_DT = dat,
+                                     lead="Lead SNP" %in% labels_subset,
+                                     consensus="Consensus SNP" %in% labels_subset,
+                                     method=T,
                                      remove_duplicates = F)
-  labelSNPs_labels <- construct_SNPs_labels(subset_DT = dat, 
-                                            lead="Lead SNP" %in% labels_subset, 
-                                            consensus="Consensus SNP" %in% labels_subset, 
-                                            method=T,  
+  labelSNPs_labels <- construct_SNPs_labels(subset_DT = dat,
+                                            lead="Lead SNP" %in% labels_subset,
+                                            consensus="Consensus SNP" %in% labels_subset,
+                                            method=T,
                                             remove_duplicates = T)
   leader_SNP <- subset(labelSNPs, type=="Lead SNP")
   CS_set <- subset(labelSNPs, type=="Credible Set")
@@ -121,11 +121,11 @@ SNP_track <- function(gr.snp,
   }
   a1 <- a1 +
     # Add diamond overtop leadSNP
-    geom_point(data=labelSNPs, 
+    geom_point(data=labelSNPs,
                pch=labelSNPs$shape,
-               fill=NA, 
-               size=labelSNPs$size, 
-               color=labelSNPs$color) + 
+               fill=NA,
+               size=labelSNPs$size,
+               color=labelSNPs$color) +
     ### Background color label
     ggrepel::geom_label_repel(data=labelSNPs_labels,
                      aes(label=SNP),
@@ -197,8 +197,8 @@ transcript_model_track <- function(gr.snp_CHR,
                     start >= min(gr.snp_CHR$POS) &
                     end <= max(gr.snp_CHR$POS)) %>%
     GenomicRanges::makeGRangesFromDataFrame(keep.extra.columns = T)
-  db.gr$symbol <- factor(db.gr$symbol, levels = unique(db.gr$symbol), ordered = T) 
-  edb <-  ensembldb::addFilter( EnsDb.Hsapiens.v75::EnsDb.Hsapiens.v75, 
+  db.gr$symbol <- factor(db.gr$symbol, levels = unique(db.gr$symbol), ordered = T)
+  edb <-  ensembldb::addFilter( EnsDb.Hsapiens.v75::EnsDb.Hsapiens.v75,
                                 AnnotationFilter::TxIdFilter(db.gr$tx_id))
   track.genes <- autoplot(edb,
                           # Have to limit (can only handle depth < 1000)
@@ -241,8 +241,8 @@ transcript_model_track <- function(gr.snp_CHR,
 #                     start >= min(gr.snp_CHR$POS) &
 #                     end <= max(gr.snp_CHR$POS)) %>%
 #     GenomicRanges::makeGRangesFromDataFrame(keep.extra.columns = T)
-#   db.gr$symbol <- factor(db.gr$symbol, levels = unique(db.gr$symbol), ordered = T) 
-#   edb <-  ensembldb::addFilter( EnsDb.Hsapiens.v75::EnsDb.Hsapiens.v75, 
+#   db.gr$symbol <- factor(db.gr$symbol, levels = unique(db.gr$symbol), ordered = T)
+#   edb <-  ensembldb::addFilter( EnsDb.Hsapiens.v75::EnsDb.Hsapiens.v75,
 #                                 AnnotationFilter::GeneNameFilter(db.gr$gene_name))
 #   track.genes <- autoplot(edb,
 #                           # Have to limit (can only handle depth < 1000)
@@ -286,13 +286,13 @@ GGBIO.plot <- function(finemap_DT,
                        annot_overlap_threshold=5,
                        PP_threshold=.95,
                        consensus_thresh=2,
-                       
+
                        Nott_sn_epigenome=F,
                        show_regulatory_rects=T,
-                       show_placseq=T, 
+                       show_placseq=T,
                        plot_Nott_binwidth=2500,
                        Nott_bigwig_dir=NULL,
-                       
+
                        save_plot=T,
                        show_plot=T,
                        max_transcripts=1,
@@ -305,9 +305,9 @@ GGBIO.plot <- function(finemap_DT,
   # consensus_thresh=2; XGR_libnames=NULL; mean.PP=T; ROADMAP=F; PP_threshold=.95;  Nott_sn_epigenome=T;  save_plot=T; show_plot=T; method_list=c("ABF","SUSIE","POLYFUN_SUSIE","FINEMAP","mean"); full_data=T;  max_transcripts=3; plot_window=100000;
   # quick_finemap("HIP1R", consensus_thresh);
   # Nott_sn_epigenome=T; show_regulatory_rects=T; show_placseq=T; plot_Nott_binwidth=2500; max_transcripts=1; dpi=400
-  
-   
-  
+
+
+
   # Set up data
   finemap_DT <- find_consensus_SNPs(finemap_DT = finemap_DT,
                                     credset_thresh = PP_threshold,
@@ -317,7 +317,7 @@ GGBIO.plot <- function(finemap_DT,
                                              value = T)) %>% unique()
   method_list <- unique(method_list[method_list %in% available_methods])
   if(mean.PP){method_list <- unique(c(method_list, "mean"))}
-  
+
   # Set window limits
   lead.pos <- subset(finemap_DT, leadSNP)$POS
   if(!is.null(plot_window)){
@@ -335,8 +335,7 @@ GGBIO.plot <- function(finemap_DT,
   DT <- data.table:::merge.data.table(finemap_DT, LD_sub,
                                       by = "SNP", all.x = T)
   # Convert to GRange object
-  DT <- DT %>% dplyr::mutate(SEQnames = paste0("chr",CHR))
-  gr.snp <- biovizBase::transformDfToGr(DT, seqnames = "SEQnames", start = "POS", end = "POS")
+  gr.snp <- DT_to_GRanges(DT)
   gr.snp_CHR <- biovizBase::transformDfToGr(DT, seqnames = "CHR", start = "POS", end = "POS")
 
   # Track 1: GWAS
@@ -360,9 +359,9 @@ GGBIO.plot <- function(finemap_DT,
   # Track 3: Gene Model Track
   # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   # DB tutorial: https://rdrr.io/bioc/ensembldb/f/vignettes/ensembldb.Rmd
-  
+
   # track.genes <- invisible_legend(track.genes)
-  track.genes <- transcript_model_track(gr.snp_CHR, 
+  track.genes <- transcript_model_track(gr.snp_CHR,
                                         max_transcripts = max_transcripts)
   TRACKS_list <- append(TRACKS_list, track.genes)
   names(TRACKS_list)[length(TRACKS_list)] <- "Gene Track"
@@ -389,7 +388,7 @@ GGBIO.plot <- function(finemap_DT,
     adjust <- ifelse(lib=="ENCODE_TFBS_ClusteredV3_CellTypes", .5, .2)
     # facet <-T
     if(facet==F){
-      track.xgr <- ggbio::autoplot(grl.xgr.merged.filt, 
+      track.xgr <- ggbio::autoplot(grl.xgr.merged.filt,
                                    which = gr.snp,
                                    aes(fill=Assay),
                                    # fill = "magenta",
@@ -399,7 +398,7 @@ GGBIO.plot <- function(finemap_DT,
                                    position="stack",
                                    # bins=50,
                                    size=.1,
-                                   alpha = 1) 
+                                   alpha = 1)
     } else {
       track.xgr <- ggbio::autoplot(grl.xgr.merged.filt, which = gr.snp,
                                    aes(fill=Assay),
@@ -420,7 +419,7 @@ GGBIO.plot <- function(finemap_DT,
       scale_fill_manual(values = colorRampPalette(brewer.pal(8, palettes[counter]))(colourCount) ) + #scale_fill_brewer(palette=palettes[1])
       scale_y_continuous(n.breaks = 3) +
       guides(fill = guide_legend(ncol = 2, keyheight = .5, keywidth = .5))
-    
+
     TRACKS_list <- append(TRACKS_list, track.xgr)
     new_name <- paste(strsplit(lib,"_")[[1]], collapse="\n")
     names(TRACKS_list)[length(TRACKS_list)] <- new_name
@@ -437,29 +436,18 @@ GGBIO.plot <- function(finemap_DT,
       printer("+ Saved annotation file detected. Loading...")
       grl.roadmap <- readRDS(anno_path)
     } else {
-      grl.roadmap <- ROADMAP.track(results_path = results_path,
+      grl.roadmap <- ROADMAP.query(results_path = results_path,
                                    gr.snp = gr.snp,
-                                   limit_files=NA)
-      save_annotations(gr = grl.roadmap, anno_path = anno_path, libName = lib)
+                                   limit_files=F)
+      save_annotations(gr = grl.roadmap,
+                       anno_path = anno_path,
+                       libName = lib)
     }
-    grl.roadmap.filt <- ROADMAP.merge_and_process_grl(grl.roadmap,  n_top_tissues=n_top_roadmap)
-    ## Make track
-    track.roadmap <- autoplot(grl.roadmap.filt, which = gr.snp,
-                              aes(fill=ChromState),
-                              color="white",
-                              size=.1,
-                              geom = "density",# density
-                              adjust = 1,
-                              # bins=10,
-                              position="stack",# stack, fill, dodge
-                              facets=Source~.,
-                              alpha=1) +
-      theme_classic() +
-      theme(strip.text.y = element_text(angle = 0),
-            strip.text = element_text(size=9 )) +
-      guides(fill = guide_legend(ncol = 2, keyheight = .5, keywidth = .5)) +
-      scale_y_continuous(n.breaks = 3)
-    
+    grl.roadmap.filt <- ROADMAP.merge_and_process_grl(grl.roadmap,
+                                                      n_top_tissues=n_top_roadmap)
+    # Plot
+    track.roadmap <- ROADMAP.track_plot(grl.roadmap.filt=grl.roadmap.filt,
+                                        gr.snp=gr.snp)
     TRACKS_list <- append(TRACKS_list, track.roadmap)
     names(TRACKS_list)[length(TRACKS_list)] <- "ROADMAP\nChromatinMarks\nCellTypes"
   }
@@ -473,12 +461,12 @@ GGBIO.plot <- function(finemap_DT,
                                                         save_plot=F,
                                                         full_data=T,
                                                         return_assay_track=T,
-                                                        binwidth = plot_Nott_binwidth, 
+                                                        binwidth = plot_Nott_binwidth,
                                                         bigwig_dir=Nott_bigwig_dir)
     TRACKS_list <- append(TRACKS_list, track.Nott_histo)
     names(TRACKS_list)[length(TRACKS_list)] <- "Nott (2019)\nRead Densities"
-     
-    # PLAC-seq 
+
+    # PLAC-seq
     if(show_placseq){
       track.Nott_plac <- NOTT_2019.plac_seq_plot(finemap_DT,
                                                  title=gene,
@@ -487,13 +475,13 @@ GGBIO.plot <- function(finemap_DT,
       TRACKS_list <- append(TRACKS_list, track.Nott_plac)
       names(TRACKS_list)[length(TRACKS_list)] <- "Nott (2019)\nPLAC-seq"
     }
-    
+
   }
 
 
-  # Fuse all tracks 
+  # Fuse all tracks
   heights <- c(.2, # GWAS track
-               rep(.15,length(method_list)), # Fine-mapping tracks 
+               rep(.15,length(method_list)), # Fine-mapping tracks
                .2, # transcript track
                if(!is.null(XGR_libnames))rep(.5,length(XGR_libnames)),
                ifelse(ROADMAP,1,0),
@@ -523,8 +511,8 @@ GGBIO.plot <- function(finemap_DT,
           strip.text = element_text(size = 7),
           panel.background = element_rect(fill = "white", colour = "black", linetype = "solid"),
           plot.subtitle = element_text(color = "turquoise", size = 8)) +
-    scale_x_continuous( labels=function(x)x/1000000)  
-    
+    scale_x_continuous( labels=function(x)x/1000000)
+
   # Save
   if(save_plot){
     window_suffix <- ifelse(is.null(plot_window),"",paste0(plot_window/1000,"kb"))
@@ -536,9 +524,9 @@ GGBIO.plot <- function(finemap_DT,
            height = 12,#+length(XGR_libnames)+n_roadmap+n_Nott,
            width = 10, dpi = dpi, bg = "transparent")
   }
-  
+
   if(show_plot){print(trks_plus_lines)}
-  
+
   return(trks_plus_lines)
 }
 

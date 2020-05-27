@@ -5,10 +5,6 @@
 
 
 
-#' @section conda functions:
-#' Functions for setting up \emph{conda} environments with R, Python, and command line tools.
-
-
 
 #' Install conda if it's missing
 #'

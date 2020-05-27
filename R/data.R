@@ -1,6 +1,6 @@
 
 
-#' echolocatoR output example
+#' echolocatoR output example (one locus)
 #'
 #' An example results file after running \code{\link{finemap_loci}} on the \emph{BST1} locus.
 #' Data originally comes from the Parkinson's disease GWAS
@@ -13,8 +13,33 @@
 #'   \item{POS}{Genomic positiion (in basepairs)}
 #'   ...
 #' }
+#' @examples
+#' finemap_DT <- data.table::fread("../Fine_Mapping/Data/GWAS/Nalls23andMe_2019/BST1/Multi-finemap/Multi-finemap_results.txt")
 #' @source \url{https://www.biorxiv.org/content/10.1101/388165v3}
 "finemap_DT"
+
+
+
+
+
+#' \emph{echolocatoR} output example (all loci)
+#'
+#' An example results file after running \code{\link{finemap_loci}}
+#'  on all Parkinson's disease (PD)-associated loci.
+#' Data originally comes from the PD GWAS
+#' by \href{https://www.biorxiv.org/content/10.1101/388165v3}{Nalls et al. (bioRxiv)}.
+#'
+#' @format data.table
+#' \describe{
+#'   \item{SNP}{SNP RSID}
+#'   \item{CHR}{Chromosome}
+#'   \item{POS}{Genomic positiion (in basepairs)}
+#'   ...
+#' }
+#' @examples
+#' merged_DT <- merge_finemapping_results(dataset = "../Fine_Mapping/Data/GWAS/Nalls23andMe_2019")
+#' @source \url{https://www.biorxiv.org/content/10.1101/388165v3}
+"merged_DT"
 
 
 
@@ -27,6 +52,12 @@
 #' Data from \href{https://www.biorxiv.org/content/10.1101/388165v3}{Nalls et al. (bioRxiv)}, Table S2.
 #' @source  \url{https://www.biorxiv.org/content/10.1101/388165v3}
 "Nalls_top_SNPs"
+
+
+
+
+
+
 
 
 #-------Corces et al. (bioRxiv) data --------

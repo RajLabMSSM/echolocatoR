@@ -17,14 +17,12 @@
 # with Eagle v2.3 phasing based on reference panel HRC r1.1 2016"_
 
 
-#' @section LD functions:
-#' Calculate and/or query linkage disequilibrium (LD) from reference panels,
-#' or user-supplied datasets.
 
 
 #' Procure an LD matrix for fine-mapping
 #'
-#' Download LD from either UK Biobank or 1000 Genomes.
+#' Calculate and/or query linkage disequilibrium (LD) from reference panels (UK Biobank, 1000 Genomes),
+#' or user-supplied datasets.
 #'
 #' Options:
 #' \itemize{

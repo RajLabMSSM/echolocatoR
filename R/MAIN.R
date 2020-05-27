@@ -159,7 +159,11 @@
 
 
 
-#' @section \emph{echolocatoR} main functions:
+#' Run \emph{echolocatoR} pipeline on a single locus
+#'
+#' Unlike \code{finemap_loci}, you don't need to provide a \code{top_SNPs} data.frame.
+#' Instead, just manually provide the coordinates of the locus you want to fine-map.
+#'
 #' The primary functions of \emph{echolocatoR} that expedite fine-mapping
 #'  by wrapping many other \emph{echolocatoR} functions into one.
 #'  Encompasses steps including:
@@ -169,18 +173,20 @@
 #'  \item{Fine-map}{Run various fine-mapping tools and merge the results into a single multi-finemap data.frame.}
 #'  \item{Plot}{Summarise the results in a multi-track plot for each locus.}
 #'  }
-
-
-
-#' Run \emph{echolocatoR} pipeline on a single locus
 #'
-#' Unlike \code{finemap_loci}, you don't need to provide a \code{top_SNPs} data.frame.
-#' Instead, just manually provide the coordinates of the locus you want to fine-map.
 #'
-#' @family MAIN
+#' @section input file parameters:
 #'
 #' @param loci Character list of loci in \strong{Locus} col of \code{top_SNPs}.
 #' @param fullSS_path Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.
+#' @param file_sep The separator in the full summary stats file.
+#' This parameter is only necessary if \code{query_by!="tabix"}.
+#' @param query_by Choose which method you want to use to extract locus subsets from the full summary stats file.
+#' Methods include:
+#' \describe{
+#' \item{"tabix"}{Convert the full summary stats file in an indexed tabix file. Makes querying lightning fast after the initial conversion is done. (\emph{default})}
+#' \item{"coordinates"}{Extract locus subsets using min/max genomic coordinates with \emph{awk}.}
+#' }
 #' @param dataset_name The name you want to assign to the dataset being fine-mapped,
 #' This will be used to name the subdirectory where your results will be stored (e.g. \code{Data/GWAS/<dataset_name>}).
 #' Don't use special characters (e.g.".", "/").
@@ -195,26 +201,9 @@
 #' \item{CHR}{The chromosome that the SNP is on. Can be "chr12" or "12" format.}
 #' \item{POS}{The genomic position of the SNP (in basepairs)}
 #' }
-#' @param force_new_subset By default, if a subset of the full summary stats file for a given locus is already present,
-#' then \emph{echolocatoR} will just use the preexisting file.
-#' Set \code{force_new_subset=T} to override this and extract a new subset.
-#' Subsets are saved in the following path structure: \url{Data/<dataset_type>/<dataset_name>/<locus>/Multi-finemap/<locus>_<dataset_name>_Multi-finemap.tsv.gz}
-#' @param force_new_LD  By default, if an LD matrix file for a given locus is already present,
-#' then \emph{echolocatoR} will just use the preexisting file.
-#' Set \code{force_new_LD=T} to override this and extract a new subset.
-#' @param force_new_finemap By default, if an fine-mapping results file for a given locus is already present,
-#' then \emph{echolocatoR} will just use the preexisting file.
-#' Set \code{force_new_finemap=T} to override this and re-run fine-mapping.
-#' @param finemap_methods Which fine-mapping methods you want to use.
-#' @param bp_distance The width of the window size you want each locus to be.
-#' For example, if \code{bp_distance=500000} then the locus will span 500kb from the lead SNP in either direction,
-#' resulting in a locus that is ~1Mb long (depending on the dataset).
-#' @param n_causal The maximum number of potential causal SNPs per locus.
-#' This parameter is used somewhat differntly by different fine-mapping tools.
-#' See tool-specific functions for details.
-#' @param sample_size The overall sample size of the study.
-#' If none is given, and \strong{N_cases} and \strong{N_controls} columns are present,
-#' then sample_size is inferred to be \code{max(N_cases) + max(N_controls)}.
+#'
+#' @section input file column names:
+#'
 #' @param chrom_col Name of the chromosome column in the full summary stats file.
 #' @param position_col Name of the genomic position column in the full summary stats file.
 #' @param snp_col Name of the SNP RSID column in the full summary stats file.
@@ -251,12 +240,13 @@
 #'   giving the same SNP a value of -1.2. If you took the effect sizes at face value you'd say the signals are in opposite directions.
 #'   But once you take into account how the valences were determined in each study you realize that they're actually both positive relative to the major allele.}
 #'  }
-#'  This process of reversing per-SNP valences based on aligning the alleles is known as allele flipping. This is important when comparing individual SNPs, but can also have an impact on colocalization results.
-#'  @param N_cases_col Name of the column in the full summary stats that has the number of case subjects in the study.
-#'  This can either be per SNP sample sizes, or one number repeated across all rows.
-#'  Proxy cases (e.g. relatives of people with the disease being investigated) should be included in this estimate if any were used in the study.
-#'  This column is not necesssary if \code{N_cases} parameter is provided.
-#'  @param N_controls_col Name of the column in the full summary stats that has the number of control subjects in the study.
+#' This process of reversing per-SNP valences based on aligning the alleles is known as allele flipping.
+#' This is important when comparing individual SNPs, but can also have an impact on colocalization results.
+#' @param N_cases_col Name of the column in the full summary stats that has the number of case subjects in the study.
+#' This can either be per SNP sample sizes, or one number repeated across all rows.
+#' Proxy cases (e.g. relatives of people with the disease being investigated) should be included in this estimate if any were used in the study.
+#' This column is not necesssary if \code{N_cases} parameter is provided.
+#' @param N_controls_col Name of the column in the full summary stats that has the number of control subjects in the study.
 #'  This can either be per SNP sample sizes, or one number repeated across all rows.
 #'  This column is not necesssary if \code{N_controls} parameter is provided.
 #'   @param N_cases The number of case subjects in the study.
@@ -265,6 +255,67 @@
 #'  Instead of providing a reudundant \strong{N_controls_col} column, you can simply enter one value here.
 #'  @param proportion_cases The proportion of total subjects in the study that were cases.
 #'  if \code{proportion_cases="calculate"} then this is inferred:  \code{N_controls / N_controls}.
+#'  #' @param sample_size The overall sample size of the study.
+#' If none is given, and \strong{N_cases} and \strong{N_controls} columns are present,
+#' then sample_size is inferred to be \code{max(N_cases) + max(N_controls)}.
+#'
+#' @section overwrite existing files:
+#'
+#' @param force_new_subset By default, if a subset of the full summary stats file for a given locus is already present,
+#' then \emph{echolocatoR} will just use the preexisting file.
+#' Set \code{force_new_subset=T} to override this and extract a new subset.
+#' Subsets are saved in the following path structure: \url{Data/<dataset_type>/<dataset_name>/<locus>/Multi-finemap/<locus>_<dataset_name>_Multi-finemap.tsv.gz}
+#' @param force_new_LD  By default, if an LD matrix file for a given locus is already present,
+#' then \emph{echolocatoR} will just use the preexisting file.
+#' Set \code{force_new_LD=T} to override this and extract a new subset.
+#' @param force_new_finemap By default, if an fine-mapping results file for a given locus is already present,
+#' then \emph{echolocatoR} will just use the preexisting file.
+#' Set \code{force_new_finemap=T} to override this and re-run fine-mapping.
+#'
+#' @section fine-mapping parameters:
+#'
+#' @param finemap_methods Which fine-mapping methods you want to use.
+#' @param bp_distance The width of the window size you want each locus to be.
+#' For example, if \code{bp_distance=500000} then the locus will span 500kb from the lead SNP in either direction,
+#' resulting in a locus that is ~1Mb long (depending on the dataset).
+#' @param n_causal The maximum number of potential causal SNPs per locus.
+#' This parameter is used somewhat differntly by different fine-mapping tools.
+#' See tool-specific functions for details.
+#' @param probe_path The location of the file containing translations between probe IDs and gene symbols.
+#' Only used for certain eQTL datasets.
+#' @param conditioned_snps Which SNPs to conditions on when fine-mapping with \emph{COJO}.
+#' @param PAINTOR_QTL_datasets A list of QTL datasets to be used when conducting joint functional fine-mapping with \emph{PAINTOR}.
+#' @param PP_threshold The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
+#' For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.
+#'
+#' @section SNP filtering parameters:
+#'
+#' @param min_POS Manually set the minimum genomic position for your locus subset.
+#' \code{min_POS} can clip the window size set by \code{bp_distance}.
+#' Only use this parameter when fine-mapping one locus at a time.
+#' @param max_POS Manually set the maximum genomic position for your locus subset.
+#' \code{max_POS} can clip the window size set by \code{bp_distance}.
+#' Only use this parameter when fine-mapping one locus at a time.
+#' @param min_MAF Remove any SNPs with \strong{MAF} < \code{min_MAF}.
+#' @param trim_gene_limits If a valid gene symbol is provided to \code{trim_gene_limits},
+#' the gene's canonical coordinates are pulled from \code{biomaRt}.
+#' This includes introns, exons, and proximal regulatory regions (e.g. promoters).
+#' Any SNPs that fall outside these coordinates are remove from downstream fine-mapping.
+#' Set \code{trim_gene_limits=F} to not limit by gene coordinates (\emph{default}).
+#' @param max_snps The maximum number of SNPs to include in the locus.
+#' If the current window size yields > \code{max_snps},
+#'  then the outer edges of the of the locus are trimmed until the number of SNPs ≤ \code{max_snps}.
+#' @param min_r2 Remove any SNPs are below the LD r2 threshold with the lead SNP within their respective locus.
+#' @param LD_block Calculate LD blocks with \emph{plink} and only include the block to which the lead SNP belongs.
+#' @param LD_block_size Adjust the granularity of block sizes when \code{LD_block=T}.
+#' @param min_Dprime Remove any SNPs are below the LD D' threshold with the lead SNP within their respective locus.
+#' This is paramter currently only works when \code{LD_reference!="UKB"}.
+#' @param remove_variants A list of variants to remove from the locus subset file.
+#' @param remove_correlates If \code{remove_correlates} is set to a value between 0-1,
+#' removes any SNPs that are in LD with any of the \code{remove_variants} above the threshold provided by \code{remove_correlates}.
+#'
+#' @section LD parameters:
+#'
 #'  @param LD_reference Which linkage disequilibrium reference panel do you want to use.
 #'  Options include:
 #'  \describe{
@@ -285,58 +336,29 @@
 #' @param download_reference When acquiring LD matrixes,
 #'  the default is to delete the full vcf or npz files after \emph{echolocator} has extracted the necssary subset.
 #'  However, if you wish to keep these full files (which can be quite large) set \code{download_reference=T}.
-#' @param min_POS Manually set the minimum genomic position for your locus subset.
-#' \code{min_POS} can clip the window size set by \code{bp_distance}.
-#' Only use this parameter when fine-mapping one locus at a time.
-#' @param max_POS Manually set the maximum genomic position for your locus subset.
-#' \code{max_POS} can clip the window size set by \code{bp_distance}.
-#' Only use this parameter when fine-mapping one locus at a time.
-#' @param min_MAF Remove any SNPs with \strong{MAF} < \code{min_MAF}.
-#' @param trim_gene_limits If a valid gene symbol is provided to \code{trim_gene_limits},
-#' the gene's canonical coordinates are pulled from \code{biomaRt}.
-#' This includes introns, exons, and proximal regulatory regions (e.g. promoters).
-#' Any SNPs that fall outside these coordinates are remove from downstream fine-mapping.
-#' Set \code{trim_gene_limits=F} to not limit by gene coordinates (\emph{default}).
-#' @param max_snps The maximum number of SNPs to include in the locus.
-#' If the current window size yields > \code{max_snps},
-#'  then the outer edges of the of the locus are trimmed until the number of SNPs ≤ \code{max_snps}.
-#' @param file_sep The separator in the full summary stats file.
-#' This parameter is only necessary if \code{query_by!="tabix"}.
-#' @param min_r2 Remove any SNPs are below the LD r2 threshold with the lead SNP within their respective locus.
-#' @param LD_block Calculate LD blocks with \emph{plink} and only include the block to which the lead SNP belongs.
-#' @param LD_block_size Adjust the granularity of block sizes when \code{LD_block=T}.
-#' @param min_Dprime Remove any SNPs are below the LD D' threshold with the lead SNP within their respective locus.
-#' This is paramter currently only works when \code{LD_reference!="UKB"}.
-#' @param query_by Choose which method you want to use to extract locus subsets from the full summary stats file.
-#' Methods include:
-#' \describe{
-#' \item{"tabix"}{Convert the full summary stats file in an indexed tabix file. Makes querying lightning fast after the initial conversion is done. (\emph{default})}
-#' \item{"coordinates"}{Extract locus subsets using min/max genomic coordinates with \emph{awk}.}
-#' }
-#' @param remove_variants A list of variants to remove from the locus subset file.
-#' @param remove_correlates If \code{remove_correlates} is set to a value between 0-1,
-#' removes any SNPs that are in LD with any of the \code{remove_variants} above the threshold provided by \code{remove_correlates}.
-#' @param probe_path The location of the file containing translations between probe IDs and gene symbols.
-#' Only used for certain eQTL datasets.
-#' @param conditioned_snps Which SNPs to conditions on when fine-mapping with \emph{COJO}.
 #' @param plot_LD Whether to plot a subset of the LD matix.
-#' @param verbose Whether \emph{echolocatoR} should be verbose or silent.
-#' @param remove_tmps Whether to remove any temporary files (e.g. FINEMAP output files) after the pipeline is done running.
+#'
+#' @section plotting parameters:
+#'
 #' @param plot_types Which kinds of plots to include.
 #' Options:
 #' \describe{
 #' \item{"simple"}{Just plot the following tracks: GWAS, fine-mapping, gene models, and brain cell type-specific epigenomic data from Nott et al. (2019).}
 #' \item{"fancy"}{Additionally plot XGR annotation tracks.}
 #' }
-#' @param PAINTOR_QTL_datasets A list of QTL datasets to be used when conducting joint functional fine-mapping with \emph{PAINTOR}.
-#' @param server
-#' Whether \emph{echolocatoR} is being run on a computing cluster/server or on a local machine.
-#' @param PP_threshold The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
-#' For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.
 #' @param plot_window Zoom into the center of the locus when plotting (without editing the fine-mapping results file).
 #' @param plot_Nott_binwidth When including Nott et al. (2019) epigenomic data in the track plots,
 #' adjust the bin width of the histograms.
 #' @param Nott_bigwig_dir Instead of pulling Nott et al. (2019) epigenomic data from the UCSC Genome Browsers, use a set of local bigwig files.
+#'
+#' @section general parameters:
+#'
+#' @param verbose Whether \emph{echolocatoR} should be verbose or silent.
+#' @param remove_tmps Whether to remove any temporary files (e.g. FINEMAP output files) after the pipeline is done running.
+#' @param server
+#' Whether \emph{echolocatoR} is being run on a computing cluster/server or on a local machine.
+#'
+#' @family MAIN
 finemap_pipeline <- function(locus,
                              fullSS_path,
                              dataset_name,

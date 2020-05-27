@@ -64,6 +64,24 @@ Can be inferred from \strong{freq_col} if missing from the dataset.}
 Effect allele frequency is preferred, but the non-effect allele can be provided instead (though this may be less accurate).
 This column is not necessary unless \code{MAF_col="calculate"} or the MAF column is missing.}
 
+\item{N_cases_col}{Name of the column in the full summary stats that has the number of case subjects in the study.
+This can either be per SNP sample sizes, or one number repeated across all rows.
+Proxy cases (e.g. relatives of people with the disease being investigated) should be included in this estimate if any were used in the study.
+This column is not necesssary if \code{N_cases} parameter is provided.}
+
+\item{N_controls_col}{Name of the column in the full summary stats that has the number of control subjects in the study.
+ This can either be per SNP sample sizes, or one number repeated across all rows.
+ This column is not necesssary if \code{N_controls} parameter is provided.
+  @param N_cases The number of case subjects in the study.
+ Instead of providing a reudundant \strong{N_cases_col} column, you can simply enter one value here.
+ @param N_controls The number of control subjects in the study.
+ Instead of providing a reudundant \strong{N_controls_col} column, you can simply enter one value here.
+ @param proportion_cases The proportion of total subjects in the study that were cases.
+ if \code{proportion_cases="calculate"} then this is inferred:  \code{N_controls / N_controls}.
+ #' @param sample_size The overall sample size of the study.
+If none is given, and \strong{N_cases} and \strong{N_controls} columns are present,
+then sample_size is inferred to be \code{max(N_cases) + max(N_controls)}.}
+
 \item{A1_col}{Name of the effect/risk allele column in the full summary stats.
 Unfortunately, different studies report different kinds of allele information in a non-standardized way.
 Meaning that A1/A2 can refer to any number of things:
@@ -83,37 +101,8 @@ Meaning that A1/A2 can refer to any number of things:
   giving the same SNP a value of -1.2. If you took the effect sizes at face value you'd say the signals are in opposite directions.
   But once you take into account how the valences were determined in each study you realize that they're actually both positive relative to the major allele.}
  }
- This process of reversing per-SNP valences based on aligning the alleles is known as allele flipping. This is important when comparing individual SNPs, but can also have an impact on colocalization results.
- @param N_cases_col Name of the column in the full summary stats that has the number of case subjects in the study.
- This can either be per SNP sample sizes, or one number repeated across all rows.
- Proxy cases (e.g. relatives of people with the disease being investigated) should be included in this estimate if any were used in the study.
- This column is not necesssary if \code{N_cases} parameter is provided.
- @param N_controls_col Name of the column in the full summary stats that has the number of control subjects in the study.
- This can either be per SNP sample sizes, or one number repeated across all rows.
- This column is not necesssary if \code{N_controls} parameter is provided.
-  @param N_cases The number of case subjects in the study.
- Instead of providing a reudundant \strong{N_cases_col} column, you can simply enter one value here.
- @param N_controls The number of control subjects in the study.
- Instead of providing a reudundant \strong{N_controls_col} column, you can simply enter one value here.
- @param proportion_cases The proportion of total subjects in the study that were cases.
- if \code{proportion_cases="calculate"} then this is inferred:  \code{N_controls / N_controls}.
- @param LD_reference Which linkage disequilibrium reference panel do you want to use.
- Options include:
- \describe{
- \item{"UKB"}{A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See \href{https://www.biorxiv.org/content/10.1101/807792v2}{Wiessbrod et al. (2019)} for more details.}
- \item{"1KG_Phase1"}{Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.}
- \item{"1KG_Phase3"}{Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.}
- }
- @param superpopulation Subset your LD reference panel by superopulation.
- Setting the superpopulation is not currently possible when \code{LD_reference="UKB"}.
- \href{https://www.internationalgenome.org/faq/which-populations-are-part-your-study/}{1KG_Phase1 options} include:
- \describe{
- \item{"AFR"}{African [descent]}
- \item{"AMR"}{Ad-mixed American}
- \item{"EAS"}{East Asian}
- \item{"EUR"}{European}
- \item{"SAS"}{South Asian}
- }}
+This process of reversing per-SNP valences based on aligning the alleles is known as allele flipping.
+This is important when comparing individual SNPs, but can also have an impact on colocalization results.}
 
 \item{verbose}{Whether \emph{echolocatoR} should be verbose or silent.}
 }

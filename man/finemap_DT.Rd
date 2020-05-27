@@ -3,7 +3,7 @@
 \docType{data}
 \name{finemap_DT}
 \alias{finemap_DT}
-\title{echolocatoR output example}
+\title{echolocatoR output example (one locus)}
 \format{
 data.table
 \describe{
@@ -23,5 +23,8 @@ finemap_DT
 An example results file after running \code{\link{finemap_loci}} on the \emph{BST1} locus.
 Data originally comes from the Parkinson's disease GWAS
 by \href{https://www.biorxiv.org/content/10.1101/388165v3}{Nalls et al. (bioRxiv)}.
+}
+\examples{
+finemap_DT <- data.table::fread("../Fine_Mapping/Data/GWAS/Nalls23andMe_2019/BST1/Multi-finemap/Multi-finemap_results.txt")
 }
 \keyword{datasets}

@@ -3,11 +3,6 @@
 # %%%%%%%%%%%%%%%%% #
 
 
-#' @section query functions:
-#' Various methods for extracting locus-specific subsets of the full summary statistics file.
-#'
-
-
 #' Import top GWAS/QTL summary statistics
 #'
 #' The resulting top_SNPs data.frame can be used to guide

@@ -1,10 +1,5 @@
 
 
-#' @section tabix functions:
-#' An extension of the query functions, specific to using \emph{tabix}.
-#'
-#'
-
 
 #' Convert summary stats file to tabix format
 #'

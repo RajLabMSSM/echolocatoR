@@ -13,7 +13,7 @@ NOTT_2019.epigenomic_histograms <- function(finemap_DT,
                                             save_plot=T,
                                             full_data=T,
                                             return_assay_track=F,
-                                            binwidth=2500, 
+                                            binwidth=2500,
                                             geom="histogram",
                                             plot_formula="Assay + Cell_type ~.",
                                             bigwig_dir=NULL){
@@ -23,7 +23,7 @@ NOTT_2019.epigenomic_histograms <- function(finemap_DT,
   # GLASS DATA: UCSC GB
   # https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf
   # show_plot=T;save_plot=T;full_data=T;return_assay_track=F;binwidth=2500; geom="histogram";plot_formula="Assay + Cell_type ~.";show_regulatory_rects=T
-  
+
   # UCSC Tracks
   import.bw.filt <- function(bw.file, gr.dat, full_data=T){
     if(full_data){
@@ -47,11 +47,11 @@ NOTT_2019.epigenomic_histograms <- function(finemap_DT,
   # bigWigFiles <- subset(bigWigFiles, marker!="-" &  cell_type!="peripheral microglia")
   bigWigFiles <- dplyr::mutate(bigWigFiles, cell_type = gsub(" ",".",cell_type))
   # Authors have since removed this from UCSC, but I saved it on Minerva beforehand.
-  subset(bigWigFiles, cell_type!="peripheral.PU1+") 
+  subset(bigWigFiles, cell_type!="peripheral.PU1+")
 
 
-   
-  
+
+
   # Convert finemap data to granges
   dat <- finemap_DT
   dat$seqnames <- paste0("chr",dat$CHR)
@@ -61,12 +61,12 @@ NOTT_2019.epigenomic_histograms <- function(finemap_DT,
                                                     start.field = "start.end",
                                                     end.field = "start.end",
                                                     keep.extra.columns = T)
-  
+
   bw.grlist <- parallel::mclapply(1:nrow(bigWigFiles), function(i){
     if(!is.null(bigwig_dir)){
       bw.file <- file.path(bigwig_dir,paste0(bigWigFiles$long_name[i],".ucsc.bigWig"))
     } else { bw.file <- bigWigFiles$data_link[i]}
-   
+
     bw.name <- gsub("_pooled|pooled_","",bigWigFiles$name[i])
     printer("GVIZ:: Importing...",bw.name)
     bw.filt <- import.bw.filt(bw.file=bw.file,
@@ -88,8 +88,8 @@ NOTT_2019.epigenomic_histograms <- function(finemap_DT,
   # merge into a single granges object
   # gr.snp <- Reduce(function(x, y) GenomicRanges::merge(x, y, all.x=T),
   #                  append(bw.grlist, gr.dat))
-  
-  # GenomicRanges::findOverlaps(query = subset(gr.dat, Support>1), 
+
+  # GenomicRanges::findOverlaps(query = subset(gr.dat, Support>1),
   #                             subject = bw.gr)
 
   nott_tracks <-  ggbio::autoplot(object=bw.gr,
@@ -98,13 +98,13 @@ NOTT_2019.epigenomic_histograms <- function(finemap_DT,
                                   # facets=Cell_type ~ .,
                                   # scales="free_y",
                                   # bins=300,
-                                  binwidth=binwidth, 
+                                  binwidth=binwidth,
                                   alpha=.7,
                                   position="identity",
                                   aes(fill=Cell_type), show.legend=T) +
-    facet_grid(facets = formula(plot_formula)) +  
+    facet_grid(facets = formula(plot_formula)) +
     theme(legend.position="right", strip.text.y = element_text(angle = 0))
-  
+
   if(return_assay_track){ return(nott_tracks)}
 
 
@@ -285,7 +285,7 @@ NOTT_2019.get_regulatory_regions <- function(finemap_DT,
     # subset(chr== paste0("chr",unique(finemap_DT$CHR)) &
     #                     start>=min(finemap_DT$POS) &
     #                     end<=max(finemap_DT$POS) ) %>%
-    tidyr::separate(Name, into=c("Cell_type","Element"), remove=F) %>% 
+    tidyr::separate(Name, into=c("Cell_type","Element"), remove=F) %>%
     dplyr::mutate(middle=as.integer( end-abs(end-start)/2) )
   if(as.granges){
     regions_sub <- GenomicRanges::makeGRangesFromDataFrame(df = regions_sub,#dplyr::mutate(regions_sub, chr = as.numeric(gsub("chr","",chr))),
@@ -293,44 +293,12 @@ NOTT_2019.get_regulatory_regions <- function(finemap_DT,
                                                      start.field = "start",
                                                      end.field = "end",
                                                      keep.extra.columns = T)
-    
-  } 
+
+  }
   return(regions_sub)
 }
 
-NOTT_2019.report_regulatory_overlap <- function(finemap_DT, regions){
-  library(GenomicRanges)
-  library(BiocGenerics) 
-  # consensus.snps <- subset(finemap_DT, Consensus_SNP==T) 
-  gr.finemap <- GenomicRanges::makeGRangesFromDataFrame(finemap_DT, 
-                                                          seqnames.field = "CHR", 
-                                                          start.field = "POS", end.field = "POS",
-                                                          ignore.strand = T,
-                                                          keep.extra.columns = T)
-  
-  if(class(regions)[1]=="GRanges"){
-    gr.regions <- regions 
-    GenomeInfoDb::seqlevelsStyle(gr.regions) <- "NCBI"
-  } else{
-    gr.regions <- GenomicRanges::makeGRangesFromDataFrame(regions, 
-                                                          seqnames.field = "CHR", 
-                                                          start.field = "start", end.field = "end",
-                                                          ignore.strand = T,
-                                                          keep.extra.columns = T) 
-  }
-  
-  hits <- GenomicRanges::findOverlaps(query = gr.finemap,
-                                      subject = gr.regions) 
-  
-  gr.hits <- gr.regions[ S4Vectors::subjectHits(hits), ] 
-  mcols(gr.hits) <- cbind(mcols(gr.hits),
-                          mcols(gr.finemap[S4Vectors::queryHits(hits),]) )
-  # gr.hits <- cbind(mcols(gr.regions[ S4Vectors::subjectHits(hits), ] ),
-  #                         mcols(gr.consensus[S4Vectors::queryHits(hits),]) )
-  message("",nrow(mcols(gr.hits))," query SNP(s) detected with reference overlap." )
-  # print(data.frame(mcols(gr.hits[,c("Name","SNP")])) )
-  return(gr.hits)
-}
+
 
 # ***************************** #
 NOTT_2019.plac_seq_plot <- function(finemap_DT=NULL,
@@ -342,11 +310,11 @@ NOTT_2019.plac_seq_plot <- function(finemap_DT=NULL,
                                      zoom_window=NULL,
                                      index_SNP=NULL,
                                      return_consensus_overlap=T,
-                                     show_arches=T, 
+                                     show_arches=T,
                                      show_regulatory_rects=T){
   #  quick_finemap()
   # print_plot=T; save_plot=T; title=NULL; index_SNP=NULL; xlims=NULL; zoom_window=NULL; return_consensus_overlap =T
-  
+
   library(ggbio)
   marker_key <- list(PU1="Microglia",
                      Olig2="Oligo",
@@ -386,21 +354,21 @@ NOTT_2019.plac_seq_plot <- function(finemap_DT=NULL,
                                             top.consensus.pos =  top.consensus.pos,
                                             marker_key = marker_key)
   # interactions <- NOTT_2019.get_interactions(finemap_DT = finemap_DT)
-  
-  
-  
+
+
+
   ## $$$$$ HERE $$$$$$ : use for fig 1, third col
-  regions <- NOTT_2019.get_regulatory_regions(finemap_DT = finemap_DT, 
-                                              as.granges = T)  
-  regions <- subset(regions, seqnames(regions) %in% paste0("chr",unique(finemap_DT$CHR)) & 
+  regions <- NOTT_2019.get_regulatory_regions(finemap_DT = finemap_DT,
+                                              as.granges = T)
+  regions <- subset(regions, seqnames(regions) %in% paste0("chr",unique(finemap_DT$CHR)) &
                    start(regions)>=min(finemap_DT$POS) &
                    end(regions)<=max(finemap_DT$POS))
-  # Report overlap 
-  printer("+ NOTT_2019:: Evaluating Consensus SNP overlap with regulatory elements...") 
-  gr.hits <- NOTT_2019.report_regulatory_overlap(finemap_DT=subset(finemap_DT, Consensus_SNP==T),
-                                                regions=regions)
-  
- 
+  # Report overlap
+  printer("+ NOTT_2019:: Evaluating Consensus SNP overlap with regulatory elements...")
+  gr.hits <- GRanges_overlap(finemap_DT=subset(finemap_DT, Consensus_SNP==T),
+                             regions=regions)
+
+
 
   ####### Assemble Tracks #######
   # GWAS track
@@ -421,9 +389,9 @@ NOTT_2019.plac_seq_plot <- function(finemap_DT=NULL,
 
   # Nott:  interactions
   # Nott_interactions
-  NOTT.interact_trk <- ggbio::ggbio() + 
+  NOTT.interact_trk <- ggbio::ggbio() +
     ggbio::geom_arch(data = interact.DT, alpha=.6, color="gray60", max.height = 10,
-                                        aes(x=Start, xend=End)) + 
+                                        aes(x=Start, xend=End)) +
     facet_grid(facets = Cell_type~.) +
     # scale_y_reverse() +
     # scale_colour_brewer(palette = "Set2") +
@@ -431,11 +399,11 @@ NOTT_2019.plac_seq_plot <- function(finemap_DT=NULL,
     # labs(subtitle = paste0(annot_sub$Annotation[[1]]," - ",promoter_celltypes) ) +
     theme(legend.key.width=unit(1.5,"line"),
           legend.key.height=unit(1.5,"line"),
-          axis.text.y = element_blank() )  
+          axis.text.y = element_blank() )
     # xlim(c(40500000, 40700000))
-  
+
   if(show_regulatory_rects){
-    NOTT.interact_trk <- NOTT.interact_trk + 
+    NOTT.interact_trk <- NOTT.interact_trk +
       ggbio::geom_rect(data = regions,
                        aes(xmin=start, xmax=end, ymin=-1, ymax=1, fill=Element), alpha=.8, inherit.aes=F) +
       scale_fill_manual(values = c("turquoise2", "purple2")) +
@@ -444,7 +412,7 @@ NOTT_2019.plac_seq_plot <- function(finemap_DT=NULL,
       scale_color_manual(values = c("turquoise","purple")) +
       geom_hline(yintercept = Inf, alpha=.2, show.legend = F)
   }
-  
+
 
   if(return_interaction_track){
     printer("++ Nott sn-epigenomics:: Returning PLAC-seq track.")

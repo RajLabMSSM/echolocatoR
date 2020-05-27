@@ -1,7 +1,5 @@
 
 
-#' @section download functions:
-#' R wrappers for faster downloading software
 
 #' wget
 #'

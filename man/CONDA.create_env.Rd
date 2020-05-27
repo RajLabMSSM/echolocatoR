@@ -18,6 +18,7 @@ By default uses \emph{echoR}, the conda environment distributed with \emph{echol
 }
 \seealso{
 Other conda functions: 
-\code{\link{CONDA.activate_env}()}
+\code{\link{CONDA.activate_env}()},
+\code{\link{CONDA.install}()}
 }
 \concept{conda functions}

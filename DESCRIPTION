@@ -2,7 +2,6 @@ Package: echolocatoR
 Type: Package
 Title: Automated genomic fine-mapping
 Version: 0.1.0
-Author: Brian M. Schilder
 Authors@R: as.person(c(
     "Brian Schilder <brian_schilder@alumni.brown.edu> [aut, cre]"
   ))
@@ -12,10 +11,11 @@ URL: https://github.com/RajLabMSSM/echolocatoR
 BugReports: https://github.com/RajLabMSSM/echolocatoR/issues
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 3.1.0)
+Depends: R (>= 3.5.0)
 SystemRequirements: Python (>= 3.7.0)
 biocViews:
 Imports: 
+    magrittr,
     R.utils,
     dplyr,
     data.table,

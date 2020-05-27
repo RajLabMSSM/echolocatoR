@@ -11,6 +11,7 @@ Activate conda env
 }
 \seealso{
 Other conda functions: 
-\code{\link{CONDA.create_env}()}
+\code{\link{CONDA.create_env}()},
+\code{\link{CONDA.install}()}
 }
 \concept{conda functions}
