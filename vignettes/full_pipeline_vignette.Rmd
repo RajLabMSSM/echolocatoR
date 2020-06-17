@@ -18,6 +18,8 @@ knitr::opts_chunk$set(
 )  
 knitr::opts_knit$set(root.dir = root.dir)
 # knitr::opts_chunk$get("root.dir")
+# devtools::build_vignettes(quiet = F, clean=F)
+# devtools::build()
 ```
 
 ```{r setup, root.dir="~/Desktop"}

@@ -64,8 +64,8 @@ trk_plot <- GGBIO.plot(finemap_dat=finemap_DT,
                        XGR_libnames=NULL, 
                        save_plot=F,
                        show_plot=F)
-trk_plot + theme(strip.background = element_rect(fill="gray"),
-                 text = element_text(size = 3, color="blue"))
+trk_plot <- trk_plot + theme(strip.background = element_rect(fill="gray"),
+                             text = element_text(size = 3, color="blue"))
 ```
 
 ## Using only XGR annotations  
@@ -81,7 +81,7 @@ trk_plot.xgr <- GGBIO.plot(finemap_dat=finemap_DT,
                            locus_dir=locus_dir, 
                            XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes"), 
                            save_plot=F,
-                           show_plot=T)
+                           show_plot=F)
 ```
 
 ## Using only Roadmap annotations
@@ -94,7 +94,7 @@ trk_plot.roadmap <- GGBIO.plot(finemap_dat=finemap_DT,
                                Roadmap=T, 
                                Roadmap_query="monocyte", 
                                save_plot=F, 
-                               show_plot=T)
+                               show_plot=F)
 ```
 
 
@@ -113,6 +113,6 @@ trk_plot.nott_2019 <- GGBIO.plot(finemap_dat=finemap_DT,
                                  Nott_regulatory_rects = T, 
                                  Nott_show_placseq = T,
                                  save_plot=F,
-                                 show_plot=T)
+                                 show_plot=F)
 ```
 
