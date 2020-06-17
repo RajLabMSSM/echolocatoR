@@ -1,20 +1,4 @@
----
-title: "echolocatoR: full pipeline vignette"
-knit: (function(input_file, encoding) {
-  out_dir <- 'docs';
-  rmarkdown::render(input_file,
-  encoding=encoding,
-  output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
-author: "Brian M. Schilder"
-date: "Most Recent Update:<br> `r Sys.Date()`"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{full_pipeline_vignette}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
----
-
-```{r, include = FALSE} 
+## ---- include = FALSE---------------------------------------------------------
 root.dir <- "~/Desktop"
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -30,22 +14,11 @@ knitr::opts_knit$set(root.dir = root.dir)
 # devtools::build_vignettes(quiet = F, clean=F)
 #
 # devtools::build()
-```
 
-```{r setup, root.dir="~/Desktop"}
+## ----setup, root.dir="~/Desktop"----------------------------------------------
 library(echolocatoR) 
-```
 
-# Full pipeline
-
-## Prepare `top_SNPs` data.frame
-
-* To enable rapid fine-mapping of many loci, you can create a `top_SNPs` data.frame  
-which contains the position of the lead/index SNP within each locus.
-* `finemap_loci()` (see next step) will then use this info to extract subsets of the   
-full GWAS/QTL summary statistics using windows centered on each lead/index SNP.
-
-```{r  Prepare `top_SNPs` data.frame} 
+## ----Prepare `top_SNPs` data.frame--------------------------------------------
 data("Nalls_top_SNPs");
 top_SNPs <- import_topSNPs(
   # topSS = "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/Nalls2019_TableS2.xlsx",
@@ -55,20 +28,8 @@ top_SNPs <- import_topSNPs(
   group_by_locus = T,
   locus_col = "Locus Number",
   remove_variants = "rs34637584") 
-```
- 
 
-## Run fine-mapping pipeline
-
-For a full description of all arguments, see `?finemap_loci`.  
-
-Here are some key arguments:  
-* *results_dir*: Where you want to store all of your results.  
-* *finemap_methods*: Which fine-mapping methods you want to run (currently includes ABF, FINEMAP, SUSIE, POLYFUN_SUSIE, and COJO).  
-* *bp_distance*: Controls window size. Specifically, `bp_distance` is the number of basepairs upstream/downstream you want to extract for each locus. For example, if you want a 2Mb window (+/- 1Mb from the lead/index SNP in `top_SNPs`), set `bp_distance=1e+06`.  
-* *plot.window*: Zoom in/out from the center of each locus when producing the multiview plot.  
-You can adjust this separately from `bp_distance` so that you don't have rerun the whole pipeline each time (locus subsets, LD matrices, and fine-mapping results are all automatically saved in locus-specific folders).  
-```{r Run fine-mapping pipeline}
+## ----Run fine-mapping pipeline------------------------------------------------
 Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS 
                                           top_SNPs = top_SNPs, 
                                           results_dir = "~/Desktop/results",
@@ -117,8 +78,4 @@ Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS
                  plot.Nott_epigenome = T, 
                  plot.Nott_binwidth = 100
                  )
-```
-
-
-
 
