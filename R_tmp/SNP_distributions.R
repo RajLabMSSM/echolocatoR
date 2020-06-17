@@ -5,7 +5,7 @@ library(ggplot2)
 
 #
 # merged_results <- readxl::read_excel("~/Desktop/Fine_Mapping/Data/annotated_results_table.xlsx")
-# finemap_DT <- data.table::fread("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/LRRK2/Multi-finemap/Multi-finemap_results.txt")
+# finemap_dat <- data.table::fread("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/LRRK2/Multi-finemap/Multi-finemap_results.txt")
 # merged_results <- merge_finemapping_results(minimum_support=1,
 #                                             include_leadSNPs=T,
 #                                             xlsx_path="./Data/annotated_finemapping_results.xlsx",
@@ -27,7 +27,7 @@ gather_locus_report <- function(){
     report <- data.frame(Locus = locus,
                          Sig_SNPs.count = snp_count$n)
     # Count Credible Set SNPs
-    CS_cols <- grep(pattern = "Credible_Set", x = colnames(dat), value = T)
+    CS_cols <- grep(pattern = "CS", x = colnames(dat), value = T)
     for(s in 1:length(CS_cols)){
       report[paste0("CS_support==",s)] <- (subset(dat, Support == s) %>% count())$n
     }
@@ -94,7 +94,7 @@ SNPgroups_plot <- function(locus_report){
     theme(legend.position = "none")
 
   ## Consensus SNP Annotations
-  CS_cols <- grep("Credible_Set",colnames(merged_results), value = T)
+  CS_cols <- grep("CS",colnames(merged_results), value = T)
   # merged_results$consequence_type_tv <- as.character(merged_results$consequence_type_tv)
   p6 <- ggplot(data=subset(merged_results, Support == length(CS_cols), drop = F),
                aes(x=consequence_type_tv, fill=consequence_type_tv))+

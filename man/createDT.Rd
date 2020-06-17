@@ -10,7 +10,7 @@ createDT(DF, caption = "", scrollY = 400)
 Generate an interactive data table with download buttons.
 }
 \seealso{
-Other general functions: 
+Other general: 
 \code{\link{.rbind.file.list}()},
 \code{\link{createDT_html}()},
 \code{\link{dt.replace}()},
@@ -18,5 +18,5 @@ Other general functions:
 \code{\link{startup_image}()},
 \code{\link{tryFunc}()}
 }
-\concept{general functions}
+\concept{general}
 \keyword{internal}

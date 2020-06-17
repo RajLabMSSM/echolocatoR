@@ -15,7 +15,7 @@ tryFunc(input, func, ...)
 Extension of tryCatch function.
 }
 \seealso{
-Other general functions: 
+Other general: 
 \code{\link{.rbind.file.list}()},
 \code{\link{createDT_html}()},
 \code{\link{createDT}()},
@@ -23,5 +23,5 @@ Other general functions:
 \code{\link{get_os}()},
 \code{\link{startup_image}()}
 }
-\concept{general functions}
+\concept{general}
 \keyword{internal}

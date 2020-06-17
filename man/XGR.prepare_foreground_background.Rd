@@ -36,12 +36,15 @@ Other XGR:
 \code{\link{DT_to_GRanges}()},
 \code{\link{GRanges_to_BED}()},
 \code{\link{XGR.download_and_standardize}()},
+\code{\link{XGR.filter_assays}()},
+\code{\link{XGR.filter_sources}()},
 \code{\link{XGR.import_annotations}()},
 \code{\link{XGR.iterate_enrichment}()},
 \code{\link{XGR.iterate_overlap}()},
 \code{\link{XGR.merge_and_process}()},
 \code{\link{XGR.plot_enrichment}()},
-\code{\link{XGR.plot_peaks}()}
+\code{\link{XGR.plot_peaks}()},
+\code{\link{save_annotations}()}
 }
 \concept{XGR}
 \keyword{internal}

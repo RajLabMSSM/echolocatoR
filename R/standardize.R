@@ -24,16 +24,16 @@ auto_topSNPs_sub <- function(top_SNPs,
 #' If \strong{tstat} column is missing,
 #' compute t-statistic from: \code{Effect / StdErr}.
 #' @family standardization functions
-calculate.tstat <- function(finemap_DT, tstat_col="t_stat"){
-  if(tstat_col %in% colnames(finemap_DT)){
-    finemap_DT <- finemap_DT %>% dplyr::rename(t_stat = tstat_col)
-  } else if(("Effect" %in% colnames(finemap_DT)) & ("StdErr" %in% colnames(finemap_DT))){
+calculate.tstat <- function(finemap_dat, tstat_col="t_stat"){
+  if(tstat_col %in% colnames(finemap_dat)){
+    finemap_dat <- finemap_dat %>% dplyr::rename(t_stat = tstat_col)
+  } else if(("Effect" %in% colnames(finemap_dat)) & ("StdErr" %in% colnames(finemap_dat))){
     printer("+ Calculating t-statistic from Effect and StdErr...")
-    finemap_DT <- finemap_DT %>% dplyr::mutate(t_stat =  Effect/StdErr)
+    finemap_dat <- finemap_dat %>% dplyr::mutate(t_stat =  Effect/StdErr)
   } else {
     printer("+ Could not calculate t-stat due to missing Effect and/or StdErr columns. Returning input data.")
   }
-  return(data.table::data.table(finemap_DT))
+  return(data.table::data.table(finemap_dat))
 }
 
 
@@ -55,17 +55,17 @@ get_UKB_MAF <- function(subset_DT,
   if(file.exists(out.file) & force_new_maf==F){
     printer("+ UKB MAF:: Importing pre-existing file")
   } else{
-    out.file <- axel(input.url = input.url,
-                     output.path = output.path,
+    out.file <- axel(input_url = input_url,
+                     output_path = output_path,
                      background = F)
   }
   maf <- data.table::fread(out.file, nThread = 4,
                            select = c(3,6),
                            col.names = c("POS","MAF"))
   maf <- subset(maf, POS %in% subset_DT$POS)
-  merged_DT <- data.table:::merge.data.table(subset_DT, maf,
+  merged_dat <- data.table:::merge.data.table(subset_DT, maf,
                                              by = "POS")
-  return(merged_DT)
+  return(merged_dat)
 }
 
 
@@ -178,7 +178,7 @@ standardize_subset <- function(locus,
 
 
 
-    query_mod$t_stat <- calculate.tstat(finemap_DT = query_mod,
+    query_mod$t_stat <- calculate.tstat(finemap_dat = query_mod,
                                         tstat_col = tstat_col)$t_stat
 
 
@@ -192,12 +192,8 @@ standardize_subset <- function(locus,
     ## Get just one SNP per location (just pick the first one)
     query_mod <- query_mod %>% group_by(CHR, POS) %>% dplyr::slice(1)
     ## Mark lead SNP
-    query_mod$leadSNP <- ifelse(query_mod$SNP==topSNP_sub$SNP, T, F)
-    if(sum(query_mod$leadSNP)==0){
-      printer("+ leadSNP missing. Assigning new one by min p-value.")
-      top.snp <- head(arrange(query_mod, P, desc(Effect)))[1,]$SNP
-      query_mod$leadSNP <- ifelse(query_mod$SNP==top.snp,T,F)
-    }
+    query_mod$leadSNP <- query_mod$SNP==topSNP_sub$SNP
+    query_mod <- assign_lead_SNP(new_DT = query_mod)
 
     # Only convert to numeric AFTER removing NAs (otherwise as.numeric will turn them into 0s)
     query_mod <- query_mod  %>%
@@ -207,8 +203,8 @@ standardize_subset <- function(locus,
     # Trim whitespaces
     ## Extra whitespace causes problems when you try to make space-delimited files
     cols_to_be_rectified <- names(query_mod)[vapply(query_mod, is.character, logical(1))]
-    query_mod <- query_mod %>% mutate_at(vars(cols_to_be_rectified),
-                                   funs(trimws) )
+    query_mod <- query_mod %>% mutate_at(.vars = vars(cols_to_be_rectified),
+                                         .funs = trimws )
 
     data.table::fwrite(query_mod, subset_path, sep = "\t", nThread = 4)
     if(return_dt==T){return(query_mod)}

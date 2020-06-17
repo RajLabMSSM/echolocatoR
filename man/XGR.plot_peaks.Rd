@@ -7,10 +7,13 @@
 XGR.plot_peaks(
   gr.lib,
   subset_DT,
+  fill_var = "Assay",
+  facet_var = "Source",
   geom = "density",
   locus = NULL,
   adjust = 0.2,
-  show_plot = T
+  show_plot = T,
+  show.legend = T
 )
 }
 \arguments{
@@ -39,20 +42,24 @@ Plots the distribution of annotations across a genomic region (x-axis).
 }
 \examples{
 data("finemap_DT")
-gr.lib <- XGR.download_and_standardize(c("TFBS_Conserved","Uniform_TFBS"), nCores=1)
-xgr.track <- XGR.plot_peaks(gr.lib=gr.lib, subset_DT=finemap_DT)
+gr.lib <- XGR.download_and_standardize(c("ENCODE_DNaseI_ClusteredV3_CellTypes"), finemap_DT=finemap_DT, nCores=1)
+gr.filt <- XGR.filter_sources(gr.lib=gr.lib, n_top_sources=5)
+xgr.track <- XGR.plot_peaks(gr.lib=gr.filt, subset_DT=finemap_DT, fill_var="Assay", facet_var="Source")
 }
 \seealso{
 Other XGR: 
 \code{\link{DT_to_GRanges}()},
 \code{\link{GRanges_to_BED}()},
 \code{\link{XGR.download_and_standardize}()},
+\code{\link{XGR.filter_assays}()},
+\code{\link{XGR.filter_sources}()},
 \code{\link{XGR.import_annotations}()},
 \code{\link{XGR.iterate_enrichment}()},
 \code{\link{XGR.iterate_overlap}()},
 \code{\link{XGR.merge_and_process}()},
 \code{\link{XGR.plot_enrichment}()},
-\code{\link{XGR.prepare_foreground_background}()}
+\code{\link{XGR.prepare_foreground_background}()},
+\code{\link{save_annotations}()}
 }
 \concept{XGR}
 \keyword{internal}

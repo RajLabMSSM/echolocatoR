@@ -321,6 +321,10 @@ The primary functions of \emph{echolocatoR} that expedite fine-mapping
 
 }
 
+\examples{
+data("Nalls_top_SNPs")
+3## finemap_results <- finemap_pipeline("BST1")
+}
 \seealso{
 Other MAIN: 
 \code{\link{finemap_loci}()}

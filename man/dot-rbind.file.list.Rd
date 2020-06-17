@@ -10,7 +10,7 @@
 Rapidly read a list of files from storage and concatenate them by rows.
 }
 \seealso{
-Other general functions: 
+Other general: 
 \code{\link{createDT_html}()},
 \code{\link{createDT}()},
 \code{\link{dt.replace}()},
@@ -18,5 +18,5 @@ Other general functions:
 \code{\link{startup_image}()},
 \code{\link{tryFunc}()}
 }
-\concept{general functions}
+\concept{general}
 \keyword{internal}

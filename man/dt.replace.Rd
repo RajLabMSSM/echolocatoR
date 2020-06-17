@@ -13,7 +13,7 @@ data.frame
 Annoyingly, there is no native function to do simple find-and-replace in the `DT` library.
 }
 \seealso{
-Other general functions: 
+Other general: 
 \code{\link{.rbind.file.list}()},
 \code{\link{createDT_html}()},
 \code{\link{createDT}()},
@@ -21,5 +21,5 @@ Other general functions:
 \code{\link{startup_image}()},
 \code{\link{tryFunc}()}
 }
-\concept{general functions}
+\concept{general}
 \keyword{internal}

@@ -16,5 +16,11 @@ IMPACT_annotation_key
 \description{
 
 }
+\examples{
+\dontrun{
+IMPACT_annotation_key <- data.table::fread("~/Desktop/Fine_Mapping/echolocatoR/annotations/IMPACT/IMPACT_annotation_key.txt.gz")
+usethis::use_data(IMPACT_annotation_key, overwrite = T)
+}
+}
 \concept{IMPACT}
 \keyword{datasets}

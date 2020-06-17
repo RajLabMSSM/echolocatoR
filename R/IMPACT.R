@@ -708,10 +708,10 @@ IMPACT.compute_enrichment <- function(annot_melt, locus=NULL){
   len.SNPs <- n_distinct(annot_melt$SNP, na.rm = T)
   # SNP.groups <- list("leadGWAS"=subset(annot_melt, leadSNP),
   #                    "UCS"=subset(annot_melt, Consensus_SNP),
-  #                    "ABF_CS"=subset(annot_melt, ABF.Credible_Set>0),
-  #                    "FINEMAP_CS"=subset(annot_melt, FINEMAP.Credible_Set>0),
-  #                    "SUSIE_CS"=subset(annot_melt, SUSIE.Credible_Set>0),
-  #                    "POLYFUN_CS"=subset(annot_melt, POLYFUN_SUSIE.Credible_Set>0),
+  #                    "ABF_CS"=subset(annot_melt, ABF.CS>0),
+  #                    "FINEMAP_CS"=subset(annot_melt, FINEMAP.CS>0),
+  #                    "SUSIE_CS"=subset(annot_melt, SUSIE.CS>0),
+  #                    "POLYFUN_CS"=subset(annot_melt, POLYFUN_SUSIE.CS>0),
   #                    "Consensus"=subset(annot_melt, Consensus_SNP))
   # enrich <- lapply(names(SNP.groups), function(snp.group){
   #   print(snp.group)
@@ -737,20 +737,20 @@ IMPACT.compute_enrichment <- function(annot_melt, locus=NULL){
                          (n_distinct(SNP[Support>0], na.rm = T) / n_distinct(SNP, na.rm = T)) ),
     "ABF_CS" = annot_melt %>%
       dplyr::group_by(TF, Tissue, Cell, CellDeriv) %>%
-      dplyr::summarise(enrichment = (sum(IMPACT_score[ABF.Credible_Set>0], na.rm = T) / sum(IMPACT_score, na.rm = T)) /
-                         (n_distinct(SNP[ABF.Credible_Set>0], na.rm = T) / n_distinct(SNP, na.rm = T)) ),
+      dplyr::summarise(enrichment = (sum(IMPACT_score[ABF.CS>0], na.rm = T) / sum(IMPACT_score, na.rm = T)) /
+                         (n_distinct(SNP[ABF.CS>0], na.rm = T) / n_distinct(SNP, na.rm = T)) ),
     "FINEMAP_CS" = annot_melt %>%
       dplyr::group_by(TF, Tissue, Cell, CellDeriv) %>%
-      dplyr::summarise(enrichment = (sum(IMPACT_score[FINEMAP.Credible_Set>0], na.rm = T) / sum(IMPACT_score, na.rm = T)) /
-                         (n_distinct(SNP[FINEMAP.Credible_Set>0], na.rm = T) / n_distinct(SNP, na.rm = T)) ),
+      dplyr::summarise(enrichment = (sum(IMPACT_score[FINEMAP.CS>0], na.rm = T) / sum(IMPACT_score, na.rm = T)) /
+                         (n_distinct(SNP[FINEMAP.CS>0], na.rm = T) / n_distinct(SNP, na.rm = T)) ),
     "SUSIE_CS" = annot_melt %>%
       dplyr::group_by(TF, Tissue, Cell, CellDeriv) %>%
-      dplyr::summarise(enrichment = (sum(IMPACT_score[SUSIE.Credible_Set>0], na.rm = T) / sum(IMPACT_score, na.rm = T)) /
-                         (n_distinct(SNP[SUSIE.Credible_Set>0], na.rm = T) / n_distinct(SNP, na.rm = T)) ),
+      dplyr::summarise(enrichment = (sum(IMPACT_score[SUSIE.CS>0], na.rm = T) / sum(IMPACT_score, na.rm = T)) /
+                         (n_distinct(SNP[SUSIE.CS>0], na.rm = T) / n_distinct(SNP, na.rm = T)) ),
     "POLYFUN_CS" = annot_melt %>%
       dplyr::group_by(TF, Tissue, Cell, CellDeriv) %>%
-      dplyr::summarise(enrichment = (sum(IMPACT_score[POLYFUN_SUSIE.Credible_Set>0], na.rm = T) / sum(IMPACT_score, na.rm = T)) /
-                         (n_distinct(SNP[POLYFUN_SUSIE.Credible_Set>0], na.rm = T) / n_distinct(SNP, na.rm = T)) ),
+      dplyr::summarise(enrichment = (sum(IMPACT_score[POLYFUN_SUSIE.CS>0], na.rm = T) / sum(IMPACT_score, na.rm = T)) /
+                         (n_distinct(SNP[POLYFUN_SUSIE.CS>0], na.rm = T) / n_distinct(SNP, na.rm = T)) ),
     "Consensus" = annot_melt %>%
       dplyr::group_by(TF, Tissue, Cell, CellDeriv) %>%
       dplyr::summarise(enrichment = (sum(IMPACT_score[Consensus_SNP], na.rm = T) / sum(IMPACT_score, na.rm = T)) /
@@ -782,7 +782,7 @@ IMPACT.iterate_enrichment <- function(gwas_paths,
   #     if(!"Locus" %in% colnames(subset_DT)){
   #       subset_DT <- cbind(Locus=locus, subset_DT)
   #     }
-  #     subset_DT <- find_consensus_SNPs(finemap_DT = subset_DT)
+  #     subset_DT <- find_consensus_SNPs(finemap_dat = subset_DT)
   #     annot_melt <- IMPACT.get_annotations(baseURL = annot_baseURL,
   #                                          subset_DT = subset_DT,
   #                                          nThread = 4)
@@ -883,13 +883,13 @@ IMPACT.plot_impact_score <- function(annot_melt,
 
 
   # Reduce to smaller df to make plotting faster
-  finemap_cols <- grep("*.PP$|*.Credible_Set$",colnames(annot_melt),value=T)
+  finemap_cols <- grep("*.PP$|*.CS$",colnames(annot_melt),value=T)
   annot_snp <- subset(annot_melt, select=c("SNP","CHR","POS","Mb","P","Consensus_SNP","leadSNP","Support",finemap_cols)) %>% unique()
   annot_snp <- dplyr::mutate(annot_snp, SNP.Group = ifelse(Consensus_SNP,"Consensus SNP",ifelse(leadSNP,"Lead GWAS SNP",ifelse(Support>0,"Credible Set SNP",NA))))
   labelSNPs <- construct_SNPs_labels(subset_DT = annot_snp, lead=T, method=T, consensus=T)
   leader_SNP <- subset(labelSNPs, type=="Lead SNP")
   CS_set <- subset(labelSNPs, type=="Credible Set")
-  # ggb <- GGBIO.plot(finemap_DT = annot_snp, LD_matrix = LD_matrix,
+  # ggb <- GGBIO.plot(finemap_dat = annot_snp, LD_matrix = LD_matrix,
   #            XGR_libnames = NULL,
   #            save_plot=F,
   #            Nott_sn_epigenome=F)
@@ -936,7 +936,7 @@ IMPACT.plot_impact_score <- function(annot_melt,
   finemap <- ggplot(annot_snp, aes(Mb, y=POLYFUN_SUSIE.PP, color=POLYFUN_SUSIE.PP)) +
     geom_point(size=1) +
     scale_color_viridis_c( breaks=c(0,.5,1)) +
-    geom_point(data=subset(annot_snp,POLYFUN_SUSIE.Credible_Set>0), pch=21, fill=NA, size=2.5,
+    geom_point(data=subset(annot_snp,POLYFUN_SUSIE.CS>0), pch=21, fill=NA, size=2.5,
                color="green3", stroke=1, alpha=0.8) +
     ylim(c(0,1.1)) +
     geom_vline(xintercept = unique(subset(labelSNPs, Consensus_SNP)$Mb), color="goldenrod2",

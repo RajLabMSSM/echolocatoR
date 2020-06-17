@@ -44,10 +44,10 @@ lead.SNP.coords <- function(consensus_thresh=2){
   ## Statistical FM
   statCS <- annot %>%
     group_by(Gene) %>%
-    subset(SUSIE.Credible_Set>0 | FINEMAP.Credible_Set > 0| PAINTOR.Credible_Set >0)
+    subset(SUSIE.CS>0 | FINEMAP.CS > 0| PAINTOR.CS >0)
   statCS.means <- SNPgroup.summary(statCS, group.name="Statistical.CS")
   # Functional FM
-  funcCS <- annot %>% group_by(Gene) %>% subset(PAINTOR.Credible_Set>0)
+  funcCS <- annot %>% group_by(Gene) %>% subset(PAINTOR.CS>0)
   funcCS.means <- SNPgroup.summary(funcCS, group.name="Functional.CS")
   # Consensus stats
   consensus <- annot %>% group_by(Gene) %>% subset(Consensus_SNP)
@@ -114,27 +114,27 @@ compare_finemapping_methods <- function(dataset="./Data/GWAS/Nalls23andMe_2019")
 
   # Proportion of CS SNPs that are the leadSNP (by tool)
   dat <- FM_all %>%
-    summarise_at(vars(ends_with(".Credible_Set")),
-                 funs(CS.sum=sum(.>0, na.rm = T),
+    summarise_at(.vars = vars(ends_with(".CS")),
+                 .funs = list(CS.sum=sum(.>0, na.rm = T),
                       leadGWAS.sum=sum(leadSNP==T, na.rm = T),
                       leadGWAS.CS.sum=sum(leadSNP==T & .>0, na.rm = T),
                       PROP.SNPS=sum(leadSNP==T & .>0, na.rm = T)/sum(.>0, na.rm = T)) )
-  colnames(dat) <- gsub("\\.Credible_Set","", colnames(dat))
+  colnames(dat) <- gsub("\\.CS","", colnames(dat))
   dat
 
   # Proportion of loci in which the CS contains the leadSNP (by tool)
   # dat3.1 <- FM_all %>% group_by(Gene) %>%
-  #   summarise_at(vars(ends_with(".Credible_Set")),
+  #   summarise_at(vars(ends_with(".CS")),
   #                funs(leadGWAS.CS.size=sum(leadSNP==T & .>0, na.rm = T)))
   # dat3.2 <- FM_all %>% group_by(Gene) %>%
-  #   summarise_at(vars(ends_with(".Credible_Set")),
+  #   summarise_at(vars(ends_with(".CS")),
   #                funs(leadGWAS.CS.size=sum(.>0, na.rm = T)))
   # colSums(dat3.1[,-1]) / colSums(dat3.2[,-1])
 
   # Number of CS SNPs (by tool)
-  dat2 <- FM_all %>% group_by(Gene) %>% summarise_at(vars(ends_with(".Credible_Set")),
-                                                     funs(CS=sum(.,na.rm=T)))
-  colnames(dat2) <- gsub("\\.Credible_Set","", colnames(dat2))
+  dat2 <- FM_all %>% group_by(Gene) %>% summarise_at(.vars = vars(ends_with(".CS")),
+                                                     .funs = list(CS=sum(.,na.rm=T)))
+  colnames(dat2) <- gsub("\\.CS","", colnames(dat2))
   # Proportion of loci with at least one CS SNP (by tool)
   colSums(dat2[,-1]>0) / nrow(dat2)
 
@@ -153,8 +153,8 @@ compare_finemapping_methods <- function(dataset="./Data/GWAS/Nalls23andMe_2019")
 
 plot_snpGroupPP_by_tool <- function(FM_all){
 
-  dat <- FM_all %>% summarise_at(vars(ends_with(".PP")),
-                                 funs(Overall=mean(.,na.rm=T),
+  dat <- FM_all %>% summarise_at(.vars = vars(ends_with(".PP")),
+                                .funs = list(Overall=mean(.,na.rm=T),
                                       GWAS.nom.sig=mean(subset(.,P<.05),na.rm=T),
                                       GWAS.sig=mean(subset(.,P<5e-8),na.rm=T),
                                       GWAS.lead=mean(subset(.,leadSNP==T),na.rm=T),
@@ -187,7 +187,7 @@ top_finemapped_loci <- function(dataset="./Data/GWAS/Nalls23andMe_2019",
   # Remove manually added loci
   FM_all <- subset(FM_all, !(Gene %in%c("ATG14","SP1","LMNB1","ATP6V0A1")) )
   # Identify which loci had the smallest Union Credile Sets between SUSIE and POLYFUN+SUSIE.
-  # subset(FM_all, SUSIE.Credible_Set > 0 | POLYFUN_SUSIE.Credible_Set > 0) %>%
+  # subset(FM_all, SUSIE.CS > 0 | POLYFUN_SUSIE.CS > 0) %>%
   #   dplyr::group_by(Gene) %>% count(name = "N") %>% arrange(N)
 
 
@@ -256,20 +256,20 @@ top_finemapped_loci <- function(dataset="./Data/GWAS/Nalls23andMe_2019",
     ## Text cols
     ### Is the Consensus SNP the GWAS lead?
     grouped.dat %>%
-      summarise_at(vars(GWAS.lead, ends_with(".sig")),
-                   funs(Consensus=paste(replace_na(subset(., Consensus_SNP), "N"),collapse=", "),
-                        CredSet=paste(replace_na(subset(., Support>0), "N"),collapse=", ")) ),
+      summarise_at(.vars = vars(GWAS.lead, ends_with(".sig")),
+                   .funs = list(Consensus=paste(replace_na(subset(., Consensus_SNP), "N"),collapse=", "),
+                                CredSet=paste(replace_na(subset(., Support>0), "N"),collapse=", ")) ),
 
     # Numeric cols
     ## As separated text
     grouped.dat %>%
-      summarise_at(vars(ends_with(".PP"), ends_with("QTL.count"),ends_with("Effect"), MAF),
-                   funs(paste(round(subset(., Consensus_SNP),3),collapse=", ")) ) %>%
+      summarise_at(.vars = vars(ends_with(".PP"), ends_with("QTL.count"),ends_with("Effect"), MAF),
+                   .funs = list(paste(round(subset(., Consensus_SNP),3),collapse=", ")) ) %>%
       dplyr::select(-Gene),
     # As means
     grouped.dat %>%
-      summarise_at(vars(mean.PP, ends_with("QTL.count")),
-                   funs(avg=mean(subset(., Consensus_SNP), na.rm=T)) ) %>%
+      summarise_at(.vars = vars(mean.PP, ends_with("QTL.count")),
+                   .funs = list(avg=mean(subset(., Consensus_SNP), na.rm=T)) ) %>%
       dplyr::select(-Gene)
   )
   top_loci <- do.call(cbind, cols)
@@ -330,8 +330,8 @@ top_finemapped_loci <- function(dataset="./Data/GWAS/Nalls23andMe_2019",
 #                                         fancy_table=F,
 #                                         minimum_support=0,
 #                                         include_leadSNPs=T){
-#   # finemap_DT <- data.table::fread(file.path(results_path,"Multi-finemap/Multi-finemap_results.txt"),stringsAsFactors = F)
-#   CS_cols <- colnames(multi_finemap_DT)[endsWith(colnames(multi_finemap_DT), ".Credible_Set")]
+#   # finemap_dat <- data.table::fread(file.path(results_path,"Multi-finemap/Multi-finemap_results.txt"),stringsAsFactors = F)
+#   CS_cols <- colnames(multi_finemap_DT)[endsWith(colnames(multi_finemap_DT), ".CS")]
 #   if(include_leadSNPs){
 #     support_DT <- subset(multi_finemap_DT, Support >= minimum_support | leadSNP==T)
 #   } else {
@@ -353,10 +353,10 @@ top_finemapped_loci <- function(dataset="./Data/GWAS/Nalls23andMe_2019",
 #     formattable::formattable(support_DT,
 #                              align =c("l","c","c","c","c", "c", "c", "c", "r"),
 #                              list( P = formattable::color_tile(customGreen, customGreen0),
-#                                    SUSIE.Credible_Set = CS_formatter,
-#                                    ABF.Credible_Set = CS_formatter,
-#                                    FINEMAP.Credible_Set = CS_formatter,
-#                                    COJO.Credible_Set = CS_formatter,
+#                                    SUSIE.CS = CS_formatter,
+#                                    ABF.CS = CS_formatter,
+#                                    FINEMAP.CS = CS_formatter,
+#                                    COJO.CS = CS_formatter,
 #                                    Support = formattable::color_tile("white", "green"))
 #     )
 #

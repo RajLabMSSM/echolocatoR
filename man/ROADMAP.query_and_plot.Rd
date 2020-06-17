@@ -38,12 +38,6 @@ Can provide multiple keywords in list form:
 \value{
 A named list containing:
 \itemize{
-\item{Roadmap_plot}
-\item{Roadmap_query}
-}
-
-List containing:
-\itemize{
 \item{\code{ggbio} plot}
 \item{\code{GRanges} object within the queried coordinates}
 }

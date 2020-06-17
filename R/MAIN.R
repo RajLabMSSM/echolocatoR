@@ -28,74 +28,13 @@
 #
 
 
-
-
-
-## susieR Function
-#
-# * Notes on L parameter
-# + L is the expected number of causal variants
-# + Increasing L increases computational time
-# + L=1: Gives a good amount of variation in PIP.
-# + L=2: Warns "IBSS algorithm did not converge in 100 iterations!", but gives good variation in PIP.
-# + L=3: Warns "IBSS algorithm did not converge in 100 iterations!". All PIPs 1s and 0s.
-# + These results seem to be at least partially dependent on whether the ethnic composition of the LD matrix.
-# * Notes on variance:
-#   + If 'estimate_residual_variance' = TRUE _without_ providing 'var_y' _and_ L>1, susieR will throw error:
-#   __"Estimating residual variance failed: the estimated value is negative"__
-# + Running susieR with 'var_y = var(b)' provides _exactly_ the same results.
-# * Statistical Terms:
-#   + posterior inclusion probability (PIP)
-# + coefficient estimate (Beta)
-# + Effect allele frequency (EAF)
-# + The I^2 statistic describes the percentage of variation across studies that seems not to be due to chance.
-
-
-
-
-
-
 # R package creation:
 ## http://r-pkgs.had.co.nz
 # R package remote dependencies:
 ## https://cran.r-project.org/web/packages/devtools/vignettes/dependencies.html
+# regex commands:
+## http://www.endmemo.com/program/R/gsub.php
 
-
-# You can learn more about package authoring with RStudio at:
-#   http://r-pkgs.had.co.nz/
-#
-# Some useful keyboard shortcuts for package authoring:
-#   Build and Reload Package:  'Cmd + Shift + B'
-#   Check Package:             'Cmd + Shift + E'
-#   Test Package:              'Cmd + Shift + T'
-
-# regex commands: http://www.endmemo.com/program/R/gsub.php
-
-# Load libraries
-# .libPaths()
-
-# Add libraries to Imports secion of DESCRIPTION file:
-
-# CRAN Imports:
-# for(p in c("dplyr","tidyr","data.table","ggplot2","patchwork",
-#            "pbmcapply","ggrepel","BiocManager",
-#            "coloc","haploR","XGR","reticulate")){
-#   usethis::use_package(package = p, type = "Imports")
-# }
-# # CRAN Suggests:
-# for(p in c("crayon")){
-#   usethis::use_package(package = p, type = "Suggests")
-# }
-# # Bioconductor Imports:
-# for(p in c("ggbio","XGR",
-#            "rtracklayer")){
-#   usethis::use_package(package = p, type = "Imports")
-# }
-# # GiHub Imports:
-# for(p in c("stephenslab/susieR")){
-#   remotes::
-#   usethis::use_package(package = p, type = "Imports")
-# }
 
 
 # library(R.utils)
@@ -107,7 +46,6 @@
 # library(ggplot2)
 # library(plotly)
 # library(patchwork) #devtools::install_github("thomasp85/patchwork")
-
 # library(pbmcapply); #devtools::install_github("kvnkuang/pbmcapply", ref = "dev")
 
 
@@ -179,6 +117,7 @@
 #'
 #' @param loci Character list of loci in \strong{Locus} col of \code{top_SNPs}.
 #' @param fullSS_path Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.
+#' @param results_dir Where to store all results.
 #' @param file_sep The separator in the full summary stats file.
 #' This parameter is only necessary if \code{query_by!="tabix"}.
 #' @param query_by Choose which method you want to use to extract locus subsets from the full summary stats file.
@@ -340,16 +279,16 @@
 #'
 #' @section plotting parameters:
 #'
-#' @param plot_types Which kinds of plots to include.
+#' @param plot.types Which kinds of plots to include.
 #' Options:
 #' \describe{
 #' \item{"simple"}{Just plot the following tracks: GWAS, fine-mapping, gene models, and brain cell type-specific epigenomic data from Nott et al. (2019).}
 #' \item{"fancy"}{Additionally plot XGR annotation tracks.}
 #' }
-#' @param plot_window Zoom into the center of the locus when plotting (without editing the fine-mapping results file).
-#' @param plot_Nott_binwidth When including Nott et al. (2019) epigenomic data in the track plots,
+#' @param plot.window Zoom into the center of the locus when plotting (without editing the fine-mapping results file).
+#' @param plot.Nott_binwidth When including Nott et al. (2019) epigenomic data in the track plots,
 #' adjust the bin width of the histograms.
-#' @param Nott_bigwig_dir Instead of pulling Nott et al. (2019) epigenomic data from the UCSC Genome Browsers, use a set of local bigwig files.
+#' @param plot.Nott_bigwig_dir Instead of pulling Nott et al. (2019) epigenomic data from the UCSC Genome Browsers, use a set of local bigwig files.
 #'
 #' @section general parameters:
 #'
@@ -361,8 +300,9 @@
 #' @family MAIN
 finemap_pipeline <- function(locus,
                              fullSS_path,
-                             dataset_name,
-                             dataset_type="GWAS",
+                             results_dir,
+                             dataset_name="dataset_name",
+                             dataset_type="dataset_type",
                              top_SNPs="auto",
                              force_new_subset=F,
                              force_new_LD=F,
@@ -392,6 +332,7 @@ finemap_pipeline <- function(locus,
                              LD_reference="1KG_Phase1",
                              superpopulation="EUR",
                              download_reference=T,
+                             LD_download_method="direct",
                              min_POS=NA,
                              max_POS=NA,
                              min_MAF=NA,
@@ -411,20 +352,30 @@ finemap_pipeline <- function(locus,
                              plot_LD = F,
                              verbose=T,
                              remove_tmps=T,
-                             plot_types=c("simple"),
+                             plot.types=c("simple"),
                              PAINTOR_QTL_datasets=NULL,
                              server=F,
                              PP_threshold=.95,
-                             plot_window=NULL,
-                             plot_Nott_binwidth=2500,
-                             Nott_bigwig_dir=NULL){
+
+                             plot.window=NULL,
+                             plot.Nott_epigenome = plot.Nott_epigenome,
+                             plot.Nott_binwidth=2500,
+                             plot.Nott_bigwig_dir=NULL,
+                             plot.XGR_libnames=NULL,
+                             plot.Roadmap=F,
+                             plot.Roadmap_query=NULL){
    # Create paths
-   results_path <- make_results_path(dataset_name, dataset_type, locus)
+   subset_path <- get_subset_path(results_dir = results_dir,
+                                  dataset_type = dataset_type,
+                                  dataset_name = dataset_name,
+                                  locus = locus)
+   locus_dir <- get_locus_dir(subset_path = subset_path)
+
    # Extract subset
    subset_DT <- extract_SNP_subset(locus = locus,
                                     top_SNPs = top_SNPs,
                                     fullSS_path = fullSS_path,
-                                    results_path  =  results_path,
+                                    subset_path  =  subset_path,
                                     force_new_subset = force_new_subset,
 
                                     chrom_col = chrom_col,
@@ -457,13 +408,14 @@ finemap_pipeline <- function(locus,
 
   ### Compute LD matrix
   message("--- Step 2: Calculate Linkage Disequilibrium ---")
-  LD_matrix <- LD.load_or_create(results_path=results_path,
+  LD_matrix <- LD.load_or_create(subset_path=subset_path,
                                  subset_DT=subset_DT,
                                  locus=locus,
                                  force_new_LD=force_new_LD,
                                  LD_reference=LD_reference,
                                  superpopulation=superpopulation,
                                  download_reference=download_reference,
+                                 download_method=LD_download_method,
                                  min_r2=min_r2,
                                  LD_block=LD_block,
                                  LD_block_size=LD_block_size,
@@ -477,7 +429,7 @@ finemap_pipeline <- function(locus,
   # Remove pre-specified SNPs
   ## Do this step AFTER saving the LD to disk so that it's easier to re-subset in different ways later without having to redownload LD.
   message("-------------- Step 3: Filter SNPs -------------")
-  subset_DT <- echoR.filter_snps(subset_DT=subset_DT,
+  subset_DT <- filter_snps(subset_DT=subset_DT,
                                   bp_distance=bp_distance,
                                   remove_variants=remove_variants,
                                   locus=locus,
@@ -491,7 +443,7 @@ finemap_pipeline <- function(locus,
   LD_matrix <- sub.out$LD
   subset_DT <- sub.out$DT
   # finemap
-  finemap_DT <- finemap_handler(results_path = results_path,
+  finemap_dat <- finemap_handler(locus_dir = locus_dir,
                                 fullSS_path = fullSS_path,
                                 finemap_methods = finemap_methods,
                                 force_new_finemap = force_new_finemap,
@@ -513,47 +465,46 @@ finemap_pipeline <- function(locus,
                                 A2_col = A2_col,
                                 PAINTOR_QTL_datasets = PAINTOR_QTL_datasets,
                                 PP_threshold = PP_threshold)
-  finemap_DT <- find_consensus_SNPs(finemap_DT, credset_thresh = PP_threshold)
+  finemap_dat <- find_consensus_SNPs(finemap_dat, credset_thresh = PP_threshold)
   # Step 6: COLOCALIZE
   # Step 7: Functionally Fine-map
 
   # Plot
   message("--------------- Step 7: Visualize --------------")
-  if("simple" %in% plot_types){
+  if("simple" %in% plot.types){
     try({
-      mf_plot <- GGBIO.plot(finemap_DT=finemap_DT,
-                            LD_matrix=LD_matrix,
-                            gene=locus,
-                            results_path=results_path,
-                            method_list=finemap_methods,
-                            Nott_sn_epigenome = T,
+      mf_plot <- GGBIO.plot(finemap_dat = finemap_dat,
+                            LD_matrix = LD_matrix,
+                            locus_dir = locus_dir,
+                            method_list = finemap_methods,
+                            Nott_epigenome = F,
+                            mean.PP = T,
                             XGR_libnames = NULL,
                             max_transcripts = 1,
-                            plot_window = plot_window,
+                            plot.window = plot.window,
                             save_plot = T,
-                            show_plot = T,
-                            plot_Nott_binwidth = plot_Nott_binwidth,
-                            Nott_bigwig_dir = Nott_bigwig_dir)
+                            show_plot = T)
     })
   }
-  if("fancy" %in% plot_types){
+  if("fancy" %in% plot.types){
     try({
-      trx <- GGBIO.plot(finemap_DT=finemap_DT,
-                        LD_matrix=LD_matrix,
-                        gene=locus,
-                        results_path=results_path,
-                        method_list=finemap_methods,
-                        Nott_sn_epigenome = T,
-                        XGR_libnames = c("ENCODE_TFBS_ClusteredV3_CellTypes",
-                                         "ENCODE_DNaseI_ClusteredV3_CellTypes",
-                                         "Broad_Histone"),
-                        ROADMAP = T,
+      trx <- GGBIO.plot(finemap_dat = finemap_dat,
+                        LD_matrix = LD_matrix,
+                        locus_dir = locus_dir,
+                        method_list = finemap_methods,
                         max_transcripts = 1,
-                        plot_window = plot_window,
+                        plot.window = plot.window,
                         save_plot = T,
                         show_plot = T,
-                        plot_Nott_binwidth = plot_Nott_binwidth,
-                        Nott_bigwig_dir = Nott_bigwig_dir)
+
+                        XGR_libnames = plot.XGR_libnames,
+
+                        Roadmap = plot.Roadmap,
+                        Roadmap_query = plot.Roadmap_query,
+
+                        Nott_epigenome = plot.Nott_epigenome,
+                        Nott_binwidth = plot.Nott_binwidth,
+                        Nott_bigwig_dir = plot.Nott_bigwig_dir)
     })
   }
 
@@ -563,18 +514,10 @@ finemap_pipeline <- function(locus,
       LD_plot(LD_matrix=LD_matrix, subset_DT=subset_DT, span=10)
     })
   }
-
-
-
-
-  # Show results table
-  printer("+",locus,"Credible Set SNPs", v=verbose)
-  print(createDT_html( subset(finemap_DT, Support >0) ))
-
-
   # Cleanup:
   if(remove_tmps){
-    tmp_files <- file.path(results_path,"plink",
+    roadmap_tbi <- list.files(locus_dir,pattern=".bgz.tbi", recursive = T, full.names = T)
+    tmp_files <- file.path(locus_dir,"LD",
                            c("plink.bed",
                              "plink.bim",
                              "plink.fam",
@@ -583,9 +526,9 @@ finemap_pipeline <- function(locus,
                              "plink.log",
                              "plink.nosex",
                              "SNPs.txt") )
-    suppressWarnings(file.remove(tmp_files))
+    out <- suppressWarnings(file.remove(tmp_files, roadmap_tbi))
   }
-  return(finemap_DT)
+  return(finemap_dat)
 }
 
 
@@ -606,12 +549,12 @@ finemap_pipeline <- function(locus,
 #' @return A merged data.frame with all fine-mapping results from all loci.
 finemap_loci <- function(loci,
                          fullSS_path,
-                         dataset_name,
-                         dataset_type="GWAS",
+                         dataset_name="dataset_name",
+                         dataset_type="dataset_type",
                          force_new_subset=F,
                          force_new_LD=F,
                          force_new_finemap=T,
-                         subset_path="auto",
+                         results_dir="./results",
                          top_SNPs="auto",
                          finemap_methods=c("ABF","SUSIE","FINEMAP"),
                          bp_distance=500000,
@@ -637,6 +580,7 @@ finemap_loci <- function(loci,
 
                          LD_reference="1KG_Phase1",
                          superpopulation="EUR",
+                         LD_download_method="direct",
                          topVariants=3,
                          download_reference=T,
                          min_POS=NA,
@@ -654,31 +598,37 @@ finemap_loci <- function(loci,
                          plot_LD=F,
                          verbose=T,
                          remove_tmps=T,
-                         plot_types = c("simple"),
                          PAINTOR_QTL_datasets=NULL,
                          server=F,
                          PP_threshold=.95,
-                         plot_window=NULL,
-                         plot_Nott_binwidth=2500,
-                         Nott_bigwig_dir=NULL){
-  fineMapped_topSNPs <- data.table::data.table()
-  fineMapped_allResults <- data.table::data.table()
-  lead_SNPs <- snps_to_condition(conditioned_snps, top_SNPs, loci)
 
-  for (i in 1:length(loci)){
+                         plot.types = c("simple"),
+                         plot.window=NULL,
+                         plot.Nott_epigenome=F,
+                         plot.Nott_binwidth=2500,
+                         plot.Nott_bigwig_dir=NULL,
+                         plot.XGR_libnames=NULL,
+                         plot.Roadmap=F,
+                         plot.Roadmap_query=NULL
+                         ){
+  conditioned_snps <- snps_to_condition(conditioned_snps, top_SNPs, loci)
+
+  FINEMAP_DAT <- lapply(1:length(unique(loci)), function(i){
     start_gene <- Sys.time()
+    finemap_dat <- NULL
     try({
       locus <- loci[i]
       message("🦇 🦇 🦇 ",locus," 🦇 🦇 🦇 ")
-      lead_SNP <- .arg_list_handler(lead_SNPs, i)
+      lead_SNP <- .arg_list_handler(conditioned_snps, i)
       gene_limits <- .arg_list_handler(trim_gene_limits, i)
       conditioned_snp <- .arg_list_handler(conditioned_snps, i)
       # message("^^^^^^^^^ Running echolocatoR on: ",locus," ^^^^^^^^^")
       # cat('  \n###', locus, '  \n')
       # Delete the old subset if force_new_subset == T
-      finemap_DT <- finemap_pipeline(locus=locus,
+      finemap_dat <- finemap_pipeline(locus=locus,
                                      top_SNPs=top_SNPs,
                                      fullSS_path=fullSS_path,
+                                     results_dir=results_dir,
                                      finemap_methods=finemap_methods,
                                      force_new_subset=force_new_subset,
                                      force_new_LD=force_new_LD,
@@ -708,6 +658,7 @@ finemap_loci <- function(loci,
 
                                      LD_reference=LD_reference,
                                      superpopulation=superpopulation,
+                                     LD_download_method=LD_download_method,
                                      min_POS=min_POS,
                                      max_POS=max_POS,
                                      min_MAF=min_MAF,
@@ -723,26 +674,31 @@ finemap_loci <- function(loci,
                                      remove_variants=remove_variants,
                                      remove_correlates=remove_correlates,
                                      probe_path=probe_path,
-                                     conditioned_snps=lead_SNP,
+                                     conditioned_snps=conditioned_snps,
                                      plot_LD=plot_LD,
                                      remove_tmps=remove_tmps,
-                                     plot_types=plot_types,
+                                     plot.types=plot.types,
                                      PAINTOR_QTL_datasets=PAINTOR_QTL_datasets,
                                      server=server,
                                      PP_threshold=PP_threshold,
-                                     plot_window=plot_window,
-                                     plot_Nott_binwidth=plot_Nott_binwidth,
-                                     Nott_bigwig_dir=Nott_bigwig_dir)
 
-      # Create summary table for all loci
-      printer("Generating summary table...", v=verbose)
-      newEntry <- cbind(data.table(Locus=locus), finemap_DT) %>% as.data.table()
-      fineMapped_allResults <- rbind(fineMapped_allResults, newEntry, fill=T)
+                                     plot.window=plot.window,
+                                     plot.Nott_epigenome=plot.Nott_epigenome,
+                                     plot.Nott_binwidth=plot.Nott_binwidth,
+                                     plot.Nott_bigwig_dir=plot.Nott_bigwig_dir,
+                                     plot.XGR_libnames=plot.XGR_libnames,
+                                     plot.Roadmap=plot.Roadmap,
+                                     plot.Roadmap_query=plot.Roadmap_query)
+      finemap_dat <- data.table::data.table(Locus=locus, finemap_dat)
       cat('  \n')
-    })
+    }) ## end try()
     end_gene <- Sys.time()
-    message(locus,"fine-mapped in", round(end_gene-start_gene, 2),"seconds", v=verbose)
-  }
-  return(fineMapped_allResults)
+    message("Fine-mappping complete:", locus)
+    print(round(end_gene-start_gene,1))
+  return(finemap_dat)
+  }) # end for loop
+  FINEMAP_DAT <- data.table::rbindlist(FINEMAP_DAT)
+  print(createDT_html( subset(FINEMAP_DAT, Support >0) ))
+  return(FINEMAP_DAT)
 }
 

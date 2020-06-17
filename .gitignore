@@ -2,5 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
-./Roadmap
-./ROADMAP
+
+.DS_Store
+./Roadmap/
+./ROADMAP/

@@ -11,7 +11,7 @@ Generate an interactive data table with download buttons.
 Use this function when manually constructing rmarkdown chunks using cat() in a for loop.
 }
 \seealso{
-Other general functions: 
+Other general: 
 \code{\link{.rbind.file.list}()},
 \code{\link{createDT}()},
 \code{\link{dt.replace}()},
@@ -19,5 +19,5 @@ Other general functions:
 \code{\link{startup_image}()},
 \code{\link{tryFunc}()}
 }
-\concept{general functions}
+\concept{general}
 \keyword{internal}

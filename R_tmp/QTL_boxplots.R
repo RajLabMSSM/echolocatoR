@@ -196,7 +196,9 @@ merge_QTL_data <- function(snp_list,
     for(i in 1:length(unique(SS_geno_exp$Condition))){
       results_path <- dirname(eQTL_SS_paths[i])
       QTL.condition <- basename(dirname(results_path))
-      subset_path <- .get_subset_path(results_path, gene = gene, subset_path="auto")
+      subset_path <- get_subset_path(dataset_type = "QTL",
+                                     dataset_name = QTL.condition,
+                                     locus = locus)
       c_sub <- subset(SS_geno_exp, Condition==QTL.condition)
       printer("+++",subset_path)
       data.table::fwrite(c_sub, subset_path, quote = F, sep="\t")
@@ -256,10 +258,10 @@ eQTL_boxplots <- function(snp_list,
 
     # Import PD GWAS data
     results_path <- "./Data/GWAS/Nalls23andMe_2019/LRRK2/"
-    finemap_DT <- data.table::fread(file.path(results_path, "Multi-finemap/Multi-finemap_results.txt"))
-    finemap_DT <- subset(finemap_DT, SNP %in% unique(SS_geno_exp$SNP))
+    finemap_dat <- data.table::fread(file.path(results_path, "Multi-finemap/Multi-finemap_results.txt"))
+    finemap_dat <- subset(finemap_dat, SNP %in% unique(SS_geno_exp$SNP))
     ## If the PD GWAS effect size is negative, flip the alleles and make the effect size positive.
-    finemap_flip <- finemap_DT %>%
+    finemap_flip <- finemap_dat %>%
       dplyr::mutate(Effect.flip = case_when(Effect != abs(Effect) ~ -Effect,
                                                Effect == abs(Effect) ~ Effect),
                         Risk.allele = case_when(Effect != abs(Effect) ~ A2,

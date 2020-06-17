@@ -7,10 +7,11 @@
 #' @family LD
 #' @keywords internal
 LD.UKBiobank <- function(subset_DT=NULL,
+                         locus_dir,
                          sumstats_path=NULL,
                          chrom=NULL,
                          min_pos=NULL,
-                         results_path="./LD",
+
                          force_new_LD=F,
                          chimera=F,
                          server=T,
@@ -30,7 +31,7 @@ LD.UKBiobank <- function(subset_DT=NULL,
 
 
   LD.download_UKB_LD <- function(LD.prefixes,
-                                 output.path="./LD",
+                                 locus_dir,
                                  alkes_url="https://data.broadinstitute.org/alkesgroup/UKBB_LD",
                                  background=T,
                                  force_overwrite=F,
@@ -42,17 +43,17 @@ LD.UKBiobank <- function(subset_DT=NULL,
 
       for(furl in c(gz.url, npz.url)){
         if(tolower(download_method)=="axel"){
-          out.file <- axel(input.url = furl,
-                           output.path = output.path,
+          out.file <- axel(input_url = furl,
+                           output_path = file.path(locus_dir,"LD"),
                            background = background,
                            nThreads = nThreads,
                            force_overwrite = force_overwrite)
         }
         if(tolower(download_method)=="wget"){
-          out.file <- wget(input.url = furl,
-                           output.path = output.path,
+          out.file <- wget(input_url = furl,
+                           output_path = file.path(locus_dir,"LD"),
                            background = background,
-                           force_overwrite = T)
+                           force_overwrite = force_overwrite)
         }
       }
     }
@@ -63,33 +64,34 @@ LD.UKBiobank <- function(subset_DT=NULL,
 
   # Begin download
   if(!is.null(subset_DT)){
-    finemap_DT <- subset_DT
+    finemap_dat <- subset_DT
   } else if(!is.null(sumstats_path)){
     printer("+ Assigning chrom and min_pos based on summary stats file")
     # sumstats_path="./example_data/BST1_Nalls23andMe_2019_subset.txt"
-    finemap_DT <- data.table::fread(sumstats_path, nThread = 4)
+    finemap_dat <- data.table::fread(sumstats_path, nThread = 4)
   }
-  chrom <- unique(finemap_DT$CHR)
-  min_pos <- min(finemap_DT$POS)
+  chrom <- unique(finemap_dat$CHR)
+  min_pos <- min(finemap_dat$POS)
   LD.prefixes <- LD.UKB_find_ld_prefix(chrom=chrom, min_pos=min_pos)
+  chimera.path <- "/sc/orga/projects/pd-omics/tools/polyfun/UKBB_LD"
   alkes_url <- "https://data.broadinstitute.org/alkesgroup/UKBB_LD"
   URL <- alkes_url
 
   printer("+ UKB LD file name:",LD.prefixes)
-  output.path <- file.path(results_path, "plink")
-  dir.create(output.path, showWarnings = F, recursive = T)
-  chimera.path <- "/sc/orga/projects/pd-omics/tools/polyfun/UKBB_LD"
-  UKBB.LD.RDS <- file.path(output.path, "UKB_LD.RDS")
+  LD_dir <- file.path(locus_dir, "LD")
+  dir.create(LD_dir, showWarnings = F, recursive = T)
+  locus <- basename(locus_dir)
+  UKBB.LD.RDS <- file.path(LD_dir, paste0(locus,".UKB_LD.RDS"))
 
   if(file.exists(UKBB.LD.RDS) & force_new_LD==F){
     printer("+ LD:: Pre-existing UKB_LD.RDS file detected. Importing...")
     LD_matrix <- readRDS(UKBB.LD.RDS)
   } else {
     if(download_method!="direct"){
-      if(download_full_ld | force_new_LD){
+      if(download_full_ld | force_new_LD | download_method %in% c("wget","axel")){
         printer("+ LD:: Downloading full .gz/.npz UKB files and saving to disk.")
         URL <- LD.download_UKB_LD(LD.prefixes = LD.prefixes,
-                                  output.path = output.path,
+                                  locus_dir = locus_dir,
                                   background = F,
                                   force_overwrite = force_new_LD,
                                   download_method = download_method)
@@ -118,7 +120,7 @@ LD.UKBiobank <- function(subset_DT=NULL,
     # RSIDs file
     # rsids <- data.table::fread(gz.path, nThread = 4)
     printer("+ LD:: ...this could take some time...")
-    reticulate::source_python(system.file("python","load_ld.py",package = "echolocatoR"))
+    reticulate::source_python(system.file("tools","load_ld.py",package = "echolocatoR"))
 
 
     # load_ld(ld_prefix=URL, server=F)
@@ -133,8 +135,8 @@ LD.UKBiobank <- function(subset_DT=NULL,
     colnames(ld_R) <- ld_snps$rsid
 
     # remove(ld.out)
-    # ld_snps.sub <- subset(ld_snps, position %in% finemap_DT$POS)
-    indices <- which(ld_snps$position %in% finemap_DT$POS)
+    # ld_snps.sub <- subset(ld_snps, position %in% finemap_dat$POS)
+    indices <- which(ld_snps$position %in% finemap_dat$POS)
     ld_snps.sub <- ld_snps[indices,]
     LD_matrix <- ld_R[indices, indices]
     row.names(LD_matrix) <- ld_snps.sub$rsid
@@ -206,15 +208,15 @@ LD.UKBiobank <- function(subset_DT=NULL,
 #
 #
 #
-# LD.UKBiobank <- function(finemap_DT,
-#                          results_path,
+# LD.UKBiobank <- function(finemap_dat,
+#                          subset_path,
 #                          force_new_LD=F,
 #                          polyfun="./echolocatoR/tools/polyfun",
 #                          server=F){
 #   alkes_url <- "https://data.broadinstitute.org/alkesgroup/UKBB_LD"
 #   URL <- alkes_url
-#   chrom <- unique(finemap_DT$CHR)
-#   min_pos <- min(finemap_DT$POS)
+#   chrom <- unique(finemap_dat$CHR)
+#   min_pos <- min(finemap_dat$POS)
 #   file.name <- LD.UKB_find_ld_prefix(chrom=chrom, min_pos=min_pos)
 #   printer("+ UKB LD file name:",file.name)
 #
@@ -222,7 +224,7 @@ LD.UKBiobank <- function(subset_DT=NULL,
 #   npz.path <- file.path(alkes_url, paste0(file.name,".npz"))
 #
 #   chimera.path <- file.path("/sc/orga/projects/pd-omics/tools/polyfun/UKBB_LD")
-#   UKBB.LD.file <- file.path(results_path,"plink/UKB_LD.RDS")
+#   UKBB.LD.file <- file.path(subset_path,"plink/UKB_LD.RDS")
 #
 #   if(server){
 #     if(file.exists(file.path(chimera.path, paste0(file.name,".gz")))  &
@@ -263,8 +265,8 @@ LD.UKBiobank <- function(subset_DT=NULL,
 #     colnames(ld_R) <- ld_snps$rsid
 #
 #     # remove(ld.out)
-#     # ld_snps.sub <- subset(ld_snps, position %in% finemap_DT$POS)
-#     indices <- which(ld_snps$position %in% finemap_DT$POS)
+#     # ld_snps.sub <- subset(ld_snps, position %in% finemap_dat$POS)
+#     indices <- which(ld_snps$position %in% finemap_dat$POS)
 #     ld_snps.sub <- ld_snps[indices,]
 #     LD_matrix <- ld_R[indices, indices]
 #     row.names(LD_matrix) <- ld_snps.sub$rsid

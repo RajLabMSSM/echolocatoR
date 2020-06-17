@@ -18,8 +18,9 @@ MACS2.download_full_bigwig <- function(bigWig.paths='Nott_2019',
 
   bigWig.paths <- lapply(biWig.links, function(URL){
     printer("MACS2:: Downloading", basename(URL))
-    out.path <- axel(input.url = URL, output.path = output.path,
-                     background = F, force_overwrite = force_overwrite, 
+    out.path <- axel(input_url = URL,
+                     output_path = output.path,
+                     background = F, force_overwrite = force_overwrite,
                      nThreads = nThreads)
     return(out.path)
   }) %>% unlist()
@@ -29,15 +30,16 @@ MACS2.download_full_bigwig <- function(bigWig.paths='Nott_2019',
 # bigWig.paths <- list.files("/pd-omics/brian/Nott_2019", full.names = T)
 
 MACS2.bigwig_to_bedgraph <- function(bigWig.paths,
-                                     converter_path="./echolocatoR/tools/UCSC_utilities",
+                                     converter_path="exec/UCSC_utilities",
                                      force_new_download=F,
                                      OS="MAC"){
   # Download executable
+  # system.file(file.path(converter_path,OS), "bigWigToBedGraph.dms", package = "echolocatoR")
   destfile <- file.path(converter_path,OS,"bigWigToBedGraph.dms")
-  
-  if(!file.exists(destfile) | force_new_download){ 
+
+  if(!file.exists(destfile) | force_new_download){
       download.file("http://hgdownload.soe.ucsc.edu/admin/exe/macOSX.x86_64/bigWigToBedGraph",
-                    destfile = destfile) 
+                    destfile = destfile)
     # Change permissions
     system(paste("chmod u+x",destfile))
   }

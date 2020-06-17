@@ -627,7 +627,7 @@ mergeQTL.QTL_distributions_plot <- function(){
     if(SNP.Group=="Consensus_SNP"){
       GENE_df <- subset(FM_melt, (Consensus_SNP==T) & (FDR<=0.05), drop=F)
     }
-    if(SNP.Group=="Credible_Set"){
+    if(SNP.Group=="CS"){
       GENE_df <- subset(FM_melt, (Support>0) & (FDR<=0.05), drop=F)
     }
     if(SNP.Group=="GWAS_lead_SNP"){
@@ -657,7 +657,7 @@ mergeQTL.QTL_distributions_plot <- function(){
     return(gp)
   }
   consensus <- plot.QTL_distributions.subset(SNP.Group = "Consensus_SNP")
-  cred.set <- plot.QTL_distributions.subset(SNP.Group = "Credible_Set")
+  cred.set <- plot.QTL_distributions.subset(SNP.Group = "CS")
   lead.snp <- plot.QTL_distributions.subset(SNP.Group = "GWAS_lead_SNP")
   sig.snp <- plot.QTL_distributions.subset(SNP.Group = "GWAS_sig_SNP")
 

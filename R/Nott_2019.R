@@ -3,12 +3,28 @@
 # ^^^^^^^^^^^^^^ single-nucleus human brain epigenomic dataset # ^^^^^^^^^^^^^^
 # Nott, Alexi, Inge R. Holtman, Nicole G. Coufal, Johannes C.M. Schlachetzki, Miao Yu, Rong Hu, Claudia Z. Han, et al. “Cell Type-Specific Enhancer-Promoter Connectivity Maps in the Human Brain and Disease Risk Association.” Science 0793, no. November (2019): 778183. https://doi.org/10.1101/778183.
 #  ^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^
+
+# UCSC Nott tracks
+# https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf
+
+
 # UCSC Genome Browser: Command Line Utilities:
 # http://hgdownload.soe.ucsc.edu/admin/exe/macOSX.x86_64/
 
 
-NOTT_2019.epigenomic_histograms <- function(finemap_DT,
-                                            results_path,
+
+
+#' Plot brain cell-specific epigenomic data
+#'
+#' Brain cell-specific epigenomic data from Nott et al. (2019).
+#' @inheritParams finemap_pipeline
+#' @keywords internal
+#' @family NOTT_2019
+#' @source
+#' \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
+#' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
+NOTT_2019.epigenomic_histograms <- function(finemap_dat,
+                                            locus_dir,
                                             show_plot=T,
                                             save_plot=T,
                                             full_data=T,
@@ -16,22 +32,24 @@ NOTT_2019.epigenomic_histograms <- function(finemap_DT,
                                             binwidth=2500,
                                             geom="histogram",
                                             plot_formula="Assay + Cell_type ~.",
-                                            bigwig_dir=NULL){
-  library(BiocGenerics)
-  library(GenomicRanges)
-  library(ggbio)
-  # GLASS DATA: UCSC GB
-  # https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf
-  # show_plot=T;save_plot=T;full_data=T;return_assay_track=F;binwidth=2500; geom="histogram";plot_formula="Assay + Cell_type ~.";show_regulatory_rects=T
+                                            bigwig_dir=NULL,
+                                            nCores=4,
+                                            save_annot=F){
+  # library(BiocGenerics)
+  # library(GenomicRanges)
+  # library(ggbio)
+  # show_plot=T;save_plot=T;full_data=T;return_assay_track=F;binwidth=2500; geom="histogram";plot_formula="Assay + Cell_type ~.";show_regulatory_rects=T; nCores=4; bigwig_dir=NULL;
 
   # UCSC Tracks
-  import.bw.filt <- function(bw.file, gr.dat, full_data=T){
+  import.bw.filt <- function(bw.file,
+                             gr.dat,
+                             full_data=T){
     if(full_data){
       # Get all ranges within min/max
       gr.span <- gr.dat[1,]
-      mcols(gr.span) <- NULL
-      start(gr.span) <- min(gr.dat$POS)
-      end(gr.span) <- max(gr.dat$POS)
+      GenomicRanges::mcols(gr.span) <- NULL
+      GenomicRanges::start(gr.span) <- min(gr.dat$POS)
+      GenomicRanges::end(gr.span) <- max(gr.dat$POS)
     } else {
       # Otherwise, just use the score for the exact values
       gr.span <- gr.dat
@@ -43,17 +61,14 @@ NOTT_2019.epigenomic_histograms <- function(finemap_DT,
   }
 
   # Import BigWig annotation files
-  bigWigFiles <- readxl::read_excel("./echolocatoR/annotations/Nott_2019/Nott_2019.snEpigenomics.xlsx")
-  # bigWigFiles <- subset(bigWigFiles, marker!="-" &  cell_type!="peripheral microglia")
+  data("NOTT_2019.bigwig_metadata")
+  bigWigFiles <- NOTT_2019.bigwig_metadata#readxl::read_excel("./echolocatoR/annotations/Nott_2019/Nott_2019.snEpigenomics.xlsx")
+  # Some bigWig files were initially loaded to UCSC GB, but then later taken down by the authors....
+  # However I saved these files on Minerva beforehand.
+  bigWigFiles <- subset(bigWigFiles, UCSC_available=="T")
   bigWigFiles <- dplyr::mutate(bigWigFiles, cell_type = gsub(" ",".",cell_type))
-  # Authors have since removed this from UCSC, but I saved it on Minerva beforehand.
-  subset(bigWigFiles, cell_type!="peripheral.PU1+")
-
-
-
-
   # Convert finemap data to granges
-  dat <- finemap_DT
+  dat <- finemap_dat
   dat$seqnames <- paste0("chr",dat$CHR)
   dat$start.end <- dat$POS
   gr.dat <- GenomicRanges::makeGRangesFromDataFrame(df = dat,
@@ -68,7 +83,7 @@ NOTT_2019.epigenomic_histograms <- function(finemap_DT,
     } else { bw.file <- bigWigFiles$data_link[i]}
 
     bw.name <- gsub("_pooled|pooled_","",bigWigFiles$name[i])
-    printer("GVIZ:: Importing...",bw.name)
+    printer("GVIZ:: Importing...",paste0("[",i,"]"),bw.name)
     bw.filt <- import.bw.filt(bw.file=bw.file,
                               gr.dat=gr.dat,
                               full_data=full_data)
@@ -80,7 +95,7 @@ NOTT_2019.epigenomic_histograms <- function(finemap_DT,
     # bw.filt$cell_type <-strsplit(bw.name, "_")[[1]][[1]]
     # bw.filt$assay <- strsplit(bw.name, "_")[[1]][[2]]
     return(bw.filt)
-  }, mc.cores = 4)
+  }, mc.cores = nCores)
   bw.cols <- bigWigFiles$name
   # names(bw.grlist) <- bw.cols
   bw.gr <- unlist(GenomicRanges::GRangesList(bw.grlist))
@@ -92,6 +107,11 @@ NOTT_2019.epigenomic_histograms <- function(finemap_DT,
   # GenomicRanges::findOverlaps(query = subset(gr.dat, Support>1),
   #                             subject = bw.gr)
 
+  if(save_annot){
+    annot_file <- annotation_file_name(locus_dir = locus_dir,
+                                       lib_name = "Nott_2019.epigenomics")
+    saveRDS(bw.gr, annot_file)
+  }
   nott_tracks <-  ggbio::autoplot(object=bw.gr,
                                   geom=geom,
                                   # facets= Experiment~.,
@@ -103,6 +123,7 @@ NOTT_2019.epigenomic_histograms <- function(finemap_DT,
                                   position="identity",
                                   aes(fill=Cell_type), show.legend=T) +
     facet_grid(facets = formula(plot_formula)) +
+    theme_classic() +
     theme(legend.position="right", strip.text.y = element_text(angle = 0))
 
   if(return_assay_track){ return(nott_tracks)}
@@ -118,7 +139,7 @@ NOTT_2019.epigenomic_histograms <- function(finemap_DT,
 
   # gr.snp[start(gr.snp)!=Inf]
   # Fuse all tracks
-  params_list <- list(title = paste0(gene," [",length(seqnames(gr.dat))," SNPs]"),
+  params_list <- list(title = paste0(gene," [",length(GenomicRanges::seqnames(gr.dat))," SNPs]"),
                       track.bg.color = "transparent",
                       track.plot.color = "transparent",
                       label.text.cex = .7,
@@ -129,10 +150,11 @@ NOTT_2019.epigenomic_histograms <- function(finemap_DT,
                       # xlim = c(min(start(gr.snp)), max(start(gr.snp))),
                       heights = c(.3,.3,1)
                       )
+  tracks <- ggbio::tracks
   trks <- suppressWarnings(do.call("tracks", append(TRACKS_list, params_list)))
   # add lines
-  lead.pos <- subset(finemap_DT,leadSNP)$POS
-  consensus.pos <- subset(finemap_DT, Consensus_SNP==T)$POS
+  lead.pos <- subset(finemap_dat,leadSNP)$POS
+  consensus.pos <- subset(finemap_dat, Consensus_SNP==T)$POS
 
   trks_plus_lines <- trks +
     # theme_bw() +
@@ -146,8 +168,10 @@ NOTT_2019.epigenomic_histograms <- function(finemap_DT,
 
   if(show_plot){ print(trks_plus_lines) }
   if(save_plot){
-    ggsave(file.path(results_path,"Annotation",
-                     paste0(basename(results_path),"_Glass.snEpigenomics.png") ),
+    save_path <- file.path(locus_dir,"Annotation",
+                           paste0(basename(locus_dir),"_Glass.snEpigenomics.png") )
+    dir.create(dir(save_path), showWarnings = F, recursive = T)
+    ggsave(save_path,
            plot = trks_plus_lines, dpi=400, height = 15, width = 8,
            bg = "transparent")
   }
@@ -155,32 +179,70 @@ NOTT_2019.epigenomic_histograms <- function(finemap_DT,
 }
 
 
-NOTT_2019.superenhancers <- function(s6_path="./echolocatoR/annotations/Nott_2019/aay0793-Nott-Table-S6.xlsx"){
-  s6 <- readxl::read_excel( , skip = 2)
-  annot_sub <- subset(s6, chr== paste0("chr",unique(finemap_DT$CHR)) & start>=min(finemap_DT$POS) & end<=max(finemap_DT$POS) )
+
+
+
+#' Get cell type-specific superenhancer data
+#'
+#' Brain cell-specific epigenomic data from Nott et al. (2019).
+#' @keywords internal
+#' @family NOTT_2019
+#' @source
+#' \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
+#' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
+NOTT_2019.superenhancers <- function(){
+  # s6 <- readxl::read_excel("./echolocatoR/annotations/Nott_2019/aay0793-Nott-Table-S6.xlsx", skip = 2)
+  data("NOTT_2019.superenhancer_interactome")
+  annot_sub <- subset(NOTT_2019.superenhancer_interactome,
+                      chr== paste0("chr",unique(finemap_dat$CHR)) &
+                      start>=min(finemap_dat$POS) &
+                      end<=max(finemap_dat$POS) )
   if(nrow(annot_sub)>0){
-    merged_DT <- data.table:::merge.data.table(finemap_DT %>%
+    merged_dat <- data.table:::merge.data.table(finemap_dat %>%
                                                  dplyr::mutate(chr=paste0("chr",CHR),
                                                                start=as.numeric(POS)) %>%
                                                  data.table::data.table(),
                                                data.table::data.table(s6),
                                                by = c("chr","start"))
   }
+  return(merged_dat)
 }
 
-NOTT_2019.get_promoter_interactome_data <- function(finemap_DT,
-                                                     s5_path="./echolocatoR/annotations/Nott_2019/aay0793-Nott-Table-S5.xlsx"){
-  sheets_s5 <- readxl::excel_sheets(s5_path)
-  s5 <- readxl::read_excel(s5_path, sheet = sheets_s5[1], skip = 2)
-  s5 <- s5 %>% dplyr::rename(chr=Chr, start=Start, end=End)
+
+
+
+#' Get cell type-specific promoter/emhancer/interactome data
+#'
+#' Brain cell-specific epigenomic data from Nott et al. (2019).
+#' @keywords internal
+#' @family NOTT_2019
+#' @source
+#' \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
+#' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
+NOTT_2019.get_promoter_interactome_data <- function(finemap_dat){
+  # s5_path="~/Desktop/Fine_Mapping/echolocatoR/annotations/Nott_2019/aay0793-Nott-Table-S5.xlsx"
+  # sheets_s5 <- readxl::excel_sheets(s5_path)
+  # s5 <- readxl::read_excel(s5_path, sheet = sheets_s5[1], skip = 2)
+  data("NOTT_2019.interactome")
   # Subset to window
-  annot_sub <- subset(s5, chr== paste0("chr",unique(finemap_DT$CHR)) &
-                        start>=min(finemap_DT$POS) &
-                        end<=max(finemap_DT$POS) )
+  annot_sub <- NOTT_2019.interactome$H3K4me3_around_TSS_annotated_pe %>%
+    dplyr::rename(chr=Chr, start=Start, end=End) %>%
+    subset(chr== paste0("chr",unique(finemap_dat$CHR)) &
+           start>=min(finemap_dat$POS) &
+           end<=max(finemap_dat$POS) )
   return(annot_sub)
 }
 
-NOTT_2019.get_promoter_celltypes <- function(annot_sub, marker_key){
+
+
+
+#' Get promoter cell types
+#'
+#' Brain cell-specific epigenomic data from Nott et al. (2019).
+#' @keywords internal
+#' @family NOTT_2019
+NOTT_2019.get_promoter_celltypes <- function(annot_sub,
+                                             marker_key){
   promoter.cols <- grep("*_active_promoter",  colnames(annot_sub), value = T)
   logical.list <- colSums(annot_sub[,promoter.cols])>0
   promoter_celltypes <- gsub("\\_.*","", promoter.cols[as.logical(logical.list)] )
@@ -189,7 +251,20 @@ NOTT_2019.get_promoter_celltypes <- function(annot_sub, marker_key){
   return(promoter_celltypes)
 }
 
-NOTT_2019.get_interactome <- function(annot_sub, top.consensus.pos, marker_key){
+
+
+
+#' Import cell type-specific interactomes
+#'
+#' Brain cell-specific epigenomic data from Nott et al. (2019).
+#' @keywords internal
+#' @family NOTT_2019
+#' @source
+#' \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
+#' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
+NOTT_2019.get_interactome <- function(annot_sub,
+                                      top.consensus.pos,
+                                      marker_key){
   interact.cols <- grep("*_interactions", colnames(annot_sub), value = T)
   interact.DT <- lapply(interact.cols, function(column){
     coords <- strsplit(annot_sub[,column][[1]], ",")
@@ -219,40 +294,64 @@ NOTT_2019.get_interactome <- function(annot_sub, top.consensus.pos, marker_key){
 }
 
 
-NOTT_2019.get_interactions <- function(finemap_DT,
-                                       s5_path="./echolocatoR/annotations/Nott_2019/aay0793-Nott-Table-S5.xlsx"){
-  sheets_s5 <- readxl::excel_sheets(s5_path)
-  selected_sheets <- grep("interactome$",sheets_s5, value = T)
+
+
+#' Import cell type-specific interactomes
+#'
+#' Brain cell-specific epigenomic data from Nott et al. (2019).
+#' @keywords internal
+#' @family NOTT_2019
+#' @source
+#' \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
+#' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
+NOTT_2019.get_interactions <- function(finemap_dat){
+  # s5_path="./echolocatoR/annotations/Nott_2019/aay0793-Nott-Table-S5.xlsx"
+  # sheets_s5 <- readxl::excel_sheets(s5_path)
+  data("NOTT_2019.interactome")
+  selected_sheets <- grep("interactome$",names(NOTT_2019.interactome), value = T)
   interactomes <- lapply(selected_sheets, function(s){
     printer("Importing",s,"...")
     # Read the sheet you want
-    dat <- readxl::read_excel(s5_path, sheet = s, skip = 2)
+    dat <- NOTT_2019.interactome[[s]]#readxl::read_excel(s5_path, sheet = s, skip = 2)
     dat$Name <- s
     return(dat)
   }) %>% data.table::rbindlist()
   interactomes_sub <- subset(interactomes,
-                         chr1== paste0("chr",unique(finemap_DT$CHR)) &
-                         chr2== paste0("chr",unique(finemap_DT$CHR)) &
-                         start1>=min(finemap_DT$POS) &
-                         start2>=min(finemap_DT$POS) &
-                         end1<=max(finemap_DT$POS) &
-                         end2<=max(finemap_DT$POS)
+                         chr1== paste0("chr",unique(finemap_dat$CHR)) &
+                         chr2== paste0("chr",unique(finemap_dat$CHR)) &
+                         start1>=min(finemap_dat$POS) &
+                         start2>=min(finemap_dat$POS) &
+                         end1<=max(finemap_dat$POS) &
+                         end2<=max(finemap_dat$POS)
                          ) %>% tidyr::separate(Name, into=c("Cell_type","Element"), remove=F)
   return(interactomes_sub)
 }
 
-NOTT_2019.get_epigenomic_peaks <- function(peak.dir="/Volumes/Scizor/Nott_2019/peaks",
+
+
+
+#' Import cell type-specific epigenomic peaks
+#'
+#' Brain cell-specific epigenomic data from Nott et al. (2019).
+#' @keywords internal
+#' @family NOTT_2019
+#' @source
+#' \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
+#' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
+NOTT_2019.get_epigenomic_peaks <- function(peak.dir="/pd-omics/data/Nott_2019/peaks",
                                            narrow_peaks=T,
                                            broad_peaks=T){
-  bigWigFiles <- readxl::read_excel("./echolocatoR/annotations/Nott_2019/Nott_2019.snEpigenomics.xlsx")
+  data("NOTT_2019.bigwig_metadata")
+  bigWigFiles <- NOTT_2019.bigwig_metadata
   peak_types <- c(ifelse(narrow_peaks,".narrowPeak$", NA),
                   ifelse(broad_peaks,"_broad.bed12$", NA))
   peak_types <- peak_types[!is.na(peak_types)]
-
   peaks.paths <- list.files(peak.dir,
                             pattern =  paste(peak_types, collapse = "|"),
-                            full.names = T,recursive = T)
-  PEAKS <- MACS2.import_peaks(peaks.paths, as_granges=T)
+                            full.names = T,
+                            recursive = T)
+  PEAKS <- MACS2.import_peaks(peaks.paths = peaks.paths,
+                              as_granges = T)
   PEAKS <- lapply(PEAKS, function(peak){
     pk.name <- gsub(".ucsc_narrowPeak1|.ucsc_broadRegion1","",peak$name[1])
     meta <- subset(bigWigFiles, long_name==pk.name)
@@ -268,23 +367,36 @@ NOTT_2019.get_epigenomic_peaks <- function(peak.dir="/Volumes/Scizor/Nott_2019/p
 }
 
 
-NOTT_2019.get_regulatory_regions <- function(finemap_DT,
-                                             s5_path="./echolocatoR/annotations/Nott_2019/aay0793-Nott-Table-S5.xlsx",
-                                             as.granges=F){
+
+
+#' Plot brain cell-specific epigenomic data
+#'
+#' @keywords internal
+#' @family NOTT_2019
+#' @source
+#' \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
+#' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
+NOTT_2019.get_regulatory_regions <- function(finemap_dat,
+                                             as.granges=F,
+                                             nCores=1){
   # Get sheet names
-  sheets_s5 <- readxl::excel_sheets(s5_path)
-  selected_sheets <- grep("promoters$|enhancers$",sheets_s5, value = T)
+  # s5_path="./echolocatoR/annotations/Nott_2019/aay0793-Nott-Table-S5.xlsx"
+  # sheets_s5 <- readxl::excel_sheets(s5_path)
+  data("NOTT_2019.interactome")
+  selected_sheets <- grep("promoters$|enhancers$",names(NOTT_2019.interactome), value = T)
   regions <- parallel::mclapply(selected_sheets, function(s){
     printer("Importing",s,"...")
     # Read the sheet you want
-    dat <- readxl::read_excel(s5_path, sheet = s, skip = 1, col_names = c("chr","start","end"))
+    # dat <- readxl::read_excel(s5_path, sheet = s, skip = 1,
+    #                           col_names = c("chr","start","end"))
+    dat <- NOTT_2019.interactome[[s]]
     dat$Name <- s
     return(dat)
-  }, mc.cores = 4) %>% data.table::rbindlist()
+  }, mc.cores = nCores) %>% data.table::rbindlist(fill=T)
   regions_sub <- regions %>%
-    # subset(chr== paste0("chr",unique(finemap_DT$CHR)) &
-    #                     start>=min(finemap_DT$POS) &
-    #                     end<=max(finemap_DT$POS) ) %>%
+    # subset(chr== paste0("chr",unique(finemap_dat$CHR)) &
+    #                     start>=min(finemap_dat$POS) &
+    #                     end<=max(finemap_dat$POS) ) %>%
     tidyr::separate(Name, into=c("Cell_type","Element"), remove=F) %>%
     dplyr::mutate(middle=as.integer( end-abs(end-start)/2) )
   if(as.granges){
@@ -293,7 +405,6 @@ NOTT_2019.get_regulatory_regions <- function(finemap_DT,
                                                      start.field = "start",
                                                      end.field = "end",
                                                      keep.extra.columns = T)
-
   }
   return(regions_sub)
 }
@@ -301,7 +412,19 @@ NOTT_2019.get_regulatory_regions <- function(finemap_DT,
 
 
 # ***************************** #
-NOTT_2019.plac_seq_plot <- function(finemap_DT=NULL,
+
+
+
+
+#' Plot brain cell-specific interactome data
+#'
+#' @keywords internal
+#' @family NOTT_2019
+#' @source
+#' \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
+#' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
+NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
+                                    locus_dir=NULL,
                                      title=NULL,
                                      print_plot=T,
                                      save_plot=T,
@@ -311,33 +434,31 @@ NOTT_2019.plac_seq_plot <- function(finemap_DT=NULL,
                                      index_SNP=NULL,
                                      return_consensus_overlap=T,
                                      show_arches=T,
-                                     show_regulatory_rects=T){
-  #  quick_finemap()
-  # print_plot=T; save_plot=T; title=NULL; index_SNP=NULL; xlims=NULL; zoom_window=NULL; return_consensus_overlap =T
-
-  library(ggbio)
+                                     show_regulatory_rects=T,
+                                     save_annot=F){
+  # data("finemap_dat"); print_plot=T; save_plot=T; title=NULL; index_SNP=NULL; xlims=NULL; zoom_window=NULL; return_consensus_overlap =T
   marker_key <- list(PU1="Microglia",
                      Olig2="Oligo",
                      NeuN="Neuronal",
                      LHX2="Astrocyte")
   if(is.null(index_SNP)){
-    lead.pos <- subset(finemap_DT, leadSNP)$POS #top_n(finemap_DT, n = 1, wt = -P)$POS
+    lead.pos <- subset(finemap_dat, leadSNP)$POS #top_n(finemap_dat, n = 1, wt = -P)$POS
   } else {
-    lead.pos <- subset(finemap_DT, SNP==index_SNP)$POS
+    lead.pos <- subset(finemap_dat, SNP==index_SNP)$POS
   }
 
-  #subset(finemap_DT,SNP=="rs76904798")$POS
-  consensus.pos <- subset(finemap_DT, Consensus_SNP==T)$POS
+  #subset(finemap_dat,SNP=="rs76904798")$POS
+  consensus.pos <- subset(finemap_dat, Consensus_SNP==T)$POS
   if(length(consensus.pos)>0){
-    top.consensus.pos <- (top_n(subset(finemap_DT, Consensus_SNP==T),
+    top.consensus.pos <- (top_n(subset(finemap_dat, Consensus_SNP==T),
                                 n=1, wt = mean.PP) %>% top_n(1,wt=Effect))$POS[1]
   } else {
-    top.consensus.pos <- (top_n(subset(finemap_DT, Support>0),
+    top.consensus.pos <- (top_n(subset(finemap_dat, Support>0),
                                 n=1, wt = mean.PP )%>% top_n(1,wt=Effect))$POS[1]
   }
   # Define window size
   if(is.null(xlims)){
-    xlims = c(min(finemap_DT$POS), max(finemap_DT$POS))
+    xlims = c(min(finemap_dat$POS), max(finemap_dat$POS))
   }
   if(!is.null(zoom_window)){
     xlims = c(lead.pos-as.integer(zoom_window/2),  lead.pos+as.integer(zoom_window/2))
@@ -345,37 +466,46 @@ NOTT_2019.plac_seq_plot <- function(finemap_DT=NULL,
 
 
   # Subset interactome to relevant region
-  annot_sub <- NOTT_2019.get_promoter_interactome_data(finemap_DT = finemap_DT)
+  annot_sub <- NOTT_2019.get_promoter_interactome_data(finemap_dat = finemap_dat)
   ## Extract active promoter celltypes
   promoter_celltypes <- NOTT_2019.get_promoter_celltypes(annot_sub = annot_sub,
                                                          marker_key = marker_key)
   ## Extract promoter interactions
   interact.DT <- NOTT_2019.get_interactome(annot_sub = annot_sub,
-                                            top.consensus.pos =  top.consensus.pos,
-                                            marker_key = marker_key)
-  # interactions <- NOTT_2019.get_interactions(finemap_DT = finemap_DT)
+                                           top.consensus.pos =  top.consensus.pos,
+                                           marker_key = marker_key)
+  # interactions <- NOTT_2019.get_interactions(finemap_dat = finemap_dat)
 
 
 
   ## $$$$$ HERE $$$$$$ : use for fig 1, third col
-  regions <- NOTT_2019.get_regulatory_regions(finemap_DT = finemap_DT,
+  regions <- NOTT_2019.get_regulatory_regions(finemap_dat = finemap_dat,
                                               as.granges = T)
-  regions <- subset(regions, seqnames(regions) %in% paste0("chr",unique(finemap_DT$CHR)) &
-                   start(regions)>=min(finemap_DT$POS) &
-                   end(regions)<=max(finemap_DT$POS))
+  regions <- subset(regions,
+                    as.character(GenomicRanges::seqnames(regions)) == paste0("chr",unique(finemap_dat$CHR))[1] &
+                    GenomicRanges::start(regions)>=min(finemap_dat$POS) &
+                    GenomicRanges::end(regions)<=max(finemap_dat$POS))
   # Report overlap
-  printer("+ NOTT_2019:: Evaluating Consensus SNP overlap with regulatory elements...")
-  gr.hits <- GRanges_overlap(finemap_DT=subset(finemap_DT, Consensus_SNP==T),
-                             regions=regions)
+  # printer("+ NOTT_2019:: Evaluating Consensus SNP overlap with regulatory elements...")
+  # gr.hits <- GRanges_overlap(finemap_dat=subset(finemap_dat, Consensus_SNP==T),
+  #                            regions=regions)
+  if(save_annot){
+    annot_file <- annotation_file_name(locus_dir = locus_dir,
+                                       lib_name = "Nott_2019.interactome")
+    saveRDS(interact.DT, annot_file)
 
+    annot_file <- annotation_file_name(locus_dir = locus_dir,
+                                       lib_name = "Nott_2019.enhancers_promoters")
+    saveRDS(regions, annot_file)
+  }
 
 
   ####### Assemble Tracks #######
   # GWAS track
-  GWAS_trk <- ggplot(data=finemap_DT, aes(x=POS, y=-log10(P), color=-log10(P))) +
+  GWAS_trk <- ggplot(data=finemap_dat, aes(x=POS, y=-log10(P), color=-log10(P))) +
     geom_point()
 
-  FM_trk <- ggplot(data=finemap_DT, aes(x=POS, y=mean.PP, color=mean.PP)) +
+  FM_trk <- ggplot(data=finemap_dat, aes(x=POS, y=mean.PP, color=mean.PP)) +
     geom_point() +
     scale_color_viridis_c(breaks=c(0,.5,1), limits=c(0,1)) +
     ylim(0,1)
@@ -393,7 +523,7 @@ NOTT_2019.plac_seq_plot <- function(finemap_DT=NULL,
     ggbio::geom_arch(data = interact.DT, alpha=.6, color="gray60", max.height = 10,
                                         aes(x=Start, xend=End)) +
     facet_grid(facets = Cell_type~.) +
-    # scale_y_reverse() +
+    scale_y_reverse() +
     # scale_colour_brewer(palette = "Set2") +
     theme_classic() +
     # labs(subtitle = paste0(annot_sub$Annotation[[1]]," - ",promoter_celltypes) ) +
@@ -405,22 +535,20 @@ NOTT_2019.plac_seq_plot <- function(finemap_DT=NULL,
   if(show_regulatory_rects){
     NOTT.interact_trk <- NOTT.interact_trk +
       ggbio::geom_rect(data = regions,
-                       aes(xmin=start, xmax=end, ymin=-1, ymax=1, fill=Element), alpha=.8, inherit.aes=F) +
+                       aes(xmin=start, xmax=end, ymin=1, ymax=-1, fill=Element),
+                       alpha=.7, inherit.aes=F, color="transparent") +
       scale_fill_manual(values = c("turquoise2", "purple2")) +
       geom_point(data = data.frame(regions), aes(x=middle, y=0, color=Element), size=.5,
                  inherit.aes = F,  alpha=.8) +
       scale_color_manual(values = c("turquoise","purple")) +
-      geom_hline(yintercept = Inf, alpha=.2, show.legend = F)
+      geom_hline(yintercept = Inf, alpha=.2, show.legend = F) +
+      scale_y_reverse()
   }
 
 
   if(return_interaction_track){
     printer("++ Nott sn-epigenomics:: Returning PLAC-seq track.")
-    return(NOTT.interact_trk
-             # ggbio::geom_rect(data = annot_sub,
-             #                  aes(xmin=start, xmax=end, ymin=-0, ymax=Inf),
-             #                  fill="turquoise", alpha=.5, inherit.aes=F) +
-            )
+    return(NOTT.interact_trk)
   } else{
     # Makes tracks list
     TRACKS_list <- list(
@@ -439,7 +567,7 @@ NOTT_2019.plac_seq_plot <- function(finemap_DT=NULL,
                         label.text.angle = 0,
                         label.width = unit(5.5, "lines"),
                         xlim = xlims
-                        # xlim = c(min(finemap_DT$POS), max(finemap_DT$POS))
+                        # xlim = c(min(finemap_dat$POS), max(finemap_dat$POS))
                         # heights = c(rep(1,length(INIT_list)), rep(1,length(BW_tracks)) )
     )
     TRACKS_list <- append(TRACKS_list, params_list)
@@ -463,7 +591,7 @@ NOTT_2019.plac_seq_plot <- function(finemap_DT=NULL,
     if(print_plot){print(trks_plus_lines)}
     # SAVE PLOT
     if(save_plot){
-      plot.path <- file.path(results_path,"Multi-finemap",
+      plot.path <- file.path(locus_dir,
                              paste0("Nott.sn-epigenomics_ggbio.png"))
       dir.create(dirname(plot.path), showWarnings = F, recursive = T)
       ggsave(filename = plot.path,

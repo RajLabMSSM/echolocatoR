@@ -7,7 +7,16 @@ __*echolocatoR*__ is an R package for automating statistical and functional fine
 To install, run the following command in R:  
 ```R
 devtools::install_github("RajLabMSSM/echolocatoR")
-```
+```  
+**NOTE**: While this GitHub repo is still private, you need to use a token to install *echolocatoR* using the `auth_token` argument (see [here for details](http://devtools.r-lib.org/reference/install_github)).  
+
+
+## Vignettes
+
+For vignettes and example workflows, see the following pages:   
+### [Full pipeline vignette](https://rajlabmssm.github.io/echolocatoR/vignettes/full_pipeline_vignette.html)  
+### [Plotting vignette](https://github.com/RajLabMSSM/echolocatoR/tree/master/vignettes/plotting_vignette.Rmd)  
+
 
 ## Workflow  
 

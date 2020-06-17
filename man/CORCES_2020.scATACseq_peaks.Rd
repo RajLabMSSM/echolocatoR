@@ -20,9 +20,18 @@ Each row represents an individual peak identified in the single-cell ATAC-seq da
 Data originally from \href{https://www.biorxiv.org/content/10.1101/2020.01.06.896159v1}{Corces et al. (bioRxiv)}, as of May 2020.
 Specifically: \emph{STable5_Features_scATAC-seq_Peaks_all}
 }
+\examples{
+\dontrun{
+dat <- readxl::read_excel("~/Desktop/Fine_Mapping/echolocatoR/annotations/Coceres_2020/STable5_Features_scATAC-seq_Peaks_all.xlsx", skip = 18)
+CORCES_2020.scATACseq_peaks <- data.table::data.table(dat)
+usethis::use_data(CORCES_2020.scATACseq_peaks, overwrite = T)
+}
+}
 \seealso{
 Other CORCES_2020: 
+\code{\link{CORCES_2020.HiChIP_FitHiChIP_loop_calls}},
 \code{\link{CORCES_2020.bulkATACseq_peaks}},
+\code{\link{CORCES_2020.cicero_coaccessibility}},
 \code{\link{CORCES_2020.scATACseq_celltype_peaks}}
 }
 \concept{CORCES_2020}

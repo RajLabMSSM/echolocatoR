@@ -20,12 +20,9 @@ Imports:
     dplyr,
     data.table,
     reticulate,
-    ggplot2,
-    patchwork,
-    pbmcapply,
+    ggplot2,  
     ggrepel,
-    coloc,
-    susieR,
+    coloc, 
     tidyr,
     tidyverse,
     RColorBrewer,
@@ -49,18 +46,24 @@ Imports:
     ensembldb, 
     ggbio,
     rtracklayer,
-    ComplexHeatmap
+    ComplexHeatmap,
+    SummarizedExperiment,
+    biomaRt
 Remotes:
-  bioc::3.3/SummarizedExperiment,
-  bioc::3.3/biomaRt
+  github::stephenslab/susieR@0.9.0,
+  github::thomasp85/patchwork,
+  github::kvnkuang/pbmcapply,
 Suggests: 
+    SparkR,
     Rsamtools,
     crayon,
     png,
     knitr,
     rmarkdown,
     SparkR,
-    gaston,
-    ggridges
+    gaston, 
+    motifbreakR,
+    SNPlocs.Hsapiens.dbSNP142.GRCh37,
+    BSgenome.Hsapiens.UCSC.hg19
 RoxygenNote: 7.1.0
 VignetteBuilder: knitr

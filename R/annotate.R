@@ -1,159 +1,190 @@
 # %%%%%%%%%%%%%%%%% #
-####### Annotate ####### 
-# %%%%%%%%%%%%%%%%% # 
+####### Annotate #######
+# %%%%%%%%%%%%%%%%% #
 
 
-
-merge_finemapping_results <- function(minimum_support=0, 
+#' Merge fine-mapping results from all loci
+#'
+#' Gather fine-mapping results from \emph{echolocatoR} across all loci
+#' and merge into a single data.frame.
+#'
+#' @param dataset Path to the folder you want to recursively search for results files within
+#'  (e.g. \url{"Data/GWAS/Nalls23andMe_2019"}).
+#' Set this to a path that includes multiple subfolders if you want to gather results
+#' from multiple studies at once
+#' (e.g. \url{"Data/GWAS"}).
+#' @param minimum_support Filter SNPs by the minimum number
+#'  of fine-mapping tools that contained the SNP in their Credible Set.
+#' @param include_leadSNPs Include lead GWAS/QTL SNPs per locus
+#'  (regardless of other filtering criterion).
+#' @param xlsx_path Save merged data.frame as excel file.
+#' @param from_storage Search for stored results files.
+#' @param haploreg_annotation Annotate SNPs with HaploReg (using \code{HaploR}).
+#' @param regulomeDB_annotation Annotate SNPs with regulaomeDB (using \code{HaploR}).
+#' @param biomart_annotation Annotate SNPs with \code{biomart}.
+#' @param PP_threshold Mean posterior probability threshold to include SNPs in mean PP Credible Set
+#'  (averaged across all fine-mapping tools).
+#' @param consensus_thresh The minimum number of tools that have the SNPs in their Credible Set
+#' to classify it as a \strong{Consensus_SNP}.
+#' @param exclude_methods Exclude certain fine-mapping methods when estimating
+#' \strong{mean.CS} and \strong{Consensus_SNP}.
+#' @param verbose Print messages.
+#' @family annotatate
+merge_finemapping_results <- function(dataset="./Data/GWAS",
+                                      minimum_support=0,
                                       include_leadSNPs=T,
                                       xlsx_path=F,#="./Data/annotated_finemapping_results.xlsx",
                                       from_storage=T,
                                       haploreg_annotation=F,
                                       regulomeDB_annotation=F,
                                       biomart_annotation=F,
+                                      PP_threshold=.95,
+                                      consensus_thresh=2,
+                                      exclude_methods=NULL,
                                       verbose=T,
-                                      dataset="./Data/GWAS",
-                                      PP_threshold=.95, 
-                                      consensus_thresh=2, 
-                                      exclude_methods=NULL){ 
+                                      nThread=4){
   if(from_storage){
     printer("+ Gathering all fine-mapping results from storage...", v=verbose)
     # Find all multi-finemap_results files
-    multi_dirs <- list.files(dataset, pattern = "Multi-finemap_results.txt|*_Multi-finemap.tsv.gz", 
+    multi_dirs <- list.files(dataset, pattern = "Multi-finemap_results.txt|*_Multi-finemap.tsv.gz",
                              recursive = T, full.names = T)
-    dataset_names <- dirname(dirname(dirname(multi_dirs))) %>% unique() 
+    dataset_names <- dirname(dirname(dirname(multi_dirs))) %>% unique()
     # Loop through each GENE
     finemap_results <- lapply(dataset_names, function(dn, multi_dirs.=multi_dirs){
       # gene_dirs <- dirname(dirname(multi_dirs.))
       # Loop through each gene folder
       all_results <- lapply(multi_dirs., function(md){
-        gene <- basename(dirname(dirname(md))) 
+        gene <- basename(dirname(dirname(md)))
         printer("+ Importing results...",gene, v=verbose)
-        multi_data <- data.table::fread(md, nThread = 4)
+        multi_data <- data.table::fread(md, nThread = nThread)
         multi_data <- cbind(data.table::data.table(Dataset=dn, Gene=gene), multi_data)
         return(multi_data)
       }) %>% data.table::rbindlist(fill=TRUE) # Bind genes
-    }) %>% data.table::rbindlist(fill=TRUE) # Bind datasets    
+    }) %>% data.table::rbindlist(fill=TRUE) # Bind datasets
   }
-  
-  
-  # Add/Update Support/Consensus cols 
-  merged_results <- find_consensus_SNPs(finemap_DT = finemap_results, 
-                                        credset_thresh = PP_threshold, 
-                                        consensus_thresh = consensus_thresh, 
+
+
+  # Add/Update Support/Consensus cols
+  merged_results <- find_consensus_SNPs(finemap_dat = finemap_results,
+                                        credset_thresh = PP_threshold,
+                                        consensus_thresh = consensus_thresh,
                                         exclude_methods = exclude_methods)
-  
+
   merged_results <- subset(merged_results, Support>=minimum_support)
   if(!"Locus" %in% colnames(merged_results)){
     merged_results <- merged_results %>% dplyr::rename(Locus=Gene) %>% data.table::data.table()
   }
-  
+
   # Loop through each DATASET
-  # merged_results <- lapply(unique(finemap_results$Dataset), function(dname, include_leadSNPs.=include_leadSNPs){ 
-  #   multi_finemap_DT <- subset(finemap_results, Dataset==dname) 
-  #   CS_cols <- colnames(multi_finemap_DT)[endsWith(colnames(multi_finemap_DT), ".Credible_Set")]
-  #   finemap_method_list <- gsub(".Credible_Set","",CS_cols) 
+  # merged_results <- lapply(unique(finemap_results$Dataset), function(dname, include_leadSNPs.=include_leadSNPs){
+  #   multi_finemap_dat <- subset(finemap_results, Dataset==dname)
+  #   CS_cols <- colnames(multi_finemap_dat)[endsWith(colnames(multi_finemap_dat), ".CS")]
+  #   finemap_method_list <- gsub(".CS","",CS_cols)
   #   # Create support table
-  #   support_DT <- multi_finemap_results_table(multi_finemap_DT,
+  #   support_DT <- multi_finemap_results_table(multi_finemap_dat,
   #                                             finemap_method_list,
   #                                             fancy_table = F,
   #                                             minimum_support = minimum_support,
   #                                             include_leadSNPs = include_leadSNPs.)
-  #   support_DT <- cbind(Dataset = dname, support_DT) %>% arrange(Gene, desc(Support)) 
-  # }) %>% data.table::rbindlist() 
-  
-  
-  
-  
+  #   support_DT <- cbind(Dataset = dname, support_DT) %>% arrange(Gene, desc(Support))
+  # }) %>% data.table::rbindlist()
+
+
+
+
   # Annotate with haplorR
   if(haploreg_annotation){
     HR_query <- haploR.HaploReg(snp_list = unique(merged_results$SNP), verbose = verbose)
-    merged_results <- data.table:::merge.data.table(merged_results, HR_query, 
-                                                    by.x = "SNP", 
-                                                    by.y = "rsID", 
+    merged_results <- data.table:::merge.data.table(merged_results, HR_query,
+                                                    by.x = "SNP",
+                                                    by.y = "rsID",
                                                     all = T,
                                                     allow.cartesian=TRUE)
   }
   if(regulomeDB_annotation){
     regDB_query <- haploR.regulomeDB(snp_list = unique(merged_results$SNP), verbose = verbose)
-    merged_results <- data.table:::merge.data.table(merged_results, regDB_query, 
-                                                    by.x = "SNP", 
-                                                    by.y = "rsID", 
+    merged_results <- data.table:::merge.data.table(merged_results, regDB_query,
+                                                    by.x = "SNP",
+                                                    by.y = "rsID",
                                                     all = T,
                                                     allow.cartesian=TRUE)
   }
   if(biomart_annotation){
-    biomart_query <- biomart_snp_info(snp_list = merged_results$SNP, verbose = verbose) 
-    merged_results <- data.table:::merge.data.table(merged_results, biomart_query, 
+    biomart_query <- biomart_snp_info(snp_list = merged_results$SNP, verbose = verbose)
+    merged_results <- data.table:::merge.data.table(merged_results, biomart_query,
                                                       by.x = "SNP",
-                                                      by.y = "refsnp_id", 
-                                                      all = T, 
-                                                      allow.cartesian=TRUE)  
+                                                      by.y = "refsnp_id",
+                                                      all = T,
+                                                      allow.cartesian=TRUE)
   }
-  
+
   if(xlsx_path!=F){
     # data.table::fwrite(merged_results, file = csv_path, quote = F, sep = ",")
     openxlsx::write.xlsx(merged_results, xlsx_path)
-  } 
-  # createDT_html(merged_results) %>% print() 
+  }
+  # createDT_html(merged_results) %>% print()
+
+  merged_results <- update_CS_cols(merged_results)
   return(merged_results)
 }
 
-
-counts_summary <- function(top_SNPs, merged_results, verbose=T){
-  # Get total # of SNPs per gene per dataset  
-  candidate_counts <- merged_results %>% dplyr::group_by(Dataset, Gene) %>% 
+#'
+counts_summary <- function(top_SNPs,
+                           merged_results,
+                           verbose=T){
+  # Get total # of SNPs per gene per dataset
+  candidate_counts <- merged_results %>% dplyr::group_by(Dataset, Locus) %>%
     count(name = "Total_SNPs")
-  max_consensus <- sum(endsWith(colnames(merged_results),".Credible_Set"))
-  candidate_counts <- merge.data.frame(candidate_counts, 
-                                       dplyr::group_by(merged_results, Gene) %>% 
-                                         count(name = "Credible_Set"), 
-                                       by = "Gene", all = T)
-  candidate_counts <- merge.data.frame(candidate_counts,  
+  max_consensus <- sum(endsWith(colnames(merged_results),".CS"))
+  candidate_counts <- merge.data.frame(candidate_counts,
+                                       dplyr::group_by(merged_results, Locus) %>%
+                                         count(name = "CS"),
+                                       by = "Locus", all = T)
+  candidate_counts <- merge.data.frame(candidate_counts,
                                        subset(merged_results, Support == max_consensus) %>%
-                                         dplyr::group_by(Gene) %>% 
+                                         dplyr::group_by(Locus) %>%
                                          count(name = "Consensus_SNPs"),
                                        all = T)
   # Add lead rsid column
-  candidate_counts <-  merge.data.frame(candidate_counts,  
-                                        top_SNPs[,c("Gene","SNP")] %>% dplyr::rename(leadSNP=SNP), 
-                                        on = "Gene", all = T) 
+  candidate_counts <-  merge.data.frame(candidate_counts,
+                                        top_SNPs[,c("Locus","SNP")] %>% dplyr::rename(leadSNP=SNP),
+                                        on = "Locus", all = T)
   # Add "is lead SNP in Credible Set" column
-  candidate_counts <-  merge.data.frame(candidate_counts,  
-                                        leadSNP_comparison(top_SNPs, merged_results), 
-                                        on = "Gene", all = T) 
+  candidate_counts <-  merge.data.frame(candidate_counts,
+                                        leadSNP_comparison(top_SNPs, merged_results),
+                                        on = "Locus", all = T)
   # Gather credible set rsids
-  CredSet_rsids <- merged_results %>% dplyr::group_by(Dataset, Gene) %>%
+  CredSet_rsids <- merged_results %>% dplyr::group_by(Dataset, Locus) %>%
     subset(Support==max_consensus) %>%
     dplyr::summarise(CredSet_rsids = paste(SNP,collapse="; ")) %>%
     data.table::data.table()
-  candidate_counts <- merge.data.frame(candidate_counts,  
-                                       CredSet_rsids, 
-                                       on = "Gene", all = T) 
+  candidate_counts <- merge.data.frame(candidate_counts,
+                                       CredSet_rsids,
+                                       on = "Locus", all = T)
   # Gather consensus rsids
-  consensus_rsids <- merged_results %>% dplyr::group_by(Dataset, Gene) %>%
+  consensus_rsids <- merged_results %>% dplyr::group_by(Dataset, Locus) %>%
     subset(Support==T) %>%
     dplyr::summarise(Consensus_rsids = paste(SNP,collapse="; ")) %>%
     data.table::data.table()
-  candidate_counts <- merge.data.frame(candidate_counts,  
-                                       consensus_rsids, 
-                                       on = "Gene", all = T) 
+  candidate_counts <- merge.data.frame(candidate_counts,
+                                       consensus_rsids,
+                                       on = "Locus", all = T)
   # Fill 0s
-  candidate_counts$Consensus_SNPs[is.na(candidate_counts$Consensus_SNPs)] <- 0 
-  means <- c(Gene=" ",
+  candidate_counts$Consensus_SNPs[is.na(candidate_counts$Consensus_SNPs)] <- 0
+  means <- c(Locus=" ",
              Dataset="[Average]",
-             candidate_counts[,c("Total_SNPs","Credible_Set","Consensus_SNPs")] %>% colMeans() %>% round(1),
+             candidate_counts[,c("Total_SNPs","CS","Consensus_SNPs")] %>% colMeans() %>% round(1),
              leadSNP_in_CredSet = paste0(round(sum(candidate_counts$leadSNP_in_CredSet) / dim(candidate_counts)[1]*100,2),"%"),
              CredSet_rsids = "",
              Conensus_rsids = ""
   )
-  # Add averages 
+  # Add averages
   candidate_counts <- suppressWarnings(rbind(candidate_counts,  means))
   percent_model_convergence <- round(sum(candidate_counts$Consensus_SNPs>0)  / length(candidate_counts$Consensus_SNPs) *100, 2)
   max_consensus_set <- max(candidate_counts$Consensus_SNPs)
   # Check if lead SNP is in the credible sets for each locus
   printer("\n + All",max_consensus,"models converged upon 1 to",
-          max_consensus_set,"SNPs in",percent_model_convergence,"% of loci.", 
+          max_consensus_set,"SNPs in",percent_model_convergence,"% of loci.",
           v=verbose)
   # createDT_html(candidate_counts) %>% print()
   return(candidate_counts)
@@ -167,55 +198,78 @@ counts_summary <- function(top_SNPs, merged_results, verbose=T){
 
 
 
-# HaploR
-# https://cran.r-project.org/web/packages/haploR/vignettes/haplor-vignette.html
+#' Download SNP-wise annotations from HaploReg
+#'
+#' @keywords internal
+#' @family annotate
+#' @source
+#' \href{https://cran.r-project.org/web/packages/haploR/vignettes/haplor-vignette.html}{HaploR}
 haploR.HaploReg <- function(snp_list, verbose=T, chunk_size=NA){
   printer("+ Gathering annotation data from HaploReg...", v=verbose)
   # Break into smaller chunks
   snp_list <- unique(snp_list)
   if(is.na(chunk_size)){chunk_size <- length(snp_list)}
-  chunked_list <- split(snp_list, ceiling(seq_along(snp_list)/chunk_size)) 
-  
-  HR_query <- lapply(names(chunked_list), function(i){ 
-    printer("++ Submitting chunk",i,"/",length(chunked_list)) 
+  chunked_list <- split(snp_list, ceiling(seq_along(snp_list)/chunk_size))
+
+  HR_query <- lapply(names(chunked_list), function(i){
+    printer("++ Submitting chunk",i,"/",length(chunked_list))
     chunk <- chunked_list[[i]]
     HR_query <-  haploR::queryHaploreg(query = chunk, file = NULL, study = NULL, ldThresh = NA,
                                        ldPop = "EUR", epi = "vanilla", cons = "siphy", genetypes = "gencode",
                                        url = "https://pubs.broadinstitute.org/mammals/haploreg/haploreg.php",
-                                       timeout = 500, encoding = "UTF-8", verbose = FALSE) 
-    
+                                       timeout = 500, encoding = "UTF-8", verbose = FALSE)
+
     return(data.table::as.data.table(HR_query))
   }) %>% data.table::rbindlist()
-  
+
   return(HR_query)
 }
 
+
+
+
+#' Download SNP-wise annotations from RegulomeDB
+#'
+#' @keywords internal
+#' @family annotate
+#' @source
+#' \href{https://cran.r-project.org/web/packages/haploR/vignettes/haplor-vignette.html}{HaploR}
 haploR.regulomeDB <- function(snp_list, verbose=T, chunk_size=NA){
   printer("+ Gathering annotation data from HaploReg...", v=verbose)
   # Break into smaller chunks
   snp_list <- unique(snp_list)
   if(is.na(chunk_size)){chunk_size <- length(snp_list)}
-  chunked_list <- split(snp_list, ceiling(seq_along(snp_list)/chunk_size)) 
-  
-  rDB_query <- lapply(names(chunked_list), function(i){ 
-    printer("++ Submitting chunk",i,"/",length(chunked_list)) 
+  chunked_list <- split(snp_list, ceiling(seq_along(snp_list)/chunk_size))
+
+  rDB_query <- lapply(names(chunked_list), function(i){
+    printer("++ Submitting chunk",i,"/",length(chunked_list))
     chunk <- chunked_list[[i]]
-    rdb_query <-  haploR::queryRegulome(query = chunk, 
-                                       timeout = 500, 
-                                       verbose = F)  
+    rdb_query <-  haploR::queryRegulome(query = chunk,
+                                       timeout = 500,
+                                       verbose = F)
     return(data.table::as.data.table(rdb_query))
   }) %>% data.table::rbindlist()
-  
+
   return(rDB_query)
 }
 
 
-biomart_snp_info <- function(snp_list, reference_genome="grch37", verbose=T){
-  printer("+ Gathering annotation data from Biomart...", v=verbose) 
-  mart = biomaRt::useMart(biomart="ENSEMBL_MART_SNP", 
-                 host=paste0(reference_genome,".ensembl.org"), 
-                 path="/biomart/martservice", 
-                 dataset="hsapiens_snp")
+
+
+#' Download SNP-wise annotations from Biomart
+#'
+#' @keywords internal
+#' @family annotate
+#' @source
+#' \href{https://bioconductor.org/packages/release/bioc/html/biomaRt.html}{biomaRt}
+biomart_snp_info <- function(snp_list,
+                             reference_genome="grch37",
+                             verbose=T){
+  printer("+ Gathering annotation data from Biomart...", v=verbose)
+  mart = biomaRt::useMart(biomart="ENSEMBL_MART_SNP",
+                           host=paste0(reference_genome,".ensembl.org"),
+                           path="/biomart/martservice",
+                           dataset="hsapiens_snp",)
   # View(biomaRt::listFilters(mart))
   # View(biomaRt::listAttributes(mart))
   biomart_query = biomaRt::getBM(attributes =  c('refsnp_id',
@@ -235,7 +289,7 @@ biomart_snp_info <- function(snp_list, reference_genome="grch37", verbose=T){
                                  ),
                   filters = c('snp_filter'),
                   values = unique(snp_list),
-                  mart = mart) 
+                  mart = mart)
   biomart_query <- data.table::as.data.table(biomart_query)
   biomart_query[biomart_query$consequence_type_tv=="",]$consequence_type_tv <- NA
   # Only take the first annotation per variant
@@ -243,21 +297,30 @@ biomart_snp_info <- function(snp_list, reference_genome="grch37", verbose=T){
   return(biomart_query)
 }
 
-# BIOMART
+
+
+
+
+#' Identify which genes SNPs belong to using Biomart
+#'
+#' @keywords internal
+#' @family annotate
+#' @source
+#' \href{https://bioconductor.org/packages/release/bioc/html/biomaRt.html}{biomaRt}
 biomart_snps_to_geneInfo <- function(snp_list, reference_genome="grch37"){
   # listMarts()
-  snp_mart = useMart("ENSEMBL_MART_SNP", 
-                     dataset="hsapiens_snp", 
+  snp_mart = useMart("ENSEMBL_MART_SNP",
+                     dataset="hsapiens_snp",
                      host =  paste0(reference_genome,".ensembl.org"))
   # View(listFilters(snp_mart))
   # View(listAttributes(snp_mart))
-  snp_results <- biomaRt::getBM(snp_mart, filters="snp_filter", 
+  snp_results <- biomaRt::getBM(snp_mart, filters="snp_filter",
                                 values=snp_list,
                                 attributes=c("refsnp_id","snp","chr_name", "chrom_start","chrom_end",
                                              "associated_gene","ensembl_gene_stable_id" ) )
   # # Split ensembl IDs
   gene_mart = useMart("ENSEMBL_MART_ENSEMBL", dataset="hsapiens_gene_ensembl")
-  gene_results <- biomaRt::getBM(mart = gene_mart, 
+  gene_results <- biomaRt::getBM(mart = gene_mart,
                                  filters = "ensembl_gene_id",
                                  # values = unlist(strsplit(snp_results$ensembl, ";")),
                                  values = snp_results$ensembl_gene_stable_id,
@@ -271,14 +334,26 @@ biomart_snps_to_geneInfo <- function(snp_list, reference_genome="grch37"){
 }
 # biomart_snps_to_geneInfo(c("rs114360492"))
 
-biomart_geneInfo <- function(geneList, reference_genome="grch37"){
+
+
+
+#' Get gene info using Biomart
+#'
+#' @keywords internal
+#' @family annotate
+#' @source
+#' \href{https://bioconductor.org/packages/release/bioc/html/biomaRt.html}{biomaRt}
+#' @examples
+#' gene_info <- biomart_geneInfo(c("PTK2B","CLU","APOE"))
+biomart_geneInfo <- function(geneList,
+                             reference_genome="grch37"){
   # listDatasets(useMart("ENSEMBL_MART_ENSEMBL") )
-  gene_mart = biomaRt::useMart("ENSEMBL_MART_ENSEMBL", 
-                               dataset="hsapiens_gene_ensembl",  
+  gene_mart = biomaRt::useMart("ENSEMBL_MART_ENSEMBL",
+                               dataset="hsapiens_gene_ensembl",
                                host = paste0(reference_genome,".ensembl.org"))
   # View(listFilters(gene_mart))
   # View(listAttributes(gene_mart))
-  gene_results <- biomaRt::getBM(mart = gene_mart, 
+  gene_results <- biomaRt::getBM(mart = gene_mart,
                                  filters = "hgnc_symbol",
                                  # values = unlist(strsplit(snp_results$ensembl, ";")),
                                  values = geneList,
@@ -286,46 +361,66 @@ biomart_geneInfo <- function(geneList, reference_genome="grch37"){
                                                 "chromosome_name", "start_position", "end_position") )
   return(gene_results)
 }
-# biomart_geneInfo(c("PTK2B","CLU","APOE"))
 
-SNPs_by_mutation_type <- function(merged_results, 
+
+
+#' Return only the missense SNPs
+#'
+#' @keywords internal
+#' @family annotate
+#' @source
+#' \href{https://bioconductor.org/packages/release/bioc/html/biomaRt.html}{biomaRt}
+SNPs_by_mutation_type <- function(merged_results,
                                   mutation_type="missense_variant"){
-  potential_missense <- subset(merged_results, consequence_type_tv == mutation_type) %>% 
-    dplyr::group_by(Dataset, Gene, SNP) %>% 
-    dplyr::select(Dataset, Gene, SNP, consequence_type_tv) %>% 
+  potential_missense <- subset(merged_results, consequence_type_tv == mutation_type) %>%
+    dplyr::group_by(Dataset, Gene, SNP) %>%
+    dplyr::select(Dataset, Gene, SNP, consequence_type_tv) %>%
     unique()
-  potential_missense_full <- subset(merged_results, SNP %in% potential_missense$SNP) %>% 
-    dplyr::group_by(Dataset, Gene, SNP) %>% 
-    dplyr::select(Dataset, Gene, SNP, consequence_type_tv) %>% 
+  potential_missense_full <- subset(merged_results, SNP %in% potential_missense$SNP) %>%
+    dplyr::group_by(Dataset, Gene, SNP) %>%
+    dplyr::select(Dataset, Gene, SNP, consequence_type_tv) %>%
     unique()
   return(potential_missense_full)
 }
 
 
 
-epigenetics_summary <- function(merged_results, 
+#' Summarise \code{HaploR} annotations
+#'
+#' @keywords internal
+#' @family annotate
+#' @source
+#' \href{https://cran.r-project.org/web/packages/haploR/vignettes/haplor-vignette.html}{HaploR}
+epigenetics_summary <- function(merged_results,
                                 tissue_list = c("BRN","BLD"),
-                                epigenetic_variables = c("Promoter_histone_marks","Enhancer_histone_marks") # Chromatin_Marks 
-                                ){  
+                                epigenetic_variables = c("Promoter_histone_marks","Enhancer_histone_marks") # Chromatin_Marks
+                                ){
   merged_results <- data.table(merged_results)
   summary_func <- function(ev){
-    boolean <- lapply(ev, function(x){ intersect(tissue_list, strsplit(as.character(x), ", ")[[1]]) %>% length() > 0 }) %>% unlist()  
+    boolean <- lapply(ev, function(x){ intersect(tissue_list, strsplit(as.character(x), ", ")[[1]]) %>% length() > 0 }) %>% unlist()
     n_hits <- dim(merged_results[boolean,])[1]
     Total <- dim(merged_results)[1]
     Percent_Total <- round(n_hits / Total*100,2)
     return(list(Hits = n_hits,
                 Total = Total,
                 Percent_Total = Percent_Total))
-  } 
+  }
   epi_summary <- merged_results[, lapply(.SD, summary_func), .SDcols = epigenetic_variables] %>% t()
   colnames(epi_summary) <- c("Hits","Total_SNPs","Percent_Total")
   print(epi_summary)
 }
-  
 
-epigenetics_enrichment <- function(snp_list1, 
-                                   snp_list2, 
-                                   chisq=T, 
+
+
+#' Test for enrichment of \code{HaploR} annotations
+#'
+#' @keywords internal
+#' @family annotate
+#' @source
+#' \href{https://cran.r-project.org/web/packages/haploR/vignettes/haplor-vignette.html}{HaploR}
+epigenetics_enrichment <- function(snp_list1,
+                                   snp_list2,
+                                   chisq=T,
                                    fisher=T,
                                    epigenetic_variables = c("Promoter_histone_marks","Enhancer_histone_marks"),
                                    tissue_list = c("BRN","BLD")){
@@ -338,22 +433,22 @@ epigenetics_enrichment <- function(snp_list1,
   printer("+++ SNP list 2 :")
   HR2 <- haploR.HaploReg(snp_list2)
   summ2 <- epigenetics_summary(HR2, tissue_list = tissue_list)
-  
+
   for(epi_var in epigenetic_variables){
     printer("++ Testing for enrichment of '",epi_var,
-            "' in the tissues '",paste(tissue_list, collapse=" & "),"'") 
+            "' in the tissues '",paste(tissue_list, collapse=" & "),"'")
     # Create contingency table
-    cont_tab <- rbind(list1 = summ1[epi_var, c("Hits","Total_SNPs")] %>% unlist, 
+    cont_tab <- rbind(list1 = summ1[epi_var, c("Hits","Total_SNPs")] %>% unlist,
                       list2 = summ2[epi_var, c("Hits","Total_SNPs")] %>% unlist() ) %>% as.table()
     # Conduct tests
     if(chisq){
-      chisq.results <- chisq.test(cont_tab, simulate.p.value = TRUE) 
+      chisq.results <- chisq.test(cont_tab, simulate.p.value = TRUE)
       print(chisq.results)
     }
     if(fisher){
       fisher.results <- fisher.test(cont_tab)
       print(fisher.results)
-    } 
+    }
   }
 }
 
@@ -362,5 +457,4 @@ epigenetics_enrichment <- function(snp_list1,
 
 
 
- 
- 
+

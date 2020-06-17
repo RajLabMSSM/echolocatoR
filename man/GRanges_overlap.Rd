@@ -7,6 +7,7 @@
 GRanges_overlap(
   finemap_DT,
   regions,
+  return_merged = T,
   chrom_col.1 = "CHR",
   start_col.1 = "POS",
   end_col.1 = "POS",
@@ -18,3 +19,5 @@ GRanges_overlap(
 \description{
 Find overlap between genomic coordinates/ranges
 }
+\concept{GRanges}
+\keyword{internal}

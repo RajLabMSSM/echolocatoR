@@ -154,7 +154,8 @@ psychENCODE.assay_summary <- function(){
 
 get_group_sums <- function(per_df){
   group_sums <- per_df[,c("ASSAY_type","GWAS_lead.HIT","Consensus.HIT","CS.HIT")] %>%
-    dplyr::group_by(ASSAY_type) %>% summarise_each(funs(sum(., na.rm=T) )) %>%
+    dplyr::group_by(ASSAY_type) %>%
+    dplyr::summarise_each(.funs = list(sum(., na.rm=T) )) %>%
     data.table::melt(id.vars="ASSAY_type",variable.name="Variable", value.name="Total")
   group_sums <- tidyr::separate(group_sums, "Variable", c("SNP.Group",NA), "\\.")
   # group_sums$Total <- paste0("n=",group_sums$Total)

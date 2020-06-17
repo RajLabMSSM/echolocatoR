@@ -3,6 +3,10 @@
 # %%%%%%%%%%%%%%%%% #
 
 
+
+
+
+
 # cojo_DT = data.table::fread(file.path("Data/GWAS/Nalls23andMe_2019/LRRK2/COJO/COJO_results.txt"), sep="\t")
 
 # SNP_list = c("rs76904798","rs34637584","rs117073808")
@@ -14,7 +18,7 @@ COJO_plot <- function(locus,
                       save_plot=T){
   locus <- basename(results_path)
   # Label independent SNPs
-  ind_SNPs <- subset(cojo_DT, COJO.Credible_Set==T)
+  ind_SNPs <- subset(cojo_DT, COJO.CS==T)
   ind_SNPs <- cbind(ind_SNPs, type="Independent",color="purple")
   labelSNPs <- ind_SNPs#rbind(labelSNPs, ind_SNPs)
 
@@ -26,9 +30,9 @@ COJO_plot <- function(locus,
 
   # topEffect_snps <- cojo_DT %>% arrange(desc(COJO.Conditioned_Effect))
   # topEffect_snps <- topEffect_snps$SNP[1:5]
-  # cojo_DT <- cojo_DT %>% dplyr::mutate(color = ifelse(COJO.Credible_Set | COJO.Conditioned_Effect %in% topEffect_snps,
-  #                                                     ifelse(COJO.Credible_Set & COJO.Conditioned_Effect %in% topEffect_snps, "purple",
-  #                                                            ifelse(COJO.Credible_Set & !(COJO.Conditioned_Effect %in% topEffect_snps), "lightpurple", "lightblue") ), NA)
+  # cojo_DT <- cojo_DT %>% dplyr::mutate(color = ifelse(COJO.CS | COJO.Conditioned_Effect %in% topEffect_snps,
+  #                                                     ifelse(COJO.CS & COJO.Conditioned_Effect %in% topEffect_snps, "purple",
+  #                                                            ifelse(COJO.CS & !(COJO.Conditioned_Effect %in% topEffect_snps), "lightpurple", "lightblue") ), NA)
   # )
 
   spacing <- if(length(cojo_DT$SNP)>1000){250000}else{50000}
@@ -63,7 +67,12 @@ COJO_plot <- function(locus,
 
 
 
-construct_SNPs_labels <- function(subset_DT, lead=T, method=T, consensus=T, verbose=F, remove_duplicates=T){
+construct_SNPs_labels <- function(subset_DT,
+                                  lead=T,
+                                  method=T,
+                                  consensus=T,
+                                  verbose=F,
+                                  remove_duplicates=T){
   printer("+ PLOT:: Constructing SNP labels...", v=verbose)
   labelSNPs <- data.table::data.table()
   subset_DT <- data.table::as.data.table(subset_DT)
@@ -99,11 +108,6 @@ construct_SNPs_labels <- function(subset_DT, lead=T, method=T, consensus=T, verb
       labelSNPs <- rbind(labelSNPs, cons_SNPs, fill=T)
     }
   }
-  # Convert to GRanges object
-  # labelGR <- transformDfToGr(data=labelSNPs, seqnames = "CHR", start = "POS", end = "POS")
-  # names(labelGR) <- labelGR$SNP
-  # plotGrandLinear(gr.snp, aes(y = P, x=POS), highlight.gr = labelGR)
-
   # If there's duplicates only show the last one
   if(remove_duplicates){
     labelSNPs$rowID <- 1:nrow(labelSNPs)
@@ -121,7 +125,11 @@ construct_SNPs_labels <- function(subset_DT, lead=T, method=T, consensus=T, verb
   return(as.data.frame(labelSNPs))
 }
 
-LD_with_leadSNP <- function(LD_matrix, LD_SNP){
+
+
+
+LD_with_leadSNP <- function(LD_matrix,
+                            LD_SNP){
   # Get R2 values from LD matrix
   printer("LD Matrix dimensions:", paste(dim(LD_matrix), collapse=" x "))
   printer("Extracting LD subset for lead SNP:",LD_SNP)
@@ -137,7 +145,7 @@ LD_with_leadSNP <- function(LD_matrix, LD_SNP){
 
 
 
-snp_plot <- function(finemap_DT,
+snp_plot <- function(finemap_dat,
                      LD_matrix,
                      locus,
                      method="original",
@@ -146,20 +154,20 @@ snp_plot <- function(finemap_DT,
                      multi = T,
                      LD_SNP = NA){
   {
-  # finemap_DT <- data.table::fread("Data/GWAS/Nalls23andMe_2019/LRRK2/Multi-finemap/Multi-finemap_results.txt", sep="\t"); LD_matrix <- readRDS("Data/GWAS/Nalls23andMe_2019/LRRK2/plink/UKB_LD.RDS")
+  # finemap_dat <- data.table::fread("Data/GWAS/Nalls23andMe_2019/LRRK2/Multi-finemap/Multi-finemap_results.txt", sep="\t"); LD_matrix <- readRDS("Data/GWAS/Nalls23andMe_2019/LRRK2/plink/UKB_LD.RDS")
   score_dict <- setNames(c("-log10(P-value)", "PIP","PIP","PP", "PIP", "Conditional Probability","-log10(P-value)"),
                          c("original","SUSIE","POLYFUN_SUSIE", "ABF", "FINEMAP", "COJO","COLOC"))
   # X-tick spacing
-  # spacing <- if(length(finemap_DT$SNP)>1000){250000}else{50000}
-  # roundBreaks <- seq(plyr::round_any(min(finemap_DT$POS),10000), max(finemap_DT$POS), spacing)
+  # spacing <- if(length(finemap_dat$SNP)>1000){250000}else{50000}
+  # roundBreaks <- seq(plyr::round_any(min(finemap_dat$POS),10000), max(finemap_dat$POS), spacing)
   # yLimits2 <- c(0,1.1)
 
   # Merge with LD info
   # If not specified, identify a lead SNP by summing the PPs from each fine-mapping method
 
-  LD_SNP <- subset(finemap_DT, leadSNP==T)$SNP
+  LD_SNP <- subset(finemap_dat, leadSNP==T)$SNP
   LD_sub <- LD_with_leadSNP(LD_matrix, LD_SNP)
-  DT <- data.table:::merge.data.table(finemap_DT, LD_sub, by = "SNP") %>%
+  DT <- data.table:::merge.data.table(finemap_dat, LD_sub, by = "SNP") %>%
     dplyr::mutate(Mb=POS/1000000)
 
 
@@ -175,7 +183,7 @@ snp_plot <- function(finemap_DT,
       geom_hline(yintercept= -log10(5e-8), alpha=.5, linetype=2, size=.5, color="black")
 # =======
 #   if(method=="original"){
-#     DT <- finemap_DT
+#     DT <- finemap_dat
 #
 #     is.na(DT$Probability) <- 0
 #
@@ -188,25 +196,25 @@ snp_plot <- function(finemap_DT,
 
     # COLOC
     if(method=="COLOC"){
-      DT <- DT %>% dplyr::rename(Credible_Set = "Colocalized" )
+      DT <- DT %>% dplyr::rename(CS = "Colocalized" )
       title <- paste0(locus," : Colocalization (",method,")")
       p <- ggplot(data = DT, aes(x=POS, y= -log10(P), label=SNP, color= r2 ))
     # Fine-mapping methods
     } else if (multi){
       title <- method #paste0(locus," : After fine-mapping (",method,")")
       DT <- DT %>% dplyr::rename(Probability = paste0(method,".PP"),
-                                 Credible_Set = paste0(method,".Credible_Set"))
+                                 CS = paste0(method,".CS"))
       is.na(DT$Probability) <- 0
       p <- ggplot(data = DT, aes(x=POS, y=Probability, color= r2 )) +
 # =======
-#       DT <- finemap_DT %>% dplyr::rename(Probability = paste0(method,".PP"),
-#                                          Credible_Set = paste0(method,".Credible_Set"))
+#       DT <- finemap_dat %>% dplyr::rename(Probability = paste0(method,".PP"),
+#                                          CS = paste0(method,".CS"))
 #       is.na(DT$Probability) <- 0
 #       p <- ggplot(data = DT, aes(x=POS, y=Probability, label=SNP, color= -log10(P) )) +
 # >>>>>>> 1e2aecb9b38f6c049a9c6f1d9baed0f0d268e0b4:echolocatoR/R/plot.R
         ylim(c(0,1.2))
       subtitle <- if(is.na(subtitle)){
-        paste0(length(subset(DT, Credible_Set>0)$SNP), " Candidate SNP(s)")
+        paste0(length(subset(DT, CS>0)$SNP), " Candidate SNP(s)")
         }else{subtitle}
     } else {
       title <- paste0(locus," : After fine-mapping (",method,")")
@@ -214,7 +222,7 @@ snp_plot <- function(finemap_DT,
         ylim(c(0,1.2))
     }
     labelSNPs <- construct_SNPs_labels(DT, lead=T, method = T, consensus = F)
-    tag_SNPs <- subset(labelSNPs, Credible_Set>0)
+    tag_SNPs <- subset(labelSNPs, CS>0)
   }
 
   p <- p +
@@ -258,7 +266,7 @@ snp_plot <- function(finemap_DT,
 
 
 
-multi_finemap_plot <- function(finemap_DT,
+multi_finemap_plot <- function(finemap_dat,
                                LD_matrix,
                                results_path,
                                finemap_method_list,
@@ -272,7 +280,7 @@ multi_finemap_plot <- function(finemap_DT,
                                  ){
   # locus <- "LRRK2"
   # results_path <- file.path("./Data/GWAS/Nalls23andMe_2019",locus)
-  # finemap_DT <- data.table::fread(file.path(results_path,"Multi-finemap/Multi-finemap_results.txt"))
+  # finemap_dat <- data.table::fread(file.path(results_path,"Multi-finemap/Multi-finemap_results.txt"))
   # LD_matrix <- readRDS(file.path(results_path,"plink/UKB_LD.RDS"))
   # method_list=c("ABF","SUSIE","POLYFUN_SUSIE","FINEMAP")
 
@@ -280,17 +288,17 @@ multi_finemap_plot <- function(finemap_DT,
 
   # Assemble plots in list
    plot_list <- lapply(method_list, function(method,
-                                            finemap_DT.=finemap_DT,
+                                            finemap_dat.=finemap_dat,
                                             LD_matrix.=LD_matrix){
       printer("\n Plotting...",method)
       if(method=="COJO"){
-        p <- COJO_plot(cojo_DT = finemap_DT.,
+        p <- COJO_plot(cojo_DT = finemap_dat.,
                   results_path = results_path,
                   show_plot = F,
                   save_plot = T,
                   conditioned_snps = conditioned_snps)
       } else{
-        p <- snp_plot(finemap_DT = finemap_DT.,
+        p <- snp_plot(finemap_dat = finemap_dat.,
                       LD_matrix = LD_matrix.,
                       locus = locus,
                       method = method,
@@ -457,18 +465,18 @@ plot_mean.PP <- function(results_path, top_snps=20){
 # ## Before-After Plots
 # before_after_plots <- function(results_path,
 #                                locus,
-#                                finemap_DT,
+#                                finemap_dat,
 #                                before_var="P",
 #                                finemap_method="",
 #                                plot_COJO=F){
 #   score_dict <- setNames(c("Posterior Inclusion Probability","Posterior Probability",
 #                            "Posterior Probability", "Conditional Probability","Probability"),
 #                          c("SUSIE", "ABF", "FINEMAP", "COJO"))
-#   roundBreaks <- seq(plyr::round_any(min(finemap_DT$POS),10000), max(finemap_DT$POS),250000)
-#   labelSNPs <- label_SNPS(finemap_DT)
+#   roundBreaks <- seq(plyr::round_any(min(finemap_dat$POS),10000), max(finemap_dat$POS),250000)
+#   labelSNPs <- label_SNPS(finemap_dat)
 #
 #   # -log10(eval(parse(text=before_var)))
-#   before_plot <- ggplot(finemap_DT, aes(x=POS, y=-log10(eval(parse(text=before_var))), label=SNP, color= -log10(P) )) +
+#   before_plot <- ggplot(finemap_dat, aes(x=POS, y=-log10(eval(parse(text=before_var))), label=SNP, color= -log10(P) )) +
 #     # ylim(yLimits1) +
 #     geom_hline(yintercept=0, alpha=.5, linetype=1, size=.5) +
 #     geom_point(alpha=.5) +
@@ -477,15 +485,15 @@ plot_mean.PP <- function(results_path, top_snps=20){
 #     geom_point(data=labelSNPs[labelSNPs$type=="after",][1,], pch=21, fill=NA, size=4, colour=labelSNPs[labelSNPs$type=="after","color"][1], stroke=1) +
 #     geom_text_repel(data=labelSNPs, aes(label=SNP), color=labelSNPs$color, segment.alpha = .5, nudge_x = .5, box.padding = .5) +
 #     labs(title="Before Fine-mapping",
-#          subtitle = paste(locus," (",length(finemap_DT$Probability)," variants)",sep=""),
+#          subtitle = paste(locus," (",length(finemap_dat$Probability)," variants)",sep=""),
 #          y=y_var, x="Position", color="-log10(p-value)") +
 #     theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5)) +
 #     scale_x_continuous(breaks = roundBreaks)
 #
 #   ## After fine-mapping
-#   yLimits2 <- c(0, max(finemap_DT$Probability)*1.1)
+#   yLimits2 <- c(0, max(finemap_dat$Probability)*1.1)
 #
-#   after_plot <- ggplot(finemap_DT, aes(x=POS, y=Probability, label=SNP, color= -log10(P) )) +
+#   after_plot <- ggplot(finemap_dat, aes(x=POS, y=Probability, label=SNP, color= -log10(P) )) +
 #     # ylim(yLimits) +
 #     geom_hline(yintercept=0,alpha=.5, linetype=1, size=.5) +
 #     geom_point(alpha=.5) +
@@ -494,7 +502,7 @@ plot_mean.PP <- function(results_path, top_snps=20){
 #     geom_point(data=labelSNPs[labelSNPs$type=="after",][1,], pch=21, fill=NA, size=4, colour=labelSNPs[labelSNPs$type=="after","color"][1], stroke=1) +
 #     geom_text_repel(data=labelSNPs, aes(label=SNP), color=labelSNPs$color, segment.alpha = .5, nudge_x = .5, box.padding = .5) +
 #     labs(title=paste("After Fine-mapping: ",finemap_method,sep=""),
-#          subtitle=paste(locus," (",length(finemap_DT$Probability)," variants)", sep=""),
+#          subtitle=paste(locus," (",length(finemap_dat$Probability)," variants)", sep=""),
 #          y=score_dict[finemap_method][[1]], x="Position",
 #          color="-log10(p-value)") +
 #     theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5)) +
@@ -509,5 +517,5 @@ plot_mean.PP <- function(results_path, top_snps=20){
 #   } else {
 #     plot_grid(before_plot, after_plot, ncol = 1) %>% print()
 #   }
-#   createDT_html(finemap_DT, paste("SUSIE Results: ", locus), scrollY = 200)
+#   createDT_html(finemap_dat, paste("SUSIE Results: ", locus), scrollY = 200)
 # }

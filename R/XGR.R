@@ -1,4 +1,3 @@
-
 # DeepBlueR: Alternate source of annotation files
 ## https://bioconductor.org/packages/release/bioc/vignettes/DeepBlueR/inst/doc/DeepBlueR.html#listing-experiments
 
@@ -6,6 +5,17 @@
 # TUTORIALS
 # http://xgr.r-forge.r-project.org/#xenrichergenes
 # http://galahad.well.ox.ac.uk:3020/R/ds2
+
+#' Name annotation file
+#'
+#' @keywords internal
+annotation_file_name <- function(locus_dir,
+                                 lib_name){
+  annot_dir <- file.path(locus_dir,"annotations")
+  dir.create(annot_dir, showWarnings = F, recursive = T)
+  annot_file <- file.path(annot_dir, paste0(lib_name,".RDS"))
+  return(annot_file)
+}
 
 
 
@@ -15,8 +25,8 @@
 #' @family XGR
 #' @keywords internal
 GRanges_to_BED <- function(GR.annotations,
-                       output_path,
-                       sep="\t"){
+                           output_path,
+                           sep="\t"){
   BED_paths <- lapply(names(GR.annotations), function(name){
     GR <- GR.annotations[[name]]
     BED <- GR %>% as.data.table() %>%
@@ -94,6 +104,43 @@ XGR.prepare_foreground_background  <- function(subset_DT,
 }
 
 
+
+
+#' @keywords internal
+#' @family XGR
+XGR.sep_handler <- function(lib.name){
+  # "_(?=[^_]+$)" : Split by the last "_"
+  sepDict <- list("ENCODE_TFBS_ClusteredV3_CellTypes"="[.]",
+                  "ENCODE_DNaseI_ClusteredV3_CellTypes"="_(?=[^_]+$)",
+                  "Broad_Histone"="_(?=[^_]+$)",
+                  "FANTOM5_Enhancer"="_(?=[^_]+$)",
+                  "TFBS_Conserved"="[$]")
+  if(lib.name %in% names(sepDict)){
+    sep <- sepDict[[lib.name]]
+  }else{ sep <- "_(?=[^_]+$)"}
+  return(sep)
+}
+
+
+
+
+#' @keywords internal
+#' @family XGR
+XGR.parse_metadata <- function(gr.lib,
+                               lib.name=NA){
+  # https://stackoverflow.com/questions/50518137/separate-a-column-into-2-columns-at-the-last-underscore-in-r
+  sep <- XGR.sep_handler(lib.name = lib.name)
+  GenomicRanges::mcols(gr.lib) <- tidyr::separate(data.frame(GenomicRanges::mcols(gr.lib)),
+                                                  sep=sep,
+                                                  col="fullname",
+                                                  into=c("Source","Assay"),
+                                                  extra="merge")
+  return(gr.lib)
+}
+
+
+
+
 #' Download, standardize, and merge XGR annotations
 #'
 #' Merges a list of XGR annotations into a single GRanges object
@@ -105,31 +152,48 @@ XGR.prepare_foreground_background  <- function(subset_DT,
 #' @return GRangesList
 #' @family XGR
 #' @examples
-#' gr.lib <- XGR.download_and_standardize(c("TFBS_Conserved","Uniform_TFBS"), nCores=1)
+#' data("BST1")
+#' finemap_DT <- BST1
+#' gr.lib <- XGR.download_and_standardize(lib.selections=c("ENCODE_DNaseI_ClusteredV3_CellTypes"), finemap_DT=finemap_DT, nCores=1)
 #' @keywords internal
 XGR.download_and_standardize <- function(lib.selections=c("ENCODE_TFBS_ClusteredV3_CellTypes",
                                                           "TFBS_Conserved",
-                                                          "ReMap_PublicAndEncode_TFBS",
                                                           "Uniform_TFBS"),
                                          as_GRangesList=F,
+                                         finemap_dat,
                                          nCores=4){
+  # Iterate over XGR libraries
   gr.lib <- lapply(lib.selections, function(lib.name){
     GR.annotations <- XGR::xRDataLoader(RData.customised = lib.name)
+    # Iterate over lists within each library
     all_GRL <- parallel::mclapply(names(GR.annotations), function(n1){
       grl <- GR.annotations[[n1]]
+
       # Handle both nested and unnested entries
       if(class(grl)=="list"){
+        # grl$name <- names(unlist(grl))
         GRL <- lapply(names(grl), function(n2){
           gr <- grl[[n2]]
           gr$source <- n1
           gr$assay <- n2
           return(gr)
         }) %>% unlist()
-      } else {return(grl)}
+      } else {
+        grl$name <- names(grl)
+        return(grl)
+        }
     }, mc.cores = nCores) %>% unlist() # return all_GRL
+    # Rename GRanges after they've been unnested
+    names(all_GRL) <- names(unlist(GR.annotations))
+
+    # Merge lists together
     if(!is.null(all_GRL)){
       ALL_GRL <- unlist(GenomicRanges::GRangesList(all_GRL))
+      ALL_GRL <- GRanges_overlap(finemap_dat = finemap_dat, regions = ALL_GRL)
+      # Parse metadata
       ALL_GRL$library <- lib.name
+      ALL_GRL$fullname <- names(ALL_GRL)
+      ALL_GRL <- XGR.parse_metadata(gr.lib = ALL_GRL, lib.name = lib.name)
       return(ALL_GRL)
     } else{return(NULL)}
   }) # return OVERLAP
@@ -138,7 +202,6 @@ XGR.download_and_standardize <- function(lib.selections=c("ENCODE_TFBS_Clustered
   if(as_GRangesList==F){ gr.lib <- unlist(gr.lib) }
   return(gr.lib)
 }
-
 
 
 
@@ -158,7 +221,8 @@ XGR.download_and_standardize <- function(lib.selections=c("ENCODE_TFBS_Clustered
 #' @family XGR
 #' @keywords internal
 #' @examples
-#' data("finemap_DT")
+#' data("BST1")
+#' finemap_DT <- BST1
 #' gr.hits <- XGR.iterate_overlap(lib.selections=c("ENCODE_TFBS_ClusteredV3_CellTypes"), subset_DT=finemap_DT, nCores=1)
 XGR.iterate_overlap <- function(lib.selections=c("ENCODE_TFBS_ClusteredV3_CellTypes",
                                                  "TFBS_Conserved",
@@ -168,12 +232,13 @@ XGR.iterate_overlap <- function(lib.selections=c("ENCODE_TFBS_ClusteredV3_CellTy
                                 save_path=F,
                                 nCores=4){
   gr.lib <- XGR.download_and_standardize(lib.selections = lib.selections,
+                                         finemap_dat = subset_DT,
                                          nCores = nCores)
   # no_no_loci <- c("HLA-DRB5","MAPT","ATG14","SP1","LMNB1","ATP6V0A1",
   #                 "RETREG3","UBTF","FAM171A2","MAP3K14","CRHR1","MAPT-AS1","KANSL1","NSF","WNT3")
   # subset_DT <- subset(subset_DT, !Locus %in% no_no_loci)
   # subset_DT <- assign_lead_SNP(subset_DT)
-  gr.hits <- GRanges_overlap(finemap_DT = subset_DT,
+  gr.hits <- GRanges_overlap(finemap_dat = subset_DT,
                              regions = gr.lib)
 
   ucs.hits <-subset(gr.hits, Consensus_SNP)
@@ -254,10 +319,10 @@ XGR.iterate_enrichment <- function(subset_DT,
     try({
       GR.annotations <- XGR::xRDataLoader(RData.customised = lib.name)
       eTerm <- lapply(GR.annotations, function(grl){
-         et <-XGR::xGRviaGenomicAnno(data.file = fg_bg$foreground,
-                                   background.file = fg_bg$background,
-                                   format.file="data.frame",
-                                   GR.annotation = grl)
+        et <-XGR::xGRviaGenomicAnno(data.file = fg_bg$foreground,
+                                    background.file = fg_bg$background,
+                                    format.file="data.frame",
+                                    GR.annotation = grl)
         return(et)
       }) %>% data.table::rbindlist()
       eTerm$lib <- lib.name
@@ -278,7 +343,7 @@ XGR.iterate_enrichment <- function(subset_DT,
   if(save_path!=F){
     data.table::fwrite(enrich_res, save_path, quote = F)
   }
-return(enrich_res)
+  return(enrich_res)
 }
 
 
@@ -321,6 +386,43 @@ XGR.plot_enrichment <- function(enrich_res,
 }
 
 
+
+#' Filter sources
+#'
+#' Identify the sources with the most annotations in the locus.
+#' Then only keep these sources.
+#' @keywords internal
+#' @family XGR
+XGR.filter_sources <- function(gr.lib,
+                               n_top_sources=5){
+  top_sources <-  data.frame(gr.lib) %>%
+    dplyr::group_by(library, Source) %>%
+    dplyr::tally(sort = T)
+  if(!is.null(n_top_sources)){
+    gr.filt <- subset(gr.lib, Source %in% unique(top_sources$Source[1:min(n_top_sources, dplyr::n_distinct(top_sources$Source))]))
+  }
+  return(gr.filt)
+}
+
+#' Filter assays
+#'
+#' Identify the assays with the most annotations in the locus.
+#' Then only keep these assays
+#' @keywords internal
+#' @family XGR
+XGR.filter_assays <- function(gr.lib,
+                               n_top_assays=5){
+  top_assays <-  data.frame(gr.lib) %>%
+    dplyr::group_by(library, Assay) %>%
+    dplyr::tally(sort = T)
+  if(!is.null(n_top_assays)){
+    gr.filt <- subset(gr.lib, Assay %in% unique(top_assays$Assay[1:min(n_top_assays, dplyr::n_distinct(top_assays$Assay))]))
+  }
+  return(gr.filt)
+}
+
+
+
 #' Plot XGR peaks
 #'
 #' Plots the distribution of annotations across a genomic region (x-axis).
@@ -335,37 +437,39 @@ XGR.plot_enrichment <- function(enrich_res,
 #' @return \code{ggbio} track plot.
 #' @inheritParams XGR.prepare_foreground_background
 #' @examples
-#' data("finemap_DT")
-#' gr.lib <- XGR.download_and_standardize(c("TFBS_Conserved","Uniform_TFBS"), nCores=1)
-#' xgr.track <- XGR.plot_peaks(gr.lib=gr.lib, subset_DT=finemap_DT)
+#' data("BST1")
+#' finemap_DT <- BST1
+#' gr.lib <- XGR.download_and_standardize(c("ENCODE_DNaseI_ClusteredV3_CellTypes"), finemap_dat=finemap_DT, nCores=1)
+#' gr.filt <- XGR.filter_sources(gr.lib=gr.lib, n_top_sources=5)
+#' gr.filt <- XGR.filter_assays(gr.lib=gr.filt, n_top_assays=5)
+#' xgr.track <- XGR.plot_peaks(gr.lib=gr.filt, subset_DT=finemap_DT, fill_var="Assay", facet_var="Source")
 XGR.plot_peaks <- function(gr.lib,
                            subset_DT,
-                           geom = "density",
+                           fill_var="Assay",
+                           facet_var="Source",
+                           geom="density",
                            locus=NULL,
                            adjust=.2,
-                           show_plot=T){
-  gr.sub <- subset(gr.lib,
-         GenomicRanges::seqnames(gr.lib)==paste0("chr",subset_DT$CHR[1]) &
-         GenomicRanges::start(gr.lib) >= min(subset_DT$POS)-1000000 &
-         GenomicRanges::end(gr.lib) <= max(subset_DT$POS)+1000000)
-  subset_DT$SEQnames <-subset_DT$CHR
-  gr.snp <- DT_to_GRanges(subset_DT = dplyr::mutate(subset_DT, CHR=paste0("chr",CHR),
-                                          bp=POS))
-  xgr.track <- ggbio::autoplot(gr.sub,
+                           show_plot=T,
+                           show.legend=T){
+  # data("BST1"); subset_DT <- BST1; show.legend=T;  fill_var="Assay"; facet_var="Source"; geom="density"; adjust=.2;
+  gr.lib$facet_label <- gsub("_","\n",GenomicRanges::mcols(gr.lib)[,facet_var])
+  xgr.track <- ggbio::autoplot(gr.lib,
                                # which = gr.snp,
-                               ggplot2::aes(fill=library),
-                               facets = library~.,
+                               ggplot2::aes(fill=eval(parse(text=fill_var))),
+                               facets = formula("facet_label ~ ."), #formula(paste0(facet_var," ~ .")),
                                # fill = "magenta",
                                color = "white",#NA
-                               geom = "density",
+                               geom = geom,
                                adjust = adjust,
                                position="stack",
                                # bins=50,
-                               # size=.1,
+                               size=.1,
                                alpha = .7,
-                               show.legend=F)  +
+                               show.legend=show.legend)  +
     ggplot2::theme_bw() +
-    xlim(min(gr.snp$POS), max(gr.snp$POS))
+    labs(fill=fill_var) +
+    xlim(min(subset_DT$POS), max(subset_DT$POS))
   # ggbio::tracks(list("XGR"=xgr.track))
 
   if(show_plot) print(xgr.track)
@@ -617,10 +721,7 @@ XGR.merge_and_process <- function(grl.xgr,
   ## Add and modify columns
   grl.xgr.merged <- unlist(grl.xgr)
   names(grl.xgr.merged) <- gsub("Broad_Histone_","",names(grl.xgr.merged))
-  sep <- list("ENCODE_TFBS_ClusteredV3_CellTypes"="[.]",
-              "ENCODE_DNaseI_ClusteredV3_CellTypes"="_",
-              "Broad_Histone"="_",
-              "FANTOM5_Enhancer"="_")[[lib]]
+  sep <- XGR.sep_handler(lib.name = lib)
   grl.xgr.merged$Source <- lapply(names(grl.xgr.merged), function(e){strsplit(e, sep)[[1]][1]}) %>% unlist()
   # grl.xgr.merged$Source <- gsub("_","\n", grl.xgr.merged$Source)
   grl.xgr.merged$Assay <- lapply(names(grl.xgr.merged), function(e){strsplit(e, sep)[[1]][2]}) %>% unlist()
@@ -675,5 +776,3 @@ XGR.import_annotations <- function(gr.snp,
   grl.xgr <- GR.name_filter_convert(gr.xgr, names(GR.orig), min_hits=annot_overlap_threshold)
   return(grl.xgr)
 }
-
-

@@ -50,8 +50,10 @@ ROADMAP.tabix <- function(results_path,
   fname <- paste0(eid,"_15_coreMarks_dense.bed.bgz")
   URL <- file.path("https://egg2.wustl.edu/roadmap/data/byFileType/chromhmmSegmentations/ChmmModels/coreMarks/jointModel/final",
                    fname) # _15_coreMarks_stateno.bed.gz
-  cmd <- paste0("cd ",results_path," && tabix -p bed --begin 2 --end 3 ", URL," ",
+  cmd <- paste0("cd ",results_path," &&",
+                " tabix -p bed --begin 2 --end 3 ", URL," ",
                 chrom,":",min_pos,"-",max_pos)
+  print(cmd)
   # out <- system(cmd, intern = T)
   dat <- data.table::fread(cmd = cmd, select = 1:4, col.names = c("Chrom","Start","End","State"))
   dat$EID <- eid
@@ -67,7 +69,6 @@ ROADMAP.tabix <- function(results_path,
 
 
 
-
 #' Query Roadmap by genomic coordinates
 #'
 #' @param gr.snp \code{\link[GenomicRanges]{GRanges}} object of SNPs to query Roadmap with.
@@ -75,7 +76,8 @@ ROADMAP.tabix <- function(results_path,
 #' @inheritParams  ROADMAP.tabix
 #' @family ROADMAP
 #' @examples
-#' data("finemap_DT")
+#' data("BST1")
+#' finemap_DT <- BST1
 #' gr.snp <- DT_to_GRanges(subset_DT = finemap_DT)
 #' grl.roadmap <- ROADMAP.query(results_path="./Roadmap", gr.snp=gr.snp, keyword_query="placenta")
 ROADMAP.query <- function(results_path,
@@ -98,7 +100,7 @@ ROADMAP.query <- function(results_path,
     dat <- GenomicRanges::GRanges()
     try({
       dat <- ROADMAP.tabix(results_path=results_path.,
-                           chrom = gsub("chr","",GenomicRanges::seqnames(gr.snp.)[1]),
+                           chrom = GenomicRanges::seqnames(gr.snp.)[1],
                            min_pos = min(gr.snp.$POS),
                            max_pos = max(gr.snp.$POS),
                            eid=eid,
@@ -118,6 +120,8 @@ ROADMAP.query <- function(results_path,
 }
 
 
+
+
 #' Standardize Roadmap query
 #'
 #' @param grl.roadmap Roadmap query results
@@ -127,10 +131,11 @@ ROADMAP.query <- function(results_path,
 #' @family ROADMAP
 ROADMAP.merge_and_process_grl <- function(grl.roadmap,
                                           gr.snp,
-                                          n_top_tissues=5){
+                                          n_top_tissues=5,
+                                          sep=" "){
   grl.roadmap.merged <- unlist(grl.roadmap)
   grl.roadmap.merged$Source <- names(grl.roadmap.merged)
-  grl.roadmap.merged$Source <- gsub("_"," ", grl.roadmap.merged$Source)
+  grl.roadmap.merged$Source <- gsub("_",sep, grl.roadmap.merged$Source)
   grl.roadmap.merged$ChromState <- lapply(grl.roadmap.merged$State, function(ROW){base::strsplit(ROW, "_")[[1]][2]})%>% unlist()
   # Tally ChromStates
   # chromState_key <- data.table::fread(file.path("./echolocatoR/tools/Annotations/ROADMAP/ROADMAP_chromatinState_HMM.tsv"))
@@ -145,8 +150,11 @@ ROADMAP.merge_and_process_grl <- function(grl.roadmap,
 
   grl.roadmap.filt <- grl.roadmap.merged[unlist( lapply(grl.roadmap, function(e){IRanges::overlapsAny(e, gr.snp, minoverlap = 1)}) )]
   if(!is.null(n_top_tissues)){
-    top_tissues <-  data.frame(grl.roadmap.filt) %>% dplyr::group_by(Source) %>% dplyr::tally(sort = T)
-    grl.roadmap.filt <- subset(grl.roadmap.filt, Source %in% unique(top_tissues$Source[1:n_top_tissues]))
+    top_tissues <-  data.frame(grl.roadmap.filt) %>%
+      dplyr::group_by(Source) %>%
+      dplyr::tally(sort = T)
+    grl.roadmap.filt <- subset(grl.roadmap.filt,
+                               Source %in% unique(top_tissues$Source[1:min(n_top_tissues, dplyr::n_distinct(top_tissues$Source))]))
   }
   return(grl.roadmap.filt)
 }
@@ -164,7 +172,8 @@ ROADMAP.merge_and_process_grl <- function(grl.roadmap,
 #' @param adjust The granularity of the peaks.
 #' @param show_plot Whether to print the plot.
 #' @examples
-#' data("finemap_DT")
+#' data("BST1")
+#' finemap_DT <- BST1
 #' gr.snp <- DT_to_GRanges(finemap_DT)
 #' grl.roadmap <- ROADMAP.query(results_path="./Roadmap", gr.snp=gr.snp, keyword_query="monocyte")
 #' grl.roadmap.filt <- ROADMAP.merge_and_process_grl(grl.roadmap=grl.roadmap, gr.snp=gr.snp, n_top_tissues=5)
@@ -211,17 +220,13 @@ ROADMAP.track_plot <- function(grl.roadmap.filt,
 #' @inheritParams ROADMAP.merge_and_process_grl
 #' @return A named list containing:
 #' \itemize{
-#' \item{Roadmap_plot}
-#' \item{Roadmap_query}
-#' }
-#' @family ROADMAP
-#' @return List containing:
-#' \itemize{
 #' \item{\code{ggbio} plot}
 #' \item{\code{GRanges} object within the queried coordinates}
 #' }
+#' @family ROADMAP
 #' @examples
-#' data("finemap_DT")
+#' data("BST1")
+#' finemap_DT <- BST1
 #' roadmap_plot_query <- ROADMAP.query_and_plot(subset_DT=finemap_DT, keyword_query="monocytes")
 ROADMAP.query_and_plot <- function(subset_DT,
                                    results_path="./ROADMAP",
@@ -272,3 +277,18 @@ ROADMAP.query_and_plot <- function(subset_DT,
 }
 
 
+
+
+#' @family plot
+#' @keywords internal
+GR.name_filter_convert <- function(GR.final,
+                                   GR.names,
+                                   min_hits=1){
+  names(GR.final) <- GR.names
+  grl <- GR.final[!as.logical(lapply(GR.final, is.null))]
+  # Filter to those that had at least N hits
+  grl <- grl[as.logical(lapply(grl, function(g, min_hits.=min_hits){length(GenomicRanges::seqnames(g)) >= min_hits.}))]
+  # Convert to GRangesList (important)
+  grl <- GenomicRanges::GRangesList(grl)
+  return(grl)
+}

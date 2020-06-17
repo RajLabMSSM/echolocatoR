@@ -93,8 +93,8 @@ import_topSNPs <- function(topSS,
     }
 
   # Make sure cols are numeric
-  top_SNPs <- top_SNPs %>% dplyr::mutate_at(vars(POS,P,Effect),
-                                            funs(as.numeric))
+  top_SNPs <- top_SNPs %>% dplyr::mutate_at(.vars = vars(POS,P,Effect),
+                                            .funs = as.numeric)
   if(show_table){
     createDT(top_SNPs, caption = "Top SNP per locus")
   }
@@ -113,7 +113,7 @@ import_topSNPs <- function(topSS,
 #' @keywords internal
 extract_SNP_subset <- function(locus,
                                fullSS_path,
-                               results_path,
+                               subset_path,
                                force_new_subset=F,
                                top_SNPs="auto",
                                bp_distance=500000,
@@ -144,11 +144,7 @@ extract_SNP_subset <- function(locus,
                                probe_path = "./Data/eQTL/gene.ILMN.map",
                                remove_tmps=T,
                                verbose=T){
-  printer("",v=verbose)
   message("------------------ Step 1: Query ---------------")
-  subset_path <- .get_subset_path(results_path=results_path,
-                                 locus=locus,
-                                 subset_path="auto")
   # topSNP_sub <- top_SNPs[top_SNPs$Locus==locus & !is.na(top_SNPs$Locus),][1,]
   # if(is.na(min_POS)){min_POS <- topSNP_sub$POS - bp_distance}
   # if(is.na(max_POS)){max_POS <- topSNP_sub$POS + bp_distance}
@@ -387,7 +383,7 @@ query_fullSS <- function(fullSS_path,
 query_handler <- function(locus,
                           fullSS_path,
                           top_SNPs=NULL,
-                          subset_path, #top_SNPs="auto",
+                          subset_path,
                           min_POS=NA,
                           max_POS=NA,
                           bp_distance=500000,
@@ -398,6 +394,7 @@ query_handler <- function(locus,
                           query_by="coordinates",
                           probe_path = "./Data/eQTL/gene.ILMN.map"){
   printer("++ Query Method: '",query_by, sep="")
+
   if(query_by=="tabix"){
     topSNP_sub <- top_SNPs[top_SNPs$Gene==locus & !is.na(top_SNPs$Gene),]
     if(is.na(min_POS)){min_POS <- topSNP_sub$POS - bp_distance}

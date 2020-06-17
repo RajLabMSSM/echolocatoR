@@ -20,8 +20,17 @@ Each row represents an individual peak identified in the bulk ATAC-seq data.
 Data originally from \href{https://www.biorxiv.org/content/10.1101/2020.01.06.896159v1}{Corces et al. (bioRxiv)}, as of May 2020.
 Specifically: \emph{STable2_Features_bulkATAC-seq_Peaks}
 }
+\examples{
+\dontrun{
+dat <- readxl::read_excel("~/Desktop/Fine_Mapping/echolocatoR/annotations/Coceres_2020/STable2_Features_bulkATAC-seq_Peaks.xlsx", skip = 18)
+CORCES_2020.bulkATACseq_peaks <- data.table::data.table(dat)
+usethis::use_data(CORCES_2020.bulkATACseq_peaks)
+}
+}
 \seealso{
 Other CORCES_2020: 
+\code{\link{CORCES_2020.HiChIP_FitHiChIP_loop_calls}},
+\code{\link{CORCES_2020.cicero_coaccessibility}},
 \code{\link{CORCES_2020.scATACseq_celltype_peaks}},
 \code{\link{CORCES_2020.scATACseq_peaks}}
 }

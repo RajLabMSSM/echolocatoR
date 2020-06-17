@@ -19,7 +19,7 @@
 #'
 #' Concatenate and print any number of items.
 #'
-#' @family general functions
+#' @family general
 #' @examples
 #' n.snps <- 50
 #' printer("echolocatoR::","Processing",n.snps,"SNPs...")
@@ -29,7 +29,7 @@ printer <- function(..., v=T){if(v){print(paste(...))}}
 
 #' Identify current operating system (OS).
 #'
-#' @family general functions
+#' @family general
 #' @examples
 #' get_os()
 #' @keywords internal
@@ -54,7 +54,7 @@ get_os <- function(){
 #'
 #' Print the echolocatoR image to the R console.
 #'
-#' @family general functions
+#' @family general
 #' @examples
 #' startup_image()
 #' @keywords internal
@@ -86,7 +86,7 @@ startup_image  <- function(){
 
 
 
-#' @family general functions
+#' @family general
 #' @keywords internal
 .arg_list_handler <- function(arg, i){
   output <- if(length(arg)>1){arg[i]}else{arg}
@@ -99,7 +99,7 @@ startup_image  <- function(){
 #'
 #' Rapidly read a list of files from storage and concatenate them by rows.
 #'
-#' @family general functions
+#' @family general
 #' @keywords internal
 .rbind.file.list <- function(file.list,
                             verbose=T,
@@ -119,7 +119,7 @@ startup_image  <- function(){
 #'
 #' Extension of tryCatch function.
 #'
-#' @family general functions
+#' @family general
 #' @param input Function input.
 #' @param func Function.
 #' @keywords internal
@@ -244,7 +244,7 @@ zscore <- function(vec){
 #'
 #' Generate an interactive data table with download buttons.
 #'
-#' @family general functions
+#' @family general
 #' @keywords internal
 createDT <- function(DF, caption="", scrollY=400){
   data <- DT::datatable(DF, caption=caption,
@@ -266,7 +266,7 @@ createDT <- function(DF, caption="", scrollY=400){
 #' Generate an interactive data table with download buttons.
 #' Use this function when manually constructing rmarkdown chunks using cat() in a for loop.
 #'
-#' @family general functions
+#' @family general
 #' @keywords internal
 createDT_html <- function(DF, caption="", scrollY=400){
   htmltools::tagList( createDT(DF, caption, scrollY))
@@ -279,7 +279,7 @@ createDT_html <- function(DF, caption="", scrollY=400){
 #'
 #' Annoyingly, there is no native function to do simple find-and-replace in the `DT` library.
 #'
-#' @family general functions
+#' @family general
 #' @return data.frame
 #' @keywords internal
 dt.replace <- function(DT, target, replacement){
@@ -289,7 +289,7 @@ dt.replace <- function(DT, target, replacement){
 
 
 
-#' @family general functions
+#' @family general
 #' @keywords internal
 view_gz_head <- function(gz_path, nrow=10){
   system(paste("zcat",gz_path,"| head",nrows))
@@ -297,7 +297,7 @@ view_gz_head <- function(gz_path, nrow=10){
 
 
 
-#' @family general functions
+#' @family general
 #' @keywords internal
 get_nrows <- function(large_file){
   printer("+ Calculating the number of rows in",basename(large_file),"...")
@@ -313,18 +313,23 @@ get_nrows <- function(large_file){
 
 
 
-#' @family general functions
+#' @family general
 #' @keywords internal
-get_header <- function(large_file){
-  if(endsWith(large_file,".gz")){
-    header <- system(paste("zcat",large_file,"| head -1 -"), intern=T)
-  } else {
-    header <- system(paste("head -1",large_file), intern=T)
-  }
+get_header <- function(large_file,
+                       nThread=1){
+  header <- colnames(data.table::fread(large_file, nrows = 0, nThread=nThread))
+  # if(endsWith(large_file,".gz")){
+  #   header <- system(paste("zcat",large_file,"| head -1 -"), intern=T)
+  # } else {
+  #   header <- system(paste("head -1",large_file), intern=T)
+  # }
   return(header)
 }
 
-#' @family general functions
+
+
+
+#' @family general
 #' @keywords internal
 check_if_empty <- function(file_path){
   rowCheck <- dim(data.table::fread(file_path, nrows = 2))[1]
@@ -416,18 +421,47 @@ ensembl_to_hgnc <- function(ensembl_ids){
 #'  quantitative trait with the same power as in your present study.
 #'  (from email correpsondence with Omer Weissbrod)
 #'
-#' @param finemap_DT Preprocessed \emph{echolocatoR} locus subset file.
+#' @param finemap_dat Preprocessed \emph{echolocatoR} locus subset file.
 #' Requires the columns \strong{N_cases} and \strong{N_controls}.
 #' @examples
-#' data("finemap_DT")
+#' data("BST1")
+#' finemap_DT <- BST1
 #' finemap_DT$effective_sample_size <- effective_sample_size(finemap_DT)
 #' @keywords internal
-effective_sample_size <- function(finemap_DT){
-  finemap_DT$N <- (4.0 / (1.0/finemap_DT$N_cases + 1.0/finemap_DT$N_controls) )
-  sample_size <- as.integer(median(finemap_DT$N))
+effective_sample_size <- function(finemap_dat){
+  finemap_dat$N <- (4.0 / (1.0/finemap_dat$N_cases + 1.0/finemap_dat$N_controls) )
+  sample_size <- as.integer(median(finemap_dat$N))
   return(sample_size)
 }
 
+
+
+
+#' Infer sample size from summary stats
+#'
+#' @family general
+#' @keywords internal
+#' data("BST1")
+#' BST1 <- finemap_DT
+#' sample_size <- get_sample_size(subset_DT = finemap_DT)
+get_sample_size <- function(subset_DT,
+                            sample_size=NULL,
+                            effective_ss=T){
+  if(effective_ss){
+    sample_size <- effective_sample_size(finemap_dat = subset_DT)
+    return(sample_size)
+  }
+
+  if(is.null(sample_size)){
+    if("N_cases" %in% colnames(subset_DT) & "N_controls" %in% colnames(subset_DT)){
+      sample_size <- max(subset_DT$N_cases) + max(subset_DT$N_controls)
+    } else {
+      sample_size <- 10000
+      printer("++ No sample size variable detected...Defaulting to:",sample_size)
+    }
+    return(sample_size)
+  }
+}
 
 
 #' Find the top Consensus SNP
@@ -460,7 +494,7 @@ find_topConsensus <- function(dat, top_N=1){
 #'  indicating whether each SNPs is the lead GWAS SNP in that locus or not.
 #' @keywords internal
 assign_lead_SNP <- function(new_DT, verbose=T){
-  if(sum(new_DT$leadSNP)==0){
+  if(sum(new_DT$leadSNP,na.rm = T)==0){
     printer("+ leadSNP missing. Assigning new one by min p-value.", v=verbose)
     top.snp <- head(arrange(new_DT, P, desc(Effect)))[1,]$SNP
     new_DT$leadSNP <- ifelse(new_DT$SNP==top.snp,T,F)
@@ -482,34 +516,36 @@ assign_lead_SNP <- function(new_DT, verbose=T){
 #' @family SNP filters
 #' @return data.frame
 #' @keywords internal
-subset_common_snps <- function(LD_matrix, finemap_DT, verbose=F){
-  printer("+ Subsetting LD matrix and finemap_DT to common SNPs...", v=verbose)
+subset_common_snps <- function(LD_matrix,
+                               finemap_dat,
+                               verbose=F){
+  printer("+ Subsetting LD matrix and finemap_dat to common SNPs...", v=verbose)
   # Remove duplicate SNPs
   dups <- which(!duplicated(LD_matrix))
   LD_matrix <- LD_matrix[dups,dups]
   ld.snps <- row.names(LD_matrix)
 
   # Remove duplicate SNPs
-  finemap_DT <- finemap_DT[which(!duplicated(finemap_DT$SNP)),]
-  fm.snps <- finemap_DT$SNP
+  finemap_dat <- finemap_dat[which(!duplicated(finemap_dat$SNP)),]
+  fm.snps <- finemap_dat$SNP
   common.snps <- base::intersect(ld.snps, fm.snps)
   printer("+ LD_matrix =",length(ld.snps),"SNPs.", v=verbose)
-  printer("+ finemap_DT =",length(fm.snps),"SNPs.", v=verbose)
+  printer("+ finemap_dat =",length(fm.snps),"SNPs.", v=verbose)
   printer("+",length(common.snps),"SNPs in common.", v=verbose)
   # Subset/order LD matrix
   new_LD <- LD_matrix[common.snps, common.snps]
   new_LD[is.na(new_LD)] <- 0
-  # Subset/order finemap_DT
-  finemap_DT <- data.frame(finemap_DT)
-  row.names(finemap_DT) <- finemap_DT$SNP
-  new_DT <- data.table::as.data.table(finemap_DT[common.snps, ])
+  # Subset/order finemap_dat
+  finemap_dat <- data.frame(finemap_dat)
+  row.names(finemap_dat) <- finemap_dat$SNP
+  new_DT <- data.table::as.data.table(finemap_dat[common.snps, ])
   new_DT <- unique(new_DT)
   # Reassign the lead SNP if it's missing
   new_DT <- assign_lead_SNP(new_DT)
   # Check dimensions are correct
   if(nrow(new_DT)!=nrow(new_LD)){
-    warning("+ LD_matrix and finemap_DT do NOT have the same number of SNPs.",v=verbose)
-    warning("+ LD_matrix SNPs = ",nrow(new_LD),"; finemap_DT = ",nrow(finemap_DT), v=verbose)
+    warning("+ LD_matrix and finemap_dat do NOT have the same number of SNPs.",v=verbose)
+    warning("+ LD_matrix SNPs = ",nrow(new_LD),"; finemap_dat = ",nrow(finemap_dat), v=verbose)
   }
   printer("++ Subsetting complete.",v=verbose)
   return(list(LD=new_LD,
@@ -623,6 +659,7 @@ filter_snps <- function(subset_DT,
   }
   # Limit range
   if(!is.null(bp_distance)){
+    subset_DT <- assign_lead_SNP(new_DT = subset_DT)
     lead.snp <- subset(subset_DT, leadSNP)
     subset_DT <- subset(subset_DT,
                         POS >= lead.snp$POS - bp_distance &
@@ -694,35 +731,66 @@ delete_subset <- function (force_new_subset, subset_path){
 #'
 #' @family directory functions
 #' @keywords internal
-make_results_path <- function(dataset_name,
-                              dataset_type,
-                              locus){
-  results_path <- file.path("Data",dataset_type, dataset_name, locus)
-  dir.create(results_path, showWarnings = F, recursive = T)
-  return(results_path)
+#' @examples
+#' dataset_dir <- make_dataset_dir(results_dir="./results", dataset_type="GWAS", dataset_name="Nalls23andMe_2019", locus="BST1")
+make_dataset_dir <- function(results_dir="./results",
+                             dataset_type="dataset_type",
+                             dataset_name="dataset_name",
+                             locus){
+  dataset_dir <- file.path(results_dir, dataset_type, dataset_name, locus)
+  dir.create(dataset_dir, showWarnings = F, recursive = T)
+  return(dataset_dir)
 }
+
+
+
 
 #' @family directory functions
 #' @keywords internal
-.get_subset_path <- function(results_path,
-                            locus,
-                            subset_path="auto",
+#' @examples
+#' subset_path <- get_subset_path(results_dir="./Data/GWAS/Nalls23andMe_2019/BST1", locus="BST1")
+get_subset_path <- function(subset_path="auto",
+                            results_dir="./results",
+                            dataset_type="dataset_type",
+                            dataset_name="dataset_name",
+                            locus=NULL,
                             suffix=".tsv.gz"){
   # Specify subset file name
   if(subset_path=="auto"){
-    dataset_name <- basename(dirname(results_path))
-    created_sub_path <- file.path(results_path, paste0(locus,"_",dataset_name,"_subset",suffix) )
+    dataset_dir <- make_dataset_dir(results_dir = results_dir,
+                                     dataset_type = dataset_type,
+                                     dataset_name = dataset_name,
+                                     locus = locus)
+    created_sub_path <- file.path(dataset_dir, paste0(locus,"_",dataset_name,"_subset",suffix) )
     return(created_sub_path)
   } else{return(subset_path)}
 }
 
 
+
+#' Extract the locus dir
+#' @family directory functions
+#' @keywords internal
+get_locus_dir <- function(subset_path){
+  locus_dir <- dirname(subset_path)
+  return(locus_dir)
+}
+
+
+
+
+
 # -----GenomicRanges ------
+
+
 #' Find overlap between genomic coordinates/ranges
 #'
-#'
-GRanges_overlap <- function(finemap_DT,
+#' @family GRanges
+#' @keywords internal
+GRanges_overlap <- function(finemap_dat,
                             regions,
+                            return_merged=T,
+
                             chrom_col.1="CHR",
                             start_col.1="POS",
                             end_col.1="POS",
@@ -730,10 +798,10 @@ GRanges_overlap <- function(finemap_DT,
                             chrom_col.2="CHR",
                             start_col.2="start",
                             end_col.2="end"){
-  library(GenomicRanges)
-  library(BiocGenerics)
-  # consensus.snps <- subset(finemap_DT, Consensus_SNP==T)
-  gr.finemap <- GenomicRanges::makeGRangesFromDataFrame(finemap_DT,
+  # library(GenomicRanges)
+  # library(BiocGenerics)
+  # consensus.snps <- subset(finemap_dat, Consensus_SNP==T)
+  gr.finemap <- GenomicRanges::makeGRangesFromDataFrame(finemap_dat,
                                                         seqnames.field = chrom_col.1,
                                                         start.field = start_col.1,
                                                         end.field = end_col.1,
@@ -754,12 +822,29 @@ GRanges_overlap <- function(finemap_DT,
   hits <- GenomicRanges::findOverlaps(query = gr.finemap,
                                       subject = gr.regions)
   gr.hits <- gr.regions[ S4Vectors::subjectHits(hits), ]
-  mcols(gr.hits) <- cbind(mcols(gr.hits),
-                          mcols(gr.finemap[S4Vectors::queryHits(hits),]) )
+  GenomicRanges::mcols(gr.hits) <- cbind(GenomicRanges::mcols(gr.hits),
+                          GenomicRanges::mcols(gr.finemap[S4Vectors::queryHits(hits),]) )
   # gr.hits <- cbind(mcols(gr.regions[ S4Vectors::subjectHits(hits), ] ),
   #                         mcols(gr.consensus[S4Vectors::queryHits(hits),]) )
-  message("",nrow(mcols(gr.hits))," query SNP(s) detected with reference overlap." )
+  message("",nrow(GenomicRanges::mcols(gr.hits))," query SNP(s) detected with reference overlap." )
   # print(data.frame(mcols(gr.hits[,c("Name","SNP")])) )
   return(gr.hits)
+}
+
+
+
+
+#' Update CS cols
+#'
+#' Convert old col format: ".Credible_Set" => ".CS"
+#' @examples
+#' \dontrun{
+#' data("BST1);
+#' finemap_DT <- BST1
+#' finemap_DT <- update_CS_cols(finemap_dat=finemap_DT)
+#' }
+update_CS_cols <- function(finemap_dat){
+  colnames(finemap_dat) <- gsub("*.Credible_Set$",".CS",colnames(finemap_dat))
+  return(finemap_dat)
 }
 

@@ -1,0 +1,13 @@
+*********************************************************************
+* LD Score Regression (LDSC)
+* Version 1.0.0
+* (C) 2014-2015 Brendan Bulik-Sullivan and Hilary Finucane
+* Broad Institute of MIT and Harvard / MIT Department of Mathematics
+* GNU General Public License v3
+*********************************************************************
+Call: 
+./ldsc.py \
+
+Beginning analysis at Tue Dec 10 15:18:48 2019
+Analysis finished at Tue Dec 10 15:18:48 2019
+Total time elapsed: 0.0s

@@ -1,0 +1,19 @@
+[INFO]  Loaded an LD matrix for 19286 SNPs from LD_temp/chr1_46000001_49000001.npz
+[INFO]  Loading sumstats file...
+[INFO]  Loaded sumstats for 966 SNPs
+[INFO]  Loaded an LD matrix for 19286 SNPs from LD_temp/chr1_46000001_49000001.npz
+[INFO]  Loading sumstats file...
+[INFO]  Loaded sumstats for 966 SNPs
+[INFO]  Loaded an LD matrix for 19286 SNPs from LD_temp/chr1_46000001_49000001.npz
+[INFO]  Loading sumstats file...
+[INFO]  Loaded sumstats for 966 SNPs
+[INFO]  Loaded an LD matrix for 19286 SNPs from LD_temp/chr1_46000001_49000001.npz
+[INFO]  Loading sumstats file...
+[INFO]  Loaded sumstats for 966 SNPs
+[INFO]  Loaded an LD matrix for 19286 SNPs from LD_temp/chr1_46000001_49000001.npz
+[INFO]  Loading sumstats file...
+[INFO]  Loaded sumstats for 966 SNPs
+[INFO]  Removing 19271 SNPs in the LD matrix that are not in the sumstats file
+[INFO]  Starting functionally-informed SuSiE fine-mapping for chromosome 1 BP 46000001-49000001 (15 SNPs)
+[INFO]  Done in 0.04 seconds
+[INFO]  Writing fine-mapping results to output/finemap.UKB.1.46000001.49000001.gz

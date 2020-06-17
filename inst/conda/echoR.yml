@@ -1,0 +1,21 @@
+name: echoR
+channels:
+  - bioconda 
+  - biobuilds
+  - conda-forge
+  - bioconda
+  - defaults
+  - anaconda
+dependencies:
+  - python=3.7
+  - pandas
+  - pyarrow
+  - fastparquet
+  - scipy
+  - scikit-learn
+  - tqdm
+  - tabix
+  - bitarray
+  - networkx
+  - rpy2
+  - requests

@@ -5,7 +5,7 @@
 \alias{NOTT_2019.bigwig_metadata}
 \title{Metadata and links to data}
 \format{
-An object of class \code{data.table} (inherits from \code{data.frame}) with 18 rows and 12 columns.
+An object of class \code{data.table} (inherits from \code{data.frame}) with 18 rows and 14 columns.
 }
 \source{
 \url{https://science.sciencemag.org/content/366/6469/1134}
@@ -18,10 +18,25 @@ Metadata for cell type-specific epigenomic bigWig files hosted on UCSC Genome Br
 bigWig files contain the genomic ranges from each epigenomic assay,
 as well as a Score column which describes the peaks of the aggregate reads.
 }
+\examples{
+\dontrun{
+NOTT_2019.bigwig_metadata <- data.table::data.table(readxl::read_excel("~/Desktop/Fine_Mapping/echolocatoR/annotations/Nott_2019/Nott_2019.snEpigenomics.xlsx"))
+usethis::use_data(NOTT_2019.bigwig_metadata, overwrite = T)
+}
+}
 \seealso{
 Other NOTT_2019: 
+\code{\link{NOTT_2019.epigenomic_histograms}()},
+\code{\link{NOTT_2019.get_epigenomic_peaks}()},
+\code{\link{NOTT_2019.get_interactions}()},
+\code{\link{NOTT_2019.get_interactome}()},
+\code{\link{NOTT_2019.get_promoter_celltypes}()},
+\code{\link{NOTT_2019.get_promoter_interactome_data}()},
+\code{\link{NOTT_2019.get_regulatory_regions}()},
 \code{\link{NOTT_2019.interactome}},
-\code{\link{NOTT_2019.superenhancer_interactome}}
+\code{\link{NOTT_2019.plac_seq_plot}()},
+\code{\link{NOTT_2019.superenhancer_interactome}},
+\code{\link{NOTT_2019.superenhancers}()}
 }
 \concept{NOTT_2019}
 \keyword{datasets}

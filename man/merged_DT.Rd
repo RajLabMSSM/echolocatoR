@@ -22,10 +22,14 @@ merged_DT
 \description{
 An example results file after running \code{\link{finemap_loci}}
  on all Parkinson's disease (PD)-associated loci.
+}
+\details{
 Data originally comes from the PD GWAS
 by \href{https://www.biorxiv.org/content/10.1101/388165v3}{Nalls et al. (bioRxiv)}.
 }
 \examples{
+\dontrun{
 merged_DT <- merge_finemapping_results(dataset = "../Fine_Mapping/Data/GWAS/Nalls23andMe_2019")
+}
 }
 \keyword{datasets}

@@ -12,28 +12,33 @@
 #' \item J Wakefield, A bayesian measure of the probability of false discovery in genetic epidemiology studies. American Journal of Human Genetics. 81, 208–227 (2007).
 #' }
 #' @keywords internal
+#' @examples
+#' data("BST1");
+#' finemap_DT <- BST1
+#' finemap_DT <- ABF(subset_DT=finemap_DT)
 ABF <- function(subset_DT,
-                PP_threshold=.95){
+                PP_threshold=.95,
+                type="cc"){
   # printer("Fine-mapping with ABF...")
   #data.table::fread("Data/GWAS/Nalls23andMe_2019/LRRK2/LRRK2_Nalls23andMe_2019_subset.txt")
-  finemap_DT <- coloc::finemap.abf(dataset = list(beta = subset_DT$Effect,
+  finemap_dat <- coloc::finemap.abf(dataset = list(beta = subset_DT$Effect,
                                                   varbeta = subset_DT$StdErr^2, # MUST be squared
                                                   N = length(subset_DT$Effect),
                                                   s = subset_DT$proportion_cases,
                                                   snp = subset_DT$SNP,
                                                   MAF = subset_DT$MAF,
-                                                  type="cc"))
-  finemap_DT <- subset(finemap_DT, snp!="null") %>%
+                                                  type=type))
+  finemap_dat <- subset(finemap_dat, snp!="null") %>%
     dplyr::rename(SNP=snp, PP=SNP.PP) %>%
-    arrange(desc(PP))
+    dplyr::arrange(desc(PP))
   # Arbitarily assign SNPs with the top N probability as the top candidate causal SNPs
-  # finemap_DT$Credible_Set <- c(rep(1,n_causal), rep(0,dim(finemap_DT)[1]-n_causal))
+  # finemap_dat$CS <- c(rep(1,n_causal), rep(0,dim(finemap_dat)[1]-n_causal))
   # Any SNPs with a PP greater than the set threshold get included in the credible set
-  finemap_DT$Credible_Set <- ifelse(finemap_DT$PP >= PP_threshold, 1, 0)
-  finemap_DT <- data.table:::merge.data.table(x=data.table::data.table(subset_DT),
-                                              y=data.table::data.table(subset(finemap_DT, select=c("SNP","PP","Credible_Set")) ),
+  finemap_dat$CS <- ifelse(finemap_dat$PP >= PP_threshold, 1, 0)
+  finemap_dat <- data.table:::merge.data.table(x=data.table::data.table(subset_DT),
+                                              y=data.table::data.table(subset(finemap_dat, select=c("SNP","PP","CS")) ),
                                               on="SNP")
-  finemap_DT <- finemap_DT %>% arrange(desc(PP))
-  return(finemap_DT)
+  finemap_dat <- finemap_dat %>% dplyr::arrange(desc(PP))
+  return(finemap_dat)
 }
 
