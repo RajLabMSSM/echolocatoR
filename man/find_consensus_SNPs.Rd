@@ -5,7 +5,7 @@
 \title{Adds fine-mapping summary columns}
 \usage{
 find_consensus_SNPs(
-  finemap_DT,
+  finemap_dat,
   verbose = T,
   credset_thresh = 0.95,
   consensus_thresh = 2,

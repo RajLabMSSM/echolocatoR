@@ -4,7 +4,12 @@
 \alias{ROADMAP.merge_and_process_grl}
 \title{Standardize Roadmap query}
 \usage{
-ROADMAP.merge_and_process_grl(grl.roadmap, gr.snp, n_top_tissues = 5)
+ROADMAP.merge_and_process_grl(
+  grl.roadmap,
+  gr.snp,
+  n_top_tissues = 5,
+  sep = " "
+)
 }
 \arguments{
 \item{grl.roadmap}{Roadmap query results}

@@ -3,49 +3,55 @@
 \name{GGBIO.plot}
 \alias{GGBIO.plot}
 \title{Multi-track plot of fine-mapping results}
+\source{
+\url{http://bioconductor.org/packages/release/bioc/vignettes/ggbio/inst/doc/ggbio.pdf}
+}
 \usage{
 GGBIO.plot(
-  finemap_DT,
+  finemap_dat,
   LD_matrix,
-  locus = NULL,
-  results_path = NULL,
-  method_list = c("SUSIE", "FINEMAP", "PAINTOR", "PAINTOR_Fairfax"),
+  locus_dir,
+  method_list = c("ABF", "FINEMAP", "SUSIE", "POLYFUN_SUSIE"),
+  QTL_prefixes = NULL,
   mean.PP = T,
   PP_threshold = 0.95,
   consensus_thresh = 2,
+  sig_cutoff = 5e-08,
   XGR_libnames = c("ENCODE_TFBS_ClusteredV3_CellTypes",
     "ENCODE_DNaseI_ClusteredV3_CellTypes", "Broad_Histone"),
   n_top_xgr = 5,
-  ROADMAP = F,
-  ROADMAP_query = NULL,
+  Roadmap = F,
+  Roadmap_query = NULL,
   n_top_roadmap = 7,
   annot_overlap_threshold = 5,
-  Nott_sn_epigenome = F,
-  show_regulatory_rects = T,
-  show_placseq = T,
-  plot_Nott_binwidth = 2500,
+  Nott_epigenome = F,
+  Nott_regulatory_rects = T,
+  Nott_show_placseq = T,
+  Nott_binwidth = 2500,
   Nott_bigwig_dir = NULL,
   save_plot = T,
   show_plot = T,
   max_transcripts = 1,
-  plot_window = NULL,
-  dpi = 200,
+  plot.window = NULL,
+  dpi = 300,
   height = 12,
-  width = 10
+  width = 10,
+  verbose = T
 )
 }
 \arguments{
+\item{QTL_prefixes}{Prefixes to the columns that contain QTL data.
+For exmaple, P-values for the \emph{Fairfax_2014} QTL study would be
+stored in the column \emph{Fairfax_2014.P}.}
+
 \item{PP_threshold}{The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
 For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.}
 
-\item{plot_Nott_binwidth}{When including Nott et al. (2019) epigenomic data in the track plots,
-adjust the bin width of the histograms.}
-
-\item{Nott_bigwig_dir}{Instead of pulling Nott et al. (2019) epigenomic data from the UCSC Genome Browsers, use a set of local bigwig files.}
-
 \item{max_transcripts}{Max number of transcripts per gene to show.}
 
-\item{plot_window}{Zoom into the center of the locus when plotting (without editing the fine-mapping results file).}
+\item{plot.window}{Zoom into the center of the locus when plotting (without editing the fine-mapping results file).}
+
+\item{verbose}{Whether \emph{echolocatoR} should be verbose or silent.}
 }
 \description{
 Plots fine-mapping results from \emph{echolocatoR}.
@@ -54,20 +60,32 @@ and each fine-mapping method (Posterior Probability).
 Uses \code{\link{ggbio}}.
 }
 \examples{
-data("finemap_DT")
-data("LD_matrix")
+\dontrun{
+data("BST1"); data("LD_matrix"); data("locus_dir");
+finemap_DT <- BST1
+# Using NO annotations
+trk_plot <- GGBIO.plot(finemap_dat=finemap_DT, LD_matrix=LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, save_plot=F)
 
 # Using only XGR annotations
-trk_plot <- GGBIO.plot(finemap_DT=finemap_DT, LD_matrix=LD_matrix, XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes"))
+trk_plot <- GGBIO.plot(finemap_dat=finemap_DT, LD_matrix=LD_matrix, locus_dir=locus_dir, XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes"), save_plot=F)
 
 # Using only Roadmap annotations
-trk_plot <- GGBIO.plot(finemap_DT=finemap_DT, LD_matrix=LD_matrix, XGR_libnames=NULL, ROADMAP=T, ROADMAP_query="monocyte")
+trk_plot <- GGBIO.plot(finemap_dat=finemap_DT, LD_matrix=LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, Roadmap=T, Roadmap_query="monocyte", save_plot=F)
 
 # Using only Nott_2019 annotations
-trk_plot <- GGBIO.plot(finemap_DT=finemap_DT, LD_matrix=LD_matrix, XGR_libnames=NULL, Nott_sn_epigenome=T)
+trk_plot <- GGBIO.plot(finemap_dat=finemap_DT, LD_matrix=LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, Nott_epigenome=T, save_plot=F)
+}
+Determine track heights
 }
 \seealso{
 Other plot: 
+\code{\link{QTL_track}()},
+\code{\link{SNP_track}()},
+\code{\link{invisible_legend}()},
+\code{\link{transcript_model_track}()}
+
+Other plot: 
+\code{\link{QTL_track}()},
 \code{\link{SNP_track}()},
 \code{\link{invisible_legend}()},
 \code{\link{transcript_model_track}()}

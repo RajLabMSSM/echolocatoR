@@ -4,12 +4,12 @@
 \alias{LD.vcf_to_bed}
 \title{Convert vcf file to BED file}
 \usage{
-LD.vcf_to_bed(vcf.gz.subset, results_path)
+LD.vcf_to_bed(vcf.gz.subset, locus_dir)
 }
 \arguments{
 \item{vcf.gz.subset}{Path to the gzipped locus subset vcf.}
 
-\item{results_path}{Locus-specific results directory.}
+\item{locus_dir}{Locus-specific results directory.}
 }
 \description{
 Uses plink to convert vcf to BED.

@@ -5,7 +5,7 @@
 \title{Create QTL locus file for PAINTOR}
 \usage{
 PAINTOR.create_locusFile.QTL(
-  finemap_DT,
+  finemap_dat,
   GWAS_datasets,
   QTL_datasets = NULL,
   PT_results_path,

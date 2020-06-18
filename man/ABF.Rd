@@ -10,9 +10,14 @@
 }
 }
 \usage{
-ABF(subset_DT, PP_threshold = 0.95)
+ABF(subset_DT, PP_threshold = 0.95, type = "cc")
 }
 \description{
 Conduct statistical (non-functional) fine-mapping with approximate Bayes factor (ABF).
+}
+\examples{
+data("BST1");
+finemap_DT <- BST1
+finemap_DT <- ABF(subset_DT=finemap_DT)
 }
 \keyword{internal}

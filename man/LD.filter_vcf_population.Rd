@@ -7,7 +7,7 @@
 LD.filter_vcf_population(
   subset_vcf,
   subset_DT,
-  results_path,
+  locus_dir,
   superpopulation,
   popDat
 )

@@ -19,6 +19,7 @@ Other general:
 \code{\link{createDT}()},
 \code{\link{dt.replace}()},
 \code{\link{get_os}()},
+\code{\link{get_sample_size}()},
 \code{\link{tryFunc}()}
 }
 \concept{general}

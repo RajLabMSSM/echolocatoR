@@ -10,7 +10,8 @@ SNP_track(
   labels_subset = c("Lead SNP", "Credible Set", "Consensus SNP"),
   r2 = NULL,
   show.legend = T,
-  PP_threshold = 0.95
+  PP_threshold = 0.95,
+  sig_cutoff = 5e-08
 )
 }
 \arguments{
@@ -31,9 +32,20 @@ For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95
 \description{
 Uses \code{\link{ggbio}}.
 }
+\examples{
+data("BST1")
+finemap_DT <- BST1
+LD_SNP <- subset(finemap_DT, leadSNP==T)$SNP
+LD_sub <- LD_with_leadSNP(LD_matrix = LD_matrix, LD_SNP = LD_SNP)
+dat <- data.table:::merge.data.table(finemap_DT, LD_sub, by = "SNP", all.x = T)
+gr.snp <- DT_to_GRanges(dat)
+gr.snp_CHR <- biovizBase::transformDfToGr(dat, seqnames = "CHR", start = "POS", end = "POS")
+snp.track <- SNP_track(gr.snp=gr.snp, method = "original")
+}
 \seealso{
 Other plot: 
 \code{\link{GGBIO.plot}()},
+\code{\link{QTL_track}()},
 \code{\link{invisible_legend}()},
 \code{\link{transcript_model_track}()}
 }

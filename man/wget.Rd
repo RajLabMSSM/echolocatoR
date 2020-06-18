@@ -5,8 +5,8 @@
 \title{wget}
 \usage{
 wget(
-  input.url,
-  output.path,
+  input_url,
+  output_path,
   background = T,
   force_overwrite = F,
   quiet = F,

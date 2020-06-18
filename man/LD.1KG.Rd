@@ -5,7 +5,7 @@
 \title{Compute LD from 1000 Genomes}
 \usage{
 LD.1KG(
-  results_path,
+  locus_dir,
   subset_DT,
   locus,
   LD_reference = "1KG_Phase1",

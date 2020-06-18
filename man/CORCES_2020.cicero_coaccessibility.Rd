@@ -22,7 +22,7 @@ Data originally from \href{https://www.biorxiv.org/content/10.1101/2020.01.06.89
 Specifically: \emph{STable10_Coacessibility_Peak_loop_connection}, \emph{Cicero Coaccessibility} sheet.
 Peak_ID_Peak1 - A unique number that identifies the peak across supplementary tables.
 
-\strong{Columns dictionary}:
+\strong{Column dictionary}:
 \describe{
 \item{hg38_Chromosome_Peak1}{The hg38 chromosome of the first loop Peak.}
 \item{hg38_Start_Peak1}{The hg38 start position of the first loop Peak.}

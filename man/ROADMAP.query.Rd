@@ -17,7 +17,8 @@ ROADMAP.query(results_path, gr.snp, keyword_query = NULL, limit_files = NULL)
 Query Roadmap by genomic coordinates
 }
 \examples{
-data("finemap_DT")
+data("BST1")
+finemap_DT <- BST1
 gr.snp <- DT_to_GRanges(subset_DT = finemap_DT)
 grl.roadmap <- ROADMAP.query(results_path="./Roadmap", gr.snp=gr.snp, keyword_query="placenta")
 }

@@ -8,7 +8,7 @@ LD.1KG_download_vcf(
   subset_DT,
   LD_reference = "1KG_Phase1",
   vcf_folder = "./Data/Reference/1000_Genomes",
-  results_path,
+  locus_dir,
   locus,
   download_reference = T,
   whole_vcf = F

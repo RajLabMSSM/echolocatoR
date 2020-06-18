@@ -5,7 +5,7 @@
 \title{Merge PAINTOR results}
 \usage{
 PAINTOR.merge_results(
-  finemap_DT,
+  finemap_dat,
   paintor.results,
   PP_threshold = 0.5,
   multi_finemap_col_name = "PAINTOR"

@@ -5,7 +5,6 @@
 \title{Create PAINTOR locus file}
 \usage{
 PAINTOR.create_locusFile(
-  results_path,
   subset_path,
   fullSS,
   PT_results_path,

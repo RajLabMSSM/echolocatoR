@@ -29,7 +29,8 @@ Options include "density" and "histogram".}
 Plot Roadmap query
 }
 \examples{
-data("finemap_DT")
+data("BST1")
+finemap_DT <- BST1
 gr.snp <- DT_to_GRanges(finemap_DT)
 grl.roadmap <- ROADMAP.query(results_path="./Roadmap", gr.snp=gr.snp, keyword_query="monocyte")
 grl.roadmap.filt <- ROADMAP.merge_and_process_grl(grl.roadmap=grl.roadmap, gr.snp=gr.snp, n_top_tissues=5)

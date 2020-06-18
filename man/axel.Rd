@@ -5,8 +5,8 @@
 \title{axel}
 \usage{
 axel(
-  input.url,
-  output.path,
+  input_url,
+  output_path,
   background = F,
   nThreads = 4,
   force_overwrite = F,

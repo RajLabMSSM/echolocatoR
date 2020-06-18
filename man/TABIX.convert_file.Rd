@@ -6,9 +6,10 @@
 \usage{
 TABIX.convert_file(
   fullSS_path,
+  results_path = NULL,
   chrom_col = "CHR",
   position_col = "POS",
-  remove_header = T
+  verbose = T
 )
 }
 \arguments{
@@ -18,11 +19,17 @@ TABIX.convert_file(
 
 \item{position_col}{Name of the genomic position column in the full summary stats file.}
 
-\item{remove_header}{Remove the header to avoid errors when sorting/converting to tabix forrmat.}
+\item{verbose}{Whether \emph{echolocatoR} should be verbose or silent.}
 }
 \description{
-Currently removes header and saves it as  \emph{header.txt}
-in the same directory as the file it came from.
+Convert summary stats file to tabix format
+}
+\examples{
+\dontrun{
+data("genome_wide_dir");
+fullSS_path <-  "~/Desktop/nallsEtAl2019_allSamples_allVariants.mod.txt"
+fullSS.gz <- TABIX.convert_file(fullSS_path=fullSS_path, results_path=results_path_genome_wide, chrom_col="CHR", position_col="POS")
+}
 }
 \seealso{
 Other query functions: 

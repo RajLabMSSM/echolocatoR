@@ -43,8 +43,7 @@ Other XGR:
 \code{\link{XGR.iterate_overlap}()},
 \code{\link{XGR.merge_and_process}()},
 \code{\link{XGR.plot_enrichment}()},
-\code{\link{XGR.plot_peaks}()},
-\code{\link{save_annotations}()}
+\code{\link{XGR.plot_peaks}()}
 }
 \concept{XGR}
 \keyword{internal}

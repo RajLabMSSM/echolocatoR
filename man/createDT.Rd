@@ -15,6 +15,7 @@ Other general:
 \code{\link{createDT_html}()},
 \code{\link{dt.replace}()},
 \code{\link{get_os}()},
+\code{\link{get_sample_size}()},
 \code{\link{startup_image}()},
 \code{\link{tryFunc}()}
 }

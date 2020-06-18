@@ -8,7 +8,7 @@ XGR.download_and_standardize(
   lib.selections = c("ENCODE_TFBS_ClusteredV3_CellTypes", "TFBS_Conserved",
     "Uniform_TFBS"),
   as_GRangesList = F,
-  finemap_DT,
+  finemap_dat,
   nCores = 4
 )
 }
@@ -26,7 +26,8 @@ GRangesList
 Merges a list of XGR annotations into a single GRanges object
 }
 \examples{
-data("finemap_DT")
+data("BST1")
+finemap_DT <- BST1
 gr.lib <- XGR.download_and_standardize(lib.selections=c("ENCODE_DNaseI_ClusteredV3_CellTypes"), finemap_DT=finemap_DT, nCores=1)
 }
 \seealso{
@@ -41,8 +42,7 @@ Other XGR:
 \code{\link{XGR.merge_and_process}()},
 \code{\link{XGR.plot_enrichment}()},
 \code{\link{XGR.plot_peaks}()},
-\code{\link{XGR.prepare_foreground_background}()},
-\code{\link{save_annotations}()}
+\code{\link{XGR.prepare_foreground_background}()}
 }
 \concept{XGR}
 \keyword{internal}

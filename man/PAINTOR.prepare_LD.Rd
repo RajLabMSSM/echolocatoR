@@ -5,7 +5,7 @@
 \title{Prepare LD file for PAINTOR}
 \usage{
 PAINTOR.prepare_LD(
-  results_path,
+  subset_path,
   PT_results_path,
   locus_name,
   locus_DT,

@@ -5,13 +5,14 @@
 \title{Procure an LD matrix for fine-mapping}
 \usage{
 LD.load_or_create(
-  results_path,
+  subset_path,
   subset_DT,
   locus,
   force_new_LD = F,
   LD_reference = "1KG_Phase1",
   superpopulation = "EUR",
   download_reference = T,
+  download_method = "direct",
   min_r2 = 0,
   LD_block = F,
   LD_block_size = 0.7,
@@ -20,7 +21,8 @@ LD.load_or_create(
   fillNA = 0,
   verbose = T,
   server = F,
-  remove_tmps = T
+  remove_tmps = T,
+  nThreads = 4
 )
 }
 \arguments{

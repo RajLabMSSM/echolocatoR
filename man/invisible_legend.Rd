@@ -12,6 +12,7 @@ Make legend invisible
 \seealso{
 Other plot: 
 \code{\link{GGBIO.plot}()},
+\code{\link{QTL_track}()},
 \code{\link{SNP_track}()},
 \code{\link{transcript_model_track}()}
 }

@@ -5,7 +5,7 @@
 \title{Prepare PAINTOR annotations}
 \usage{
 PAINTOR.prepare_annotations(
-  paintor_path = "./echolocatoR/tools/PAINTOR_V3.0",
+  paintor_path = NULL,
   BED_paths,
   PT_results_path,
   locus_name,

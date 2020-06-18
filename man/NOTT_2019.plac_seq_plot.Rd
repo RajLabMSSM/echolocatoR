@@ -9,7 +9,8 @@
 }
 \usage{
 NOTT_2019.plac_seq_plot(
-  finemap_DT = NULL,
+  finemap_dat = NULL,
+  locus_dir = NULL,
   title = NULL,
   print_plot = T,
   save_plot = T,
@@ -19,7 +20,8 @@ NOTT_2019.plac_seq_plot(
   index_SNP = NULL,
   return_consensus_overlap = T,
   show_arches = T,
-  show_regulatory_rects = T
+  show_regulatory_rects = T,
+  save_annot = F
 )
 }
 \description{

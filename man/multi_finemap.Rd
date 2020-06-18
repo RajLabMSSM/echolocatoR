@@ -5,7 +5,7 @@
 \title{Fine-map using multiple fine-mapping tools}
 \usage{
 multi_finemap(
-  results_path,
+  locus_dir,
   fullSS_path,
   finemap_method_list,
   subset_DT,
@@ -103,7 +103,14 @@ along with the original per-SNP GWAS/QTL summary statistics.
 Each tools will have the following columns:
 \describe{
 \item{<tool>.PP}{The posterior probability (PP) of a SNP being causal for the trait. Though this is a generalization and the exact meaning of PP will differ by tools (e.g. Posterior Inclusion Probability for SUSIE).}
-\item{<tool>.Credible_Set}{Which credible set the SNP is part of (within a locus). If \code{=0}, then the SNP was not part of any credible set. Some tools only produce one credible set per locus.}
+\item{<tool>.CS}{Which credible set the SNP is part of (within a locus). If \code{=0}, then the SNP was not part of any credible set. Some tools only produce one credible set per locus.}
+}
+}
+\examples{
+\dontrun{
+data("BST1"); data("LD_matrix");
+subset_DT <- BST1
+finemap_method_list <- c("ABF","SUSIE")
 }
 }
 \seealso{

@@ -4,7 +4,7 @@
 \alias{PAINTOR.help_menu}
 \title{Show PAINTOR help menu}
 \usage{
-PAINTOR.help_menu(paintor_path = "./echolocatoR/tools/PAINTOR_V3.0/")
+PAINTOR.help_menu(paintor_path = NULL)
 }
 \description{
 Show PAINTOR help menu

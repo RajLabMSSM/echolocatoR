@@ -12,7 +12,10 @@ TABIX(
   position_col = "POS",
   min_POS = NA,
   max_POS = NA,
-  chrom = NULL
+  chrom = NULL,
+  save_subset = T,
+  nThread = 1,
+  verbose = T
 )
 }
 \arguments{
@@ -29,6 +32,8 @@ Only use this parameter when fine-mapping one locus at a time.}
 \item{max_POS}{Manually set the maximum genomic position for your locus subset.
 \code{max_POS} can clip the window size set by \code{bp_distance}.
 Only use this parameter when fine-mapping one locus at a time.}
+
+\item{verbose}{Whether \emph{echolocatoR} should be verbose or silent.}
 }
 \value{
 data.table of locus subset summary statistics
@@ -38,6 +43,19 @@ If it is not tabix format already
 (determined by checking for a \link{.tbi} file of the same name in the same directory),
 the full summary statistics file is converted into tabix format for super fast querying.
 A query is then made using the min/max genomic positions to extract a locus-specific summary stats file.
+}
+\examples{
+\dontrun{
+data("locus_dir"); data("Nalls_top_SNPs")
+fullSS_path <- "./results/GWAS/Nalls23andMe_2019/_genome_wide/nallsEtAl2019_allSamples_allVariants.mod.txt.gz"
+top_SNPs <- import_topSNPs(topSS = Nalls_top_SNPs, chrom_col = "CHR", position_col = "BP", snp_col="SNP", pval_col="P, all studies", effect_col="Beta, all studies", gene_col="Nearest Gene", group_by_locus = T,locus_col = "Nearest Gene")
+top_SNPs_BST1 <- subset(top_SNPs, Locus=='BST1')
+bp_distance <- 1e+06
+min_POS <- top_SNPs_BST1$POS - bp_distance
+max_POS <- top_SNPs_BST1$POS + bp_distance
+subset_file <- file.path(results_path,"BST1_Nalls23andMe_2019_subset.tsv.gz")
+dat <- TABIX(fullSS_path=fullSS_path, subset_path="auto", min_POS=min_POS, max_POS=max_POS, chrom=top_SNPs_BST1$CHR)
+}
 }
 \seealso{
 Other query functions: 

@@ -9,8 +9,8 @@
 }
 \usage{
 NOTT_2019.epigenomic_histograms(
-  finemap_DT,
-  results_path,
+  finemap_dat,
+  locus_dir,
   show_plot = T,
   save_plot = T,
   full_data = T,
@@ -19,7 +19,8 @@ NOTT_2019.epigenomic_histograms(
   geom = "histogram",
   plot_formula = "Assay + Cell_type ~.",
   bigwig_dir = NULL,
-  nCores = 4
+  nCores = 4,
+  save_annot = F
 )
 }
 \description{

@@ -18,7 +18,8 @@ data.table
 \url{https://www.biorxiv.org/content/10.1101/807792v3}
  @examples
  \dontrun{
-data("finemap_DT")
+data("BST1")
+finemap_DT <- BST1
 # Only including a small subset of the full
 # LD matrix for storage purposes.
 lead_snp <- subset(finemap_DT, leadSNP)$SNP

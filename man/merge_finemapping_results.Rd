@@ -16,7 +16,8 @@ merge_finemapping_results(
   PP_threshold = 0.95,
   consensus_thresh = 2,
   exclude_methods = NULL,
-  verbose = T
+  verbose = T,
+  nThread = 4
 )
 }
 \arguments{
@@ -49,7 +50,7 @@ of fine-mapping tools that contained the SNP in their Credible Set.}
 to classify it as a \strong{Consensus_SNP}.}
 
 \item{exclude_methods}{Exclude certain fine-mapping methods when estimating
-\strong{mean.Credible_Set} and \strong{Consensus_SNP}.}
+\strong{mean.CS} and \strong{Consensus_SNP}.}
 
 \item{verbose}{Print messages.}
 }

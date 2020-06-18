@@ -8,7 +8,7 @@
 \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
 }
 \usage{
-NOTT_2019.get_promoter_interactome_data(finemap_DT)
+NOTT_2019.get_promoter_interactome_data(finemap_dat)
 }
 \description{
 Brain cell-specific epigenomic data from Nott et al. (2019).

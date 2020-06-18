@@ -41,9 +41,11 @@ XGR.plot_peaks(
 Plots the distribution of annotations across a genomic region (x-axis).
 }
 \examples{
-data("finemap_DT")
-gr.lib <- XGR.download_and_standardize(c("ENCODE_DNaseI_ClusteredV3_CellTypes"), finemap_DT=finemap_DT, nCores=1)
+data("BST1")
+finemap_DT <- BST1
+gr.lib <- XGR.download_and_standardize(c("ENCODE_DNaseI_ClusteredV3_CellTypes"), finemap_dat=finemap_DT, nCores=1)
 gr.filt <- XGR.filter_sources(gr.lib=gr.lib, n_top_sources=5)
+gr.filt <- XGR.filter_assays(gr.lib=gr.filt, n_top_assays=5)
 xgr.track <- XGR.plot_peaks(gr.lib=gr.filt, subset_DT=finemap_DT, fill_var="Assay", facet_var="Source")
 }
 \seealso{
@@ -58,8 +60,7 @@ Other XGR:
 \code{\link{XGR.iterate_overlap}()},
 \code{\link{XGR.merge_and_process}()},
 \code{\link{XGR.plot_enrichment}()},
-\code{\link{XGR.prepare_foreground_background}()},
-\code{\link{save_annotations}()}
+\code{\link{XGR.prepare_foreground_background}()}
 }
 \concept{XGR}
 \keyword{internal}

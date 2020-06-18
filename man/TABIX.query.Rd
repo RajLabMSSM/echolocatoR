@@ -4,10 +4,10 @@
 \alias{TABIX.query}
 \title{Query a tabix file}
 \usage{
-TABIX.query(fullSS.gz, chrom, start_pos, end_pos)
+TABIX.query(fullSS.gz, chrom, start_pos, end_pos, verbose = T)
 }
 \description{
-Query by min/max genomic coordinates.
+Query by genomic coordinates.
 }
 \seealso{
 Other query functions: 

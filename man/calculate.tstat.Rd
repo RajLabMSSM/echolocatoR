@@ -4,7 +4,7 @@
 \alias{calculate.tstat}
 \title{Compute t-stat}
 \usage{
-calculate.tstat(finemap_DT, tstat_col = "t_stat")
+calculate.tstat(finemap_dat, tstat_col = "t_stat")
 }
 \description{
 If \strong{tstat} column is missing,

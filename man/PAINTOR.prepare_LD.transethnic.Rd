@@ -5,6 +5,7 @@
 \title{Prepare transethnic LD files for PAINTOR}
 \usage{
 PAINTOR.prepare_LD.transethnic(
+  subset_path,
   subset_DT,
   PT_results_path,
   locus,

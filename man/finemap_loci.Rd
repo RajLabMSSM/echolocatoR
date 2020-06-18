@@ -7,12 +7,12 @@
 finemap_loci(
   loci,
   fullSS_path,
-  dataset_name,
-  dataset_type = "GWAS",
+  dataset_name = "dataset_name",
+  dataset_type = "dataset_type",
   force_new_subset = F,
   force_new_LD = F,
   force_new_finemap = T,
-  subset_path = "auto",
+  results_dir = "./results",
   top_SNPs = "auto",
   finemap_methods = c("ABF", "SUSIE", "FINEMAP"),
   bp_distance = 5e+05,
@@ -37,6 +37,7 @@ finemap_loci(
   proportion_cases = "calculate",
   LD_reference = "1KG_Phase1",
   superpopulation = "EUR",
+  LD_download_method = "direct",
   topVariants = 3,
   download_reference = T,
   min_POS = NA,
@@ -57,13 +58,17 @@ finemap_loci(
   plot_LD = F,
   verbose = T,
   remove_tmps = T,
-  plot_types = c("simple"),
   PAINTOR_QTL_datasets = NULL,
   server = F,
   PP_threshold = 0.95,
-  plot_window = NULL,
-  plot_Nott_binwidth = 2500,
-  Nott_bigwig_dir = NULL
+  plot.types = c("simple"),
+  plot.window = NULL,
+  plot.Nott_epigenome = F,
+  plot.Nott_binwidth = 2500,
+  plot.Nott_bigwig_dir = NULL,
+  plot.XGR_libnames = NULL,
+  plot.Roadmap = F,
+  plot.Roadmap_query = NULL
 )
 }
 \arguments{
@@ -91,10 +96,7 @@ Set \code{force_new_LD=T} to override this and extract a new subset.}
 then \emph{echolocatoR} will just use the preexisting file.
 Set \code{force_new_finemap=T} to override this and re-run fine-mapping.}
 
-\item{subset_path}{The file you want your locus subset saved as.
-Only use when fine-mapping one locus at a time.
-If \code{subset_path="auto"} (\emph{default}), a locus subset file name is automatically constructed as:
-\url{Data/<dataset_type>/<dataset_name>/<locus>/Multi-finemap/<locus>_<dataset_name>_Multi-finemap.tsv.gz}}
+\item{results_dir}{Where to store all results.}
 
 \item{top_SNPs}{A data.frame with the genomic coordinates of the lead SNP for each locus.
 The lead SNP will be used as the center of the window when extracting subset from the full GWAS/QTL summary statistics file.
@@ -242,13 +244,6 @@ Only used for certain eQTL datasets.}
 
 \item{remove_tmps}{Whether to remove any temporary files (e.g. FINEMAP output files) after the pipeline is done running.}
 
-\item{plot_types}{Which kinds of plots to include.
-Options:
-\describe{
-\item{"simple"}{Just plot the following tracks: GWAS, fine-mapping, gene models, and brain cell type-specific epigenomic data from Nott et al. (2019).}
-\item{"fancy"}{Additionally plot XGR annotation tracks.}
-}}
-
 \item{PAINTOR_QTL_datasets}{A list of QTL datasets to be used when conducting joint functional fine-mapping with \emph{PAINTOR}.}
 
 \item{server}{Whether \emph{echolocatoR} is being run on a computing cluster/server or on a local machine.}
@@ -256,12 +251,24 @@ Options:
 \item{PP_threshold}{The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
 For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.}
 
-\item{plot_window}{Zoom into the center of the locus when plotting (without editing the fine-mapping results file).}
+\item{plot.types}{Which kinds of plots to include.
+Options:
+\describe{
+\item{"simple"}{Just plot the following tracks: GWAS, fine-mapping, gene models, and brain cell type-specific epigenomic data from Nott et al. (2019).}
+\item{"fancy"}{Additionally plot XGR annotation tracks.}
+}}
 
-\item{plot_Nott_binwidth}{When including Nott et al. (2019) epigenomic data in the track plots,
+\item{plot.window}{Zoom into the center of the locus when plotting (without editing the fine-mapping results file).}
+
+\item{plot.Nott_binwidth}{When including Nott et al. (2019) epigenomic data in the track plots,
 adjust the bin width of the histograms.}
 
-\item{Nott_bigwig_dir}{Instead of pulling Nott et al. (2019) epigenomic data from the UCSC Genome Browsers, use a set of local bigwig files.}
+\item{plot.Nott_bigwig_dir}{Instead of pulling Nott et al. (2019) epigenomic data from the UCSC Genome Browsers, use a set of local bigwig files.}
+
+\item{subset_path}{The file you want your locus subset saved as.
+Only use when fine-mapping one locus at a time.
+If \code{subset_path="auto"} (\emph{default}), a locus subset file name is automatically constructed as:
+\url{Data/<dataset_type>/<dataset_name>/<locus>/Multi-finemap/<locus>_<dataset_name>_Multi-finemap.tsv.gz}}
 }
 \value{
 A merged data.frame with all fine-mapping results from all loci.

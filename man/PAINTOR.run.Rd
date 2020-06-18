@@ -5,7 +5,7 @@
 \title{Run PAINTOR}
 \usage{
 PAINTOR.run(
-  paintor_path,
+  paintor_path = NULL,
   PT_results_path,
   .LD_file.paths,
   n_datasets,

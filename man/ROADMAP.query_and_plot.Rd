@@ -46,7 +46,8 @@ A named list containing:
 Query and plot Roadmap epigenomic annotations
 }
 \examples{
-data("finemap_DT")
+data("BST1")
+finemap_DT <- BST1
 roadmap_plot_query <- ROADMAP.query_and_plot(subset_DT=finemap_DT, keyword_query="monocytes")
 }
 \seealso{

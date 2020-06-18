@@ -50,8 +50,7 @@ Other XGR:
 \code{\link{XGR.merge_and_process}()},
 \code{\link{XGR.plot_enrichment}()},
 \code{\link{XGR.plot_peaks}()},
-\code{\link{XGR.prepare_foreground_background}()},
-\code{\link{save_annotations}()}
+\code{\link{XGR.prepare_foreground_background}()}
 }
 \concept{XGR}
 \keyword{internal}

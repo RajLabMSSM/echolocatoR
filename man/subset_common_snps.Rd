@@ -4,7 +4,7 @@
 \alias{subset_common_snps}
 \title{Subset LD matrix and dataframe to only their shared SNPs}
 \usage{
-subset_common_snps(LD_matrix, finemap_DT, verbose = F)
+subset_common_snps(LD_matrix, finemap_dat, verbose = F)
 }
 \value{
 data.frame

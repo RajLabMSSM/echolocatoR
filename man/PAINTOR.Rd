@@ -9,8 +9,8 @@
 }
 \usage{
 PAINTOR(
-  finemap_DT = NULL,
-  paintor_path = system.file("exec/PAINTOR_V3.0", "PAINTOR", package = "echolocatoR"),
+  finemap_dat = NULL,
+  paintor_path = NULL,
   GWAS_datasets = NULL,
   QTL_datasets = NULL,
   locus,

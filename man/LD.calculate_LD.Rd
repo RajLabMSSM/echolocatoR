@@ -4,10 +4,10 @@
 \alias{LD.calculate_LD}
 \title{Calculate LD}
 \usage{
-LD.calculate_LD(results_path, ld_window = 1000, ld_format = "r")
+LD.calculate_LD(locus_dir, ld_window = 1000, ld_format = "r")
 }
 \arguments{
-\item{results_path}{Locus-specific results directory.}
+\item{locus_dir}{Locus-specific results directory.}
 
 \item{ld_window}{Set --r/--r2 max variant ct pairwise distance (usu. 10).}
 

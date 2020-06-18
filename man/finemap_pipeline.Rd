@@ -7,8 +7,9 @@
 finemap_pipeline(
   locus,
   fullSS_path,
-  dataset_name,
-  dataset_type = "GWAS",
+  results_dir,
+  dataset_name = "dataset_name",
+  dataset_type = "dataset_type",
   top_SNPs = "auto",
   force_new_subset = F,
   force_new_LD = F,
@@ -37,6 +38,7 @@ finemap_pipeline(
   LD_reference = "1KG_Phase1",
   superpopulation = "EUR",
   download_reference = T,
+  LD_download_method = "direct",
   min_POS = NA,
   max_POS = NA,
   min_MAF = NA,
@@ -55,17 +57,23 @@ finemap_pipeline(
   plot_LD = F,
   verbose = T,
   remove_tmps = T,
-  plot_types = c("simple"),
+  plot.types = c("simple"),
   PAINTOR_QTL_datasets = NULL,
   server = F,
   PP_threshold = 0.95,
-  plot_window = NULL,
-  plot_Nott_binwidth = 2500,
-  Nott_bigwig_dir = NULL
+  plot.window = NULL,
+  plot.Nott_epigenome = plot.Nott_epigenome,
+  plot.Nott_binwidth = 2500,
+  plot.Nott_bigwig_dir = NULL,
+  plot.XGR_libnames = NULL,
+  plot.Roadmap = F,
+  plot.Roadmap_query = NULL
 )
 }
 \arguments{
 \item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.}
+
+\item{results_dir}{Where to store all results.}
 
 \item{dataset_name}{The name you want to assign to the dataset being fine-mapped,
 This will be used to name the subdirectory where your results will be stored (e.g. \code{Data/GWAS/<dataset_name>}).
@@ -233,7 +241,7 @@ Only used for certain eQTL datasets.}
 
 \item{remove_tmps}{Whether to remove any temporary files (e.g. FINEMAP output files) after the pipeline is done running.}
 
-\item{plot_types}{Which kinds of plots to include.
+\item{plot.types}{Which kinds of plots to include.
 Options:
 \describe{
 \item{"simple"}{Just plot the following tracks: GWAS, fine-mapping, gene models, and brain cell type-specific epigenomic data from Nott et al. (2019).}
@@ -247,12 +255,12 @@ Options:
 \item{PP_threshold}{The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
 For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.}
 
-\item{plot_window}{Zoom into the center of the locus when plotting (without editing the fine-mapping results file).}
+\item{plot.window}{Zoom into the center of the locus when plotting (without editing the fine-mapping results file).}
 
-\item{plot_Nott_binwidth}{When including Nott et al. (2019) epigenomic data in the track plots,
+\item{plot.Nott_binwidth}{When including Nott et al. (2019) epigenomic data in the track plots,
 adjust the bin width of the histograms.}
 
-\item{Nott_bigwig_dir}{Instead of pulling Nott et al. (2019) epigenomic data from the UCSC Genome Browsers, use a set of local bigwig files.}
+\item{plot.Nott_bigwig_dir}{Instead of pulling Nott et al. (2019) epigenomic data from the UCSC Genome Browsers, use a set of local bigwig files.}
 
 \item{loci}{Character list of loci in \strong{Locus} col of \code{top_SNPs}.}
 }
@@ -321,10 +329,6 @@ The primary functions of \emph{echolocatoR} that expedite fine-mapping
 
 }
 
-\examples{
-data("Nalls_top_SNPs")
-3## finemap_results <- finemap_pipeline("BST1")
-}
 \seealso{
 Other MAIN: 
 \code{\link{finemap_loci}()}

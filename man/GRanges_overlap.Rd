@@ -5,7 +5,7 @@
 \title{Find overlap between genomic coordinates/ranges}
 \usage{
 GRanges_overlap(
-  finemap_DT,
+  finemap_dat,
   regions,
   return_merged = T,
   chrom_col.1 = "CHR",

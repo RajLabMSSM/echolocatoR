@@ -4,7 +4,7 @@
 \alias{PAINTOR.install}
 \title{Install PAINTOR via command line}
 \usage{
-PAINTOR.install(paintor_path = "./echolocatoR/tools/PAINTOR_V3.0/")
+PAINTOR.install(paintor_path = NULL)
 }
 \description{
 Currently there is no R or conda distribution of PAINTOR.

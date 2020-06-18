@@ -6,10 +6,10 @@
 \usage{
 LD.UKBiobank(
   subset_DT = NULL,
+  locus_dir,
   sumstats_path = NULL,
   chrom = NULL,
   min_pos = NULL,
-  results_path = "./LD",
   force_new_LD = F,
   chimera = F,
   server = T,
