@@ -45,14 +45,14 @@ Imports:
     biovizBase,
     ensembldb, 
     ggbio,
-    rtracklayer,
-    ComplexHeatmap,
+    rtracklayer, 
     SummarizedExperiment,
-    biomaRt
+    biomaRt,
+    snpStats
 Remotes:
   github::stephenslab/susieR@0.9.0,
   github::thomasp85/patchwork,
-  github::kvnkuang/pbmcapply,
+  github::kvnkuang/pbmcapply
 Suggests: 
     SparkR,
     Rsamtools,
@@ -64,6 +64,7 @@ Suggests:
     gaston, 
     motifbreakR,
     SNPlocs.Hsapiens.dbSNP142.GRCh37,
-    BSgenome.Hsapiens.UCSC.hg19
+    BSgenome.Hsapiens.UCSC.hg19,
+    ComplexHeatmap
 RoxygenNote: 7.1.0
 VignetteBuilder: knitr

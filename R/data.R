@@ -21,6 +21,7 @@
 #' # Previously "finemap_DT"
 #' BST1 <- data.table::fread("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/BST1/Multi-finemap/Multi-finemap_results.txt")
 #' BST1 <- update_CS_cols(finemap_dat=BST1)
+#' BST1 <- find_consensus_SNPs(finemap_dat=BST1)
 #' usethis::use_data(BST1, overwrite = T)
 #' }
 "BST1"
@@ -48,6 +49,7 @@
 #' \dontrun{
 #' LRRK2 <- data.table::fread("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/LRRK2/Multi-finemap/Multi-finemap_results.txt")
 #' LRRK2 <- update_CS_cols(finemap_dat=LRRK2)
+#' LRRK2 <- find_consensus_SNPs(finemap_dat=LRRK2)
 #' usethis::use_data(LRRK2, overwrite = T)
 #' }
 "LRRK2"
@@ -75,6 +77,7 @@
 #' \dontrun{
 #' MEX3C <- data.table::fread("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/MEX3C/Multi-finemap/Multi-finemap_results.txt")
 #' MEX3C <- update_CS_cols(finemap_dat=MEX3C)
+#' MEX3C <- find_consensus_SNPs(finemap_dat=MEX3C)
 #' usethis::use_data(MEX3C, overwrite = T)
 #' }
 "MEX3C"

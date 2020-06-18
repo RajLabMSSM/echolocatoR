@@ -25,7 +25,6 @@ invisible_legend <- function(gg){
 
 
 
-
 #' Track plot for SNPs
 #'
 #' Uses \code{\link{ggbio}}.
@@ -53,7 +52,8 @@ SNP_track <- function(gr.snp,
                       labels_subset = c("Lead SNP", "Credible Set", "Consensus SNP"),
                       r2=NULL,
                       show.legend=T,
-                      PP_threshold=.95){
+                      PP_threshold=.95,
+                      sig_cutoff=5e-8){
   # Format data
   if(!(method %in% c("original"))){
     if(method=="COJO"){
@@ -79,8 +79,8 @@ SNP_track <- function(gr.snp,
 
   ## Make track
   if(method=="original"){
-    cutoff <- -log10(5e-8)
-    cutoff_lab <- paste("P < 5e-8")
+    sig_cutoff <- -log10(sig_cutoff)
+    cutoff_lab <- paste("P <",sig_cutoff)
     ymax <- max(-log10(gr.snp$P))
     r2_multiply <- 150
     a1 <- ggbio::plotGrandLinear(gr.snp,
@@ -93,7 +93,7 @@ SNP_track <- function(gr.snp,
       labs(y="-log10(P-value)") +
       ylim(c(0,ymax*1.1))
   } else {
-    cutoff <- PP_threshold
+    sig_cutoff <- PP_threshold
     cutoff_lab <- paste0(PP_threshold*100,"% probability")
     r2_multiply <- 5
     # Further filter label tags if plotting fine-mapping results
@@ -113,8 +113,8 @@ SNP_track <- function(gr.snp,
   a1 <- a1 +
     scale_color_gradient(low="blue", high="red", limits = c(0,1)) +
     geom_hline(yintercept=0,alpha=.5, linetype=1, size=.5) +
-    geom_hline(yintercept=cutoff, alpha=.5, linetype=2, size=.5, color="black") +
-    geom_text(aes(x=min(POS), y=cutoff*1.1),
+    geom_hline(yintercept=sig_cutoff, alpha=.5, linetype=2, size=.5, color="black") +
+    geom_text(aes(x=min(POS), y=sig_cutoff*1.1),
               label=cutoff_lab,
               size=3,color="grey", hjust = 0)
   # Only draw LD line on the first track
@@ -168,6 +168,121 @@ SNP_track <- function(gr.snp,
   # if(show.legend==F){a1 <- a1 + scale_fill_discrete(guide=F) + guides(fill=F) + theme(legend.position="none")}
   return(a1)
 }
+
+
+
+#' Plot QTL data
+#'
+#' @inheritParams finemap_pipeline
+#' @inheritParams SNP_track
+ #' @family plot
+#' @keywords internal
+#' @examples
+#' data("BST1")
+#' finemap_DT <- BST1
+#' LD_SNP <- subset(finemap_DT, leadSNP==T)$SNP
+#' LD_sub <- LD_with_leadSNP(LD_matrix = LD_matrix, LD_SNP = LD_SNP)
+#' dat <- data.table:::merge.data.table(finemap_DT, LD_sub, by = "SNP", all.x = T)
+#' gr.snp <- DT_to_GRanges(dat)
+#' ## Create fake QTL P-values
+#' gr.snp$fake_eQTL.P <- gr.snp$P  * c(1,.9,.7)
+#' qtl.track <- QTL_track(gr.snp=gr.snp, QTL_prefix="fake_eQTL", labels_subset=c("Lead SNP"))
+QTL_track <- function(gr.snp,
+                      QTL_prefix="QTL",
+                      labels_subset = c("Lead SNP", "Credible Set", "Consensus SNP"),
+                      color_r2=T,
+                      show.legend=T,
+                      PP_threshold=.95,
+                      sig_cutoff=5e-8){
+  dat <- as.data.frame(gr.snp)
+  pval_col <- paste0(QTL_prefix,".P")
+  ### Label set
+  labelSNPs <- construct_SNPs_labels(subset_DT = dat,
+                                     lead="Lead SNP" %in% labels_subset,
+                                     consensus="Consensus SNP" %in% labels_subset,
+                                     method=T,
+                                     remove_duplicates = F)
+  labelSNPs_labels <- construct_SNPs_labels(subset_DT = dat,
+                                            lead="Lead SNP" %in% labels_subset,
+                                            consensus="Consensus SNP" %in% labels_subset,
+                                            method=T,
+                                            remove_duplicates = T)
+  leader_SNP <- subset(labelSNPs, type=="Lead SNP")
+  CS_set <- subset(labelSNPs, type=="Credible Set")
+
+  ## Make track
+  sig_cutoff <- -log10(sig_cutoff)
+  cutoff_lab <- paste("P <",sig_cutoff)
+  ymax <- max(-log10(gr.snp$P))
+  r2_multiply <- 150
+  q1 <- ggbio::plotGrandLinear(gr.snp,
+                               geom = "point",
+                               coord = "genome",
+                               size=2,
+                               alpha=.8,
+                               aes(y = -log10(eval(parse(text=pval_col))),
+                                   x=POS, color=r2),
+                               facets=SEQnames~.) +
+    labs(y="-log10(P-value)") +
+    ylim(c(0,ymax*1.1)) +
+    geom_hline(yintercept=0,alpha=.5, linetype=1, size=.5) +
+    geom_hline(yintercept=sig_cutoff, alpha=.5, linetype=2, size=.5, color="black") +
+    geom_text(aes(x=min(POS), y=sig_cutoff*1.1),
+              label=cutoff_lab,
+              size=3,color="grey", hjust = 0)
+  # Only draw LD line on the first track
+  if("r2" %in% colnames(dat) & color_r2==T){
+    q1 <- q1 + geom_line(data=dat, stat="smooth",
+                         aes(x=POS,y=r2*r2_multiply), #y=scales::rescale(gr.snp$r2, to=c(0,20))),
+                         se = F, formula = y ~ x,  method = 'loess',
+                         span=.1, size=.5, color="firebrick1") +
+      scale_color_gradient(low="blue", high="red", limits = c(0,1))
+  }
+  q1 <- q1 +
+    # Add diamond overtop leadSNP
+    geom_point(data=labelSNPs,
+               pch=labelSNPs$shape,
+               fill=NA,
+               size=labelSNPs$size,
+               color=labelSNPs$color) +
+    ### Background color label
+    ggrepel::geom_label_repel(data=labelSNPs_labels,
+                              aes(label=SNP),
+                              color=NA,
+                              # nudge_x = .5,
+                              fill="black",
+                              box.padding = .25,
+                              label.padding = .25,
+                              label.size=NA,
+                              alpha=.6,
+                              seed = 1,
+                              size = 3,
+                              min.segment.length = 1) +
+    ### Foreground color label
+    ggrepel::geom_label_repel(data=labelSNPs_labels,
+                              aes(label=SNP),
+                              color=labelSNPs_labels$color,
+                              segment.alpha = .5,
+                              # nudge_x = .5,
+                              box.padding = .25,
+                              label.padding = .25,
+                              segment.size = 1,
+                              fill = NA,
+                              alpha=1,
+                              seed = 1,
+                              size = 3,
+                              min.segment.length = 1) +
+    theme_classic() +
+    theme(legend.title = element_text(size=8),
+          legend.text = element_text(size=6),
+          strip.text.y = element_text(angle = 0),
+          strip.text = element_text(size=9),
+          legend.key.width=grid::unit(.5,"line"),
+          legend.key.height=grid::unit(.5,"line"))
+   return(q1)
+}
+
+
 
 
 
@@ -254,7 +369,9 @@ transcript_model_track <- function(gr.snp_CHR,
 #' Create separate tracks for the original results (-log10(P))
 #' and each fine-mapping method (Posterior Probability).
 #' Uses \code{\link{ggbio}}.
-#'
+#' @param QTL_prefixes Prefixes to the columns that contain QTL data.
+#' For exmaple, P-values for the \emph{Fairfax_2014} QTL study would be
+#' stored in the column \emph{Fairfax_2014.P}.
 #' @inheritParams transcript_model_track
 #' @inheritParams finemap_pipeline
 #' @family plot
@@ -281,9 +398,11 @@ GGBIO.plot <- function(finemap_dat,
                        LD_matrix,
                        locus_dir,
                        method_list=c("ABF","FINEMAP","SUSIE","POLYFUN_SUSIE"),
+                       QTL_prefixes=NULL,
                        mean.PP=T,
                        PP_threshold=.95,
                        consensus_thresh=2,
+                       sig_cutoff=5e-8,
 
                        XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes",
                                       "ENCODE_DNaseI_ClusteredV3_CellTypes",
@@ -307,7 +426,8 @@ GGBIO.plot <- function(finemap_dat,
                        plot.window=NULL,
                        dpi=300,
                        height=12,
-                       width=10){
+                       width=10,
+                       verbose=T){
   # consensus_thresh=2; XGR_libnames="ENCODE_TFBS_ClusteredV3_CellTypes";n_top_xgr=5; mean.PP=T; Roadmap=T; PP_threshold=.95;  Nott_epigenome=T;  save_plot=T; show_plot=T; method_list=c("ABF","SUSIE","POLYFUN_SUSIE","FINEMAP","mean"); full_data=T;  max_transcripts=3; plot.window=100000;
   # Nott_epigenome=T; Nott_regulatory_rects=T; Nott_show_placseq=T; Nott_binwidth=2500; max_transcripts=1; dpi=400; height=12; width=10; results_path=NULL;  n_top_roadmap=7; annot_overlap_threshold=5; Nott_bigwig_dir=NULL; locus="BST1"; Roadmap_query=NULL;
   locus <- basename(locus_dir)
@@ -346,15 +466,32 @@ GGBIO.plot <- function(finemap_dat,
                                             start = "POS", end = "POS")
 
   # Track 1: GWAS
+  printer("++ GGBIO::","GWAS","track", v=verbose)
   track.gwas <- SNP_track(gr.snp = gr.snp,
                           method = "original",
-                          labels_subset = c("Lead SNP", "Consensus SNP"))
+                          sig_cutoff=sig_cutoff,
+                          labels_subset = c("Lead SNP","Consensus SNP"))
   TRACKS_list <- append(TRACKS_list, track.gwas)
   names(TRACKS_list)[1] <- "GWAS"
 
+
+  for (qtl in QTL_prefixes){
+    printer("++ GGBIO::",qtl,"track", v=verbose)
+    qtl_track <- QTL_track(gr.snp = gr.snp,
+                           QTL_prefix=qtl,
+                           labels_subset = c("Lead SNP", "Consensus SNP"),
+                           color_r2=T,
+                           show.legend=F,
+                           PP_threshold=PP_threshold,
+                           sig_cutoff=sig_cutoff)
+    TRACKS_list <- append(TRACKS_list, qtl_track)
+    names(TRACKS_list)[length(TRACKS_list)] <- qtl
+  }
+
+
   # Tracks 2n: Fine-mapping
   for(m in method_list){
-    printer("++ GGBIO::",m,"Track")
+    printer("++ GGBIO::",m,"track", v=verbose)
     track.finemapping <- SNP_track(gr.snp, method = m,
                                    labels_subset = c("Lead SNP", "Credible Set"),
                                    show.legend = F)
@@ -376,8 +513,8 @@ GGBIO.plot <- function(finemap_dat,
   # Track 3: Annotation - XGR Annotations
   ## Download
   palettes <- c("Spectral","BrBG","PiYG", "PuOr")
-  counter <- 1
   if(any(!is.null(XGR_libnames))){printer("++ GGBIO:: XGR Tracks")}
+  i=1
   for(lib in XGR_libnames){
     annot_file <- annotation_file_name(locus_dir = locus_dir,
                                        lib_name = paste0("XGR.",lib))
@@ -394,18 +531,16 @@ GGBIO.plot <- function(finemap_dat,
                                 geom = "density",
                                 show_plot = F)
     colourCount <- length(unique(gr.filt$assay))
-    # facet <- lib!="ENCODE_DNaseI_ClusteredV3_CellTypes"
     xgr.track <- xgr.track +
       theme_classic() +
       theme(strip.text.y = element_text(angle = 0),
             strip.text = element_text(size=9)) +
-      scale_fill_manual(values = grDevices::colorRampPalette(RColorBrewer::brewer.pal(8, palettes[counter]))(colourCount) ) + #scale_fill_brewer(palette=palettes[1])
+      scale_fill_manual(values = grDevices::colorRampPalette(RColorBrewer::brewer.pal(8, palettes[i]))(colourCount) ) +
       scale_y_continuous(n.breaks = 3) +
       guides(fill = guide_legend(ncol = 2, keyheight = .5, keywidth = .5))
-
     TRACKS_list <- append(TRACKS_list, xgr.track)
     names(TRACKS_list)[length(TRACKS_list)] <- gsub("_|[.]","\n",lib)
-    counter = counter+1
+    i = i+1
   }
 
   # Track 4: Roadmap Chromatin Marks API
@@ -480,6 +615,7 @@ GGBIO.plot <- function(finemap_dat,
                                        Nott_epigenome=1,
                                        Nott_placseq=.33){
     dict <- c("GWAS"=Manhattan,
+              "QTL"=Manhattan,
       "ABF"=Manhattan,
       "SUSIE"=Manhattan,
       "POLYFUN_SUSIE"=Manhattan,
@@ -491,8 +627,9 @@ GGBIO.plot <- function(finemap_dat,
       "Nott (2019)\nPLAC-seq"=Nott_placseq
       )
     heights <- lapply(names(TRACKS_list),function(trk_name){
+      if(endsWith(trk_name,"QTL")){trk_name <- "QTL" }
       if(trk_name %in% names(dict)){dict[[trk_name]]
-        } else{1}
+        } else{.33}
     }) %>% unlist()
   return(heights)
   }

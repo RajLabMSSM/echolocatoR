@@ -1,5 +1,0 @@
----
-title: "echolocatoR documentation"
----
-
-🦇 🦇 🦇 🦇 🦇 Hello, Website! 🦇 🦇 🦇 🦇 🦇 🦇 

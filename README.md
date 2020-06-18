@@ -14,8 +14,8 @@ devtools::install_github("RajLabMSSM/echolocatoR")
 ## Vignettes
 
 For vignettes and example workflows, see the following pages:   
-### [Full pipeline vignette](https://rajlabmssm.github.io/echolocatoR/docs/full_pipeline_vignette)   
-### [Plotting vignette](https://rajlabmssm.github.io/echolocatoR/docs/plotting_vignette)  
+### [Full pipeline vignette](https://rajlabmssm.github.io/echolocatoR/doc/full_pipeline_vignette)   
+### [Plotting vignette](https://rajlabmssm.github.io/echolocatoR/doc/plotting_vignette)  
 
 
 ## Workflow  

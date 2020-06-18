@@ -1,7 +1,7 @@
 ---
 title: "echolocatoR: plotting vignette"
 knit: (function(input_file, encoding) {
-  out_dir <- 'docs';
+  out_dir <- 'doc';
   rmarkdown::render(input_file,
   encoding=encoding,
   output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
@@ -19,10 +19,15 @@ root.dir <- "~/Desktop"
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  root.dir = root.dir
+  root.dir = root.dir, 
+  fig.height = 12,
+  fig.width = 10
 )  
-knitr::opts_knit$set(root.dir = root.dir)
+knitr::opts_knit$set(
+  root.dir = root.dir
+  )
 # knitr::opts_chunk$get("root.dir")
+# devtools::build_vignettes(quiet = F)
 ```
 
 ```{r setup, root.dir="~/Desktop"}
@@ -43,10 +48,10 @@ The plot is centered on the lead/index SNP.
   + Further modify this object using `ggplot2` functions like `+ theme()`.
   + The modifications will be applied to all tracks at once.  
 * Save a high-resolution *.png* of the plot by setting `save_plot=T`  
-  + Further increase resolution by adjusting the `dpi` argument (*default=400*).
+  + Further increase resolution by adjusting the `dpi` argument (*default=300*).
   + Adjust the `height` and `width` of the saved plot using these respective arguments.
   + The plot will be automatically saved in the locus-specific directory as:  
-  *multiview_<locus>_<plot.window>.png*.
+  `multiview_<locus>_<plot.window>.png`.
    
 ## Load example data  
 
@@ -58,6 +63,7 @@ library(ggplot2)
 data("BST1"); data("LD_matrix"); data("locus_dir");
 locus_dir <- file.path("~/Desktop",locus_dir)
 finemap_DT <- BST1 
+show_plot <- T
 ```
 
 ## Using NO annotations  
@@ -68,9 +74,9 @@ trk_plot <- GGBIO.plot(finemap_dat=finemap_DT,
                        locus_dir=locus_dir, 
                        XGR_libnames=NULL, 
                        save_plot=F,
-                       show_plot=F)
+                       show_plot=show_plot)
 trk_plot <- trk_plot + theme(strip.background = element_rect(fill="gray"),
-                             text = element_text(size = 3, color="blue"))
+                             text = element_text(size=3, color="blue"))
 ```
 
 ## Using only XGR annotations  
@@ -78,7 +84,7 @@ trk_plot <- trk_plot + theme(strip.background = element_rect(fill="gray"),
 Whenever you use annotation arguments (e.g. `XGR_libnames`,`Roadmap`,`Nott_epigenome`)
 the annotations that overlap with your locus will automatically be saved as `GRanges` objects  
 in a locus-specific subdirectory:  
-*results/<dataset_type>/<dataset_name>/<locus>/annotation*  
+`results/<dataset_type>/<dataset_name>/<locus>/annotation` 
 
 ```{r trk_plot.xgr}
 trk_plot.xgr <- GGBIO.plot(finemap_dat=finemap_DT, 
@@ -86,7 +92,7 @@ trk_plot.xgr <- GGBIO.plot(finemap_dat=finemap_DT,
                            locus_dir=locus_dir, 
                            XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes"), 
                            save_plot=F,
-                           show_plot=F)
+                           show_plot=show_plot)
 ```
 
 ## Using only Roadmap annotations
@@ -99,11 +105,11 @@ trk_plot.roadmap <- GGBIO.plot(finemap_dat=finemap_DT,
                                Roadmap=T, 
                                Roadmap_query="monocyte", 
                                save_plot=F, 
-                               show_plot=F)
+                               show_plot=show_plot)
 ```
 
 
-## Using only Nott_2019 annotations
+## Using only Nott_2019 annotations  
 
 * Query and plot brain cell type-specific epigenomic assays from Nott et al. (2019)  
 (see `?NOTT_2019.bigwig_metadata` for details).
@@ -118,6 +124,27 @@ trk_plot.nott_2019 <- GGBIO.plot(finemap_dat=finemap_DT,
                                  Nott_regulatory_rects = T, 
                                  Nott_show_placseq = T,
                                  save_plot=F,
-                                 show_plot=F)
+                                 show_plot=show_plot)
 ```
+
+
+## Using QTL datasets  
+
+* Plot multiple QTL p-value columns (or really P-value columns from any kind of datset).  
+* Each QTL dataset will be plotted as a new track.
+
+```{r trk_plot.QTL}
+# Make fake QTL P-values for the sake a demonstration
+finemap_DT$fake_eQTL.P <- finemap_DT$P  * c(1,.9,.7)
+finemap_DT$fake_sQTL.P <- finemap_DT$P  * c(1,.8,.5)
+
+trk_plot.qtl <- GGBIO.plot(finemap_dat=finemap_DT, 
+                           LD_matrix=LD_matrix, 
+                           locus_dir=locus_dir,
+                           QTL_prefixes=c("fake_eQTL","fake_sQTL"),
+                           XGR_libnames=NULL, 
+                           save_plot=F,
+                           show_plot=show_plot)
+```
+
 
