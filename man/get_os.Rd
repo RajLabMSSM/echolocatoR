@@ -18,6 +18,7 @@ Other general:
 \code{\link{createDT_html}()},
 \code{\link{createDT}()},
 \code{\link{dt.replace}()},
+\code{\link{example_fullSS}()},
 \code{\link{get_sample_size}()},
 \code{\link{startup_image}()},
 \code{\link{tryFunc}()}

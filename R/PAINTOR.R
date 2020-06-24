@@ -3,9 +3,9 @@
 
 
 
-find_paintor_path <- function(paintor_path=NULL){
+PAINTOR.find_paintor_folder <- function(paintor_path=NULL){
   if(is.null(paintor_path)){
-    paintor_path <- file.path(find.package("echolocatoR"),"exec/PAINTOR_V3.0")
+    paintor_path <- system.file("tools/PAINTOR_V3.0", package = "echolocatoR")
   }
   return(paintor_path)
 }
@@ -26,7 +26,7 @@ PAINTOR.install <- function(paintor_path=NULL){
 #' Show PAINTOR help menu
 #'
 PAINTOR.help_menu <- function(paintor_path=NULL){
-  paintor_path <- find_paintor_path(paintor_path=paintor_path)
+  paintor_path <- PAINTOR.find_paintor_folder(paintor_path=paintor_path)
   system(file.path(paintor_path,"PAINTOR"))
 }
 
@@ -410,7 +410,7 @@ PAINTOR.prepare_annotations <- function(paintor_path=NULL,
                                         PT_results_path,
                                         locus_name,
                                         remove_BED=F){
-  paintor_path <- find_paintor_path(paintor_path=paintor_path)
+  paintor_path <- PAINTOR.find_paintor_folder(paintor_path=paintor_path)
   .locus_file <- file.path(PT_results_path, locus_name)
   .annotations_file <- file.path(PT_results_path, paste0(locus_name,".annotations.txt"))
 
@@ -510,7 +510,7 @@ PAINTOR.run <- function(paintor_path=NULL,
                         method="enumerate",#"mcmc"
                         n_causal=2 ){
   printer("+ PAINTOR:: Running PAINTOR...")
-  paintor_path <- find_paintor_path(paintor_path=paintor_path)
+  paintor_path <- PAINTOR.find_paintor_folder(paintor_path=paintor_path)
   PT.start <- Sys.time()
   # Enumerate or mcmc sampling
   method_command <- ifelse(method=="enumerate", paste("-enumerate",n_causal),"-mcmc")
@@ -691,7 +691,7 @@ PAINTOR <- function(finemap_dat=NULL,
   #   GWAS_dataset_name <- basename(dirname(subset_path));
   #   printer("PAINTOR:: Inferring GWAS dataset name:", GWAS_dataset_name)
   #   }
-  paintor_path <- find_paintor_path(paintor_path=paintor_path)
+  paintor_path <- PAINTOR.find_paintor_folder(paintor_path=paintor_path)
   locus_name <- PAINTOR.locusName_handler(locus_name,
                                           locus,
                                           GWAS_datasets,

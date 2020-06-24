@@ -18,8 +18,9 @@ wget(
 R wrapper for wget
 }
 \seealso{
-Other download functions: 
-\code{\link{axel}()}
+Other downloaders: 
+\code{\link{axel}()},
+\code{\link{downloader}()}
 }
-\concept{download functions}
+\concept{downloaders}
 \keyword{internal}

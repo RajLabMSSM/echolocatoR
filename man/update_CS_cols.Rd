@@ -9,3 +9,10 @@ update_CS_cols(finemap_dat)
 \description{
 Convert old col format: ".Credible_Set" => ".CS"
 }
+\examples{
+\dontrun{
+data("BST1");
+finemap_DT <- BST1
+finemap_DT <- update_CS_cols(finemap_dat=finemap_DT)
+}
+}

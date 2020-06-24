@@ -26,19 +26,27 @@ import_topSNPs(
 You can provide either a number to identify the tab by order,
 or a string to identify the tab by name.}
 
-\item{chrom_col}{Name of the chromosome column in the full summary stats file.}
+\item{chrom_col}{Name of the chromosome column in the full summary stats file.
+Can be "chr1" or "1" format.
+(\emph{default: ="CHR"})}
 
-\item{position_col}{Name of the genomic position column in the full summary stats file.}
+\item{position_col}{Name of the genomic position column in the full summary stats file.
+Must be in units of basepairs.
+(\emph{default: ="POS"})}
 
-\item{snp_col}{Name of the SNP RSID column in the full summary stats file.}
+\item{snp_col}{Name of the SNP RSID column in the full summary stats file.
+(\emph{default: ="SNP"})}
 
 \item{pval_col}{Name of the p-value column in the full summary stats file.
-Raw p-values are preferred, but if not available corrected p-values (e.g. FDR) can be used instead.}
+Raw p-values are preferred, but if not available corrected p-values (e.g. FDR) can be used instead.
+(\emph{default: ="P"})}
 
 \item{effect_col}{Name of the effect size column in the full summary stats file.
-Effect size is preferred, but if not available other metrics like Beta for Odds Ratio can be used instead.}
+Effect size is preferred, but if not available other metrics like Beta for Odds Ratio can be used instead.
+(\emph{default: ="Effect"})}
 
-\item{locus_col}{Name of the locus column in the full summary stats file.}
+\item{locus_col}{Name of the locus column in the full summary stats file.
+(\emph{default: ="Locus"})}
 
 \item{gene_col}{An optional column to keep track of the causal gene(s) in each locus (if known).}
 

@@ -2,12 +2,12 @@
 % Please edit documentation in R/POLYFUN.R
 \name{POLYFUN.find_polyfun_folder}
 \alias{POLYFUN.find_polyfun_folder}
-\title{Install PolyFun dependencies}
+\title{Folder where PolyFun submodule is stored}
 \usage{
 POLYFUN.find_polyfun_folder(polyfun_path = NULL)
 }
 \description{
-Install PolyFun dependencies
+Folder where PolyFun submodule is stored
 }
 \examples{
 polyfun_path <- POLYFUN.find_polyfun_folder()
@@ -15,8 +15,6 @@ polyfun_path <- POLYFUN.find_polyfun_folder()
 \seealso{
 Other polyfun: 
 \code{\link{POLYFUN.compute_priors}()},
-\code{\link{POLYFUN.conda_from_list}()},
-\code{\link{POLYFUN.conda_from_yaml}()},
 \code{\link{POLYFUN.download_ref_files}()},
 \code{\link{POLYFUN.finemapper}()},
 \code{\link{POLYFUN.functional_enrichment}()},
@@ -27,10 +25,7 @@ Other polyfun:
 \code{\link{POLYFUN.h2_enrichment}()},
 \code{\link{POLYFUN.help}()},
 \code{\link{POLYFUN.initialize}()},
-\code{\link{POLYFUN.install_conda}()},
-\code{\link{POLYFUN.install_dependencies}()},
 \code{\link{POLYFUN.ldsc_annot_enrichment}()},
-\code{\link{POLYFUN.load_conda}()},
 \code{\link{POLYFUN.munge_summ_stats}()},
 \code{\link{POLYFUN.plot}()},
 \code{\link{POLYFUN.prepare_snp_input}()},

@@ -34,55 +34,69 @@ The lead SNP will be used as the center of the window when extracting subset fro
 Only one SNP per \strong{Locus} should be included.
 At minimum, \code{top_SNPs} should include the following columns:
 \describe{
-\item{Locus}{A unique name for each locus. Often, loci are named after a relevant gene (e.g. LRRK2) or based on the name/coordinates of the lead SNP (e.g. locus_chr12_40734202) }
-\item{CHR}{The chromosome that the SNP is on. Can be "chr12" or "12" format.}
-\item{POS}{The genomic position of the SNP (in basepairs)}
+\item{\emph{Locus}}{A unique name for each locus. Often, loci are named after a relevant gene (e.g. LRRK2) or based on the name/coordinates of the lead SNP (e.g. locus_chr12_40734202) }
+\item{\emph{CHR}}{The chromosome that the SNP is on. Can be "chr12" or "12" format.}
+\item{\emph{POS}}{The genomic position of the SNP (in basepairs)}
 }}
 
-\item{chrom_col}{Name of the chromosome column in the full summary stats file.}
+\item{chrom_col}{Name of the chromosome column in the full summary stats file.
+Can be "chr1" or "1" format.
+(\emph{default: ="CHR"})}
 
-\item{position_col}{Name of the genomic position column in the full summary stats file.}
+\item{position_col}{Name of the genomic position column in the full summary stats file.
+Must be in units of basepairs.
+(\emph{default: ="POS"})}
 
-\item{snp_col}{Name of the SNP RSID column in the full summary stats file.}
+\item{snp_col}{Name of the SNP RSID column in the full summary stats file.
+(\emph{default: ="SNP"})}
 
 \item{pval_col}{Name of the p-value column in the full summary stats file.
-Raw p-values are preferred, but if not available corrected p-values (e.g. FDR) can be used instead.}
+Raw p-values are preferred, but if not available corrected p-values (e.g. FDR) can be used instead.
+(\emph{default: ="P"})}
 
 \item{effect_col}{Name of the effect size column in the full summary stats file.
-Effect size is preferred, but if not available other metrics like Beta for Odds Ratio can be used instead.}
+Effect size is preferred, but if not available other metrics like Beta for Odds Ratio can be used instead.
+(\emph{default: ="Effect"})}
 
 \item{stderr_col}{Name of the standard error  column in the full summary stats file.
-You can also set \code{stderr_col="calculate"} to infer standard error using: \code{effect / tstat}.}
+You can also set \code{stderr_col="calculate"} to infer standard error using: \code{effect / tstat}.
+(\emph{default: ="StdErr"})}
 
 \item{tstat_col}{Name of the t-statistic column in the full summary stats file.
-This column is not necessary unless \code{stderr_col="calculate"} or the standard error column is missing.}
+This column is not necessary unless \code{stderr_col="calculate"} or the standard error column is missing.
+(\emph{default: ="t-stat"})}
 
 \item{MAF_col}{Name of the minor allele frequency column in the full summary stats file.
-Can be inferred from \strong{freq_col} if missing from the dataset.}
+Can be inferred from \strong{freq_col} if missing from the dataset.
+(\emph{default: ="MAF"})}
 
 \item{freq_col}{Name of the allele frequency column in the full summary stats file.
 Effect allele frequency is preferred, but the non-effect allele can be provided instead (though this may be less accurate).
-This column is not necessary unless \code{MAF_col="calculate"} or the MAF column is missing.}
+This column is not necessary unless \code{MAF_col="calculate"} or the MAF column is missing.
+(\emph{default: ="Freq"})}
 
 \item{N_cases_col}{Name of the column in the full summary stats that has the number of case subjects in the study.
 This can either be per SNP sample sizes, or one number repeated across all rows.
 Proxy cases (e.g. relatives of people with the disease being investigated) should be included in this estimate if any were used in the study.
-This column is not necesssary if \code{N_cases} parameter is provided.}
+This column is not necesssary if \code{N_cases} parameter is provided.
+(\emph{default: ="N_cases"})}
 
 \item{N_controls_col}{Name of the column in the full summary stats that has the number of control subjects in the study.
  This can either be per SNP sample sizes, or one number repeated across all rows.
  This column is not necesssary if \code{N_controls} parameter is provided.
-  @param N_cases The number of case subjects in the study.
- Instead of providing a reudundant \strong{N_cases_col} column, you can simply enter one value here.
- @param N_controls The number of control subjects in the study.
- Instead of providing a reudundant \strong{N_controls_col} column, you can simply enter one value here.
- @param proportion_cases The proportion of total subjects in the study that were cases.
- if \code{proportion_cases="calculate"} then this is inferred:  \code{N_controls / N_controls}.
- #' @param sample_size The overall sample size of the study.
-If none is given, and \strong{N_cases} and \strong{N_controls} columns are present,
-then sample_size is inferred to be \code{max(N_cases) + max(N_controls)}.}
+(\emph{default: ="N_controls"})}
+
+\item{N_cases}{The number of case subjects in the study.
+Instead of providing a redundant \strong{N_cases_col} column, you can simply enter one value here.}
+
+\item{N_controls}{The number of control subjects in the study.
+Instead of providing a redundant \strong{N_controls_col} column, you can simply enter one value here.}
+
+\item{proportion_cases}{The proportion of total subjects in the study that were cases.
+if \code{proportion_cases="calculate"} then this is inferred:  \code{N_controls / N_controls}.}
 
 \item{A1_col}{Name of the effect/risk allele column in the full summary stats.
+ \strong{\emph{IMPORTANT}}: Make sure this actually the case for your full summary stats file.
 Unfortunately, different studies report different kinds of allele information in a non-standardized way.
 Meaning that A1/A2 can refer to any number of things:
  \describe{

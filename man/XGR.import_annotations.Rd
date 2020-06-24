@@ -6,8 +6,7 @@
 \usage{
 XGR.import_annotations(
   gr.snp,
-  anno_data_path = file.path("echolocatoR/tools/Annotations", paste0("XGR_", lib.name,
-    ".rds")),
+  anno_data_path = file.path("annotations", paste0("XGR_", lib.name, ".rds")),
   lib.name,
   save_xgr = T,
   annot_overlap_threshold = 5

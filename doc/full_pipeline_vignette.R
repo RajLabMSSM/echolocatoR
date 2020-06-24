@@ -3,7 +3,9 @@ root.dir <- "~/Desktop"
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  root.dir = root.dir
+  root.dir = root.dir,
+  fig.height = 12,
+  fig.width = 10
 )  
 knitr::opts_knit$set(root.dir = root.dir)
 # knitr::opts_chunk$get("root.dir")
@@ -27,23 +29,26 @@ top_SNPs <- import_topSNPs(
   chrom_col = "CHR", position_col = "BP", snp_col="SNP",
   pval_col="P, all studies", effect_col="Beta, all studies", gene_col="Nearest Gene",
   group_by_locus = T,
-  locus_col = "Locus Number",
+  locus_col = "Nearest Gene",
   remove_variants = "rs34637584") 
+
+## ----fullSS-------------------------------------------------------------------
+fullSS_path <- example_fullSS(fullSS_path="~/Desktop/Nalls23andMe_2019.fullSS_subset.tsv")
 
 ## ----Run fine-mapping pipeline------------------------------------------------
 Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS 
-                                          top_SNPs = top_SNPs, 
+                                          top_SNPs = top_SNPs,  
                                           results_dir = "~/Desktop/results",
                                           loci = c("BST1","MEX3C"),#top_SNPs$Gene, 
                                           dataset_name = "Nalls23andMe_2019",
                                           dataset_type = "GWAS",  
-                                          force_new_subset = F,
+                                          force_new_subset = T,
                                           force_new_LD = F,
                                           force_new_finemap = F,
                                           remove_tmps = T,
                                           
                  # SUMMARY STATS ARGUMENTS
-                 fullSS_path = "~/Desktop/nallsEtAl2019_allSamples_allVariants.mod.txt.gz",
+                 fullSS_path = fullSS_path,
                  query_by ="tabix",
                  chrom_col = "CHR", position_col = "POS", snp_col = "RSID",
                  pval_col = "p", effect_col = "beta", stderr_col = "se",

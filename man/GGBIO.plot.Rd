@@ -12,6 +12,7 @@ GGBIO.plot(
   LD_matrix,
   locus_dir,
   method_list = c("ABF", "FINEMAP", "SUSIE", "POLYFUN_SUSIE"),
+  dot_summary = F,
   QTL_prefixes = NULL,
   mean.PP = T,
   PP_threshold = 0.95,
@@ -63,8 +64,14 @@ Uses \code{\link{ggbio}}.
 \dontrun{
 data("BST1"); data("LD_matrix"); data("locus_dir");
 finemap_DT <- BST1
+
 # Using NO annotations
 trk_plot <- GGBIO.plot(finemap_dat=finemap_DT, LD_matrix=LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, save_plot=F)
+
+Using NO annotations (dot plot summary instead of Manhattan plots for each fine-mapping tool)
+### WARNING: Currently doesn't align as well due to the summary plot having a differnt x-axis.
+trk_plot <- GGBIO.plot(finemap_dat=finemap_DT, LD_matrix=LD_matrix, locus_dir=locus_dir, method_list=NULL, mean.PP=F, dot_summary=T, XGR_libnames=NULL, save_plot=F)
+
 
 # Using only XGR annotations
 trk_plot <- GGBIO.plot(finemap_dat=finemap_DT, LD_matrix=LD_matrix, locus_dir=locus_dir, XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes"), save_plot=F)
@@ -73,22 +80,17 @@ trk_plot <- GGBIO.plot(finemap_dat=finemap_DT, LD_matrix=LD_matrix, locus_dir=lo
 trk_plot <- GGBIO.plot(finemap_dat=finemap_DT, LD_matrix=LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, Roadmap=T, Roadmap_query="monocyte", save_plot=F)
 
 # Using only Nott_2019 annotations
-trk_plot <- GGBIO.plot(finemap_dat=finemap_DT, LD_matrix=LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, Nott_epigenome=T, save_plot=F)
+trk_plot <- GGBIO.plot(finemap_dat=finemap_DT, LD_matrix=LD_matrix, locus_dir=locus_dir, Nott_epigenome=T, XGR_libnames=NULL)
 }
-Determine track heights
 }
 \seealso{
 Other plot: 
-\code{\link{QTL_track}()},
-\code{\link{SNP_track}()},
-\code{\link{invisible_legend}()},
-\code{\link{transcript_model_track}()}
-
-Other plot: 
-\code{\link{QTL_track}()},
-\code{\link{SNP_track}()},
-\code{\link{invisible_legend}()},
-\code{\link{transcript_model_track}()}
+\code{\link{GGBIO.QTL_track}()},
+\code{\link{GGBIO.SNP_track}()},
+\code{\link{GGBIO.add_lines}()},
+\code{\link{GGBIO.invisible_legend}()},
+\code{\link{GGBIO.track_heights_dict}()},
+\code{\link{GGBIO.transcript_model_track}()}
 }
 \concept{plot}
 \keyword{internal}

@@ -85,6 +85,38 @@
 
 
 
+
+
+
+
+#' "Example subset of full summary stats
+#'
+#' Data originally comes from the Parkinson's disease GWAS
+#' by \href{https://www.biorxiv.org/content/10.1101/388165v3}{Nalls et al. (bioRxiv)}.
+#'
+#' @source \url{https://www.biorxiv.org/content/10.1101/388165v3}
+#' @examples
+#' A subset of the full GWAS summary stats from Nalls et al. (2019)
+#' \dontrun{
+#' data("top_SNPs")
+#' loci <- c("BST1","LRRK2","MEX3C")
+#' fullSS_dat <- lapply(loci, function(locus){
+#'   top_sub <- subset(top_SNPs, Locus==locus)
+#'   TABIX(fullSS_path = "~/Desktop/nallsEtAl2019_allSamples_allVariants.mod.txt.gz",
+#'         save_subset = F,
+#'         subset_path = NULL,
+#'         chrom_col = "CHR", position_col = "POS",
+#'         chrom = top_sub$CHR[1],
+#'         min_POS = top_sub$POS - 500000*4,
+#'         max_POS = top_sub$POS + 500000*4)
+#' }) %>% data.table::rbindlist()
+#' usethis::use_data(fullSS_dat, overwrite=T)
+#' }
+"fullSS_dat"
+
+
+
+
 #' Example results path for BST1 locus
 #' @examples
 #' \dontrun{
@@ -179,6 +211,24 @@
 #' Data from \href{https://www.biorxiv.org/content/10.1101/388165v3}{Nalls et al. (bioRxiv)}, Table S2.
 #' @source  \url{https://www.biorxiv.org/content/10.1101/388165v3}
 "Nalls_top_SNPs"
+
+
+
+
+#' TopSS example file (processed)
+#'
+#'Summary stats of the top SNP(s) per locus.
+#' Used to query locus subsets.for fine-mapping.
+#'
+#' @examples
+#' data("Nalls_top_SNPs")
+#' top_SNPs <- import_topSNPs(topSS=Nalls_top_SNPs, chrom_col="CHR", position_col="BP", snp_col="SNP", pval_col="P, all studies", effect_col="Beta, all studies", gene_col="Nearest Gene", group_by_locus=T, locus_col="Nearest Gene", remove_variants="rs34637584")
+#' \dontrun{
+#' usethis::use_data(top_SNPs, overwrite=T)
+#' }
+"top_SNPs"
+
+
 
 
 

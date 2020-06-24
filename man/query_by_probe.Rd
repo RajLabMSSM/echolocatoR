@@ -19,7 +19,9 @@ query_by_probe(
 \arguments{
 \item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.}
 
-\item{chrom_col}{Name of the chromosome column in the full summary stats file.}
+\item{chrom_col}{Name of the chromosome column in the full summary stats file.
+Can be "chr1" or "1" format.
+(\emph{default: ="CHR"})}
 
 \item{file_sep}{The separator in the full summary stats file.
 This parameter is only necessary if \code{query_by!="tabix"}.}

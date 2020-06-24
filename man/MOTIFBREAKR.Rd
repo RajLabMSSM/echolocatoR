@@ -12,7 +12,31 @@
 \url{http://simon-coetzee.github.io/motifBreakR}
 }
 \usage{
-MOTIFBREAKR(snp_list, save_rds = T, dataset_dir)
+MOTIFBREAKR(
+  snp_list,
+  save_rds = T,
+  dataset_dir,
+  pwmList = NULL,
+  organism = "Hsapiens",
+  threshold = 0.85,
+  show.neutral = F,
+  method = "default",
+  verbose = T,
+  calculate_all_pval = F
+)
+}
+\arguments{
+\item{pwmList}{An object of class \code{MotifList} containing the motifs that
+you wish to interrogate}
+
+\item{threshold}{Numeric; the maximum p-value for a match to be called or a minimum score threshold}
+
+\item{show.neutral}{Logical; include neutral changes in the output}
+
+\item{method}{Character; one of \code{default}, \code{log}, \code{ic}, or \code{notrans}; see
+details.}
+
+\item{verbose}{Logical; if running serially, show verbose messages}
 }
 \value{
 motifbreakr results
@@ -23,11 +47,14 @@ a transcription factor binding motif (if it falls witihn one).
 }
 \examples{
 \dontrun{
-data("merged_DT")
-library('BSgenome')
-# merged_DT <- openxlsx::read.xlsx("/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/Nalls23andMe_2019_results.xlsx")
-snp_list <- unique(merged_DT$SNP)
-motifbreakr.results <- MOTIFBREAKR(snp_list=snp_list)
+# data("merged_DT")
+# snp_list <- unique(subset(merged_DT, Support>0 | leadSNP)$SNP)
+snp_list <- "rs1006140"
+mb.results <- MOTIFBREAKR(snp_list=snp_list)
 }
-
 }
+\seealso{
+Other motifbreakR: 
+\code{\link{MOTIFBREAKR.filter_by_metadata}()}
+}
+\concept{motifbreakR}

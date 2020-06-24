@@ -11,15 +11,20 @@
 \url{https://github.com/Simon-Coetzee/MotifBreakR}
 }
 \usage{
-MOTIFBREAKR.plot(motifbreakr.results, rsid = NULL)
+MOTIFBREAKR.plot(mb.results, rsid = NULL, effect = c("strong", "weak"))
 }
 \description{
 Plot \code{\link{motifbreakR}} results
 }
 \examples{
 \dontrun{
-# motifbreakr.results <- readRDS("/sc/arion/projects/pd-omics/brian/motifbreakR/motifbreakR_results.rds")
-motifbreakr.results <- readRDS("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/motifbreakR/motifbreakR_results.rds")
-MOTIFBREAKR.plot(motifbreakr.results=motifbreakr.results, rsid="rs114528427")
+# mb.results <- readRDS("/sc/arion/projects/pd-omics/brian/motifbreakR/motifbreakR_results.rds")
+mb.results <- readRDS("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/motifbreakR/motifbreakR_results.rds")
+MOTIFBREAKR.plot(mb.results=mb.results, rsid="rs114528427")
+
+# Example from motifbreakR
+library(motifbreakR)
+data("example.results")
+motifbreakR::plotMB(mb.results=example.results, "rs2661839", effect = "strong")
 }
 }

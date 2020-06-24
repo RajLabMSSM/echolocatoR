@@ -7,13 +7,12 @@
 ## Conda source: https://anaconda.org/bioconda/macs2
 
 MACS2.download_full_bigwig <- function(bigWig.paths='Nott_2019',
-                                       output.path = "/Volumes/Scizor/Nott_2019/",
+                                       output.path = "results/resources/MACS2",
                                        nThreads=4,
                                        force_overwrite = F){
   dir.create(output.path, showWarnings = F, recursive = T)
   if(all(bigWig.paths=='Nott_2019')){
-    bigWig.meta <- readxl::read_excel("./echolocatoR/annotations/Nott_2019/Nott_2019.snEpigenomics.xlsx")
-    biWig.links <- bigWig.meta$data_link
+    biWig.links <- echolocatoR::NOTT_2019.bigwig_metadata$data_link
   }
 
   bigWig.paths <- lapply(biWig.links, function(URL){
@@ -30,7 +29,7 @@ MACS2.download_full_bigwig <- function(bigWig.paths='Nott_2019',
 # bigWig.paths <- list.files("/pd-omics/brian/Nott_2019", full.names = T)
 
 MACS2.bigwig_to_bedgraph <- function(bigWig.paths,
-                                     converter_path="exec/UCSC_utilities",
+                                     converter_path=system.file("tools/UCSC_utilities",package="echolocatoR"),
                                      force_new_download=F,
                                      OS="MAC"){
   # Download executable

@@ -1,12 +1,12 @@
 ---
 title: "echolocatoR: full pipeline vignette"
 knit: (function(input_file, encoding) {
-  out_dir <- 'docs';
+  out_dir <- 'doc';
   rmarkdown::render(input_file,
   encoding=encoding,
   output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
 author: "Brian M. Schilder"
-date: "Most Recent Update:<br> `r Sys.Date()`"
+date: "Most recent update:<br> `r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{full_pipeline_vignette}
@@ -19,7 +19,9 @@ root.dir <- "~/Desktop"
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  root.dir = root.dir
+  root.dir = root.dir,
+  fig.height = 12,
+  fig.width = 10
 )  
 knitr::opts_knit$set(root.dir = root.dir)
 # knitr::opts_chunk$get("root.dir")
@@ -37,14 +39,19 @@ knitr::opts_knit$set(root.dir = root.dir)
 library(echolocatoR) 
 ```
 
-# Full pipeline
+# Full pipeline  
 
-## Prepare `top_SNPs` data.frame
+All examples below use data from the Parkinson's disease GWAS by Nalls et al. (2019).  
+
+## Prepare `top_SNPs` data.frame   
 
 * To enable rapid fine-mapping of many loci, you can create a `top_SNPs` data.frame  
 which contains the position of the lead/index SNP within each locus.
 * `finemap_loci()` (see next step) will then use this info to extract subsets of the   
 full GWAS/QTL summary statistics using windows centered on each lead/index SNP.
+* The `topSS` argument can either be a data.frame, or a path to a topSS file saved somehwere. Most common tabular data formats (e.g. .tsv, .csv, .xlsx) are accepted.  
+
+
 
 ```{r  Prepare `top_SNPs` data.frame} 
 data("Nalls_top_SNPs");
@@ -54,35 +61,48 @@ top_SNPs <- import_topSNPs(
   chrom_col = "CHR", position_col = "BP", snp_col="SNP",
   pval_col="P, all studies", effect_col="Beta, all studies", gene_col="Nearest Gene",
   group_by_locus = T,
-  locus_col = "Locus Number",
+  locus_col = "Nearest Gene",
   remove_variants = "rs34637584") 
 ```
- 
 
-## Run fine-mapping pipeline
+
+
+## Find path to full summary stats file  
+
+* Since a full GWAS summary stats file would be too large to include within *echolocatoR*,  
+we instead provide a example subset of the full summary stats.  
+* To simulate how you'd actually use your own full summary stats file, we will save our example dataset to your computer (you can change the path to wherever you like).
+
+```{r fullSS}
+fullSS_path <- example_fullSS(fullSS_path="~/Desktop/Nalls23andMe_2019.fullSS_subset.tsv")
+```
+
+## Run fine-mapping pipeline  
 
 For a full description of all arguments, see `?finemap_loci`.  
 
 Here are some key arguments:  
+
 * *results_dir*: Where you want to store all of your results.  
 * *finemap_methods*: Which fine-mapping methods you want to run (currently includes ABF, FINEMAP, SUSIE, POLYFUN_SUSIE, and COJO).  
 * *bp_distance*: Controls window size. Specifically, `bp_distance` is the number of basepairs upstream/downstream you want to extract for each locus. For example, if you want a 2Mb window (+/- 1Mb from the lead/index SNP in `top_SNPs`), set `bp_distance=1e+06`.  
 * *plot.window*: Zoom in/out from the center of each locus when producing the multiview plot.  
 You can adjust this separately from `bp_distance` so that you don't have rerun the whole pipeline each time (locus subsets, LD matrices, and fine-mapping results are all automatically saved in locus-specific folders).  
+
 ```{r Run fine-mapping pipeline}
 Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS 
-                                          top_SNPs = top_SNPs, 
+                                          top_SNPs = top_SNPs,  
                                           results_dir = "~/Desktop/results",
                                           loci = c("BST1","MEX3C"),#top_SNPs$Gene, 
                                           dataset_name = "Nalls23andMe_2019",
                                           dataset_type = "GWAS",  
-                                          force_new_subset = F,
+                                          force_new_subset = T,
                                           force_new_LD = F,
                                           force_new_finemap = F,
                                           remove_tmps = T,
                                           
                  # SUMMARY STATS ARGUMENTS
-                 fullSS_path = "~/Desktop/nallsEtAl2019_allSamples_allVariants.mod.txt.gz",
+                 fullSS_path = fullSS_path,
                  query_by ="tabix",
                  chrom_col = "CHR", position_col = "POS", snp_col = "RSID",
                  pval_col = "p", effect_col = "beta", stderr_col = "se",

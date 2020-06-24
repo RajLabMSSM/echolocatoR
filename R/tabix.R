@@ -103,7 +103,7 @@ TABIX.query <- function(fullSS.gz,
 #' dat <- TABIX(fullSS_path=fullSS_path, subset_path="auto", min_POS=min_POS, max_POS=max_POS, chrom=top_SNPs_BST1$CHR)
 #' }
 TABIX <- function(fullSS_path,
-                  subset_path,
+                  subset_path=NULL,
                   is_tabix=F,
                   chrom_col="CHR",
                   position_col="POS",

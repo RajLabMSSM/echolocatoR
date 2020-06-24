@@ -39,7 +39,6 @@
 
 # library(R.utils)
 # library(devtools)
-# library(readxl)
 # library(DT)
 # library(data.table)
 # library(dplyr)
@@ -127,40 +126,55 @@
 #' \item{"coordinates"}{Extract locus subsets using min/max genomic coordinates with \emph{awk}.}
 #' }
 #' @param dataset_name The name you want to assign to the dataset being fine-mapped,
-#' This will be used to name the subdirectory where your results will be stored (e.g. \code{Data/GWAS/<dataset_name>}).
+#' This will be used to name the subdirectory where your results will be stored
+#' (e.g. \emph{Data/GWAS/<dataset_name>}).
 #' Don't use special characters (e.g.".", "/").
 #' @param dataset_type The kind dataset you're fine-mapping (e.g. GWAS, eQTL, tQTL).
-#' This will also be used when creating the subdirectory where your results will be stored (e.g. \code{Data/<dataset_type>/Kunkle_2019}).
+#' This will also be used when creating the subdirectory where your results will be stored
+#' (e.g. \emph{Data/<dataset_type>/Kunkle_2019}).
 #' @param top_SNPs A data.frame with the genomic coordinates of the lead SNP for each locus.
 #' The lead SNP will be used as the center of the window when extracting subset from the full GWAS/QTL summary statistics file.
 #' Only one SNP per \strong{Locus} should be included.
 #' At minimum, \code{top_SNPs} should include the following columns:
 #' \describe{
-#' \item{Locus}{A unique name for each locus. Often, loci are named after a relevant gene (e.g. LRRK2) or based on the name/coordinates of the lead SNP (e.g. locus_chr12_40734202) }
-#' \item{CHR}{The chromosome that the SNP is on. Can be "chr12" or "12" format.}
-#' \item{POS}{The genomic position of the SNP (in basepairs)}
+#' \item{\emph{Locus}}{A unique name for each locus. Often, loci are named after a relevant gene (e.g. LRRK2) or based on the name/coordinates of the lead SNP (e.g. locus_chr12_40734202) }
+#' \item{\emph{CHR}}{The chromosome that the SNP is on. Can be "chr12" or "12" format.}
+#' \item{\emph{POS}}{The genomic position of the SNP (in basepairs)}
 #' }
 #'
 #' @section input file column names:
 #'
 #' @param chrom_col Name of the chromosome column in the full summary stats file.
+#' Can be "chr1" or "1" format.
+#' (\emph{default: ="CHR"})
 #' @param position_col Name of the genomic position column in the full summary stats file.
+#' Must be in units of basepairs.
+#' (\emph{default: ="POS"})
 #' @param snp_col Name of the SNP RSID column in the full summary stats file.
+#' (\emph{default: ="SNP"})
 #' @param pval_col Name of the p-value column in the full summary stats file.
 #' Raw p-values are preferred, but if not available corrected p-values (e.g. FDR) can be used instead.
+#' (\emph{default: ="P"})
 #' @param effect_col Name of the effect size column in the full summary stats file.
 #' Effect size is preferred, but if not available other metrics like Beta for Odds Ratio can be used instead.
+#' (\emph{default: ="Effect"})
 #' @param stderr_col Name of the standard error  column in the full summary stats file.
 #' You can also set \code{stderr_col="calculate"} to infer standard error using: \code{effect / tstat}.
+#' (\emph{default: ="StdErr"})
 #' @param tstat_col Name of the t-statistic column in the full summary stats file.
 #' This column is not necessary unless \code{stderr_col="calculate"} or the standard error column is missing.
+#' (\emph{default: ="t-stat"})
 #' @param locus_col Name of the locus column in the full summary stats file.
+#' (\emph{default: ="Locus"})
 #' @param freq_col Name of the allele frequency column in the full summary stats file.
 #' Effect allele frequency is preferred, but the non-effect allele can be provided instead (though this may be less accurate).
 #' This column is not necessary unless \code{MAF_col="calculate"} or the MAF column is missing.
+#' (\emph{default: ="Freq"})
 #' @param MAF_col Name of the minor allele frequency column in the full summary stats file.
 #' Can be inferred from \strong{freq_col} if missing from the dataset.
+#' (\emph{default: ="MAF"})
 #' @param A1_col Name of the effect/risk allele column in the full summary stats.
+#'  \strong{\emph{IMPORTANT}}: Make sure this actually the case for your full summary stats file.
 #' Unfortunately, different studies report different kinds of allele information in a non-standardized way.
 #' Meaning that A1/A2 can refer to any number of things:
 #'  \describe{
@@ -185,25 +199,28 @@
 #' This can either be per SNP sample sizes, or one number repeated across all rows.
 #' Proxy cases (e.g. relatives of people with the disease being investigated) should be included in this estimate if any were used in the study.
 #' This column is not necesssary if \code{N_cases} parameter is provided.
+#' (\emph{default: ="N_cases"})
 #' @param N_controls_col Name of the column in the full summary stats that has the number of control subjects in the study.
 #'  This can either be per SNP sample sizes, or one number repeated across all rows.
 #'  This column is not necesssary if \code{N_controls} parameter is provided.
-#'   @param N_cases The number of case subjects in the study.
-#'  Instead of providing a reudundant \strong{N_cases_col} column, you can simply enter one value here.
-#'  @param N_controls The number of control subjects in the study.
-#'  Instead of providing a reudundant \strong{N_controls_col} column, you can simply enter one value here.
-#'  @param proportion_cases The proportion of total subjects in the study that were cases.
+#' (\emph{default: ="N_controls"})
+#' @param N_cases The number of case subjects in the study.
+#'  Instead of providing a redundant \strong{N_cases_col} column, you can simply enter one value here.
+#' @param N_controls The number of control subjects in the study.
+#'  Instead of providing a redundant \strong{N_controls_col} column, you can simply enter one value here.
+#' @param proportion_cases The proportion of total subjects in the study that were cases.
 #'  if \code{proportion_cases="calculate"} then this is inferred:  \code{N_controls / N_controls}.
-#'  #' @param sample_size The overall sample size of the study.
+#' @param sample_size The overall sample size of the study.
 #' If none is given, and \strong{N_cases} and \strong{N_controls} columns are present,
-#' then sample_size is inferred to be \code{max(N_cases) + max(N_controls)}.
+#' then sample_size is inferred to be:  \code{max(N_cases) + max(N_controls)}.
 #'
 #' @section overwrite existing files:
 #'
 #' @param force_new_subset By default, if a subset of the full summary stats file for a given locus is already present,
 #' then \emph{echolocatoR} will just use the preexisting file.
 #' Set \code{force_new_subset=T} to override this and extract a new subset.
-#' Subsets are saved in the following path structure: \url{Data/<dataset_type>/<dataset_name>/<locus>/Multi-finemap/<locus>_<dataset_name>_Multi-finemap.tsv.gz}
+#' Subsets are saved in the following path structure:
+#' \emph{Data/<dataset_type>/<dataset_name>/<locus>/Multi-finemap/<locus>_<dataset_name>_Multi-finemap.tsv.gz}
 #' @param force_new_LD  By default, if an LD matrix file for a given locus is already present,
 #' then \emph{echolocatoR} will just use the preexisting file.
 #' Set \code{force_new_LD=T} to override this and extract a new subset.
@@ -282,13 +299,16 @@
 #' @param plot.types Which kinds of plots to include.
 #' Options:
 #' \describe{
-#' \item{"simple"}{Just plot the following tracks: GWAS, fine-mapping, gene models, and brain cell type-specific epigenomic data from Nott et al. (2019).}
-#' \item{"fancy"}{Additionally plot XGR annotation tracks.}
+#' \item{"simple"}{Just plot the following tracks: GWAS, fine-mapping, gene models}
+#' \item{"fancy"}{Additionally plot XGR annotation tracks (XGR, Roadmap, Nott).}
 #' }
 #' @param plot.window Zoom into the center of the locus when plotting (without editing the fine-mapping results file).
 #' @param plot.Nott_binwidth When including Nott et al. (2019) epigenomic data in the track plots,
 #' adjust the bin width of the histograms.
 #' @param plot.Nott_bigwig_dir Instead of pulling Nott et al. (2019) epigenomic data from the UCSC Genome Browsers, use a set of local bigwig files.
+#' @param plot.Roadmap Find and plot annotations from Roadmap.
+#' @param plot.Roadmap_query Only plot annotations from Roadmap whose metadata contains a string or any items from  a list of strings
+#' (e.g. "brain" or c("brain","liver","monocytes"))
 #'
 #' @section general parameters:
 #'
@@ -296,6 +316,7 @@
 #' @param remove_tmps Whether to remove any temporary files (e.g. FINEMAP output files) after the pipeline is done running.
 #' @param server
 #' Whether \emph{echolocatoR} is being run on a computing cluster/server or on a local machine.
+#' @param conda_env The name of a conda environment to use.
 #'
 #' @family MAIN
 finemap_pipeline <- function(locus,
@@ -363,7 +384,9 @@ finemap_pipeline <- function(locus,
                              plot.Nott_bigwig_dir=NULL,
                              plot.XGR_libnames=NULL,
                              plot.Roadmap=F,
-                             plot.Roadmap_query=NULL){
+                             plot.Roadmap_query=NULL,
+
+                             conda_env="echoR"){
    # Create paths
    subset_path <- get_subset_path(results_dir = results_dir,
                                   dataset_type = dataset_type,
@@ -464,7 +487,8 @@ finemap_pipeline <- function(locus,
                                 A1_col = A1_col,
                                 A2_col = A2_col,
                                 PAINTOR_QTL_datasets = PAINTOR_QTL_datasets,
-                                PP_threshold = PP_threshold)
+                                PP_threshold = PP_threshold,
+                                conda_env = conda_env)
   finemap_dat <- find_consensus_SNPs(finemap_dat, credset_thresh = PP_threshold)
   # Step 6: COLOCALIZE
   # Step 7: Functionally Fine-map
@@ -544,7 +568,7 @@ finemap_pipeline <- function(locus,
 #' @param subset_path The file you want your locus subset saved as.
 #' Only use when fine-mapping one locus at a time.
 #' If \code{subset_path="auto"} (\emph{default}), a locus subset file name is automatically constructed as:
-#' \url{Data/<dataset_type>/<dataset_name>/<locus>/Multi-finemap/<locus>_<dataset_name>_Multi-finemap.tsv.gz}
+#' \emph{Data/<dataset_type>/<dataset_name>/<locus>/Multi-finemap/<locus>_<dataset_name>_Multi-finemap.tsv.gz}
 #' @inheritParams finemap_pipeline
 #' @return A merged data.frame with all fine-mapping results from all loci.
 finemap_loci <- function(loci,
@@ -609,7 +633,9 @@ finemap_loci <- function(loci,
                          plot.Nott_bigwig_dir=NULL,
                          plot.XGR_libnames=NULL,
                          plot.Roadmap=F,
-                         plot.Roadmap_query=NULL
+                         plot.Roadmap_query=NULL,
+
+                         conda_env="echoR"
                          ){
   conditioned_snps <- snps_to_condition(conditioned_snps, top_SNPs, loci)
 
@@ -688,7 +714,9 @@ finemap_loci <- function(loci,
                                      plot.Nott_bigwig_dir=plot.Nott_bigwig_dir,
                                      plot.XGR_libnames=plot.XGR_libnames,
                                      plot.Roadmap=plot.Roadmap,
-                                     plot.Roadmap_query=plot.Roadmap_query)
+                                     plot.Roadmap_query=plot.Roadmap_query,
+
+                                     conda_env = conda_env)
       finemap_dat <- data.table::data.table(Locus=locus, finemap_dat)
       cat('  \n')
     }) ## end try()

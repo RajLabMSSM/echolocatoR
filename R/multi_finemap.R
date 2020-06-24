@@ -105,7 +105,8 @@ multi_finemap <- function(locus_dir,
                           A1_col="A1",
                           A2_col="A2",
                           PAINTOR_QTL_datasets=NULL,
-                          PP_threshold=.95){
+                          PP_threshold=.95,
+                          conda_env="echoR"){
   # PAINTOR_QTL_datasets=NULL;PP_threshold=.95; effect_col="Effect"; n_causal=5; sample_size=1000; stderr_col="StdErr"; pval_col="P"; N_cases_col="N_cases"; N_controls_col="N_controls"; A1_col="A1"; A2_col="A2";conditioned_snps=NULL;
   printer("++ Fine-mapping using multiple tools:", paste(finemap_method_list, collapse=", "))
   # Check overlap
@@ -146,7 +147,8 @@ multi_finemap <- function(locus_dir,
                                      A2_col = A2_col,
                                      PAINTOR_QTL_datasets = PAINTOR_QTL_datasets,
                                      PP_threshold = PP_threshold,
-                                     conditioned_snps = conditioned_snps)
+                                     conditioned_snps = conditioned_snps,
+                                     conda_env=conda_env)
      })
       # },
       # # WARNING
@@ -237,7 +239,8 @@ finemap_method_handler <- function(locus_dir,
                                    A1_col="A1",
                                    A2_col="A2",
                                    PAINTOR_QTL_datasets=NULL,
-                                   PP_threshold=.95){
+                                   PP_threshold=.95,
+                                   conda_env="echoR"){
   sub.out <- subset_common_snps(LD_matrix=LD_matrix,
                                 finemap_dat=subset_DT)
   LD_matrix <- sub.out$LD
@@ -263,7 +266,8 @@ finemap_method_handler <- function(locus_dir,
                                 n_causal = n_causal,
                                 sample_size = sample_size,
                                 polyfun_approach = "precomputed",#"non-parametric",
-                                PP_threshold = PP_threshold)
+                                PP_threshold = PP_threshold,
+                                conda_env = conda_env)
 
   }else if(finemap_method=="ABF"){
     # coloc - finemap.abf
@@ -321,7 +325,7 @@ finemap_method_handler <- function(locus_dir,
 
 
 
-
+#' @inheritParams finemap_pipeline
 #' @family finemapping functions
 #' @keywords internal
 finemap_handler <- function(locus_dir,
@@ -344,7 +348,8 @@ finemap_handler <- function(locus_dir,
                             A1_col="A1",
                             A2_col="A2",
                             PAINTOR_QTL_datasets=NULL,
-                            PP_threshold=.95){
+                            PP_threshold=.95,
+                            conda_env="echoR"){
   message("-------- Step 4: Statistically Fine-map --------")
   start_FM <- Sys.time()
   set.seed(1)
@@ -382,7 +387,9 @@ finemap_handler <- function(locus_dir,
                                  A1_col = A1_col,
                                  A2_col = A2_col,
                                  PAINTOR_QTL_datasets = PAINTOR_QTL_datasets,
-                                 PP_threshold = PP_threshold)
+                                 PP_threshold = PP_threshold,
+
+                                 conda_env="echoR")
       save_finemap_results(finemap_dat, file_path)
     }
   end_FM <- Sys.time()

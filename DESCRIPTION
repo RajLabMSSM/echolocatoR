@@ -40,6 +40,8 @@ Imports:
     EnsDb.Hsapiens.v75,
     GenomeInfoDb, 
     XGR,
+    ggnetwork,
+    RCircos,
     biomaRt,
     haploR,
     biovizBase,

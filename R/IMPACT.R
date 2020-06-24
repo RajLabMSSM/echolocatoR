@@ -1030,7 +1030,7 @@ IMPACT.plot_impact_score_compare <- function(loci=c("CD19","TRIM40","NUCKS1","LR
 
   # Convert to GRange object
   # gr.snp_CHR <- biovizBase::transformDfToGr(subset_DT, seqnames = "CHR", start = "POS", end = "POS")
-  # gene_model <- transcript_model_track(gr.snp_CHR,
+  # gene_model <- GGBIO.transcript_model_track(gr.snp_CHR,
   #                                      max_transcripts=1,
   #                                      show.legend=T)
   # # Remove any pseudogenes

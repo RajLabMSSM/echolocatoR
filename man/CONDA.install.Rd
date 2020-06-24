@@ -4,14 +4,17 @@
 \alias{CONDA.install}
 \title{Install conda if it's missing}
 \usage{
-CONDA.install()
+CONDA.install(conda_path = "auto")
 }
 \description{
 Install conda if it's missing
 }
 \seealso{
-Other conda functions: 
+Other conda: 
 \code{\link{CONDA.activate_env}()},
-\code{\link{CONDA.create_env}()}
+\code{\link{CONDA.create_env}()},
+\code{\link{CONDA.env_from_list}()},
+\code{\link{CONDA.env_from_yaml}()},
+\code{\link{CONDA.find_env_path}()}
 }
-\concept{conda functions}
+\concept{conda}

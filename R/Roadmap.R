@@ -137,17 +137,6 @@ ROADMAP.merge_and_process_grl <- function(grl.roadmap,
   grl.roadmap.merged$Source <- names(grl.roadmap.merged)
   grl.roadmap.merged$Source <- gsub("_",sep, grl.roadmap.merged$Source)
   grl.roadmap.merged$ChromState <- lapply(grl.roadmap.merged$State, function(ROW){base::strsplit(ROW, "_")[[1]][2]})%>% unlist()
-  # Tally ChromStates
-  # chromState_key <- data.table::fread(file.path("./echolocatoR/tools/Annotations/ROADMAP/ROADMAP_chromatinState_HMM.tsv"))
-  # snp.pos <- subset(gr.snp, SNP %in% c("rs7294619"))$POS
-  # snp.sub <- subset(grl.roadmap.merged, Start<=snp.pos & End>=snp.pos) %>%  data.frame()
-  # chrom_tally <- snp.sub %>%
-  #   dplyr::group_by(ChromState) %>%
-  #   tally(sort = T) %>%
-  #   merge(y=chromState_key[,c("MNEMONIC","DESCRIPTION")],
-  #         by.x="ChromState", by.y="MNEMONIC", all.x=T, sort=F) %>% arrange(desc(n))
-  # createDT(chrom_tally)
-
   grl.roadmap.filt <- grl.roadmap.merged[unlist( lapply(grl.roadmap, function(e){IRanges::overlapsAny(e, gr.snp, minoverlap = 1)}) )]
   if(!is.null(n_top_tissues)){
     top_tissues <-  data.frame(grl.roadmap.filt) %>%
@@ -247,7 +236,7 @@ ROADMAP.query_and_plot <- function(subset_DT,
   }
   # Roadmap query
   lib <- "Roadmap_ChromatinMarks_CellTypes"
-  anno_path <- file.path(results_path, "Annotation",paste0("GRanges_",lib,".rds"))
+  anno_path <- file.path(results_path, "annotations",paste0("GRanges_",lib,".rds"))
   if(file.exists(anno_path) & force_new_query==F){
     printer("+ Saved annotation file detected. Loading...")
     grl.roadmap <- readRDS(anno_path)

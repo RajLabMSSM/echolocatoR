@@ -17,6 +17,7 @@ Other general:
 \code{\link{.rbind.file.list}()},
 \code{\link{createDT_html}()},
 \code{\link{createDT}()},
+\code{\link{example_fullSS}()},
 \code{\link{get_os}()},
 \code{\link{get_sample_size}()},
 \code{\link{startup_image}()},

@@ -62,7 +62,7 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
 
   # Import BigWig annotation files
   data("NOTT_2019.bigwig_metadata")
-  bigWigFiles <- NOTT_2019.bigwig_metadata#readxl::read_excel("./echolocatoR/annotations/Nott_2019/Nott_2019.snEpigenomics.xlsx")
+  bigWigFiles <- NOTT_2019.bigwig_metadata
   # Some bigWig files were initially loaded to UCSC GB, but then later taken down by the authors....
   # However I saved these files on Minerva beforehand.
   bigWigFiles <- subset(bigWigFiles, UCSC_available=="T")
@@ -168,7 +168,7 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
 
   if(show_plot){ print(trks_plus_lines) }
   if(save_plot){
-    save_path <- file.path(locus_dir,"Annotation",
+    save_path <- file.path(locus_dir,"annotations",
                            paste0(basename(locus_dir),"_Glass.snEpigenomics.png") )
     dir.create(dir(save_path), showWarnings = F, recursive = T)
     ggsave(save_path,
@@ -191,9 +191,8 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
 #' \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
 #' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
 NOTT_2019.superenhancers <- function(){
-  # s6 <- readxl::read_excel("./echolocatoR/annotations/Nott_2019/aay0793-Nott-Table-S6.xlsx", skip = 2)
-  data("NOTT_2019.superenhancer_interactome")
-  annot_sub <- subset(NOTT_2019.superenhancer_interactome,
+
+  annot_sub <- subset(echolocatoR::NOTT_2019.superenhancer_interactome,
                       chr== paste0("chr",unique(finemap_dat$CHR)) &
                       start>=min(finemap_dat$POS) &
                       end<=max(finemap_dat$POS) )
@@ -220,9 +219,6 @@ NOTT_2019.superenhancers <- function(){
 #' \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
 #' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
 NOTT_2019.get_promoter_interactome_data <- function(finemap_dat){
-  # s5_path="~/Desktop/Fine_Mapping/echolocatoR/annotations/Nott_2019/aay0793-Nott-Table-S5.xlsx"
-  # sheets_s5 <- readxl::excel_sheets(s5_path)
-  # s5 <- readxl::read_excel(s5_path, sheet = sheets_s5[1], skip = 2)
   data("NOTT_2019.interactome")
   # Subset to window
   annot_sub <- NOTT_2019.interactome$H3K4me3_around_TSS_annotated_pe %>%
@@ -305,14 +301,12 @@ NOTT_2019.get_interactome <- function(annot_sub,
 #' \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
 #' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
 NOTT_2019.get_interactions <- function(finemap_dat){
-  # s5_path="./echolocatoR/annotations/Nott_2019/aay0793-Nott-Table-S5.xlsx"
-  # sheets_s5 <- readxl::excel_sheets(s5_path)
   data("NOTT_2019.interactome")
   selected_sheets <- grep("interactome$",names(NOTT_2019.interactome), value = T)
   interactomes <- lapply(selected_sheets, function(s){
     printer("Importing",s,"...")
     # Read the sheet you want
-    dat <- NOTT_2019.interactome[[s]]#readxl::read_excel(s5_path, sheet = s, skip = 2)
+    dat <- NOTT_2019.interactome[[s]]
     dat$Name <- s
     return(dat)
   }) %>% data.table::rbindlist()
@@ -338,9 +332,14 @@ NOTT_2019.get_interactions <- function(finemap_dat){
 #' @source
 #' \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
 #' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
+#' @examples
+#' \dontrun{
+#' PEAKS.merged <- NOTT_2019.get_epigenomic_peaks(peak.dir="/pd-omics/data/Nott_2019/peaks", narrow_peaks=T, broad_peaks=F)
+#' }
 NOTT_2019.get_epigenomic_peaks <- function(peak.dir="/pd-omics/data/Nott_2019/peaks",
                                            narrow_peaks=T,
-                                           broad_peaks=T){
+                                           broad_peaks=T,
+                                           nThread=4){
   data("NOTT_2019.bigwig_metadata")
   bigWigFiles <- NOTT_2019.bigwig_metadata
   peak_types <- c(ifelse(narrow_peaks,".narrowPeak$", NA),
@@ -352,7 +351,7 @@ NOTT_2019.get_epigenomic_peaks <- function(peak.dir="/pd-omics/data/Nott_2019/pe
                             recursive = T)
   PEAKS <- MACS2.import_peaks(peaks.paths = peaks.paths,
                               as_granges = T)
-  PEAKS <- lapply(PEAKS, function(peak){
+  PEAKS <- parallel::mclapply(PEAKS, function(peak){
     pk.name <- gsub(".ucsc_narrowPeak1|.ucsc_broadRegion1","",peak$name[1])
     meta <- subset(bigWigFiles, long_name==pk.name)
     peak$Cell_type <- meta$cell_type
@@ -360,7 +359,7 @@ NOTT_2019.get_epigenomic_peaks <- function(peak.dir="/pd-omics/data/Nott_2019/pe
     peak$Fresh_frozen <- meta$fresh_frozen
     peak$marker  <- meta$marker
     return(peak)
-  }) %>% GenomicRanges::GenomicRangesList()
+  },mc.cores = nThread) %>% GenomicRanges::GRangesList()
  PEAKS.merged <- unlist(PEAKS)
  PEAKS.merged$peak_type <- PEAKS.merged
  return(PEAKS.merged)
@@ -379,24 +378,15 @@ NOTT_2019.get_epigenomic_peaks <- function(peak.dir="/pd-omics/data/Nott_2019/pe
 NOTT_2019.get_regulatory_regions <- function(finemap_dat,
                                              as.granges=F,
                                              nCores=1){
-  # Get sheet names
-  # s5_path="./echolocatoR/annotations/Nott_2019/aay0793-Nott-Table-S5.xlsx"
-  # sheets_s5 <- readxl::excel_sheets(s5_path)
-  data("NOTT_2019.interactome")
-  selected_sheets <- grep("promoters$|enhancers$",names(NOTT_2019.interactome), value = T)
+
+  selected_sheets <- grep("promoters$|enhancers$",names(echolocatoR::NOTT_2019.interactome), value = T)
   regions <- parallel::mclapply(selected_sheets, function(s){
     printer("Importing",s,"...")
-    # Read the sheet you want
-    # dat <- readxl::read_excel(s5_path, sheet = s, skip = 1,
-    #                           col_names = c("chr","start","end"))
-    dat <- NOTT_2019.interactome[[s]]
+    dat <- echolocatoR::NOTT_2019.interactome[[s]]
     dat$Name <- s
     return(dat)
   }, mc.cores = nCores) %>% data.table::rbindlist(fill=T)
   regions_sub <- regions %>%
-    # subset(chr== paste0("chr",unique(finemap_dat$CHR)) &
-    #                     start>=min(finemap_dat$POS) &
-    #                     end<=max(finemap_dat$POS) ) %>%
     tidyr::separate(Name, into=c("Cell_type","Element"), remove=F) %>%
     dplyr::mutate(middle=as.integer( end-abs(end-start)/2) )
   if(as.granges){
@@ -510,12 +500,6 @@ NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
     scale_color_viridis_c(breaks=c(0,.5,1), limits=c(0,1)) +
     ylim(0,1)
 
-  # Nott tracks
-  # Nott_s5 <- ggbio::ggbio() +
-  #   ggbio::geom_rect(data = annot_sub, aes(xmin=start, xmax=end, ymin=0, ymax=1),
-  #                    fill="turquoise", alpha=.75) +
-  #   facet_grid(facets = Annotation~.)
-  # Nott_s5 <- invisible_legend(Nott_s5)
 
   # Nott:  interactions
   # Nott_interactions

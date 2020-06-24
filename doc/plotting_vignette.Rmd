@@ -1,12 +1,12 @@
 ---
 title: "echolocatoR: plotting vignette"
 knit: (function(input_file, encoding) {
-  out_dir <- 'docs';
+  out_dir <- 'doc';
   rmarkdown::render(input_file,
   encoding=encoding,
   output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
 author: "Brian M. Schilder"
-date: "Most Recent Update:<br> `r Sys.Date()`"
+date: "Most recent update:<br> `r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{plotting_vignette}
@@ -37,9 +37,10 @@ library(echolocatoR)
 # Plotting only
 
 *echolocatoR* contains various functions that can be used separately  
-from the comprehensive `finemap_loci()` pipeline.
+from the comprehensive `finemap_loci()` pipeline.  
 
-Generate a multiview plot using `GGBIO.plot()`.
+Generate a multiview plot using `GGBIO.plot()`.  
+
 * You can mix and match different tracks and annotations using the different arguments 
 (see `?GGBIO.plot` for details).  
 * Zoom in/out by adjusting the `plot.window` size (in units of basepairs).  
@@ -51,9 +52,9 @@ The plot is centered on the lead/index SNP.
   + Further increase resolution by adjusting the `dpi` argument (*default=300*).
   + Adjust the `height` and `width` of the saved plot using these respective arguments.
   + The plot will be automatically saved in the locus-specific directory as:  
-  `multiview_<locus>_<plot.window>.png`.
+  *multiview_<locus>_<plot.window>.png*.
    
-## Load example data  
+## Load example data   
 
 Load example dataset of the results from fine-mapping the BST1 locus with `finemap_loci()`.
 Original data comes from the recent Nalls et al. (2019) Parkinson's disease GWAS (see `?BST1` for details).
@@ -79,12 +80,12 @@ trk_plot <- trk_plot + theme(strip.background = element_rect(fill="gray"),
                              text = element_text(size=3, color="blue"))
 ```
 
-## Using only XGR annotations  
+## Using only XGR annotations   
 
 Whenever you use annotation arguments (e.g. `XGR_libnames`,`Roadmap`,`Nott_epigenome`)
 the annotations that overlap with your locus will automatically be saved as `GRanges` objects  
 in a locus-specific subdirectory:  
-`results/<dataset_type>/<dataset_name>/<locus>/annotation` 
+*results/<dataset_type>/<dataset_name>/<locus>/annotation* 
 
 ```{r trk_plot.xgr}
 trk_plot.xgr <- GGBIO.plot(finemap_dat=finemap_DT, 
@@ -109,7 +110,7 @@ trk_plot.roadmap <- GGBIO.plot(finemap_dat=finemap_DT,
 ```
 
 
-## Using only Nott_2019 annotations  
+## Using only Nott_2019 annotations   
 
 * Query and plot brain cell type-specific epigenomic assays from Nott et al. (2019)  
 (see `?NOTT_2019.bigwig_metadata` for details).

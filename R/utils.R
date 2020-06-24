@@ -744,7 +744,8 @@ make_dataset_dir <- function(results_dir="./results",
 
 
 
-
+#' Construct the path of the locus subset
+#'
 #' @family directory functions
 #' @keywords internal
 #' @examples
@@ -839,7 +840,7 @@ GRanges_overlap <- function(finemap_dat,
 #' Convert old col format: ".Credible_Set" => ".CS"
 #' @examples
 #' \dontrun{
-#' data("BST1);
+#' data("BST1");
 #' finemap_DT <- BST1
 #' finemap_DT <- update_CS_cols(finemap_dat=finemap_DT)
 #' }
@@ -848,3 +849,25 @@ update_CS_cols <- function(finemap_dat){
   return(finemap_dat)
 }
 
+
+
+
+
+#' Store \code{\link{fullSS_dat}}
+#'
+#' @inheritParams finemap_pipeline
+#' @family general
+#' @keywords internal
+#' @examples
+#' \dontrun{
+#' data("fullSS_dat")
+#' fullSS_path <- example_fullSS(fullSS_path="./Nalls23andMe_2019.fullSS_subset.tsv")
+#' }
+example_fullSS <- function(fullSS_path="./Nalls23andMe_2019.fullSS_subset.tsv",
+                           nThread=1){
+  data("fullSS_dat")
+  data.table::fwrite(fullSS_dat, fullSS_path,
+                     nThread = nThread,
+                     sep="\t")
+  return(fullSS_path)
+}

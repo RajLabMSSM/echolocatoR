@@ -20,8 +20,9 @@ R wrapper for axel, which enables multi-threaded download of a single large file
 \seealso{
 \url{https://github.com/axel-download-accelerator/axel/}
 
-Other download functions: 
+Other downloaders: 
+\code{\link{downloader}()},
 \code{\link{wget}()}
 }
-\concept{download functions}
+\concept{downloaders}
 \keyword{internal}

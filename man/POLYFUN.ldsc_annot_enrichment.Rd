@@ -22,8 +22,6 @@ Run and plot heritability enrichment tests
 \seealso{
 Other polyfun: 
 \code{\link{POLYFUN.compute_priors}()},
-\code{\link{POLYFUN.conda_from_list}()},
-\code{\link{POLYFUN.conda_from_yaml}()},
 \code{\link{POLYFUN.download_ref_files}()},
 \code{\link{POLYFUN.find_polyfun_folder}()},
 \code{\link{POLYFUN.finemapper}()},
@@ -35,9 +33,6 @@ Other polyfun:
 \code{\link{POLYFUN.h2_enrichment}()},
 \code{\link{POLYFUN.help}()},
 \code{\link{POLYFUN.initialize}()},
-\code{\link{POLYFUN.install_conda}()},
-\code{\link{POLYFUN.install_dependencies}()},
-\code{\link{POLYFUN.load_conda}()},
 \code{\link{POLYFUN.munge_summ_stats}()},
 \code{\link{POLYFUN.plot}()},
 \code{\link{POLYFUN.prepare_snp_input}()},

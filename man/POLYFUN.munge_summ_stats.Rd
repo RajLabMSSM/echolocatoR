@@ -11,7 +11,8 @@ POLYFUN.munge_summ_stats(
   sample_size = 1474097,
   min_INFO = 0,
   min_MAF = 0.001,
-  force_new_munge = F
+  force_new_munge = F,
+  conda_env = "echoR"
 )
 }
 \description{
@@ -20,15 +21,13 @@ Munge summary stats
 \examples{
 \dontrun{
 data("genome_wide_dir");
-fullSS_path <- "/Users/schilder/Desktop/echolocatoR/results/GWAS/Nalls23andMe_2019/_genome_wide/nallsEtAl2019_allSamples_allVariants.mod.txt.gz"
-munged_path <- POLYFUN.munge_summ_stats(fullSS_path=fullSS_path, locus_dir=locus_dir_genome_wide)
+fullSS_path <- example_fullSS(fullSS_path="~/Desktop/Nalls23andMe_2019.fullSS_subset.tsv")
+munged_path <- POLYFUN.munge_summ_stats(fullSS_path=fullSS_path, locus_dir=genome_wide_dir, force_new_munge=T)
 }
 }
 \seealso{
 Other polyfun: 
 \code{\link{POLYFUN.compute_priors}()},
-\code{\link{POLYFUN.conda_from_list}()},
-\code{\link{POLYFUN.conda_from_yaml}()},
 \code{\link{POLYFUN.download_ref_files}()},
 \code{\link{POLYFUN.find_polyfun_folder}()},
 \code{\link{POLYFUN.finemapper}()},
@@ -40,10 +39,7 @@ Other polyfun:
 \code{\link{POLYFUN.h2_enrichment}()},
 \code{\link{POLYFUN.help}()},
 \code{\link{POLYFUN.initialize}()},
-\code{\link{POLYFUN.install_conda}()},
-\code{\link{POLYFUN.install_dependencies}()},
 \code{\link{POLYFUN.ldsc_annot_enrichment}()},
-\code{\link{POLYFUN.load_conda}()},
 \code{\link{POLYFUN.plot}()},
 \code{\link{POLYFUN.prepare_snp_input}()},
 \code{\link{POLYFUN.read_parquet}()},

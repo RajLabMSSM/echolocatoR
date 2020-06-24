@@ -11,11 +11,17 @@
 NOTT_2019.get_epigenomic_peaks(
   peak.dir = "/pd-omics/data/Nott_2019/peaks",
   narrow_peaks = T,
-  broad_peaks = T
+  broad_peaks = T,
+  nThread = 4
 )
 }
 \description{
 Brain cell-specific epigenomic data from Nott et al. (2019).
+}
+\examples{
+\dontrun{
+PEAKS.merged <- NOTT_2019.get_epigenomic_peaks(peak.dir="/pd-omics/data/Nott_2019/peaks", narrow_peaks=T, broad_peaks=F)
+}
 }
 \seealso{
 Other NOTT_2019: 

@@ -300,7 +300,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">echolocatoR: plotting vignette</h1>
 <h4 class="author">Brian M. Schilder</h4>
-<h4 class="date">Most Recent Update:<br> 2020-06-17</h4>
+<h4 class="date">Most recent update:<br> 2020-06-18</h4>
 
 
 
@@ -309,13 +309,27 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1>Plotting only</h1>
 <p><em>echolocatoR</em> contains various functions that can be used separately<br />
 from the comprehensive <code>finemap_loci()</code> pipeline.</p>
-<p>Generate a multiview plot using <code>GGBIO.plot()</code>. * You can mix and match different tracks and annotations using the different arguments (see <code>?GGBIO.plot</code> for details).<br />
-* Zoom in/out by adjusting the <code>plot.window</code> size (in units of basepairs).<br />
+<p>Generate a multiview plot using <code>GGBIO.plot()</code>.</p>
+<ul>
+<li>You can mix and match different tracks and annotations using the different arguments (see <code>?GGBIO.plot</code> for details).<br />
+</li>
+<li>Zoom in/out by adjusting the <code>plot.window</code> size (in units of basepairs).<br />
 The plot is centered on the lead/index SNP.<br />
-* <code>GGBIO.plot()</code> returns a <code>ggbio</code> track object. + Further modify this object using <code>ggplot2</code> functions like <code>+ theme()</code>. + The modifications will be applied to all tracks at once.<br />
-* Save a high-resolution <em>.png</em> of the plot by setting <code>save_plot=T</code><br />
-+ Further increase resolution by adjusting the <code>dpi</code> argument (<em>default=300</em>). + Adjust the <code>height</code> and <code>width</code> of the saved plot using these respective arguments. + The plot will be automatically saved in the locus-specific directory as:<br />
-<code>multiview_&lt;locus&gt;_&lt;plot.window&gt;.png</code>.</p>
+</li>
+<li><code>GGBIO.plot()</code> returns a <code>ggbio</code> track object.
+<ul>
+<li>Further modify this object using <code>ggplot2</code> functions like <code>+ theme()</code>.</li>
+<li>The modifications will be applied to all tracks at once.<br />
+</li>
+</ul></li>
+<li>Save a high-resolution <em>.png</em> of the plot by setting <code>save_plot=T</code>
+<ul>
+<li>Further increase resolution by adjusting the <code>dpi</code> argument (<em>default=300</em>).</li>
+<li>Adjust the <code>height</code> and <code>width</code> of the saved plot using these respective arguments.</li>
+<li>The plot will be automatically saved in the locus-specific directory as:<br />
+*multiview_<locus>_&lt;plot.window&gt;.png*.</li>
+</ul></li>
+</ul>
 <div id="load-example-data" class="section level2">
 <h2>Load example data</h2>
 <p>Load example dataset of the results from fine-mapping the BST1 locus with <code>finemap_loci()</code>. Original data comes from the recent Nalls et al. (2019) Parkinson’s disease GWAS (see <code>?BST1</code> for details).</p>
@@ -393,7 +407,7 @@ The plot is centered on the lead/index SNP.<br />
 <h2>Using only XGR annotations</h2>
 <p>Whenever you use annotation arguments (e.g. <code>XGR_libnames</code>,<code>Roadmap</code>,<code>Nott_epigenome</code>) the annotations that overlap with your locus will automatically be saved as <code>GRanges</code> objects<br />
 in a locus-specific subdirectory:<br />
-<code>results/&lt;dataset_type&gt;/&lt;dataset_name&gt;/&lt;locus&gt;/annotation</code></p>
+<em>results/<dataset_type>/<dataset_name>/<locus>/annotation</em></p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">trk_plot.xgr &lt;-<span class="st"> </span><span class="kw">GGBIO.plot</span>(<span class="dt">finemap_dat=</span>finemap_DT, </a>
 <a class="sourceLine" id="cb5-2" data-line-number="2">                           <span class="dt">LD_matrix=</span>LD_matrix, </a>
 <a class="sourceLine" id="cb5-3" data-line-number="3">                           <span class="dt">locus_dir=</span>locus_dir, </a>
@@ -423,12 +437,12 @@ in a locus-specific subdirectory:<br />
 <a class="sourceLine" id="cb5-27" data-line-number="27"><span class="co">#&gt; [1] &quot;++ GGBIO:: Gene Model Track&quot;</span></a>
 <a class="sourceLine" id="cb5-28" data-line-number="28"><span class="co">#&gt; [1] &quot;+ Annotating at transcript-level.&quot;</span></a>
 <a class="sourceLine" id="cb5-29" data-line-number="29"><span class="co">#&gt; [1] &quot;++ GGBIO:: XGR Tracks&quot;</span></a>
-<a class="sourceLine" id="cb5-30" data-line-number="30"><span class="co">#&gt; Start at 2020-06-17 22:42:53</span></a>
+<a class="sourceLine" id="cb5-30" data-line-number="30"><span class="co">#&gt; Start at 2020-06-18 18:30:16</span></a>
 <a class="sourceLine" id="cb5-31" data-line-number="31"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb5-32" data-line-number="32"><span class="co">#&gt; 'ENCODE_TFBS_ClusteredV3_CellTypes' (from http://galahad.well.ox.ac.uk/bigdata/ENCODE_TFBS_ClusteredV3_CellTypes.RData) has been loaded into the working environment (at 2020-06-17 22:43:04)</span></a>
+<a class="sourceLine" id="cb5-32" data-line-number="32"><span class="co">#&gt; 'ENCODE_TFBS_ClusteredV3_CellTypes' (from http://galahad.well.ox.ac.uk/bigdata/ENCODE_TFBS_ClusteredV3_CellTypes.RData) has been loaded into the working environment (at 2020-06-18 18:30:36)</span></a>
 <a class="sourceLine" id="cb5-33" data-line-number="33"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb5-34" data-line-number="34"><span class="co">#&gt; End at 2020-06-17 22:43:04</span></a>
-<a class="sourceLine" id="cb5-35" data-line-number="35"><span class="co">#&gt; Runtime in total is: 11 secs</span></a>
+<a class="sourceLine" id="cb5-34" data-line-number="34"><span class="co">#&gt; End at 2020-06-18 18:30:36</span></a>
+<a class="sourceLine" id="cb5-35" data-line-number="35"><span class="co">#&gt; Runtime in total is: 20 secs</span></a>
 <a class="sourceLine" id="cb5-36" data-line-number="36"><span class="co">#&gt; 8702 query SNP(s) detected with reference overlap.</span></a>
 <a class="sourceLine" id="cb5-37" data-line-number="37"><span class="co">#&gt; Warning in max(xlim): no non-missing arguments to max; returning -Inf</span></a>
 <a class="sourceLine" id="cb5-38" data-line-number="38"><span class="co">#&gt; Scale for 'x' is already present. Adding another scale for 'x', which will</span></a>

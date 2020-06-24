@@ -15,9 +15,13 @@ TABIX.convert_file(
 \arguments{
 \item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.}
 
-\item{chrom_col}{Name of the chromosome column in the full summary stats file.}
+\item{chrom_col}{Name of the chromosome column in the full summary stats file.
+Can be "chr1" or "1" format.
+(\emph{default: ="CHR"})}
 
-\item{position_col}{Name of the genomic position column in the full summary stats file.}
+\item{position_col}{Name of the genomic position column in the full summary stats file.
+Must be in units of basepairs.
+(\emph{default: ="POS"})}
 
 \item{verbose}{Whether \emph{echolocatoR} should be verbose or silent.}
 }

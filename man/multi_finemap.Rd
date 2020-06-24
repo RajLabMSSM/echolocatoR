@@ -23,53 +23,58 @@ multi_finemap(
   A1_col = "A1",
   A2_col = "A2",
   PAINTOR_QTL_datasets = NULL,
-  PP_threshold = 0.95
+  PP_threshold = 0.95,
+  conda_env = "echoR"
 )
 }
 \arguments{
 \item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.}
 
 \item{dataset_type}{The kind dataset you're fine-mapping (e.g. GWAS, eQTL, tQTL).
-This will also be used when creating the subdirectory where your results will be stored (e.g. \code{Data/<dataset_type>/Kunkle_2019}).}
+This will also be used when creating the subdirectory where your results will be stored
+(e.g. \emph{Data/<dataset_type>/Kunkle_2019}).}
 
 \item{n_causal}{The maximum number of potential causal SNPs per locus.
 This parameter is used somewhat differntly by different fine-mapping tools.
 See tool-specific functions for details.}
 
-\item{snp_col}{Name of the SNP RSID column in the full summary stats file.}
+\item{sample_size}{The overall sample size of the study.
+If none is given, and \strong{N_cases} and \strong{N_controls} columns are present,
+then sample_size is inferred to be:  \code{max(N_cases) + max(N_controls)}.}
+
+\item{snp_col}{Name of the SNP RSID column in the full summary stats file.
+(\emph{default: ="SNP"})}
 
 \item{freq_col}{Name of the allele frequency column in the full summary stats file.
 Effect allele frequency is preferred, but the non-effect allele can be provided instead (though this may be less accurate).
-This column is not necessary unless \code{MAF_col="calculate"} or the MAF column is missing.}
+This column is not necessary unless \code{MAF_col="calculate"} or the MAF column is missing.
+(\emph{default: ="Freq"})}
 
 \item{effect_col}{Name of the effect size column in the full summary stats file.
-Effect size is preferred, but if not available other metrics like Beta for Odds Ratio can be used instead.}
+Effect size is preferred, but if not available other metrics like Beta for Odds Ratio can be used instead.
+(\emph{default: ="Effect"})}
 
 \item{stderr_col}{Name of the standard error  column in the full summary stats file.
-You can also set \code{stderr_col="calculate"} to infer standard error using: \code{effect / tstat}.}
+You can also set \code{stderr_col="calculate"} to infer standard error using: \code{effect / tstat}.
+(\emph{default: ="StdErr"})}
 
 \item{pval_col}{Name of the p-value column in the full summary stats file.
-Raw p-values are preferred, but if not available corrected p-values (e.g. FDR) can be used instead.}
+Raw p-values are preferred, but if not available corrected p-values (e.g. FDR) can be used instead.
+(\emph{default: ="P"})}
 
 \item{N_cases_col}{Name of the column in the full summary stats that has the number of case subjects in the study.
 This can either be per SNP sample sizes, or one number repeated across all rows.
 Proxy cases (e.g. relatives of people with the disease being investigated) should be included in this estimate if any were used in the study.
-This column is not necesssary if \code{N_cases} parameter is provided.}
+This column is not necesssary if \code{N_cases} parameter is provided.
+(\emph{default: ="N_cases"})}
 
 \item{N_controls_col}{Name of the column in the full summary stats that has the number of control subjects in the study.
  This can either be per SNP sample sizes, or one number repeated across all rows.
  This column is not necesssary if \code{N_controls} parameter is provided.
-  @param N_cases The number of case subjects in the study.
- Instead of providing a reudundant \strong{N_cases_col} column, you can simply enter one value here.
- @param N_controls The number of control subjects in the study.
- Instead of providing a reudundant \strong{N_controls_col} column, you can simply enter one value here.
- @param proportion_cases The proportion of total subjects in the study that were cases.
- if \code{proportion_cases="calculate"} then this is inferred:  \code{N_controls / N_controls}.
- #' @param sample_size The overall sample size of the study.
-If none is given, and \strong{N_cases} and \strong{N_controls} columns are present,
-then sample_size is inferred to be \code{max(N_cases) + max(N_controls)}.}
+(\emph{default: ="N_controls"})}
 
 \item{A1_col}{Name of the effect/risk allele column in the full summary stats.
+ \strong{\emph{IMPORTANT}}: Make sure this actually the case for your full summary stats file.
 Unfortunately, different studies report different kinds of allele information in a non-standardized way.
 Meaning that A1/A2 can refer to any number of things:
  \describe{
@@ -95,6 +100,8 @@ This is important when comparing individual SNPs, but can also have an impact on
 
 \item{PP_threshold}{The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
 For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.}
+
+\item{conda_env}{The name of a conda environment to use.}
 }
 \description{
 Fine-mapping will be repeated on the same locus using each of the tools in \code{finemap_method_list}.

@@ -4,14 +4,20 @@
 \alias{CONDA.activate_env}
 \title{Activate conda env}
 \usage{
-CONDA.activate_env(condaenv = "echoR")
+CONDA.activate_env(conda_env = "echoR")
 }
 \description{
 Activate conda env
 }
+\examples{
+CONDA.activate_env(conda_env="echoR")
+}
 \seealso{
-Other conda functions: 
+Other conda: 
 \code{\link{CONDA.create_env}()},
+\code{\link{CONDA.env_from_list}()},
+\code{\link{CONDA.env_from_yaml}()},
+\code{\link{CONDA.find_env_path}()},
 \code{\link{CONDA.install}()}
 }
-\concept{conda functions}
+\concept{conda}

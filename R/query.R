@@ -41,7 +41,7 @@ import_topSNPs <- function(topSS,
       return(topSS)
     } else{
       if(endsWith(topSS, ".xlsx") | endsWith(topSS, ".xlsm")){
-        topSS <- readxl::read_excel(path = topSS, sheet = sheet) %>% data.table::data.table()
+        topSS <- openxlsx::read.xlsx(topSS, sheet = sheet) %>% data.table::data.table()
       } else {
         topSS <- data.table::fread(file=topSS, header = T, stringsAsFactors = F )
       }

@@ -6,7 +6,7 @@
 \usage{
 TABIX(
   fullSS_path,
-  subset_path,
+  subset_path = NULL,
   is_tabix = F,
   chrom_col = "CHR",
   position_col = "POS",
@@ -21,9 +21,13 @@ TABIX(
 \arguments{
 \item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.}
 
-\item{chrom_col}{Name of the chromosome column in the full summary stats file.}
+\item{chrom_col}{Name of the chromosome column in the full summary stats file.
+Can be "chr1" or "1" format.
+(\emph{default: ="CHR"})}
 
-\item{position_col}{Name of the genomic position column in the full summary stats file.}
+\item{position_col}{Name of the genomic position column in the full summary stats file.
+Must be in units of basepairs.
+(\emph{default: ="POS"})}
 
 \item{min_POS}{Manually set the minimum genomic position for your locus subset.
 \code{min_POS} can clip the window size set by \code{bp_distance}.
