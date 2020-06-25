@@ -42,6 +42,8 @@ GGBIO.plot(
 )
 }
 \arguments{
+\item{color_r2}{If an LD_matrix is supplied, color each SNP by its LD with the lead SNP from the GWAS ()}
+
 \item{QTL_prefixes}{Prefixes to the columns that contain QTL data.
 For exmaple, P-values for the \emph{Fairfax_2014} QTL study would be
 stored in the column \emph{Fairfax_2014.P}.}
@@ -66,7 +68,7 @@ Uses \code{\link{ggbio}}.
 data("BST1"); data("BST1_LD_matrix"); data("locus_dir");
 
 # Using NO annotations
-trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, save_plot=F)
+trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, save_plot=F, color_r2=T)
 
 Using NO annotations (dot plot summary instead of Manhattan plots for each fine-mapping tool)
 ### WARNING: Currently doesn't align as well due to the summary plot having a differnt x-axis.

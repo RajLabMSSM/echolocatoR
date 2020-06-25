@@ -94,7 +94,7 @@ GGBIO.SNP_track <- function(gr.snp,
                             show.legend=T,
                             PP_threshold=.95,
                             sig_cutoff=5e-8){
-  if(color_r2==F){gr.snp$r2 <- 0}
+  if(color_r2==F){gr.snp$r2 <- NA}
   # Format data
   if(!(method %in% c("original"))){
     if(method=="COJO"){
@@ -231,7 +231,7 @@ GGBIO.QTL_track <- function(gr.snp,
                             show.legend=T,
                             PP_threshold=.95,
                             sig_cutoff=5e-8){
-  if(color_r2==F){gr.snp$r2 <- 0}
+  if(color_r2==F){gr.snp$r2 <- NA}
   dat <- as.data.frame(gr.snp)
   pval_col <- paste0(QTL_prefix,".P")
   ### Label set
@@ -417,7 +417,7 @@ GGBIO.transcript_model_track <- function(gr.snp_CHR,
 #' data("BST1"); data("BST1_LD_matrix"); data("locus_dir");
 #'
 #' # Using NO annotations
-#' trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, save_plot=F)
+#' trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, save_plot=F, color_r2=T)
 #'
 #' Using NO annotations (dot plot summary instead of Manhattan plots for each fine-mapping tool)
 #' ### WARNING: Currently doesn't align as well due to the summary plot having a differnt x-axis.
