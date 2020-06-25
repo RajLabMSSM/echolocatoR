@@ -12,7 +12,7 @@
 #' @family FINEMAP
 #' @keywords internal
 #' @examples
-#' data("locus_dir"); data("BST1"); data("LD_matrix");
+#' data("locus_dir"); data("BST1"); data("BST1_LD_matrix");
 #' finemap_DT <- BST1
 #' dir.create(file.path(locus_dir,"FINEMAP"), showWarnings = F, recursive = T)
 #' out <- subset_common_snps(LD_matrix=LD_matrix, finemap_DT=finemap_DT)
@@ -199,7 +199,7 @@ FINEMAP.find_executable <- function(FINEMAP_path=NULL,
 #' @family FINEMAP
 #' @keywords internal
 #' @examples
-#' data("locus_dir"); data("BST1"); data("LD_matrix");
+#' data("locus_dir"); data("BST1"); data("BST1_LD_matrix");
 #' finemap_DT <- BST1
 #' dir.create(file.path(locus_dir,"FINEMAP"), showWarnings = F, recursive = T)
 #' out <- subset_common_snps(LD_matrix=LD_matrix, finemap_DT=finemap_DT)

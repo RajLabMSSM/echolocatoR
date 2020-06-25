@@ -84,21 +84,17 @@ GGBIO.invisible_legend <- function(gg){
 #' @family plot
 #' @keywords internal
 #' @examples
-#' data("BST1")
-#' finemap_DT <- BST1
-#' LD_SNP <- subset(finemap_DT, leadSNP==T)$SNP
-#' LD_sub <- LD_with_leadSNP(LD_matrix = LD_matrix, LD_SNP = LD_SNP)
-#' dat <- data.table:::merge.data.table(finemap_DT, LD_sub, by = "SNP", all.x = T)
+#' data("BST1");
 #' gr.snp <- DT_to_GRanges(dat)
-#' gr.snp_CHR <- biovizBase::transformDfToGr(dat, seqnames = "CHR", start = "POS", end = "POS")
-#' snp.track <- GGBIO.SNP_track(gr.snp=gr.snp, method = "original")
+#' snp.track <- GGBIO.SNP_track(gr.snp=gr.snp, method = "original", color_r2=F)
 GGBIO.SNP_track <- function(gr.snp,
-                      method = "original",
-                      labels_subset = c("Lead SNP", "Credible Set", "Consensus SNP"),
-                      r2=NULL,
-                      show.legend=T,
-                      PP_threshold=.95,
-                      sig_cutoff=5e-8){
+                            method = "original",
+                            labels_subset = c("Lead SNP", "Credible Set", "Consensus SNP"),
+                            color_r2=F,
+                            show.legend=T,
+                            PP_threshold=.95,
+                            sig_cutoff=5e-8){
+  if(color_r2==F){gr.snp$r2 <- 0}
   # Format data
   if(!(method %in% c("original"))){
     if(method=="COJO"){
@@ -163,7 +159,7 @@ GGBIO.SNP_track <- function(gr.snp,
               label=cutoff_lab,
               size=3,color="grey", hjust = 0)
   # Only draw LD line on the first track
-  if(is.null(r2) & method=="original"){
+  if(color_r2 & method=="original"){
     a1 <- a1 + geom_line(data=dat, stat="smooth",
                          aes(x=POS,y=r2*r2_multiply), #y=scales::rescale(gr.snp$r2, to=c(0,20))),
                          se = F, formula = y ~ x,  method = 'loess',
@@ -224,21 +220,18 @@ GGBIO.SNP_track <- function(gr.snp,
 #' @keywords internal
 #' @examples
 #' data("BST1")
-#' finemap_DT <- BST1
-#' LD_SNP <- subset(finemap_DT, leadSNP==T)$SNP
-#' LD_sub <- LD_with_leadSNP(LD_matrix = LD_matrix, LD_SNP = LD_SNP)
-#' dat <- data.table:::merge.data.table(finemap_DT, LD_sub, by = "SNP", all.x = T)
 #' gr.snp <- DT_to_GRanges(dat)
 #' ## Create fake QTL P-values
 #' gr.snp$fake_eQTL.P <- gr.snp$P  * c(1,.9,.7)
-#' qtl.track <- GGBIO.QTL_track(gr.snp=gr.snp, QTL_prefix="fake_eQTL", labels_subset=c("Lead SNP"))
+#' qtl.track <- GGBIO.QTL_track(gr.snp=gr.snp, QTL_prefix="fake_eQTL", labels_subset=c("Lead SNP"), color_r2=F)
 GGBIO.QTL_track <- function(gr.snp,
-                      QTL_prefix="QTL",
-                      labels_subset = c("Lead SNP", "Credible Set", "Consensus SNP"),
-                      color_r2=T,
-                      show.legend=T,
-                      PP_threshold=.95,
-                      sig_cutoff=5e-8){
+                            QTL_prefix="QTL",
+                            labels_subset = c("Lead SNP", "Credible Set", "Consensus SNP"),
+                            color_r2=T,
+                            show.legend=T,
+                            PP_threshold=.95,
+                            sig_cutoff=5e-8){
+  if(color_r2==F){gr.snp$r2 <- 0}
   dat <- as.data.frame(gr.snp)
   pval_col <- paste0(QTL_prefix,".P")
   ### Label set
@@ -276,7 +269,7 @@ GGBIO.QTL_track <- function(gr.snp,
               label=cutoff_lab,
               size=3,color="grey", hjust = 0)
   # Only draw LD line on the first track
-  if("r2" %in% colnames(dat) & color_r2==T){
+  if(color_r2 & ("r2" %in% colnames(dat)) ){
     q1 <- q1 + geom_line(data=dat, stat="smooth",
                          aes(x=POS,y=r2*r2_multiply), #y=scales::rescale(gr.snp$r2, to=c(0,20))),
                          se = F, formula = y ~ x,  method = 'loess',
@@ -344,20 +337,13 @@ GGBIO.QTL_track <- function(gr.snp,
 #' @family plot
 #' @keywords internal
 #' @examples
-#' data("BST1"); data("LD_matrix");
-#' finemap_DT <- BST1
-#' #finemap_DT <- data.table::fread("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/LRRK2/Multi-finemap/Multi-finemap_results.txt")
-#' #LD_matrix <- readRDS("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/LRRK2/plink/UKB_LD.RDS")
-#' LD_SNP <- subset(finemap_DT, leadSNP==T)$SNP
-#' LD_sub <- LD_with_leadSNP(LD_matrix = LD_matrix, LD_SNP = LD_SNP)
-#' dat <- data.table:::merge.data.table(finemap_DT, LD_sub, by = "SNP", all.x = T)
-#' gr.snp <- DT_to_GRanges(dat)
-#' gr.snp_CHR <- biovizBase::transformDfToGr(dat, seqnames = "CHR", start = "POS", end = "POS")
+#' data("BST1");
+#' gr.snp_CHR <- biovizBase::transformDfToGr(BST1, seqnames = "CHR", start = "POS", end = "POS")
 #' track.genes <- GGBIO.transcript_model_track(gr.snp_CHR, max_transcripts=1)
 GGBIO.transcript_model_track <- function(gr.snp_CHR,
-                                   max_transcripts=1,
-                                   show.legend=T,
-                                   show_plot=F){
+                                         max_transcripts=1,
+                                         show.legend=T,
+                                         show_plot=F){
   # library(ggbio)
   printer("++ GGBIO:: Gene Model Track")
   lead.index <- which(gr.snp_CHR$leadSNP==T)
@@ -417,6 +403,7 @@ GGBIO.transcript_model_track <- function(gr.snp_CHR,
 #' @param QTL_prefixes Prefixes to the columns that contain QTL data.
 #' For exmaple, P-values for the \emph{Fairfax_2014} QTL study would be
 #' stored in the column \emph{Fairfax_2014.P}.
+#' @param color_r2 If an LD_matrix is supplied, color each SNP by its LD with the lead SNP from the GWAS ()
 #' @inheritParams GGBIO.SNP_track
 #' @inheritParams GGBIO.QTL_track
 #' @inheritParams GGBIO.transcript_model_track
@@ -427,29 +414,29 @@ GGBIO.transcript_model_track <- function(gr.snp_CHR,
 #' \url{http://bioconductor.org/packages/release/bioc/vignettes/ggbio/inst/doc/ggbio.pdf}
 #' @examples
 #' \dontrun{
-#' data("BST1"); data("LD_matrix"); data("locus_dir");
-#' finemap_DT <- BST1
+#' data("BST1"); data("BST1_LD_matrix"); data("locus_dir");
 #'
 #' # Using NO annotations
-#' trk_plot <- GGBIO.plot(finemap_dat=finemap_DT, LD_matrix=LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, save_plot=F)
+#' trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, save_plot=F)
 #'
 #' Using NO annotations (dot plot summary instead of Manhattan plots for each fine-mapping tool)
 #' ### WARNING: Currently doesn't align as well due to the summary plot having a differnt x-axis.
-#' trk_plot <- GGBIO.plot(finemap_dat=finemap_DT, LD_matrix=LD_matrix, locus_dir=locus_dir, method_list=NULL, mean.PP=F, dot_summary=T, XGR_libnames=NULL, save_plot=F)
+#' trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, method_list=NULL, mean.PP=F, dot_summary=T, XGR_libnames=NULL, save_plot=F)
 #'
 #'
 #' # Using only XGR annotations
-#' trk_plot <- GGBIO.plot(finemap_dat=finemap_DT, LD_matrix=LD_matrix, locus_dir=locus_dir, XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes"), save_plot=F)
+#' trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes"), save_plot=F)
 #'
 #' # Using only Roadmap annotations
-#' trk_plot <- GGBIO.plot(finemap_dat=finemap_DT, LD_matrix=LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, Roadmap=T, Roadmap_query="monocyte", save_plot=F)
+#' trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, Roadmap=T, Roadmap_query="monocyte", save_plot=F)
 #'
 #' # Using only Nott_2019 annotations
-#' trk_plot <- GGBIO.plot(finemap_dat=finemap_DT, LD_matrix=LD_matrix, locus_dir=locus_dir, Nott_epigenome=T, XGR_libnames=NULL)
+#' trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, Nott_epigenome=T, XGR_libnames=NULL)
 #' }
 GGBIO.plot <- function(finemap_dat,
-                       LD_matrix,
                        locus_dir,
+                       LD_matrix=NULL,
+                       color_r2=T,
                        method_list=c("ABF","FINEMAP","SUSIE","POLYFUN_SUSIE"),
                        dot_summary=F,
                        QTL_prefixes=NULL,
@@ -510,13 +497,22 @@ GGBIO.plot <- function(finemap_dat,
   }
 
   TRACKS_list <- NULL
+
   # Add LD into the dat
   LD_SNP <- subset(finemap_dat, leadSNP==T)$SNP
-  LD_sub <- LD_with_leadSNP(LD_matrix = LD_matrix,
-                            LD_SNP = LD_SNP)
-  dat <- data.table::merge.data.table(finemap_dat, LD_sub,
-                                      by = "SNP",
-                                      all.x = T)
+  if(is.null(LD_matrix)){
+    print("GGBIO:: No LD_matrix detected. Setting color_r2=F");
+    color_r2 <- F
+    dat <- finemap_dat
+  } else {
+    print("GGBIO:: LD_matrix detected. Coloring SNPs by LD with lead SNP.")
+    LD_sub <- LD_with_leadSNP(LD_matrix = LD_matrix,
+                              LD_SNP = LD_SNP)
+    dat <- data.table::merge.data.table(finemap_dat, LD_sub,
+                                        by = "SNP",
+                                        all.x = T)
+  }
+
   # Convert to GRange object
   gr.snp <- DT_to_GRanges(dat)
   gr.snp_CHR <- biovizBase::transformDfToGr(dat, seqnames = "CHR",
@@ -539,7 +535,8 @@ GGBIO.plot <- function(finemap_dat,
   track.gwas <- GGBIO.SNP_track(gr.snp = gr.snp,
                           method = "original",
                           sig_cutoff=sig_cutoff,
-                          labels_subset = c("Lead SNP","Consensus SNP"))
+                          labels_subset = c("Lead SNP","Consensus SNP"),
+                          color_r2 = color_r2)
   TRACKS_list <- append(TRACKS_list, track.gwas)
   names(TRACKS_list)[ifelse(is.null(TRACKS_list),1,length(TRACKS_list))] <- "GWAS"
 
@@ -549,12 +546,12 @@ GGBIO.plot <- function(finemap_dat,
   for (qtl in QTL_prefixes){
     printer("++ GGBIO::",qtl,"track", v=verbose)
     qtl_track <- GGBIO.QTL_track(gr.snp = gr.snp,
-                           QTL_prefix=qtl,
-                           labels_subset = c("Lead SNP", "Consensus SNP"),
-                           color_r2=T,
-                           show.legend=F,
-                           PP_threshold=PP_threshold,
-                           sig_cutoff=sig_cutoff)
+                                 QTL_prefix=qtl,
+                                 labels_subset = c("Lead SNP", "Consensus SNP"),
+                                 color_r2=color_r2,
+                                 show.legend=F,
+                                 PP_threshold=PP_threshold,
+                                 sig_cutoff=sig_cutoff)
     TRACKS_list <- append(TRACKS_list, qtl_track)
     names(TRACKS_list)[length(TRACKS_list)] <- qtl
   }
@@ -565,6 +562,7 @@ GGBIO.plot <- function(finemap_dat,
     printer("++ GGBIO::",m,"track", v=verbose)
     track.finemapping <- GGBIO.SNP_track(gr.snp, method = m,
                                    labels_subset = c("Lead SNP", "Credible Set"),
+                                   color_r2 = color_r2,
                                    show.legend = F)
     TRACKS_list <- append(TRACKS_list, track.finemapping)
     names(TRACKS_list)[length(TRACKS_list)] <- m

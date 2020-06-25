@@ -386,6 +386,16 @@ POLYFUN.download_ref_files <- function(alkes_url="https://data.broadinstitute.or
 
 
 
+
+#' Get ref data path prefix
+#'
+POLYFUN.get_ref_prefix <- function(ref_prefix=NULL,
+                                   locus_dir){
+  "./resources/1000_Genomes/Phase1/1000G.mac5eur."
+
+
+}
+
 #' Recompute SNP-wise priors from summary stats
 #' @keywords internal
 #' @family polyfun
@@ -408,13 +418,17 @@ POLYFUN.compute_priors <- function(polyfun=NULL,
                                     chrom="all",
                                     compute_ldscores=F,
                                     allow_missing_SNPs=T,
-                                    ref_prefix="./resources/1000_Genomes/Phase1/1000G.mac5eur.",
+                                    ref_prefix=NULL,
+                                    remove_tmps=T,
                                     conda_env = "echoR"){
   # polyfun="./echolocatoR/tools/polyfun"; parametric=T;  weights.path=file.path(polyfun,"example_data/weights."); annotations.path=file.path(polyfun,"example_data/annotations."); munged.path= "./Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/sumstats_munged.parquet"; parametric=T; dataset="Nalls23andMe_2019"; prefix="PD_GWAS"; compute_ldscores=F; allow_missing_SNPs=T; chrom="all"; finemap_dat=NULL; locus="LRRK2"; server=F; ref.prefix="/sc/arion/projects/pd-omics/data/1000_Genomes/Phase1/1000G.mac5eur.";
   # CONDA.activate_env(conda_env = conda_env)
   # PATH_cmd <- "source ~/.bash_profile &&"
   python <- CONDA.find_env_path(conda_env = conda_env)
   polyfun <- POLYFUN.find_polyfun_folder(polyfun_path = polyfun)
+
+
+
   if(is.null(annotations_path)){annotations_path <- file.path(system.file("tools/polyfun/example_data",package="echolocatoR"),"annotations.")}
   if(is.null(weights_path)){weights_path <- file.path(system.file("tools/polyfun/example_data",package="echolocatoR"),"weights.")}
   # 0. Create paths
@@ -504,6 +518,10 @@ POLYFUN.compute_priors <- function(polyfun=NULL,
     # bin.1 <- POLYFUN.read_parquet(file.path(out.path,"PD_GWAS.2.bins.parquet"))
     #rowSums(bin.1[,-c(1:5)]) # each SNP belongs to only 1 bin
   } else { LDSC.files <- list.files(out.path, pattern = "_ridge_constrained.gz", full.names = T) }
+
+
+
+  if(remove_tmps){ file.remove(snp.path) }
   return(LDSC.files)
 }
 

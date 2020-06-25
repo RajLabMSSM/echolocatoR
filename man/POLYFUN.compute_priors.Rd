@@ -17,7 +17,8 @@ POLYFUN.compute_priors(
   chrom = "all",
   compute_ldscores = F,
   allow_missing_SNPs = T,
-  ref_prefix = "./resources/1000_Genomes/Phase1/1000G.mac5eur.",
+  ref_prefix = NULL,
+  remove_tmps = T,
   conda_env = "echoR"
 )
 }

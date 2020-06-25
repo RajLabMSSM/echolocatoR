@@ -92,8 +92,8 @@ You can adjust this separately from `bp_distance` so that you don't have rerun t
 ```{r Run fine-mapping pipeline}
 Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS 
                                           top_SNPs = top_SNPs,  
-                                          results_dir = "~/Desktop/results",
-                                          loci = c("BST1","MEX3C"),#top_SNPs$Gene, 
+                                          results_dir = "./echolocatoR_results",
+                                          loci =top_SNPs$Locus,# c("BST1","MEX3C"),
                                           dataset_name = "Nalls23andMe_2019",
                                           dataset_type = "GWAS",  
                                           force_new_subset = F,

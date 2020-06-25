@@ -431,7 +431,7 @@ finemap_pipeline <- function(locus,
 
   ### Compute LD matrix
   message("--- Step 2: Calculate Linkage Disequilibrium ---")
-  LD_matrix <- LD.load_or_create(subset_path=subset_path,
+  LD_matrix <- LD.load_or_create(locus_dir=locus_dir,
                                  subset_DT=subset_DT,
                                  locus=locus,
                                  force_new_LD=force_new_LD,

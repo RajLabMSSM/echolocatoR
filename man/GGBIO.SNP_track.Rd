@@ -8,7 +8,7 @@ GGBIO.SNP_track(
   gr.snp,
   method = "original",
   labels_subset = c("Lead SNP", "Credible Set", "Consensus SNP"),
-  r2 = NULL,
+  color_r2 = F,
   show.legend = T,
   PP_threshold = 0.95,
   sig_cutoff = 5e-08
@@ -22,25 +22,20 @@ in \code{\link{GRanges}} format.}
 
 \item{labels_subset}{Which SNP groups to label.}
 
-\item{r2}{Whether color the points by LD r2.}
-
 \item{show.legend}{Whether to show legend.}
 
 \item{PP_threshold}{The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
 For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.}
+
+\item{r2}{Whether color the points by LD r2.}
 }
 \description{
 Uses \code{\link{ggbio}}.
 }
 \examples{
-data("BST1")
-finemap_DT <- BST1
-LD_SNP <- subset(finemap_DT, leadSNP==T)$SNP
-LD_sub <- LD_with_leadSNP(LD_matrix = LD_matrix, LD_SNP = LD_SNP)
-dat <- data.table:::merge.data.table(finemap_DT, LD_sub, by = "SNP", all.x = T)
+data("BST1");
 gr.snp <- DT_to_GRanges(dat)
-gr.snp_CHR <- biovizBase::transformDfToGr(dat, seqnames = "CHR", start = "POS", end = "POS")
-snp.track <- GGBIO.SNP_track(gr.snp=gr.snp, method = "original")
+snp.track <- GGBIO.SNP_track(gr.snp=gr.snp, method = "original", color_r2=F)
 }
 \seealso{
 Other plot: 

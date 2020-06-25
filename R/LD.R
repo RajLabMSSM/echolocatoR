@@ -35,7 +35,14 @@
 #' @param subset_DT The locus subset of the full summary stats file.
 #' @inheritParams finemap_pipeline
 #' @return A symmetric LD matrix of pairwise \emph{r} values.
-LD.load_or_create <- function(subset_path,
+#' @examples
+#' \dontrun{
+#' data("BST1"); data("locus_dir");
+#' locus_dir <- file.path("~/Desktop",locus_dir)
+#' # UK Biobank LD
+#' LD.load_or_create(locus_dir=locus_dir, subset_DT=BST1, locus="BST1", )
+#' }
+LD.load_or_create <- function(locus_dir,
                               subset_DT,
                               locus,
                               force_new_LD=F,
@@ -53,7 +60,6 @@ LD.load_or_create <- function(subset_path,
                               server=F,
                               remove_tmps=T,
                               nThreads=4){
-  locus_dir <- get_locus_dir(subset_path=subset_path)
   if(LD_reference=="UKB"){
     printer("LD:: Using UK Biobank LD reference panel...")
     LD_matrix <- LD.UKBiobank(subset_DT = subset_DT,
@@ -431,11 +437,11 @@ LD.1KG <- function(locus_dir,
   # locus <- "LRRK2"; locus_dir <- file.path("./Data/GWAS/Nalls23andMe_2019",locus); LD_reference="1KG_Phase1"; vcf_folder="./Data/Reference/1000_Genomes"; superpopulation="EUR"; vcf_folder="./Data/Reference/1000_Genomes"; min_r2=F; LD_block=F; LD_block_size=.7; min_Dprime=F;  remove_correlates=F; download_reference=T; subset_DT <- data.table::fread(file.path(locus_dir,"Multi-finemap/Multi-finemap_results.txt"))
     printer("LD:: Using 1000Genomes LD reference panel...")
     vcf_info <- LD.1KG_download_vcf(subset_DT=subset_DT,
-                                     locus_dir,
-                                     LD_reference=LD_reference,
-                                     vcf_folder=vcf_folder,
-                                     locus=locus,
-                                     download_reference=download_reference)
+                                    locus_dir=locus_dir,
+                                    LD_reference=LD_reference,
+                                    vcf_folder=vcf_folder,
+                                    locus=locus,
+                                    download_reference=download_reference)
     subset_vcf <- vcf_info$subset_vcf
     popDat <- vcf_info$popDat
     vcf.gz.path <- BCFTOOLS.filter_vcf(subset_vcf = subset_vcf,

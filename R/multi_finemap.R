@@ -83,7 +83,7 @@ find_consensus_SNPs <- function(finemap_dat,
 #' @keywords internal
 #' @examples
 #' \dontrun{
-#' data("BST1"); data("LD_matrix");
+#' data("BST1"); data("BST1_LD_matrix");
 #' subset_DT <- BST1
 #' finemap_method_list <- c("ABF","SUSIE")
 #' }

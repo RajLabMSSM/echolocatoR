@@ -115,7 +115,7 @@ Each tools will have the following columns:
 }
 \examples{
 \dontrun{
-data("BST1"); data("LD_matrix");
+data("BST1"); data("BST1_LD_matrix");
 subset_DT <- BST1
 finemap_method_list <- c("ABF","SUSIE")
 }

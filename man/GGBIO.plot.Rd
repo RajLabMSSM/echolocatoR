@@ -9,8 +9,9 @@
 \usage{
 GGBIO.plot(
   finemap_dat,
-  LD_matrix,
   locus_dir,
+  LD_matrix = NULL,
+  color_r2 = T,
   method_list = c("ABF", "FINEMAP", "SUSIE", "POLYFUN_SUSIE"),
   dot_summary = F,
   QTL_prefixes = NULL,
@@ -62,25 +63,24 @@ Uses \code{\link{ggbio}}.
 }
 \examples{
 \dontrun{
-data("BST1"); data("LD_matrix"); data("locus_dir");
-finemap_DT <- BST1
+data("BST1"); data("BST1_LD_matrix"); data("locus_dir");
 
 # Using NO annotations
-trk_plot <- GGBIO.plot(finemap_dat=finemap_DT, LD_matrix=LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, save_plot=F)
+trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, save_plot=F)
 
 Using NO annotations (dot plot summary instead of Manhattan plots for each fine-mapping tool)
 ### WARNING: Currently doesn't align as well due to the summary plot having a differnt x-axis.
-trk_plot <- GGBIO.plot(finemap_dat=finemap_DT, LD_matrix=LD_matrix, locus_dir=locus_dir, method_list=NULL, mean.PP=F, dot_summary=T, XGR_libnames=NULL, save_plot=F)
+trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, method_list=NULL, mean.PP=F, dot_summary=T, XGR_libnames=NULL, save_plot=F)
 
 
 # Using only XGR annotations
-trk_plot <- GGBIO.plot(finemap_dat=finemap_DT, LD_matrix=LD_matrix, locus_dir=locus_dir, XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes"), save_plot=F)
+trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes"), save_plot=F)
 
 # Using only Roadmap annotations
-trk_plot <- GGBIO.plot(finemap_dat=finemap_DT, LD_matrix=LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, Roadmap=T, Roadmap_query="monocyte", save_plot=F)
+trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, Roadmap=T, Roadmap_query="monocyte", save_plot=F)
 
 # Using only Nott_2019 annotations
-trk_plot <- GGBIO.plot(finemap_dat=finemap_DT, LD_matrix=LD_matrix, locus_dir=locus_dir, Nott_epigenome=T, XGR_libnames=NULL)
+trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, Nott_epigenome=T, XGR_libnames=NULL)
 }
 }
 \seealso{

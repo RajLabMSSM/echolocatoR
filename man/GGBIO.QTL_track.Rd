@@ -30,14 +30,10 @@ Plot QTL data
 }
 \examples{
 data("BST1")
-finemap_DT <- BST1
-LD_SNP <- subset(finemap_DT, leadSNP==T)$SNP
-LD_sub <- LD_with_leadSNP(LD_matrix = LD_matrix, LD_SNP = LD_SNP)
-dat <- data.table:::merge.data.table(finemap_DT, LD_sub, by = "SNP", all.x = T)
 gr.snp <- DT_to_GRanges(dat)
 ## Create fake QTL P-values
 gr.snp$fake_eQTL.P <- gr.snp$P  * c(1,.9,.7)
-qtl.track <- GGBIO.QTL_track(gr.snp=gr.snp, QTL_prefix="fake_eQTL", labels_subset=c("Lead SNP"))
+qtl.track <- GGBIO.QTL_track(gr.snp=gr.snp, QTL_prefix="fake_eQTL", labels_subset=c("Lead SNP"), color_r2=F)
 }
 \seealso{
 Other plot: 

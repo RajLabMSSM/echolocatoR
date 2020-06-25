@@ -169,10 +169,11 @@
 #' # LD matrix for storage purposes.
 #' lead_snp <- subset(finemap_DT, leadSNP)$SNP
 #' snp_list <-  finemap_DT[which(finemap_DT$SNP==lead_snp)-100:which(finemap_DT$SNP==lead_snp)+100,]$SNP
-#' LD_matrix <- readRDS("../Fine_Mapping/Data/GWAS/Nalls23andMe_2019/BST1/plink/UKB_LD.RDS")
-#' LD_matrix <- LD_matrix[snp_list, snp_list]
+#' BST1_LD_matrix <- readRDS("../Fine_Mapping/Data/GWAS/Nalls23andMe_2019/BST1/plink/UKB_LD.RDS")
+#' BST1_LD_matrix <- BST1_LD_matrix[snp_list, snp_list]
+#' usethis::use_data(BST1_LD_matrix, overwrite=T)
 #'  }
-"LD_matrix"
+"BST1_LD_matrix"
 
 
 

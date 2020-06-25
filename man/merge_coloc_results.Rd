@@ -16,8 +16,9 @@ merge_coloc_results(
 \item{all_obj}{Nested list object created by Jack.}
 
 \item{results_level}{Return coloc results at the
-"summary" (one row per Locus:eGene pair) or "snp" level (one row per SNP).
-@param save_path Directory where you want the merged results to be saved as a compressed .tsv file.}
+"summary" (one row per Locus:eGene pair) or "snp" level (one row per SNP).}
+
+\item{save_path}{Directory where you want the merged results to be saved as a compressed .tsv file.}
 }
 \description{
 Convert Jack's coloc results to \emph{echolocatoR} format
@@ -25,7 +26,7 @@ Convert Jack's coloc results to \emph{echolocatoR} format
 \examples{
 \dontrun{
 load("~/Desktop/Microglia_all_regions_Kunkle_2019_COLOC.RData")
-merged_results <- merge_coloc_results(all_obj=all_obj, save_path="~/Desktop/results")
+merged_results <- merge_coloc_results(all_obj=all_obj, results_level="snp", save_path="~/Desktop/results")
 }
 }
 \seealso{

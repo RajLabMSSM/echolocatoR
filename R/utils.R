@@ -240,6 +240,9 @@ zscore <- function(vec){
   return(z)
 }
 
+
+
+
 #' Interactive DT
 #'
 #' Generate an interactive data table with download buttons.
@@ -357,18 +360,6 @@ column_dictionary <- function(file_path){
   return(colDict)
 }
 
-
-# column_dictionary <- function(file_path){
-#   # Get the index of each column name
-#   # f <- data.table::fread(file_path, nrows = 0, header = T)
-#
-#   cmd <- paste(ifelse(endsWith(file_path,".gz"),"gunzip -c","cat"),
-#                file_path,"| head -1")
-#   # system(cmd)
-#   cNames <- colnames(data.table::fread(cmd=cmd))
-#   colDict <- setNames(1:length(cNames), cNames  )
-#   return(colDict)
-# }
 
 
 
@@ -875,6 +866,7 @@ example_fullSS <- function(fullSS_path="./Nalls23andMe_2019.fullSS_subset.tsv",
 
 
 
+
 #' Convert Jack's coloc results to \emph{echolocatoR} format
 #'
 #' @param all_obj Nested list object created by Jack.
@@ -886,7 +878,7 @@ example_fullSS <- function(fullSS_path="./Nalls23andMe_2019.fullSS_subset.tsv",
 #' @examples
 #' \dontrun{
 #' load("~/Desktop/Microglia_all_regions_Kunkle_2019_COLOC.RData")
-#' merged_results <- merge_coloc_results(all_obj=all_obj, save_path="~/Desktop/results")
+#' merged_results <- merge_coloc_results(all_obj=all_obj, results_level="snp", save_path="~/Desktop/results")
 #' }
 merge_coloc_results <- function(all_obj,
                         results_level=c("summary"),
@@ -919,7 +911,7 @@ merge_coloc_results <- function(all_obj,
   print(null_list)
 
   if(save_path!=F){
-    data.table::fwrite(merged_results, file.path(save_path,"merged_coloc_results.tsv.gz"), sep="\t")
+    data.table::fwrite(merged_results, file.path(save_path,paste0("merged_coloc_results.",results_level,".tsv.gz")), sep="\t")
   }
   return(merged_results)
 }

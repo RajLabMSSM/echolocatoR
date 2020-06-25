@@ -5,7 +5,7 @@
 \title{Procure an LD matrix for fine-mapping}
 \usage{
 LD.load_or_create(
-  subset_path,
+  locus_dir,
   subset_DT,
   locus,
   force_new_LD = F,
@@ -68,5 +68,13 @@ Options:
 \item Download raw vcf file from 1KG and compute LD on the fly.
 \item Compute LD fon the fly from a user-supplied vcf file.
 \item Use a user-supplied pre-computed LD-matrix.
+}
+}
+\examples{
+\dontrun{
+data("BST1"); data("locus_dir");
+locus_dir <- file.path("~/Desktop",locus_dir)
+# UK Biobank LD
+LD.load_or_create(locus_dir=locus_dir, subset_DT=BST1, locus="BST1", )
 }
 }

@@ -23,15 +23,8 @@ in \code{\link{GRanges}} format.}
 Uses \code{\link{ggbio}}.
 }
 \examples{
-data("BST1"); data("LD_matrix");
-finemap_DT <- BST1
-#finemap_DT <- data.table::fread("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/LRRK2/Multi-finemap/Multi-finemap_results.txt")
-#LD_matrix <- readRDS("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/LRRK2/plink/UKB_LD.RDS")
-LD_SNP <- subset(finemap_DT, leadSNP==T)$SNP
-LD_sub <- LD_with_leadSNP(LD_matrix = LD_matrix, LD_SNP = LD_SNP)
-dat <- data.table:::merge.data.table(finemap_DT, LD_sub, by = "SNP", all.x = T)
-gr.snp <- DT_to_GRanges(dat)
-gr.snp_CHR <- biovizBase::transformDfToGr(dat, seqnames = "CHR", start = "POS", end = "POS")
+data("BST1");
+gr.snp_CHR <- biovizBase::transformDfToGr(BST1, seqnames = "CHR", start = "POS", end = "POS")
 track.genes <- GGBIO.transcript_model_track(gr.snp_CHR, max_transcripts=1)
 }
 \seealso{
