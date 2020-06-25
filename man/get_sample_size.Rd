@@ -17,6 +17,7 @@ Other general:
 \code{\link{dt.replace}()},
 \code{\link{example_fullSS}()},
 \code{\link{get_os}()},
+\code{\link{merge_coloc_results}()},
 \code{\link{startup_image}()},
 \code{\link{tryFunc}()}
 }

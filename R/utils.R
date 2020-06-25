@@ -871,3 +871,56 @@ example_fullSS <- function(fullSS_path="./Nalls23andMe_2019.fullSS_subset.tsv",
                      sep="\t")
   return(fullSS_path)
 }
+
+
+
+
+#' Convert Jack's coloc results to \emph{echolocatoR} format
+#'
+#' @param all_obj Nested list object created by Jack.
+#' @param results_level Return coloc results at the
+#'  "summary" (one row per Locus:eGene pair) or "snp" level (one row per SNP).
+#' @param save_path Directory where you want the merged results to be saved as a compressed .tsv file.
+#' @family general
+#' @keywords internal
+#' @examples
+#' \dontrun{
+#' load("~/Desktop/Microglia_all_regions_Kunkle_2019_COLOC.RData")
+#' merged_results <- merge_coloc_results(all_obj=all_obj, save_path="~/Desktop/results")
+#' }
+merge_coloc_results <- function(all_obj,
+                        results_level=c("summary"),
+                        nThread=4,
+                        verbose=T,
+                        save_path=F){
+  null_list<<-NULL
+  printer("Gathering coloc results at",results_level,"level...")
+  merged_results <- parallel::mclapply(names(all_obj), function(locus){
+    printer("- Locus =",locus,v=verbose)
+    locus_obj <- all_obj[[locus]]
+    parallel::mclapply(names(locus_obj), function(egene){
+      printer("eGene =",egene,v=verbose)
+      egene_obj <- locus_obj[[egene]]
+      if(results_level=="snp"){
+        results <- egene_obj$object$results
+        if(!is.null(results)){
+          results <- cbind(Locus=locus,results)
+        } else {null_list <<- append(null_list, setNames(locus, egene))}
+      } else{
+        results <- egene_obj$df
+        if(!is.null(results)){
+          results <- cbind(Locus=locus,gene=egene,results)
+        } else {null_list <<- append(null_list, setNames(locus, egene))}
+      }
+      return(results)
+    }, mc.cores=nThread) %>% data.table::rbindlist()
+  }, mc.cores = 1)  %>% data.table::rbindlist()
+  printer("NULL results detected in",length(null_list),"Locus:eGene pairs.")
+  print(null_list)
+
+  if(save_path!=F){
+    data.table::fwrite(merged_results, file.path(save_path,"merged_coloc_results.tsv.gz"), sep="\t")
+  }
+  return(merged_results)
+}
+

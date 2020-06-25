@@ -29,6 +29,7 @@ Other general:
 \code{\link{dt.replace}()},
 \code{\link{get_os}()},
 \code{\link{get_sample_size}()},
+\code{\link{merge_coloc_results}()},
 \code{\link{startup_image}()},
 \code{\link{tryFunc}()}
 }

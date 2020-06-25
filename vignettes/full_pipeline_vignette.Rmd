@@ -27,7 +27,7 @@ knitr::opts_knit$set(root.dir = root.dir)
 # knitr::opts_chunk$get("root.dir")
 
 ## Build vignettes
-## This will generate a /doc folder with the lmotted html files.
+## This will generate a /doc folder with the documentation html files.
 ## Go to GitHub and enable GitHub pages, selecting "branch/doc"
 # devtools::build_vignettes(quiet = F, clean=F)
 # https://resources.github.com/whitepapers/github-and-rstudio/
