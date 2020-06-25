@@ -20,12 +20,26 @@ NOTT_2019.plac_seq_plot(
   index_SNP = NULL,
   return_consensus_overlap = T,
   show_arches = T,
+  highlight_plac = F,
   show_regulatory_rects = T,
-  save_annot = F
+  save_annot = F,
+  point_size = 2,
+  height = 7,
+  width = 7,
+  dpi = 300
 )
 }
 \description{
 Plot brain cell-specific interactome data
+}
+\examples{
+\dontrun{
+data("BST1"); data("locus_dir");
+
+trks_plus_lines <- NOTT_2019.plac_seq_plot(finemap_dat=BST1, locus_dir=file.path("~/Desktop",locus_dir), highlight_plac=T)
+# Zoom in
+trks_plus_lines <- NOTT_2019.plac_seq_plot(finemap_dat=BST1, locus_dir=file.path("~/Desktop",locus_dir), zoom_window=500000, highlight_plac=T)
+}
 }
 \seealso{
 Other NOTT_2019: 
