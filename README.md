@@ -1,4 +1,4 @@
-<center><h1> )))))))   echolocatoR   ((((((( </h1></center>  
+<center><h1> )    )   )  ) ))) [🦇 echolocatoR  🦇](https://rajlabmssm.github.io/echolocatoR/) ((( (  (   (    ( </h1></center>  
 
 __*echolocatoR*__ is an R package for automating statistical and functional fine-mapping with extensive API access to datasets.  
 
@@ -13,10 +13,7 @@ devtools::install_github("RajLabMSSM/echolocatoR")
 
 ## Vignettes
 
-For vignettes and example workflows, see the following pages:   
-### [Full pipeline vignette](https://rajlabmssm.github.io/echolocatoR/doc/full_pipeline_vignette)   
-### [Plotting vignette](https://rajlabmssm.github.io/echolocatoR/doc/plotting_vignette)  
-
+Example vignettes can be found under **Articles**.  
 
 ## Workflow  
 

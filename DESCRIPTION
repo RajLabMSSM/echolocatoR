@@ -3,7 +3,8 @@ Type: Package
 Title: Automated genomic fine-mapping
 Version: 0.1.0
 Authors@R: as.person(c(
-    "Brian Schilder <brian_schilder@alumni.brown.edu> [aut, cre]"
+    "Brian Schilder <brian_schilder@alumni.brown.edu> [aut, cre]",
+    "Jack Humphrey [ctb]"
   ))
 Description: Automated statistical and functional fine-mapping pipeline with extensive API access to datasets.  
 License: MIT + file LICENSE
