@@ -11,13 +11,17 @@ devtools::install_github("RajLabMSSM/echolocatoR")
 *NOTE*: While this GitHub repo is still private, you need to use a token to install __*echolocatoR*__  using the `auth_token` argument (see [here for details](http://devtools.r-lib.org/reference/install_github)).  
 
 
-## Vignettes
+## Documentation
 
-Example vignettes can be found under **Articles**.  
+### [Full Documentation Website](https://rajlabmssm.github.io/echolocatoR/)  
+
+### [Full pipeline vignette](https://rajlabmssm.github.io/echolocatoR/articles/full_pipeline_vignette.html)  
+
+### [Plotting vignette](https://rajlabmssm.github.io/echolocatoR/articles/plotting_vignette.html)  
 
 ## Workflow  
 
-![echoFlow](./inst/images/PD_Finemapping_Flowchart_plus.png)
+![echoFlow](./images/PD_Finemapping_Flowchart_plus.png)
 
 ## Fine-mapping Tools  
 
