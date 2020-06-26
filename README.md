@@ -13,7 +13,7 @@ devtools::install_github("RajLabMSSM/echolocatoR")
 
 ## Documentation
 
-### [Full Documentation Website](https://rajlabmssm.github.io/echolocatoR/)  
+### [FuDumentation Wewsite](https://rajlabmssm.github.io/echolocatoR/)  
 
 ### [Full pipeline vignette](https://rajlabmssm.github.io/echolocatoR/articles/full_pipeline_vignette.html)  
 
