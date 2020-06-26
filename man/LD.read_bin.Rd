@@ -14,3 +14,26 @@ Depending on which parameters you give \emph{plink} when calculating LD, you get
 When it produces bin and bim files, use this function to create a proper LD matrix.
 For example, this happens when you try to calculate D' with the \code{--r dprime-signed} flag (instead of just r).
 }
+\seealso{
+Other LD: 
+\code{\link{LD.1KG_download_vcf}()},
+\code{\link{LD.1KG}()},
+\code{\link{LD.LD_blocks}()},
+\code{\link{LD.UKBiobank}()},
+\code{\link{LD.calculate_LD}()},
+\code{\link{LD.dprime_table}()},
+\code{\link{LD.filter_vcf_population}()},
+\code{\link{LD.filter_vcf_rsamtools}()},
+\code{\link{LD.filter_vcf}()},
+\code{\link{LD.leadSNP_block}()},
+\code{\link{LD.load_or_create}()},
+\code{\link{LD.plink_LD}()},
+\code{\link{LD.plot}()},
+\code{\link{LD.read_ld_table}()},
+\code{\link{LD.run_plink_LD}()},
+\code{\link{LD.translate_population}()},
+\code{\link{LD.vcf_to_bed}()},
+\code{\link{get_vcf_folder}()}
+}
+\concept{LD}
+\keyword{internal}

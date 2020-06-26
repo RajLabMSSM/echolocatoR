@@ -20,3 +20,26 @@ LD.filter_vcf_population(
 \description{
 Subset a vcf by superpopulation
 }
+\seealso{
+Other LD: 
+\code{\link{LD.1KG_download_vcf}()},
+\code{\link{LD.1KG}()},
+\code{\link{LD.LD_blocks}()},
+\code{\link{LD.UKBiobank}()},
+\code{\link{LD.calculate_LD}()},
+\code{\link{LD.dprime_table}()},
+\code{\link{LD.filter_vcf_rsamtools}()},
+\code{\link{LD.filter_vcf}()},
+\code{\link{LD.leadSNP_block}()},
+\code{\link{LD.load_or_create}()},
+\code{\link{LD.plink_LD}()},
+\code{\link{LD.plot}()},
+\code{\link{LD.read_bin}()},
+\code{\link{LD.read_ld_table}()},
+\code{\link{LD.run_plink_LD}()},
+\code{\link{LD.translate_population}()},
+\code{\link{LD.vcf_to_bed}()},
+\code{\link{get_vcf_folder}()}
+}
+\concept{LD}
+\keyword{internal}

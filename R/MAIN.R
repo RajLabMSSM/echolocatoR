@@ -276,12 +276,12 @@
 #'  Options include:
 #'  \describe{
 #'  \item{"UKB"}{A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See \href{https://www.biorxiv.org/content/10.1101/807792v2}{Wiessbrod et al. (2019)} for more details.}
-#'  \item{"1KG_Phase1"}{Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.}
-#'  \item{"1KG_Phase3"}{Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.}
+#'  \item{"1KGphase1"}{Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.}
+#'  \item{"1KGphase3"}{Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.}
 #'  }
 #'  @param superpopulation Subset your LD reference panel by superopulation.
 #'  Setting the superpopulation is not currently possible when \code{LD_reference="UKB"}.
-#'  \href{https://www.internationalgenome.org/faq/which-populations-are-part-your-study/}{1KG_Phase1 options} include:
+#'  \href{https://www.internationalgenome.org/faq/which-populations-are-part-your-study/}{1KGphase1 options} include:
 #'  \describe{
 #'  \item{"AFR"}{African [descent]}
 #'  \item{"AMR"}{Ad-mixed American}
@@ -350,7 +350,7 @@ finemap_pipeline <- function(locus,
                              N_controls=NULL,
                              proportion_cases="calculate",
 
-                             LD_reference="1KG_Phase1",
+                             LD_reference="1KGphase1",
                              superpopulation="EUR",
                              download_reference=T,
                              LD_download_method="direct",
@@ -602,7 +602,7 @@ finemap_loci <- function(loci,
                          N_controls=NULL,
                          proportion_cases="calculate",
 
-                         LD_reference="1KG_Phase1",
+                         LD_reference="1KGphase1",
                          superpopulation="EUR",
                          LD_download_method="direct",
                          topVariants=3,

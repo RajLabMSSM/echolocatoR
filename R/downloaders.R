@@ -14,13 +14,13 @@ downloader <- function(input_url,
                        show_progress=T,
                        continue=T,
 
-                       nThreads=4,
+                       nThread=4,
                        alternate=T){
   if(download_method=="axel"){
     out_file <- axel(input_url=input_url,
                      output_path=output_path,
                      background=background,
-                     nThreads=nThreads,
+                     nThread=nThread,
                      force_overwrite=force_overwrite,
                      quiet=quiet,
                      alternate=alternate)
@@ -80,7 +80,7 @@ wget <- function(input_url,
 axel <- function(input_url,
                  output_path,
                  background=F,
-                 nThreads=4,
+                 nThread=4,
                  force_overwrite=F,
                  quiet=F,
                  alternate=T){
@@ -90,9 +90,8 @@ axel <- function(input_url,
     print("+ Overwriting pre-existing file.")
     suppressWarnings(file.remove(out_file))
   }
-
   cmd <- paste("axel",input_url,
-               "-n",nThreads,
+               "-n",nThread,
                ifelse(force_overwrite,"","--no-clobber"),
                "-o",out_file,
                ifelse(quiet,"-q",""),

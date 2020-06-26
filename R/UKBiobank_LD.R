@@ -17,7 +17,7 @@ LD.UKBiobank <- function(subset_DT=NULL,
                          server=T,
                          download_full_ld=F,
                          download_method="direct",
-                         nThreads=4,
+                         nThread=4,
                          return_matrix=F,
                          remove_tmps=T){
 
@@ -36,7 +36,7 @@ LD.UKBiobank <- function(subset_DT=NULL,
                                  background=T,
                                  force_overwrite=F,
                                  download_method="direct",
-                                 nThreads=4){
+                                 nThread=4){
     for(f in LD.prefixes){
       gz.url <- file.path(alkes_url,paste0(f,".gz"))
       npz.url <- file.path(alkes_url,paste0(f,".npz"))
@@ -46,7 +46,7 @@ LD.UKBiobank <- function(subset_DT=NULL,
           out.file <- axel(input_url = furl,
                            output_path = file.path(locus_dir,"LD"),
                            background = background,
-                           nThreads = nThreads,
+                           nThread = nThread,
                            force_overwrite = force_overwrite)
         }
         if(tolower(download_method)=="wget"){

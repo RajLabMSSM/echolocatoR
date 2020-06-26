@@ -1,0 +1,8 @@
+pandoc: 2.3.1
+pkgdown: 1.5.1
+pkgdown_sha: ~
+articles:
+  full_pipeline_vignette: full_pipeline_vignette.html
+  plotting_vignette: plotting_vignette.html
+last_built: 2020-06-25T23:36Z
+

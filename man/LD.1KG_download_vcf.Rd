@@ -6,12 +6,14 @@
 \usage{
 LD.1KG_download_vcf(
   subset_DT,
-  LD_reference = "1KG_Phase1",
-  vcf_folder = "./Data/Reference/1000_Genomes",
+  LD_reference = "1KGphase1",
+  vcf_folder = NULL,
   locus_dir,
   locus,
-  download_reference = T,
-  whole_vcf = F
+  download_reference = F,
+  whole_vcf = F,
+  download_method = "wget",
+  nThread = 4
 )
 }
 \arguments{
@@ -22,3 +24,32 @@ However, if you wish to keep these full files (which can be quite large) set \co
 \description{
 Download vcf subset from 1000 Genomes
 }
+\examples{
+\dontrun{
+data("BST1");
+subset_DT <- BST1
+}
+}
+\seealso{
+Other LD: 
+\code{\link{LD.1KG}()},
+\code{\link{LD.LD_blocks}()},
+\code{\link{LD.UKBiobank}()},
+\code{\link{LD.calculate_LD}()},
+\code{\link{LD.dprime_table}()},
+\code{\link{LD.filter_vcf_population}()},
+\code{\link{LD.filter_vcf_rsamtools}()},
+\code{\link{LD.filter_vcf}()},
+\code{\link{LD.leadSNP_block}()},
+\code{\link{LD.load_or_create}()},
+\code{\link{LD.plink_LD}()},
+\code{\link{LD.plot}()},
+\code{\link{LD.read_bin}()},
+\code{\link{LD.read_ld_table}()},
+\code{\link{LD.run_plink_LD}()},
+\code{\link{LD.translate_population}()},
+\code{\link{LD.vcf_to_bed}()},
+\code{\link{get_vcf_folder}()}
+}
+\concept{LD}
+\keyword{internal}

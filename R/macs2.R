@@ -8,7 +8,7 @@
 
 MACS2.download_full_bigwig <- function(bigWig.paths='Nott_2019',
                                        output.path = "results/resources/MACS2",
-                                       nThreads=4,
+                                       nThread=4,
                                        force_overwrite = F){
   dir.create(output.path, showWarnings = F, recursive = T)
   if(all(bigWig.paths=='Nott_2019')){
@@ -20,7 +20,7 @@ MACS2.download_full_bigwig <- function(bigWig.paths='Nott_2019',
     out.path <- axel(input_url = URL,
                      output_path = output.path,
                      background = F, force_overwrite = force_overwrite,
-                     nThreads = nThreads)
+                     nThread = nThread)
     return(out.path)
   }) %>% unlist()
     return(bigWig.paths)

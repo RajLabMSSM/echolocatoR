@@ -8,9 +8,9 @@ LD.1KG(
   locus_dir,
   subset_DT,
   locus,
-  LD_reference = "1KG_Phase1",
+  LD_reference = "1KGphase1",
   superpopulation = "EUR",
-  vcf_folder = "./Data/Reference/1000_Genomes",
+  vcf_folder = NULL,
   download_reference = T,
   min_r2 = F,
   LD_block = F,
@@ -18,7 +18,9 @@ LD.1KG(
   min_Dprime = F,
   remove_correlates = F,
   remove_tmps = T,
-  fillNA = 0
+  fillNA = 0,
+  nThread = 4,
+  download_method = "wget"
 )
 }
 \arguments{
@@ -50,3 +52,32 @@ Then uses \emph{plink} to calculate LD on the fly.
 This approach is taken, because other API query tools have limitations with the window size being queried.
 This approach does not have this limitations, allowing you to fine-map loci more completely.
 }
+\examples{
+\dontrun{
+data("BST1"); data("locus_dir");
+LD_matrix <- LD.1KG(locus_dir=file.path("~/Desktop",locus_dir), subset_DT=BST1, locus="BST1", LD_reference="1KGphase1")
+}
+}
+\seealso{
+Other LD: 
+\code{\link{LD.1KG_download_vcf}()},
+\code{\link{LD.LD_blocks}()},
+\code{\link{LD.UKBiobank}()},
+\code{\link{LD.calculate_LD}()},
+\code{\link{LD.dprime_table}()},
+\code{\link{LD.filter_vcf_population}()},
+\code{\link{LD.filter_vcf_rsamtools}()},
+\code{\link{LD.filter_vcf}()},
+\code{\link{LD.leadSNP_block}()},
+\code{\link{LD.load_or_create}()},
+\code{\link{LD.plink_LD}()},
+\code{\link{LD.plot}()},
+\code{\link{LD.read_bin}()},
+\code{\link{LD.read_ld_table}()},
+\code{\link{LD.run_plink_LD}()},
+\code{\link{LD.translate_population}()},
+\code{\link{LD.vcf_to_bed}()},
+\code{\link{get_vcf_folder}()}
+}
+\concept{LD}
+\keyword{internal}

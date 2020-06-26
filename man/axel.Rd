@@ -8,7 +8,7 @@ axel(
   input_url,
   output_path,
   background = F,
-  nThreads = 4,
+  nThread = 4,
   force_overwrite = F,
   quiet = F,
   alternate = T

@@ -13,7 +13,7 @@ downloader(
   quiet = F,
   show_progress = T,
   continue = T,
-  nThreads = 4,
+  nThread = 4,
   alternate = T
 )
 }

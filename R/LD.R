@@ -35,6 +35,8 @@
 #' @param subset_DT The locus subset of the full summary stats file.
 #' @inheritParams finemap_pipeline
 #' @return A symmetric LD matrix of pairwise \emph{r} values.
+#' @family LD
+#' @keywords internal
 #' @examples
 #' \dontrun{
 #' data("BST1"); data("locus_dir");
@@ -44,9 +46,9 @@
 #' }
 LD.load_or_create <- function(locus_dir,
                               subset_DT,
-                              locus,
+                              locus=NULL,
                               force_new_LD=F,
-                              LD_reference="1KG_Phase1",
+                              LD_reference="1KGphase1",
                               superpopulation="EUR",
                               download_reference=T,
                               download_method="direct",
@@ -59,34 +61,38 @@ LD.load_or_create <- function(locus_dir,
                               verbose=T,
                               server=F,
                               remove_tmps=T,
-                              nThreads=4){
+                              nThread=4){
+  if(is.null(locus)){locus <- basename(locus_dir)}
   if(LD_reference=="UKB"){
     printer("LD:: Using UK Biobank LD reference panel...")
     LD_matrix <- LD.UKBiobank(subset_DT = subset_DT,
                               locus_dir = locus_dir,
-                               force_new_LD = force_new_LD,
-                               chimera = server,
-                               download_method = download_method,
-                               nThreads = nThreads,
-                               return_matrix = T,
-                               remove_tmps = remove_tmps)
-  } else if (LD_reference == "1KG_Phase1" | LD_reference == "1KG_Phase3") {
-    LD_path <- file.path(locus_dir,"LD",paste0(LD_reference,"_LD.RDS"))
+                              force_new_LD = force_new_LD,
+                              chimera = server,
+                              download_method = download_method,
+                              nThread = nThread,
+                              return_matrix = T,
+                              remove_tmps = remove_tmps)
+  } else if (LD_reference == "1KGphase1" | LD_reference == "1KGphase3") {
+    LD_path <- file.path(locus_dir,"LD",paste0(locus, LD_reference,"_LD.RDS"))
     if(!file.exists(LD_path) | force_new_LD==T){
       printer("+ Computing LD matrix...", verbose)
       LD_matrix <- LD.1KG(locus_dir = locus_dir,
-                           subset_DT = subset_DT,
-                           locus = locus,
-                           LD_reference = LD_reference,
-                           superpopulation = superpopulation,
-                           download_reference = download_reference,
+                          subset_DT = subset_DT,
+                          locus = locus,
+                          vcf_folder = vcf_folder,
+                          LD_reference = LD_reference,
+                          superpopulation = superpopulation,
+                          download_reference = download_reference,
 
-                           min_r2 = min_r2,
-                           LD_block = LD_block,
-                           LD_block_size = LD_block_size,
-                           min_Dprime = min_Dprime,
-                           remove_correlates = remove_correlates,
-                           fillNA = fillNA)
+                          min_r2 = min_r2,
+                          LD_block = LD_block,
+                          LD_block_size = LD_block_size,
+                          min_Dprime = min_Dprime,
+                          remove_correlates = remove_correlates,
+                          fillNA = fillNA,
+                          nThread = nThread,
+                          download_method = download_method)
       # Save LD matrix
       printer("+ Saving LD matrix to:",LD_path, v=verbose)
       saveRDS(LD_matrix, file = LD_path)
@@ -104,7 +110,8 @@ LD.load_or_create <- function(locus_dir,
 #' Translate superopulation acronyms
 #'
 #' Ensures a common ontology for synonynmous superpopulation names.
-#'
+#' @family LD
+#' @keywords internal
 #' @param superpopulation Three-letter superpopulation name.
 LD.translate_population <- function(superpopulation){
   pop_dict <- list("AFA"="AFR", "CAU"="EUR", "HIS"="AMR",
@@ -120,6 +127,8 @@ LD.translate_population <- function(superpopulation){
 #'
 #' Uses \code{gaston} to plot a SNP-annotated LD matrix.
 #' @inheritParams finemap_pipeline
+#' @family LD
+#' @keywords internal
 #' @param span This is very computationally intensive,
 #' so you need to limit the number of SNPs with span.
 #' If \code{span=10}, only 10 SNPs upstream and 10 SNPs downstream of the lead SNP will be plotted.
@@ -129,14 +138,15 @@ LD.plot <- function(LD_matrix,
   leadSNP = subset(subset_DT, leadSNP==T)$SNP
   lead_index = match(leadSNP, row.names(LD_matrix))
   if(dim(LD_matrix)[1]<span){
-    start = lead_index - dim(LD_matrix)[1]
-    end = lead_index + dim(LD_matrix)[1]
+    start_pos = lead_index - dim(LD_matrix)[1]
+    end_pos = lead_index + dim(LD_matrix)[1]
   } else{
-    start = lead_index - span
-    end = lead_index + span
+    start_pos = lead_index - span
+    end_pos = lead_index + span
   }
   sub_DT <- subset(subset_DT, SNP %in% rownames(LD_matrix))
-  gaston::LD.plot( LD_matrix[start:end, start:end], snp.positions = sub_DT$POS[start:end] )
+  gaston::LD.plot( LD_matrix[start_pos:end_pos, start_pos:end_pos],
+                   snp.positions = sub_DT$POS[start_pos:end_pos] )
 }
 
 
@@ -144,24 +154,44 @@ LD.plot <- function(LD_matrix,
 
 #' Download vcf subset from 1000 Genomes
 #'
+#' @family LD
+#' @keywords internal
+#' @param query_by_regions You can make queries with \code{tabix} in two different ways:
+#' \describe{
+#' \item{\code{query_by_regions=F} \emph{(default)}}{Return a vcf with all positions between the min/max in \code{subset_DT} Takes up more storage but is MUCH faster}
+#' \item{\code{query_by_regions=T}}{Return a vcf with only the exact positions present in \code{subset_DT}. Takes up less storage but is MUCH slower}
+#' }
 #' @inheritParams finemap_pipeline
+#' @examples
+#' \dontrun{
+#' data("BST1");
+#' subset_DT <- BST1
+#' subset_vcf.popDat <- LD.1KG_download_vcf(subset_DT=BST1, LD_reference="1KGphase1", locus_dir=file.path("~/Desktop",locus_dir))
+#' }
 LD.1KG_download_vcf <- function(subset_DT,
-                                LD_reference="1KG_Phase1",
-                                vcf_folder="./Data/Reference/1000_Genomes",
+                                LD_reference="1KGphase1",
+                                vcf_folder=NULL,
                                 locus_dir,
-                                locus,
+                                locus=NULL,
                                 download_reference=T,
-                                whole_vcf=F){
+                                whole_vcf=F,
+                                download_method="wget",
+                                force_new_vcf=F,
+                                nThread=4,
+                                query_by_regions=F,
+                                verbose=T){
   ## http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/
   # Download portion of vcf from 1KG website
-
+  if(is.null(locus)){locus <- basename(locus_dir)}
+  vcf_folder <- get_vcf_folder(vcf_folder=vcf_folder,
+                               locus_dir=locus_dir)
   # Don't use the chr prefix: https://www.internationalgenome.org/faq/how-do-i-get-sub-section-vcf-file/
   subset_DT$CHR <- gsub("chr","",subset_DT$CHR)
   chrom <- unique(subset_DT$CHR)
 
   # PHASE 3 DATA
-  if(LD_reference=="1KG_Phase3"){
-    printer("LD Reference Panel = 1KG_Phase3")
+  if(LD_reference=="1KGphase3"){
+    printer("LD Reference Panel = 1KGphase3", v=verbose)
     if(download_reference){## With internet
       vcf_URL <- paste("ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ALL.chr",chrom,
                        ".phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz",sep="")
@@ -173,8 +203,8 @@ LD.1KG_download_vcf <- function(subset_DT,
     }
 
     # PHASE 1 DATA
-  } else if (LD_reference=="1KG_Phase1") {
-    printer("LD Reference Panel = 1KG_Phase1")
+  } else if (LD_reference=="1KGphase1") {
+    printer("LD Reference Panel = 1KGphase1", v=verbose)
     if(download_reference){## With internet
       vcf_URL <- paste("ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20110521/ALL.chr",chrom,
                        ".phase1_release_v3.20101123.snps_indels_svs.genotypes.vcf.gz", sep="")
@@ -185,42 +215,63 @@ LD.1KG_download_vcf <- function(subset_DT,
       popDat_URL = file.path(vcf_folder, "phase1_integrated_calls.20101123.ALL.panel")
     }
   }
-  phase <- gsub("1KG_","",LD_reference)
+  phase <- gsub("1KG","",LD_reference)
   popDat <-  data.table::fread(text=gsub(",\t",",",readLines(popDat_URL)),
                                header = F, sep="\t",  fill=T, stringsAsFactors = F,
-                               col.names = c("sample","population","superpop","platform"))
+                               col.names = c("sample","population","superpop","platform"),
+                               nThread = nThread)
   # library(Rsamtools); #BiocManager::install("Rsamtools")
-  subset_vcf <- file.path(vcf_folder, phase,
+  subset_vcf <- file.path(vcf_folder,
                           ifelse(whole_vcf, paste(LD_reference, paste0("chr",chrom),"vcf", sep="."),
-                                                 paste(locus,"subset.vcf",sep="_")))
+                                                 paste(locus,LD_reference,"vcf",sep=".")))
   # Create directory if it doesn't exist
   dir.create(path = dirname(subset_vcf), recursive = T, showWarnings = F)
   # Download and subset vcf if the subset doesn't exist already
-  if(!file.exists(subset_vcf)){
+  if(!file.exists(subset_vcf) | force_new_vcf){
+    printer("LD:: Querying 1000 Genomes API for VCF subset", v=verbose)
     if(whole_vcf){
-      region <= ""
-      locus=""
+      region <- ""
+      locus <- ""
+      out.file <- downloader(input_url = vcf_URL,
+                             output_path = dirname(subset_vcf),
+                             download_method = download_method,
+                             nThread = nThread)
     } else {
-      # Specify exact positions
-      regions.bed <- file.path(locus_dir,"LD","regions.tsv")
-      data.table::fwrite(list(paste0(subset_DT$CHR), sort(subset_DT$POS)),
-                         file=regions.bed, sep="\t")
-      # data.table::fwrite(list(paste0(subset_DT$CHR,":", subset_DT$POS,"-",subset_DT$POS)),
-      #                    file=regions.bed, sep="\t")
-      region <- paste("-R",regions.bed)
+      # Download tabix subset
+      if(query_by_regions){
+        ### Using region file (-R flag)
+        regions.bed <- file.path(locus_dir,"LD","regions.tsv")
+        data.table::fwrite(list(paste0(subset_DT$CHR), sort(subset_DT$POS)),
+                           file=regions.bed, sep="\t")
+        regions <- paste("-R",regions.bed)
+        tabix_cmd <- paste("tabix",
+                           "-fh",
+                           "-p vcf",
+                           vcf_URL,
+                           gsub("\\./","",regions),
+                           ">",
+                           gsub("\\./","",subset_vcf) )
+        printer(tabix_cmd)
+        system(tabix_cmd)
+      } else {
+        ### Using coordinates range (MUCH faster!)
+        coord_range <- paste0(unique(subset_DT$CHR)[1],":",
+                              min(subset_DT$POS),"-",max(subset_DT$POS))
+        tabix_cmd <- paste("tabix",
+                           "-fh",
+                           "-p vcf",
+                           vcf_URL,
+                           coord_range,
+                           ">",
+                           gsub("\\./","",subset_vcf) )
+        printer(tabix_cmd)
+        system(tabix_cmd)
+      }
     }
-    # Download tabix subset
-    tabix_cmd <- paste("tabix -fh",vcf_URL,
-                       # Specifying the SNP subset drastically reduces compute time
-                       gsub("\\./","",region),
-                       ">",
-                       gsub("\\./","",subset_vcf) )
-    printer(tabix_cmd)
-    # system("ml tabix")
-    system(tabix_cmd)
+
     vcf_name <- paste(basename(vcf_URL), ".tbi", sep="")
-    file.remove(vcf_name)
-  } else {printer("+ Identified matching VCF subset file. Importing...", subset_vcf)}
+    out <- suppressWarnings(file.remove(vcf_name))
+  } else {printer("+ Identified existing VCF subset file. Importing...", subset_vcf, v=verbose)}
   return(list(subset_vcf = subset_vcf,
               popDat = popDat))
 }
@@ -233,6 +284,8 @@ LD.1KG_download_vcf <- function(subset_DT,
 #' Filter a vcf by min/max coordinates
 #'
 #' Uses the \code{Rsamtools} package to filter a vcf fiile.
+#'
+#' @family LD
 #' @keywords internal
 LD.filter_vcf_rsamtools <- function(){
   gr <- GenomicRanges::makeGRangesFromDataFrame(df = subset_DT[,c("CHR","POS")],
@@ -242,8 +295,10 @@ LD.filter_vcf_rsamtools <- function(){
   # Rsamtools::scanTabix(file = vcf_URL, param = gr)
   # library(Rsamtools)
   tbx <- Rsamtools::TabixFile(file = vcf_URL,  index = paste0(vcf_URL,".tbi"))
-  countTabix(tbx, param=gr)
+  Rsamtools::fi
 }
+
+
 
 
 #' Filter a vcf by min/max coordinates
@@ -252,6 +307,8 @@ LD.filter_vcf_rsamtools <- function(){
 #' @param subset_vcf Path to the locus subset vcf.
 #' @param popDat The metadata file listing the superpopulation to which each sample belongs.
 #' @inheritParams finemap_pipeline
+#' @family LD
+#' @keywords internal
 LD.filter_vcf <- function(subset_vcf,
                           popDat,
                           superpopulation,
@@ -290,6 +347,8 @@ LD.filter_vcf <- function(subset_vcf,
 #' Subset a vcf by superpopulation
 #'
 #' @inheritParams LD.filter_vcf
+#' @family LD
+#' @keywords internal
 LD.filter_vcf_population <- function(subset_vcf,
                                      subset_DT,
                                      locus_dir,
@@ -320,6 +379,8 @@ LD.filter_vcf_population <- function(subset_vcf,
 #' Uses plink to convert vcf to BED.
 #' @param vcf.gz.subset Path to the gzipped locus subset vcf.
 #' @param locus_dir Locus-specific results directory.
+#' @family LD
+#' @keywords internal
 LD.vcf_to_bed <- function(vcf.gz.subset,
                           locus_dir){
   printer("LD:PLINK:: Converting vcf.gz to .bed/.bim/.fam")
@@ -330,6 +391,7 @@ LD.vcf_to_bed <- function(vcf.gz.subset,
 
 
 
+
 #' Calculate LD
 #'
 #' Calculate a pairwise LD matrix from a vcf file using \emph{plink}.
@@ -337,6 +399,8 @@ LD.vcf_to_bed <- function(vcf.gz.subset,
 #' @param ld_window Set --r/--r2 max variant ct pairwise distance (usu. 10).
 #' @param ld_format Whether to produce an LD matrix with
 #' r (\code{ld_format="r"}) or D' (\code{ld_format="D"}) as the pairwise SNP correlation metric.
+#' @family LD
+#' @keywords internal
 LD.calculate_LD <- function(locus_dir,
                             ld_window=1000, # 10000000
                             ld_format="r"){
@@ -372,16 +436,23 @@ LD.calculate_LD <- function(locus_dir,
 #' When it produces bin and bim files, use this function to create a proper LD matrix.
 #' For example, this happens when you try to calculate D' with the \code{--r dprime-signed} flag (instead of just r).
 #' @param ld.path Directory that contains the bin/bim files.
+#' @family LD
+#' @keywords internal
 LD.read_bin <- function(ld.path){
   bim <- data.table::fread(file.path(dirname(ld.path), "plink.bim"), col.names = c("CHR","SNP","V3","POS","A1","A2"))
   bin.vector <- readBin(ld.path, what = "numeric", n=length(bim$SNP)^2)
   ld.matrix <- matrix(bin.vector, nrow = length(bim$SNP), dimnames = list(bim$SNP, bim$SNP))
 }
 
+
+
+
 #' Create LD matrix from plink output.
 #'
 #' Depending on which parameters you give \emph{plink} when calculating LD, you get different file outputs.
 #' When it produces an LD table, use this function to create a proper LD matrix.
+#' @family LD
+#' @keywords internal
 LD.read_ld_table <- function(ld.path, snp.subset=F){
   # subset_DT <- data.table::fread(file.path(locus_dir,"Multi-finemap/Multi-finemap_results.txt")); snp.subset <- subset_DT$SNP
   ld.table <- data.table::fread(ld.path, nThread = 4)
@@ -405,6 +476,20 @@ LD.read_ld_table <- function(ld.path, snp.subset=F){
 
 
 
+#' Get VCF storage folder
+#' @family LD
+#' @keywords internal
+#' @examples
+#' data("locus_dir")
+#' vcf_folder <- get_vcf_folder(locus_dir=locus_dir)
+get_vcf_folder <- function(vcf_folder=NULL,
+                           locus_dir=NULL){
+  if(is.null(vcf_folder)){
+    vcf_folder <- file.path(locus_dir, "LD")
+    out <- dir.create(vcf_folder, showWarnings = F, recursive = T)
+  }
+ return(vcf_folder)
+}
 
 
 
@@ -419,37 +504,50 @@ LD.read_ld_table <- function(ld.path, snp.subset=F){
 #'
 #' @param fillNA When pairwise LD (r) between two SNPs is \code{NA}, replace with 0.
 #' @inheritParams finemap_pipeline
+#' @family LD
+#' @keywords internal
+#' @examples
+#' \dontrun{
+#' data("BST1"); data("locus_dir");
+#' LD_matrix <- LD.1KG(locus_dir=file.path("~/Desktop",locus_dir), subset_DT=BST1, locus="BST1", LD_reference="1KGphase1")
+#' }
 LD.1KG <- function(locus_dir,
-                    subset_DT,
-                    locus,
-                    LD_reference="1KG_Phase1",
-                    superpopulation="EUR",
-                    vcf_folder="./Data/Reference/1000_Genomes",
-                    download_reference=T,
-                    min_r2=F,
-                    LD_block=F,
-                    LD_block_size=.7,
-                    min_Dprime=F,
-                    remove_correlates=F,
-                    remove_tmps=T,
-                    fillNA=0){
-          # Quickstart
-  # locus <- "LRRK2"; locus_dir <- file.path("./Data/GWAS/Nalls23andMe_2019",locus); LD_reference="1KG_Phase1"; vcf_folder="./Data/Reference/1000_Genomes"; superpopulation="EUR"; vcf_folder="./Data/Reference/1000_Genomes"; min_r2=F; LD_block=F; LD_block_size=.7; min_Dprime=F;  remove_correlates=F; download_reference=T; subset_DT <- data.table::fread(file.path(locus_dir,"Multi-finemap/Multi-finemap_results.txt"))
-    printer("LD:: Using 1000Genomes LD reference panel...")
-    vcf_info <- LD.1KG_download_vcf(subset_DT=subset_DT,
-                                    locus_dir=locus_dir,
-                                    LD_reference=LD_reference,
-                                    vcf_folder=vcf_folder,
-                                    locus=locus,
-                                    download_reference=download_reference)
-    subset_vcf <- vcf_info$subset_vcf
-    popDat <- vcf_info$popDat
-    vcf.gz.path <- BCFTOOLS.filter_vcf(subset_vcf = subset_vcf,
-                                       popDat = popDat,
-                                       superpopulation = superpopulation,
-                                       remove_tmp = F)
-    LD.vcf_to_bed(vcf.gz.subset = vcf.gz.path,
-                     locus_dir = locus_dir)
+                   subset_DT,
+                   locus=NULL,
+                   LD_reference="1KGphase1",
+                   superpopulation="EUR",
+                   vcf_folder=NULL,
+                   download_reference=T,
+                   min_r2=F,
+                   LD_block=F,
+                   LD_block_size=.7,
+                   min_Dprime=F,
+                   remove_correlates=F,
+                   remove_tmps=T,
+                   fillNA=0,
+                   nThread=4,
+                   download_method="wget"){
+  # locus <- "LRRK2"; data("locus_dir"); LD_reference="1KGphase1"; vcf_folder=NULL; superpopulation="EUR";  min_r2=F; LD_block=F; LD_block_size=.7; min_Dprime=F;  remove_correlates=F; download_reference=T;
+  if(is.null(locus)){locus <- basename(locus_dir)}
+  vcf_folder <- get_vcf_folder(vcf_folder = vcf_folder,
+                               locus_dir = locus_dir)
+  printer("LD:: Using 1000Genomes LD reference panel...")
+  vcf_info <- LD.1KG_download_vcf(subset_DT=subset_DT,
+                                  locus_dir=locus_dir,
+                                  LD_reference=LD_reference,
+                                  vcf_folder=vcf_folder,
+                                  locus=locus,
+                                  download_reference=download_reference,
+                                  download_method=download_method,
+                                  nThread=nThread)
+  subset_vcf <- vcf_info$subset_vcf
+  popDat <- vcf_info$popDat
+  vcf.gz.path <- BCFTOOLS.filter_vcf(subset_vcf = subset_vcf,
+                                     popDat = popDat,
+                                     superpopulation = superpopulation,
+                                     remove_tmp = F)
+  LD.vcf_to_bed(vcf.gz.subset = vcf.gz.path,
+                   locus_dir = locus_dir)
     # Calculate pairwise LD for all SNP combinations
     #### "Caution that the LD matrix has to be correlation matrix" -SuSiER documentation
     ### https://stephenslab.github.io/susieR/articles/finemapping_summary_statistics.html
@@ -487,6 +585,8 @@ LD.1KG <- function(locus_dir,
 #'
 #' This appriach computes an LD matrix of D' (instead of r or r2) from a vcf.
 #' See \code{\link{LD.run_plink_LD}} for a faster (but less flexible) alternative to computing LD.
+#' @family LD
+#' @keywords internal
 LD.dprime_table <- function(SNP_list, plink_folder){
   printer("+ Creating DPrime table")
   system( paste("plink", "--bfile",file.path(plink_folder,"LD"),
@@ -521,6 +621,8 @@ LD.dprime_table <- function(SNP_list, plink_folder){
 #' @param bim A bim file produced by \emph{plink}
 #' @param plink_folder Locus-specific LD output folder.
 #' @param r_format Whether to fill the matrix with \code{r} or \code{r2}.
+#' @family LD
+#' @keywords internal
 LD.run_plink_LD <- function(bim,
                             plink_folder,
                             r_format="r"){
@@ -539,6 +641,8 @@ LD.run_plink_LD <- function(bim,
 #' Calculate LD
 #'
 #' Use \emph{plink} to calculate LD from a vcf.
+#' @family LD
+#' @keywords internal
 LD.plink_LD <-function(leadSNP,
                        plink_folder,
                        min_r2=F,
@@ -602,6 +706,8 @@ LD.plink_LD <-function(leadSNP,
 #'
 #' Uses \emph{plink} to group highly correlated SNPs into LD blocks.
 #'
+#' @family LD
+#' @keywords internal
 LD.LD_blocks <- function(plink_folder,
                          LD_block_size=.7){
   printer("++ Calculating LD blocks...")
@@ -627,6 +733,9 @@ LD.LD_blocks <- function(plink_folder,
 }
 
 
+#' Identify the LD block in which the lead SNP resides
+#' @family LD
+#' @keywords internal
 LD.leadSNP_block <- function(leadSNP, plink_folder, LD_block_size=.7){
   printer("Returning lead SNP's block...")
   blocks <- LD.LD_blocks(plink_folder, LD_block_size)

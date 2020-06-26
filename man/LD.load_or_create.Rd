@@ -7,9 +7,9 @@
 LD.load_or_create(
   locus_dir,
   subset_DT,
-  locus,
+  locus = NULL,
   force_new_LD = F,
-  LD_reference = "1KG_Phase1",
+  LD_reference = "1KGphase1",
   superpopulation = "EUR",
   download_reference = T,
   download_method = "direct",
@@ -22,7 +22,7 @@ LD.load_or_create(
   verbose = T,
   server = F,
   remove_tmps = T,
-  nThreads = 4
+  nThread = 4
 )
 }
 \arguments{
@@ -78,3 +78,26 @@ locus_dir <- file.path("~/Desktop",locus_dir)
 LD.load_or_create(locus_dir=locus_dir, subset_DT=BST1, locus="BST1", )
 }
 }
+\seealso{
+Other LD: 
+\code{\link{LD.1KG_download_vcf}()},
+\code{\link{LD.1KG}()},
+\code{\link{LD.LD_blocks}()},
+\code{\link{LD.UKBiobank}()},
+\code{\link{LD.calculate_LD}()},
+\code{\link{LD.dprime_table}()},
+\code{\link{LD.filter_vcf_population}()},
+\code{\link{LD.filter_vcf_rsamtools}()},
+\code{\link{LD.filter_vcf}()},
+\code{\link{LD.leadSNP_block}()},
+\code{\link{LD.plink_LD}()},
+\code{\link{LD.plot}()},
+\code{\link{LD.read_bin}()},
+\code{\link{LD.read_ld_table}()},
+\code{\link{LD.run_plink_LD}()},
+\code{\link{LD.translate_population}()},
+\code{\link{LD.vcf_to_bed}()},
+\code{\link{get_vcf_folder}()}
+}
+\concept{LD}
+\keyword{internal}
