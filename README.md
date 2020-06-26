@@ -1,4 +1,4 @@
-<center><h1> )    )   )  ) ))) [🦇 echolocatoR  🦇](https://rajlabmssm.github.io/echolocatoR/) ((( (  (   (    ( </h1></center>  
+<center><h1> )    )   )  ) ))) 🦇 echolocatoR  🦇 ((( (  (   (    ( </h1></center>  
 
 __*echolocatoR*__ is an R package for automating statistical and functional fine-mapping with extensive API access to datasets.  
 
@@ -8,7 +8,7 @@ To install, run the following command in R:
 ```R
 devtools::install_github("RajLabMSSM/echolocatoR")
 ```  
-**NOTE**: While this GitHub repo is still private, you need to use a token to install *echolocatoR* using the `auth_token` argument (see [here for details](http://devtools.r-lib.org/reference/install_github)).  
+*NOTE*: While this GitHub repo is still private, you need to use a token to install __*echolocatoR*__  using the `auth_token` argument (see [here for details](http://devtools.r-lib.org/reference/install_github)).  
 
 
 ## Vignettes
@@ -23,7 +23,7 @@ Example vignettes can be found under **Articles**.
 
 ### Currently implemented  
 - [ABF](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)  
-- [susieR](https://github.com/stephenslab/susieR)  
+- [SuSiE](https://github.com/stephenslab/susieR)  
 - [FINEMAP](http://www.christianbenner.com)  
 - [PolyFun](https://github.com/omerwe/polyfun)
 - [GCTA-COJO](https://cnsgenomics.com/software/gcta/#COJO)
