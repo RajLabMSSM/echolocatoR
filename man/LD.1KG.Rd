@@ -7,7 +7,7 @@
 LD.1KG(
   locus_dir,
   subset_DT,
-  locus,
+  locus = NULL,
   LD_reference = "1KGphase1",
   superpopulation = "EUR",
   vcf_folder = NULL,

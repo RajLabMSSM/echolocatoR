@@ -9,17 +9,28 @@ LD.1KG_download_vcf(
   LD_reference = "1KGphase1",
   vcf_folder = NULL,
   locus_dir,
-  locus,
-  download_reference = F,
+  locus = NULL,
+  download_reference = T,
   whole_vcf = F,
   download_method = "wget",
-  nThread = 4
+  force_new_vcf = F,
+  nThread = 4,
+  query_by_regions = F,
+  verbose = T
 )
 }
 \arguments{
 \item{download_reference}{When acquiring LD matrixes,
 the default is to delete the full vcf or npz files after \emph{echolocator} has extracted the necssary subset.
 However, if you wish to keep these full files (which can be quite large) set \code{download_reference=T}.}
+
+\item{query_by_regions}{You can make queries with \code{tabix} in two different ways:
+\describe{
+\item{\code{query_by_regions=F} \emph{(default)}}{Return a vcf with all positions between the min/max in \code{subset_DT} Takes up more storage but is MUCH faster}
+\item{\code{query_by_regions=T}}{Return a vcf with only the exact positions present in \code{subset_DT}. Takes up less storage but is MUCH slower}
+}}
+
+\item{verbose}{Whether \emph{echolocatoR} should be verbose or silent.}
 }
 \description{
 Download vcf subset from 1000 Genomes
@@ -28,6 +39,7 @@ Download vcf subset from 1000 Genomes
 \dontrun{
 data("BST1");
 subset_DT <- BST1
+subset_vcf.popDat <- LD.1KG_download_vcf(subset_DT=BST1, LD_reference="1KGphase1", locus_dir=file.path("~/Desktop",locus_dir))
 }
 }
 \seealso{

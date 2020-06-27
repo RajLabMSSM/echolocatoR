@@ -15,9 +15,10 @@ Create new conda env from list of dependencies
 \seealso{
 Other conda: 
 \code{\link{CONDA.activate_env}()},
-\code{\link{CONDA.create_env}()},
+\code{\link{CONDA.create_echoR_env}()},
 \code{\link{CONDA.env_from_yaml}()},
-\code{\link{CONDA.find_env_path}()},
+\code{\link{CONDA.find_env_Rlib}()},
+\code{\link{CONDA.find_python_path}()},
 \code{\link{CONDA.install}()}
 }
 \concept{conda}

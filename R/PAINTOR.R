@@ -178,7 +178,7 @@ PAINTOR.prepare_LD.transethnic <- function(subset_path,
     qtl <- QTL_datasets[i]
     pop <- QTL_populations[i]
     printer("+ PAINTOR::",pop)
-    LD_matrix <- LD.load_or_create(subset_path=subset_path,
+    LD_matrix <- LD.load_or_create(locus_dir=locus_dir,
                                    subset_DT=subset_DT,
                                    locus=locus,
                                    download_reference = T,
@@ -250,7 +250,7 @@ PAINTOR.prepare_LD <- function(subset_path,
   printer("++ PAINTOR:: Creating LD Matrix File...")
   finemap_dat <- data.table::fread(file.path(subset_path,"Multi-finemap/Multi-finemap_results.txt"), nThread = 4)
   if(is.null(LD_matrix)){
-    LD_matrix <- LD.load_or_create(subset_path=subset_path,
+    LD_matrix <- LD.load_or_create(locus_dir=locus_dir,
                                    subset_DT=finemap_dat,
                                    locus=locus,
                                    download_reference = T,

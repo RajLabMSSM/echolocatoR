@@ -36,5 +36,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Brian Schilder \email{brian_schilder@alumni.brown.edu}
 
+Other contributors:
+\itemize{
+  \item Jack Humphrey [contributor]
+}
+
 }
 \keyword{internal}

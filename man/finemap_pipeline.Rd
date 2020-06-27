@@ -38,7 +38,7 @@ finemap_pipeline(
   LD_reference = "1KGphase1",
   superpopulation = "EUR",
   download_reference = T,
-  LD_download_method = "direct",
+  download_method = "direct",
   min_POS = NA,
   max_POS = NA,
   min_MAF = NA,

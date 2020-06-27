@@ -37,7 +37,7 @@ finemap_loci(
   proportion_cases = "calculate",
   LD_reference = "1KGphase1",
   superpopulation = "EUR",
-  LD_download_method = "direct",
+  download_method = "direct",
   topVariants = 3,
   download_reference = T,
   min_POS = NA,

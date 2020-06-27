@@ -69,7 +69,12 @@ CONDA.find_env_Rlib <- function(conda_env="echoR"){
 
 
 
-#' Install necessary command line and python tools
+
+#' Create conda env for \emph{echolocatoR}
+#'
+#' Create a new env (or update and existing one)
+#' with the necessary Python, R, and command line packages
+#' to run \emph{echolocatoR}.
 #'
 #' \describe{
 #' \item{plink}{https://anaconda.org/bioconda/plink}
