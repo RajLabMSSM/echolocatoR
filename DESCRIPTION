@@ -18,6 +18,7 @@ biocViews:
 Imports: 
     magrittr,
     R.utils,
+    remotes,
     dplyr,
     data.table,
     reticulate,
@@ -38,8 +39,7 @@ Imports:
     BiocGenerics,
     IRanges,
     EnsDb.Hsapiens.v75,
-    GenomeInfoDb, 
-    XGR,
+    GenomeInfoDb,  
     ggnetwork,
     RCircos,
     biomaRt,
@@ -47,14 +47,14 @@ Imports:
     biovizBase,
     ensembldb, 
     ggbio,
-    rtracklayer, 
-    SummarizedExperiment,
-    biomaRt,
-    snpStats
+    rtracklayer
 Remotes:
   github::stephenslab/susieR@0.9.0,
   github::thomasp85/patchwork,
-  github::kvnkuang/pbmcapply
+  github::kvnkuang/pbmcapply,
+  bioc::3.3/SummarizedExperiment,
+  bioc::3.3/XGR,
+  bioc::3.3/snpStats
 Suggests: 
     SparkR,
     Rsamtools,

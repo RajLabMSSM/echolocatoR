@@ -30,8 +30,10 @@
 
 # R package creation:
 ## http://r-pkgs.had.co.nz
+
 # R package remote dependencies:
 ## https://cran.r-project.org/web/packages/devtools/vignettes/dependencies.html
+
 # regex commands:
 ## http://www.endmemo.com/program/R/gsub.php
 
