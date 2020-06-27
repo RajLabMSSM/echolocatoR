@@ -43,7 +43,7 @@ POLYFUN.read_parquet <- function(parquet_path,
       data.table::data.table()
   } else {
     printer("+ Importing parquet file with `pandas (Python)`")
-    python <- CONDA.find_env_path(conda_env = conda_env)
+    python <- CONDA.find_python_path(conda_env = conda_env)
     reticulate::use_python(python = python)
     pd <- reticulate::import("pandas")
     parquor <- pd$read_parquet(parquet_path)
@@ -62,7 +62,7 @@ POLYFUN.read_parquet <- function(parquet_path,
 POLYFUN.help <- function(polyfun=NULL,
                          conda_env="echoR"){
   polyfun <- POLYFUN.find_polyfun_folder(polyfun_path = polyfun)
-  python <- CONDA.find_env_path(conda_env = conda_env)
+  python <- CONDA.find_python_path(conda_env = conda_env)
   cmd <- paste(python,
                file.path(polyfun,"polyfun.py"),
                "--help")
@@ -184,7 +184,7 @@ POLYFUN.get_precomputed_priors <- function(polyfun=NULL,
                                            force_new_priors=F,
                                            remove_tmps=F,
                                            conda_env="echoR"){
-  python <- CONDA.find_env_path(conda_env = conda_env)
+  python <- CONDA.find_python_path(conda_env = conda_env)
   polyfun <- POLYFUN.find_polyfun_folder(polyfun_path = polyfun)
   dataset <- basename(dirname(locus_dir))
   locus <- basename(locus_dir)
@@ -259,7 +259,7 @@ POLYFUN.munge_summ_stats <- function(polyfun=NULL,
                                      min_MAF=0.001,
                                      force_new_munge=F,
                                      conda_env="echoR"){
-  python <- CONDA.find_env_path(conda_env = conda_env)
+  python <- CONDA.find_python_path(conda_env = conda_env)
   polyfun <- POLYFUN.find_polyfun_folder(polyfun_path = polyfun)
   PF.output.path <- file.path(locus_dir, "PolyFun")
   dir.create(PF.output.path, showWarnings = F, recursive = T)
@@ -424,7 +424,7 @@ POLYFUN.compute_priors <- function(polyfun=NULL,
   # polyfun="./echolocatoR/tools/polyfun"; parametric=T;  weights.path=file.path(polyfun,"example_data/weights."); annotations.path=file.path(polyfun,"example_data/annotations."); munged.path= "./Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/sumstats_munged.parquet"; parametric=T; dataset="Nalls23andMe_2019"; prefix="PD_GWAS"; compute_ldscores=F; allow_missing_SNPs=T; chrom="all"; finemap_dat=NULL; locus="LRRK2"; server=F; ref.prefix="/sc/arion/projects/pd-omics/data/1000_Genomes/Phase1/1000G.mac5eur.";
   # CONDA.activate_env(conda_env = conda_env)
   # PATH_cmd <- "source ~/.bash_profile &&"
-  python <- CONDA.find_env_path(conda_env = conda_env)
+  python <- CONDA.find_python_path(conda_env = conda_env)
   polyfun <- POLYFUN.find_polyfun_folder(polyfun_path = polyfun)
 
 

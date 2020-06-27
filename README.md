@@ -4,16 +4,43 @@ __*echolocatoR*__ is an R package for automating statistical and functional fine
 
 ## Installation  
 
+### R  
 To install, run the following command in R:  
 ```R
 devtools::install_github("RajLabMSSM/echolocatoR")
 ```  
 *NOTE*: While this GitHub repo is still private, you need to use a token to install __*echolocatoR*__  using the `auth_token` argument (see [here for details](http://devtools.r-lib.org/reference/install_github)).  
 
+### Conda
+
+__*echolocatoR*__ also requires some software only available in Python and command line. 
+The easiest way to install all of these (and make sure they play well together!) 
+is to make a [*conda*](https://docs.conda.io/en/latest/) environment specifically for __*echolocatoR*__.  
+
+__*echolocatoR*__ includes a function to make this as easimples possible.
+It automatically creates a new env called "e`"echoR"`nd installs all the necessary sofware.  (using the [reticulate](https://rstudio.github.io/reticulate/)) 
+If you don't have conda installed yet, it will do that for you too.  
+It returns the path where your new env resides.  
+```R
+env_path <- CONDA.create_echoR_env(conda_env="echoR")
+```
+
+To make sure __*echolocatoR*__ uses the packages in this env, 
+you can then supply the env name to the `finemap_loci()` function using `conda_env="echoR"`.
+
+
+### Axel
+
+*Axel* is a command line tool that drastically accelerates large file downloads 
+by using multiple cores. This is very useful for the large UK Bibank pre-computed LD files.
+Unfortunately, it does require a bit of extra setup to use, but you can find the [instructions here](https://github.com/axel-download-accelerator/axel).
+
+Once you've successfully installed *Axel*, you can tell `finemap_loci()` to use it with `download_method = "axel"`.  
+
 
 ## Documentation
 
-### [Full ducumentation website](https://rajlabmssm.github.io/echolocatoR/)  
+### [Full documentation website](https://rajlabmssm.github.io/echolocatoR/)  
 
 ### [Full pipeline vignette](https://rajlabmssm.github.io/echolocatoR/articles/full_pipeline_vignette.html)  
 

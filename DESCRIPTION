@@ -12,7 +12,7 @@ URL: https://github.com/RajLabMSSM/echolocatoR
 BugReports: https://github.com/RajLabMSSM/echolocatoR/issues
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 3.5.0)
+Depends: R (>= 3.5.1)
 SystemRequirements: Python (>= 3.7.0)
 biocViews:
 Imports: 
@@ -28,8 +28,7 @@ Imports:
     tidyverse,
     RColorBrewer,
     pals,
-    patchwork,
-    S4Vectors,
+    patchwork, 
     htmltools,
     stringr, 
     shades,

@@ -51,7 +51,10 @@ MOTIFBREAKR <- function(snp_list,
                         method="default",
                         verbose=T,
                         calculate_all_pval=F){
-  # library(echolocatoR); library(motifbreakR); library(BSgenome); save_rds=T; dataset_dir <- "./results/GWAS/Nalls23andMe_2019"; pwmList=NULL; organism="Hsapiens";  threshold=.85; method = "default"; verbose=T; show.neutral = F;
+  # library(echolocatoR); library(motifbreakR); library(BSgenome); save_rds=T; dataset_dir <- "./results/GWAS/Nalls23andMe_2019";
+  # pwmList=NULL; organism="Hsapiens";  threshold=.85; method = "default"; verbose=T; show.neutral = F; calculate_all_pval=T; save_rds=T;
+  # data("merged_DT"); snp_list <- unique(subset(merged_DT, Support>0 | leadSNP)$SNP);
+
   library(BSgenome)
   # Prepare input
   printer("+ MOTIFBREAKR:: Turning SNP list into motifbreakR input format.", v=verbose)
@@ -72,7 +75,7 @@ MOTIFBREAKR <- function(snp_list,
                                          method = method,
                                          show.neutral = show.neutral,
                                          verbose = verbose);
-  # Calculat p-values
+  # Calculate p-values
   if(calculate_all_pval){
     printer("+ MOTIFBREAKR:: Calculating p-values for all SNPs...", v=verbose)
     mb.results <- motifbreakR::calculatePvalue(mb.results)
