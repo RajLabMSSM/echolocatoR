@@ -17,8 +17,8 @@ SystemRequirements: Python (>= 3.7.0)
 biocViews:
 Imports: 
     magrittr,
-    R.utils,
-    remotes,
+    R.utils, 
+    BiocManager,
     dplyr,
     data.table,
     reticulate,
@@ -34,7 +34,7 @@ Imports:
     stringr, 
     shades,
     readxl,
-    openxlsx,
+    openxlsx, 
     GenomicRanges,
     BiocGenerics,
     IRanges,
@@ -52,9 +52,9 @@ Remotes:
   github::stephenslab/susieR@0.9.0,
   github::thomasp85/patchwork,
   github::kvnkuang/pbmcapply,
-  bioc::3.3/SummarizedExperiment,
-  bioc::3.3/XGR,
-  bioc::3.3/snpStats
+  bioc::3.1/SummarizedExperiment,
+  bioc::3.1/XGR,
+  bioc::3.1/snpStats
 Suggests: 
     SparkR,
     Rsamtools,
@@ -62,7 +62,6 @@ Suggests:
     png,
     knitr,
     rmarkdown,
-    SparkR,
     gaston, 
     motifbreakR,
     SNPlocs.Hsapiens.dbSNP142.GRCh37,
