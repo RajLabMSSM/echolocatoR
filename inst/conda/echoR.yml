@@ -23,10 +23,17 @@ dependencies:
   - macs2
   - r-base
   - r-devtools
-  - r-reticulate
+  - r-reticulate  
   - r-rlang
-  - r-biocmanager
   - r-data.table
   - r-ggplot2
   - r-ckmeans.1d.dp
   - r-tidyverse
+  - r-foreign
+  - r-refgenome
+  - r-xgr
+  - r-biocmanager
+  - bioconductor-snpstats
+  - bioconductor-ggbio  
+  - bioconductor-ensdb.hsapiens.v75
+ 

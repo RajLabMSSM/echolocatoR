@@ -75,17 +75,23 @@ MOTIFBREAKR <- function(snp_list,
                                          method = method,
                                          show.neutral = show.neutral,
                                          verbose = verbose);
+  # Save tmp results
+  if(save_rds){
+    rds_path <- file.path(dataset_dir,'_genome_wide','motifbreakR','motifbreakR_results.rds');
+    printer("+ MOTIFBREAKR:: Saving results ==>",rds_path, v=verbose)
+    dir.create(dirname(rds_path),showWarnings = F, recursive = T);
+    # printer("+ MOTIFBREAKR:: Saving results ==>", rds_path);
+    saveRDS(mb.results, rds_path);
+  }
   # Calculate p-values
   if(calculate_all_pval){
     printer("+ MOTIFBREAKR:: Calculating p-values for all SNPs...", v=verbose)
     mb.results <- motifbreakR::calculatePvalue(mb.results)
   }
-  # Save results
+  # Save final results
   if(save_rds){
-    rds_path <- file.path(dataset_dir,'_genome_wide','motifbreakR','motifbreakR_results.rds');
-    printer("+ MOTIFBREAKR:: Saving reults ==>",rds_path, v=verbose)
-    dir.create(dirname(rds_path),showWarnings = F, recursive = T);
-    # printer("+ MOTIFBREAKR:: Saving results ==>", rds_path);
+    rds_path <- file.path(dataset_dir,'_genome_wide','motifbreakR','motifbreakR_results.p_values.rds');
+    printer("+ MOTIFBREAKR:: Saving results ==>",rds_path, v=verbose)
     saveRDS(mb.results, rds_path);
   }
   return(mb.results)
