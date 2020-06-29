@@ -14,7 +14,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE} 
+```{r, include = FALSE, error = TRUE} 
 root.dir <- "~/Desktop"
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -79,7 +79,7 @@ we instead provide an example subset of the full summary stats.
 
 ```{r fullSS}
 # fullSS_path <- "./nallsEtAl2019_allSamples_allVariants.mod.txt.gz"
-fullSS_path <- example_fullSS(fullSS_path="~/Desktop/Nalls23andMe_2019.fullSS_subset.tsv")
+fullSS_path <- example_fullSS(fullSS_path="~/Desktop/Nalls23andMe_2019.fullSS_subset.tsv") 
 ```
 
 ## Run fine-mapping pipeline  
@@ -97,13 +97,13 @@ You can adjust this separately from `bp_distance` so that you don't have rerun t
 ```{r Run fine-mapping pipeline}
 Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS 
                                           top_SNPs = top_SNPs,  
-                                          results_dir = "./echolocatoR_results",
+                                          results_dir = "~/Desktop/results",
                                           loci = c("BST1","MEX3C"),# top_SNPs$Locus,
                                           dataset_name = "Nalls23andMe_2019",
                                           dataset_type = "GWAS",  
                                           force_new_subset = F,
                                           force_new_LD = F,
-                                          force_new_finemap = T,
+                                          force_new_finemap = F,
                                           remove_tmps = T,
                                           
                  # SUMMARY STATS ARGUMENTS
@@ -117,7 +117,7 @@ Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS
                  
                  # FILTERING ARGUMENTS
                  bp_distance = 500000*2,
-                 min_MAF = 0.001, 
+                 min_MAF = 0.001,  
                  trim_gene_limits = F,
                  
                  # FINE-MAPPING ARGUMENTS

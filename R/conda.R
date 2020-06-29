@@ -4,6 +4,37 @@
 # ~~~~~~~~~~~~~# ~~~~~~~~~~~~~# ~~~~~~~~~~~~~
 
 
+printer <- function(..., v=T){if(v){print(paste(...))}}
+
+
+
+#' Install reticulate
+#'
+#' \emph{reticulate} often doesn't install very well via CRAN.
+#' This function helps do it correctly.
+CONDA.install_reticulate <- function(dependencies=c("devtools",
+                                                    "reticulate",
+                                                    "lattice",
+                                                    "jsonlite",
+                                                    "Matrix",
+                                                    "rappdirs",
+                                                    "Rcpp")){
+  if("reticulate" %in% installed.packages()){
+    print("CONDA:: `reticulate` already installed.")
+  } else{
+    required_packages <- dependencies[ ! dependencies %in% installed.packages() ]
+    if(length(required_packages)>0){
+      for(lib in required_packages){
+        install.packages(lib, dependencies=T)
+      }
+    }
+  }
+}
+
+
+
+
+
 
 
 #' Install conda if it's missing
@@ -80,12 +111,11 @@ CONDA.find_env_Rlib <- function(conda_env="echoR"){
 #' \item{plink}{https://anaconda.org/bioconda/plink}
 #' \item{tabix}{https://anaconda.org/bioconda/tabix}
 #' }
-#'
 #' @family conda
 #' @param envname The conda environment where you want to install \emph{plink}.
 #' By default uses \emph{echoR}, the conda environment distributed with \emph{echolocatoR}.
 CONDA.create_echoR_env <- function(conda_env="echoR",
-                                   python_version=3.7,
+                                   python_version=NULL,
                                    channels=c("conda-forge","bioconda","r"),
                                    python_packages=c("pandas>=0.25.0",
                                                      "pyarrow",
@@ -95,25 +125,27 @@ CONDA.create_echoR_env <- function(conda_env="echoR",
                                                      "rpy2",
                                                      "scipy",
                                                      "pandas-plink"),
-                                   r_packages=c("r>=3.5.1",
-                                                "r-base",
-                                                "r-devtools",
-                                                "r-reticulate",
-                                                "r-data.table",
-                                                "r-ggplot2",
-                                                "r-wavethresh",
-                                                "r-lattice",
-                                                "r-ckmeans.1d.dp",
-                                                "r-stringi",
-                                                "r-matrixstats",
-                                                "r-expm",
-                                                "r-xgr",
-                                                "r-rlang"),
+                                   r_packages=c("r-base",
+                                                # "r>=3.6.3",
+                                                "r-devtools"
+                                                # "r-biocmanager",
+                                                # "r-reticulate",
+                                                # "r-data.table",
+                                                # "r-ggplot2",
+                                                # "r-wavethresh",
+                                                # "r-lattice",
+                                                # "r-ckmeans.1d.dp",
+                                                # "r-stringi",
+                                                # "r-matrixstats",
+                                                # "r-expm",
+                                                # "r-rlang",
+                                                # "r-xgr",
+                                                ),
                                    cli_packages=c("tabix",
                                                   "plink",
                                                   "macs2"),
                                    force_install=F,
-                                   auth_token=github_pat(quiet)){
+                                   auth_token=devtools::github_pat()){
   # Make sure conda is installed to begin with
   CONDA.install()
   # conda_path <- reticulate::conda_binary()
@@ -152,27 +184,6 @@ CONDA.env_from_yaml <- function(yaml_path=system.file("conda","echoR.yml",packag
 }
 
 
-
-
-#' Create new conda env from list of dependencies
-#' @keywords internal
-#' @family conda
-CONDA.env_from_list <- function(libraries = c("numpy",
-                                                  "scipy",
-                                                  "scikit-learn",
-                                                  "pandas",
-                                                  "tqdm",
-                                                  "pyarrow",
-                                                  "bitarray",
-                                                  "networkx",
-                                                  "rpy2",
-                                                  "r-ckmeans.1d.dp")){
-  # NOTE: version specification must use quotes
-  cmd <- paste("conda create -n polyfun_venv python=3.7.3",
-               "numpy scipy scikit-learn 'pandas>=0.25.0'",
-               paste(libraries, collapse=" "))
-  print(cmd)
-}
 
 
 

@@ -43,7 +43,7 @@ MOTIFBREAKR.filter_by_metadata <- function(mb.results,
 #' }
 MOTIFBREAKR <- function(snp_list,
                         save_rds=T,
-                        dataset_dir,
+                        dataset_dir="./results",
                         pwmList=NULL,
                         organism="Hsapiens",
                         threshold=.85,

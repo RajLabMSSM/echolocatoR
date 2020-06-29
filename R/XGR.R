@@ -1,10 +1,18 @@
 # DeepBlueR: Alternate source of annotation files
 ## https://bioconductor.org/packages/release/bioc/vignettes/DeepBlueR/inst/doc/DeepBlueR.html#listing-experiments
 
+# INSTALLATION
+## CRAN version no longer works. Follow these instructions instead:
+## https://github.com/hfang-bristol/XGR/issues/10
+# > BiocManager::install("remotes")
+# > BiocManager::install("hfang-bristol/XGR", dependencies=T)
+
 
 # TUTORIALS
 # http://xgr.r-forge.r-project.org/#xenrichergenes
 # http://galahad.well.ox.ac.uk:3020/R/ds2
+
+
 
 #' Name annotation file
 #'

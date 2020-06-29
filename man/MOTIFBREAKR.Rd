@@ -15,7 +15,7 @@
 MOTIFBREAKR(
   snp_list,
   save_rds = T,
-  dataset_dir,
+  dataset_dir = "./results",
   pwmList = NULL,
   organism = "Hsapiens",
   threshold = 0.85,

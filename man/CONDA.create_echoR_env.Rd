@@ -6,16 +6,14 @@
 \usage{
 CONDA.create_echoR_env(
   conda_env = "echoR",
-  python_version = 3.7,
+  python_version = NULL,
   channels = c("conda-forge", "bioconda", "r"),
   python_packages = c("pandas>=0.25.0", "pyarrow", "scikit-learn", "bitarray",
     "networkx", "rpy2", "scipy", "pandas-plink"),
-  r_packages = c("r>=3.5.1", "r-base", "r-devtools", "r-reticulate", "r-data.table",
-    "r-ggplot2", "r-wavethresh", "r-lattice", "r-ckmeans.1d.dp", "r-stringi",
-    "r-matrixstats", "r-expm", "r-xgr", "r-rlang"),
+  r_packages = c("r-base", "r-devtools"),
   cli_packages = c("tabix", "plink", "macs2"),
   force_install = F,
-  auth_token = github_pat(quiet)
+  auth_token = devtools::github_pat()
 )
 }
 \arguments{
@@ -36,7 +34,6 @@ to run \emph{echolocatoR}.
 \seealso{
 Other conda: 
 \code{\link{CONDA.activate_env}()},
-\code{\link{CONDA.env_from_list}()},
 \code{\link{CONDA.env_from_yaml}()},
 \code{\link{CONDA.find_env_Rlib}()},
 \code{\link{CONDA.find_python_path}()},

@@ -2,27 +2,58 @@
 
 __*echolocatoR*__ is an R package for automating statistical and functional fine-mapping with extensive API access to datasets.  
 
+
+## Documentation
+
+### [Full documentation website](https://rajlabmssm.github.io/echolocatoR/)  
+
+### [Full pipeline vignette](https://rajlabmssm.github.io/echolocatoR/articles/full_pipeline_vignette.html)  
+
+### [Plotting vignette](https://rajlabmssm.github.io/echolocatoR/articles/plotting_vignette.html)
+
+
+## Workflow  
+
+![echoFlow](./images/PD_Finemapping_Flowchart_plus.png)  
+
+
 ## Installation  
 
 ### R  
 To install, run the following command in R:  
 ```R
+if(!"devtools"%i n%in stalled.packages()){install.packages("devtools")}
 devtools::install_github("RajLabMSSM/echolocatoR")
 ```  
 *NOTE*: While this GitHub repo is still private, you need to use a token to install __*echolocatoR*__  using the `auth_token` argument (see [here for details](http://devtools.r-lib.org/reference/install_github)).  
 
-### Conda
 
-__*echolocatoR*__ also requires some software only available in Python and command line. 
-The easiest way to install all of these (and make sure they play well together!) 
-is to make a [*conda*](https://docs.conda.io/en/latest/) environment specifically for __*echolocatoR*__.  
 
-__*echolocatoR*__ includes a function to make this as easimples possible.
-It automatically creates a new env called "e`"echoR"`nd installs all the necessary sofware.  (using the [reticulate](https://rstudio.github.io/reticulate/)) 
-If you don't have conda installed yet, it will do that for you too.  
-It returns the path where your new env resides.  
+## Conda
+
+As with most softwares, installation is half the battle.
+The easiest way to install all of __*echolocatoR*__'s dependencies (in R, Python, and command line) and make sure they play well together
+is to create a [*conda*](https://docs.conda.io/en/latest/) environment.
+
+1. If you haven't done so already, install [*conda*](https://docs.conda.io/en/latest/).  
+
+2. Download the echoR.yml file found [here](https://github.com/RajLabMSSM/echolocatoR/blob/master/inst/conda/echoR.yml) (this file tells *conda* what to install).
+
+3. Create the env from the *.yml* file,   
+by the entering the following into the command line:  
+```
+conda env create -f <path_to_file>/echoR.yml
+```
+
+4. Activate the new env:  
+```
+conda activate echoR
+```
+
+5. In R, install __*echolocatoR*__:  
 ```R
-env_path <- CONDA.create_echoR_env(conda_env="echoR")
+if(!"devtools"%i n%in stalled.packages()){install.packages("devtools")}
+devtools::install_github("RajLabMSSM/echolocatoR")
 ```
 
 To make sure __*echolocatoR*__ uses the packages in this env, 
@@ -37,18 +68,7 @@ Unfortunately, it does require a bit of extra setup to use, but you can find the
 
 Once you've successfully installed *Axel*, you can tell `finemap_loci()` to use it with `download_method = "axel"`.  
 
-
-## Documentation
-
-### [Full documentation website](https://rajlabmssm.github.io/echolocatoR/)  
-
-### [Full pipeline vignette](https://rajlabmssm.github.io/echolocatoR/articles/full_pipeline_vignette.html)  
-
-### [Plotting vignette](https://rajlabmssm.github.io/echolocatoR/articles/plotting_vignette.html)  
-
-## Workflow  
-
-![echoFlow](./images/PD_Finemapping_Flowchart_plus.png)
+  
 
 ## Fine-mapping Tools  
 

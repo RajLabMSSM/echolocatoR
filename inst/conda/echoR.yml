@@ -1,21 +1,32 @@
 name: echoR
 channels:
+  - defaults
   - bioconda 
   - biobuilds
-  - conda-forge
-  - bioconda
-  - defaults
+  - conda-forge 
   - anaconda
 dependencies:
-  - python=3.7
-  - pandas
+  - python>=3.6.1
+  - pandas>=0.25.0
+  - pandas-plink
   - pyarrow
   - fastparquet
   - scipy
   - scikit-learn
-  - tqdm
-  - tabix
+  - tqdm 
   - bitarray
   - networkx
   - rpy2
   - requests
+  - tabix
+  - plink
+  - macs2
+  - r-base
+  - r-devtools
+  - r-reticulate
+  - r-rlang
+  - r-biocmanager
+  - r-data.table
+  - r-ggplot2
+  - r-ckmeans.1d.dp
+  - r-dplyr

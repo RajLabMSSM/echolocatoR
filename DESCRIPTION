@@ -12,7 +12,7 @@ URL: https://github.com/RajLabMSSM/echolocatoR
 BugReports: https://github.com/RajLabMSSM/echolocatoR/issues
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 3.5.1)
+Depends: R (>= 3.6.3)
 SystemRequirements: Python (>= 3.7.0)
 biocViews:
 Imports: 
@@ -20,7 +20,14 @@ Imports:
     R.utils, 
     BiocManager,
     dplyr,
+    knitr,
+    rmarkdown,
     data.table,
+    lattice,
+    jsonlite,
+    Matrix,
+    rappdirs,
+    Rcpp,
     reticulate,
     ggplot2,  
     ggrepel,
@@ -47,25 +54,26 @@ Imports:
     biovizBase,
     ensembldb, 
     ggbio,
-    rtracklayer
+    rtracklayer,
+    BSgenome
 Remotes:
   github::stephenslab/susieR@0.9.0,
   github::thomasp85/patchwork,
   github::kvnkuang/pbmcapply,
-  bioc::3.1/SummarizedExperiment,
-  bioc::3.1/XGR,
-  bioc::3.1/snpStats
+  bioc::3.10/remotes,  
+  bioc::3.10/snpStats,
+  bioc::3.10/hfang-bristol/XGR
 Suggests: 
+    devtools,
     SparkR,
     Rsamtools,
     crayon,
-    png,
-    knitr,
-    rmarkdown,
+    png, 
     gaston, 
     motifbreakR,
     SNPlocs.Hsapiens.dbSNP142.GRCh37,
     BSgenome.Hsapiens.UCSC.hg19,
-    ComplexHeatmap
+    ComplexHeatmap,
+    SummarizedExperiment
 RoxygenNote: 7.1.0
 VignetteBuilder: knitr

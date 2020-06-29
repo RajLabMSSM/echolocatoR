@@ -13,7 +13,6 @@ Find the python file for a specific env
 Other conda: 
 \code{\link{CONDA.activate_env}()},
 \code{\link{CONDA.create_echoR_env}()},
-\code{\link{CONDA.env_from_list}()},
 \code{\link{CONDA.env_from_yaml}()},
 \code{\link{CONDA.find_env_Rlib}()},
 \code{\link{CONDA.install}()}
