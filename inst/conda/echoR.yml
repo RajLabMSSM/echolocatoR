@@ -29,4 +29,4 @@ dependencies:
   - r-data.table
   - r-ggplot2
   - r-ckmeans.1d.dp
-  - r-dplyr
+  - r-tidyverse

@@ -17,22 +17,20 @@ __*echolocatoR*__ is an R package for automating statistical and functional fine
 ![echoFlow](./images/PD_Finemapping_Flowchart_plus.png)  
 
 
-## Installation  
+## Quick installation  
 
-### R  
-To install, run the following command in R:  
+In R:  
 ```R
-if(!"devtools"%i n%in stalled.packages()){install.packages("devtools")}
+if(!"devtools" %in% installed.packages()){install.packages("devtools")}
 devtools::install_github("RajLabMSSM/echolocatoR")
 ```  
 *NOTE*: While this GitHub repo is still private, you need to use a token to install __*echolocatoR*__  using the `auth_token` argument (see [here for details](http://devtools.r-lib.org/reference/install_github)).  
 
 
 
-## Conda
-
+## Robust installation (co*conda*
 As with most softwares, installation is half the battle.
-The easiest way to install all of __*echolocatoR*__'s dependencies (in R, Python, and command line) and make sure they play well together
+The easiest way to install all of __*echolocatoR*__'s dependencies (inwhich include, Python, and command line)  toolsand make sure they play well together
 is to create a [*conda*](https://docs.conda.io/en/latest/) environment.
 
 1. If you haven't done so already, install [*conda*](https://docs.conda.io/en/latest/).  
@@ -52,7 +50,7 @@ conda activate echoR
 
 5. In R, install __*echolocatoR*__:  
 ```R
-if(!"devtools"%i n%in stalled.packages()){install.packages("devtools")}
+if(!"devtools" %in% installed.packages()){install.packages("devtools")}
 devtools::install_github("RajLabMSSM/echolocatoR")
 ```
 
