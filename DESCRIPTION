@@ -33,7 +33,10 @@ Imports:
     stringr,  
     openxlsx,
     EnsDb.Hsapiens.v75,  
-    ensembldb
+    ensembldb,
+    dplyr,
+    ggbio,
+    BSgenome
 Remotes:
   github::stephenslab/susieR@0.9.0, 
   github::kvnkuang/pbmcapply,
