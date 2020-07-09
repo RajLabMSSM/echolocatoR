@@ -4,7 +4,7 @@
 \alias{LD.calculate_LD}
 \title{Calculate LD}
 \usage{
-LD.calculate_LD(locus_dir, ld_window = 1000, ld_format = "r")
+LD.calculate_LD(locus_dir, ld_window = 1000, ld_format = "r", verbose = T)
 }
 \arguments{
 \item{locus_dir}{Locus-specific results directory.}
@@ -24,19 +24,19 @@ Other LD:
 \code{\link{LD.LD_blocks}()},
 \code{\link{LD.UKBiobank}()},
 \code{\link{LD.dprime_table}()},
-\code{\link{LD.filter_vcf_population}()},
-\code{\link{LD.filter_vcf_rsamtools}()},
+\code{\link{LD.filter_vcf_gaston}()},
 \code{\link{LD.filter_vcf}()},
+\code{\link{LD.get_vcf_folder}()},
 \code{\link{LD.leadSNP_block}()},
 \code{\link{LD.load_or_create}()},
 \code{\link{LD.plink_LD}()},
+\code{\link{LD.plink_file}()},
 \code{\link{LD.plot}()},
 \code{\link{LD.read_bin}()},
 \code{\link{LD.read_ld_table}()},
 \code{\link{LD.run_plink_LD}()},
 \code{\link{LD.translate_population}()},
-\code{\link{LD.vcf_to_bed}()},
-\code{\link{get_vcf_folder}()}
+\code{\link{LD.vcf_to_bed}()}
 }
 \concept{LD}
 \keyword{internal}

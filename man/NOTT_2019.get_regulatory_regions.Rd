@@ -8,7 +8,12 @@
 \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
 }
 \usage{
-NOTT_2019.get_regulatory_regions(finemap_dat, as.granges = F, nCores = 1)
+NOTT_2019.get_regulatory_regions(
+  finemap_dat,
+  as.granges = F,
+  nThread = 1,
+  verbose = T
+)
 }
 \description{
 Plot brain cell-specific epigenomic data

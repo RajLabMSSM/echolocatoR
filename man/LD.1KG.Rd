@@ -20,7 +20,8 @@ LD.1KG(
   remove_tmps = T,
   fillNA = 0,
   nThread = 4,
-  download_method = "wget"
+  download_method = "wget",
+  verbose = T
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ removes any SNPs that are in LD with any of the \code{remove_variants} above the
 \item{remove_tmps}{Whether to remove any temporary files (e.g. FINEMAP output files) after the pipeline is done running.}
 
 \item{fillNA}{When pairwise LD (r) between two SNPs is \code{NA}, replace with 0.}
+
+\item{verbose}{Whether \emph{echolocatoR} should be verbose or silent.}
 }
 \description{
 Downloads a subset vcf of the 1KG database that matches your locus coordinates.
@@ -65,19 +68,19 @@ Other LD:
 \code{\link{LD.UKBiobank}()},
 \code{\link{LD.calculate_LD}()},
 \code{\link{LD.dprime_table}()},
-\code{\link{LD.filter_vcf_population}()},
-\code{\link{LD.filter_vcf_rsamtools}()},
+\code{\link{LD.filter_vcf_gaston}()},
 \code{\link{LD.filter_vcf}()},
+\code{\link{LD.get_vcf_folder}()},
 \code{\link{LD.leadSNP_block}()},
 \code{\link{LD.load_or_create}()},
 \code{\link{LD.plink_LD}()},
+\code{\link{LD.plink_file}()},
 \code{\link{LD.plot}()},
 \code{\link{LD.read_bin}()},
 \code{\link{LD.read_ld_table}()},
 \code{\link{LD.run_plink_LD}()},
 \code{\link{LD.translate_population}()},
-\code{\link{LD.vcf_to_bed}()},
-\code{\link{get_vcf_folder}()}
+\code{\link{LD.vcf_to_bed}()}
 }
 \concept{LD}
 \keyword{internal}

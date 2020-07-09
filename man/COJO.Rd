@@ -21,8 +21,6 @@ COJO(
   effect_col = "Effect",
   stderr_col = "StdErr",
   pval_col = "P",
-  N_cases_col = "N_cases",
-  N_controls_col = "N_controls",
   A1_col = "A1",
   A2_col = "A2",
   full_genome = F

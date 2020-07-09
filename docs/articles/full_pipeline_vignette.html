@@ -54,6 +54,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -85,7 +88,7 @@
       <h1 data-toc-skip>echolocatoR: full pipeline vignette</h1>
                         <h4 class="author">Brian M. Schilder</h4>
             
-            <h4 class="date">Most recent update:<br> 2020-06-26</h4>
+            <h4 class="date">Most recent update:<br> 2020-07-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/RajLabMSSM/echolocatoR/blob/master/vignettes/full_pipeline_vignette.Rmd"><code>vignettes/full_pipeline_vignette.Rmd</code></a></small>
       <div class="hidden name"><code>full_pipeline_vignette.Rmd</code></div>
@@ -117,23 +120,34 @@ full GWAS/QTL summary statistics using windows centered on each lead/index SNP.<
 <span class="no">top_SNPs</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/import_topSNPs.html">import_topSNPs</a></span>(
   <span class="co"># topSS = "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/Nalls2019_TableS2.xlsx",</span>
   <span class="kw">topSS</span> <span class="kw">=</span> <span class="no">Nalls_top_SNPs</span>,
-  <span class="kw">chrom_col</span> <span class="kw">=</span> <span class="st">"CHR"</span>, <span class="kw">position_col</span> <span class="kw">=</span> <span class="st">"BP"</span>, <span class="kw">snp_col</span><span class="kw">=</span><span class="st">"SNP"</span>,
-  <span class="kw">pval_col</span><span class="kw">=</span><span class="st">"P, all studies"</span>, <span class="kw">effect_col</span><span class="kw">=</span><span class="st">"Beta, all studies"</span>, <span class="kw">gene_col</span><span class="kw">=</span><span class="st">"Nearest Gene"</span>,
-  <span class="kw">group_by_locus</span> <span class="kw">=</span> <span class="no">T</span>,
+  <span class="kw">chrom_col</span> <span class="kw">=</span> <span class="st">"CHR"</span>,
+  <span class="kw">position_col</span> <span class="kw">=</span> <span class="st">"BP"</span>,
+  <span class="kw">snp_col</span><span class="kw">=</span><span class="st">"SNP"</span>,
+  <span class="kw">pval_col</span><span class="kw">=</span><span class="st">"P, all studies"</span>,
+  <span class="kw">effect_col</span><span class="kw">=</span><span class="st">"Beta, all studies"</span>,
+  <span class="kw">gene_col</span><span class="kw">=</span><span class="st">"Nearest Gene"</span>,
   <span class="kw">locus_col</span> <span class="kw">=</span> <span class="st">"Nearest Gene"</span>,
-  <span class="kw">remove_variants</span> <span class="kw">=</span> <span class="st">"rs34637584"</span>)</pre></body></html></div>
+  <span class="kw">grouping_vars</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Locus"</span>),
+  <span class="kw">remove_variants</span> <span class="kw">=</span> <span class="st">"rs34637584"</span>)
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">top_SNPs</span>)
+<span class="co">#&gt;       Gene   Locus CHR       POS        SNP        P  Effect</span>
+<span class="co">#&gt; 1:   ASXL3   ASXL3  18  31304318  rs1941685 1.69e-08  0.0531</span>
+<span class="co">#&gt; 2:    BAG3    BAG3  10 121415685 rs72840788 1.57e-11  0.0763</span>
+<span class="co">#&gt; 3:    BIN3    BIN3   8  22525980  rs2280104 1.16e-08  0.0556</span>
+<span class="co">#&gt; 4:   BRIP1   BRIP1  17  59917366 rs61169879 9.28e-10  0.0820</span>
+<span class="co">#&gt; 5:    BST1    BST1   4  15737348  rs4698412 2.06e-28  0.1035</span>
+<span class="co">#&gt; 6: C5orf24 C5orf24   5 134199105 rs11950533 7.16e-09 -0.0916</span></pre></body></html></div>
 </div>
-<div id="find-path-to-full-summary-stats-file" class="section level2">
+<div id="path-to-full-summary-stats-file" class="section level2">
 <h2 class="hasAnchor">
-<a href="#find-path-to-full-summary-stats-file" class="anchor"></a>Find path to full summary stats file</h2>
+<a href="#path-to-full-summary-stats-file" class="anchor"></a>Path to full summary stats file</h2>
 <ul>
 <li>Since a full GWAS summary stats file would be too large to include within <em>echolocatoR</em>,<br>
-we instead provide a example subset of the full summary stats.<br>
+we instead provide an example subset of the full summary stats.<br>
 </li>
 <li>To simulate how you’d actually use your own full summary stats file, we will save our example dataset to your computer (you can change the path to wherever you like).</li>
 </ul>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="co"># fullSS_path &lt;- "./nallsEtAl2019_allSamples_allVariants.mod.txt.gz"</span>
-<span class="no">fullSS_path</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/example_fullSS.html">example_fullSS</a></span>(<span class="kw">fullSS_path</span><span class="kw">=</span><span class="st">"~/Desktop/Nalls23andMe_2019.fullSS_subset.tsv"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">fullSS_path</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/example_fullSS.html">example_fullSS</a></span>(<span class="kw">fullSS_path</span><span class="kw">=</span><span class="st">"~/Desktop/Nalls23andMe_2019.fullSS_subset.tsv"</span>)</pre></body></html></div>
 </div>
 <div id="run-fine-mapping-pipeline" class="section level2">
 <h2 class="hasAnchor">
@@ -156,13 +170,13 @@ You can adjust this separately from <code>bp_distance</code> so that you don’t
 </ul>
 <div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">Nalls23andMe_2019.results</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/finemap_loci.html">finemap_loci</a></span>(<span class="co"># GENERAL ARGUMENTS </span>
                                           <span class="kw">top_SNPs</span> <span class="kw">=</span> <span class="no">top_SNPs</span>,
-                                          <span class="kw">results_dir</span> <span class="kw">=</span> <span class="st">"./echolocatoR_results"</span>,
+                                          <span class="kw">results_dir</span> <span class="kw">=</span> <span class="st">"~/Desktop/results"</span>,
                                           <span class="kw">loci</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"BST1"</span>,<span class="st">"MEX3C"</span>),<span class="co"># top_SNPs$Locus,</span>
                                           <span class="kw">dataset_name</span> <span class="kw">=</span> <span class="st">"Nalls23andMe_2019"</span>,
                                           <span class="kw">dataset_type</span> <span class="kw">=</span> <span class="st">"GWAS"</span>,
                                           <span class="kw">force_new_subset</span> <span class="kw">=</span> <span class="no">F</span>,
                                           <span class="kw">force_new_LD</span> <span class="kw">=</span> <span class="no">F</span>,
-                                          <span class="kw">force_new_finemap</span> <span class="kw">=</span> <span class="no">T</span>,
+                                          <span class="kw">force_new_finemap</span> <span class="kw">=</span> <span class="no">F</span>,
                                           <span class="kw">remove_tmps</span> <span class="kw">=</span> <span class="no">T</span>,
 
                  <span class="co"># SUMMARY STATS ARGUMENTS</span>
@@ -187,7 +201,7 @@ You can adjust this separately from <code>bp_distance</code> so that you don’t
                  <span class="co"># LD ARGUMENTS </span>
                  <span class="kw">LD_reference</span> <span class="kw">=</span> <span class="st">"UKB"</span>,<span class="co">#"1KGphase1",</span>
                  <span class="kw">superpopulation</span> <span class="kw">=</span> <span class="st">"EUR"</span>,
-                 <span class="kw">LD_download_method</span> <span class="kw">=</span> <span class="st">"axel"</span>,
+                 <span class="kw">download_method</span> <span class="kw">=</span> <span class="st">"axel"</span>,
 
                  <span class="co"># PLOT ARGUMENTS </span>
                  <span class="co">## general   </span>
@@ -202,76 +216,21 @@ You can adjust this separately from <code>bp_distance</code> so that you don’t
                  <span class="kw">plot.Nott_epigenome</span> <span class="kw">=</span> <span class="no">T</span>,
                  <span class="kw">plot.Nott_binwidth</span> <span class="kw">=</span> <span class="fl">100</span>
                  )
+<span class="co">#&gt; [1] "Fine-mapping 2 loci."</span>
 <span class="co">#&gt; 🦇 🦇 🦇 BST1 🦇 🦇 🦇</span>
 <span class="co">#&gt; ------------------ Step 1: Query ---------------</span>
-<span class="co">#&gt; [1] "+ Extracting relevant variants from fullSS..."</span>
-<span class="co">#&gt; [1] "++ Query Method: 'tabix"</span>
-<span class="co">#&gt; [1] "---Min snp position: 14737348 ---"</span>
-<span class="co">#&gt; [1] "---Max snp position: 16737348 ---"</span>
-<span class="co">#&gt; [1] "TABIX:: Existing indexed tabix file detected"</span>
-<span class="co">#&gt; [1] "TABIX:: Extracting subset of sum stats"</span>
-<span class="co">#&gt; [1] "++ Returning 6282 x 11 data.table"</span>
-<span class="co">#&gt; [1] "++ Saving query ==&gt; ./echolocatoR_results/GWAS/Nalls23andMe_2019/BST1/BST1_Nalls23andMe_2019_subset.tsv.gz"</span>
-<span class="co">#&gt; [1] ""</span>
-<span class="co">#&gt; ---------------- Step 1.5: Standardize ----------</span>
-<span class="co">#&gt; [1] "+Inferring MAF from frequency column..."</span>
-<span class="co">#&gt; [1] "+ Standardize:: Calculating proportion of cases."</span>
-<span class="co">#&gt; [1] "+ Calculating t-statistic from Effect and StdErr..."</span>
-<span class="co">#&gt; [1] "+ Extraction completed in 2.45 seconds"</span>
-<span class="co">#&gt; [1] "+ 6273 SNPs x  15 columns"</span>
+<span class="co">#&gt; [1] "+ Importing  pre-existing file: /Users/schilder/Desktop/results/GWAS/Nalls23andMe_2019/BST1/Multi-finemap/BST1_Nalls23andMe_2019_Multi-finemap.tsv.gz"</span>
+<span class="co">#&gt; [1] "+ Subset file looks good! :)"</span>
 <span class="co">#&gt; [1] "+ Removing subset tmp..."</span>
 <span class="co">#&gt; --- Step 2: Calculate Linkage Disequilibrium ---</span>
 <span class="co">#&gt; [1] "LD:: Using UK Biobank LD reference panel..."</span>
 <span class="co">#&gt; [1] "+ UKB LD file name: chr4_14000001_17000001"</span>
-<span class="co">#&gt; [1] "+ LD:: Downloading full .gz/.npz UKB files and saving to disk."</span>
-<span class="co">#&gt; [1] "+ LD:: ...this could take some time..."</span>
-<span class="co">#&gt; Processed URL: ./echolocatoR_results/GWAS/Nalls23andMe_2019/BST1/LD/chr4_14000001_17000001</span>
-<span class="co">#&gt; Some other message at the end</span>
-<span class="co">#&gt; [1] "LD matrix dimensions 6254 x 6254"</span>
-<span class="co">#&gt; [1] "+ LD:: Saving LD =&gt; ./echolocatoR_results/GWAS/Nalls23andMe_2019/BST1/LD/BST1.UKB_LD.RDS"</span>
-<span class="co">#&gt; [1] "+ Removing .gz/.npz files."</span>
+<span class="co">#&gt; [1] "+ LD:: Pre-existing UKB_LD.RDS file detected. Importing..."</span>
 <span class="co">#&gt; -------------- Step 3: Filter SNPs -------------</span>
-<span class="co">#&gt; [1] "++ Post-filtered data: 6273 x 15"</span>
+<span class="co">#&gt; [1] "++ Post-filtered data: 6216 x 23"</span>
 <span class="co">#&gt; -------- Step 4: Statistically Fine-map --------</span>
-<span class="co">#&gt; [1] "++ Fine-mapping using multiple tools: ABF, FINEMAP, SUSIE, POLYFUN_SUSIE"</span>
-<span class="co">#&gt; Multi-finemap:: ABF</span>
-<span class="co">#&gt; [1] "++ Credible Set SNPS identified = 0"</span>
-<span class="co">#&gt; [1] "++ Merging ABF results with multi-finemap data."</span>
-<span class="co">#&gt; Multi-finemap:: FINEMAP</span>
-<span class="co">#&gt; [1] "++ Constructing FINEMAP master file."</span>
-<span class="co">#&gt; [1] "++ Formatting data.z file for FINEMAP"</span>
-<span class="co">#&gt; [1] "++ Formatting LD Matrix for FINEMAP"</span>
-<span class="co">#&gt; [1] "+++ Writing FINEMAP z and ld files..."</span>
-<span class="co">#&gt; [1] "cd ./echolocatoR_results/GWAS/Nalls23andMe_2019/BST1 &amp;&amp; /private/var/folders/sw/km9819713937hp640lj59ygw0000gn/T/RtmpnuHoUP/temp_libpathdf6530fe2c52/echolocatoR/tools/FINEMAP/finemap_v1.3_MacOSX --cond --in-files ./echolocatoR_results/GWAS/Nalls23andMe_2019/BST1/FINEMAP/master --log --n-causal-snps 5"</span>
-<span class="co">#&gt; Error in data.table::fread(file.path(locus_dir, "FINEMAP/data.config")) : </span>
-<span class="co">#&gt;   File './echolocatoR_results/GWAS/Nalls23andMe_2019/BST1/FINEMAP/data.config' does not exist or is non-readable. getwd()=='/Users/schilder/Desktop'</span>
-<span class="co">#&gt; [1] "++ Credible Set SNPS identified = 0"</span>
-<span class="co">#&gt; [1] "++ Merging FINEMAP results with multi-finemap data."</span>
-<span class="co">#&gt; Multi-finemap:: SUSIE</span>
-<span class="co">#&gt; [1] "++ Computing phenotype variance..."</span>
-<span class="co">#&gt; [1] "+ SUSIE:: n_causal = 5"</span>
-<span class="co">#&gt; Warning in susie_ss(XtX = XtX, Xty = Xty, yty = var_y * (n - 1), n = n, : IBSS</span>
-<span class="co">#&gt; algorithm did not converge in 100 iterations!</span>
-<span class="co">#&gt; [1] ""</span>
-<span class="co">#&gt; [1] "++ Extracting Credible Sets..."</span>
-<span class="co">#&gt; [1] "++ Credible Set SNPS identified = 3"</span>
-<span class="co">#&gt; [1] "++ Merging SUSIE results with multi-finemap data."</span>
-<span class="co">#&gt; Multi-finemap:: POLYFUN_SUSIE</span>
-<span class="co">#&gt; [1] "PolyFun:: Preparing SNP input file..."</span>
-<span class="co">#&gt; [1] "+ PolyFun:: 6216 SNPs identified."</span>
-<span class="co">#&gt; [1] "+ PolyFun:: Writing SNP file ==&gt; ./echolocatoR_results/GWAS/Nalls23andMe_2019/BST1/PolyFun/snps_to_finemap.txt.gz"</span>
-<span class="co">#&gt; [1] "/opt/anaconda3/envs/echoR/bin/python /private/var/folders/sw/km9819713937hp640lj59ygw0000gn/T/RtmpnuHoUP/temp_libpathdf6530fe2c52/echolocatoR/tools/polyfun//extract_snpvar.py --snps ./echolocatoR_results/GWAS/Nalls23andMe_2019/BST1/PolyFun/snps_to_finemap.txt.gz --out ./echolocatoR_results/GWAS/Nalls23andMe_2019/BST1/PolyFun/snps_with_priors.snpvar.tsv.gz"</span>
-<span class="co">#&gt; [1] "++ Remove tmp file."</span>
-<span class="co">#&gt; [1] "++ Computing phenotype variance..."</span>
-<span class="co">#&gt; [1] "+ SUSIE:: n_causal = 5"</span>
-<span class="co">#&gt; [1] "Utilizing prior_weights for 6216 SNPs."</span>
-<span class="co">#&gt; Warning in susie_ss(XtX = XtX, Xty = Xty, yty = var_y * (n - 1), n = n, : IBSS</span>
-<span class="co">#&gt; algorithm did not converge in 100 iterations!</span>
-<span class="co">#&gt; [1] ""</span>
-<span class="co">#&gt; [1] "++ Extracting Credible Sets..."</span>
-<span class="co">#&gt; [1] "++ Credible Set SNPS identified = 3"</span>
-<span class="co">#&gt; [1] "++ Merging POLYFUN_SUSIE results with multi-finemap data."</span>
-<span class="co">#&gt; [1] "++ Fine-mapping with ' ABF, FINEMAP, SUSIE, POLYFUN_SUSIE ' completed in  5.91"</span>
+<span class="co">#&gt; [1] "++ Previously multi-fine-mapped results identified. Importing..."</span>
+<span class="co">#&gt; [1] "++ Fine-mapping with ' ABF, FINEMAP, SUSIE, POLYFUN_SUSIE ' completed in  0.06"</span>
 <span class="co">#&gt; [1] "+ Identifying Consensus SNPs..."</span>
 <span class="co">#&gt; [1] "++ support_thresh = 2"</span>
 <span class="co">#&gt; [1] "+ Calculating mean Posterior Probability (mean.PP)..."</span>
@@ -279,12 +238,8 @@ You can adjust this separately from <code>bp_distance</code> so that you don’t
 <span class="co">#&gt; [1] "++ 3 Credible Set SNPs identified."</span>
 <span class="co">#&gt; [1] "++ 3 Consensus SNPs identified."</span>
 <span class="co">#&gt; --------------- Step 7: Visualize --------------</span>
-<span class="co">#&gt; [1] "+ Identifying Consensus SNPs..."</span>
-<span class="co">#&gt; [1] "++ support_thresh = 2"</span>
-<span class="co">#&gt; [1] "+ Calculating mean Posterior Probability (mean.PP)..."</span>
-<span class="co">#&gt; [1] "++ 4 fine-mapping methods used."</span>
-<span class="co">#&gt; [1] "++ 3 Credible Set SNPs identified."</span>
-<span class="co">#&gt; [1] "++ 3 Consensus SNPs identified."</span>
+<span class="co">#&gt; [1] "+ Filling NAs in CS cols with 0"</span>
+<span class="co">#&gt; [1] "+ Filling NAs in PP cols with 0"</span>
 <span class="co">#&gt; [1] "GGBIO:: LD_matrix detected. Coloring SNPs by LD with lead SNP."</span>
 <span class="co">#&gt; [1] "LD Matrix dimensions: 6216 x 6216"</span>
 <span class="co">#&gt; [1] "Extracting LD subset for lead SNP: rs4698412"</span>
@@ -311,149 +266,87 @@ You can adjust this separately from <code>bp_distance</code> so that you don’t
 <span class="co">#&gt; [1] "Importing Oligo promoters ..."</span>
 <span class="co">#&gt; [1] "Importing Microglia enhancers ..."</span>
 <span class="co">#&gt; [1] "Importing Microglia promoters ..."</span>
+<span class="co">#&gt; [1] "+ Converting to GRanges."</span>
 <span class="co">#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will</span>
 <span class="co">#&gt; replace the existing scale.</span>
 <span class="co">#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will</span>
 <span class="co">#&gt; replace the existing scale.</span>
 <span class="co">#&gt; [1] "++ Nott sn-epigenomics:: Returning PLAC-seq track."</span>
-<span class="co">#&gt; [1] "+ GGBIO:: Saving plot ==&gt; ./echolocatoR_results/GWAS/Nalls23andMe_2019/BST1/multiview_BST1_100kb.png"</span>
-<span class="co">#&gt; Warning: Removed 100 rows containing non-finite values (stat_smooth).</span>
-<span class="co">#&gt; Warning: Removed 6212 rows containing missing values (geom_point).</span>
-<span class="co">#&gt; Warning: Removed 4 rows containing missing values (geom_point).</span>
-<span class="co">#&gt; Warning: Removed 4 rows containing missing values (geom_label_repel).</span>
+<span class="co">#&gt; [1] "+ GGBIO:: Saving plot ==&gt; /Users/schilder/Desktop/results/GWAS/Nalls23andMe_2019/BST1/multiview_BST1_100kb.png"</span>
+<span class="co">#&gt; Warning: Removed 98 rows containing non-finite values (stat_smooth).</span>
+<span class="co">#&gt; Warning: Duplicated override.aes is ignored.</span>
+<span class="co">#&gt; Warning: Removed 98 rows containing non-finite values (stat_smooth).</span>
+<span class="co">#&gt; Warning: Duplicated override.aes is ignored.</span></pre></body></html></div>
+<pre><code>#&gt; Fine-mappping complete:BST1
+#&gt; Time difference of 1.5 mins
+#&gt; 🦇 🦇 🦇 MEX3C 🦇 🦇 🦇
+#&gt; ------------------ Step 1: Query ---------------
+#&gt; [1] "+ Importing  pre-existing file: /Users/schilder/Desktop/results/GWAS/Nalls23andMe_2019/MEX3C/Multi-finemap/MEX3C_Nalls23andMe_2019_Multi-finemap.tsv.gz"
+#&gt; [1] "+ Subset file looks good! :)"
+#&gt; [1] "+ Removing subset tmp..."
+#&gt; --- Step 2: Calculate Linkage Disequilibrium ---
+#&gt; [1] "LD:: Using UK Biobank LD reference panel..."
+#&gt; [1] "+ UKB LD file name: chr18_47000001_50000001"
+#&gt; [1] "+ LD:: Pre-existing UKB_LD.RDS file detected. Importing..."
+#&gt; -------------- Step 3: Filter SNPs -------------
+#&gt; [1] "++ Post-filtered data: 5368 x 23"
+#&gt; -------- Step 4: Statistically Fine-map --------
+#&gt; [1] "++ Previously multi-fine-mapped results identified. Importing..."
+#&gt; [1] "++ Fine-mapping with ' ABF, FINEMAP, SUSIE, POLYFUN_SUSIE ' completed in  0.12"
+#&gt; [1] "+ Identifying Consensus SNPs..."
+#&gt; [1] "++ support_thresh = 2"
+#&gt; [1] "+ Calculating mean Posterior Probability (mean.PP)..."
+#&gt; [1] "++ 4 fine-mapping methods used."
+#&gt; [1] "++ 3 Credible Set SNPs identified."
+#&gt; [1] "++ 1 Consensus SNPs identified."
+#&gt; --------------- Step 7: Visualize --------------
+#&gt; [1] "+ Filling NAs in CS cols with 0"
+#&gt; [1] "+ Filling NAs in PP cols with 0"
+#&gt; [1] "GGBIO:: LD_matrix detected. Coloring SNPs by LD with lead SNP."
+#&gt; [1] "LD Matrix dimensions: 5368 x 5368"
+#&gt; [1] "Extracting LD subset for lead SNP: rs8087969"
+#&gt; [1] "++ GGBIO:: GWAS track"
+#&gt; using coord:genome to parse x scale
+#&gt; [1] "++ GGBIO:: ABF track"
+#&gt; using coord:genome to parse x scale
+#&gt; [1] "++ GGBIO:: FINEMAP track"
+#&gt; using coord:genome to parse x scale
+#&gt; [1] "++ GGBIO:: SUSIE track"
+#&gt; using coord:genome to parse x scale
+#&gt; [1] "++ GGBIO:: POLYFUN_SUSIE track"
+#&gt; using coord:genome to parse x scale
+#&gt; [1] "++ GGBIO:: mean track"
+#&gt; using coord:genome to parse x scale
+#&gt; [1] "++ GGBIO:: Gene Model Track"
+#&gt; [1] "+ Annotating at transcript-level."
+#&gt; Warning in max(xlim): no non-missing arguments to max; returning -Inf
+#&gt; [1] "Importing Astrocyte enhancers ..."
+#&gt; [1] "Importing Astrocyte promoters ..."
+#&gt; [1] "Importing Neuronal enhancers ..."
+#&gt; [1] "Importing Neuronal promoters ..."
+#&gt; [1] "Importing Oligo enhancers ..."
+#&gt; [1] "Importing Oligo promoters ..."
+#&gt; [1] "Importing Microglia enhancers ..."
+#&gt; [1] "Importing Microglia promoters ..."
+#&gt; [1] "+ Converting to GRanges."
+#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will
+#&gt; replace the existing scale.
+#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will
+#&gt; replace the existing scale.
+#&gt; [1] "++ Nott sn-epigenomics:: Returning PLAC-seq track."
+#&gt; [1] "+ GGBIO:: Saving plot ==&gt; /Users/schilder/Desktop/results/GWAS/Nalls23andMe_2019/MEX3C/multiview_MEX3C_100kb.png"
+#&gt; Warning: Removed 303 rows containing non-finite values (stat_smooth).
 
-<span class="co">#&gt; Warning: Removed 4 rows containing missing values (geom_label_repel).</span>
-<span class="co">#&gt; Error : Discrete value supplied to continuous scale</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Fine-mappping complete:BST1</span>
-<span class="co">#&gt; Time difference of 19.7 mins</span>
-<span class="co">#&gt; 🦇 🦇 🦇 MEX3C 🦇 🦇 🦇</span>
-<span class="co">#&gt; ------------------ Step 1: Query ---------------</span>
-<span class="co">#&gt; [1] "+ Extracting relevant variants from fullSS..."</span>
-<span class="co">#&gt; [1] "++ Query Method: 'tabix"</span>
-<span class="co">#&gt; [1] "---Min snp position: 47683589 ---"</span>
-<span class="co">#&gt; [1] "---Max snp position: 49683589 ---"</span>
-<span class="co">#&gt; [1] "TABIX:: Existing indexed tabix file detected"</span>
-<span class="co">#&gt; [1] "TABIX:: Extracting subset of sum stats"</span>
-<span class="co">#&gt; [1] "++ Returning 5405 x 11 data.table"</span>
-<span class="co">#&gt; [1] "++ Saving query ==&gt; ./echolocatoR_results/GWAS/Nalls23andMe_2019/MEX3C/MEX3C_Nalls23andMe_2019_subset.tsv.gz"</span>
-<span class="co">#&gt; [1] ""</span>
-<span class="co">#&gt; ---------------- Step 1.5: Standardize ----------</span>
-<span class="co">#&gt; [1] "+Inferring MAF from frequency column..."</span>
-<span class="co">#&gt; [1] "+ Standardize:: Calculating proportion of cases."</span>
-<span class="co">#&gt; [1] "+ Calculating t-statistic from Effect and StdErr..."</span>
-<span class="co">#&gt; [1] "+ Extraction completed in 1.08 seconds"</span>
-<span class="co">#&gt; [1] "+ 5399 SNPs x  15 columns"</span>
-<span class="co">#&gt; [1] "+ Removing subset tmp..."</span>
-<span class="co">#&gt; --- Step 2: Calculate Linkage Disequilibrium ---</span>
-<span class="co">#&gt; [1] "LD:: Using UK Biobank LD reference panel..."</span>
-<span class="co">#&gt; [1] "+ UKB LD file name: chr18_47000001_50000001"</span>
-<span class="co">#&gt; [1] "+ LD:: Downloading full .gz/.npz UKB files and saving to disk."</span>
-<span class="co">#&gt; [1] "+ LD:: ...this could take some time..."</span>
-<span class="co">#&gt; Processed URL: ./echolocatoR_results/GWAS/Nalls23andMe_2019/MEX3C/LD/chr18_47000001_50000001</span>
-<span class="co">#&gt; Some other message at the end</span>
-<span class="co">#&gt; [1] "LD matrix dimensions 5388 x 5388"</span>
-<span class="co">#&gt; [1] "+ LD:: Saving LD =&gt; ./echolocatoR_results/GWAS/Nalls23andMe_2019/MEX3C/LD/MEX3C.UKB_LD.RDS"</span>
-<span class="co">#&gt; [1] "+ Removing .gz/.npz files."</span>
-<span class="co">#&gt; -------------- Step 3: Filter SNPs -------------</span>
-<span class="co">#&gt; [1] "++ Post-filtered data: 5399 x 15"</span>
-<span class="co">#&gt; -------- Step 4: Statistically Fine-map --------</span>
-<span class="co">#&gt; [1] "++ Fine-mapping using multiple tools: ABF, FINEMAP, SUSIE, POLYFUN_SUSIE"</span>
-<span class="co">#&gt; Multi-finemap:: ABF</span>
-<span class="co">#&gt; [1] "++ Credible Set SNPS identified = 0"</span>
-<span class="co">#&gt; [1] "++ Merging ABF results with multi-finemap data."</span>
-<span class="co">#&gt; Multi-finemap:: FINEMAP</span>
-<span class="co">#&gt; [1] "++ Constructing FINEMAP master file."</span>
-<span class="co">#&gt; [1] "++ Formatting data.z file for FINEMAP"</span>
-<span class="co">#&gt; [1] "++ Formatting LD Matrix for FINEMAP"</span>
-<span class="co">#&gt; [1] "+++ Writing FINEMAP z and ld files..."</span>
-<span class="co">#&gt; [1] "cd ./echolocatoR_results/GWAS/Nalls23andMe_2019/MEX3C &amp;&amp; /private/var/folders/sw/km9819713937hp640lj59ygw0000gn/T/RtmpnuHoUP/temp_libpathdf6530fe2c52/echolocatoR/tools/FINEMAP/finemap_v1.3_MacOSX --cond --in-files ./echolocatoR_results/GWAS/Nalls23andMe_2019/MEX3C/FINEMAP/master --log --n-causal-snps 5"</span>
-<span class="co">#&gt; Error in data.table::fread(file.path(locus_dir, "FINEMAP/data.config")) : </span>
-<span class="co">#&gt;   File './echolocatoR_results/GWAS/Nalls23andMe_2019/MEX3C/FINEMAP/data.config' does not exist or is non-readable. getwd()=='/Users/schilder/Desktop'</span>
-<span class="co">#&gt; [1] "++ Credible Set SNPS identified = 0"</span>
-<span class="co">#&gt; [1] "++ Merging FINEMAP results with multi-finemap data."</span>
-<span class="co">#&gt; Multi-finemap:: SUSIE</span>
-<span class="co">#&gt; [1] "++ Computing phenotype variance..."</span>
-<span class="co">#&gt; [1] "+ SUSIE:: n_causal = 5"</span>
-<span class="co">#&gt; Warning in susie_ss(XtX = XtX, Xty = Xty, yty = var_y * (n - 1), n = n, : IBSS</span>
-<span class="co">#&gt; algorithm did not converge in 100 iterations!</span>
-<span class="co">#&gt; [1] ""</span>
-<span class="co">#&gt; [1] "++ Extracting Credible Sets..."</span>
-<span class="co">#&gt; [1] "++ Credible Set SNPS identified = 1"</span>
-<span class="co">#&gt; [1] "++ Merging SUSIE results with multi-finemap data."</span>
-<span class="co">#&gt; Multi-finemap:: POLYFUN_SUSIE</span>
-<span class="co">#&gt; [1] "PolyFun:: Preparing SNP input file..."</span>
-<span class="co">#&gt; [1] "+ PolyFun:: 5368 SNPs identified."</span>
-<span class="co">#&gt; [1] "+ PolyFun:: Writing SNP file ==&gt; ./echolocatoR_results/GWAS/Nalls23andMe_2019/MEX3C/PolyFun/snps_to_finemap.txt.gz"</span>
-<span class="co">#&gt; [1] "/opt/anaconda3/envs/echoR/bin/python /private/var/folders/sw/km9819713937hp640lj59ygw0000gn/T/RtmpnuHoUP/temp_libpathdf6530fe2c52/echolocatoR/tools/polyfun//extract_snpvar.py --snps ./echolocatoR_results/GWAS/Nalls23andMe_2019/MEX3C/PolyFun/snps_to_finemap.txt.gz --out ./echolocatoR_results/GWAS/Nalls23andMe_2019/MEX3C/PolyFun/snps_with_priors.snpvar.tsv.gz"</span>
-<span class="co">#&gt; [1] "++ Remove tmp file."</span>
-<span class="co">#&gt; [1] "++ Computing phenotype variance..."</span>
-<span class="co">#&gt; [1] "+ SUSIE:: n_causal = 5"</span>
-<span class="co">#&gt; [1] "Utilizing prior_weights for 5368 SNPs."</span>
-<span class="co">#&gt; Warning in susie_ss(XtX = XtX, Xty = Xty, yty = var_y * (n - 1), n = n, : IBSS</span>
-<span class="co">#&gt; algorithm did not converge in 100 iterations!</span>
-<span class="co">#&gt; [1] ""</span>
-<span class="co">#&gt; [1] "++ Extracting Credible Sets..."</span>
-<span class="co">#&gt; [1] "++ Credible Set SNPS identified = 3"</span>
-<span class="co">#&gt; [1] "++ Merging POLYFUN_SUSIE results with multi-finemap data."</span>
-<span class="co">#&gt; [1] "++ Fine-mapping with ' ABF, FINEMAP, SUSIE, POLYFUN_SUSIE ' completed in  4.17"</span>
-<span class="co">#&gt; [1] "+ Identifying Consensus SNPs..."</span>
-<span class="co">#&gt; [1] "++ support_thresh = 2"</span>
-<span class="co">#&gt; [1] "+ Calculating mean Posterior Probability (mean.PP)..."</span>
-<span class="co">#&gt; [1] "++ 4 fine-mapping methods used."</span>
-<span class="co">#&gt; [1] "++ 3 Credible Set SNPs identified."</span>
-<span class="co">#&gt; [1] "++ 1 Consensus SNPs identified."</span>
-<span class="co">#&gt; --------------- Step 7: Visualize --------------</span>
-<span class="co">#&gt; [1] "+ Identifying Consensus SNPs..."</span>
-<span class="co">#&gt; [1] "++ support_thresh = 2"</span>
-<span class="co">#&gt; [1] "+ Calculating mean Posterior Probability (mean.PP)..."</span>
-<span class="co">#&gt; [1] "++ 4 fine-mapping methods used."</span>
-<span class="co">#&gt; [1] "++ 3 Credible Set SNPs identified."</span>
-<span class="co">#&gt; [1] "++ 1 Consensus SNPs identified."</span>
-<span class="co">#&gt; [1] "GGBIO:: LD_matrix detected. Coloring SNPs by LD with lead SNP."</span>
-<span class="co">#&gt; [1] "LD Matrix dimensions: 5368 x 5368"</span>
-<span class="co">#&gt; [1] "Extracting LD subset for lead SNP: rs8087969"</span>
-<span class="co">#&gt; [1] "++ GGBIO:: GWAS track"</span>
-<span class="co">#&gt; using coord:genome to parse x scale</span>
-<span class="co">#&gt; [1] "++ GGBIO:: ABF track"</span>
-<span class="co">#&gt; using coord:genome to parse x scale</span>
-<span class="co">#&gt; [1] "++ GGBIO:: FINEMAP track"</span>
-<span class="co">#&gt; using coord:genome to parse x scale</span>
-<span class="co">#&gt; [1] "++ GGBIO:: SUSIE track"</span>
-<span class="co">#&gt; using coord:genome to parse x scale</span>
-<span class="co">#&gt; [1] "++ GGBIO:: POLYFUN_SUSIE track"</span>
-<span class="co">#&gt; using coord:genome to parse x scale</span>
-<span class="co">#&gt; [1] "++ GGBIO:: mean track"</span>
-<span class="co">#&gt; using coord:genome to parse x scale</span>
-<span class="co">#&gt; [1] "++ GGBIO:: Gene Model Track"</span>
-<span class="co">#&gt; [1] "+ Annotating at transcript-level."</span>
-<span class="co">#&gt; Warning in max(xlim): no non-missing arguments to max; returning -Inf</span>
-<span class="co">#&gt; [1] "Importing Astrocyte enhancers ..."</span>
-<span class="co">#&gt; [1] "Importing Astrocyte promoters ..."</span>
-<span class="co">#&gt; [1] "Importing Neuronal enhancers ..."</span>
-<span class="co">#&gt; [1] "Importing Neuronal promoters ..."</span>
-<span class="co">#&gt; [1] "Importing Oligo enhancers ..."</span>
-<span class="co">#&gt; [1] "Importing Oligo promoters ..."</span>
-<span class="co">#&gt; [1] "Importing Microglia enhancers ..."</span>
-<span class="co">#&gt; [1] "Importing Microglia promoters ..."</span>
-<span class="co">#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will</span>
-<span class="co">#&gt; replace the existing scale.</span>
-<span class="co">#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will</span>
-<span class="co">#&gt; replace the existing scale.</span>
-<span class="co">#&gt; [1] "++ Nott sn-epigenomics:: Returning PLAC-seq track."</span>
-<span class="co">#&gt; [1] "+ GGBIO:: Saving plot ==&gt; ./echolocatoR_results/GWAS/Nalls23andMe_2019/MEX3C/multiview_MEX3C_100kb.png"</span>
-<span class="co">#&gt; Warning: Removed 304 rows containing non-finite values (stat_smooth).</span>
-<span class="co">#&gt; Warning: Removed 5364 rows containing missing values (geom_point).</span>
-<span class="co">#&gt; Warning: Removed 4 rows containing missing values (geom_point).</span>
-<span class="co">#&gt; Warning: Removed 4 rows containing missing values (geom_label_repel).</span>
+#&gt; Warning: Duplicated override.aes is ignored.</code></pre>
+<p><img src="full_pipeline_vignette_files/figure-html/Run%20fine-mapping%20pipeline-1.png" width="960"></p>
+<pre><code>#&gt; Warning: Removed 303 rows containing non-finite values (stat_smooth).
 
-<span class="co">#&gt; Warning: Removed 4 rows containing missing values (geom_label_repel).</span>
-<span class="co">#&gt; Error : Discrete value supplied to continuous scale</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Fine-mappping complete:MEX3C</span>
-<span class="co">#&gt; Time difference of 14.8 mins</span>
-<span class="co">#&gt; &lt;div id="htmlwidget-f843a680a1fcd62a0dd1" style="width:960px;height:500px;" class="datatables html-widget"&gt;&lt;/div&gt;</span>
-<span class="co">#&gt; &lt;script type="application/json" data-for="htmlwidget-f843a680a1fcd62a0dd1"&gt;{"x":{"filter":"none","extensions":["Buttons"],"caption":"&lt;caption&gt;&lt;\/caption&gt;","data":[["1","2","3","4","5","6"],["BST1","BST1","BST1","MEX3C","MEX3C","MEX3C"],["rs34559912","rs4389574","rs4541502","rs1893379","rs11082860","rs4939656"],[4,4,4,18,18,18],[15730146,15730398,15712787,48718536,48714154,48714576],[1.213e-27,3.141e-17,8.309e-22,2.847e-08,3.007e-08,3.19e-08],[0.103,-0.0977,-0.0897,0.0558,0.0557,-0.0556],[0.0095,0.0116,0.0093,0.01,0.01,0.01],["T","A","T","A","T","T"],["G","G","G","G","G","C"],[0.5526,0.4443,0.4749,0.4542,0.4546,0.5454],[0.4474,0.4443,0.4749,0.4542,0.4546,0.4546],[56306,42598,56306,49053,49053,49053],[1417791,1322509,1417791,1411006,1411006,1411006],[0.0381969436203995,0.0312048799105125,0.0381969436203995,0.0335965875351613,0.0335965875351613,0.0335965875351613],[10.8421052631579,-8.42241379310345,-9.64516129032258,5.58,5.57,-5.56],[false,false,false,false,false,false],[null,null,null,null,null,null],[null,null,null,null,null,null],[null,null,null,null,null,null],[null,null,null,null,null,null],[3,1,2,1,0,0],[1,1,1,1,0,1.04650871348699e-05],[3,1,2,1,3,2],[1,1,1,1,1,1],[2,2,2,2,1,1],[true,true,true,true,false,false],[0.5,0.5,0.5,0.5,0.25,0.250002616271784],[0,0,0,0,0,0]],"container":"&lt;table class=\"display\"&gt;\n  &lt;thead&gt;\n    &lt;tr&gt;\n      &lt;th&gt; &lt;\/th&gt;\n      &lt;th&gt;Locus&lt;\/th&gt;\n      &lt;th&gt;SNP&lt;\/th&gt;\n      &lt;th&gt;CHR&lt;\/th&gt;\n      &lt;th&gt;POS&lt;\/th&gt;\n      &lt;th&gt;P&lt;\/th&gt;\n      &lt;th&gt;Effect&lt;\/th&gt;\n      &lt;th&gt;StdErr&lt;\/th&gt;\n      &lt;th&gt;A1&lt;\/th&gt;\n      &lt;th&gt;A2&lt;\/th&gt;\n      &lt;th&gt;Freq&lt;\/th&gt;\n      &lt;th&gt;MAF&lt;\/th&gt;\n      &lt;th&gt;N_cases&lt;\/th&gt;\n      &lt;th&gt;N_controls&lt;\/th&gt;\n      &lt;th&gt;proportion_cases&lt;\/th&gt;\n      &lt;th&gt;t_stat&lt;\/th&gt;\n      &lt;th&gt;leadSNP&lt;\/th&gt;\n      &lt;th&gt;ABF.CS&lt;\/th&gt;\n      &lt;th&gt;ABF.PP&lt;\/th&gt;\n      &lt;th&gt;FINEMAP.CS&lt;\/th&gt;\n      &lt;th&gt;FINEMAP.PP&lt;\/th&gt;\n      &lt;th&gt;SUSIE.CS&lt;\/th&gt;\n      &lt;th&gt;SUSIE.PP&lt;\/th&gt;\n      &lt;th&gt;POLYFUN_SUSIE.CS&lt;\/th&gt;\n      &lt;th&gt;POLYFUN_SUSIE.PP&lt;\/th&gt;\n      &lt;th&gt;Support&lt;\/th&gt;\n      &lt;th&gt;Consensus_SNP&lt;\/th&gt;\n      &lt;th&gt;mean.PP&lt;\/th&gt;\n      &lt;th&gt;mean.CS&lt;\/th&gt;\n    &lt;\/tr&gt;\n  &lt;\/thead&gt;\n&lt;\/table&gt;","options":{"dom":"Bfrtip","buttons":["copy","csv","excel","pdf","print"],"scrollY":400,"scrollX":true,"scrollCollapse":true,"paging":false,"columnDefs":[{"className":"dt-center","targets":"_all"},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}&lt;/script&gt;</span></pre></body></html></div>
+#&gt; Warning: Duplicated override.aes is ignored.</code></pre>
+<pre><code>#&gt; Fine-mappping complete:MEX3C</code></pre>
+<p><img src="full_pipeline_vignette_files/figure-html/Run%20fine-mapping%20pipeline-2.png" width="960"></p>
+<pre><code>#&gt; Time difference of 1.5 mins
+#&gt; &lt;div id="htmlwidget-d62a0dd1ba32e0541469" style="width:960px;height:500px;" class="datatables html-widget"&gt;&lt;/div&gt;
+#&gt; &lt;script type="application/json" data-for="htmlwidget-d62a0dd1ba32e0541469"&gt;{"x":{"filter":"none","extensions":["Buttons"],"caption":"&lt;caption&gt;&lt;\/caption&gt;","data":[["1","2","3","4","5","6"],["BST1","BST1","BST1","MEX3C","MEX3C","MEX3C"],["rs34559912","rs4389574","rs4541502","rs1893379","rs11082860","rs4939656"],[4,4,4,18,18,18],[15730146,15730398,15712787,48718536,48714154,48714576],[1.213e-27,3.141e-17,8.309e-22,2.847e-08,3.007e-08,3.19e-08],[0.103,-0.0977,-0.0897,0.0558,0.0557,-0.0556],[0.0095,0.0116,0.0093,0.01,0.01,0.01],["T","A","T","A","T","T"],["G","G","G","G","G","C"],[0.5526,0.4443,0.4749,0.4542,0.4546,0.5454],[0.4474,0.4443,0.4749,0.4542,0.4546,0.4546],[56306,42598,56306,49053,49053,49053],[1417791,1322509,1417791,1411006,1411006,1411006],[0.0381969436203995,0.0312048799105125,0.0381969436203995,0.0335965875351613,0.0335965875351613,0.0335965875351613],[10.8421052631579,-8.42241379310345,-9.64516129032258,5.58,5.57,-5.56],[false,false,false,false,false,false],[null,null,null,null,null,null],[null,null,null,null,null,null],[null,null,null,null,null,null],[null,null,null,null,null,null],[3,1,2,1,0,0],[1,1,1,1,0,1.04650871348699e-05],[3,1,2,1,3,2],[1,1,1,1,1,1],[2,2,2,2,1,1],[true,true,true,true,false,false],[0.5,0.5,0.5,0.5,0.25,0.250002616271784],[0,0,0,0,0,0]],"container":"&lt;table class=\"display\"&gt;\n  &lt;thead&gt;\n    &lt;tr&gt;\n      &lt;th&gt; &lt;\/th&gt;\n      &lt;th&gt;Locus&lt;\/th&gt;\n      &lt;th&gt;SNP&lt;\/th&gt;\n      &lt;th&gt;CHR&lt;\/th&gt;\n      &lt;th&gt;POS&lt;\/th&gt;\n      &lt;th&gt;P&lt;\/th&gt;\n      &lt;th&gt;Effect&lt;\/th&gt;\n      &lt;th&gt;StdErr&lt;\/th&gt;\n      &lt;th&gt;A1&lt;\/th&gt;\n      &lt;th&gt;A2&lt;\/th&gt;\n      &lt;th&gt;Freq&lt;\/th&gt;\n      &lt;th&gt;MAF&lt;\/th&gt;\n      &lt;th&gt;N_cases&lt;\/th&gt;\n      &lt;th&gt;N_controls&lt;\/th&gt;\n      &lt;th&gt;proportion_cases&lt;\/th&gt;\n      &lt;th&gt;t_stat&lt;\/th&gt;\n      &lt;th&gt;leadSNP&lt;\/th&gt;\n      &lt;th&gt;ABF.CS&lt;\/th&gt;\n      &lt;th&gt;ABF.PP&lt;\/th&gt;\n      &lt;th&gt;FINEMAP.CS&lt;\/th&gt;\n      &lt;th&gt;FINEMAP.PP&lt;\/th&gt;\n      &lt;th&gt;SUSIE.CS&lt;\/th&gt;\n      &lt;th&gt;SUSIE.PP&lt;\/th&gt;\n      &lt;th&gt;POLYFUN_SUSIE.CS&lt;\/th&gt;\n      &lt;th&gt;POLYFUN_SUSIE.PP&lt;\/th&gt;\n      &lt;th&gt;Support&lt;\/th&gt;\n      &lt;th&gt;Consensus_SNP&lt;\/th&gt;\n      &lt;th&gt;mean.PP&lt;\/th&gt;\n      &lt;th&gt;mean.CS&lt;\/th&gt;\n    &lt;\/tr&gt;\n  &lt;\/thead&gt;\n&lt;\/table&gt;","options":{"dom":"Bfrtip","buttons":["copy","csv","excel","pdf","print"],"scrollY":400,"scrollX":true,"scrollCollapse":true,"paging":false,"columnDefs":[{"className":"dt-center","targets":"_all"},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}&lt;/script&gt;</code></pre>
 </div>
 </div>
   </div>

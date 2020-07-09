@@ -95,6 +95,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -132,7 +135,7 @@
     <p>Calculate a pairwise LD matrix from a vcf file using <em>plink</em>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>LD.calculate_LD</span>(<span class='no'>locus_dir</span>, <span class='kw'>ld_window</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>ld_format</span> <span class='kw'>=</span> <span class='st'>"r"</span>)</pre>
+    <pre class="usage"><span class='fu'>LD.calculate_LD</span>(<span class='no'>locus_dir</span>, <span class='kw'>ld_window</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>ld_format</span> <span class='kw'>=</span> <span class='st'>"r"</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -160,19 +163,19 @@ r (<code>ld_format="r"</code>) or D' (<code>ld_format="D"</code>) as the pairwis
 <code><a href='LD.LD_blocks.html'>LD.LD_blocks</a>()</code>,
 <code><a href='LD.UKBiobank.html'>LD.UKBiobank</a>()</code>,
 <code><a href='LD.dprime_table.html'>LD.dprime_table</a>()</code>,
-<code><a href='LD.filter_vcf_population.html'>LD.filter_vcf_population</a>()</code>,
-<code><a href='LD.filter_vcf_rsamtools.html'>LD.filter_vcf_rsamtools</a>()</code>,
+<code><a href='LD.filter_vcf_gaston.html'>LD.filter_vcf_gaston</a>()</code>,
 <code><a href='LD.filter_vcf.html'>LD.filter_vcf</a>()</code>,
+<code><a href='LD.get_vcf_folder.html'>LD.get_vcf_folder</a>()</code>,
 <code><a href='LD.leadSNP_block.html'>LD.leadSNP_block</a>()</code>,
 <code><a href='LD.load_or_create.html'>LD.load_or_create</a>()</code>,
 <code><a href='LD.plink_LD.html'>LD.plink_LD</a>()</code>,
+<code><a href='LD.plink_file.html'>LD.plink_file</a>()</code>,
 <code><a href='LD.plot.html'>LD.plot</a>()</code>,
 <code><a href='LD.read_bin.html'>LD.read_bin</a>()</code>,
 <code><a href='LD.read_ld_table.html'>LD.read_ld_table</a>()</code>,
 <code><a href='LD.run_plink_LD.html'>LD.run_plink_LD</a>()</code>,
 <code><a href='LD.translate_population.html'>LD.translate_population</a>()</code>,
-<code><a href='LD.vcf_to_bed.html'>LD.vcf_to_bed</a>()</code>,
-<code><a href='get_vcf_folder.html'>get_vcf_folder</a>()</code></p></div>
+<code><a href='LD.vcf_to_bed.html'>LD.vcf_to_bed</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

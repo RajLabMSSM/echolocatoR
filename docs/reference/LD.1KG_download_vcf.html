@@ -95,6 +95,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -137,11 +140,14 @@
   <span class='kw'>LD_reference</span> <span class='kw'>=</span> <span class='st'>"1KGphase1"</span>,
   <span class='kw'>vcf_folder</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='no'>locus_dir</span>,
-  <span class='no'>locus</span>,
-  <span class='kw'>download_reference</span> <span class='kw'>=</span> <span class='no'>F</span>,
+  <span class='kw'>locus</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>download_reference</span> <span class='kw'>=</span> <span class='no'>T</span>,
   <span class='kw'>whole_vcf</span> <span class='kw'>=</span> <span class='no'>F</span>,
   <span class='kw'>download_method</span> <span class='kw'>=</span> <span class='st'>"wget"</span>,
-  <span class='kw'>nThread</span> <span class='kw'>=</span> <span class='fl'>4</span>
+  <span class='kw'>force_new_vcf</span> <span class='kw'>=</span> <span class='no'>F</span>,
+  <span class='kw'>nThread</span> <span class='kw'>=</span> <span class='fl'>4</span>,
+  <span class='kw'>query_by_regions</span> <span class='kw'>=</span> <span class='no'>F</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -153,6 +159,18 @@
 the default is to delete the full vcf or npz files after <em>echolocator</em> has extracted the necssary subset.
 However, if you wish to keep these full files (which can be quite large) set <code>download_reference=T</code>.</p></td>
     </tr>
+    <tr>
+      <th>query_by_regions</th>
+      <td><p>You can make queries with <code>tabix</code> in two different ways:</p><dl'>
+<dt><code>query_by_regions=F</code> <em>(default)</em></dt><dd><p>Return a vcf with all positions between the min/max in <code>subset_DT</code> Takes up more storage but is MUCH faster</p></dd>
+<dt><code>query_by_regions=T</code></dt><dd><p>Return a vcf with only the exact positions present in <code>subset_DT</code>. Takes up less storage but is MUCH slower</p></dd>
+
+</dl></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>Whether <em>echolocatoR</em> should be verbose or silent.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -163,24 +181,25 @@ However, if you wish to keep these full files (which can be quite large) set <co
 <code><a href='LD.UKBiobank.html'>LD.UKBiobank</a>()</code>,
 <code><a href='LD.calculate_LD.html'>LD.calculate_LD</a>()</code>,
 <code><a href='LD.dprime_table.html'>LD.dprime_table</a>()</code>,
-<code><a href='LD.filter_vcf_population.html'>LD.filter_vcf_population</a>()</code>,
-<code><a href='LD.filter_vcf_rsamtools.html'>LD.filter_vcf_rsamtools</a>()</code>,
+<code><a href='LD.filter_vcf_gaston.html'>LD.filter_vcf_gaston</a>()</code>,
 <code><a href='LD.filter_vcf.html'>LD.filter_vcf</a>()</code>,
+<code><a href='LD.get_vcf_folder.html'>LD.get_vcf_folder</a>()</code>,
 <code><a href='LD.leadSNP_block.html'>LD.leadSNP_block</a>()</code>,
 <code><a href='LD.load_or_create.html'>LD.load_or_create</a>()</code>,
 <code><a href='LD.plink_LD.html'>LD.plink_LD</a>()</code>,
+<code><a href='LD.plink_file.html'>LD.plink_file</a>()</code>,
 <code><a href='LD.plot.html'>LD.plot</a>()</code>,
 <code><a href='LD.read_bin.html'>LD.read_bin</a>()</code>,
 <code><a href='LD.read_ld_table.html'>LD.read_ld_table</a>()</code>,
 <code><a href='LD.run_plink_LD.html'>LD.run_plink_LD</a>()</code>,
 <code><a href='LD.translate_population.html'>LD.translate_population</a>()</code>,
-<code><a href='LD.vcf_to_bed.html'>LD.vcf_to_bed</a>()</code>,
-<code><a href='get_vcf_folder.html'>get_vcf_folder</a>()</code></p></div>
+<code><a href='LD.vcf_to_bed.html'>LD.vcf_to_bed</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"BST1"</span>);
 <span class='no'>subset_DT</span> <span class='kw'>&lt;-</span> <span class='no'>BST1</span>
+<span class='no'>subset_vcf.popDat</span> <span class='kw'>&lt;-</span> <span class='fu'>LD.1KG_download_vcf</span>(<span class='kw'>subset_DT</span><span class='kw'>=</span><span class='no'>BST1</span>, <span class='kw'>LD_reference</span><span class='kw'>=</span><span class='st'>"1KGphase1"</span>, <span class='kw'>locus_dir</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='st'>"~/Desktop"</span>,<span class='no'>locus_dir</span>))
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

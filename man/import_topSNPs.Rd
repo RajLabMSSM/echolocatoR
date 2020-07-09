@@ -14,9 +14,10 @@ import_topSNPs(
   pval_col = "P",
   effect_col = "Effect",
   locus_col = "Locus",
-  group_by_locus = F,
+  grouping_vars = c("Locus"),
   gene_col = "Gene",
-  remove_variants = F
+  remove_variants = NULL,
+  nThread = 4
 )
 }
 \arguments{
@@ -47,6 +48,11 @@ Effect size is preferred, but if not available other metrics like Beta for Odds 
 
 \item{locus_col}{Name of the locus column in the full summary stats file.
 (\emph{default: ="Locus"})}
+
+\item{grouping_vars}{The variables that you want to group by
+such that each grouping_var combination has its own index SNP.
+For example, if you want one index SNP per QTL eGene - GWAS locus pair, you could supply:
+\code{grouping_vars=c("Locus","Gene")}.}
 
 \item{gene_col}{An optional column to keep track of the causal gene(s) in each locus (if known).}
 

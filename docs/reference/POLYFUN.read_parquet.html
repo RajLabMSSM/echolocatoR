@@ -95,6 +95,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -169,8 +172,10 @@ or <code>pandas</code> (Python + <code>reticulate</code>).</p></td>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>parquet_path</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"tools/polyfun/gold"</span>,<span class='st'>"polyloc_test.22.bins.parquet"</span>,<span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"echolocatoR"</span>)
  <span class='co'># Using python (pandas) - default</span>
-<span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='fu'>POLYFUN.read_parquet</span>(<span class='kw'>parquet_path</span><span class='kw'>=</span><span class='no'>parquet_path</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='st'>"pandas"</span>)</div><div class='output co'>#&gt; [1] "+ Importing parquet file with `pandas (Python)`"</div><div class='input'><span class='co'># Using R (SparkR)</span>
-<span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='fu'>POLYFUN.read_parquet</span>(<span class='kw'>parquet_path</span><span class='kw'>=</span><span class='no'>parquet_path</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='st'>"sparkR"</span>)</div><div class='output co'>#&gt; [1] "+ Importing parquet file with `pandas (Python)`"</div></pre>
+<span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='fu'>POLYFUN.read_parquet</span>(<span class='kw'>parquet_path</span><span class='kw'>=</span><span class='no'>parquet_path</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='st'>"pandas"</span>)</div><div class='output co'>#&gt; [1] "+ Importing parquet file with `pandas (Python)`"
+#&gt; [1] "+ CONDA:: conda already installed."</div><div class='input'><span class='co'># Using R (SparkR)</span>
+<span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='fu'>POLYFUN.read_parquet</span>(<span class='kw'>parquet_path</span><span class='kw'>=</span><span class='no'>parquet_path</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='st'>"sparkR"</span>)</div><div class='output co'>#&gt; [1] "+ Importing parquet file with `pandas (Python)`"
+#&gt; [1] "+ CONDA:: conda already installed."</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

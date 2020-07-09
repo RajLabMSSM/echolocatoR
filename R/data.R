@@ -1,5 +1,7 @@
 
 
+
+
 #' \emph{echolocatoR} output example (BST1 locus)
 #'
 #' An example results file after running
@@ -12,14 +14,14 @@
 #' \describe{
 #'   \item{SNP}{SNP RSID}
 #'   \item{CHR}{Chromosome}
-#'   \item{POS}{Genomic positiion (in basepairs)}
-#'   ...
+#'   \item{POS}{Genomic position (in basepairs)}
+#'   \item{...}{Optional: extra columns}
 #' }
 #' @source \url{https://www.biorxiv.org/content/10.1101/388165v3}
 #' @examples
 #' \dontrun{
-#' # Previously "finemap_DT"
-#' BST1 <- data.table::fread("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/BST1/Multi-finemap/Multi-finemap_results.txt")
+#' root_dir <- "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/BST1/Multi-finemap"
+#' BST1 <- data.table::fread(file.path(root_dir,"Multi-finemap_results.txt"))
 #' BST1 <- update_CS_cols(finemap_dat=BST1)
 #' BST1 <- find_consensus_SNPs(finemap_dat=BST1)
 #' usethis::use_data(BST1, overwrite = T)
@@ -41,13 +43,14 @@
 #' \describe{
 #'   \item{SNP}{SNP RSID}
 #'   \item{CHR}{Chromosome}
-#'   \item{POS}{Genomic positiion (in basepairs)}
-#'   ...
+#'   \item{POS}{Genomic position (in basepairs)}
+#'   \item{...}{Optional: extra columns}
 #' }
 #' @source \url{https://www.biorxiv.org/content/10.1101/388165v3}
 #' @examples
 #' \dontrun{
-#' LRRK2 <- data.table::fread("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/LRRK2/Multi-finemap/Multi-finemap_results.txt")
+#' root_dir <- "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/LRRK2/Multi-finemap"
+#' LRRK2 <- data.table::fread(file.path(root_dir,"Multi-finemap_results.txt"))
 #' LRRK2 <- update_CS_cols(finemap_dat=LRRK2)
 #' LRRK2 <- find_consensus_SNPs(finemap_dat=LRRK2)
 #' usethis::use_data(LRRK2, overwrite = T)
@@ -69,13 +72,14 @@
 #' \describe{
 #'   \item{SNP}{SNP RSID}
 #'   \item{CHR}{Chromosome}
-#'   \item{POS}{Genomic positiion (in basepairs)}
-#'   ...
+#'   \item{POS}{Genomic position (in basepairs)}
+#'   \item{...}{Optional: extra columns}
 #' }
 #' @source \url{https://www.biorxiv.org/content/10.1101/388165v3}
 #' @examples
 #' \dontrun{
-#' MEX3C <- data.table::fread("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/MEX3C/Multi-finemap/Multi-finemap_results.txt")
+#' root_dir <- "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/MEX3C/Multi-finemap"
+#' MEX3C <- data.table::fread(file.path(root_dir,"Multi-finemap_results.txt"))
 #' MEX3C <- update_CS_cols(finemap_dat=MEX3C)
 #' MEX3C <- find_consensus_SNPs(finemap_dat=MEX3C)
 #' usethis::use_data(MEX3C, overwrite = T)
@@ -155,8 +159,8 @@
 #' \describe{
 #'   \item{SNP}{SNP RSID}
 #'   \item{CHR}{Chromosome}
-#'   \item{POS}{Genomic positiion (in basepairs)}
-#'   ...
+#'   \item{POS}{Genomic position (in basepairs)}
+#'   \item{...}{Optional: extra columns}
 #' }
 #' @source
 #' \url{https://www.ukbiobank.ac.uk}
@@ -190,13 +194,14 @@
 #' \describe{
 #'   \item{SNP}{SNP RSID}
 #'   \item{CHR}{Chromosome}
-#'   \item{POS}{Genomic positiion (in basepairs)}
-#'   ...
+#'   \item{POS}{Genomic position (in basepairs)}
+#'   \item{...}{Optional: extra columns}
 #' }
 #' @source \url{https://www.biorxiv.org/content/10.1101/388165v3}
 #' @examples
 #' \dontrun{
 #' merged_DT <- merge_finemapping_results(dataset = "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019")
+#' merged_DT <- update_CS_cols(finemap_dat=merged_DT)
 #' usethis::use_data(merged_DT, overwrite=T)
 #' }
 "merged_DT"
@@ -237,7 +242,7 @@
 #-------Corces et al. (bioRxiv) data --------
 
 
-#' bulkATACseq peaks from Alzheimer's disease brain tissue
+#' bulkATACseq peaks from human brain tissue
 #'
 #' Each row represents an individual peak identified in the bulk ATAC-seq data.
 #'
@@ -257,7 +262,7 @@
 
 
 
-#' scATACseq peaks from Alzheimer's disease brain tissue
+#' scATACseq peaks from human brain tissue
 #'
 #' Each row represents an individual peak identified in the single-cell ATAC-seq data.
 #'
@@ -277,7 +282,7 @@
 
 
 
-#' scATACseq cell type-specific peaks from Alzheimer's disease brain tissue
+#' scATACseq cell type-specific peaks from human brain tissue
 #'
 #' Each row represents an individual peak identified from the feature binarization analysis (see methods).
 #'
@@ -297,7 +302,7 @@
 
 
 
-#' FitHiChIP loop calls from Alzheimer's disease brain tissue
+#' FitHiChIP loop calls from human brain tissue
 #'
 #' FitHiChIP loop calls that overlap SNPs derived from analysis of H3K27ac HiChIP data.
 #' Each row represents an individual peak identified from the feature binarization analysis (see methods).
@@ -333,7 +338,7 @@
 
 
 
-#' Cicero_coaccessibility from Alzheimer's disease brain tissue
+#' Cicero_coaccessibility from human brain tissue
 #'
 #' Cicero coaccessibility analysis for peaks that overlap SNPs derived from analysis of scATAC-seq data.
 #' Each row represents an individual peak identified from the feature binarization analysis (see methods).

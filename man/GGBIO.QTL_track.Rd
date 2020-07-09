@@ -23,7 +23,7 @@ in \code{\link{GRanges}} format.}
 \item{show.legend}{Whether to show legend.}
 
 \item{PP_threshold}{The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
-For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.}
+For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\\% Credible Set SNPs.}
 }
 \description{
 Plot QTL data
@@ -33,7 +33,7 @@ data("BST1")
 gr.snp <- DT_to_GRanges(dat)
 ## Create fake QTL P-values
 gr.snp$fake_eQTL.P <- gr.snp$P  * c(1,.9,.7)
-qtl.track <- GGBIO.QTL_track(gr.snp=gr.snp, QTL_prefix="fake_eQTL", labels_subset=c("Lead SNP"), color_r2=F)
+qtl.track <- GGBIO.QTL_track(gr.snp=gr.snp, QTL_prefix="fake_eQTL.", labels_subset=c("Lead SNP"), color_r2=F)
 }
 \seealso{
 Other plot: 

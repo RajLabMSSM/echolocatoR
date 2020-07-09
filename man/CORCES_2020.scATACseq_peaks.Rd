@@ -3,7 +3,7 @@
 \docType{data}
 \name{CORCES_2020.scATACseq_peaks}
 \alias{CORCES_2020.scATACseq_peaks}
-\title{scATACseq peaks from Alzheimer's disease brain tissue}
+\title{scATACseq peaks from human brain tissue}
 \format{
 An object of class \code{data.table} (inherits from \code{data.frame}) with 359022 rows and 10 columns.
 }
@@ -32,6 +32,9 @@ Other CORCES_2020:
 \code{\link{CORCES_2020.HiChIP_FitHiChIP_loop_calls}},
 \code{\link{CORCES_2020.bulkATACseq_peaks}},
 \code{\link{CORCES_2020.cicero_coaccessibility}},
+\code{\link{CORCES_2020.get_HiChIP_FitHiChIP_overlap}()},
+\code{\link{CORCES_2020.get_scATAC_peak_overlap}()},
+\code{\link{CORCES_2020.prepare_peak_overlap}()},
 \code{\link{CORCES_2020.scATACseq_celltype_peaks}}
 }
 \concept{CORCES_2020}

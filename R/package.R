@@ -14,5 +14,4 @@
 #'  All results are merged into a single per-SNP summary file for additional downstream analysis
 #'   and results sharing. Therefore \emph{echolocatoR} drastically reduces the barriers to identifying
 #'   causal variants by making the entire fine-mapping pipeline rapid, robust and scalable.
-#' @keywords internal
 "_PACKAGE"

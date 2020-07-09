@@ -96,6 +96,9 @@ the finemap_loci in querying and fine-mapping loci." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -144,9 +147,10 @@ the <code><a href='finemap_loci.html'>finemap_loci</a></code> in querying and fi
   <span class='kw'>pval_col</span> <span class='kw'>=</span> <span class='st'>"P"</span>,
   <span class='kw'>effect_col</span> <span class='kw'>=</span> <span class='st'>"Effect"</span>,
   <span class='kw'>locus_col</span> <span class='kw'>=</span> <span class='st'>"Locus"</span>,
-  <span class='kw'>group_by_locus</span> <span class='kw'>=</span> <span class='no'>F</span>,
+  <span class='kw'>grouping_vars</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Locus"</span>),
   <span class='kw'>gene_col</span> <span class='kw'>=</span> <span class='st'>"Gene"</span>,
-  <span class='kw'>remove_variants</span> <span class='kw'>=</span> <span class='no'>F</span>
+  <span class='kw'>remove_variants</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>nThread</span> <span class='kw'>=</span> <span class='fl'>4</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -195,6 +199,13 @@ Effect size is preferred, but if not available other metrics like Beta for Odds 
       <th>locus_col</th>
       <td><p>Name of the locus column in the full summary stats file.
 (<em>default: ="Locus"</em>)</p></td>
+    </tr>
+    <tr>
+      <th>grouping_vars</th>
+      <td><p>The variables that you want to group by
+such that each grouping_var combination has its own index SNP.
+For example, if you want one index SNP per QTL eGene - GWAS locus pair, you could supply:
+<code>grouping_vars=c("Locus","Gene")</code>.</p></td>
     </tr>
     <tr>
       <th>gene_col</th>

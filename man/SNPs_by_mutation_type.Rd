@@ -14,6 +14,8 @@ Return only the missense SNPs
 }
 \seealso{
 Other annotate: 
+\code{\link{ANNOTATE.annotate_missense}()},
+\code{\link{ANNOTATE.plot_missense}()},
 \code{\link{biomart_geneInfo}()},
 \code{\link{biomart_snp_info}()},
 \code{\link{biomart_snps_to_geneInfo}()},

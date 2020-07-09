@@ -6,7 +6,9 @@
 
 lead.SNP.coords <- function(consensus_thresh=2){
   annot <- readxl::read_excel("./Data/annotated_finemapping_results.xlsx")
-  annot <- find_consensus_SNPs(annot, consensus_thresh = consensus_thresh)
+  annot <- find_consensus_SNPs(annot,
+                               consensus_thresh = consensus_thresh,
+                               verbose = F)
   annot[is.na(annot$mean.PP),"mean.PP"] <-0
 
   annot.sub <- subset(annot, leadSNP==T, select=c(Gene, SNP, CHR, POS)) %>%
@@ -365,6 +367,8 @@ top_finemapped_loci <- function(dataset="./Data/GWAS/Nalls23andMe_2019",
 # }
 
 
+
+
 leadSNP_comparison <- function(top_SNPs, merged_results){
   leadSNP_summary_table <- data.table:::merge.data.table(
     top_SNPs %>% dplyr::select(leadSNP=SNP, Gene),
@@ -381,3 +385,356 @@ leadSNP_comparison <- function(top_SNPs, merged_results){
 }
 
 
+
+
+#' Tally tool-specific and union CS sizes
+#'
+#' @family summarise
+#' @examples
+#' data("merged_DT");
+#' locus_order <- SUMMARISE.get_CS_counts(merged_DT=merged_DT)
+SUMMARISE.get_CS_counts <- function(merged_DT){
+  UCS_count <- suppressMessages(merged_DT %>%
+    dplyr::group_by(Locus, .drop=F)  %>%
+    dplyr::summarise(UCS.CS_size=dplyr::n_distinct(SNP[Support>0])))
+
+  locus_order <- suppressMessages(merged_DT %>%
+    dplyr::group_by(Locus, .drop=F) %>%
+    dplyr::summarise_at(.vars = vars(dplyr::ends_with("CS")),
+                        .funs=funs(size=dplyr::n_distinct(SNP[.>0], na.rm = T)
+                             # SNPs=paste(unique(SNP[.>0]),collapse=",")
+                             ) ) %>%
+    base::merge(UCS_count, by="Locus") %>%
+    dplyr::arrange(-UCS.CS_size))
+  # locus_order <- locus_order[!endsWith(colnames(locus_order), ".CS_size")]
+  locus_order$Locus <- factor(locus_order$Locus,  levels = locus_order$Locus, ordered = T)
+  return(data.frame(locus_order))
+}
+
+
+
+
+#' Count bins of tool-specific and union CS sizes
+#'
+#' @family summarise
+#' @examples
+#' data("merged_DT");
+#' bin_counts <- SUMMARISE.get_CS_bins(merged_DT=merged_DT)
+SUMMARISE.get_CS_bins <- function(merged_DT){
+  locus_order <- SUMMARISE.get_CS_counts(merged_DT = merged_DT)
+  max_CS_size <- sapply(locus_order[,-1], max, na.rm=T) %>% max()
+  labels = c("0","1","2-4","5-7","8-10","11-15","16+")
+  bin_counts <-
+    locus_order %>%
+    reshape2:::melt.data.frame(measure.vars = grep("*_size$", colnames(locus_order), value = T),
+                               value.name = "CS_size") %>%
+    dplyr::mutate(Method=gsub("\\.CS_size$|_size$","",variable))  %>%
+    dplyr::group_by(Method, .drop=F) %>%
+    dplyr::mutate(bin = case_when(
+      CS_size == 0 ~ labels[1],
+      CS_size == 1 ~ labels[2],
+      CS_size > 1 & CS_size <= 4 ~ labels[3],
+      CS_size > 4 & CS_size <= 7 ~ labels[4],
+      CS_size > 7 & CS_size <= 10 ~ labels[5],
+      CS_size > 10 & CS_size <= 15 ~ labels[6],
+      CS_size >= 16  ~ labels[7]
+    ))
+  bin_counts$bin <- factor(bin_counts$bin, levels = rev(labels), ordered = T)
+  return(data.frame(bin_counts))
+}
+
+
+
+
+#' Plot CS bin counts
+#'
+#' @family summarise
+#' @examples
+#' data("merged_DT");
+#' bin_plot <- SUMMARISE.CS_bin_plot(merged_DT=merged_DT)
+SUMMARISE.CS_bin_plot <- function(merged_DT,
+                                  show_plot=T){
+  bin_counts <- SUMMARISE.get_CS_bins(merged_DT = merged_DT)
+
+  custom_colors <- c("lightgrey",RColorBrewer::brewer.pal(n=5,"GnBu"))
+  bin_plot <- ggplot(subset(bin_counts, Method!="mean"), aes(x=Method, fill=bin)) +
+    geom_bar(stat="count",show.legend = T, position = position_stack(reverse = F), color="lightblue") +
+    # scale_fill_brewer(palette = "Spectral", direction = -1) +
+    scale_fill_manual(values = rev(custom_colors)) +
+    # geom_text(aes(label = paste(bin,"SNPs")), position =  position_stack(vjust = .5), vjust=-1, stat = "count") +
+    geom_text(aes(label = ..count..),  position =  position_stack(vjust = .5), vjust=.5, stat = "count") +
+    theme_bw() +
+    labs(x=NULL, y="Loci", fill="CS size") +
+    coord_flip() +
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          rect = element_blank(),
+          axis.text.x =element_blank(),
+          axis.ticks = element_blank(),
+          legend.position = "top") +
+    guides(fill = guide_legend(nrow = 1, reverse = T))
+  if(show_plot)print(bin_plot)
+  return(list(plot=bin_plot,
+              data=bin_counts))
+}
+
+
+
+
+#' Tally locus-specific SNP group sizes
+#'
+#' @family summarise
+#' @examples
+#' data("merged_DT");
+#' snp_groups <- SUMMARISE.get_SNPgroup_counts(merged_DT=merged_DT)
+SUMMARISE.get_SNPgroup_counts <- function(merged_DT){
+  snp_groups <- merged_DT %>%
+    dplyr::group_by(Locus) %>%
+    dplyr::summarise(Total.SNPs=n_distinct(SNP, na.rm = T),
+                     nom.sig.GWAS=n_distinct(SNP[P<.05], na.rm = T),
+                     sig.GWAS=n_distinct(SNP[P<5e-8], na.rm = T),
+                     CS=n_distinct(SNP[Support>0], na.rm = T),
+                     Consensus=n_distinct(SNP[Support>1], na.rm = T),
+                     topConsensus=n_distinct(SNP[Consensus_SNP & mean.PP==max(mean.PP)], na.rm = T ),
+                     topConsensus.leadGWAS=n_distinct(SNP[Consensus_SNP & leadSNP], na.rm = T ))
+  print(snp_groups[,-1] %>% colSums() / n_distinct(snp_groups$Locus))
+  return(data.frame(snp_groups))
+}
+
+
+
+
+
+#' Bar plot of tool-specific CS sizes
+#'
+#' Loci ordered by UCS size (smallest to largest).
+#' @family summarise
+#' @examples
+#' gg_CS <- SUMARISE.CS_counts_plot(merged_DT=merged_DT)
+SUMARISE.CS_counts_plot <- function(merged_DT,
+                                    ylabel="Locus",
+                                    show_plot=T){
+  # Group and melt CS sizes
+  locus_order <- SUMMARISE.get_CS_counts(merged_DT = merged_DT)
+
+  melt.dat <-
+    locus_order %>%
+    dplyr::mutate(Locus_UCS=paste0(Locus,"  (",UCS.CS_size,")")) %>%
+    reshape2:::melt.data.frame(measure.vars = grep(".CS_size$", colnames(locus_order), value = T),
+                               variable.name = "CS",
+                               value.name = "Credible Set size") %>%
+  dplyr::mutate(Method=gsub(".CS_size$","", CS)) %>%
+  dplyr::arrange(Locus, Method) %>%
+  dplyr::mutate(Method=factor(Method),
+                Locus_UCS=factor(Locus_UCS,levels = unique(Locus_UCS), ordered = T)) %>%
+  subset(Method!="mean")
+  melt.dat[melt.dat$`Credible Set size`==0 | is.na(melt.dat$`Credible Set size`),"Credible Set size"] <- NA
+
+
+ggplot(data=melt.dat, aes(y=Locus, x=`Credible Set size`, fill=Method)) +
+  geom_bar(stat = "identity", color="white", size=.05) +
+  geom_text(aes(label = `Credible Set size`), color="grey20",
+            size=3, show.legend = F, position = position_stack(vjust = .5)) +
+  geom_text(aes(x=sum(`Credible Set size`), label = Locus_UCS),
+            size=3, show.legend = F, position = position_stack(vjust = 1))
+
+  ## Method-specific CS
+  gg_CS <- ggplot(data = melt.dat,
+                  aes(y=Locus, x=`Credible Set size`, fill=Method)) +
+    geom_bar(stat = "identity", color="white", size=.05) +
+    geom_text(aes(label = `Credible Set size`), color="grey20",
+              size=3, show.legend = F, position = position_stack(vjust = .5)) +
+    geom_text(aes(x=sum(`Credible Set size`), label = Locus_UCS),
+              size=3, show.legend = F, position = position_stack(vjust = 1)) +
+    labs(x=NULL, y=ylabel) +
+    theme_bw() +
+    theme(legend.position = "top",
+          # axis.text.y = element_text(),
+          # axis.title.y = element_blank(),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank(),
+          legend.text = element_text(size = 8),
+          legend.key.size = unit(.5, units = "cm" )) +
+    guides(fill = guide_legend(nrow = 2,
+                               title.position = "top",
+                               title.hjust = .5))
+  if(show_plot)print(gg_CS)
+  return(list(plot=gg_CS,
+              data=melt.dat))
+}
+
+
+
+
+
+
+
+#' Plot overlap between some SNP group and various epigenomic data
+#'
+#' @param include.NOTT_2019_peaks Plot SNP subset overlap with
+#' cell type-specific epigenomic peaks.
+#' @param include.NOTT_2019_enhancers_promoters Plot SNP subset overlap with
+#' cell enhancers and promoters.
+#' @param include.Corces_2020_scATACpeaks Plot SNP subset overlap with
+#' cell-type-specific scATAC-seq peaks.
+#' @param include.Corces_2020_Cicero_coaccess Plot SNP subset overlap with
+#' Cicero coaccessibility peaks (derived from scATACseq).
+#' @keywords internal
+#' @family summarise
+#' @source
+#' \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
+#' \href{https://www.biorxiv.org/content/10.1101/2020.01.06.896159v1}{Corces et al. (2020/bioRxiv)}
+#' @examples
+#' data("merged_DT");
+#'
+#' # Consensus SNPs
+#' gg_peaks <- NOTT_2019.peak_overlap_plot(merged_DT=merged_DT, snp_filter="Consensus_SNP==T", fill_title="Consensus SNPs in epigenomic peaks")
+#' # UCS SNPs
+#' gg_peaks <- NOTT_2019.peak_overlap_plot(merged_DT=merged_DT, snp_filter="Support>0", fill_title="UCS SNPs in epigenomic peaks")
+SUMMARISE.peak_overlap_plot <- function(merged_DT,
+                                        snp_filter="Consensus_SNP==T",
+                                        include.NOTT_2019_peaks=T,
+                                        include.NOTT_2019_enhancers_promoters=T,
+                                        include.NOTT_2019_PLACseq=T,
+                                        include.Corces_2020_scATACpeaks=T,
+                                        include.Corces_2020_Cicero_coaccess=T,
+                                        include.Corces_2020_HiChIP_FitHiChIP_coaccess=T,
+                                        facets_formula=". ~ Cell_type",
+                                        show_plot=T,
+                                        label_yaxis=T,
+                                        x_strip_angle=0,
+                                        x_tick_angle=40,
+                                        drop_empty_cols=F,
+                                        fill_title=paste(snp_filter,"\nin epigenomic peaks"),
+                                        save_path=F,
+                                        height=11,
+                                        width=15,
+                                        verbose=T){
+  # no_no_loci<- c("HLA-DRB5","MAPT","ATG14","SP1","LMNB1","ATP6V0A1",
+  #                "RETREG3","UBTF","FAM171A2","MAP3K14","CRHR1","MAPT-AS1","KANSL1","NSF","WNT3")
+  # merged_DT <- subset(merged_DT, !Locus %in% no_no_loci)
+  dat_melt <- data.frame()
+
+  if(include.NOTT_2019_peaks){
+    dat_melt.NOTTpeaks <- NOTT_2019.prepare_peak_overlap(merged_DT = merged_DT,
+                                                         snp_filter = snp_filter)
+    dat_melt.NOTTpeaks$background <- NA
+    dat_melt.NOTTpeaks$Study <- "Nott et al. (2019)"
+    dat_melt <- rbind(dat_melt, dat_melt.NOTTpeaks)
+  }
+
+  if(include.NOTT_2019_enhancers_promoters){
+    dat_melt.NOTTreg <- NOTT_2019.prepare_regulatory_overlap(merged_DT = merged_DT,
+                                                             snp_filter = snp_filter)
+    dat_melt.NOTTreg$background <- 1
+    dat_melt.NOTTreg$Study <- "Nott et al. (2019)"
+    dat_melt <- rbind(dat_melt, dat_melt.NOTTreg)
+  }
+
+  if(include.NOTT_2019_PLACseq){
+    dat_melt.NOTTplac <- NOTT_2019.prepare_placseq_overlap(merged_DT = merged_DT,
+                                                           snp_filter = snp_filter)
+    dat_melt.NOTTplac$background <- NA
+    dat_melt.NOTTplac$Study <- "Nott et al. (2019)"
+    dat_melt <- rbind(dat_melt, dat_melt.NOTTplac)
+  }
+
+  if(include.Corces_2020_scATACpeaks){
+    dat_melt.CORCESpeaks <- CORCES_2020.prepare_peak_overlap(merged_DT = merged_DT,
+                                                             snp_filter = snp_filter,
+                                                             add_cicero = include.Corces_2020_Cicero_coaccess,
+                                                             add_HiChIP_FitHiChIP = include.Corces_2020_HiChIP_FitHiChIP_coaccess,
+                                                             verbose = verbose)
+    dat_melt.CORCESpeaks$background <- NA
+    dat_melt.CORCESpeaks$Study <- "Corces et al. (2020)"
+    dat_melt <- rbind(dat_melt, dat_melt.CORCESpeaks)
+  }
+
+
+  plot_dat <- order_loci_by_UCS_size(dat = dat_melt,
+                                     merged_DT = merged_DT)
+  plot_dat$Assay <- factor(plot_dat$Assay, levels = c("H3K27ac","H3K4me3","ATAC","scATAC","PLAC-seq","Cicero","HiChIP_FitHiChIP","enhancers","promoters"), ordered = T)
+  neuronal_cols <- grep("neuron",unique(plot_dat$Cell_type), value = T)
+  plot_dat$Cell_type <- factor(plot_dat$Cell_type, levels = c("astrocytes","microglia","oligo","OPCs",neuronal_cols,"brain"), ordered = T)
+  plot_dat$background <- as.numeric(plot_dat$background)
+  plot_dat$Cell_type <- gsub(" ","\n",plot_dat$Cell_type)
+
+
+
+  # Plot
+  gg_peaks <- ggplot(data=plot_dat, aes(x=Assay, y=Locus, fill=Count)) +
+    geom_tile(color="white") +
+    # scale_fill_manual(values = consensus_colors) +
+    # scale_fill_discrete(na.value = "transparent") +
+    scale_fill_gradient(na.value = "transparent",low = scales::alpha("blue",.7), high = scales::alpha("red",.7)) +
+    # geom_point(aes(size=ifelse(Count>0, "dot", "no_dot")), show.legend = F, alpha=.8, color="white") +
+
+    # geom_rect( aes(xmin = Assay, xmax = dplyr::lead(Assay), ymin = -0.5, ymax = Inf, fill = background),
+    #           alpha = 0.5, color="grey") +
+    geom_tile(data = subset(plot_dat, !is.na(background)), aes( width=0.9, height=0.9), color="cyan", size=.7) +
+
+    facet_grid(facets = formula(facets_formula),
+               scales = if(drop_empty_cols) "free_x" else "fixed",
+               space = "free_x") +
+    scale_size_manual(values=c(dot=.5, no_dot=NA), guide="none") +
+    labs(fill = fill_title) +
+    theme_bw() +
+    theme(legend.position = "top",
+          legend.title.align = .5,
+          axis.text.x = element_text(angle = x_tick_angle,
+                                     hjust = if(x_tick_angle>0) 1 else NULL),
+          # legend.background =  element_rect(fill = "lightgray"),
+          legend.key = element_rect(colour = "gray60"),
+          axis.title.y = element_blank(),
+          strip.background = element_rect(fill="grey90"),
+          strip.text.x = element_text(angle = x_strip_angle),
+          legend.text = element_text(size = 8),
+          legend.text.align = .5,
+          # legend.key.size = unit(.5, units = "cm" ),
+          legend.box="horizontal",
+          panel.background = element_rect(fill = 'transparent'),
+          # panel.grid = element_line(color="gray", size=5),
+          # panel.grid.major.x = element_line(color="gray", size=.5),
+          # panel.grid.major.x = element_line(color="gray", size=.5),
+
+          panel.grid.minor = element_line(color="white", size=.5)) +
+    guides(color = guide_legend(nrow = 1, reverse = F,
+                                title.position = "top",
+                                # label.position = "top",
+                                title.hjust = .5,
+                                label.hjust = -1)) +
+    # Keep unused levels/Loci
+    scale_y_discrete(drop=FALSE)
+
+  if(label_yaxis==F){
+    gg_peaks <- gg_peaks + theme(axis.text.y = element_blank())
+  }
+
+  if(show_plot) print(gg_peaks)
+  if(save_path!=F){
+    printer("+ Saving plot ==>",save_path,v=verbose)
+    ggplot2::ggsave(save_path, gg_peaks, height=height, width=width)
+  }
+  return(list(data=dat_melt,
+              plot=gg_peaks))
+}
+
+
+
+
+
+
+count_and_melt <- function(merged_annot,
+                           snp_filter="Consensus_SNP==T",
+                           grouping_vars=c("Locus","Cell_type","Assay")){
+  consensus_melt <-
+    data.table::setDT(merged_annot)[, .(Count = dplyr::n_distinct(SNP[eval(parse(text=snp_filter))], na.rm = T)),
+                                    by=grouping_vars]
+  if(length(grouping_vars)>=3){
+    consensus_melt <- subset(consensus_melt,
+                             !is.na(dplyr::vars(grouping_vars[2])) &
+                               !is.na(dplyr::vars(grouping_vars[3]) ), .drop=F)%>%
+      dplyr::mutate(Annotation = paste0(eval(parse(text=grouping_vars[2])),"_",eval(parse(text=grouping_vars[3]))))
+  }
+  return(consensus_melt)
+}

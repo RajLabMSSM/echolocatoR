@@ -17,6 +17,8 @@ gene_info <- biomart_geneInfo(c("PTK2B","CLU","APOE"))
 }
 \seealso{
 Other annotate: 
+\code{\link{ANNOTATE.annotate_missense}()},
+\code{\link{ANNOTATE.plot_missense}()},
 \code{\link{SNPs_by_mutation_type}()},
 \code{\link{biomart_snp_info}()},
 \code{\link{biomart_snps_to_geneInfo}()},

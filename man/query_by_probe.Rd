@@ -19,6 +19,9 @@ query_by_probe(
 \arguments{
 \item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.}
 
+\item{gene_col}{For QTL studies, the name of the \link{e}gene column in the full summary stats file (\emph{default: "gene"}).
+This column will be used for filtering summary stats if supplying a named list of gene:Locus pairs to \code{loci}.}
+
 \item{chrom_col}{Name of the chromosome column in the full summary stats file.
 Can be "chr1" or "1" format.
 (\emph{default: ="CHR"})}

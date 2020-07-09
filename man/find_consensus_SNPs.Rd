@@ -6,17 +6,17 @@
 \usage{
 find_consensus_SNPs(
   finemap_dat,
-  verbose = T,
   credset_thresh = 0.95,
   consensus_thresh = 2,
   sort_by_support = T,
-  exclude_methods = NULL
+  exclude_methods = NULL,
+  verbose = T
 )
 }
 \arguments{
-\item{verbose}{Whether \emph{echolocatoR} should be verbose or silent.}
-
 \item{consensus_thresh}{Threshold for determining \strong{Consensus_SNP} status.}
+
+\item{verbose}{Whether \emph{echolocatoR} should be verbose or silent.}
 }
 \description{
 Adds several columns that summarise the results across all fine-mapping tools that were run:

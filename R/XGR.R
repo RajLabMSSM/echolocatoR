@@ -197,7 +197,11 @@ XGR.download_and_standardize <- function(lib.selections=c("ENCODE_TFBS_Clustered
     # Merge lists together
     if(!is.null(all_GRL)){
       ALL_GRL <- unlist(GenomicRanges::GRangesList(all_GRL))
-      ALL_GRL <- GRanges_overlap(finemap_dat = finemap_dat, regions = ALL_GRL)
+      ALL_GRL <- GRanges_overlap(dat1 = finemap_dat,
+                                 chrom_col.1 = "CHR",
+                                 start_col.1 = "POS",
+                                 end_col.1 = "POS",
+                                 dat2 = ALL_GRL)
       # Parse metadata
       ALL_GRL$library <- lib.name
       ALL_GRL$fullname <- names(ALL_GRL)
@@ -246,8 +250,11 @@ XGR.iterate_overlap <- function(lib.selections=c("ENCODE_TFBS_ClusteredV3_CellTy
   #                 "RETREG3","UBTF","FAM171A2","MAP3K14","CRHR1","MAPT-AS1","KANSL1","NSF","WNT3")
   # subset_DT <- subset(subset_DT, !Locus %in% no_no_loci)
   # subset_DT <- assign_lead_SNP(subset_DT)
-  gr.hits <- GRanges_overlap(finemap_dat = subset_DT,
-                             regions = gr.lib)
+  gr.hits <- GRanges_overlap(dat1 = subset_DT,
+                             chrom_col.1 = "CHR",
+                             start_col.1 = "POS",
+                             end_col.1 = "POS",
+                             dat2 = gr.lib)
 
   ucs.hits <-subset(gr.hits, Consensus_SNP)
   length(unique(subset(subset_DT, Consensus_SNP)$SNP))

@@ -18,6 +18,8 @@ Summarise \code{HaploR} annotations
 }
 \seealso{
 Other annotate: 
+\code{\link{ANNOTATE.annotate_missense}()},
+\code{\link{ANNOTATE.plot_missense}()},
 \code{\link{SNPs_by_mutation_type}()},
 \code{\link{biomart_geneInfo}()},
 \code{\link{biomart_snp_info}()},

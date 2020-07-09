@@ -11,7 +11,7 @@ assign_lead_SNP(new_DT, verbose = T)
 }
 \value{
 Fine-mapping results data.frame with new boolean \strong{leadSNP} column,
- indicating whether each SNPs is the lead GWAS SNP in that locus or not.
+indicating whether each SNPs is the lead GWAS SNP in that locus or not.
 }
 \description{
 If none of the SNPs in the data.frame have \code{leadSNP==T},

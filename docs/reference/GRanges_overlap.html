@@ -95,6 +95,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -133,15 +136,16 @@
     </div>
 
     <pre class="usage"><span class='fu'>GRanges_overlap</span>(
-  <span class='no'>finemap_dat</span>,
-  <span class='no'>regions</span>,
-  <span class='kw'>return_merged</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>chrom_col.1</span> <span class='kw'>=</span> <span class='st'>"CHR"</span>,
-  <span class='kw'>start_col.1</span> <span class='kw'>=</span> <span class='st'>"POS"</span>,
-  <span class='kw'>end_col.1</span> <span class='kw'>=</span> <span class='st'>"POS"</span>,
-  <span class='kw'>chrom_col.2</span> <span class='kw'>=</span> <span class='st'>"CHR"</span>,
+  <span class='no'>dat1</span>,
+  <span class='no'>dat2</span>,
+  <span class='kw'>chrom_col.1</span> <span class='kw'>=</span> <span class='st'>"chrom"</span>,
+  <span class='kw'>start_col.1</span> <span class='kw'>=</span> <span class='st'>"start"</span>,
+  <span class='kw'>end_col.1</span> <span class='kw'>=</span> <span class='st'>"end"</span>,
+  <span class='kw'>chrom_col.2</span> <span class='kw'>=</span> <span class='st'>"chrom"</span>,
   <span class='kw'>start_col.2</span> <span class='kw'>=</span> <span class='st'>"start"</span>,
-  <span class='kw'>end_col.2</span> <span class='kw'>=</span> <span class='st'>"end"</span>
+  <span class='kw'>end_col.2</span> <span class='kw'>=</span> <span class='st'>"end"</span>,
+  <span class='kw'>return_merged</span> <span class='kw'>=</span> <span class='no'>T</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>
 )</pre>
 
 

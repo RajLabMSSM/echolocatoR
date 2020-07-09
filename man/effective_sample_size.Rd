@@ -4,7 +4,7 @@
 \alias{effective_sample_size}
 \title{Calculate effective sample size}
 \usage{
-effective_sample_size(finemap_dat)
+effective_sample_size(finemap_dat, sample_size = NULL, verbose = T)
 }
 \arguments{
 \item{finemap_dat}{Preprocessed \emph{echolocatoR} locus subset file.
@@ -13,12 +13,11 @@ Requires the columns \strong{N_cases} and \strong{N_controls}.}
 \description{
 This is an often-cited approximation for the effective sample size in a case-control study.
 i.e., this is the sample size required to identify an association with a
- quantitative trait with the same power as in your present study.
- (from email correpsondence with Omer Weissbrod)
+quantitative trait with the same power as in your present study.
+(from email correpsondence with Omer Weissbrod)
 }
 \examples{
-data("BST1")
-finemap_DT <- BST1
-finemap_DT$effective_sample_size <- effective_sample_size(finemap_DT)
+data("BST1");
+finemap_DT <- effective_sample_size(finemap_dat=BST1)
 }
 \keyword{internal}

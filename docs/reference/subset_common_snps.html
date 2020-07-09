@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Subset LD matrix and dataframe to only their shared SNPs — subset_common_snps" />
-<meta property="og:description" content="Find the SNPs that are shared between an LD matrix and another data.frame with a `SNP` column.
+<meta property="og:description" content="Find the SNPs that are shared between an LD matrix and another data.frame with a SNP column.
 Then remove any non-shared SNPs from both objects." />
 
 
@@ -96,6 +96,9 @@ Then remove any non-shared SNPs from both objects." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -130,11 +133,11 @@ Then remove any non-shared SNPs from both objects." />
     </div>
 
     <div class="ref-description">
-    <p>Find the SNPs that are shared between an LD matrix and another data.frame with a `SNP` column.
+    <p>Find the SNPs that are shared between an LD matrix and another data.frame with a <code>SNP</code> column.
 Then remove any non-shared SNPs from both objects.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>subset_common_snps</span>(<span class='no'>LD_matrix</span>, <span class='no'>finemap_dat</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>F</span>)</pre>
+    <pre class="usage"><span class='fu'>subset_common_snps</span>(<span class='no'>LD_matrix</span>, <span class='no'>finemap_dat</span>, <span class='kw'>fillNA</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>F</span>)</pre>
 
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -148,6 +151,9 @@ Then remove any non-shared SNPs from both objects.</p>
 <code><a href='limit_SNPs.html'>limit_SNPs</a>()</code>,
 <code><a href='snps_to_condition.html'>snps_to_condition</a>()</code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"BST1"</span>); <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>'LD_matrix'</span>);
+<span class='no'>finemap_dat</span><span class='kw'>=</span><span class='no'>BST1</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

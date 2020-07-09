@@ -22,7 +22,7 @@ merge_finemapping_results(
 }
 \arguments{
 \item{dataset}{Path to the folder you want to recursively search for results files within
- (e.g. \url{"Data/GWAS/Nalls23andMe_2019"}).
+(e.g. \url{"Data/GWAS/Nalls23andMe_2019"}).
 Set this to a path that includes multiple subfolders if you want to gather results
 from multiple studies at once
 (e.g. \url{"Data/GWAS"}).}
@@ -57,5 +57,13 @@ to classify it as a \strong{Consensus_SNP}.}
 \description{
 Gather fine-mapping results from \emph{echolocatoR} across all loci
 and merge into a single data.frame.
+}
+\examples{
+dataset_dir <- "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019"
+# UCS and lead SNPs: No annotation
+merged_DT <- merge_finemapping_results(dataset=dataset_dir, minimum_support=1, include_leadSNPs=T)
+
+# UCS and lead SNPs: With annotations
+merged_DT <- merge_finemapping_results(dataset=dataset_dir, minimum_support=1, include_leadSNPs=T, haploreg_annotation=T, biomart_annotation=T)
 }
 \concept{annotatate}

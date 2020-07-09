@@ -3,7 +3,7 @@
 \docType{data}
 \name{CORCES_2020.HiChIP_FitHiChIP_loop_calls}
 \alias{CORCES_2020.HiChIP_FitHiChIP_loop_calls}
-\title{FitHiChIP loop calls from Alzheimer's disease brain tissue}
+\title{FitHiChIP loop calls from human brain tissue}
 \format{
 An object of class \code{data.table} (inherits from \code{data.frame}) with 11542 rows and 11 columns.
 }
@@ -47,6 +47,9 @@ usethis::use_data(CORCES_2020.HiChIP_FitHiChIP_loop_calls)
 Other CORCES_2020: 
 \code{\link{CORCES_2020.bulkATACseq_peaks}},
 \code{\link{CORCES_2020.cicero_coaccessibility}},
+\code{\link{CORCES_2020.get_HiChIP_FitHiChIP_overlap}()},
+\code{\link{CORCES_2020.get_scATAC_peak_overlap}()},
+\code{\link{CORCES_2020.prepare_peak_overlap}()},
 \code{\link{CORCES_2020.scATACseq_celltype_peaks}},
 \code{\link{CORCES_2020.scATACseq_peaks}}
 }

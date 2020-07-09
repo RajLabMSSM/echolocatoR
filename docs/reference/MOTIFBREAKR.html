@@ -96,6 +96,9 @@ a transcription factor binding motif (if it falls witihn one)." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -135,16 +138,17 @@ a transcription factor binding motif (if it falls witihn one).</p>
     </div>
 
     <pre class="usage"><span class='fu'>MOTIFBREAKR</span>(
-  <span class='no'>snp_list</span>,
+  <span class='no'>rsid_list</span>,
   <span class='kw'>save_rds</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='no'>dataset_dir</span>,
+  <span class='kw'>dataset_dir</span> <span class='kw'>=</span> <span class='st'>"./results"</span>,
   <span class='kw'>pwmList</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>organism</span> <span class='kw'>=</span> <span class='st'>"Hsapiens"</span>,
+  <span class='kw'>organism</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>threshold</span> <span class='kw'>=</span> <span class='fl'>0.85</span>,
   <span class='kw'>show.neutral</span> <span class='kw'>=</span> <span class='no'>F</span>,
   <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"default"</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>calculate_all_pval</span> <span class='kw'>=</span> <span class='no'>F</span>
+  <span class='kw'>calculate_all_pval</span> <span class='kw'>=</span> <span class='no'>T</span>,
+  <span class='kw'>force_new</span> <span class='kw'>=</span> <span class='no'>F</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -193,9 +197,9 @@ details.</p></td>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='co'># data("merged_DT")</span>
-<span class='co'># snp_list &lt;- unique(subset(merged_DT, Support&gt;0 | leadSNP)$SNP)</span>
-<span class='no'>snp_list</span> <span class='kw'>&lt;-</span> <span class='st'>"rs1006140"</span>
-<span class='no'>mb.results</span> <span class='kw'>&lt;-</span> <span class='fu'>MOTIFBREAKR</span>(<span class='kw'>snp_list</span><span class='kw'>=</span><span class='no'>snp_list</span>)
+<span class='co'># rsid_list &lt;- unique(subset(merged_DT, Support&gt;0 | leadSNP)$SNP)</span>
+<span class='no'>rsid_list</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"rs11175620"</span>,<span class='st'>"rs7294619"</span>,<span class='st'>"rs74324737"</span>)
+<span class='no'>mb.results</span> <span class='kw'>&lt;-</span> <span class='fu'>MOTIFBREAKR</span>(<span class='kw'>rsid_list</span><span class='kw'>=</span><span class='no'>rsid_list</span>, <span class='kw'>calculate_all_pval</span><span class='kw'>=</span><span class='no'>T</span>)
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

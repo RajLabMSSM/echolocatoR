@@ -102,6 +102,9 @@ and thier respective p-values." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -146,12 +149,27 @@ We can also see the absolute scores for our method in scoreRef and scoreAlt
 and thier respective p-values.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>MOTIFBREAKR.summarize</span>(<span class='no'>merged_DT</span>, <span class='no'>mb.results</span>, <span class='kw'>no_no_loci</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>MOTIFBREAKR.summarize</span>(
+  <span class='no'>merged_DT</span>,
+  <span class='no'>mb.results</span>,
+  <span class='kw'>pct_threshold</span> <span class='kw'>=</span> <span class='fl'>0.7</span>,
+  <span class='kw'>pvalue_threshold</span> <span class='kw'>=</span> <span class='fl'>1e-04</span>,
+  <span class='kw'>effect_strengths</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"strong"</span>),
+  <span class='kw'>snp_filter</span> <span class='kw'>=</span> <span class='st'>"Consensus_SNP==T"</span>,
+  <span class='kw'>no_no_loci</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
+)</pre>
 
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"merged_DT"</span>)</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"merged_DT"</span>)
+<span class='co'># root_dir &lt;- "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/motifbreakR"</span>
+<span class='no'>root_dir</span> <span class='kw'>&lt;-</span> <span class='st'>"/pd-omics/brian/results/_genome_wide/motifbreakR"</span>
+<span class='no'>mb.results</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='no'>root_dir</span>, <span class='st'>"motifbreakR_results.rds"</span>))
+ <span class='no'>mb.lrrk2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span>(<span class='st'>"/pd-omics/brian/results/_genome_wide/motifbreakR/motifbreakR_results.p_values_LRRK2.rds"</span>)
+ <span class='no'>mb.encode</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span>(<span class='st'>"/pd-omics/brian/results/_genome_wide/motifbreakR/motifbreakR_results.encode.lrrk2.rds"</span>)
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

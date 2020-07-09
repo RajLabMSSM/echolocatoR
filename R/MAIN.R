@@ -34,6 +34,9 @@
 # R package remote dependencies:
 ## https://cran.r-project.org/web/packages/devtools/vignettes/dependencies.html
 
+# Turn on rmarkdown syntax within Roxygen
+## https://cran.r-project.org/web/packages/roxygen2/vignettes/rd-formatting.html
+
 # regex commands:
 ## http://www.endmemo.com/program/R/gsub.php
 
@@ -197,6 +200,8 @@
 #'  }
 #' This process of reversing per-SNP valences based on aligning the alleles is known as allele flipping.
 #' This is important when comparing individual SNPs, but can also have an impact on colocalization results.
+#' @param gene_col For QTL studies, the name of the [e]gene column in the full summary stats file (\emph{default: "gene"}).
+#' This column will be used for filtering summary stats if supplying a named list of gene:Locus pairs to \code{loci}.
 #' @param N_cases_col Name of the column in the full summary stats that has the number of case subjects in the study.
 #' This can either be per SNP sample sizes, or one number repeated across all rows.
 #' Proxy cases (e.g. relatives of people with the disease being investigated) should be included in this estimate if any were used in the study.
@@ -330,10 +335,9 @@ finemap_pipeline <- function(locus,
                              force_new_subset=F,
                              force_new_LD=F,
                              force_new_finemap=T,
-                             finemap_methods=c("ABF","SUSIE","FINEMAP"),
+                             finemap_methods=c("ABF","FINEMAP","SUSIE","POLYFUN_SUSIE"),
                              bp_distance=500000,
                              n_causal=5,
-                             sample_size=NA,
                              chrom_col="CHR",
                              position_col="POS",
                              snp_col="SNP",
@@ -346,11 +350,13 @@ finemap_pipeline <- function(locus,
                              MAF_col="MAF",
                              A1_col = "A1",
                              A2_col = "A2",
+                             gene_col="Gene",
                              N_cases_col="N_cases",
                              N_controls_col="N_controls",
                              N_cases=NULL,
                              N_controls=NULL,
                              proportion_cases="calculate",
+                             sample_size=NULL,
 
                              LD_reference="1KGphase1",
                              superpopulation="EUR",
@@ -373,12 +379,12 @@ finemap_pipeline <- function(locus,
                              probe_path = "./Data/eQTL/gene.ILMN.map",
                              conditioned_snps,
                              plot_LD = F,
-                             verbose=T,
                              remove_tmps=T,
                              plot.types=c("simple"),
                              PAINTOR_QTL_datasets=NULL,
                              server=F,
                              PP_threshold=.95,
+                             QTL_prefixes=NULL,
 
                              plot.window=NULL,
                              plot.Nott_epigenome = plot.Nott_epigenome,
@@ -388,7 +394,8 @@ finemap_pipeline <- function(locus,
                              plot.Roadmap=F,
                              plot.Roadmap_query=NULL,
 
-                             conda_env="echoR"){
+                             conda_env="echoR",
+                             verbose=T){
    # Create paths
    subset_path <- get_subset_path(results_dir = results_dir,
                                   dataset_type = dataset_type,
@@ -397,7 +404,7 @@ finemap_pipeline <- function(locus,
    locus_dir <- get_locus_dir(subset_path = subset_path)
 
    # Extract subset
-   subset_DT <- extract_SNP_subset(locus = locus,
+   subset_DT <- extract_SNP_subset(locus_dir = locus_dir,
                                     top_SNPs = top_SNPs,
                                     fullSS_path = fullSS_path,
                                     subset_path  =  subset_path,
@@ -415,12 +422,14 @@ finemap_pipeline <- function(locus,
                                     freq_col = freq_col,
                                     A1_col = A1_col,
                                     A2_col = A2_col,
+                                    gene_col = gene_col,
 
                                     N_cases_col = N_cases_col,
                                     N_controls_col = N_controls_col,
                                     N_cases = N_cases,
                                     N_controls = N_controls,
                                     proportion_cases = proportion_cases,
+                                    sample_size = sample_size,
 
                                     bp_distance = bp_distance,
                                     superpopulation = superpopulation,
@@ -429,8 +438,10 @@ finemap_pipeline <- function(locus,
                                     file_sep = file_sep,
                                     query_by = query_by,
                                     probe_path = probe_path,
-                                    remove_tmps = remove_tmps)
+                                    QTL_prefixes=QTL_prefixes,
 
+                                    remove_tmps = remove_tmps,
+                                    verbose = verbose)
   ### Compute LD matrix
   message("--- Step 2: Calculate Linkage Disequilibrium ---")
   LD_matrix <- LD.load_or_create(locus_dir=locus_dir,
@@ -446,23 +457,23 @@ finemap_pipeline <- function(locus,
                                  LD_block_size=LD_block_size,
                                  min_Dprime=min_Dprime,
                                  remove_correlates=remove_correlates,
-                                 verbose=verbose,
                                  server=server,
-                                 remove_tmps=remove_tmps)
+                                 remove_tmps=remove_tmps,
+                                 verbose=verbose)
 
   #### ***** SNP Filters ***** ###
   # Remove pre-specified SNPs
   ## Do this step AFTER saving the LD to disk so that it's easier to re-subset in different ways later without having to redownload LD.
   message("-------------- Step 3: Filter SNPs -------------")
   subset_DT <- filter_snps(subset_DT=subset_DT,
-                                  bp_distance=bp_distance,
-                                  remove_variants=remove_variants,
-                                  locus=locus,
-                                  verbose=verbose,
-                                  min_POS=min_POS,
-                                  max_POS=max_POS,
-                                  max_snps=max_snps,
-                                  trim_gene_limits=trim_gene_limits)
+                            bp_distance=bp_distance,
+                            remove_variants=remove_variants,
+                            locus=locus,
+                            verbose=verbose,
+                            min_POS=min_POS,
+                            max_POS=max_POS,
+                            max_snps=max_snps,
+                            trim_gene_limits=trim_gene_limits)
   # Subset LD and df to only overlapping SNPs
   sub.out <- subset_common_snps(LD_matrix, subset_DT)
   LD_matrix <- sub.out$LD
@@ -490,10 +501,11 @@ finemap_pipeline <- function(locus,
                                 A2_col = A2_col,
                                 PAINTOR_QTL_datasets = PAINTOR_QTL_datasets,
                                 PP_threshold = PP_threshold,
-                                conda_env = conda_env)
-  finemap_dat <- find_consensus_SNPs(finemap_dat, credset_thresh = PP_threshold)
-  # Step 6: COLOCALIZE
-  # Step 7: Functionally Fine-map
+                                conda_env = conda_env,
+                                verbose = verbose)
+  finemap_dat <- find_consensus_SNPs(finemap_dat,
+                                     credset_thresh = PP_threshold,
+                                     verbose = verbose)
 
   # Plot
   message("--------------- Step 7: Visualize --------------")
@@ -503,13 +515,15 @@ finemap_pipeline <- function(locus,
                             LD_matrix = LD_matrix,
                             locus_dir = locus_dir,
                             method_list = finemap_methods,
+                            QTL_prefixes = QTL_prefixes,
                             Nott_epigenome = F,
                             mean.PP = T,
                             XGR_libnames = NULL,
                             max_transcripts = 1,
                             plot.window = plot.window,
                             save_plot = T,
-                            show_plot = T)
+                            show_plot = T,
+                            verbose = verbose)
     })
   }
   if("fancy" %in% plot.types){
@@ -518,6 +532,7 @@ finemap_pipeline <- function(locus,
                         LD_matrix = LD_matrix,
                         locus_dir = locus_dir,
                         method_list = finemap_methods,
+                        QTL_prefixes = QTL_prefixes,
                         max_transcripts = 1,
                         plot.window = plot.window,
                         save_plot = T,
@@ -530,14 +545,17 @@ finemap_pipeline <- function(locus,
 
                         Nott_epigenome = plot.Nott_epigenome,
                         Nott_binwidth = plot.Nott_binwidth,
-                        Nott_bigwig_dir = plot.Nott_bigwig_dir)
+                        Nott_bigwig_dir = plot.Nott_bigwig_dir,
+                        verbose = verbose)
     })
   }
 
   # Plot LD
   if(plot_LD){
     try({
-      LD_plot(LD_matrix=LD_matrix, subset_DT=subset_DT, span=10)
+      LD.plot(LD_matrix=LD_matrix,
+              subset_DT=subset_DT,
+              span=10)
     })
   }
   # Cleanup:
@@ -556,6 +574,8 @@ finemap_pipeline <- function(locus,
   }
   return(finemap_dat)
 }
+
+
 
 
 
@@ -582,10 +602,9 @@ finemap_loci <- function(loci,
                          force_new_finemap=T,
                          results_dir="./results",
                          top_SNPs="auto",
-                         finemap_methods=c("ABF","SUSIE","FINEMAP"),
+                         finemap_methods=c("ABF","FINEMAP","SUSIE","POLYFUN_SUSIE"),
                          bp_distance=500000,
                          n_causal=5,
-                         sample_size=NA,
                          chrom_col="CHR",
                          position_col="POS",
                          snp_col="SNP",
@@ -598,11 +617,14 @@ finemap_loci <- function(loci,
                          freq_col="Freq",
                          A1_col = "A1",
                          A2_col = "A2",
+                         gene_col="Gene",
+
                          N_cases_col="N_cases",
                          N_controls_col="N_controls",
                          N_cases=NULL,
                          N_controls=NULL,
                          proportion_cases="calculate",
+                         sample_size=NULL,
 
                          LD_reference="1KGphase1",
                          superpopulation="EUR",
@@ -622,11 +644,11 @@ finemap_loci <- function(loci,
                          probe_path = "./Data/eQTL/gene.ILMN.map",
                          conditioned_snps="auto",
                          plot_LD=F,
-                         verbose=T,
                          remove_tmps=T,
                          PAINTOR_QTL_datasets=NULL,
                          server=F,
                          PP_threshold=.95,
+                         QTL_prefixes=NULL,
 
                          plot.types = c("simple"),
                          plot.window=NULL,
@@ -637,9 +659,14 @@ finemap_loci <- function(loci,
                          plot.Roadmap=F,
                          plot.Roadmap_query=NULL,
 
-                         conda_env="echoR"
-                         ){
+                         conda_env="echoR",
+                         verbose=T){
   conditioned_snps <- snps_to_condition(conditioned_snps, top_SNPs, loci)
+  genes_detected <- detect_genes(loci = loci, verbose = verbose)
+  if(genes_detected){
+    top_SNPs <- dplyr::mutate(top_SNPs, Locus_Gene=paste(Locus,Gene,sep="_"))
+    top_SNPs <- subset(top_SNPs, Locus_Gene %in% paste(unname(loci),names(loci),sep="_"))
+  }
 
   FINEMAP_DAT <- lapply(1:length(unique(loci)), function(i){
     start_gene <- Sys.time()
@@ -676,13 +703,15 @@ finemap_loci <- function(loci,
                                      locus_col=locus_col,
                                      MAF_col=MAF_col,
                                      freq_col=freq_col,
-                                     A1_col = A1_col,
-                                     A2_col = A2_col,
-                                     N_cases_col = N_cases_col,
-                                     N_controls_col = N_controls_col,
-                                     N_cases = N_cases,
-                                     N_controls = N_controls,
-                                     proportion_cases = proportion_cases,
+                                     A1_col=A1_col,
+                                     A2_col=A2_col,
+                                     gene_col=gene_col,
+                                     N_cases_col=N_cases_col,
+                                     N_controls_col=N_controls_col,
+                                     N_cases=N_cases,
+                                     N_controls=N_controls,
+                                     proportion_cases=proportion_cases,
+                                     sample_size=sample_size,
 
                                      LD_reference=LD_reference,
                                      superpopulation=superpopulation,
@@ -709,6 +738,7 @@ finemap_loci <- function(loci,
                                      PAINTOR_QTL_datasets=PAINTOR_QTL_datasets,
                                      server=server,
                                      PP_threshold=PP_threshold,
+                                     QTL_prefixes=QTL_prefixes,
 
                                      plot.window=plot.window,
                                      plot.Nott_epigenome=plot.Nott_epigenome,
@@ -718,7 +748,8 @@ finemap_loci <- function(loci,
                                      plot.Roadmap=plot.Roadmap,
                                      plot.Roadmap_query=plot.Roadmap_query,
 
-                                     conda_env = conda_env)
+                                     conda_env=conda_env,
+                                     verbose=verbose)
       finemap_dat <- data.table::data.table(Locus=locus, finemap_dat)
       cat('  \n')
     }) ## end try()
@@ -727,7 +758,7 @@ finemap_loci <- function(loci,
     print(round(end_gene-start_gene,1))
   return(finemap_dat)
   }) # end for loop
-  FINEMAP_DAT <- data.table::rbindlist(FINEMAP_DAT)
+  FINEMAP_DAT <- data.table::rbindlist(FINEMAP_DAT, fill = T)
   print(createDT_html( subset(FINEMAP_DAT, Support >0) ))
   return(FINEMAP_DAT)
 }

@@ -54,6 +54,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -85,7 +88,7 @@
       <h1 data-toc-skip>echolocatoR: plotting vignette</h1>
                         <h4 class="author">Brian M. Schilder</h4>
             
-            <h4 class="date">Most recent update:<br> 2020-06-26</h4>
+            <h4 class="date">Most recent update:<br> 2020-07-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/RajLabMSSM/echolocatoR/blob/master/vignettes/plotting_vignette.Rmd"><code>vignettes/plotting_vignette.Rmd</code></a></small>
       <div class="hidden name"><code>plotting_vignette.Rmd</code></div>
@@ -147,12 +150,8 @@ The plot is centered on the lead/index SNP.<br>
                        <span class="kw">XGR_libnames</span><span class="kw">=</span><span class="kw">NULL</span>,
                        <span class="kw">save_plot</span><span class="kw">=</span><span class="no">F</span>,
                        <span class="kw">show_plot</span><span class="kw">=</span><span class="no">show_plot</span>)
-<span class="co">#&gt; [1] "+ Identifying Consensus SNPs..."</span>
-<span class="co">#&gt; [1] "++ support_thresh = 2"</span>
-<span class="co">#&gt; [1] "+ Calculating mean Posterior Probability (mean.PP)..."</span>
-<span class="co">#&gt; [1] "++ 4 fine-mapping methods used."</span>
-<span class="co">#&gt; [1] "++ 7 Credible Set SNPs identified."</span>
-<span class="co">#&gt; [1] "++ 3 Consensus SNPs identified."</span>
+<span class="co">#&gt; [1] "+ Filling NAs in CS cols with 0"</span>
+<span class="co">#&gt; [1] "+ Filling NAs in PP cols with 0"</span>
 <span class="co">#&gt; [1] "GGBIO:: LD_matrix detected. Coloring SNPs by LD with lead SNP."</span>
 <span class="co">#&gt; [1] "LD Matrix dimensions: 95 x 95"</span>
 <span class="co">#&gt; [1] "Extracting LD subset for lead SNP: rs4698412"</span>
@@ -204,12 +203,8 @@ in a locus-specific subdirectory:<br><em>results/<dataset_type>/<dataset_name>/<
                            <span class="kw">XGR_libnames</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"ENCODE_TFBS_ClusteredV3_CellTypes"</span>),
                            <span class="kw">save_plot</span><span class="kw">=</span><span class="no">F</span>,
                            <span class="kw">show_plot</span><span class="kw">=</span><span class="no">show_plot</span>)
-<span class="co">#&gt; [1] "+ Identifying Consensus SNPs..."</span>
-<span class="co">#&gt; [1] "++ support_thresh = 2"</span>
-<span class="co">#&gt; [1] "+ Calculating mean Posterior Probability (mean.PP)..."</span>
-<span class="co">#&gt; [1] "++ 4 fine-mapping methods used."</span>
-<span class="co">#&gt; [1] "++ 7 Credible Set SNPs identified."</span>
-<span class="co">#&gt; [1] "++ 3 Consensus SNPs identified."</span>
+<span class="co">#&gt; [1] "+ Filling NAs in CS cols with 0"</span>
+<span class="co">#&gt; [1] "+ Filling NAs in PP cols with 0"</span>
 <span class="co">#&gt; [1] "GGBIO:: LD_matrix detected. Coloring SNPs by LD with lead SNP."</span>
 <span class="co">#&gt; [1] "LD Matrix dimensions: 95 x 95"</span>
 <span class="co">#&gt; [1] "Extracting LD subset for lead SNP: rs4698412"</span>
@@ -228,12 +223,16 @@ in a locus-specific subdirectory:<br><em>results/<dataset_type>/<dataset_name>/<
 <span class="co">#&gt; [1] "++ GGBIO:: Gene Model Track"</span>
 <span class="co">#&gt; [1] "+ Annotating at transcript-level."</span>
 <span class="co">#&gt; [1] "++ GGBIO:: XGR Tracks"</span>
-<span class="co">#&gt; Start at 2020-06-26 13:03:52</span>
+<span class="co">#&gt; Start at 2020-07-09 18:29:56</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; 'ENCODE_TFBS_ClusteredV3_CellTypes' (from http://galahad.well.ox.ac.uk/bigdata/ENCODE_TFBS_ClusteredV3_CellTypes.RData) has been loaded into the working environment (at 2020-06-26 13:04:14)</span>
+<span class="co">#&gt; 'ENCODE_TFBS_ClusteredV3_CellTypes' (from http://galahad.well.ox.ac.uk/bigdata/ENCODE_TFBS_ClusteredV3_CellTypes.RData) has been loaded into the working environment (at 2020-07-09 18:30:15)</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; End at 2020-06-26 13:04:14</span>
-<span class="co">#&gt; Runtime in total is: 22 secs</span>
+<span class="co">#&gt; End at 2020-07-09 18:30:15</span>
+<span class="co">#&gt; Runtime in total is: 19 secs</span>
+<span class="co">#&gt; [1] "+ dat2 already in GRanges format"</span>
+<span class="co">#&gt; Warning in .replace_seqlevels_style(x_seqlevels, value): found more than one</span>
+<span class="co">#&gt; best sequence renaming map compatible with seqname style "NCBI" for this object,</span>
+<span class="co">#&gt; using the first one</span>
 <span class="co">#&gt; 8702 query SNP(s) detected with reference overlap.</span>
 <span class="co">#&gt; Warning in max(xlim): no non-missing arguments to max; returning -Inf</span>
 <span class="co">#&gt; Scale for 'x' is already present. Adding another scale for 'x', which will</span>
@@ -254,12 +253,8 @@ in a locus-specific subdirectory:<br><em>results/<dataset_type>/<dataset_name>/<
                                <span class="kw">Roadmap_query</span><span class="kw">=</span><span class="st">"monocyte"</span>,
                                <span class="kw">save_plot</span><span class="kw">=</span><span class="no">F</span>,
                                <span class="kw">show_plot</span><span class="kw">=</span><span class="no">show_plot</span>)
-<span class="co">#&gt; [1] "+ Identifying Consensus SNPs..."</span>
-<span class="co">#&gt; [1] "++ support_thresh = 2"</span>
-<span class="co">#&gt; [1] "+ Calculating mean Posterior Probability (mean.PP)..."</span>
-<span class="co">#&gt; [1] "++ 4 fine-mapping methods used."</span>
-<span class="co">#&gt; [1] "++ 7 Credible Set SNPs identified."</span>
-<span class="co">#&gt; [1] "++ 3 Consensus SNPs identified."</span>
+<span class="co">#&gt; [1] "+ Filling NAs in CS cols with 0"</span>
+<span class="co">#&gt; [1] "+ Filling NAs in PP cols with 0"</span>
 <span class="co">#&gt; [1] "GGBIO:: LD_matrix detected. Coloring SNPs by LD with lead SNP."</span>
 <span class="co">#&gt; [1] "LD Matrix dimensions: 95 x 95"</span>
 <span class="co">#&gt; [1] "Extracting LD subset for lead SNP: rs4698412"</span>
@@ -278,12 +273,7 @@ in a locus-specific subdirectory:<br><em>results/<dataset_type>/<dataset_name>/<
 <span class="co">#&gt; [1] "++ GGBIO:: Gene Model Track"</span>
 <span class="co">#&gt; [1] "+ Annotating at transcript-level."</span>
 <span class="co">#&gt; [1] "+ GGBIO:: Creating Roadmap track"</span>
-<span class="co">#&gt; [1] "+ ROADMAP:: 2 annotation(s) identified that match `keyword_query`."</span>
-<span class="co">#&gt; [1] "+ Querying subset from Roadmap API: E124  -  1 / 1"</span>
-<span class="co">#&gt; [1] "++ Downloading Roadmap Chromatin Marks: E124"</span>
-<span class="co">#&gt; [1] "cd /Users/schilder/Desktop/results/GWAS/Nalls23andMe_2019/BST1/annotations &amp;&amp; tabix -p bed --begin 2 --end 3 https://egg2.wustl.edu/roadmap/data/byFileType/chromhmmSegmentations/ChmmModels/coreMarks/jointModel/final/E124_15_coreMarks_dense.bed.bgz chr4:14737349-16737284"</span>
-<span class="co">#&gt; [1] "BED subset downloaded in 4.937 seconds"</span>
-<span class="co">#&gt; [1] "All downloads complete in 5 minutes"</span>
+<span class="co">#&gt; [1] "+ Saved annotation file detected. Loading..."</span>
 <span class="co">#&gt; Warning in max(xlim): no non-missing arguments to max; returning -Inf</span>
 <span class="co">#&gt; Warning: Removed 6131 rows containing non-finite values (stat_smooth).</span>
 <span class="co">#&gt; Warning: Removed 1 row(s) containing missing values (geom_path).</span>
@@ -315,12 +305,8 @@ in a locus-specific subdirectory:<br><em>results/<dataset_type>/<dataset_name>/<
                                  <span class="kw">Nott_show_placseq</span> <span class="kw">=</span> <span class="no">T</span>,
                                  <span class="kw">save_plot</span><span class="kw">=</span><span class="no">F</span>,
                                  <span class="kw">show_plot</span><span class="kw">=</span><span class="no">show_plot</span>)
-<span class="co">#&gt; [1] "+ Identifying Consensus SNPs..."</span>
-<span class="co">#&gt; [1] "++ support_thresh = 2"</span>
-<span class="co">#&gt; [1] "+ Calculating mean Posterior Probability (mean.PP)..."</span>
-<span class="co">#&gt; [1] "++ 4 fine-mapping methods used."</span>
-<span class="co">#&gt; [1] "++ 7 Credible Set SNPs identified."</span>
-<span class="co">#&gt; [1] "++ 3 Consensus SNPs identified."</span>
+<span class="co">#&gt; [1] "+ Filling NAs in CS cols with 0"</span>
+<span class="co">#&gt; [1] "+ Filling NAs in PP cols with 0"</span>
 <span class="co">#&gt; [1] "GGBIO:: LD_matrix detected. Coloring SNPs by LD with lead SNP."</span>
 <span class="co">#&gt; [1] "LD Matrix dimensions: 95 x 95"</span>
 <span class="co">#&gt; [1] "Extracting LD subset for lead SNP: rs4698412"</span>
@@ -347,6 +333,7 @@ in a locus-specific subdirectory:<br><em>results/<dataset_type>/<dataset_name>/<
 <span class="co">#&gt; [1] "Importing Oligo promoters ..."</span>
 <span class="co">#&gt; [1] "Importing Microglia enhancers ..."</span>
 <span class="co">#&gt; [1] "Importing Microglia promoters ..."</span>
+<span class="co">#&gt; [1] "+ Converting to GRanges."</span>
 <span class="co">#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will</span>
 <span class="co">#&gt; replace the existing scale.</span>
 <span class="co">#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will</span>
@@ -372,24 +359,20 @@ in a locus-specific subdirectory:<br><em>results/<dataset_type>/<dataset_name>/<
 <span class="no">trk_plot.qtl</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/GGBIO.plot.html">GGBIO.plot</a></span>(<span class="kw">finemap_dat</span><span class="kw">=</span><span class="no">finemap_DT</span>,
                            <span class="kw">LD_matrix</span><span class="kw">=</span><span class="no">LD_matrix</span>,
                            <span class="kw">locus_dir</span><span class="kw">=</span><span class="no">locus_dir</span>,
-                           <span class="kw">QTL_prefixes</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"fake_eQTL"</span>,<span class="st">"fake_sQTL"</span>),
+                           <span class="kw">QTL_prefixes</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"fake_eQTL."</span>,<span class="st">"fake_sQTL."</span>),
                            <span class="kw">XGR_libnames</span><span class="kw">=</span><span class="kw">NULL</span>,
                            <span class="kw">save_plot</span><span class="kw">=</span><span class="no">F</span>,
                            <span class="kw">show_plot</span><span class="kw">=</span><span class="no">show_plot</span>)
-<span class="co">#&gt; [1] "+ Identifying Consensus SNPs..."</span>
-<span class="co">#&gt; [1] "++ support_thresh = 2"</span>
-<span class="co">#&gt; [1] "+ Calculating mean Posterior Probability (mean.PP)..."</span>
-<span class="co">#&gt; [1] "++ 4 fine-mapping methods used."</span>
-<span class="co">#&gt; [1] "++ 7 Credible Set SNPs identified."</span>
-<span class="co">#&gt; [1] "++ 3 Consensus SNPs identified."</span>
+<span class="co">#&gt; [1] "+ Filling NAs in CS cols with 0"</span>
+<span class="co">#&gt; [1] "+ Filling NAs in PP cols with 0"</span>
 <span class="co">#&gt; [1] "GGBIO:: LD_matrix detected. Coloring SNPs by LD with lead SNP."</span>
 <span class="co">#&gt; [1] "LD Matrix dimensions: 95 x 95"</span>
 <span class="co">#&gt; [1] "Extracting LD subset for lead SNP: rs4698412"</span>
 <span class="co">#&gt; [1] "++ GGBIO:: GWAS track"</span>
 <span class="co">#&gt; using coord:genome to parse x scale</span>
-<span class="co">#&gt; [1] "++ GGBIO:: fake_eQTL track"</span>
+<span class="co">#&gt; [1] "++ GGBIO:: fake_eQTL. track"</span>
 <span class="co">#&gt; using coord:genome to parse x scale</span>
-<span class="co">#&gt; [1] "++ GGBIO:: fake_sQTL track"</span>
+<span class="co">#&gt; [1] "++ GGBIO:: fake_sQTL. track"</span>
 <span class="co">#&gt; using coord:genome to parse x scale</span>
 <span class="co">#&gt; [1] "++ GGBIO:: ABF track"</span>
 <span class="co">#&gt; using coord:genome to parse x scale</span>

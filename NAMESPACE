@@ -1,6 +1,8 @@
 exportPattern("^[[:alpha:]]+")
 importFrom(magrittr,"%>%")
+importFrom(data.table,":=")
 import(dplyr)
 import(ggplot2)
 importFrom(BSgenome,"snpsById")
-importFrom(ggbio, "tracks")
+importFrom(ggbio,"tracks")
+

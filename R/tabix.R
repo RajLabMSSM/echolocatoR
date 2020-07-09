@@ -117,7 +117,7 @@ TABIX <- function(fullSS_path,
   fullSS.gz <- ifelse(endsWith(fullSS_path,".gz"), fullSS_path, paste0(fullSS_path,".gz"))
   is_tabix <- file.exists(fullSS.gz) & file.exists(paste0(fullSS.gz,".tbi"))
   if(!is_tabix){
-    fullSS.gz <- TABIX.convert_file(fullSS_path,
+    fullSS.gz <- TABIX.convert_file(fullSS_path = fullSS_path,
                                     chrom_col = chrom_col,
                                     position_col = position_col,
                                     verbose=verbose)

@@ -7,17 +7,17 @@
 \format{
 data.table
 \describe{
-  \item{SNP}{SNP RSID}
-  \item{CHR}{Chromosome}
-  \item{POS}{Genomic positiion (in basepairs)}
-  ...
+\item{SNP}{SNP RSID}
+\item{CHR}{Chromosome}
+\item{POS}{Genomic position (in basepairs)}
+\item{...}{Optional: extra columns}
 }
 }
 \source{
 \url{https://www.ukbiobank.ac.uk}
 \url{https://www.biorxiv.org/content/10.1101/807792v3}
- @examples
- \dontrun{
+@examples
+\dontrun{
 data("BST1")
 finemap_DT <- BST1
 # Only including a small subset of the full
@@ -34,7 +34,7 @@ BST1_LD_matrix
 }
 \description{
 Precomputed LD within the \emph{BST1} locus
- (defined in \code{\link{finemap_DT}}.
+(defined in \code{\link{finemap_DT}}.
 LD derived white British subpopulation in the UK Biobank.
 Only includes a subset of all the SNPs for storage purposes
 (including the lead GWAS/QTL SNP).

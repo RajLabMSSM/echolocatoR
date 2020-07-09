@@ -51,7 +51,7 @@ COJO.conditional <- function(GCTA_path=system.file("tools/gcta_1.92.1beta5_mac/b
                      " --cojo-cond ",conditioned_path,
                      " --exclude ",excluded_path,
                      " --out ",file.path(cojo_dir,"cojo"), sep="")
-  printer("\n + COJO conditional analysis -- Conditioning on:",paste(snp_list, collapse=", ") )
+  printer("+ COJO:: conditional analysis -- Conditioning on:",paste(snp_list, collapse=", ") )
   system(cojo_cmd1)
 }
 # Conditional results
@@ -66,6 +66,7 @@ get_conditional_results <- function(cojo_dir){
 
 
 
+
 #' Conditional stepwise procedure
 #'
 #' Runs the GCTA-COJO conditional stepwise procedure to identify independent signals.
@@ -74,8 +75,7 @@ get_conditional_results <- function(cojo_dir){
 #' \url{https://www.nature.com/articles/ng.2213}
 #' \url{https://www.cell.com/ajhg/fulltext/S0002-9297(10)00598-7}
 #' \url{https://cnsgenomics.com/software/gcta/#Overview}
-COJO.stepwise <- function(subset_DT,
-                          GCTA_path=system.file("tools/gcta_1.92.1beta5_mac/bin","gcta64",package="echolocatoR"),
+COJO.stepwise <- function(GCTA_path=system.file("tools/gcta_1.92.1beta5_mac/bin","gcta64",package="echolocatoR"),
                           locus_dir,
                           min_MAF,
                           excluded_path){
@@ -127,7 +127,7 @@ get_stepwise_results <- function(cojo_dir){
 process_COJO_results <- function(subset_DT,
                                  locus_dir,
                                  freq_cutoff=0.1){
-  printer("+ Processing COJO results...")
+  printer("+ COJO:: Processing results...")
   cojo_dir <- COJO.make_locus_subdir(locus_dir)
   # Stepwise results
   ## FILTER BY FREQ
@@ -174,8 +174,6 @@ COJO <- function(subset_DT,
                  effect_col="Effect",
                  stderr_col="StdErr",
                  pval_col="P",
-                 N_cases_col="N_cases",
-                 N_controls_col="N_controls",
                  A1_col="A1",
                  A2_col="A2",
                  full_genome=F
@@ -204,10 +202,9 @@ COJO <- function(subset_DT,
   ## NOTE: cojo-file.ma Must be a SPACE-separated file
   if(full_genome){
     cojo.ma <- data.table::fread(fullSS_path) %>%
-      dplyr::rename(N_cases = N_cases_col, N_controls = N_controls_col) %>%
-      dplyr::mutate(N = N_cases + N_controls) %>%
       dplyr::select(SNP=snp_col,
-                    A1, A2,
+                    A1=A1_col,
+                    A2=A2_col,
                     freq=freq_col,
                     b=effect_col,
                     se=stderr_col,
@@ -219,11 +216,7 @@ COJO <- function(subset_DT,
     cojo_dir <- genome_dir
   } else {
     # Use subset of summary stats (not for the stepwise conditional procedure)
-    cojo.ma <- subset_DT %>% dplyr::rename(N_cases = N_cases_col,
-                                           N_controls = N_controls_col,
-                                           A1 = A1_col,
-                                           A2 = A2_col) %>%
-      dplyr::mutate(N = N_cases + N_controls) %>%
+    cojo.ma <- subset_DT %>%
       dplyr::select(SNP,
                     A1,
                     A2,

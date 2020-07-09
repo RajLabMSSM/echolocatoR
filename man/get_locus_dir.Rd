@@ -12,7 +12,7 @@ Extract the locus dir
 \seealso{
 Other directory functions: 
 \code{\link{get_subset_path}()},
-\code{\link{make_dataset_dir}()}
+\code{\link{make_locus_dir}()}
 }
 \concept{directory functions}
 \keyword{internal}

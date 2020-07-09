@@ -1,0 +1,123 @@
+---
+title: "echolocatoR: QTL pipeline vignette" 
+author: "Brian M. Schilder"
+date: "Most recent update:<br> `r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{QTL_pipeline_vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE, error = TRUE} 
+root.dir <- "~/Desktop"
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  root.dir = root.dir,
+  fig.height = 12,
+  fig.width = 10
+)  
+knitr::opts_knit$set(root.dir = root.dir)
+```
+
+
+```{r setup, root.dir="~/Desktop"}
+library(echolocatoR) 
+```
+
+# QTL pipeline
+
+## Prepare `top_SNPs` data.frame   
+
+- In this case, we don't have a top SNPs file ready.
+So we're just going to make one directly from the full summary stats file itself (*NOTE*: You can only use this approach if you can fit the entire file in memory).  
+- In this case, you'll want to make sure to set `grouping_vars=c("Locus","Gene")` so that you get top SNPs for each eGene-locus pair (not just one SNP per locus).  
+
+```{r  Prepare `top_SNPs` data.frame}
+fullSS_path <- "~/Desktop/merged_coloc_results.snp.tsv.gz"
+
+top_SNPs <- import_topSNPs(  
+  topSS = fullSS_path,
+  chrom_col = "chr", 
+  position_col = "pos",
+  snp_col="snp",
+  pval_col="gwas.pvalues", 
+  effect_col="gwas.beta", 
+  gene_col="gene",
+  locus_col = "Locus",
+  grouping_vars = c("Locus","Gene")) 
+head(top_SNPs)
+```
+
+## eGene-locus list  
+
+- In `finemap_loci()` we usually supply `loci=` with a list of locus names. 
+However,when fine-mapping GWAS-QTL jointly, you'll need to specify which
+QTL eGene-GWAS locus pairs you want to run.
+- You can easy get this named list of all eGene-locus pairs with `gene_locus_list()`. The returned list's values are the GWAS loci, while the names are the QTL eGenes.  
+- If you don't want to test all pairs, you can filter the `top_SNPs` object first. In this example, I'm going to remove any pairs that don't have matching eGene-locus names.  
+We'll also limit the anaylsis to just 3 loci.  
+
+```{r} 
+loci <- gene_locus_list(top_SNPs=subset(top_SNPs, Gene==Locus))
+# We'll just fine-map 2 loci to start
+loci <- loci[1:3] 
+loci
+```
+
+
+## Run fine-mapping pipeline  
+
+**NOTE**: Currently this `finemap_loci()` will only fine-map the GWAS results. However you can still plot the fine-mapped GWAS results using the `QTL_prefixes` argument.  
+
+```{r}
+Kunkle_2019.microgliaQTL <- finemap_loci(# GENERAL ARGUMENTS 
+                                        top_SNPs = top_SNPs,  
+                                        results_dir = "~/Desktop/results",
+                                        
+                                        loci = loci,
+                                        dataset_name = "Kunkle_2019.microgliaQTL",
+                                        dataset_type = "GWAS",  
+                                        sample_size = 21982 + 41944,
+                                        proportion_cases = 21982 / 41944,
+                                        force_new_subset = F,
+                                        force_new_LD = F,
+                                        force_new_finemap = F,
+                                        remove_tmps = T,
+                                          
+                 # SUMMARY STATS ARGUMENTS
+                 fullSS_path = fullSS_path,
+                 query_by ="coordinates",
+                 chrom_col = "chr", 
+                 position_col = "pos", 
+                 snp_col = "snp",
+                 pval_col = "gwas.pvalues", 
+                 effect_col = "gwas.beta", 
+                 stderr_col = "gwas.varbeta", 
+                 MAF_col = "gwas.MAF", 
+                 gene_col = "gene",
+                 
+                 # QTL prefixes
+                 QTL_prefixes = c("qtl."),
+                 
+                 # FILTERING ARGUMENTS
+                 bp_distance = 500000, #100000,
+                 min_MAF = 0.001, 
+                 
+                 # FINE-MAPPING ARGUMENTS
+                 finemap_methods = c("ABF","FINEMAP","SUSIE","POLYFUN_SUSIE"),
+                 n_causal = 5,
+                 PP_threshold = .95,
+                 
+                 # LD ARGUMENTS 
+                 LD_reference = "1KGphase1",
+                 superpopulation = "EUR",
+                 download_method = "axel",
+                 
+                 # PLOT ARGUMENTS 
+                 plot.types=c("simple"),
+                 plot.window = 500000/2, 
+                 )
+```
+

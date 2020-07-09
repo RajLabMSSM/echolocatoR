@@ -95,6 +95,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -132,7 +135,12 @@
     <p>Plot brain cell-specific epigenomic data</p>
     </div>
 
-    <pre class="usage"><span class='fu'>NOTT_2019.get_regulatory_regions</span>(<span class='no'>finemap_dat</span>, <span class='kw'>as.granges</span> <span class='kw'>=</span> <span class='no'>F</span>, <span class='kw'>nCores</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+    <pre class="usage"><span class='fu'>NOTT_2019.get_regulatory_regions</span>(
+  <span class='no'>finemap_dat</span>,
+  <span class='kw'>as.granges</span> <span class='kw'>=</span> <span class='no'>F</span>,
+  <span class='kw'>nThread</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>
+)</pre>
 
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>

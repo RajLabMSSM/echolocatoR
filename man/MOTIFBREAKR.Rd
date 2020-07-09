@@ -13,16 +13,17 @@
 }
 \usage{
 MOTIFBREAKR(
-  snp_list,
+  rsid_list,
   save_rds = T,
   dataset_dir = "./results",
   pwmList = NULL,
-  organism = "Hsapiens",
+  organism = NULL,
   threshold = 0.85,
   show.neutral = F,
   method = "default",
   verbose = T,
-  calculate_all_pval = F
+  calculate_all_pval = T,
+  force_new = F
 )
 }
 \arguments{
@@ -48,9 +49,9 @@ a transcription factor binding motif (if it falls witihn one).
 \examples{
 \dontrun{
 # data("merged_DT")
-# snp_list <- unique(subset(merged_DT, Support>0 | leadSNP)$SNP)
-snp_list <- "rs1006140"
-mb.results <- MOTIFBREAKR(snp_list=snp_list)
+# rsid_list <- unique(subset(merged_DT, Support>0 | leadSNP)$SNP)
+rsid_list <- c("rs11175620","rs7294619","rs74324737")
+mb.results <- MOTIFBREAKR(rsid_list=rsid_list, calculate_all_pval=T)
 }
 }
 \seealso{

@@ -30,6 +30,13 @@
 #' \strong{mean.CS} and \strong{Consensus_SNP}.
 #' @param verbose Print messages.
 #' @family annotatate
+#' @examples
+#' dataset_dir <- "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019"
+#' # UCS and lead SNPs: No annotation
+#' merged_DT <- merge_finemapping_results(dataset=dataset_dir, minimum_support=1, include_leadSNPs=T)
+#'
+#' # UCS and lead SNPs: With annotations
+#' merged_DT <- merge_finemapping_results(dataset=dataset_dir, minimum_support=1, include_leadSNPs=T, haploreg_annotation=T, biomart_annotation=T)
 merge_finemapping_results <- function(dataset="./Data/GWAS",
                                       minimum_support=0,
                                       include_leadSNPs=T,
@@ -65,11 +72,12 @@ merge_finemapping_results <- function(dataset="./Data/GWAS",
 
 
   # Add/Update Support/Consensus cols
+  finemap_results <- update_CS_cols(finemap_results)
   merged_results <- find_consensus_SNPs(finemap_dat = finemap_results,
                                         credset_thresh = PP_threshold,
                                         consensus_thresh = consensus_thresh,
-                                        exclude_methods = exclude_methods)
-
+                                        exclude_methods = exclude_methods,
+                                        verbose = T)
   merged_results <- subset(merged_results, Support>=minimum_support)
   if(!"Locus" %in% colnames(merged_results)){
     merged_results <- merged_results %>% dplyr::rename(Locus=Gene) %>% data.table::data.table()
@@ -117,18 +125,18 @@ merge_finemapping_results <- function(dataset="./Data/GWAS",
                                                       all = T,
                                                       allow.cartesian=TRUE)
   }
-
   if(xlsx_path!=F){
     # data.table::fwrite(merged_results, file = csv_path, quote = F, sep = ",")
     openxlsx::write.xlsx(merged_results, xlsx_path)
   }
   # createDT_html(merged_results) %>% print()
-
-  merged_results <- update_CS_cols(merged_results)
   return(merged_results)
 }
 
-#'
+
+
+
+
 counts_summary <- function(top_SNPs,
                            merged_results,
                            verbose=T){
@@ -393,7 +401,8 @@ SNPs_by_mutation_type <- function(merged_results,
 #' \href{https://cran.r-project.org/web/packages/haploR/vignettes/haplor-vignette.html}{HaploR}
 epigenetics_summary <- function(merged_results,
                                 tissue_list = c("BRN","BLD"),
-                                epigenetic_variables = c("Promoter_histone_marks","Enhancer_histone_marks") # Chromatin_Marks
+                                # Chromatin_Marks
+                                epigenetic_variables = c("Promoter_histone_marks","Enhancer_histone_marks")
                                 ){
   merged_results <- data.table(merged_results)
   summary_func <- function(ev){
@@ -422,7 +431,8 @@ epigenetics_enrichment <- function(snp_list1,
                                    snp_list2,
                                    chisq=T,
                                    fisher=T,
-                                   epigenetic_variables = c("Promoter_histone_marks","Enhancer_histone_marks"),
+                                   epigenetic_variables = c("Promoter_histone_marks",
+                                                            "Enhancer_histone_marks"),
                                    tissue_list = c("BRN","BLD")){
   printer("Conducting SNP epigenomic annotation enrichment tests...")
   # Foreground
@@ -455,6 +465,65 @@ epigenetics_enrichment <- function(snp_list1,
 
 
 
+#' Annotate any missense variants
+#'
+#' @family annotate
+#' @examples
+#' data("merged_DT");
+#' annotated_DT <- ANNOTATE.annotate_missense(merged_DT=merged_DT, snp_filter="Support>0")
+ANNOTATE.annotate_missense <- function(merged_DT,
+                                       snp_filter="Support>0"){
+  snp_info <- biomart_snp_info(unique(subset(merged_DT, eval(parse(text=snp_filter)))$SNP))
+  # unique(snp_info$consequence_type_tv)
+  missense <- suppressMessages(snp_info %>%
+                                 dplyr::group_by(refsnp_id) %>%
+                                 dplyr::summarise(Missense = ifelse(any(consequence_type_tv=="missense_variant",na.rm = T),T,F)) %>%
+                                 data.table::data.table())
+
+  merged_DT <- data.table::merge.data.table(merged_DT, missense,
+                                            all.x=T,
+                                            by.x="SNP",
+                                            by.y = "refsnp_id")
+  # missense_counts <- suppressMessages(merged_DT %>% dplyr::group_by(Locus) %>%
+  #   dplyr::summarise(Missense=sum(Missense, na.rm=T)))
+  printer(sum(subset(merged_DT, Support>0)$Missense, na.rm = T),"missense mutations detected in UCS.")
+  printer(sum(subset(merged_DT, Consensus_SNP)$Missense, na.rm = T),"missense mutations detected in Consensus SNPs")
+  return(merged_DT)
+}
 
 
+#' Plot any missense variants
+#'
+#' @family annotate
+#' @examples
+#' data("merged_DT");
+#' gg_missense <- ANNOTATE.plot_missense(merged_DT=merged_DT, snp_filter="Support>0")
+#' gg_missense <- ANNOTATE.plot_missense(merged_DT=merged_DT, snp_filter="Consensus_SNP==T")
+ANNOTATE.plot_missense <- function(merged_DT,
+                                   snp_filter="Support>0",
+                                   show_plot=T){
+  locus_order <- SUMMARISE.get_CS_counts(merged_DT = merged_DT)
+  annotated_DT <- ANNOTATE.annotate_missense(merged_DT=merged_DT, snp_filter=snp_filter)
+  dat_melt <-
+    data.table::setDT(annotated_DT)[, .(Missense = n_distinct(SNP[Missense==T], na.rm = T)),
+                        by=c("Locus")]  %>%
+    dplyr::mutate(Locus=factor(Locus, levels = unique(locus_order$Locus), ordered = T) )
+  dat_melt$dummy <- "UCS missense\nmutations"
+  dat_melt[dat_melt$Missense==0,"Missense"] <- NA
 
+  gg_missense <- ggplot(data=dat_melt, aes(x=dummy, y=Locus, fill=Missense)) +
+    geom_tile(show.legend = F) +
+    geom_text(aes(label = Missense), color="grey70") +
+    scale_fill_continuous(na.value = "transparent") +
+    # scale_fill_fermenter(palette = "Spectral", na.value = "transparent") +
+    # scale_fill_viridis_d(na.value = "transparent") +
+    theme_bw() +
+    labs(y=NULL, x=NULL) +
+    theme(axis.text.y = element_blank(),
+          axis.text.x = element_text(angle=40, hjust=1),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank())
+  if(show_plot)print(gg_missense)
+  return(list(plot=gg_missense,
+              data=dat_melt))
+}

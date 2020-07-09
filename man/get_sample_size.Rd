@@ -4,7 +4,7 @@
 \alias{get_sample_size}
 \title{Infer sample size from summary stats}
 \usage{
-get_sample_size(subset_DT, sample_size = NULL, effective_ss = T)
+get_sample_size(subset_DT, sample_size = NULL, effective_ss = T, verbose = T)
 }
 \description{
 Infer sample size from summary stats
@@ -16,6 +16,7 @@ Other general:
 \code{\link{createDT}()},
 \code{\link{dt.replace}()},
 \code{\link{example_fullSS}()},
+\code{\link{fillNA_CS_PP}()},
 \code{\link{get_os}()},
 \code{\link{merge_coloc_results}()},
 \code{\link{startup_image}()},
@@ -30,4 +31,4 @@ Other general:
 \keyword{finemap_DT)}
 \keyword{get_sample_size(subset_DT}
 \keyword{internal}
-\keyword{sample_size}
+\keyword{subset_DT}

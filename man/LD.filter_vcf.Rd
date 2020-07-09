@@ -4,12 +4,14 @@
 \alias{LD.filter_vcf}
 \title{Filter a vcf by min/max coordinates}
 \usage{
-LD.filter_vcf(subset_vcf, popDat, superpopulation, remove_tmp = F)
+LD.filter_vcf(subset_vcf, popDat, superpopulation, remove_tmp = T, verbose = T)
 }
 \arguments{
 \item{subset_vcf}{Path to the locus subset vcf.}
 
 \item{popDat}{The metadata file listing the superpopulation to which each sample belongs.}
+
+\item{verbose}{Whether \emph{echolocatoR} should be verbose or silent.}
 }
 \description{
 Uses \emph{bcftools} to filter a vcf by min/max genomic coordinates (in basepairs).
@@ -22,18 +24,18 @@ Other LD:
 \code{\link{LD.UKBiobank}()},
 \code{\link{LD.calculate_LD}()},
 \code{\link{LD.dprime_table}()},
-\code{\link{LD.filter_vcf_population}()},
-\code{\link{LD.filter_vcf_rsamtools}()},
+\code{\link{LD.filter_vcf_gaston}()},
+\code{\link{LD.get_vcf_folder}()},
 \code{\link{LD.leadSNP_block}()},
 \code{\link{LD.load_or_create}()},
 \code{\link{LD.plink_LD}()},
+\code{\link{LD.plink_file}()},
 \code{\link{LD.plot}()},
 \code{\link{LD.read_bin}()},
 \code{\link{LD.read_ld_table}()},
 \code{\link{LD.run_plink_LD}()},
 \code{\link{LD.translate_population}()},
-\code{\link{LD.vcf_to_bed}()},
-\code{\link{get_vcf_folder}()}
+\code{\link{LD.vcf_to_bed}()}
 }
 \concept{LD}
 \keyword{internal}

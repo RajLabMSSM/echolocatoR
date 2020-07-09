@@ -4,7 +4,15 @@
 \alias{MOTIFBREAKR.summarize}
 \title{Summarise \code{\link{motifbreakR}} + \code{\link{echolocatoR}} results}
 \usage{
-MOTIFBREAKR.summarize(merged_DT, mb.results, no_no_loci = NULL)
+MOTIFBREAKR.summarize(
+  merged_DT,
+  mb.results,
+  pct_threshold = 0.7,
+  pvalue_threshold = 1e-04,
+  effect_strengths = c("strong"),
+  snp_filter = "Consensus_SNP==T",
+  no_no_loci = NULL
+)
 }
 \description{
 For each SNP we have at least one allele achieving a p-value below 1e-4 threshold that we required.
@@ -17,5 +25,12 @@ We can also see the absolute scores for our method in scoreRef and scoreAlt
 and thier respective p-values.
 }
 \examples{
+\dontrun{
 data("merged_DT")
+# root_dir <- "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/motifbreakR"
+root_dir <- "/pd-omics/brian/results/_genome_wide/motifbreakR"
+mb.results <- readRDS(file.path(root_dir, "motifbreakR_results.rds"))
+ mb.lrrk2 <- readRDS("/pd-omics/brian/results/_genome_wide/motifbreakR/motifbreakR_results.p_values_LRRK2.rds")
+ mb.encode <- readRDS("/pd-omics/brian/results/_genome_wide/motifbreakR/motifbreakR_results.encode.lrrk2.rds")
+}
 }

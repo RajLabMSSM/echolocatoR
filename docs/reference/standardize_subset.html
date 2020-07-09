@@ -97,6 +97,9 @@ that the rest of echolocatoR can work with." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -154,9 +157,13 @@ that the rest of <em>echolocatoR</em> can work with.</p>
   <span class='kw'>N_cases</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>N_controls</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>proportion_cases</span> <span class='kw'>=</span> <span class='st'>"calculate"</span>,
+  <span class='kw'>sample_size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>A1_col</span> <span class='kw'>=</span> <span class='st'>"A1"</span>,
   <span class='kw'>A2_col</span> <span class='kw'>=</span> <span class='st'>"A2"</span>,
+  <span class='kw'>gene_col</span> <span class='kw'>=</span> <span class='st'>"Gene"</span>,
+  <span class='kw'>QTL_prefixes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>return_dt</span> <span class='kw'>=</span> <span class='no'>T</span>,
+  <span class='kw'>nThread</span> <span class='kw'>=</span> <span class='fl'>4</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>
 )</pre>
 
@@ -240,8 +247,8 @@ This column is not necesssary if <code>N_cases</code> parameter is provided.
     <tr>
       <th>N_controls_col</th>
       <td><p>Name of the column in the full summary stats that has the number of control subjects in the study.
- This can either be per SNP sample sizes, or one number repeated across all rows.
- This column is not necesssary if <code>N_controls</code> parameter is provided.
+This can either be per SNP sample sizes, or one number repeated across all rows.
+This column is not necesssary if <code>N_controls</code> parameter is provided.
 (<em>default: ="N_controls"</em>)</p></td>
     </tr>
     <tr>
@@ -260,27 +267,38 @@ Instead of providing a redundant <strong>N_controls_col</strong> column, you can
 if <code>proportion_cases="calculate"</code> then this is inferred:  <code>N_controls / N_controls</code>.</p></td>
     </tr>
     <tr>
+      <th>sample_size</th>
+      <td><p>The overall sample size of the study.
+If none is given, and <strong>N_cases</strong> and <strong>N_controls</strong> columns are present,
+then sample_size is inferred to be:  <code>max(N_cases) + max(N_controls)</code>.</p></td>
+    </tr>
+    <tr>
       <th>A1_col</th>
       <td><p>Name of the effect/risk allele column in the full summary stats.
- <strong><em>IMPORTANT</em></strong>: Make sure this actually the case for your full summary stats file.
+<strong><em>IMPORTANT</em></strong>: Make sure this actually the case for your full summary stats file.
 Unfortunately, different studies report different kinds of allele information in a non-standardized way.
 Meaning that A1/A2 can refer to any number of things:</p><dl'>
- <dt>effect/other alleles</dt><dd><p>in the case of diseases</p></dd>
- <dt>ref/alt alleles</dt><dd><p>where ref is the reference genome being used</p></dd>
- <dt>major/minor alleles</dt><dd><p>This dichotomy holds true for bi-allelic SNPs but not necessary multi-allelic SNPs</p></dd>
- 
+<dt>effect/other alleles</dt><dd><p>in the case of diseases</p></dd>
+<dt>ref/alt alleles</dt><dd><p>where ref is the reference genome being used</p></dd>
+<dt>major/minor alleles</dt><dd><p>This dichotomy holds true for bi-allelic SNPs but not necessary multi-allelic SNPs</p></dd>
+
 </dl><p>This makes comparing summary stats across GWAS/QTL datasets very confusing for several reasons:</p><dl'>
- <dt>Multi-allelic SNPs</dt><dd><p>SNPs can have more than just 2 possible alleles (multi-allelic SNPs). Even if you compare the same SNP between two studies, you may accidentally be comparing totally different alleles.</p></dd>
- <dt>Valence</dt><dd><p>The valence (+/-) of per-SNP GWAS effect sizes/beta can be relative to different allele types between studies.
- For example, let's say in one GWAS study your effect size for SNP A is 1.5 relative to the major allele in one study,
-  and the minor allele happens to be the one found in the reference genome.
-  You then try to compare that effect size to that of the same SNP in another GWAS.
-  But, the valence of the effect sizes in the 2nd GWAS study are all relative to the reference genome (instead of the minor allele),
-  giving the same SNP a value of -1.2. If you took the effect sizes at face value you'd say the signals are in opposite directions.
-  But once you take into account how the valences were determined in each study you realize that they're actually both positive relative to the major allele.</p></dd>
- 
+<dt>Multi-allelic SNPs</dt><dd><p>SNPs can have more than just 2 possible alleles (multi-allelic SNPs). Even if you compare the same SNP between two studies, you may accidentally be comparing totally different alleles.</p></dd>
+<dt>Valence</dt><dd><p>The valence (+/-) of per-SNP GWAS effect sizes/beta can be relative to different allele types between studies.
+For example, let's say in one GWAS study your effect size for SNP A is 1.5 relative to the major allele in one study,
+and the minor allele happens to be the one found in the reference genome.
+You then try to compare that effect size to that of the same SNP in another GWAS.
+But, the valence of the effect sizes in the 2nd GWAS study are all relative to the reference genome (instead of the minor allele),
+giving the same SNP a value of -1.2. If you took the effect sizes at face value you'd say the signals are in opposite directions.
+But once you take into account how the valences were determined in each study you realize that they're actually both positive relative to the major allele.</p></dd>
+
 </dl><p>This process of reversing per-SNP valences based on aligning the alleles is known as allele flipping.
 This is important when comparing individual SNPs, but can also have an impact on colocalization results.</p></td>
+    </tr>
+    <tr>
+      <th>gene_col</th>
+      <td><p>For QTL studies, the name of the egene column in the full summary stats file (<em>default: "gene"</em>).
+This column will be used for filtering summary stats if supplying a named list of gene:Locus pairs to <code>loci</code>.</p></td>
     </tr>
     <tr>
       <th>verbose</th>

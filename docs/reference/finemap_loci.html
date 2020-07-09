@@ -40,8 +40,6 @@
 
 
 <meta property="og:title" content="Fine-map multiple loci — finemap_loci" />
-<meta property="og:description" content="echolocatoR will automatically fine-map each locus.
-Uses the top_SNPs data.frame to define locus coordinates." />
 
 
 
@@ -96,6 +94,9 @@ Uses the top_SNPs data.frame to define locus coordinates." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -130,8 +131,6 @@ Uses the top_SNPs data.frame to define locus coordinates." />
     </div>
 
     <div class="ref-description">
-    <p><em>echolocatoR</em> will automatically fine-map each locus.
-Uses the <code>top_SNPs</code> data.frame to define locus coordinates.</p>
     </div>
 
     <pre class="usage"><span class='fu'>finemap_loci</span>(
@@ -144,10 +143,9 @@ Uses the <code>top_SNPs</code> data.frame to define locus coordinates.</p>
   <span class='kw'>force_new_finemap</span> <span class='kw'>=</span> <span class='no'>T</span>,
   <span class='kw'>results_dir</span> <span class='kw'>=</span> <span class='st'>"./results"</span>,
   <span class='kw'>top_SNPs</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
-  <span class='kw'>finemap_methods</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ABF"</span>, <span class='st'>"SUSIE"</span>, <span class='st'>"FINEMAP"</span>),
+  <span class='kw'>finemap_methods</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ABF"</span>, <span class='st'>"FINEMAP"</span>, <span class='st'>"SUSIE"</span>, <span class='st'>"POLYFUN_SUSIE"</span>),
   <span class='kw'>bp_distance</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>,
   <span class='kw'>n_causal</span> <span class='kw'>=</span> <span class='fl'>5</span>,
-  <span class='kw'>sample_size</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
   <span class='kw'>chrom_col</span> <span class='kw'>=</span> <span class='st'>"CHR"</span>,
   <span class='kw'>position_col</span> <span class='kw'>=</span> <span class='st'>"POS"</span>,
   <span class='kw'>snp_col</span> <span class='kw'>=</span> <span class='st'>"SNP"</span>,
@@ -160,14 +158,16 @@ Uses the <code>top_SNPs</code> data.frame to define locus coordinates.</p>
   <span class='kw'>freq_col</span> <span class='kw'>=</span> <span class='st'>"Freq"</span>,
   <span class='kw'>A1_col</span> <span class='kw'>=</span> <span class='st'>"A1"</span>,
   <span class='kw'>A2_col</span> <span class='kw'>=</span> <span class='st'>"A2"</span>,
+  <span class='kw'>gene_col</span> <span class='kw'>=</span> <span class='st'>"Gene"</span>,
   <span class='kw'>N_cases_col</span> <span class='kw'>=</span> <span class='st'>"N_cases"</span>,
   <span class='kw'>N_controls_col</span> <span class='kw'>=</span> <span class='st'>"N_controls"</span>,
   <span class='kw'>N_cases</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>N_controls</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>proportion_cases</span> <span class='kw'>=</span> <span class='st'>"calculate"</span>,
+  <span class='kw'>sample_size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>LD_reference</span> <span class='kw'>=</span> <span class='st'>"1KGphase1"</span>,
   <span class='kw'>superpopulation</span> <span class='kw'>=</span> <span class='st'>"EUR"</span>,
-  <span class='kw'>LD_download_method</span> <span class='kw'>=</span> <span class='st'>"direct"</span>,
+  <span class='kw'>download_method</span> <span class='kw'>=</span> <span class='st'>"direct"</span>,
   <span class='kw'>topVariants</span> <span class='kw'>=</span> <span class='fl'>3</span>,
   <span class='kw'>download_reference</span> <span class='kw'>=</span> <span class='no'>T</span>,
   <span class='kw'>min_POS</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
@@ -186,11 +186,11 @@ Uses the <code>top_SNPs</code> data.frame to define locus coordinates.</p>
   <span class='kw'>probe_path</span> <span class='kw'>=</span> <span class='st'>"./Data/eQTL/gene.ILMN.map"</span>,
   <span class='kw'>conditioned_snps</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
   <span class='kw'>plot_LD</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>,
   <span class='kw'>remove_tmps</span> <span class='kw'>=</span> <span class='no'>T</span>,
   <span class='kw'>PAINTOR_QTL_datasets</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>server</span> <span class='kw'>=</span> <span class='no'>F</span>,
   <span class='kw'>PP_threshold</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
+  <span class='kw'>QTL_prefixes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>plot.types</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"simple"</span>),
   <span class='kw'>plot.window</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>plot.Nott_epigenome</span> <span class='kw'>=</span> <span class='no'>F</span>,
@@ -199,7 +199,8 @@ Uses the <code>top_SNPs</code> data.frame to define locus coordinates.</p>
   <span class='kw'>plot.XGR_libnames</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>plot.Roadmap</span> <span class='kw'>=</span> <span class='no'>F</span>,
   <span class='kw'>plot.Roadmap_query</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>conda_env</span> <span class='kw'>=</span> <span class='st'>"echoR"</span>
+  <span class='kw'>conda_env</span> <span class='kw'>=</span> <span class='st'>"echoR"</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -279,12 +280,6 @@ This parameter is used somewhat differntly by different fine-mapping tools.
 See tool-specific functions for details.</p></td>
     </tr>
     <tr>
-      <th>sample_size</th>
-      <td><p>The overall sample size of the study.
-If none is given, and <strong>N_cases</strong> and <strong>N_controls</strong> columns are present,
-then sample_size is inferred to be:  <code>max(N_cases) + max(N_controls)</code>.</p></td>
-    </tr>
-    <tr>
       <th>chrom_col</th>
       <td><p>Name of the chromosome column in the full summary stats file.
 Can be "chr1" or "1" format.
@@ -346,25 +341,30 @@ This column is not necessary unless <code>MAF_col="calculate"</code> or the MAF 
     <tr>
       <th>A1_col</th>
       <td><p>Name of the effect/risk allele column in the full summary stats.
- <strong><em>IMPORTANT</em></strong>: Make sure this actually the case for your full summary stats file.
+<strong><em>IMPORTANT</em></strong>: Make sure this actually the case for your full summary stats file.
 Unfortunately, different studies report different kinds of allele information in a non-standardized way.
 Meaning that A1/A2 can refer to any number of things:</p><dl'>
- <dt>effect/other alleles</dt><dd><p>in the case of diseases</p></dd>
- <dt>ref/alt alleles</dt><dd><p>where ref is the reference genome being used</p></dd>
- <dt>major/minor alleles</dt><dd><p>This dichotomy holds true for bi-allelic SNPs but not necessary multi-allelic SNPs</p></dd>
- 
+<dt>effect/other alleles</dt><dd><p>in the case of diseases</p></dd>
+<dt>ref/alt alleles</dt><dd><p>where ref is the reference genome being used</p></dd>
+<dt>major/minor alleles</dt><dd><p>This dichotomy holds true for bi-allelic SNPs but not necessary multi-allelic SNPs</p></dd>
+
 </dl><p>This makes comparing summary stats across GWAS/QTL datasets very confusing for several reasons:</p><dl'>
- <dt>Multi-allelic SNPs</dt><dd><p>SNPs can have more than just 2 possible alleles (multi-allelic SNPs). Even if you compare the same SNP between two studies, you may accidentally be comparing totally different alleles.</p></dd>
- <dt>Valence</dt><dd><p>The valence (+/-) of per-SNP GWAS effect sizes/beta can be relative to different allele types between studies.
- For example, let's say in one GWAS study your effect size for SNP A is 1.5 relative to the major allele in one study,
-  and the minor allele happens to be the one found in the reference genome.
-  You then try to compare that effect size to that of the same SNP in another GWAS.
-  But, the valence of the effect sizes in the 2nd GWAS study are all relative to the reference genome (instead of the minor allele),
-  giving the same SNP a value of -1.2. If you took the effect sizes at face value you'd say the signals are in opposite directions.
-  But once you take into account how the valences were determined in each study you realize that they're actually both positive relative to the major allele.</p></dd>
- 
+<dt>Multi-allelic SNPs</dt><dd><p>SNPs can have more than just 2 possible alleles (multi-allelic SNPs). Even if you compare the same SNP between two studies, you may accidentally be comparing totally different alleles.</p></dd>
+<dt>Valence</dt><dd><p>The valence (+/-) of per-SNP GWAS effect sizes/beta can be relative to different allele types between studies.
+For example, let's say in one GWAS study your effect size for SNP A is 1.5 relative to the major allele in one study,
+and the minor allele happens to be the one found in the reference genome.
+You then try to compare that effect size to that of the same SNP in another GWAS.
+But, the valence of the effect sizes in the 2nd GWAS study are all relative to the reference genome (instead of the minor allele),
+giving the same SNP a value of -1.2. If you took the effect sizes at face value you'd say the signals are in opposite directions.
+But once you take into account how the valences were determined in each study you realize that they're actually both positive relative to the major allele.</p></dd>
+
 </dl><p>This process of reversing per-SNP valences based on aligning the alleles is known as allele flipping.
 This is important when comparing individual SNPs, but can also have an impact on colocalization results.</p></td>
+    </tr>
+    <tr>
+      <th>gene_col</th>
+      <td><p>For QTL studies, the name of the egene column in the full summary stats file (<em>default: "gene"</em>).
+This column will be used for filtering summary stats if supplying a named list of gene:Locus pairs to <code>loci</code>.</p></td>
     </tr>
     <tr>
       <th>N_cases_col</th>
@@ -377,8 +377,8 @@ This column is not necesssary if <code>N_cases</code> parameter is provided.
     <tr>
       <th>N_controls_col</th>
       <td><p>Name of the column in the full summary stats that has the number of control subjects in the study.
- This can either be per SNP sample sizes, or one number repeated across all rows.
- This column is not necesssary if <code>N_controls</code> parameter is provided.
+This can either be per SNP sample sizes, or one number repeated across all rows.
+This column is not necesssary if <code>N_controls</code> parameter is provided.
 (<em>default: ="N_controls"</em>)</p></td>
     </tr>
     <tr>
@@ -395,6 +395,12 @@ Instead of providing a redundant <strong>N_controls_col</strong> column, you can
       <th>proportion_cases</th>
       <td><p>The proportion of total subjects in the study that were cases.
 if <code>proportion_cases="calculate"</code> then this is inferred:  <code>N_controls / N_controls</code>.</p></td>
+    </tr>
+    <tr>
+      <th>sample_size</th>
+      <td><p>The overall sample size of the study.
+If none is given, and <strong>N_cases</strong> and <strong>N_controls</strong> columns are present,
+then sample_size is inferred to be:  <code>max(N_cases) + max(N_controls)</code>.</p></td>
     </tr>
     <tr>
       <th>download_reference</th>
@@ -430,7 +436,7 @@ Set <code>trim_gene_limits=F</code> to not limit by gene coordinates (<em>defaul
       <th>max_snps</th>
       <td><p>The maximum number of SNPs to include in the locus.
 If the current window size yields &gt; <code>max_snps</code>,
- then the outer edges of the of the locus are trimmed until the number of SNPs ≤ <code>max_snps</code>.</p></td>
+then the outer edges of the of the locus are trimmed until the number of SNPs ≤ <code>max_snps</code>.</p></td>
     </tr>
     <tr>
       <th>file_sep</th>
@@ -486,10 +492,6 @@ Only used for certain eQTL datasets.</p></td>
       <td><p>Whether to plot a subset of the LD matix.</p></td>
     </tr>
     <tr>
-      <th>verbose</th>
-      <td><p>Whether <em>echolocatoR</em> should be verbose or silent.</p></td>
-    </tr>
-    <tr>
       <th>remove_tmps</th>
       <td><p>Whether to remove any temporary files (e.g. FINEMAP output files) after the pipeline is done running.</p></td>
     </tr>
@@ -504,59 +506,28 @@ Only used for certain eQTL datasets.</p></td>
     <tr>
       <th>PP_threshold</th>
       <td><p>The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
-For example, <code>PP_threshold=.95</code> means that all Credible Set SNPs will be 95% Credible Set SNPs.</p></td>
-    </tr>
-    <tr>
-      <th>plot.types</th>
-      <td><p>Which kinds of plots to include.
-Options:</p><dl'>
+For example, <code>PP_threshold=.95</code> means that all Credible Set SNPs will be 95\<!-- % Credible Set SNPs.} --></p>
+<p>plot.typesWhich kinds of plots to include.
+Options:
+<dl'>
 <dt>"simple"</dt><dd><p>Just plot the following tracks: GWAS, fine-mapping, gene models</p></dd>
-<dt>"fancy"</dt><dd><p>Additionally plot XGR annotation tracks (XGR, Roadmap, Nott).</p></dd>
-
-</dl></td>
-    </tr>
-    <tr>
-      <th>plot.window</th>
-      <td><p>Zoom into the center of the locus when plotting (without editing the fine-mapping results file).</p></td>
-    </tr>
-    <tr>
-      <th>plot.Nott_binwidth</th>
-      <td><p>When including Nott et al. (2019) epigenomic data in the track plots,
-adjust the bin width of the histograms.</p></td>
-    </tr>
-    <tr>
-      <th>plot.Nott_bigwig_dir</th>
-      <td><p>Instead of pulling Nott et al. (2019) epigenomic data from the UCSC Genome Browsers, use a set of local bigwig files.</p></td>
-    </tr>
-    <tr>
-      <th>plot.Roadmap</th>
-      <td><p>Find and plot annotations from Roadmap.</p></td>
-    </tr>
-    <tr>
-      <th>plot.Roadmap_query</th>
-      <td><p>Only plot annotations from Roadmap whose metadata contains a string or any items from  a list of strings
-(e.g. "brain" or c("brain","liver","monocytes"))</p></td>
-    </tr>
-    <tr>
-      <th>conda_env</th>
-      <td><p>The name of a conda environment to use.</p></td>
-    </tr>
-    <tr>
-      <th>subset_path</th>
-      <td><p>The file you want your locus subset saved as.
+<dt>"fancy"</dt><dd><p>Additionally plot XGR annotation tracks (XGR, Roadmap, Nott).</p></dd></dl></p>
+<p>plot.windowZoom into the center of the locus when plotting (without editing the fine-mapping results file).</p>
+<p>plot.Nott_binwidthWhen including Nott et al. (2019) epigenomic data in the track plots,
+adjust the bin width of the histograms.</p>
+<p>plot.Nott_bigwig_dirInstead of pulling Nott et al. (2019) epigenomic data from the UCSC Genome Browsers, use a set of local bigwig files.</p>
+<p>plot.RoadmapFind and plot annotations from Roadmap.</p>
+<p>plot.Roadmap_queryOnly plot annotations from Roadmap whose metadata contains a string or any items from  a list of strings
+(e.g. "brain" or c("brain","liver","monocytes"))</p>
+<p>conda_envThe name of a conda environment to use.</p>
+<p>verboseWhether <em>echolocatoR</em> should be verbose or silent.</p>
+<p>subset_pathThe file you want your locus subset saved as.
 Only use when fine-mapping one locus at a time.
 If <code>subset_path="auto"</code> (<em>default</em>), a locus subset file name is automatically constructed as:
 <em>Data/&lt;dataset_type&gt;/&lt;dataset_name&gt;/&lt;locus&gt;/Multi-finemap/&lt;locus&gt;_&lt;dataset_name&gt;_Multi-finemap.tsv.gz</em></p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A merged data.frame with all fine-mapping results from all loci.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Other MAIN: 
-<code><a href='finemap_pipeline.html'>finemap_pipeline</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

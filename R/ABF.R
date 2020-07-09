@@ -19,7 +19,6 @@
 ABF <- function(subset_DT,
                 PP_threshold=.95,
                 type="cc"){
-  # printer("Fine-mapping with ABF...")
   #data.table::fread("Data/GWAS/Nalls23andMe_2019/LRRK2/LRRK2_Nalls23andMe_2019_subset.txt")
   finemap_dat <- coloc::finemap.abf(dataset = list(beta = subset_DT$Effect,
                                                   varbeta = subset_DT$StdErr^2, # MUST be squared

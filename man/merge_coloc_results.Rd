@@ -26,7 +26,7 @@ Convert Jack's coloc results to \emph{echolocatoR} format
 \examples{
 \dontrun{
 load("~/Desktop/Microglia_all_regions_Kunkle_2019_COLOC.RData")
-merged_results <- merge_coloc_results(all_obj=all_obj, results_level="snp", save_path="~/Desktop/results")
+merged_results <- merge_coloc_results(all_obj=all_obj, results_level="snp", save_path="~/Desktop")
 }
 }
 \seealso{
@@ -36,6 +36,7 @@ Other general:
 \code{\link{createDT}()},
 \code{\link{dt.replace}()},
 \code{\link{example_fullSS}()},
+\code{\link{fillNA_CS_PP}()},
 \code{\link{get_os}()},
 \code{\link{get_sample_size}()},
 \code{\link{startup_image}()},

@@ -12,26 +12,32 @@ auto_topSNPs_sub <- function(top_SNPs,
                              query,
                              locus){
   if(toString(top_SNPs)=="auto"){
-    top_SNPs <- query %>% mutate(Locus=locus) %>%
-      arrange(P, desc(Effect)) %>% group_by(Locus) %>% dplyr::slice(1)
+    top_SNPs <- query %>% dplyr::mutate(Locus=locus) %>%
+      dplyr::arrange(P, dplyr::desc(Effect)) %>% dplyr::group_by(Locus) %>% dplyr::slice(1)
   }
   topSNP_sub <- top_SNPs[top_SNPs$Locus==locus & !is.na(top_SNPs$Locus),][1,]
   return(topSNP_sub)
 }
+
+
+
 
 #' Compute t-stat
 #'
 #' If \strong{tstat} column is missing,
 #' compute t-statistic from: \code{Effect / StdErr}.
 #' @family standardization functions
-calculate.tstat <- function(finemap_dat, tstat_col="t_stat"){
+calculate_tstat <- function(finemap_dat,
+                            tstat_col="t_stat"){
   if(tstat_col %in% colnames(finemap_dat)){
     finemap_dat <- finemap_dat %>% dplyr::rename(t_stat = tstat_col)
-  } else if(("Effect" %in% colnames(finemap_dat)) & ("StdErr" %in% colnames(finemap_dat))){
-    printer("+ Calculating t-statistic from Effect and StdErr...")
-    finemap_dat <- finemap_dat %>% dplyr::mutate(t_stat =  Effect/StdErr)
   } else {
-    printer("+ Could not calculate t-stat due to missing Effect and/or StdErr columns. Returning input data.")
+    if(("Effect" %in% colnames(finemap_dat)) & ("StdErr" %in% colnames(finemap_dat))){
+      printer("+ Calculating t-statistic from Effect and StdErr...")
+      finemap_dat <- finemap_dat %>% dplyr::mutate(t_stat =  Effect/StdErr)
+    } else {
+      printer("+ Could not calculate t-stat due to missing Effect and/or StdErr columns. Returning input data.")
+    }
   }
   return(data.table::data.table(finemap_dat))
 }
@@ -63,7 +69,7 @@ get_UKB_MAF <- function(subset_DT,
                            select = c(3,6),
                            col.names = c("POS","MAF"))
   maf <- subset(maf, POS %in% subset_DT$POS)
-  merged_dat <- data.table:::merge.data.table(subset_DT, maf,
+  merged_dat <- data.table::merge.data.table(subset_DT, maf,
                                              by = "POS")
   return(merged_dat)
 }
@@ -95,9 +101,13 @@ standardize_subset <- function(locus,
                               N_cases=NULL,
                               N_controls=NULL,
                               proportion_cases="calculate",
+                              sample_size=NULL,
                               A1_col="A1",
                               A2_col="A2",
+                              gene_col="Gene",
+                              QTL_prefixes=NULL,
                               return_dt=T,
+                              nThread=4,
                               verbose=T){
   printer("",v=verbose)
   message("---------------- Step 1.5: Standardize ----------")
@@ -107,7 +117,9 @@ standardize_subset <- function(locus,
     file.remove(subset_path)
     stop("Could not find any rows in full data that matched query :(")
   } else{
-    query <- data.table::fread(subset_path, header=T, stringsAsFactors = F)
+    query <- data.table::fread(subset_path,
+                               header=T, stringsAsFactors = F,
+                               nThread = nThread)
     ## Calculate StdErr
     if(stderr_col=="calculate"){
       printer("Calculating Standard Error...")
@@ -120,7 +132,20 @@ standardize_subset <- function(locus,
       dplyr::rename(CHR=chrom_col,POS=position_col, SNP=snp_col, P=pval_col,
                     Effect=effect_col, StdErr=stderr_col)
 
+    printer("++ Preparing Gene col", v=verbose)
+    if(gene_col %in% colnames(query)){
+      query <- dplyr::rename(query, Gene=gene_col)
+      query_mod$Gene <- query$Gene
+      if(detect_genes(loci = locus, verbose = F)){
+        printer("+ Subsetting to gene =",names(locus), v=verbose)
+        query_mod <- subset(query_mod, Gene==names(locus))
+        query <- subset(query, Gene==names(locus))
+        if(dplyr::n_distinct(query_mod$SNP)!=nrow(query_mod)) stop("N rows must be equal to N unique SNPS.")
+      }
+    }
+
     # Add ref/alt alleles if available
+    printer("++ Preparing A1,A1 cols", v=verbose)
     if(A1_col %in% colnames(query) & A2_col %in% colnames(query)){
       query2 <- query %>% dplyr::rename(A1=A1_col, A2=A2_col)
       query_mod$A1 <- query2$A1
@@ -129,6 +154,7 @@ standardize_subset <- function(locus,
 
     # ------ Optional columns ------ #
     ## Infer MAF from freq (assuming MAF is alway less than 0.5)
+    printer("++ Preparing MAF,Freq cols", v=verbose)
     if(MAF_col %in% colnames(query)){
       query <- query %>% dplyr::rename(MAF=MAF_col)
       query_mod$MAF <- as.numeric(query$MAF)
@@ -150,63 +176,103 @@ standardize_subset <- function(locus,
 
 
     ## Add proportion of cases if available
+    printer("++ Preparing N_cases,N_controls cols", v=verbose)
     if(N_cases_col %in% colnames(query) & N_controls_col %in% colnames(query)){
       query <- query %>% dplyr::rename(N_cases=N_cases_col, N_controls=N_controls_col)
       query_mod$N_cases <- query$N_cases
       query_mod$N_controls <- query$N_controls
     } else {
-      query_mod$N_cases <- N_cases
-      query$N_cases <- N_cases
-      N_cases_col <- "N_cases"
-      query_mod$N_controls <- N_controls
-      query$N_controls <- N_controls
-      N_controls_col <- "N_controls"
+      if(!is.null(N_cases)){
+        query_mod$N_cases <- N_cases
+        query$N_cases <- N_cases
+        N_cases_col <- "N_cases"
+      }
+      if(!is.null(N_controls)){
+        query_mod$N_controls <- N_controls
+        query$N_controls <- N_controls
+        N_controls_col <- "N_controls"
+      }
     }
 
+    printer("++ Preparing `proportion_cases` col", v=verbose)
     if(proportion_cases !="calculate"){
-      query_mod$proportion_cases <- query[proportion_cases]
+      if(length(proportion_cases)==nrow(query)){
+        query_mod$proportion_cases <- query[[proportion_cases]]
+      } else {
+        query_mod$proportion_cases <- proportion_cases
+      }
     } else if(proportion_cases=="calculate" &
               "N_cases" %in% colnames(query_mod) &
               "N_controls" %in% colnames(query_mod)){
-      printer("+ Standardize:: Calculating proportion of cases.")
+      printer("++ Calculating `proportion_cases`.")
       ### Calculate proportion of cases if N_cases and N_controls available
       query_mod$proportion_cases <- query_mod$N_cases / (query_mod$N_controls + query_mod$N_cases)
     } else {
       ### Otherwise don't include this col
-      printer("'proportion of cases' not included in data subset.")
+      printer("++ 'proportion_cases' not included in data subset.")
     }
 
+    # Calculate sample size
+    printer("++ Preparing N col", v=verbose)
+    query_mod$N <- get_sample_size(subset_DT = query_mod,
+                                   sample_size = sample_size,
+                                   verbose=verbose)[["N"]]
 
+    printer("++ Preparing t-stat col", v=verbose)
+    query_mod$t_stat <- calculate_tstat(finemap_dat = query_mod,
+                                        tstat_col = tstat_col)[["t_stat"]]
 
-    query_mod$t_stat <- calculate.tstat(finemap_dat = query_mod,
-                                        tstat_col = tstat_col)$t_stat
+    if(any(query_mod$P<=0)){
+      printer("++ Replacing P-values==0 with", .Machine$double.xmin, v=verbose)
+      query_mod[(query_mod$P<=0),"P"] <- .Machine$double.xmin
+    }
+    if(any(is.na(query_mod$P))){
+      printer("++ Removing SNPs with P-values==NA", v=verbose)
+      query_mod <- subset(query_mod, !is.na(P))
+    }
 
-
-    if(is.null(top_SNPs)){top_SNPs <- cbind(Locus=locus,(query_mod %>% arrange(P))[1,])}
-    topSNP_sub <- auto_topSNPs_sub(top_SNPs, query_mod, locus)
-
-    ## Remove SNPs with NAs in stats
-    query_mod[(query_mod$P<=0)|(query_mod$P>1),"P"] <- 1
-
+    printer("++ Assigning lead SNP", v=verbose)
     # Add leadSNP col
-    ## Get just one SNP per location (just pick the first one)
-    query_mod <- query_mod %>% group_by(CHR, POS) %>% dplyr::slice(1)
-    ## Mark lead SNP
+    if(is.null(top_SNPs)){
+      top_SNPs <- cbind(Locus=locus,(query_mod %>% arrange(P))[1,])
+    }
+    topSNP_sub <- auto_topSNPs_sub(top_SNPs = top_SNPs,
+                                   query = query_mod,
+                                   locus = locus)
     query_mod$leadSNP <- query_mod$SNP==topSNP_sub$SNP
-    query_mod <- assign_lead_SNP(new_DT = query_mod)
 
+    printer("++ Ensuring Effect, StdErr, P are numeric", v=verbose)
     # Only convert to numeric AFTER removing NAs (otherwise as.numeric will turn them into 0s)
     query_mod <- query_mod  %>%
-      mutate(Effect=as.numeric(Effect), StdErr=as.numeric(StdErr), P=as.numeric(P))
+      dplyr::mutate(Effect=as.numeric(Effect),
+                    StdErr=as.numeric(StdErr),
+                    P=as.numeric(P))
 
+    # Add QTL cols
+    if(!is.null(QTL_prefixes)){
+      printer("++ Adding back cols starting with:",paste(QTL_prefixes,collapse = ","), v=verbose)
+      qtl_cols <- grep(paste(QTL_prefixes,collapse = "|"),colnames(query), value = T)
+      query_mod <- cbind(data.frame(query_mod), data.frame(query)[,qtl_cols])
+    }
+
+    printer("++ Ensuring 1 SNP per row", v=verbose)
+    ## Get just one SNP per location (just pick the first one)
+    query_mod <- query_mod %>%
+      dplyr::group_by(CHR, POS) %>%
+      dplyr::slice(1) %>%
+      dplyr::group_by(SNP) %>%
+      dplyr::slice(1)
 
     # Trim whitespaces
     ## Extra whitespace causes problems when you try to make space-delimited files
+    printer("++ Removing extra whitespace", v=verbose)
     cols_to_be_rectified <- names(query_mod)[vapply(query_mod, is.character, logical(1))]
-    query_mod <- query_mod %>% mutate_at(.vars = vars(cols_to_be_rectified),
-                                         .funs = trimws )
-
-    data.table::fwrite(query_mod, subset_path, sep = "\t", nThread = 4)
+    query_mod <- query_mod %>% dplyr::mutate_at(.vars = vars(cols_to_be_rectified),
+                                                .funs = trimws )
+    printer("++ Saving subset ==>",subset_path, v=verbose)
+    dir.create(dirname(subset_path), showWarnings = F, recursive = T)
+    data.table::fwrite(query_mod, subset_path,
+                       sep = "\t", nThread = nThread)
     if(return_dt==T){return(query_mod)}
   }
 }

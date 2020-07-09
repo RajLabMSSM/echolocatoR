@@ -2,26 +2,26 @@
 % Please edit documentation in R/Nott_2019.R
 \name{NOTT_2019.get_epigenomic_peaks}
 \alias{NOTT_2019.get_epigenomic_peaks}
-\title{Import cell type-specific epigenomic peaks}
+\title{Download cell type-specific epigenomic peaks}
 \source{
 \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
 \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
 }
 \usage{
 NOTT_2019.get_epigenomic_peaks(
-  peak.dir = "/pd-omics/data/Nott_2019/peaks",
-  narrow_peaks = T,
-  broad_peaks = T,
-  nThread = 4
+  assays = c("ATAC", "H3K27ac", "H3K4me3"),
+  cell_types = c("neurons", "microglia", "oligo", "astrocytes"),
+  convert_to_GRanges = T,
+  nThread = 4,
+  verbose = T
 )
 }
 \description{
-Brain cell-specific epigenomic data from Nott et al. (2019).
+API access to brain cell type-specific epigenomic peaks (bed format)
+from Nott et al. (2019).
 }
 \examples{
-\dontrun{
-PEAKS.merged <- NOTT_2019.get_epigenomic_peaks(peak.dir="/pd-omics/data/Nott_2019/peaks", narrow_peaks=T, broad_peaks=F)
-}
+PEAKS <- NOTT_2019.get_epigenomic_peaks()
 }
 \seealso{
 Other NOTT_2019: 

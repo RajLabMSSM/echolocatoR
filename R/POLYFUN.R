@@ -254,7 +254,7 @@ POLYFUN.get_precomputed_priors <- function(polyfun=NULL,
 POLYFUN.munge_summ_stats <- function(polyfun=NULL,
                                      fullSS_path,
                                      locus_dir,
-                                     sample_size=1474097,
+                                     sample_size=NULL,
                                      min_INFO=0,
                                      min_MAF=0.001,
                                      force_new_munge=F,
@@ -612,7 +612,7 @@ POLYFUN_SUSIE <- function(locus_dir,
                           polyfun_approach="non-parametric",
                           dataset_type="GWAS",
                           n_causal=5,
-                          sample_size=NA,
+                          sample_size=NULL,
                           server=F,
                           PP_threshold=.95,
                           conda_env="echoR"){
@@ -703,8 +703,6 @@ POLYFUN.finemapper <- function(polyfun=NULL,
   # finemap_dat <- quick_finemap();
   # base_url  <- "./echolocatoR/tools/polyfun/LD_temp"
   polyfun <- POLYFUN.find_polyfun_folder(polyfun_path = polyfun)
-  sample_size <- ifelse(is.null(sample_size),
-                        effective_sample_size(finemap_dat = finemap_dat),  sample_size)
   chrom <- unique(finemap_dat$CHR)
   file.name <- paste0("chr",chrom,"_","40000001_43000001")
   ld_path <- file.path(locus_dir,"plink",file.name)

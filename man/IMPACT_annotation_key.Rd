@@ -14,7 +14,8 @@ An object of class \code{data.table} (inherits from \code{data.frame}) with 1511
 IMPACT_annotation_key
 }
 \description{
-
+Metadata for each of the IMPACT (Inference and Modeling of Phenotype-related ACtive Transcription) annotation files.
+Originally from \href{https://www.cell.com/ajhg/supplemental/S0002-9297\%2819\%2930108-9}{Amariuta et al. (2019)}.
 }
 \examples{
 \dontrun{

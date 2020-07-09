@@ -8,7 +8,7 @@ POLYFUN.munge_summ_stats(
   polyfun = NULL,
   fullSS_path,
   locus_dir,
-  sample_size = 1474097,
+  sample_size = NULL,
   min_INFO = 0,
   min_MAF = 0.001,
   force_new_munge = F,

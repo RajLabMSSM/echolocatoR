@@ -40,7 +40,6 @@
 
 
 <meta property="og:title" content="Plot QTL data — GGBIO.QTL_track" />
-<meta property="og:description" content="Plot QTL data" />
 
 
 
@@ -95,6 +94,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -129,7 +131,6 @@
     </div>
 
     <div class="ref-description">
-    <p>Plot QTL data</p>
     </div>
 
     <pre class="usage"><span class='fu'>GGBIO.QTL_track</span>(
@@ -161,24 +162,11 @@ in <code>GRanges</code> format.</p></td>
     <tr>
       <th>PP_threshold</th>
       <td><p>The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
-For example, <code>PP_threshold=.95</code> means that all Credible Set SNPs will be 95% Credible Set SNPs.</p></td>
+For example, <code>PP_threshold=.95</code> means that all Credible Set SNPs will be 95\<!-- % Credible Set SNPs.} --></p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other plot: 
-<code><a href='GGBIO.SNP_track.html'>GGBIO.SNP_track</a>()</code>,
-<code><a href='GGBIO.add_lines.html'>GGBIO.add_lines</a>()</code>,
-<code><a href='GGBIO.invisible_legend.html'>GGBIO.invisible_legend</a>()</code>,
-<code><a href='GGBIO.plot.html'>GGBIO.plot</a>()</code>,
-<code><a href='GGBIO.track_heights_dict.html'>GGBIO.track_heights_dict</a>()</code>,
-<code><a href='GGBIO.transcript_model_track.html'>GGBIO.transcript_model_track</a>()</code></p></div>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"BST1"</span>)
-<span class='no'>gr.snp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='DT_to_GRanges.html'>DT_to_GRanges</a></span>(<span class='no'>dat</span>)</div><div class='output co'>#&gt; <span class='error'>Error in dplyr::mutate(subset_DT, SEQnames = paste0("chr", CHR)): object 'dat' not found</span></div><div class='input'><span class='co'>## Create fake QTL P-values</span>
-<span class='no'>gr.snp</span>$<span class='no'>fake_eQTL.P</span> <span class='kw'>&lt;-</span> <span class='no'>gr.snp</span>$<span class='no'>P</span>  * <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>.9</span>,<span class='fl'>.7</span>)</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'gr.snp' not found</span></div><div class='input'><span class='no'>qtl.track</span> <span class='kw'>&lt;-</span> <span class='fu'>GGBIO.QTL_track</span>(<span class='kw'>gr.snp</span><span class='kw'>=</span><span class='no'>gr.snp</span>, <span class='kw'>QTL_prefix</span><span class='kw'>=</span><span class='st'>"fake_eQTL"</span>, <span class='kw'>labels_subset</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Lead SNP"</span>), <span class='kw'>color_r2</span><span class='kw'>=</span><span class='no'>F</span>)</div><div class='output co'>#&gt; <span class='error'>Error in GGBIO.QTL_track(gr.snp = gr.snp, QTL_prefix = "fake_eQTL", labels_subset = c("Lead SNP"),     color_r2 = F): object 'gr.snp' not found</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

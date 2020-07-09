@@ -41,7 +41,7 @@
 
 <meta property="og:title" content="Extract a subset of the summary stats — extract_SNP_subset" />
 <meta property="og:description" content="Use either tabix or awk to extract a locus subset
- from the full summary statistics file." />
+from the full summary statistics file." />
 
 
 
@@ -96,6 +96,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -131,11 +134,11 @@
 
     <div class="ref-description">
     <p>Use either <em>tabix</em> or <em>awk</em> to extract a locus subset
- from the full summary statistics file.</p>
+from the full summary statistics file.</p>
     </div>
 
     <pre class="usage"><span class='fu'>extract_SNP_subset</span>(
-  <span class='no'>locus</span>,
+  <span class='no'>locus_dir</span>,
   <span class='no'>fullSS_path</span>,
   <span class='no'>subset_path</span>,
   <span class='kw'>force_new_subset</span> <span class='kw'>=</span> <span class='no'>F</span>,
@@ -153,17 +156,20 @@
   <span class='kw'>tstat_col</span> <span class='kw'>=</span> <span class='st'>"t-stat"</span>,
   <span class='kw'>A1_col</span> <span class='kw'>=</span> <span class='st'>"A1"</span>,
   <span class='kw'>A2_col</span> <span class='kw'>=</span> <span class='st'>"A2"</span>,
+  <span class='kw'>gene_col</span> <span class='kw'>=</span> <span class='st'>"gene"</span>,
   <span class='kw'>N_cases_col</span> <span class='kw'>=</span> <span class='st'>"N_cases"</span>,
   <span class='kw'>N_controls_col</span> <span class='kw'>=</span> <span class='st'>"N_controls"</span>,
   <span class='kw'>N_cases</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>N_controls</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>proportion_cases</span> <span class='kw'>=</span> <span class='st'>"calculate"</span>,
+  <span class='kw'>sample_size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>superpopulation</span> <span class='kw'>=</span> <span class='st'>""</span>,
   <span class='kw'>min_POS</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
   <span class='kw'>max_POS</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
   <span class='kw'>file_sep</span> <span class='kw'>=</span> <span class='st'>"\t"</span>,
   <span class='kw'>query_by</span> <span class='kw'>=</span> <span class='st'>"coordinates"</span>,
   <span class='kw'>probe_path</span> <span class='kw'>=</span> <span class='st'>"./Data/eQTL/gene.ILMN.map"</span>,
+  <span class='kw'>QTL_prefixes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>remove_tmps</span> <span class='kw'>=</span> <span class='no'>T</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>
 )</pre>

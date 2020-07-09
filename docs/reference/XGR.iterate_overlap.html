@@ -41,7 +41,7 @@
 
 <meta property="og:title" content="Check overlap with XGR annotations — XGR.iterate_overlap" />
 <meta property="og:description" content="Automatically handles different file formats provided by XGR
- (e.g. varying kinds of nested/unnested GRanges).
+(e.g. varying kinds of nested/unnested GRanges).
 Then returns a Granges object with only the XGR annotation ranges
 that overlap with the SNPs in subset_DT.
 The GRanges merges hits from subset_DT." />
@@ -99,6 +99,9 @@ The GRanges merges hits from subset_DT." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -134,7 +137,7 @@ The GRanges merges hits from subset_DT." />
 
     <div class="ref-description">
     <p>Automatically handles different file formats provided by XGR
- (e.g. varying kinds of nested/unnested <code>GRanges</code>).
+(e.g. varying kinds of nested/unnested <code>GRanges</code>).
 Then returns a <code>Granges</code> object with only the XGR annotation ranges
 that overlap with the SNPs in <code>subset_DT</code>.
 The <code>GRanges</code> merges hits from <code>subset_DT</code>.</p>
@@ -155,7 +158,7 @@ The <code>GRanges</code> merges hits from <code>subset_DT</code>.</p>
       <th>lib.selections</th>
       <td><p>Which XGR annotations to check overlap with.
 For full list of libraries see:
- <a href='http://xgr.r-forge.r-project.org/#annotations-at-the-genomic-region-level'>http://xgr.r-forge.r-project.org/#annotations-at-the-genomic-region-level</a></p></td>
+<a href='http://xgr.r-forge.r-project.org/#annotations-at-the-genomic-region-level'>http://xgr.r-forge.r-project.org/#annotations-at-the-genomic-region-level</a></p></td>
     </tr>
     <tr>
       <th>subset_DT</th>
@@ -194,8 +197,8 @@ For full list of libraries see:
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"BST1"</span>)
 <span class='no'>finemap_DT</span> <span class='kw'>&lt;-</span> <span class='no'>BST1</span>
-<span class='no'>gr.hits</span> <span class='kw'>&lt;-</span> <span class='fu'>XGR.iterate_overlap</span>(<span class='kw'>lib.selections</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ENCODE_TFBS_ClusteredV3_CellTypes"</span>), <span class='kw'>subset_DT</span><span class='kw'>=</span><span class='no'>finemap_DT</span>, <span class='kw'>nCores</span><span class='kw'>=</span><span class='fl'>1</span>)</div><div class='output co'>#&gt; <span class='message'>Start at 2020-06-26 12:25:21</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>'ENCODE_TFBS_ClusteredV3_CellTypes' (from http://galahad.well.ox.ac.uk/bigdata/ENCODE_TFBS_ClusteredV3_CellTypes.RData) has been loaded into the working environment (at 2020-06-26 12:25:34)</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>End at 2020-06-26 12:25:34</span></div><div class='output co'>#&gt; <span class='message'>Runtime in total is: 13 secs</span></div><div class='output co'>#&gt; <span class='message'>8702 query SNP(s) detected with reference overlap.</span></div><div class='output co'>#&gt; <span class='message'>25970 query SNP(s) detected with reference overlap.</span></div></pre>
+<span class='no'>gr.hits</span> <span class='kw'>&lt;-</span> <span class='fu'>XGR.iterate_overlap</span>(<span class='kw'>lib.selections</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ENCODE_TFBS_ClusteredV3_CellTypes"</span>), <span class='kw'>subset_DT</span><span class='kw'>=</span><span class='no'>finemap_DT</span>, <span class='kw'>nCores</span><span class='kw'>=</span><span class='fl'>1</span>)</div><div class='output co'>#&gt; <span class='message'>Start at 2020-07-09 18:21:05</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>'ENCODE_TFBS_ClusteredV3_CellTypes' (from http://galahad.well.ox.ac.uk/bigdata/ENCODE_TFBS_ClusteredV3_CellTypes.RData) has been loaded into the working environment (at 2020-07-09 18:21:15)</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>End at 2020-07-09 18:21:15</span></div><div class='output co'>#&gt; <span class='message'>Runtime in total is: 10 secs</span></div><div class='output co'>#&gt; [1] "+ dat2 already in GRanges format"</div><div class='output co'>#&gt; <span class='warning'>Warning: found more than one best sequence renaming map compatible with seqname style "NCBI" for this object, using the first one</span></div><div class='output co'>#&gt; <span class='message'>8702 query SNP(s) detected with reference overlap.</span></div><div class='output co'>#&gt; [1] "+ dat2 already in GRanges format"</div><div class='output co'>#&gt; <span class='warning'>Warning: found more than one best sequence renaming map compatible with seqname style "NCBI" for this object, using the first one</span></div><div class='output co'>#&gt; <span class='message'>25970 query SNP(s) detected with reference overlap.</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

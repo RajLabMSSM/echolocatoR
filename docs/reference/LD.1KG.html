@@ -96,6 +96,9 @@ Then uses plink to calculate LD on the fly." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -137,7 +140,7 @@ Then uses <em>plink</em> to calculate LD on the fly.</p>
     <pre class="usage"><span class='fu'>LD.1KG</span>(
   <span class='no'>locus_dir</span>,
   <span class='no'>subset_DT</span>,
-  <span class='no'>locus</span>,
+  <span class='kw'>locus</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>LD_reference</span> <span class='kw'>=</span> <span class='st'>"1KGphase1"</span>,
   <span class='kw'>superpopulation</span> <span class='kw'>=</span> <span class='st'>"EUR"</span>,
   <span class='kw'>vcf_folder</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -150,7 +153,8 @@ Then uses <em>plink</em> to calculate LD on the fly.</p>
   <span class='kw'>remove_tmps</span> <span class='kw'>=</span> <span class='no'>T</span>,
   <span class='kw'>fillNA</span> <span class='kw'>=</span> <span class='fl'>0</span>,
   <span class='kw'>nThread</span> <span class='kw'>=</span> <span class='fl'>4</span>,
-  <span class='kw'>download_method</span> <span class='kw'>=</span> <span class='st'>"wget"</span>
+  <span class='kw'>download_method</span> <span class='kw'>=</span> <span class='st'>"wget"</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -192,6 +196,10 @@ removes any SNPs that are in LD with any of the <code>remove_variants</code> abo
       <th>fillNA</th>
       <td><p>When pairwise LD (r) between two SNPs is <code>NA</code>, replace with 0.</p></td>
     </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>Whether <em>echolocatoR</em> should be verbose or silent.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
@@ -206,19 +214,19 @@ This approach does not have this limitations, allowing you to fine-map loci more
 <code><a href='LD.UKBiobank.html'>LD.UKBiobank</a>()</code>,
 <code><a href='LD.calculate_LD.html'>LD.calculate_LD</a>()</code>,
 <code><a href='LD.dprime_table.html'>LD.dprime_table</a>()</code>,
-<code><a href='LD.filter_vcf_population.html'>LD.filter_vcf_population</a>()</code>,
-<code><a href='LD.filter_vcf_rsamtools.html'>LD.filter_vcf_rsamtools</a>()</code>,
+<code><a href='LD.filter_vcf_gaston.html'>LD.filter_vcf_gaston</a>()</code>,
 <code><a href='LD.filter_vcf.html'>LD.filter_vcf</a>()</code>,
+<code><a href='LD.get_vcf_folder.html'>LD.get_vcf_folder</a>()</code>,
 <code><a href='LD.leadSNP_block.html'>LD.leadSNP_block</a>()</code>,
 <code><a href='LD.load_or_create.html'>LD.load_or_create</a>()</code>,
 <code><a href='LD.plink_LD.html'>LD.plink_LD</a>()</code>,
+<code><a href='LD.plink_file.html'>LD.plink_file</a>()</code>,
 <code><a href='LD.plot.html'>LD.plot</a>()</code>,
 <code><a href='LD.read_bin.html'>LD.read_bin</a>()</code>,
 <code><a href='LD.read_ld_table.html'>LD.read_ld_table</a>()</code>,
 <code><a href='LD.run_plink_LD.html'>LD.run_plink_LD</a>()</code>,
 <code><a href='LD.translate_population.html'>LD.translate_population</a>()</code>,
-<code><a href='LD.vcf_to_bed.html'>LD.vcf_to_bed</a>()</code>,
-<code><a href='get_vcf_folder.html'>get_vcf_folder</a>()</code></p></div>
+<code><a href='LD.vcf_to_bed.html'>LD.vcf_to_bed</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {

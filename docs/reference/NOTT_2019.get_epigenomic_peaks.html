@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Import cell type-specific epigenomic peaks — NOTT_2019.get_epigenomic_peaks • echolocatoR</title>
+<title>Download cell type-specific epigenomic peaks — NOTT_2019.get_epigenomic_peaks • echolocatoR</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="Import cell type-specific epigenomic peaks — NOTT_2019.get_epigenomic_peaks" />
-<meta property="og:description" content="Brain cell-specific epigenomic data from Nott et al. (2019)." />
+<meta property="og:title" content="Download cell type-specific epigenomic peaks — NOTT_2019.get_epigenomic_peaks" />
+<meta property="og:description" content="API access to brain cell type-specific epigenomic peaks (bed format)
+from Nott et al. (2019)." />
 
 
 
@@ -95,6 +96,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -123,20 +127,22 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Import cell type-specific epigenomic peaks</h1>
+    <h1>Download cell type-specific epigenomic peaks</h1>
     <small class="dont-index">Source: <a href='https://github.com/RajLabMSSM/echolocatoR/blob/master/R/Nott_2019.R'><code>R/Nott_2019.R</code></a></small>
     <div class="hidden name"><code>NOTT_2019.get_epigenomic_peaks.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Brain cell-specific epigenomic data from Nott et al. (2019).</p>
+    <p>API access to brain cell type-specific epigenomic peaks (bed format)
+from Nott et al. (2019).</p>
     </div>
 
     <pre class="usage"><span class='fu'>NOTT_2019.get_epigenomic_peaks</span>(
-  <span class='kw'>peak.dir</span> <span class='kw'>=</span> <span class='st'>"/pd-omics/data/Nott_2019/peaks"</span>,
-  <span class='kw'>narrow_peaks</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>broad_peaks</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>nThread</span> <span class='kw'>=</span> <span class='fl'>4</span>
+  <span class='kw'>assays</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ATAC"</span>, <span class='st'>"H3K27ac"</span>, <span class='st'>"H3K4me3"</span>),
+  <span class='kw'>cell_types</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"neurons"</span>, <span class='st'>"microglia"</span>, <span class='st'>"oligo"</span>, <span class='st'>"astrocytes"</span>),
+  <span class='kw'>convert_to_GRanges</span> <span class='kw'>=</span> <span class='no'>T</span>,
+  <span class='kw'>nThread</span> <span class='kw'>=</span> <span class='fl'>4</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>
 )</pre>
 
 
@@ -160,9 +166,9 @@
 <code><a href='NOTT_2019.superenhancers.html'>NOTT_2019.superenhancers</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>PEAKS.merged</span> <span class='kw'>&lt;-</span> <span class='fu'>NOTT_2019.get_epigenomic_peaks</span>(<span class='kw'>peak.dir</span><span class='kw'>=</span><span class='st'>"/pd-omics/data/Nott_2019/peaks"</span>, <span class='kw'>narrow_peaks</span><span class='kw'>=</span><span class='no'>T</span>, <span class='kw'>broad_peaks</span><span class='kw'>=</span><span class='no'>F</span>)
-}</div></pre>
+    <pre class="examples"><div class='input'><span class='no'>PEAKS</span> <span class='kw'>&lt;-</span> <span class='fu'>NOTT_2019.get_epigenomic_peaks</span>()</div><div class='output co'>#&gt; [1] "++ Nott_2019:: Downloading and merging 12 BED files."
+#&gt; [1] "++ NOTT_2019:: Converting merged BED files to GRanges."
+#&gt; [1] "++ Nott_2019:: 634540 ranges retrieved."</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

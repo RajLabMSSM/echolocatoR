@@ -40,10 +40,6 @@
 
 
 <meta property="og:title" content="Multi-track plot of fine-mapping results — GGBIO.plot" />
-<meta property="og:description" content="Plots fine-mapping results from echolocatoR.
-Create separate tracks for the original results (-log10(P))
-and each fine-mapping method (Posterior Probability).
-Uses ggbio." />
 
 
 
@@ -98,6 +94,9 @@ Uses ggbio." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -132,10 +131,6 @@ Uses ggbio." />
     </div>
 
     <div class="ref-description">
-    <p>Plots fine-mapping results from <em>echolocatoR</em>.
-Create separate tracks for the original results (-log10(P))
-and each fine-mapping method (Posterior Probability).
-Uses <code>ggbio</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>GGBIO.plot</span>(
@@ -188,37 +183,17 @@ stored in the column <em>Fairfax_2014.P</em>.</p></td>
     <tr>
       <th>PP_threshold</th>
       <td><p>The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
-For example, <code>PP_threshold=.95</code> means that all Credible Set SNPs will be 95% Credible Set SNPs.</p></td>
-    </tr>
-    <tr>
-      <th>max_transcripts</th>
-      <td><p>Max number of transcripts per gene to show.</p></td>
-    </tr>
-    <tr>
-      <th>plot.window</th>
-      <td><p>Zoom into the center of the locus when plotting (without editing the fine-mapping results file).</p></td>
-    </tr>
-    <tr>
-      <th>verbose</th>
-      <td><p>Whether <em>echolocatoR</em> should be verbose or silent.</p></td>
+For example, <code>PP_threshold=.95</code> means that all Credible Set SNPs will be 95\<!-- % Credible Set SNPs.} --></p>
+<p>max_transcriptsMax number of transcripts per gene to show.</p>
+<p>plot.windowZoom into the center of the locus when plotting (without editing the fine-mapping results file).</p>
+<p>verboseWhether <em>echolocatoR</em> should be verbose or silent.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
     <p><a href='http://bioconductor.org/packages/release/bioc/vignettes/ggbio/inst/doc/ggbio.pdf'>http://bioconductor.org/packages/release/bioc/vignettes/ggbio/inst/doc/ggbio.pdf</a></p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other plot: 
-<code><a href='GGBIO.QTL_track.html'>GGBIO.QTL_track</a>()</code>,
-<code><a href='GGBIO.SNP_track.html'>GGBIO.SNP_track</a>()</code>,
-<code><a href='GGBIO.add_lines.html'>GGBIO.add_lines</a>()</code>,
-<code><a href='GGBIO.invisible_legend.html'>GGBIO.invisible_legend</a>()</code>,
-<code><a href='GGBIO.track_heights_dict.html'>GGBIO.track_heights_dict</a>()</code>,
-<code><a href='GGBIO.transcript_model_track.html'>GGBIO.transcript_model_track</a>()</code></p></div>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -35,25 +35,15 @@ getmode <- function(v) {
   uniqv[which.max(tabulate(match(v, uniqv)))]
 }
 
-get_sample_size <- function(subset_DT, sample_size=NA){
-  if(is.na(sample_size)){
-    if("N_cases" %in% colnames(subset_DT) & "N_controls" %in% colnames(subset_DT)){
-      sample_size <- max(subset_DT$N_cases) + max(subset_DT$N_controls)
-    } else {
-      sample_size <- 10000
-      printer("++ No sample size variable detected...Defaulting to:",sample_size)
-    }
-  }
-  return(sample_size)
-}
+
 
 COLOC.construct_dataset <- function(subset_DT,
-                                    sample_size=NA,
+                                    sample_size=NULL,
                                     proportion_cases=NA, # Doesn't allow actual 0, so use smallest number R allows
                                     MAF=NA,
                                     type="cc"){
   # Sample size
-  sample_size <- get_sample_size(subset_DT, sample_size)
+  sample_size <- max(subset_DT$N)
   # Proportion cases
   if(is.na(proportion_cases)){
     if("proportion_cases" %in% colnames(subset_DT)){

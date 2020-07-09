@@ -11,10 +11,8 @@ Creates and saves the master file
 which tells \code{FINEMAP} where to find each input file.
 }
 \examples{
-data("locus_dir"); data("BST1");
-finemap_DT <- BST1
-n_samples <- get_sample_size(subset_DT = finemap_DT)
-master_path <- FINEMAP.construct_master(locus_dir=locus_dir, n_samples=n_samples)
+data("locus_dir");
+master_path <- FINEMAP.construct_master(locus_dir=locus_dir, n_samples=25000)
 }
 \seealso{
 Other FINEMAP: 

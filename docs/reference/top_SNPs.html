@@ -96,6 +96,9 @@ Used to query locus subsets.for fine-mapping." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -143,8 +146,7 @@ Used to query locus subsets.for fine-mapping.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"Nalls_top_SNPs"</span>)
-<span class='no'>top_SNPs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='import_topSNPs.html'>import_topSNPs</a></span>(<span class='kw'>topSS</span><span class='kw'>=</span><span class='no'>Nalls_top_SNPs</span>, <span class='kw'>chrom_col</span><span class='kw'>=</span><span class='st'>"CHR"</span>, <span class='kw'>position_col</span><span class='kw'>=</span><span class='st'>"BP"</span>, <span class='kw'>snp_col</span><span class='kw'>=</span><span class='st'>"SNP"</span>, <span class='kw'>pval_col</span><span class='kw'>=</span><span class='st'>"P, all studies"</span>, <span class='kw'>effect_col</span><span class='kw'>=</span><span class='st'>"Beta, all studies"</span>, <span class='kw'>gene_col</span><span class='kw'>=</span><span class='st'>"Nearest Gene"</span>, <span class='kw'>group_by_locus</span><span class='kw'>=</span><span class='no'>T</span>, <span class='kw'>locus_col</span><span class='kw'>=</span><span class='st'>"Nearest Gene"</span>, <span class='kw'>remove_variants</span><span class='kw'>=</span><span class='st'>"rs34637584"</span>)
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='no'>top_SNPs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='import_topSNPs.html'>import_topSNPs</a></span>(<span class='kw'>topSS</span><span class='kw'>=</span><span class='no'>Nalls_top_SNPs</span>, <span class='kw'>chrom_col</span><span class='kw'>=</span><span class='st'>"CHR"</span>, <span class='kw'>position_col</span><span class='kw'>=</span><span class='st'>"BP"</span>, <span class='kw'>snp_col</span><span class='kw'>=</span><span class='st'>"SNP"</span>, <span class='kw'>pval_col</span><span class='kw'>=</span><span class='st'>"P, all studies"</span>, <span class='kw'>effect_col</span><span class='kw'>=</span><span class='st'>"Beta, all studies"</span>, <span class='kw'>gene_col</span><span class='kw'>=</span><span class='st'>"Nearest Gene"</span>, <span class='kw'>group_by_locus</span><span class='kw'>=</span><span class='no'>T</span>, <span class='kw'>locus_col</span><span class='kw'>=</span><span class='st'>"Nearest Gene"</span>, <span class='kw'>remove_variants</span><span class='kw'>=</span><span class='st'>"rs34637584"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in import_topSNPs(topSS = Nalls_top_SNPs, chrom_col = "CHR", position_col = "BP",     snp_col = "SNP", pval_col = "P, all studies", effect_col = "Beta, all studies",     gene_col = "Nearest Gene", group_by_locus = T, locus_col = "Nearest Gene",     remove_variants = "rs34637584"): unused argument (group_by_locus = T)</span></div><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='kw pkg'>usethis</span><span class='kw ns'>::</span><span class='fu'><a href='https://usethis.r-lib.org/reference/use_data.html'>use_data</a></span>(<span class='no'>top_SNPs</span>, <span class='kw'>overwrite</span><span class='kw'>=</span><span class='no'>T</span>)
 }</div></pre>
   </div>

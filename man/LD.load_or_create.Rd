@@ -13,6 +13,7 @@ LD.load_or_create(
   superpopulation = "EUR",
   download_reference = T,
   download_method = "direct",
+  vcf_folder = NULL,
   min_r2 = 0,
   LD_block = F,
   LD_block_size = 0.7,
@@ -86,18 +87,18 @@ Other LD:
 \code{\link{LD.UKBiobank}()},
 \code{\link{LD.calculate_LD}()},
 \code{\link{LD.dprime_table}()},
-\code{\link{LD.filter_vcf_population}()},
-\code{\link{LD.filter_vcf_rsamtools}()},
+\code{\link{LD.filter_vcf_gaston}()},
 \code{\link{LD.filter_vcf}()},
+\code{\link{LD.get_vcf_folder}()},
 \code{\link{LD.leadSNP_block}()},
 \code{\link{LD.plink_LD}()},
+\code{\link{LD.plink_file}()},
 \code{\link{LD.plot}()},
 \code{\link{LD.read_bin}()},
 \code{\link{LD.read_ld_table}()},
 \code{\link{LD.run_plink_LD}()},
 \code{\link{LD.translate_population}()},
-\code{\link{LD.vcf_to_bed}()},
-\code{\link{get_vcf_folder}()}
+\code{\link{LD.vcf_to_bed}()}
 }
 \concept{LD}
 \keyword{internal}

@@ -4,7 +4,7 @@
 \alias{LD.dprime_table}
 \title{Calculate LD (D')}
 \usage{
-LD.dprime_table(SNP_list, plink_folder)
+LD.dprime_table(SNP_list, LD_folder)
 }
 \description{
 This appriach computes an LD matrix of D' (instead of r or r2) from a vcf.
@@ -17,19 +17,19 @@ Other LD:
 \code{\link{LD.LD_blocks}()},
 \code{\link{LD.UKBiobank}()},
 \code{\link{LD.calculate_LD}()},
-\code{\link{LD.filter_vcf_population}()},
-\code{\link{LD.filter_vcf_rsamtools}()},
+\code{\link{LD.filter_vcf_gaston}()},
 \code{\link{LD.filter_vcf}()},
+\code{\link{LD.get_vcf_folder}()},
 \code{\link{LD.leadSNP_block}()},
 \code{\link{LD.load_or_create}()},
 \code{\link{LD.plink_LD}()},
+\code{\link{LD.plink_file}()},
 \code{\link{LD.plot}()},
 \code{\link{LD.read_bin}()},
 \code{\link{LD.read_ld_table}()},
 \code{\link{LD.run_plink_LD}()},
 \code{\link{LD.translate_population}()},
-\code{\link{LD.vcf_to_bed}()},
-\code{\link{get_vcf_folder}()}
+\code{\link{LD.vcf_to_bed}()}
 }
 \concept{LD}
 \keyword{internal}

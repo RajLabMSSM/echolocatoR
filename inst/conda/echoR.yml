@@ -21,7 +21,8 @@ dependencies:
   - tabix
   - plink
   - macs2
-  - r-base
+  - bcftools
+  - r-base>=3.6.0
   - r-devtools
   - r-reticulate  
   - r-rlang
@@ -32,8 +33,10 @@ dependencies:
   - r-foreign
   - r-refgenome
   - r-xgr
+  - r-coloc
   - r-biocmanager
   - bioconductor-snpstats
   - bioconductor-ggbio  
   - bioconductor-ensdb.hsapiens.v75
+  - bioconductor-biomart
  

@@ -763,7 +763,7 @@ PAINTOR <- function(finemap_dat=NULL,
                                               QTL_populations=QTL_populations,
                                               LD_reference=LD_reference,
                                               force_new_LD=force_new_LD,
-                                              fillNA = NA)
+                                              fillNA = NULL)
     .LD_file.paths <-  LD.list$.LD_file.paths
     # .LD_file.paths[2] <- gsub(".ld2",".ld1",.LD_file.paths[2])
     # Make sure SNP order matches that of LD matrices

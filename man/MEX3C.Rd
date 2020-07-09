@@ -7,10 +7,10 @@
 \format{
 data.table
 \describe{
-  \item{SNP}{SNP RSID}
-  \item{CHR}{Chromosome}
-  \item{POS}{Genomic positiion (in basepairs)}
-  ...
+\item{SNP}{SNP RSID}
+\item{CHR}{Chromosome}
+\item{POS}{Genomic position (in basepairs)}
+\item{...}{Optional: extra columns}
 }
 }
 \source{
@@ -29,7 +29,8 @@ by \href{https://www.biorxiv.org/content/10.1101/388165v3}{Nalls et al. (bioRxiv
 }
 \examples{
 \dontrun{
-MEX3C <- data.table::fread("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/MEX3C/Multi-finemap/Multi-finemap_results.txt")
+root_dir <- "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/MEX3C/Multi-finemap"
+MEX3C <- data.table::fread(file.path(root_dir,"Multi-finemap_results.txt"))
 MEX3C <- update_CS_cols(finemap_dat=MEX3C)
 MEX3C <- find_consensus_SNPs(finemap_dat=MEX3C)
 usethis::use_data(MEX3C, overwrite = T)

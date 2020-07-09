@@ -52,6 +52,7 @@ LD.load_or_create <- function(locus_dir,
                               superpopulation="EUR",
                               download_reference=T,
                               download_method="direct",
+                              vcf_folder=NULL,
                               min_r2=0,
                               LD_block=F,
                               LD_block_size=.7,
@@ -64,7 +65,7 @@ LD.load_or_create <- function(locus_dir,
                               nThread=4){
   if(is.null(locus)){locus <- basename(locus_dir)}
   if(LD_reference=="UKB"){
-    printer("LD:: Using UK Biobank LD reference panel...")
+    printer("LD:: Using UK Biobank LD reference panel...", v=verbose)
     LD_matrix <- LD.UKBiobank(subset_DT = subset_DT,
                               locus_dir = locus_dir,
                               force_new_LD = force_new_LD,
@@ -74,9 +75,9 @@ LD.load_or_create <- function(locus_dir,
                               return_matrix = T,
                               remove_tmps = remove_tmps)
   } else if (LD_reference == "1KGphase1" | LD_reference == "1KGphase3") {
-    LD_path <- file.path(locus_dir,"LD",paste0(locus, LD_reference,"_LD.RDS"))
+    LD_path <- file.path(locus_dir,"LD",paste0(locus,".",LD_reference,"_LD.RDS"))
     if(!file.exists(LD_path) | force_new_LD==T){
-      printer("+ Computing LD matrix...", verbose)
+      printer("+ Computing LD matrix...", v=verbose)
       LD_matrix <- LD.1KG(locus_dir = locus_dir,
                           subset_DT = subset_DT,
                           locus = locus,
@@ -183,8 +184,8 @@ LD.1KG_download_vcf <- function(subset_DT,
   ## http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/
   # Download portion of vcf from 1KG website
   if(is.null(locus)){locus <- basename(locus_dir)}
-  vcf_folder <- get_vcf_folder(vcf_folder=vcf_folder,
-                               locus_dir=locus_dir)
+  vcf_folder <- LD.get_vcf_folder(vcf_folder=vcf_folder,
+                                  locus_dir=locus_dir)
   # Don't use the chr prefix: https://www.internationalgenome.org/faq/how-do-i-get-sub-section-vcf-file/
   subset_DT$CHR <- gsub("chr","",subset_DT$CHR)
   chrom <- unique(subset_DT$CHR)
@@ -280,27 +281,6 @@ LD.1KG_download_vcf <- function(subset_DT,
 
 
 
-
-#' Filter a vcf by min/max coordinates
-#'
-#' Uses the \code{Rsamtools} package to filter a vcf fiile.
-#'
-#' @family LD
-#' @keywords internal
-LD.filter_vcf_rsamtools <- function(){
-  gr <- GenomicRanges::makeGRangesFromDataFrame(df = subset_DT[,c("CHR","POS")],
-                                                seqnames.field = "CHR",
-                                                start.field = "POS",
-                                                end.field = "POS")
-  # Rsamtools::scanTabix(file = vcf_URL, param = gr)
-  # library(Rsamtools)
-  tbx <- Rsamtools::TabixFile(file = vcf_URL,  index = paste0(vcf_URL,".tbi"))
-  Rsamtools::fi
-}
-
-
-
-
 #' Filter a vcf by min/max coordinates
 #'
 #' Uses \emph{bcftools} to filter a vcf by min/max genomic coordinates (in basepairs).
@@ -312,35 +292,27 @@ LD.filter_vcf_rsamtools <- function(){
 LD.filter_vcf <- function(subset_vcf,
                           popDat,
                           superpopulation,
-                          remove_tmp=F){
-  # vcf.bgz <- Rsamtools::bgzip(subset_vcf, overwrite = T)
-  # Rsamtools::indexTabix(file = vcf.bgz, seq = 12, begin=subset_DT$POS[1])
-  # tbx <- Rsamtools::TabixFile(file = subset_vcf)
-
+                          remove_tmp=T,
+                          verbose=T){
   vcf.gz <- paste0(subset_vcf,".gz")
   vcf.gz.subset <- gsub("_subset","_samples_subset",vcf.gz)
   # Compress vcf
   if(!file.exists(vcf.gz)){
-    printer("LD:BCFTOOLS:: Compressing vcf file...")
+    printer("LD:BCFTOOLS:: Compressing vcf file...", v=verbose)
     system(paste("bgzip -f",subset_vcf))
   }
   # Re-index vcf
-  printer("LD:TABIX:: Re-indexing vcf.gz...")
+  printer("LD:TABIX:: Re-indexing vcf.gz...", v=verbose)
   system(paste("tabix -f -p vcf",vcf.gz))
-
   # Subset samples
   selectedInds <- subset(popDat, superpop == superpopulation)$sample %>% unique()
-  printer("LD:BCFTOOLS:: Subsetting vcf to only include",superpopulation,"individuals (",length(selectedInds), "/",length(popDat$sample%>%unique()),").")
+  printer("LD:BCFTOOLS:: Subsetting vcf to only include",superpopulation,"individuals (",length(selectedInds), "/",length(popDat$sample%>%unique()),").", v=verbose)
   cmd <- paste("bcftools view -s",paste(selectedInds, collapse=","), vcf.gz, "| bgzip > tmp && mv tmp",vcf.gz.subset)
   system(cmd)
-  # mega_cmd <- paste(subset_vcf,
-  #                   "| bgzip",
-  #                   "| tabix -f -p vcf",
-  #                   "| bcftools view -s",paste(selectedInds, collapse=","), vcf.gz,
-  #                   "| bgzip > tmp && mv tmp",vcf.gz.subset)
+  # Remove old vcf
+  if(remove_tmp){out <- suppressWarnings(file.remove(subset_vcf))}
   return(vcf.gz.subset)
 }
-
 
 
 
@@ -349,19 +321,20 @@ LD.filter_vcf <- function(subset_vcf,
 #' @inheritParams LD.filter_vcf
 #' @family LD
 #' @keywords internal
-LD.filter_vcf_population <- function(subset_vcf,
-                                     subset_DT,
-                                     locus_dir,
-                                     superpopulation,
-                                     popDat){
+LD.filter_vcf_gaston <- function(subset_vcf,
+                                 subset_DT,
+                                 locus_dir,
+                                 superpopulation,
+                                 popDat,
+                                 verbose=T){
   # Import w/ gaston and further subset
-  printer("+ Importing VCF as bed file...")
+  printer("+ Importing VCF as bed file...", v=verbose)
   bed.file <- gaston::read.vcf(subset_vcf, verbose = F)
   ## Subset rsIDs
   bed <- gaston::select.snps(bed.file, id %in% subset_DT$SNP & id !=".")
   # Create plink sub-dir
   dir.create(file.path(locus_dir, "LD"), recursive = T, showWarnings = F)
-  gaston::write.bed.matrix(bed, file.path(locus_dir, "plink/plink"), rds = NULL)
+  gaston::write.bed.matrix(bed, file.path(locus_dir, "LD/plink"), rds = NULL)
   # Subset Individuals
   selectedInds <- subset(popDat, superpop == superpopulation)
   bed <- gaston::select.inds(bed, id %in% selectedInds$sample)
@@ -382,10 +355,14 @@ LD.filter_vcf_population <- function(subset_vcf,
 #' @family LD
 #' @keywords internal
 LD.vcf_to_bed <- function(vcf.gz.subset,
-                          locus_dir){
-  printer("LD:PLINK:: Converting vcf.gz to .bed/.bim/.fam")
+                          locus_dir,
+                          verbose=T){
+  plink <- LD.plink_file()
+  printer("LD:PLINK:: Converting vcf.gz to .bed/.bim/.fam", v=verbose)
   dir.create(file.path(locus_dir,"LD"), recursive = T, showWarnings = F)
-  cmd <- paste("plink","--vcf",vcf.gz.subset, "--out", file.path(locus_dir,"LD","LD"))
+  cmd <- paste(plink,
+               "--vcf",vcf.gz.subset,
+               "--out", file.path(locus_dir,"LD","plink"))
   system(cmd)
 }
 
@@ -403,19 +380,21 @@ LD.vcf_to_bed <- function(vcf.gz.subset,
 #' @keywords internal
 LD.calculate_LD <- function(locus_dir,
                             ld_window=1000, # 10000000
-                            ld_format="r"){
-  printer("LD:PLINK:: Calculating LD ( r & D'-signed; LD-window =",ld_window,")")
-  plink_path_prefix <- file.path(locus_dir,"LD","LD")
+                            ld_format="r",
+                            verbose=T){
+  plink <- LD.plink_file()
+  printer("LD:PLINK:: Calculating LD ( r & D'-signed; LD-window =",ld_window,")", v=verbose)
+  plink_path_prefix <- file.path(locus_dir,"LD","plink")
   dir.create(file.path(locus_dir,"LD"), recursive = T, showWarnings = F)
   out_prefix <- paste0(plink_path_prefix,".r_dprimeSigned")
   if(ld_format=="r"){
-    cmd <- paste("plink",
+    cmd <- paste(plink,
                  "--bfile",plink_path_prefix,
                  "--r square bin",
                  "--out",out_prefix)
     ld.path <- paste0(out_prefix,".ld.bin")
   } else {
-    cmd <- paste("plink",
+    cmd <- paste(plink,
                  "--bfile",plink_path_prefix,
                  "--r dprime-signed",
                  "--ld-window",ld_window,
@@ -453,14 +432,17 @@ LD.read_bin <- function(ld.path){
 #' When it produces an LD table, use this function to create a proper LD matrix.
 #' @family LD
 #' @keywords internal
-LD.read_ld_table <- function(ld.path, snp.subset=F){
+LD.read_ld_table <- function(ld.path,
+                             snp.subset=F,
+                             fillNA=0,
+                             verbose=T){
   # subset_DT <- data.table::fread(file.path(locus_dir,"Multi-finemap/Multi-finemap_results.txt")); snp.subset <- subset_DT$SNP
   ld.table <- data.table::fread(ld.path, nThread = 4)
   if(any(snp.subset!=F)){
-    printer("LD:PLINK:: Subsetting LD data...")
+    printer("LD:PLINK:: Subsetting LD data...", v=verbose)
     ld.table <- subset(ld.table, SNP_A %in% snp.subset | SNP_B %in% snp.subset)
   }
-  printer("LD:PLINK:: Casting data.matrix...")
+  printer("LD:PLINK:: Casting data.matrix...", v=verbose)
   ld.cast <- data.table::dcast.data.table(ld.table,
                                           formula = SNP_B ~ SNP_A,
                                           value.var="R",
@@ -470,7 +452,10 @@ LD.read_ld_table <- function(ld.path, snp.subset=F){
   ld.cast <- subset(ld.cast, SNP_B !=".", select = -`.`)
   ld.mat <- data.frame(ld.cast, row.names = ld.cast$SNP_B) %>% data.table() %>% as.matrix()
   # ld.mat[1:10,1:10]
-  ld.mat[is.na(ld.mat)] <- 0
+  ld.mat <- LD.fill_NA(LD_matrix = ld.mat,
+                       fillNA = fillNA,
+                       verbose = verbose)
+  return(ld.mat)
 }
 
 
@@ -481,14 +466,33 @@ LD.read_ld_table <- function(ld.path, snp.subset=F){
 #' @keywords internal
 #' @examples
 #' data("locus_dir")
-#' vcf_folder <- get_vcf_folder(locus_dir=locus_dir)
-get_vcf_folder <- function(vcf_folder=NULL,
+#' vcf_folder <- LD.get_vcf_folder(locus_dir=locus_dir)
+LD.get_vcf_folder <- function(vcf_folder=NULL,
                            locus_dir=NULL){
   if(is.null(vcf_folder)){
     vcf_folder <- file.path(locus_dir, "LD")
     out <- dir.create(vcf_folder, showWarnings = F, recursive = T)
   }
  return(vcf_folder)
+}
+
+
+#' Find correct plink file
+#'
+#' @family LD
+#' @keywords internal
+#' @examples
+#' plink <- LD.plink_file()
+LD.plink_file <- function(base_url=system.file("tools/plink",package = "echolocatoR")){
+  os <- get_os()
+  if (os=="osx") {
+    plink <- file.path(base_url, "plink1.9_mac");
+  } else if  (os=="linux") {
+    plink <- file.path(base_url, "plink1.9_linux");
+  } else {
+    plink <- file.path(base_url, "plink1.9_windows.exe");
+  }
+  return(plink)
 }
 
 
@@ -526,12 +530,13 @@ LD.1KG <- function(locus_dir,
                    remove_tmps=T,
                    fillNA=0,
                    nThread=4,
-                   download_method="wget"){
+                   download_method="wget",
+                   verbose=T){
   # locus <- "LRRK2"; data("locus_dir"); LD_reference="1KGphase1"; vcf_folder=NULL; superpopulation="EUR";  min_r2=F; LD_block=F; LD_block_size=.7; min_Dprime=F;  remove_correlates=F; download_reference=T;
   if(is.null(locus)){locus <- basename(locus_dir)}
-  vcf_folder <- get_vcf_folder(vcf_folder = vcf_folder,
+  vcf_folder <- LD.get_vcf_folder(vcf_folder = vcf_folder,
                                locus_dir = locus_dir)
-  printer("LD:: Using 1000Genomes LD reference panel...")
+  printer("LD:: Using 1000Genomes LD reference panel...", v=verbose)
   vcf_info <- LD.1KG_download_vcf(subset_DT=subset_DT,
                                   locus_dir=locus_dir,
                                   LD_reference=LD_reference,
@@ -539,15 +544,16 @@ LD.1KG <- function(locus_dir,
                                   locus=locus,
                                   download_reference=download_reference,
                                   download_method=download_method,
-                                  nThread=nThread)
+                                  nThread=nThread,
+                                  verbose=verbose)
   subset_vcf <- vcf_info$subset_vcf
   popDat <- vcf_info$popDat
-  vcf.gz.path <- BCFTOOLS.filter_vcf(subset_vcf = subset_vcf,
-                                     popDat = popDat,
-                                     superpopulation = superpopulation,
-                                     remove_tmp = F)
+  vcf.gz.path <- LD.filter_vcf(subset_vcf = subset_vcf,
+                               popDat = popDat,
+                               superpopulation = superpopulation,
+                               remove_tmp = T)
   LD.vcf_to_bed(vcf.gz.subset = vcf.gz.path,
-                   locus_dir = locus_dir)
+                locus_dir = locus_dir)
     # Calculate pairwise LD for all SNP combinations
     #### "Caution that the LD matrix has to be correlation matrix" -SuSiER documentation
     ### https://stephenslab.github.io/susieR/articles/finemapping_summary_statistics.html
@@ -558,12 +564,12 @@ LD.1KG <- function(locus_dir,
     # Get lead SNP rsid
     leadSNP = subset(subset_DT, leadSNP==T)$SNP #rs76904798
     # Plink LD method
-    LD_matrix <- LD.plink_LD(plink_folder = file.path(locus_dir,"LD"),
-                          leadSNP = leadSNP,
-                          min_r2 = min_r2,
-                          min_Dprime = min_Dprime,
-                          remove_correlates = remove_correlates,
-                          fillNA = fillNA)
+    LD_matrix <- LD.plink_LD(LD_folder = file.path(locus_dir,"LD"),
+                             leadSNP = leadSNP,
+                             min_r2 = min_r2,
+                             min_Dprime = min_Dprime,
+                             remove_correlates = remove_correlates,
+                             fillNA = fillNA)
     # Filter out SNPs not in the same LD block as the lead SNP
     if(LD_block){
       block_snps <- LD.leadSNP_block(leadSNP, "./plink_tmp", LD_block_size)
@@ -574,8 +580,8 @@ LD.1KG <- function(locus_dir,
     if(remove_tmps){
       suppressWarnings(file.remove(subset_vcf))
     }
+    printer("Saving LD matrix of size:", dim(LD_matrix)[1],"rows x",dim(LD_matrix)[2],"columns.", v=verbose)
   return(LD_matrix)
-  printer("Saving LD matrix of size:", dim(LD_matrix)[1],"rows x",dim(LD_matrix)[2],"columns.")
 }
 
 
@@ -587,26 +593,27 @@ LD.1KG <- function(locus_dir,
 #' See \code{\link{LD.run_plink_LD}} for a faster (but less flexible) alternative to computing LD.
 #' @family LD
 #' @keywords internal
-LD.dprime_table <- function(SNP_list, plink_folder){
+LD.dprime_table <- function(SNP_list, LD_folder){
+  plink <- LD.plink_file()
   printer("+ Creating DPrime table")
-  system( paste("plink", "--bfile",file.path(plink_folder,"LD"),
+  system( paste(plink, "--bfile",file.path(LD_folder,"plink"),
                 "--ld-snps", paste(SNP_list, collapse=" "),
                 "--r dprime-signed",
                 "--ld-window 10000000", # max out window size
                 "--ld-window-kb 10000000",
-                "--out",file.path(plink_folder,"LD")) )
+                "--out",file.path(LD_folder,"plink")) )
   #--ld-window-r2 0
 
   # # Awk method: theoretically faster?
   # if(min_Dprime==F){Dprime = -1}else{Dprime=min_Dprime}
   # if(min_r2==F){r = -1}else{r = round(sqrt(min_r2),2) }
-  # columns <- data.table::fread(file.path(plink_folder, "plink.ld"), nrows = 0) %>% colnames()
+  # columns <- data.table::fread(file.path(LD_folder, "plink.ld"), nrows = 0) %>% colnames()
   # col_dict <- setNames(1:length(columns), columns)
   # awk_cmd <- paste("awk -F \"\t\" 'NR==1{print $0}{ if(($",col_dict["DP"]," >= ",Dprime,")",
-  #                  " && ($",col_dict["R"]," >= ",r,")) { print } }' ",file.path(plink_folder, "plink.ld"),
-  #                  " > ",file.path(plink_folder, "plink.ld_filtered.txt"),  sep="")
+  #                  " && ($",col_dict["R"]," >= ",r,")) { print } }' ",file.path(LD_folder, "plink.ld"),
+  #                  " > ",file.path(LD_folder, "plink.ld_filtered.txt"),  sep="")
   # system(awk_cmd)
-  plink.ld <- data.table::fread(file.path(plink_folder, "plink.ld"), select = c("SNP_A", "SNP_B","DP","R"), )
+  plink.ld <- data.table::fread(file.path(LD_folder, "plink.ld"), select = c("SNP_A", "SNP_B","DP","R"), )
   plink.ld <- plink.ld[complete.cases(plink.ld) ]
   return(plink.ld)
 }
@@ -619,18 +626,19 @@ LD.dprime_table <- function(SNP_list, plink_folder){
 #' This appriach computes and LD matrix of r or r2 (instead of D') from a vcf.
 #' See \code{\link{LD.dprime_table}} for a slower (but more flexible) alternative to computing LD.
 #' @param bim A bim file produced by \emph{plink}
-#' @param plink_folder Locus-specific LD output folder.
+#' @param LD_folder Locus-specific LD output folder.
 #' @param r_format Whether to fill the matrix with \code{r} or \code{r2}.
 #' @family LD
 #' @keywords internal
 LD.run_plink_LD <- function(bim,
-                            plink_folder,
+                            LD_folder,
                             r_format="r"){
+  plink <- LD.plink_file()
   # METHOD 2 (faster, but less control over parameters. Most importantly, can't get Dprime)
-  system( paste("plink", "--bfile",file.path(plink_folder,"LD"),
-                "--extract",file.path(plink_folder,"SNPs.txt"),
-                paste0("--",r_format," square bin"), "--out", file.path(plink_folder,"LD")) )
-  bin.vector <- readBin(file.path(plink_folder, "plink.ld.bin"), what = "numeric", n=length(bim$SNP)^2)
+  system( paste(plink, "--bfile",file.path(LD_folder,"plink"),
+                "--extract",file.path(LD_folder,"SNPs.txt"),
+                paste0("--",r_format," square bin"), "--out", file.path(LD_folder,"plink")) )
+  bin.vector <- readBin(file.path(LD_folder, "plink.ld.bin"), what = "numeric", n=length(bim$SNP)^2)
   ld.matrix <- matrix(bin.vector, nrow = length(bim$SNP), dimnames = list(bim$SNP, bim$SNP))
   return(ld.matrix)
 }
@@ -644,45 +652,45 @@ LD.run_plink_LD <- function(bim,
 #' @family LD
 #' @keywords internal
 LD.plink_LD <-function(leadSNP,
-                       plink_folder,
+                       LD_folder,
                        min_r2=F,
                        min_Dprime=F,
                        remove_correlates=F,
-                       fillNA=0){
+                       fillNA=0,
+                       verbose=T){
   # Dprime ranges from -1 to 1
   start <- Sys.time()
-
   # Calculate LD
-  printer("++ Reading in BIM file...")
-  bim <- data.table::fread(file.path(plink_folder, "plink.bim"), col.names = c("CHR","SNP","V3","POS","A1","A2"))
-  data.table::fwrite(subset(bim, select="SNP"), file.path(plink_folder,"SNPs.txt"), col.names = F)
+  printer("++ Reading in BIM file...", v=verbose)
+  bim <- data.table::fread(file.path(LD_folder, "plink.bim"), col.names = c("CHR","SNP","V3","POS","A1","A2"))
+  data.table::fwrite(subset(bim, select="SNP"), file.path(LD_folder,"SNPs.txt"), col.names = F)
 
-  printer("++ Calculating LD")
-  ld.matrix <- run_plink_LD(bim, plink_folder)
+  printer("++ Calculating LD", v=verbose)
+  ld.matrix <- LD.run_plink_LD(bim, LD_folder)
 
   if((min_Dprime != F) | (min_r2 != F) | (remove_correlates != F)){
-    plink.ld <- LD.dprime_table(SNP_list = row.names(ld.matrix), plink_folder)
+    plink.ld <- LD.dprime_table(SNP_list = row.names(ld.matrix), LD_folder)
 
     # DPrime filter
     if(min_Dprime != F){
-      printer("+++ Filtering LD Matrix (min_Dprime): Removing SNPs with D' <=",min_Dprime,"for",leadSNP,"(lead SNP).")
+      printer("+++ Filtering LD Matrix (min_Dprime): Removing SNPs with D' <=",min_Dprime,"for",leadSNP,"(lead SNP).", v=verbose)
       plink.ld <- subset(plink.ld, (SNP_A==leadSNP & DP>=min_Dprime) | (SNP_B==leadSNP & DP>=min_Dprime))
-    } else{printer("+ min_Dprime == FALSE")}
+    } else{printer("+ min_Dprime == FALSE", v=verbose)}
 
     # R2 filter
     if(min_r2 != F ){
-      printer("+++ Filtering LD Matrix (min_r2): Removing SNPs with r <=",min_r2,"for",leadSNP,"(lead SNP).")
+      printer("+++ Filtering LD Matrix (min_r2): Removing SNPs with r <=",min_r2,"for",leadSNP,"(lead SNP).", v=verbose)
       r = sqrt(min_r2) # PROBLEM: this doesn't give you r, which you need for SUSIE
       plink.ld <- subset(plink.ld, (SNP_A==leadSNP & R>=r) | (SNP_B==leadSNP & R>=r))
-    } else{printer("+ min_r2 == FALSE")}
+    } else{printer("+ min_r2 == FALSE", v=verbose)}
 
     # Correlates filter
     if(remove_correlates != F){
       r2_threshold <- remove_correlates# 0.2
       r <- sqrt(r2_threshold)
-      printer("+++ Filtering LD Matrix (remove_correlates): Removing SNPs with R2 >=",r2_threshold,"for",paste(remove_correlates,collapse=", "),".")
+      printer("+++ Filtering LD Matrix (remove_correlates): Removing SNPs with R2 >=",r2_threshold,"for",paste(remove_correlates,collapse=", "),".", v=verbose)
       plink.ld <- subset(plink.ld, !(SNP_A %in% remove_correlates & R>=r) | (SNP_B %in% remove_correlates & R>=r))
-    } else{printer("+ remove_correlates == FALSE")}
+    } else{printer("+ remove_correlates == FALSE", v=verbose)}
 
     # Apply filters
     A_list <- unique(plink.ld$SNP_A)
@@ -691,12 +699,53 @@ LD.plink_LD <-function(leadSNP,
     ld.matrix <- ld.matrix[row.names(ld.matrix) %in% snp_list, colnames(ld.matrix) %in% snp_list]
     ## Manually remove rare variant
     # ld.matrix <- ld.matrix[rownames(ld.matrix)!="rs34637584", colnames(ld.matrix)!="rs34637584"]
+  }
+  # !IMPORTANT!: Fill NAs (otherwise susieR will break)
+  ld.matrix <- LD.fill_NA(LD_matrix = ld.matrix,
+                          fillNA = fillNA,
+                          verbose = verbose)
+  end <- Sys.time()
+  printer("+ LD matrix calculated in",round(as.numeric(end-start),2),"seconds.", v=verbose)
+  return(ld.matrix)
+}
+
+
+#' Fill NAs in an LD matrix
+#'
+#' Trickier than it looks.
+#' @examples
+#' \dontrun{
+#' data("LD_matrix");
+#' LD_matrix <- LD.fill_NA(LD_matrix)
+#' }
+LD.fill_NA <- function(LD_matrix,
+                       fillNA=0,
+                       verbose=T){
+  printer("LD:: Removing unnamed rows/cols", v=verbose)
+  # First, filter any rows/cols without names
+  LD_matrix <- data.frame(LD_matrix)
+  LD_matrix <- LD_matrix[rownames(LD_matrix)!=".", colnames(LD_matrix)!="."]
+  LD_matrix_orig <- LD_matrix
+  LD_matrix <- data.table::data.table(LD_matrix)
+
+  if(!is.null(fillNA)){
+    # Replace NAs
+    printer("LD:: Replacing NAs with",fillNA, v=verbose)
+    replace_NAs = function(DT) {
+      # Does inplace
+      for (i in names(DT))
+        DT[is.na(get(i)), (i):=0]
     }
-    # !IMPORTANT!: Fill NAs (otherwise susieR will break)
-    ld.matrix[is.na(ld.matrix)] <- fillNA
-    end <- Sys.time()
-    printer("+ LD matrix calculated in",round(as.numeric(end-start),2),"seconds.")
-    return(ld.matrix)
+    replace_NAs(LD_matrix)
+  }
+  # Check for duplicate SNPs
+  LD_fill <- data.frame(LD_matrix,
+                        row.names = rownames(LD_matrix_orig))
+  if(dplyr::n_distinct(rownames(LD_fill))!=nrow(LD_fill) |
+     dplyr::n_distinct(colnames(LD_fill))!=ncol(LD_fill)){
+    stop("There's more rows/cols than unique SNPs.")
+  }
+  return(LD_fill)
 }
 
 
@@ -708,7 +757,7 @@ LD.plink_LD <-function(leadSNP,
 #'
 #' @family LD
 #' @keywords internal
-LD.LD_blocks <- function(plink_folder,
+LD.LD_blocks <- function(LD_folder,
                          LD_block_size=.7){
   printer("++ Calculating LD blocks...")
   # PLINK 1.07 LD: http://zzz.bwh.harvard.edu/plink/ld.shtml
@@ -722,11 +771,12 @@ LD.LD_blocks <- function(plink_folder,
   # Estimate LD blocks
   # Defaults: --blocks-strong-lowci = 0.70, --blocks-strong-highci .90
 
-  # Reucing "--blocks-inform-frac" is the only parameter that seems to make the block sizes larger
-  system( paste("plink", "--bfile",file.path(plink_folder,"LD"),
+  # Reducing "--blocks-inform-frac" is the only parameter that seems to make the block sizes larger
+  plink <- LD.plink_file()
+  system( paste(plink, "--bfile",file.path(LD_folder,"plink"),
                 "--blocks no-pheno-req no-small-max-span --blocks-max-kb 100000",
                 # "--blocks-strong-lowci .52 --blocks-strong-highci 1",
-                "--blocks-inform-frac",LD_block_size," --blocks-min-maf 0 --out",file.path(plink_folder,"LD")) )
+                "--blocks-inform-frac",LD_block_size," --blocks-min-maf 0 --out",file.path(LD_folder,"plink")) )
   # system( paste("plink", "--bfile plink --ld-snp-list snp_list.txt --r") )
   blocks <- data.table::fread("./plink_tmp/plink.blocks.det")
   return(blocks)
@@ -736,9 +786,9 @@ LD.LD_blocks <- function(plink_folder,
 #' Identify the LD block in which the lead SNP resides
 #' @family LD
 #' @keywords internal
-LD.leadSNP_block <- function(leadSNP, plink_folder, LD_block_size=.7){
+LD.leadSNP_block <- function(leadSNP, LD_folder, LD_block_size=.7){
   printer("Returning lead SNP's block...")
-  blocks <- LD.LD_blocks(plink_folder, LD_block_size)
+  blocks <- LD.LD_blocks(LD_folder, LD_block_size)
   splitLists <- strsplit(blocks$SNPS,split = "[|]")
   block_snps <- lapply(splitLists, function(l, leadSNP){if(leadSNP %in% l){return(l)} }, leadSNP=leadSNP) %>% unlist()
   printer("Number of SNPs in LD block =", length(block_snps))

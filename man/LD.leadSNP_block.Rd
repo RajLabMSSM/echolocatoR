@@ -4,7 +4,7 @@
 \alias{LD.leadSNP_block}
 \title{Identify the LD block in which the lead SNP resides}
 \usage{
-LD.leadSNP_block(leadSNP, plink_folder, LD_block_size = 0.7)
+LD.leadSNP_block(leadSNP, LD_folder, LD_block_size = 0.7)
 }
 \description{
 Identify the LD block in which the lead SNP resides
@@ -17,18 +17,18 @@ Other LD:
 \code{\link{LD.UKBiobank}()},
 \code{\link{LD.calculate_LD}()},
 \code{\link{LD.dprime_table}()},
-\code{\link{LD.filter_vcf_population}()},
-\code{\link{LD.filter_vcf_rsamtools}()},
+\code{\link{LD.filter_vcf_gaston}()},
 \code{\link{LD.filter_vcf}()},
+\code{\link{LD.get_vcf_folder}()},
 \code{\link{LD.load_or_create}()},
 \code{\link{LD.plink_LD}()},
+\code{\link{LD.plink_file}()},
 \code{\link{LD.plot}()},
 \code{\link{LD.read_bin}()},
 \code{\link{LD.read_ld_table}()},
 \code{\link{LD.run_plink_LD}()},
 \code{\link{LD.translate_population}()},
-\code{\link{LD.vcf_to_bed}()},
-\code{\link{get_vcf_folder}()}
+\code{\link{LD.vcf_to_bed}()}
 }
 \concept{LD}
 \keyword{internal}

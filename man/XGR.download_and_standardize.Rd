@@ -15,7 +15,7 @@ XGR.download_and_standardize(
 \arguments{
 \item{lib.selections}{Which XGR annotations to check overlap with.
 For full list of libraries see:
- \url{http://xgr.r-forge.r-project.org/#annotations-at-the-genomic-region-level}}
+\url{http://xgr.r-forge.r-project.org/#annotations-at-the-genomic-region-level}}
 
 \item{as_GRangesList}{Return as a \code{GRangesList}, instead of a single merged \code{GRanges} object.}
 }

@@ -84,10 +84,8 @@ FINEMAP.construct_data <- function(locus_dir,
 #' @family FINEMAP
 #' @keywords internal
 #' @examples
-#' data("locus_dir"); data("BST1");
-#' finemap_DT <- BST1
-#' n_samples <- get_sample_size(subset_DT = finemap_DT)
-#' master_path <- FINEMAP.construct_master(locus_dir=locus_dir, n_samples=n_samples)
+#' data("locus_dir");
+#' master_path <- FINEMAP.construct_master(locus_dir=locus_dir, n_samples=25000)
 FINEMAP.construct_master <- function(locus_dir,
                                      n_samples,
                                      dataset_number=1,
@@ -218,9 +216,7 @@ FINEMAP <- function(subset_DT,
                     finemap_version="1.3.1",
                     server=F){
   # n_causal=5; model="cond"; credset_thresh=.95;
-  n_samples <- get_sample_size(subset_DT = subset_DT,
-                               sample_size = n_samples,
-                               effective_ss = T)
+  n_samples <- max(subset_DT$N)
   # Setup files
   master_path <- FINEMAP.construct_master(locus_dir = locus_dir,
                                           n_samples = n_samples)

@@ -5,7 +5,6 @@
 \title{Conditional stepwise procedure}
 \usage{
 COJO.stepwise(
-  subset_DT,
   GCTA_path = system.file("tools/gcta_1.92.1beta5_mac/bin", "gcta64", package =
     "echolocatoR"),
   locus_dir,

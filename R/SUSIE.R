@@ -24,33 +24,41 @@
 
 ###------#### MAIN FUNCTION ###------####
 
+#' Fine-map with SUSIE
+#'
+#' Sum of Single Effects (SuSiE): Iterative Bayesian Step-wise Selection
+#' @source
+#' \url{https://stephenslab.github.io/susieR/}
+#' @examples
+#' data("BST1"); data("LD_matrix");
+#' BST1 <- get_sample_size(subset_DT = BST1)
+#' finemap_DT <- SUSIE(subset_DT=BST1, LD_matrix=LD_matrix)
 SUSIE <- function(subset_DT,
                   LD_matrix,
                   dataset_type="GWAS",
                   n_causal=5,
-                  sample_size=NA,
+                  sample_size=NULL,
                   var_y="estimate",
                   prior_weights=NULL,
                   PP_threshold=.95,
                   scaled_prior_variance=0.001,
-                  estimate_residual_variance=F){
-  # Sum of Single Effects (SuSiE): Iterative Bayesian Step-wise Selection
-  # https://stephenslab.github.io/susieR/
+                  estimate_residual_variance=F,
+                  verbose=T){
   vars <- get_var_y(subset_DT, dataset_type)
-  sample_size <- get_sample_size(subset_DT, sample_size)
-  printer("+ SUSIE:: n_causal =",n_causal)
+  sample_size <- max(subset_DT$N)
+  printer("+ SUSIE:: n_causal =",n_causal, v=verbose)
   if(!is.null(prior_weights)){
-    printer("Utilizing prior_weights for",length(prior_weights),"SNPs.")
+    printer("Utilizing prior_weights for",length(prior_weights),"SNPs.",v=verbose)
   }
-  # library(susieR)
-  # subset_DT <- data.table::fread("~/Desktop/Omer_example/Multi-finemap_results.txt")
-  # LD_matrix <- readRDS("~/Desktop/Omer_example/UKB_LD.RDS")
-  # sub.out <- subset_common_snps(LD_matrix, subset_DT)
-  # LD_matrix <- sub.out$LD
-  # subset_DT <- sub.out$DT
-  # library(susieR)
-  # SUSIE's authors "merge[d] susie_ss and susie_bhat to susie_suff_stat" in 11/2019.
+  sub.out <- subset_common_snps(LD_matrix=LD_matrix,
+                                finemap_dat=subset_DT,
+                                fillNA = 0,
+                                verbose = verbose)
+  LD_matrix <- sub.out$LD
+  subset_DT <- sub.out$DT
+
   library(susieR)
+  # SUSIE's authors "merge[d] susie_ss and susie_bhat to susie_suff_stat" in 11/2019.
   susie_func <- ifelse(length(find("susie_bhat"))==0,
                        susieR::susie_suff_stat,
                        susieR::susie_bhat)
@@ -74,8 +82,7 @@ SUSIE <- function(subset_DT,
                             verbose = F)
 
   # try({susieR::susie_plot_iteration(fitted_bhat, n_causal, 'test_track_fit')})
-  printer("")
-  printer("++ Extracting Credible Sets...")
+  printer("++ Extracting Credible Sets...",v=verbose)
   ## Get PIP
   subset_DT$PP <- susieR::susie_get_pip(fitted_bhat)
   ## Get CS assignments

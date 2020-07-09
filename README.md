@@ -5,7 +5,7 @@ __*echolocatoR*__ is an R package for automating statistical and functional fine
 
 ## Documentation
 
-### [Full documentation website](https://rajlabmssm.github.io/echolocatoR/)  
+### [Documentation website](https://rajlabmssm.github.io/echolocatoR/)  
 
 ### [Full pipeline vignette](https://rajlabmssm.github.io/echolocatoR/articles/full_pipeline_vignette.html)  
 
@@ -28,17 +28,17 @@ devtools::install_github("RajLabMSSM/echolocatoR")
 
 
 
-## Robust installation (co*conda*
-As with most softwares, installation is half the battle.
-The easiest way to install all of __*echolocatoR*__'s dependencies (inwhich include, Python, and command line)  toolsand make sure they play well together
+## Robust installation (*conda*)
+
+  As with most softwares, installation is half the battle.
+The easiest way to install all of __*echolocatoR*__'s dependencies (which include R, Python, and command line tools) and make sure they play well together
 is to create a [*conda*](https://docs.conda.io/en/latest/) environment.
 
 1. If you haven't done so already, install [*conda*](https://docs.conda.io/en/latest/).  
 
 2. Download the echoR.yml file found [here](https://github.com/RajLabMSSM/echolocatoR/blob/master/inst/conda/echoR.yml) (this file tells *conda* what to install).
 
-3. Create the env from the *.yml* file,   
-by the entering the following into the command line:  
+3. In command line, create the env from the *.yml* file:  
 ```
 conda env create -f <path_to_file>/echoR.yml
 ```
@@ -54,24 +54,72 @@ if(!"devtools" %in% installed.packages()){install.packages("devtools")}
 devtools::install_github("RajLabMSSM/echolocatoR")
 ```
 
-To make sure __*echolocatoR*__ uses the packages in this env, 
-you can then supply the env name to the `finemap_loci()` function using `conda_env="echoR"`.
+To make sure __*echolocatoR*__ uses the packages in this env (esp. if using from RStudio), you can then supply the env name to the `finemap_loci()` function using `conda_env="echoR"`.
 
 
-### Axel
+## Dependencies   
+\* = _optional_  
 
-*Axel* is a command line tool that drastically accelerates large file downloads 
-by using multiple cores. This is very useful for the large UK Bibank pre-computed LD files.
-Unfortunately, it does require a bit of extra setup to use, but you can find the [instructions here](https://github.com/axel-download-accelerator/axel).
+### R  
+- magrittr  
+- R.utils  
+- dplyr  
+- BiocManager 
+- tidyverse
+- knitr
+- rmarkdown  
+- data.table  
+- foreign  
+- reticulate  
+- ggplot2    
+- ggrepel  
+- coloc    
+- RColorBrewer   
+- patchwork   
+- htmltools  
+- stringr    
+- openxlsx  
+- EnsDb.Hsapiens.v75    
+- ensembldb   
+- ggbio    
+- BSgenome  
+- Ckmeans.1d.dp  
+- refGenome  
+- * _For a full list of suggested packages, see [DESCRIPTION](https://github.com/RajLabMSSM/echolocatoR/blob/master/DESCRIPTION)._  
 
-Once you've successfully installed *Axel*, you can tell `finemap_loci()` to use it with `download_method = "axel"`.  
+### Python  
+- python>=3.6.1  
+- pandas>=0.25.0   
+- pandas-plink  
+- pyarrow  
+- fastparquet  
+- scipy  
+- scikit-learn  
+- tqdm  
+- bitarray  
+- networkx  
+- rpy2  
+- requests  
 
-  
+### Command line   
+
+- [**Tabix**](http://www.htslib.org/doc/tabix.html):  
+  + Rapid querying of summary stats files.  
+  + To use it, specify `download_method = "axel"` in `finemap_loci()` . 
+- [**bcftools**](http://samtools.github.io/bcftools/bcftools.html):  
+  + Used here for filtering populations in vcf files.  
+- [**Axel**](https://github.com/axel-download-accelerator/axel):*  
+  + Rapid multi-core downloading of large files (e.g. LD matrices from UK Biobank).  
+- [**MACS2**](https://hbctraining.github.io/Intro-to-ChIPseq/lessons/05_peak_calling_macs.html):*  
+  + Epigenomic peak calling.  
+ 
 
 ## Fine-mapping Tools  
 
-### Currently implemented  
+All methods require colums: `SNP`, `CHR`, `POS`.  
+
 - [ABF](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)  
+  + Required columns: `proportion_cases`,`MAF`,`Effect`,`StdErr`
 - [SuSiE](https://github.com/stephenslab/susieR)  
 - [FINEMAP](http://www.christianbenner.com)  
 - [PolyFun](https://github.com/omerwe/polyfun)

@@ -95,6 +95,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -146,7 +149,7 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"locus_dir"</span>); <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"BST1"</span>); <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"BST1_LD_matrix"</span>);
 <span class='no'>finemap_DT</span> <span class='kw'>&lt;-</span> <span class='no'>BST1</span>
-<span class='fu'><a href='https://rdrr.io/r/base/files2.html'>dir.create</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='no'>locus_dir</span>,<span class='st'>"FINEMAP"</span>), <span class='kw'>showWarnings</span> <span class='kw'>=</span> <span class='no'>F</span>, <span class='kw'>recursive</span> <span class='kw'>=</span> <span class='no'>T</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/files2.html'>dir.create</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='no'>locus_dir</span>,<span class='st'>"FINEMAP"</span>), <span class='kw'>showWarnings</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>recursive</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='subset_common_snps.html'>subset_common_snps</a></span>(<span class='kw'>LD_matrix</span><span class='kw'>=</span><span class='no'>LD_matrix</span>, <span class='kw'>finemap_DT</span><span class='kw'>=</span><span class='no'>finemap_DT</span>)</div><div class='output co'>#&gt; <span class='error'>Error in subset_common_snps(LD_matrix = LD_matrix, finemap_DT = finemap_DT): unused argument (finemap_DT = finemap_DT)</span></div><div class='input'><span class='no'>LD_matrix</span> <span class='kw'>&lt;-</span> <span class='no'>out</span>$<span class='no'>LD</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'out' not found</span></div><div class='input'><span class='no'>finemap_DT</span> <span class='kw'>&lt;-</span> <span class='no'>out</span>$<span class='no'>DT</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'out' not found</span></div><div class='input'><span class='no'>dat_paths</span> <span class='kw'>&lt;-</span> <span class='fu'>FINEMAP.construct_data</span>(<span class='kw'>locus_dir</span><span class='kw'>=</span><span class='no'>locus_dir</span>, <span class='kw'>subset_DT</span><span class='kw'>=</span><span class='no'>finemap_DT</span>, <span class='kw'>LD_matrix</span><span class='kw'>=</span><span class='no'>LD_matrix</span>)</div><div class='output co'>#&gt; [1] "++ Formatting data.z file for FINEMAP"
 #&gt; [1] "++ Formatting LD Matrix for FINEMAP"
 #&gt; [1] "+++ Writing FINEMAP z and ld files..."</div></pre>

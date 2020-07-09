@@ -4,7 +4,7 @@
 \alias{LD.read_ld_table}
 \title{Create LD matrix from plink output.}
 \usage{
-LD.read_ld_table(ld.path, snp.subset = F)
+LD.read_ld_table(ld.path, snp.subset = F, fillNA = 0, verbose = T)
 }
 \description{
 Depending on which parameters you give \emph{plink} when calculating LD, you get different file outputs.
@@ -18,18 +18,18 @@ Other LD:
 \code{\link{LD.UKBiobank}()},
 \code{\link{LD.calculate_LD}()},
 \code{\link{LD.dprime_table}()},
-\code{\link{LD.filter_vcf_population}()},
-\code{\link{LD.filter_vcf_rsamtools}()},
+\code{\link{LD.filter_vcf_gaston}()},
 \code{\link{LD.filter_vcf}()},
+\code{\link{LD.get_vcf_folder}()},
 \code{\link{LD.leadSNP_block}()},
 \code{\link{LD.load_or_create}()},
 \code{\link{LD.plink_LD}()},
+\code{\link{LD.plink_file}()},
 \code{\link{LD.plot}()},
 \code{\link{LD.read_bin}()},
 \code{\link{LD.run_plink_LD}()},
 \code{\link{LD.translate_population}()},
-\code{\link{LD.vcf_to_bed}()},
-\code{\link{get_vcf_folder}()}
+\code{\link{LD.vcf_to_bed}()}
 }
 \concept{LD}
 \keyword{internal}

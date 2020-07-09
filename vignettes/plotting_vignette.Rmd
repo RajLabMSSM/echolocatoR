@@ -142,7 +142,7 @@ finemap_DT$fake_sQTL.P <- finemap_DT$P  * c(1,.8,.5)
 trk_plot.qtl <- GGBIO.plot(finemap_dat=finemap_DT, 
                            LD_matrix=LD_matrix, 
                            locus_dir=locus_dir,
-                           QTL_prefixes=c("fake_eQTL","fake_sQTL"),
+                           QTL_prefixes=c("fake_eQTL.","fake_sQTL."),
                            XGR_libnames=NULL, 
                            save_plot=F,
                            show_plot=show_plot)

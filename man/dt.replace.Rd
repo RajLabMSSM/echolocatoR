@@ -10,7 +10,7 @@ dt.replace(DT, target, replacement)
 data.frame
 }
 \description{
-Annoyingly, there is no native function to do simple find-and-replace in the `DT` library.
+Annoyingly, there is no native function to do simple find-and-replace in the \code{DT} library.
 }
 \seealso{
 Other general: 
@@ -18,6 +18,7 @@ Other general:
 \code{\link{createDT_html}()},
 \code{\link{createDT}()},
 \code{\link{example_fullSS}()},
+\code{\link{fillNA_CS_PP}()},
 \code{\link{get_os}()},
 \code{\link{get_sample_size}()},
 \code{\link{merge_coloc_results}()},

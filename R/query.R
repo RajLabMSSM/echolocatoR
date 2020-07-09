@@ -21,6 +21,10 @@
 #' You can provide either a number to identify the tab by order,
 #' or a string to identify the tab by name.
 #' @param gene_col An optional column to keep track of the causal gene(s) in each locus (if known).
+#' @param grouping_vars The variables that you want to group by
+#' such that each grouping_var combination has its own index SNP.
+#' For example, if you want one index SNP per QTL eGene - GWAS locus pair, you could supply:
+#' \code{grouping_vars=c("Locus","Gene")}.
 #' @inheritParams finemap_pipeline
 import_topSNPs <- function(topSS,
                            show_table=T,
@@ -31,9 +35,10 @@ import_topSNPs <- function(topSS,
                            pval_col="P",
                            effect_col="Effect",
                            locus_col="Locus",
-                           group_by_locus=F,
+                           grouping_vars=c("Locus"),
                            gene_col="Gene",
-                           remove_variants=F
+                           remove_variants=NULL,
+                           nThread=4
                            ){
   # Import top SNPs
   topSNPs_reader <- function(topSS, sheet = 1){
@@ -43,7 +48,10 @@ import_topSNPs <- function(topSS,
       if(endsWith(topSS, ".xlsx") | endsWith(topSS, ".xlsm")){
         topSS <- openxlsx::read.xlsx(topSS, sheet = sheet) %>% data.table::data.table()
       } else {
-        topSS <- data.table::fread(file=topSS, header = T, stringsAsFactors = F )
+        topSS <- data.table::fread(file=topSS,
+                                   header = T,
+                                   stringsAsFactors = F,
+                                   nThread=nThread)
       }
       return(topSS)
     }
@@ -76,16 +84,15 @@ import_topSNPs <- function(topSS,
 
 
     # Remove specific variants
-    if(remove_variants != F){
+    if(!is.null(remove_variants)){
       top_SNPs <- subset(top_SNPs, !(SNP %in% remove_variants))
     }
 
-
     # Get the top representative SNP and Gene per locus (by lowest p-value and effect size)
-    if(group_by_locus){
+     if(!is.null(grouping_vars)){
       top_SNPs <- top_SNPs %>%
         arrange(P, desc(Effect)) %>%
-        dplyr::group_by(Locus) %>%
+        dplyr::group_by(.dots=grouping_vars) %>%
         dplyr::slice(1) %>%
         replace(., .=="NA", NA) %>%
         subset(!is.na(Locus)) %>%
@@ -102,6 +109,32 @@ import_topSNPs <- function(topSS,
 }
 
 
+#' Generate a named list of [e]gene-locus pairs
+#'
+gene_locus_list <- function(top_SNPs){
+  setNames(top_SNPs$Locus, top_SNPs$Gene)
+}
+
+
+#' Detect QTL genes in full summary stats file
+#'
+#' Allows summary stats from different genes to be
+#' fine-mapped separately.
+#' @examples
+#' loci <- c("BST1","LRKR2","MEX3C")
+#' detect_genes(loci)
+#' loci <- c(BST1="BST1", LRRK2="LRRK2", MEX3C="MEX3C")
+#' detect_genes(loci)
+detect_genes <- function(loci,
+                          verbose=T){
+  if(!is.null(names(loci))){
+    printer("Fine-mapping",dplyr::n_distinct(loci),"gene:Locus pairs.", v=verbose)
+    return(T)
+  } else {printer("Fine-mapping",dplyr::n_distinct(loci),"loci.", v=verbose) }
+  return(F)
+}
+
+
 
 
 #' Extract a subset of the summary stats
@@ -111,7 +144,7 @@ import_topSNPs <- function(topSS,
 #'
 #' @family query functions
 #' @keywords internal
-extract_SNP_subset <- function(locus,
+extract_SNP_subset <- function(locus_dir,
                                fullSS_path,
                                subset_path,
                                force_new_subset=F,
@@ -129,12 +162,14 @@ extract_SNP_subset <- function(locus,
                                tstat_col="t-stat",
                                A1_col = "A1",
                                A2_col = "A2",
+                               gene_col="gene",
 
                                N_cases_col="N_cases",
                                N_controls_col="N_controls",
                                N_cases=NULL,
                                N_controls=NULL,
                                proportion_cases="calculate",
+                               sample_size=NULL,
 
                                superpopulation="",
                                min_POS=NA,
@@ -142,26 +177,29 @@ extract_SNP_subset <- function(locus,
                                file_sep="\t",
                                query_by="coordinates",
                                probe_path = "./Data/eQTL/gene.ILMN.map",
+                               QTL_prefixes=NULL,
                                remove_tmps=T,
                                verbose=T){
   message("------------------ Step 1: Query ---------------")
-  # topSNP_sub <- top_SNPs[top_SNPs$Locus==locus & !is.na(top_SNPs$Locus),][1,]
-  # if(is.na(min_POS)){min_POS <- topSNP_sub$POS - bp_distance}
-  # if(is.na(max_POS)){max_POS <- topSNP_sub$POS + bp_distance}
-  # printer("---Min snp position:",min_POS, "---")
-  # printer("---Max snp position:",max_POS, "---")
-  multi_path <- file.path(dirname(subset_path),"Multi-finemap/Multi-finemap_results.txt")
+  locus <- basename(locus_dir)
+  # multi_path <- file.path(locus_dir,"Multi-finemap","Multi-finemap_results.txt")
+  multi_path <- list.files(path = locus_dir,
+                           pattern = "*Multi-finemap.tsv*",
+                           full.names = T,
+                           recursive = T)[1] %>% toString()
+
+
   if(file.exists(subset_path) & force_new_subset==F){
-    printer("+ Subset file already exists. Importing",subset_path,"...")
+    printer("+ Importing pre-existing file:",subset_path, v=verbose)
     check_if_empty(subset_path)
-    query <- data.table::fread(subset_path, header=T, stringsAsFactors=F, sep="\t")
+    query <- data.table::fread(subset_path, header=T, stringsAsFactors=F)
   } else if (file.exists(multi_path) & force_new_subset==F){
-    printer("+ Importing previous Multi-finemap file...Importing summary stats.")
+    printer("+ Importing  pre-existing file:",multi_path, v=verbose)
     check_if_empty(multi_path)
-    query <- data.table::fread(multi_path, header=T, stringsAsFactors=F, sep="\t")
+    query <- data.table::fread(multi_path, header=T, stringsAsFactors=F)
   } else {
     # Extract subset with awk
-    printer("+ Extracting relevant variants from fullSS...")
+    printer("+ Extracting relevant variants from fullSS...", v=verbose)
     start_query <- Sys.time()
     # Function selects different methods of querying your SNPs
     query_handler(locus=locus,
@@ -190,20 +228,23 @@ extract_SNP_subset <- function(locus,
                                 tstat_col=tstat_col,
                                 MAF_col=MAF_col,
                                 freq_col=freq_col,
-                                A1_col = A1_col,
-                                A2_col = A2_col,
+                                A1_col=A1_col,
+                                A2_col=A2_col,
+                                gene_col=gene_col,
 
                                 N_cases_col=N_cases_col,
                                 N_controls_col=N_controls_col,
                                 N_cases=N_cases,
                                 N_controls=N_controls,
-                                proportion_cases = proportion_cases)
+                                proportion_cases=proportion_cases,
+                                sample_size=sample_size,
+                                QTL_prefixes=QTL_prefixes)
     end_query <- Sys.time()
-    printer("+ Extraction completed in", round(end_query-start_query, 2),"seconds")
-    printer("+", dim(query)[1], "SNPs x ",dim(query)[2],"columns")
+    printer("+ Extraction completed in", round(end_query-start_query, 2),"seconds", v=verbose)
+    printer("+", dim(query)[1], "SNPs x ",dim(query)[2],"columns", v=verbose)
   }
   if(remove_tmps){
-    printer("+ Removing subset tmp...")
+    printer("+ Removing subset tmp...", v=verbose)
     suppressWarnings(file.remove(subset_path))
   }
   return(query)
@@ -229,7 +270,10 @@ query_by_coordinates <- function(top_SNPs,
                                  max_POS,
                                  bp_distance){
   gz.reader <- ifelse(endsWith(fullSS_path,".gz"), " gzcat ","")
-  topSNP_sub <- top_SNPs[top_SNPs$Gene==locus & !is.na(top_SNPs$Gene),]
+  topSNP_sub <- top_SNPs[top_SNPs$Locus==locus & !is.na(top_SNPs$Locus),]
+  if(detect_genes(loci = locus, verbose = F)){
+    topSNP_sub <- subset(topSNP_sub, Gene==names(locus))
+  }
   if(is.na(min_POS)){min_POS <- topSNP_sub$POS - bp_distance}
   if(is.na(max_POS)){max_POS <- topSNP_sub$POS + bp_distance}
   printer("---Min snp position:",min_POS, "---")
@@ -401,14 +445,14 @@ query_handler <- function(locus,
     if(is.na(max_POS)){max_POS <- topSNP_sub$POS + bp_distance}
     printer("---Min snp position:",min_POS, "---")
     printer("---Max snp position:",max_POS, "---")
-    TABIX(fullSS_path=fullSS_path,
-          subset_path=subset_path,
-          # is_tabix=F,
-          chrom_col=chrom_col,
-          position_col=position_col,
-          min_POS=min_POS,
-          max_POS=max_POS,
-          chrom= gsub("chr","",topSNP_sub$CHR[1])
+    query <- TABIX(fullSS_path=fullSS_path,
+                    subset_path=subset_path,
+                    # is_tabix=F,
+                    chrom_col=chrom_col,
+                    position_col=position_col,
+                    min_POS=min_POS,
+                    max_POS=max_POS,
+                    chrom= gsub("chr","",topSNP_sub$CHR[1])
           )
   }
   if(query_by=="coordinates"){

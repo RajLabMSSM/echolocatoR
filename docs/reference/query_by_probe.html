@@ -97,6 +97,9 @@ More commonly useful for QTL full summary stats files." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -154,6 +157,11 @@ More commonly useful for QTL full summary stats files.</p>
     <tr>
       <th>fullSS_path</th>
       <td><p>Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.</p></td>
+    </tr>
+    <tr>
+      <th>gene_col</th>
+      <td><p>For QTL studies, the name of the egene column in the full summary stats file (<em>default: "gene"</em>).
+This column will be used for filtering summary stats if supplying a named list of gene:Locus pairs to <code>loci</code>.</p></td>
     </tr>
     <tr>
       <th>chrom_col</th>

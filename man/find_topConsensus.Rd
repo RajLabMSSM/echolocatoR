@@ -4,7 +4,7 @@
 \alias{find_topConsensus}
 \title{Find the top Consensus SNP}
 \usage{
-find_topConsensus(dat, top_N = 1)
+find_topConsensus(dat, top_N = 1, grouping_vars = c("Locus"))
 }
 \description{
 Identify the \code{top_N} Consensus SNP(s) per Locus,

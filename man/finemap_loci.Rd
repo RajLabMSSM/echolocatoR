@@ -14,10 +14,9 @@ finemap_loci(
   force_new_finemap = T,
   results_dir = "./results",
   top_SNPs = "auto",
-  finemap_methods = c("ABF", "SUSIE", "FINEMAP"),
+  finemap_methods = c("ABF", "FINEMAP", "SUSIE", "POLYFUN_SUSIE"),
   bp_distance = 5e+05,
   n_causal = 5,
-  sample_size = NA,
   chrom_col = "CHR",
   position_col = "POS",
   snp_col = "SNP",
@@ -30,11 +29,13 @@ finemap_loci(
   freq_col = "Freq",
   A1_col = "A1",
   A2_col = "A2",
+  gene_col = "Gene",
   N_cases_col = "N_cases",
   N_controls_col = "N_controls",
   N_cases = NULL,
   N_controls = NULL,
   proportion_cases = "calculate",
+  sample_size = NULL,
   LD_reference = "1KGphase1",
   superpopulation = "EUR",
   download_method = "direct",
@@ -56,11 +57,11 @@ finemap_loci(
   probe_path = "./Data/eQTL/gene.ILMN.map",
   conditioned_snps = "auto",
   plot_LD = F,
-  verbose = T,
   remove_tmps = T,
   PAINTOR_QTL_datasets = NULL,
   server = F,
   PP_threshold = 0.95,
+  QTL_prefixes = NULL,
   plot.types = c("simple"),
   plot.window = NULL,
   plot.Nott_epigenome = F,
@@ -69,7 +70,8 @@ finemap_loci(
   plot.XGR_libnames = NULL,
   plot.Roadmap = F,
   plot.Roadmap_query = NULL,
-  conda_env = "echoR"
+  conda_env = "echoR",
+  verbose = T
 )
 }
 \arguments{
@@ -122,10 +124,6 @@ resulting in a locus that is ~1Mb long (depending on the dataset).}
 This parameter is used somewhat differntly by different fine-mapping tools.
 See tool-specific functions for details.}
 
-\item{sample_size}{The overall sample size of the study.
-If none is given, and \strong{N_cases} and \strong{N_controls} columns are present,
-then sample_size is inferred to be:  \code{max(N_cases) + max(N_controls)}.}
-
 \item{chrom_col}{Name of the chromosome column in the full summary stats file.
 Can be "chr1" or "1" format.
 (\emph{default: ="CHR"})}
@@ -166,27 +164,30 @@ This column is not necessary unless \code{MAF_col="calculate"} or the MAF column
 (\emph{default: ="Freq"})}
 
 \item{A1_col}{Name of the effect/risk allele column in the full summary stats.
- \strong{\emph{IMPORTANT}}: Make sure this actually the case for your full summary stats file.
+\strong{\emph{IMPORTANT}}: Make sure this actually the case for your full summary stats file.
 Unfortunately, different studies report different kinds of allele information in a non-standardized way.
 Meaning that A1/A2 can refer to any number of things:
- \describe{
- \item{effect/other alleles}{in the case of diseases}
- \item{ref/alt alleles}{where ref is the reference genome being used}
- \item{major/minor alleles}{This dichotomy holds true for bi-allelic SNPs but not necessary multi-allelic SNPs}
- }
- This makes comparing summary stats across GWAS/QTL datasets very confusing for several reasons:
- \describe{
- \item{Multi-allelic SNPs}{SNPs can have more than just 2 possible alleles (multi-allelic SNPs). Even if you compare the same SNP between two studies, you may accidentally be comparing totally different alleles.}
- \item{Valence}{The valence (+/-) of per-SNP GWAS effect sizes/beta can be relative to different allele types between studies.
- For example, let's say in one GWAS study your effect size for SNP A is 1.5 relative to the major allele in one study,
-  and the minor allele happens to be the one found in the reference genome.
-  You then try to compare that effect size to that of the same SNP in another GWAS.
-  But, the valence of the effect sizes in the 2nd GWAS study are all relative to the reference genome (instead of the minor allele),
-  giving the same SNP a value of -1.2. If you took the effect sizes at face value you'd say the signals are in opposite directions.
-  But once you take into account how the valences were determined in each study you realize that they're actually both positive relative to the major allele.}
- }
+\describe{
+\item{effect/other alleles}{in the case of diseases}
+\item{ref/alt alleles}{where ref is the reference genome being used}
+\item{major/minor alleles}{This dichotomy holds true for bi-allelic SNPs but not necessary multi-allelic SNPs}
+}
+This makes comparing summary stats across GWAS/QTL datasets very confusing for several reasons:
+\describe{
+\item{Multi-allelic SNPs}{SNPs can have more than just 2 possible alleles (multi-allelic SNPs). Even if you compare the same SNP between two studies, you may accidentally be comparing totally different alleles.}
+\item{Valence}{The valence (+/-) of per-SNP GWAS effect sizes/beta can be relative to different allele types between studies.
+For example, let's say in one GWAS study your effect size for SNP A is 1.5 relative to the major allele in one study,
+and the minor allele happens to be the one found in the reference genome.
+You then try to compare that effect size to that of the same SNP in another GWAS.
+But, the valence of the effect sizes in the 2nd GWAS study are all relative to the reference genome (instead of the minor allele),
+giving the same SNP a value of -1.2. If you took the effect sizes at face value you'd say the signals are in opposite directions.
+But once you take into account how the valences were determined in each study you realize that they're actually both positive relative to the major allele.}
+}
 This process of reversing per-SNP valences based on aligning the alleles is known as allele flipping.
 This is important when comparing individual SNPs, but can also have an impact on colocalization results.}
+
+\item{gene_col}{For QTL studies, the name of the \link{e}gene column in the full summary stats file (\emph{default: "gene"}).
+This column will be used for filtering summary stats if supplying a named list of gene:Locus pairs to \code{loci}.}
 
 \item{N_cases_col}{Name of the column in the full summary stats that has the number of case subjects in the study.
 This can either be per SNP sample sizes, or one number repeated across all rows.
@@ -195,8 +196,8 @@ This column is not necesssary if \code{N_cases} parameter is provided.
 (\emph{default: ="N_cases"})}
 
 \item{N_controls_col}{Name of the column in the full summary stats that has the number of control subjects in the study.
- This can either be per SNP sample sizes, or one number repeated across all rows.
- This column is not necesssary if \code{N_controls} parameter is provided.
+This can either be per SNP sample sizes, or one number repeated across all rows.
+This column is not necesssary if \code{N_controls} parameter is provided.
 (\emph{default: ="N_controls"})}
 
 \item{N_cases}{The number of case subjects in the study.
@@ -207,6 +208,10 @@ Instead of providing a redundant \strong{N_controls_col} column, you can simply 
 
 \item{proportion_cases}{The proportion of total subjects in the study that were cases.
 if \code{proportion_cases="calculate"} then this is inferred:  \code{N_controls / N_controls}.}
+
+\item{sample_size}{The overall sample size of the study.
+If none is given, and \strong{N_cases} and \strong{N_controls} columns are present,
+then sample_size is inferred to be:  \code{max(N_cases) + max(N_controls)}.}
 
 \item{download_reference}{When acquiring LD matrixes,
 the default is to delete the full vcf or npz files after \emph{echolocator} has extracted the necssary subset.
@@ -230,7 +235,7 @@ Set \code{trim_gene_limits=F} to not limit by gene coordinates (\emph{default}).
 
 \item{max_snps}{The maximum number of SNPs to include in the locus.
 If the current window size yields > \code{max_snps},
- then the outer edges of the of the locus are trimmed until the number of SNPs ≤ \code{max_snps}.}
+then the outer edges of the of the locus are trimmed until the number of SNPs ≤ \code{max_snps}.}
 
 \item{file_sep}{The separator in the full summary stats file.
 This parameter is only necessary if \code{query_by!="tabix"}.}
@@ -263,8 +268,6 @@ Only used for certain eQTL datasets.}
 
 \item{plot_LD}{Whether to plot a subset of the LD matix.}
 
-\item{verbose}{Whether \emph{echolocatoR} should be verbose or silent.}
-
 \item{remove_tmps}{Whether to remove any temporary files (e.g. FINEMAP output files) after the pipeline is done running.}
 
 \item{PAINTOR_QTL_datasets}{A list of QTL datasets to be used when conducting joint functional fine-mapping with \emph{PAINTOR}.}
@@ -272,7 +275,7 @@ Only used for certain eQTL datasets.}
 \item{server}{Whether \emph{echolocatoR} is being run on a computing cluster/server or on a local machine.}
 
 \item{PP_threshold}{The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
-For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.}
+For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\\% Credible Set SNPs.}
 
 \item{plot.types}{Which kinds of plots to include.
 Options:
@@ -294,6 +297,8 @@ adjust the bin width of the histograms.}
 (e.g. "brain" or c("brain","liver","monocytes"))}
 
 \item{conda_env}{The name of a conda environment to use.}
+
+\item{verbose}{Whether \emph{echolocatoR} should be verbose or silent.}
 
 \item{subset_path}{The file you want your locus subset saved as.
 Only use when fine-mapping one locus at a time.

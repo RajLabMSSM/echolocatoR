@@ -101,6 +101,9 @@ Consensus_SNPWhether or not the SNP was in the credible set of ≥ consensus_thr
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -146,23 +149,23 @@ Consensus_SNPWhether or not the SNP was in the credible set of ≥ consensus_thr
 
     <pre class="usage"><span class='fu'>find_consensus_SNPs</span>(
   <span class='no'>finemap_dat</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>,
   <span class='kw'>credset_thresh</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
   <span class='kw'>consensus_thresh</span> <span class='kw'>=</span> <span class='fl'>2</span>,
   <span class='kw'>sort_by_support</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>exclude_methods</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
+  <span class='kw'>exclude_methods</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>verbose</th>
-      <td><p>Whether <em>echolocatoR</em> should be verbose or silent.</p></td>
-    </tr>
-    <tr>
       <th>consensus_thresh</th>
       <td><p>Threshold for determining <strong>Consensus_SNP</strong> status.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>Whether <em>echolocatoR</em> should be verbose or silent.</p></td>
     </tr>
     </table>
 

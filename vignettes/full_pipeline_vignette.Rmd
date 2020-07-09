@@ -1,10 +1,5 @@
 ---
-title: "echolocatoR: full pipeline vignette"
-knit: (function(input_file, encoding) {
-  out_dir <- 'doc';
-  rmarkdown::render(input_file,
-  encoding=encoding,
-  output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
+title: "echolocatoR: full pipeline vignette" 
 author: "Brian M. Schilder"
 date: "Most recent update:<br> `r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -61,24 +56,27 @@ data("Nalls_top_SNPs");
 top_SNPs <- import_topSNPs(
   # topSS = "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/Nalls2019_TableS2.xlsx",
   topSS = Nalls_top_SNPs,
-  chrom_col = "CHR", position_col = "BP", snp_col="SNP",
-  pval_col="P, all studies", effect_col="Beta, all studies", gene_col="Nearest Gene",
-  group_by_locus = T,
+  chrom_col = "CHR", 
+  position_col = "BP", 
+  snp_col="SNP",
+  pval_col="P, all studies", 
+  effect_col="Beta, all studies", 
+  gene_col="Nearest Gene", 
   locus_col = "Nearest Gene",
+  grouping_vars = c("Locus"),
   remove_variants = "rs34637584") 
 head(top_SNPs)
 ```
 
 
 
-## Find path to full summary stats file  
+## Path to full summary stats file  
 
 * Since a full GWAS summary stats file would be too large to include within *echolocatoR*,  
 we instead provide an example subset of the full summary stats.  
 * To simulate how you'd actually use your own full summary stats file, we will save our example dataset to your computer (you can change the path to wherever you like).
 
 ```{r fullSS}
-# fullSS_path <- "./nallsEtAl2019_allSamples_allVariants.mod.txt.gz"
 fullSS_path <- example_fullSS(fullSS_path="~/Desktop/Nalls23andMe_2019.fullSS_subset.tsv") 
 ```
 

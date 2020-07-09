@@ -4,12 +4,12 @@
 \alias{LD.run_plink_LD}
 \title{Calculate LD (r or r2)}
 \usage{
-LD.run_plink_LD(bim, plink_folder, r_format = "r")
+LD.run_plink_LD(bim, LD_folder, r_format = "r")
 }
 \arguments{
 \item{bim}{A bim file produced by \emph{plink}}
 
-\item{plink_folder}{Locus-specific LD output folder.}
+\item{LD_folder}{Locus-specific LD output folder.}
 
 \item{r_format}{Whether to fill the matrix with \code{r} or \code{r2}.}
 }
@@ -25,18 +25,18 @@ Other LD:
 \code{\link{LD.UKBiobank}()},
 \code{\link{LD.calculate_LD}()},
 \code{\link{LD.dprime_table}()},
-\code{\link{LD.filter_vcf_population}()},
-\code{\link{LD.filter_vcf_rsamtools}()},
+\code{\link{LD.filter_vcf_gaston}()},
 \code{\link{LD.filter_vcf}()},
+\code{\link{LD.get_vcf_folder}()},
 \code{\link{LD.leadSNP_block}()},
 \code{\link{LD.load_or_create}()},
 \code{\link{LD.plink_LD}()},
+\code{\link{LD.plink_file}()},
 \code{\link{LD.plot}()},
 \code{\link{LD.read_bin}()},
 \code{\link{LD.read_ld_table}()},
 \code{\link{LD.translate_population}()},
-\code{\link{LD.vcf_to_bed}()},
-\code{\link{get_vcf_folder}()}
+\code{\link{LD.vcf_to_bed}()}
 }
 \concept{LD}
 \keyword{internal}

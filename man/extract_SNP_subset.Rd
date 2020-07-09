@@ -5,7 +5,7 @@
 \title{Extract a subset of the summary stats}
 \usage{
 extract_SNP_subset(
-  locus,
+  locus_dir,
   fullSS_path,
   subset_path,
   force_new_subset = F,
@@ -23,24 +23,27 @@ extract_SNP_subset(
   tstat_col = "t-stat",
   A1_col = "A1",
   A2_col = "A2",
+  gene_col = "gene",
   N_cases_col = "N_cases",
   N_controls_col = "N_controls",
   N_cases = NULL,
   N_controls = NULL,
   proportion_cases = "calculate",
+  sample_size = NULL,
   superpopulation = "",
   min_POS = NA,
   max_POS = NA,
   file_sep = "\\t",
   query_by = "coordinates",
   probe_path = "./Data/eQTL/gene.ILMN.map",
+  QTL_prefixes = NULL,
   remove_tmps = T,
   verbose = T
 )
 }
 \description{
 Use either \emph{tabix} or \emph{awk} to extract a locus subset
- from the full summary statistics file.
+from the full summary statistics file.
 }
 \seealso{
 Other query functions: 

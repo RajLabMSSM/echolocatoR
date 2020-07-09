@@ -441,14 +441,22 @@ ensembl_to_hgnc <- function(ensembl_ids){
 #' @param finemap_dat Preprocessed \emph{echolocatoR} locus subset file.
 #' Requires the columns \strong{N_cases} and \strong{N_controls}.
 #' @examples
-#' data("BST1")
-#' finemap_DT <- BST1
-#' finemap_DT$effective_sample_size <- effective_sample_size(finemap_DT)
+#' data("BST1");
+#' finemap_DT <- effective_sample_size(finemap_dat=BST1)
 #' @keywords internal
-effective_sample_size <- function(finemap_dat){
-  finemap_dat$N <- (4.0 / (1.0/finemap_dat$N_cases + 1.0/finemap_dat$N_controls) )
-  sample_size <- as.integer(median(finemap_dat$N))
-  return(sample_size)
+effective_sample_size <- function(finemap_dat,
+                                  sample_size=NULL,
+                                  verbose=T){
+  if(is.null(sample_size)){
+    if(all(c("N_cases","N_controls") %in% colnames(finemap_dat))){
+      finemap_dat$N <- (4.0 / (1.0/finemap_dat$N_cases + 1.0/finemap_dat$N_controls) )
+      printer("Calculating effective sample size (`N`) from `N_cases` and `N_controls`", v=verbose)
+    }
+  }else{
+    finemap_dat$N <- sample_size
+    printer(paste0("Using `sample_size = ",sample_size,"` ") )
+  }
+  return(finemap_dat)
 }
 
 
@@ -460,25 +468,31 @@ effective_sample_size <- function(finemap_dat){
 #' @keywords internal
 #' data("BST1")
 #' BST1 <- finemap_DT
-#' sample_size <- get_sample_size(subset_DT = finemap_DT)
+#' subset_DT <- get_sample_size(subset_DT = finemap_DT)
 get_sample_size <- function(subset_DT,
                             sample_size=NULL,
-                            effective_ss=T){
+                            effective_ss=T,
+                            verbose=T){
   if(effective_ss){
-    sample_size <- effective_sample_size(finemap_dat = subset_DT)
-    return(sample_size)
+    subset_DT <- effective_sample_size(finemap_dat = subset_DT,
+                                       sample_size = sample_size,
+                                       verbose = verbose)
+  } else{
+    if(is.null(sample_size)){
+      if("N_cases" %in% colnames(subset_DT) & "N_controls" %in% colnames(subset_DT)){
+        sample_size <- max(subset_DT$N_cases) + max(subset_DT$N_controls)
+        printer("++ Inferring sample size from max(N_cases) + max(N_controls):",sample_size,v=verbose)
+      } else {
+        sample_size <- NULL
+        printer("++ `sample_size` not provided.",v=verbose)
+      }
+    } else{ printer(paste0("++ Using `sample_size = ",sample_size,"` ") )}
+    subset_DT$N <- sample_size
   }
-
-  if(is.null(sample_size)){
-    if("N_cases" %in% colnames(subset_DT) & "N_controls" %in% colnames(subset_DT)){
-      sample_size <- max(subset_DT$N_cases) + max(subset_DT$N_controls)
-    } else {
-      sample_size <- 10000
-      printer("++ No sample size variable detected...Defaulting to:",sample_size)
-    }
-    return(sample_size)
-  }
+  return(subset_DT)
 }
+
+
 
 
 #' Find the top Consensus SNP
@@ -486,13 +500,16 @@ get_sample_size <- function(subset_DT,
 #' Identify the \code{top_N} Consensus SNP(s) per Locus,
 #' defined as the Consensus SNPs with the highest mean PP across all fine-mapping tools used.
 #' @keywords internal
-find_topConsensus <- function(dat, top_N=1){
+find_topConsensus <- function(dat,
+                              top_N=1,
+                              grouping_vars=c("Locus")){
   # CGet top consensus SNPs
   top.consensus <- (dat %>%
-                      dplyr::group_by(Locus) %>%
+                      dplyr::group_by(.dots=grouping_vars) %>%
                       subset(Consensus_SNP) %>%
                       dplyr::arrange(-mean.PP) %>%
                       # dplyr::arrange(-IMPACT_score) %>%
+                      # dplyr::mutate(topConsensus = ifelse(Consensus_SNP & mean.PP==max(mean.PP,na.rm = T),T,F)) %>%
                       dplyr::slice(top_N))$SNP %>% unique()
   dat$topConsensus <- dat$SNP %in% top.consensus
   return(dat)
@@ -525,6 +542,36 @@ assign_lead_SNP <- function(new_DT, verbose=T){
 
 
 
+#' Fill NA in PP and CS columns
+#'
+#' @family general
+#' @keywords internal
+#' @examples
+#' data("BST1");
+#' finemap_dat <- BST1
+#' # finemap_dat <- data.table::fread("~/Desktop/results/GWAS/Kunkle_2019.microgliaQTL/ABCA7/Multi-finemap/ABCA7_Kunkle_2019.microgliaQTL_Multi-finemap.tsv.gz")
+#' finemap_dat <- fillNA_CS_PP(finemap_dat=finemap_dat)
+fillNA_CS_PP <- function(finemap_dat,
+                         fillNA_CS=0,
+                         fillNA_PP=0){
+  CS_cols <- grep(".CS$",colnames(finemap_dat), value = T)
+  PP_cols <-  grep(".PP$",colnames(finemap_dat), value = T)
+  finemap_dat <- data.frame(finemap_dat)
+  if(!is.null(fillNA_CS)){
+    printer("+ Filling NAs in CS cols with",fillNA_CS)
+    finemap_dat[,CS_cols][is.na(finemap_dat[,CS_cols])] <- fillNA_CS
+  }
+  if(!is.null(fillNA_PP)){
+    printer("+ Filling NAs in PP cols with",fillNA_PP)
+    finemap_dat[,PP_cols][is.na(finemap_dat[,PP_cols])] <- fillNA_PP
+  }
+  return(finemap_dat)
+}
+
+
+
+
+
 #' Subset LD matrix and dataframe to only their shared SNPs
 #'
 #' Find the SNPs that are shared between an LD matrix and another data.frame with a `SNP` column.
@@ -533,17 +580,25 @@ assign_lead_SNP <- function(new_DT, verbose=T){
 #' @family SNP filters
 #' @return data.frame
 #' @keywords internal
+#' @examples
+#' data("BST1"); data('LD_matrix');
+#' finemap_dat=BST1
 subset_common_snps <- function(LD_matrix,
                                finemap_dat,
+                               fillNA=0,
                                verbose=F){
   printer("+ Subsetting LD matrix and finemap_dat to common SNPs...", v=verbose)
   # Remove duplicate SNPs
-  dups <- which(!duplicated(LD_matrix))
-  LD_matrix <- LD_matrix[dups,dups]
+  LD_matrix <- LD.fill_NA(LD_matrix = LD_matrix,
+                          fillNA = fillNA,
+                          verbose = verbose)
+  nondup_rows <- which(!base::duplicated(rownames(LD_matrix)))
+  nondup_cols <- which(!base::duplicated(colnames(LD_matrix)))
+  LD_matrix <- LD_matrix[nondup_rows,nondup_cols]
   ld.snps <- row.names(LD_matrix)
 
   # Remove duplicate SNPs
-  finemap_dat <- finemap_dat[which(!duplicated(finemap_dat$SNP)),]
+  finemap_dat <- finemap_dat[which(!base::duplicated(finemap_dat$SNP)),]
   fm.snps <- finemap_dat$SNP
   common.snps <- base::intersect(ld.snps, fm.snps)
   printer("+ LD_matrix =",length(ld.snps),"SNPs.", v=verbose)
@@ -551,14 +606,14 @@ subset_common_snps <- function(LD_matrix,
   printer("+",length(common.snps),"SNPs in common.", v=verbose)
   # Subset/order LD matrix
   new_LD <- LD_matrix[common.snps, common.snps]
-  new_LD[is.na(new_LD)] <- 0
+
   # Subset/order finemap_dat
   finemap_dat <- data.frame(finemap_dat)
   row.names(finemap_dat) <- finemap_dat$SNP
   new_DT <- data.table::as.data.table(finemap_dat[common.snps, ])
   new_DT <- unique(new_DT)
   # Reassign the lead SNP if it's missing
-  new_DT <- assign_lead_SNP(new_DT)
+  new_DT <- assign_lead_SNP(new_DT, verbose = verbose)
   # Check dimensions are correct
   if(nrow(new_DT)!=nrow(new_LD)){
     warning("+ LD_matrix and finemap_dat do NOT have the same number of SNPs.",v=verbose)
@@ -688,6 +743,9 @@ filter_snps <- function(subset_DT,
   return(subset_DT)
 }
 
+
+
+
 #' Identify SNPs to condition on.
 #'
 #' When running conditional analyses (e.g. \emph{GCTA-COJO}),
@@ -744,19 +802,19 @@ delete_subset <- function (force_new_subset, subset_path){
 
 
 
-#' Make paths for results and subsets
+#' Make locus-specific results folder
 #'
 #' @family directory functions
 #' @keywords internal
 #' @examples
-#' dataset_dir <- make_dataset_dir(results_dir="./results", dataset_type="GWAS", dataset_name="Nalls23andMe_2019", locus="BST1")
-make_dataset_dir <- function(results_dir="./results",
+#' locus_dir <- make_locus_dir(results_dir="./results", dataset_type="GWAS", dataset_name="Nalls23andMe_2019", locus="BST1")
+make_locus_dir <- function(results_dir="./results",
                              dataset_type="dataset_type",
                              dataset_name="dataset_name",
                              locus){
-  dataset_dir <- file.path(results_dir, dataset_type, dataset_name, locus)
-  dir.create(dataset_dir, showWarnings = F, recursive = T)
-  return(dataset_dir)
+  locus_dir <- file.path(results_dir, dataset_type, dataset_name, locus)
+  dir.create(locus_dir, showWarnings = F, recursive = T)
+  return(locus_dir)
 }
 
 
@@ -775,11 +833,11 @@ get_subset_path <- function(subset_path="auto",
                             suffix=".tsv.gz"){
   # Specify subset file name
   if(subset_path=="auto"){
-    dataset_dir <- make_dataset_dir(results_dir = results_dir,
-                                     dataset_type = dataset_type,
-                                     dataset_name = dataset_name,
-                                     locus = locus)
-    created_sub_path <- file.path(dataset_dir, paste0(locus,"_",dataset_name,"_subset",suffix) )
+    locus_dir <- make_locus_dir(results_dir = results_dir,
+                                   dataset_type = dataset_type,
+                                   dataset_name = dataset_name,
+                                   locus = locus)
+    created_sub_path <- file.path(locus_dir, paste0(locus,"_",dataset_name,"_subset",suffix) )
     return(created_sub_path)
   } else{return(subset_path)}
 }
@@ -796,8 +854,6 @@ get_locus_dir <- function(subset_path){
 
 
 
-
-
 # -----GenomicRanges ------
 
 
@@ -805,47 +861,54 @@ get_locus_dir <- function(subset_path){
 #'
 #' @family GRanges
 #' @keywords internal
-GRanges_overlap <- function(finemap_dat,
-                            regions,
-                            return_merged=T,
-
-                            chrom_col.1="CHR",
-                            start_col.1="POS",
-                            end_col.1="POS",
-
-                            chrom_col.2="CHR",
+GRanges_overlap <- function(dat1,
+                            dat2,
+                            chrom_col.1="chrom",
+                            start_col.1="start",
+                            end_col.1="end",
+                            chrom_col.2="chrom",
                             start_col.2="start",
-                            end_col.2="end"){
-  # library(GenomicRanges)
-  # library(BiocGenerics)
-  # consensus.snps <- subset(finemap_dat, Consensus_SNP==T)
-  gr.finemap <- GenomicRanges::makeGRangesFromDataFrame(finemap_dat,
-                                                        seqnames.field = chrom_col.1,
-                                                        start.field = start_col.1,
-                                                        end.field = end_col.1,
-                                                        ignore.strand = T,
-                                                        keep.extra.columns = T)
-
-  if(class(regions)[1]=="GRanges"){
-    gr.regions <- regions
-    GenomeInfoDb::seqlevelsStyle(gr.regions) <- "NCBI"
+                            end_col.2="end",
+                            return_merged=T,
+                            verbose=T){
+  # dat1
+  if(class(dat1)[1]=="GRanges"){
+    printer("+ dat1 already in GRanges format", v=verbose)
+    gr.dat1 <- dat1
+  } else {
+    gr.dat1 <- GenomicRanges::makeGRangesFromDataFrame(dat1,
+                                                       seqnames.field = chrom_col.1,
+                                                       start.field = start_col.1,
+                                                       end.field = end_col.1,
+                                                       ignore.strand = T,
+                                                       keep.extra.columns = T)
+  }
+  # dat2
+  if(class(dat2)[1]=="GRanges"){
+    printer("+ dat2 already in GRanges format", v=verbose)
+    gr.dat2 <- dat2
   } else{
-    gr.regions <- GenomicRanges::makeGRangesFromDataFrame(regions,
+    printer("+ Converting dat2 to GRanges", v=verbose)
+    gr.dat2 <- GenomicRanges::makeGRangesFromDataFrame(dat2,
                                                           seqnames.field = chrom_col.2,
                                                           start.field = start_col.2,
                                                           end.field = end_col.2,
                                                           ignore.strand = T,
                                                           keep.extra.columns = T)
   }
-  hits <- GenomicRanges::findOverlaps(query = gr.finemap,
-                                      subject = gr.regions)
-  gr.hits <- gr.regions[ S4Vectors::subjectHits(hits), ]
+  # Standardize seqnames format
+  GenomeInfoDb::seqlevelsStyle(gr.dat1) <- "NCBI"
+  GenomeInfoDb::seqlevelsStyle(gr.dat2) <- "NCBI"
+  hits <- GenomicRanges::findOverlaps(query = gr.dat1,
+                                      subject = gr.dat2)
+  gr.hits <- gr.dat2[ S4Vectors::subjectHits(hits), ]
   GenomicRanges::mcols(gr.hits) <- cbind(GenomicRanges::mcols(gr.hits),
-                          GenomicRanges::mcols(gr.finemap[S4Vectors::queryHits(hits),]) )
+                          GenomicRanges::mcols(gr.dat1[S4Vectors::queryHits(hits),]) )
   # gr.hits <- cbind(mcols(gr.regions[ S4Vectors::subjectHits(hits), ] ),
   #                         mcols(gr.consensus[S4Vectors::queryHits(hits),]) )
   message("",nrow(GenomicRanges::mcols(gr.hits))," query SNP(s) detected with reference overlap." )
   # print(data.frame(mcols(gr.hits[,c("Name","SNP")])) )
+  GenomeInfoDb::seqlevelsStyle(gr.hits) <- "NCBI"
   return(gr.hits)
 }
 
@@ -904,13 +967,13 @@ example_fullSS <- function(fullSS_path="./Nalls23andMe_2019.fullSS_subset.tsv",
 #' @examples
 #' \dontrun{
 #' load("~/Desktop/Microglia_all_regions_Kunkle_2019_COLOC.RData")
-#' merged_results <- merge_coloc_results(all_obj=all_obj, results_level="snp", save_path="~/Desktop/results")
+#' merged_results <- merge_coloc_results(all_obj=all_obj, results_level="snp", save_path="~/Desktop")
 #' }
 merge_coloc_results <- function(all_obj,
-                        results_level=c("summary"),
-                        nThread=4,
-                        verbose=T,
-                        save_path=F){
+                                results_level=c("summary"),
+                                nThread=4,
+                                verbose=T,
+                                save_path=F){
   null_list<<-NULL
   printer("Gathering coloc results at",results_level,"level...")
   merged_results <- parallel::mclapply(names(all_obj), function(locus){
@@ -936,9 +999,72 @@ merge_coloc_results <- function(all_obj,
   printer("NULL results detected in",length(null_list),"Locus:eGene pairs.")
   print(null_list)
 
+  # Rename cols
+  suffix_to_prefix <- function(dat, suffix){
+    cols_select <- grep(paste0(suffix,"$"),colnames(dat))
+    prefix <- paste0(gsub("\\.","",suffix),".")
+    colnames(dat)[cols_select] <- paste0(prefix, gsub(paste0(suffix,"$"),"",colnames(dat)[cols_select] ))
+    return(dat)
+  }
+  merged_results <- suffix_to_prefix(dat=merged_results, suffix = ".gwas")
+  merged_results <- suffix_to_prefix(dat=merged_results, suffix = ".qtl")
+
+
   if(save_path!=F){
-    data.table::fwrite(merged_results, file.path(save_path,paste0("merged_coloc_results.",results_level,".tsv.gz")), sep="\t")
+    data.table::fwrite(merged_results, file.path(save_path,paste0("merged_coloc_results.",results_level,".tsv.gz")),
+                       sep="\t", nThread=nThread)
   }
   return(merged_results)
+}
+
+
+
+
+
+
+#' Lift genome across builds
+#'
+#' @param build_conversion "hg19.to.hg38" (\emph{default}) or "hg38.to.hg19.
+#' @family utils
+#' @examples
+#' data("BST1")
+#' gr.lifted <- LIFTOVER(dat=BST1, build.conversion="hg19.to.hg38")
+LIFTOVER <- function(dat,
+                     build.conversion="hg19.to.hg38",
+                     chrom_col="CHR",
+                     start_col="POS",
+                     end_col="POS",
+                     verbose=T){
+  printer("XGR:: Lifting genome build:", build.conversion, v = verbose)
+  # Save original coordinates and SNP IDs
+  dat <- dat %>% dplyr::mutate(chrom=paste0("chr",gsub("chr","",eval(parse(text=chrom_col)))),
+                               POS.orig=eval(parse(text=start_col)))
+  # chain <- rtracklayer::import.chain(con = chain_paths$hg19_to_hg38)
+  gr.dat <- GenomicRanges::makeGRangesFromDataFrame(df = dat,
+                                                     keep.extra.columns = T,
+                                                     seqnames.field = "chrom",
+                                                     start.field = start_col,
+                                                     end.field = end_col)
+  gr.lifted <- XGR::xLiftOver(data.file = gr.dat,
+                              format.file = "GRanges",
+                              build.conversion = build.conversion,
+                              verbose = verbose ,
+                              merged = F)  # merge must =F in order to work
+  # Standardize seqnames format
+  GenomeInfoDb::seqlevelsStyle(gr.lifted) <- "NCBI"
+  return(gr.lifted)
+}
+
+
+
+
+
+order_loci_by_UCS_size <- function(dat,
+                                   merged_DT,
+                                   verbose=F){
+  printer("+ Ordering loci by UCS size.",v=verbose)
+  locus_order <- SUMMARISE.get_CS_counts(merged_DT)
+  dat$Locus <- factor(dat$Locus,  levels = locus_order$Locus, ordered = T)
+  return(dat)
 }
 

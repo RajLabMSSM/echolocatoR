@@ -3,7 +3,7 @@
 \docType{data}
 \name{CORCES_2020.cicero_coaccessibility}
 \alias{CORCES_2020.cicero_coaccessibility}
-\title{Cicero_coaccessibility from Alzheimer's disease brain tissue}
+\title{Cicero_coaccessibility from human brain tissue}
 \format{
 An object of class \code{data.table} (inherits from \code{data.frame}) with 9795 rows and 14 columns.
 }
@@ -49,6 +49,9 @@ usethis::use_data(CORCES_2020.cicero_coaccessibility)
 Other CORCES_2020: 
 \code{\link{CORCES_2020.HiChIP_FitHiChIP_loop_calls}},
 \code{\link{CORCES_2020.bulkATACseq_peaks}},
+\code{\link{CORCES_2020.get_HiChIP_FitHiChIP_overlap}()},
+\code{\link{CORCES_2020.get_scATAC_peak_overlap}()},
+\code{\link{CORCES_2020.prepare_peak_overlap}()},
 \code{\link{CORCES_2020.scATACseq_celltype_peaks}},
 \code{\link{CORCES_2020.scATACseq_peaks}}
 }

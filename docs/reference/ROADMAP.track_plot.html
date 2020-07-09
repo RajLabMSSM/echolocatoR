@@ -95,6 +95,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+    </li>
+    <li>
       <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
     </li>
     <li>
@@ -175,14 +178,12 @@ Options include "density" and "histogram".</p></td>
 <span class='no'>grl.roadmap</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ROADMAP.query.html'>ROADMAP.query</a></span>(<span class='kw'>results_path</span><span class='kw'>=</span><span class='st'>"./Roadmap"</span>, <span class='kw'>gr.snp</span><span class='kw'>=</span><span class='no'>gr.snp</span>, <span class='kw'>keyword_query</span><span class='kw'>=</span><span class='st'>"monocyte"</span>)</div><div class='output co'>#&gt; [1] "+ ROADMAP:: 2 annotation(s) identified that match `keyword_query`."
 #&gt; [1] "+ Querying subset from Roadmap API: E124  -  1 / 2"
 #&gt; [1] "++ Downloading Roadmap Chromatin Marks: E124"
-#&gt; [1] "cd ./Roadmap &amp;&amp; tabix -p bed --begin 2 --end 3 https://egg2.wustl.edu/roadmap/data/byFileType/chromhmmSegmentations/ChmmModels/coreMarks/jointModel/final/E124_15_coreMarks_dense.bed.bgz chr4:14737349-16737284"
-#&gt; [1] "BED subset downloaded in 1.811 seconds"
+#&gt; [1] "cd ./Roadmap &amp;&amp; tabix -p bed --begin 2 --end 3 https://egg2.wustl.edu/roadmap/data/byFileType/chromhmmSegmentations/ChmmModels/coreMarks/jointModel/final/E124_15_coreMarks_dense.bed.bgz chr4:14737349-16737284"</div><div class='output co'>#&gt; <span class='warning'>Warning: File '/var/folders/sw/km9819713937hp640lj59ygw0000gn/T//RtmpuHIsxp/file124f064d36c66' has size 0. Returning a NULL data.table.</span></div><div class='output co'>#&gt; Error in `[.data.frame`(x, i, j) : undefined columns selected
 #&gt; [1] "+ Querying subset from Roadmap API: E029  -  2 / 2"
 #&gt; [1] "++ Downloading Roadmap Chromatin Marks: E029"
-#&gt; [1] "cd ./Roadmap &amp;&amp; tabix -p bed --begin 2 --end 3 https://egg2.wustl.edu/roadmap/data/byFileType/chromhmmSegmentations/ChmmModels/coreMarks/jointModel/final/E029_15_coreMarks_dense.bed.bgz chr4:14737349-16737284"
-#&gt; [1] "BED subset downloaded in 1.822 seconds"
-#&gt; [1] "All downloads complete in 3.7 minutes"</div><div class='input'><span class='no'>grl.roadmap.filt</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ROADMAP.merge_and_process_grl.html'>ROADMAP.merge_and_process_grl</a></span>(<span class='kw'>grl.roadmap</span><span class='kw'>=</span><span class='no'>grl.roadmap</span>, <span class='kw'>gr.snp</span><span class='kw'>=</span><span class='no'>gr.snp</span>, <span class='kw'>n_top_tissues</span><span class='kw'>=</span><span class='fl'>5</span>)
-<span class='no'>track.roadmap</span> <span class='kw'>&lt;-</span> <span class='fu'>ROADMAP.track_plot</span>(<span class='no'>grl.roadmap.filt</span>, <span class='kw'>gr.snp</span><span class='kw'>=</span><span class='no'>gr.snp</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: no non-missing arguments to max; returning -Inf</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Groups with fewer than two data points have been dropped.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Groups with fewer than two data points have been dropped.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Groups with fewer than two data points have been dropped.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Groups with fewer than two data points have been dropped.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 4 rows containing missing values (position_stack).</span></div><div class='img'><img src='ROADMAP.track_plot-1.png' alt='' width='700' height='433' /></div></pre>
+#&gt; [1] "cd ./Roadmap &amp;&amp; tabix -p bed --begin 2 --end 3 https://egg2.wustl.edu/roadmap/data/byFileType/chromhmmSegmentations/ChmmModels/coreMarks/jointModel/final/E029_15_coreMarks_dense.bed.bgz chr4:14737349-16737284"</div><div class='output co'>#&gt; <span class='warning'>Warning: File '/var/folders/sw/km9819713937hp640lj59ygw0000gn/T//RtmpuHIsxp/file124f07471d040' has size 0. Returning a NULL data.table.</span></div><div class='output co'>#&gt; Error in `[.data.frame`(x, i, j) : undefined columns selected
+#&gt; [1] "All downloads complete in 0 minutes"</div><div class='input'><span class='no'>grl.roadmap.filt</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ROADMAP.merge_and_process_grl.html'>ROADMAP.merge_and_process_grl</a></span>(<span class='kw'>grl.roadmap</span><span class='kw'>=</span><span class='no'>grl.roadmap</span>, <span class='kw'>gr.snp</span><span class='kw'>=</span><span class='no'>gr.snp</span>, <span class='kw'>n_top_tissues</span><span class='kw'>=</span><span class='fl'>5</span>)
+<span class='no'>track.roadmap</span> <span class='kw'>&lt;-</span> <span class='fu'>ROADMAP.track_plot</span>(<span class='no'>grl.roadmap.filt</span>, <span class='kw'>gr.snp</span><span class='kw'>=</span><span class='no'>gr.snp</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: no non-missing arguments to max; returning -Inf</span></div><div class='output co'>#&gt; <span class='error'>Error: Faceting variables must have at least one value</span></div><div class='img'><img src='ROADMAP.track_plot-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

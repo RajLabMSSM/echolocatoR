@@ -23,6 +23,7 @@ Imports:
     knitr,
     rmarkdown,
     data.table, 
+    foreign,
     reticulate,
     ggplot2,  
     ggrepel,
@@ -36,7 +37,9 @@ Imports:
     ensembldb,
     dplyr,
     ggbio,
-    BSgenome
+    BSgenome,
+    Ckmeans.1d.dp,
+    refGenome
 Remotes:
   github::stephenslab/susieR@0.9.0, 
   github::kvnkuang/pbmcapply,
@@ -46,6 +49,7 @@ Remotes:
 Suggests: 
     devtools,
     XGR,
+    gaston,
     GenomeInfoDb,
     ggnetwork,
     RCircos, 
@@ -61,15 +65,14 @@ Suggests:
     pals,
     crayon,
     png,
-    readxl,
-    gaston, 
+    readxl, 
     biomaRt,
     haploR,
     motifbreakR,
     SNPlocs.Hsapiens.dbSNP142.GRCh37,
-    BSgenome.Hsapiens.UCSC.hg19,
-    BSgenome,
+    BSgenome.Hsapiens.UCSC.hg19, 
     ComplexHeatmap,
     SummarizedExperiment
 RoxygenNote: 7.1.0
 VignetteBuilder: knitr
+Roxygen: list(markdown = TRUE)

@@ -61,8 +61,7 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
   }
 
   # Import BigWig annotation files
-  data("NOTT_2019.bigwig_metadata")
-  bigWigFiles <- NOTT_2019.bigwig_metadata
+  bigWigFiles <- echolocatoR::NOTT_2019.bigwig_metadata
   # Some bigWig files were initially loaded to UCSC GB, but then later taken down by the authors....
   # However I saved these files on Minerva beforehand.
   bigWigFiles <- subset(bigWigFiles, UCSC_available=="T")
@@ -191,7 +190,6 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
 #' \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
 #' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
 NOTT_2019.superenhancers <- function(){
-
   annot_sub <- subset(echolocatoR::NOTT_2019.superenhancer_interactome,
                       chr== paste0("chr",unique(finemap_dat$CHR)) &
                       start>=min(finemap_dat$POS) &
@@ -219,9 +217,8 @@ NOTT_2019.superenhancers <- function(){
 #' \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
 #' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
 NOTT_2019.get_promoter_interactome_data <- function(finemap_dat){
-  data("NOTT_2019.interactome")
   # Subset to window
-  annot_sub <- NOTT_2019.interactome$H3K4me3_around_TSS_annotated_pe %>%
+  annot_sub <- echolocatoR::NOTT_2019.interactome$H3K4me3_around_TSS_annotated_pe %>%
     dplyr::rename(chr=Chr, start=Start, end=End) %>%
     subset(chr== paste0("chr",unique(finemap_dat$CHR)) &
            start>=min(finemap_dat$POS) &
@@ -301,7 +298,7 @@ NOTT_2019.get_interactome <- function(annot_sub,
 #' \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
 #' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
 NOTT_2019.get_interactions <- function(finemap_dat){
-  data("NOTT_2019.interactome")
+  NOTT_2019.interactome <- echolocatoR::NOTT_2019.interactome
   selected_sheets <- grep("interactome$",names(NOTT_2019.interactome), value = T)
   interactomes <- lapply(selected_sheets, function(s){
     printer("Importing",s,"...")
@@ -310,38 +307,60 @@ NOTT_2019.get_interactions <- function(finemap_dat){
     dat$Name <- s
     return(dat)
   }) %>% data.table::rbindlist()
-  interactomes_sub <- subset(interactomes,
-                         chr1== paste0("chr",unique(finemap_dat$CHR)) &
-                         chr2== paste0("chr",unique(finemap_dat$CHR)) &
-                         start1>=min(finemap_dat$POS) &
-                         start2>=min(finemap_dat$POS) &
-                         end1<=max(finemap_dat$POS) &
-                         end2<=max(finemap_dat$POS)
-                         ) %>% tidyr::separate(Name, into=c("Cell_type","Element"), remove=F)
-  return(interactomes_sub)
+  # Anchor 1
+  interactomes.anchor1 <- GRanges_overlap(dat1 = finemap_dat,
+                                          chrom_col.1 = "CHR",
+                                          start_col.1 = "POS",
+                                          end_col.1 = "POS",
+                                          dat2 = interactomes,
+                                          chrom_col.2 = "chr1",
+                                          start_col.2 = "start1",
+                                          end_col.2 = "end1" )
+  interactomes.anchor1$Anchor <-1
+  # Anchor 2
+  interactomes.anchor2 <- GRanges_overlap(dat1 = finemap_dat,
+                                          chrom_col.1 = "CHR",
+                                          start_col.1 = "POS",
+                                          end_col.1 = "POS",
+                                          dat2 = interactomes,
+                                          chrom_col.2 = "chr2",
+                                          start_col.2 = "start2",
+                                          end_col.2 = "end2" )
+  interactomes.anchor2$Anchor <-2
+  # Merge
+  interactomes.anchor <- c(interactomes.anchor1, interactomes.anchor2)
+  # Modify
+  interactomes.anchor$Assay <- "PLAC"
+  interactomes.anchor <- cbind(interactomes.anchor,
+                               tidyr::separate(data.frame(interactomes.anchor), Name,
+                                               into=c("Cell_type","Element"))[,c("Cell_type","Element")])
+  cell_dict <- c("Microglia"="microglia",
+                 "Neuronal"="neurons",
+                 "Oligo"="oligo")
+  interactomes.anchor$Cell_type <- cell_dict[interactomes.anchor$Cell_type]
+  return(interactomes.anchor)
 }
 
 
 
 
-#' Import cell type-specific epigenomic peaks
-#'
-#' Brain cell-specific epigenomic data from Nott et al. (2019).
-#' @keywords internal
-#' @family NOTT_2019
-#' @source
-#' \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
-#' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
-#' @examples
-#' \dontrun{
-#' PEAKS.merged <- NOTT_2019.get_epigenomic_peaks(peak.dir="/pd-omics/data/Nott_2019/peaks", narrow_peaks=T, broad_peaks=F)
-#' }
-NOTT_2019.get_epigenomic_peaks <- function(peak.dir="/pd-omics/data/Nott_2019/peaks",
-                                           narrow_peaks=T,
-                                           broad_peaks=T,
-                                           nThread=4){
-  data("NOTT_2019.bigwig_metadata")
-  bigWigFiles <- NOTT_2019.bigwig_metadata
+# Import cell type-specific epigenomic peaks
+#
+# Brain cell-specific epigenomic data from Nott et al. (2019).
+# @keywords internal
+# @family NOTT_2019
+# @source
+# \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
+# \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
+# @examples
+# \dontrun{
+# PEAKS.merged <- NOTT_2019.get_epigenomic_peaks(peak.dir="/pd-omics/data/Nott_2019/peaks", narrow_peaks=T, broad_peaks=F)
+# }
+NOTT_2019.get_epigenomic_peaks_macs2 <- function(peak.dir="/pd-omics/data/Nott_2019/peaks",
+                                                 narrow_peaks=T,
+                                                 broad_peaks=T,
+                                                 nThread=4){
+  bigWigFiles <- echolocatoR::NOTT_2019.bigwig_metadata
   peak_types <- c(ifelse(narrow_peaks,".narrowPeak$", NA),
                   ifelse(broad_peaks,"_broad.bed12$", NA))
   peak_types <- peak_types[!is.na(peak_types)]
@@ -357,13 +376,123 @@ NOTT_2019.get_epigenomic_peaks <- function(peak.dir="/pd-omics/data/Nott_2019/pe
     peak$Cell_type <- meta$cell_type
     peak$Assay <- meta$assay
     peak$Fresh_frozen <- meta$fresh_frozen
-    peak$marker  <- meta$marker
+    peak$Marker  <- meta$marker
     return(peak)
   },mc.cores = nThread) %>% GenomicRanges::GRangesList()
  PEAKS.merged <- unlist(PEAKS)
  PEAKS.merged$peak_type <- PEAKS.merged
  return(PEAKS.merged)
 }
+
+
+
+
+#' Download cell type-specific epigenomic peaks
+#'
+#' API access to brain cell type-specific epigenomic peaks (bed format)
+#' from Nott et al. (2019).
+#' @keywords internal
+#' @family NOTT_2019
+#' @source
+#' \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
+#' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
+#' @examples
+#' PEAKS <- NOTT_2019.get_epigenomic_peaks()
+NOTT_2019.get_epigenomic_peaks <- function(assays=c("ATAC","H3K27ac","H3K4me3"),
+                                           cell_types=c("neurons","microglia","oligo","astrocytes"),
+                                           convert_to_GRanges=T,
+                                           nThread=4,
+                                           verbose=T){
+  baseURL <- "https://raw.githubusercontent.com/nottalexi/brain-cell-type-peak-files/master"
+  cell_dict <- list(neurons="NeuN",
+                    microglia="PU1",
+                    oligo="Olig2",
+                    astrocytes="LHX2",
+                    periph="peripheral PU1+")
+  cell_dict_invert <- as.list(setNames(names(cell_dict), cell_dict))
+  assay_dict <- list(ATAC="_optimal_peak_IDR_ENCODE.ATAC.bed",
+                     H3K27ac="_optimal_peak.H3K27.bed",
+                     H3K4me3="_optimal_peak.H3K4me3.bed")
+  file_names <- unlist(lapply(assays, function(assay){file.path(assay,paste0(cell_dict[cell_types],assay_dict[assay])) }))
+
+  printer("++ Nott_2019:: Downloading and merging",length(file_names),"BED files.", v=verbose)
+  PEAKS <- parallel::mclapply(file_names, function(f, .verbose=verbose){
+    printer("++ NOTT_2019:: Downloading",f, v=.verbose)
+    bed_dat <- data.table::fread(file.path(baseURL,f), col.names = c("chr","start","end"))
+    bed_dat$Assay <- dirname(f)
+    bed_dat$Marker <- strsplit(basename(f),"_")[[1]][1]
+    bed_dat$Cell_type <- cell_dict_invert[[strsplit(basename(f),"_")[[1]][1]]]
+    return(bed_dat)
+  }, mc.cores = nThread) %>% data.table::rbindlist()
+
+  if(convert_to_GRanges){
+    printer("++ NOTT_2019:: Converting merged BED files to GRanges.", v=verbose)
+    PEAKS <- biovizBase::transformDfToGr(PEAKS, seqnames = "chr", start = "start", end="end")
+  }
+  printer("++ Nott_2019::",length(PEAKS),"ranges retrieved.", v=verbose)
+  return(PEAKS)
+}
+
+
+
+
+NOTT_2019.prepare_placseq_overlap <- function(merged_DT,
+                                              snp_filter){
+  finemap_dat <- subset(merged_DT, eval(parse(text=snp_filter)), .drop=F)
+  interactome <- NOTT_2019.get_interactions(finemap_dat = finemap_dat)
+  dat_melt <- count_and_melt(merged_annot = interactome,
+                             snp_filter = snp_filter)
+  dat_melt[dat_melt$Count==0 | is.na(dat_melt$Count),"Count"] <- NA
+  return(dat_melt)
+}
+
+
+
+
+
+NOTT_2019.prepare_peak_overlap <- function(merged_DT,
+                                           snp_filter){
+  PEAKS <- NOTT_2019.get_epigenomic_peaks()
+  # Get SNP groups
+  finemap_dat <- subset(merged_DT, eval(parse(text=snp_filter)), .drop=F)
+  # Get overlap with PEAKS
+  gr.hits <- GRanges_overlap(dat1 = finemap_dat,
+                             chrom_col.1 = "CHR",
+                             start_col.1 = "POS",
+                             end_col.1 = "POS",
+                             dat2 = PEAKS)
+  merged_annot <- find_topConsensus(dat = data.frame(gr.hits),
+                                    grouping_vars = c("Locus","Cell_type","Assay"))
+  dat_melt <- count_and_melt(merged_annot = merged_annot,
+                                       snp_filter = snp_filter)
+  dat_melt[dat_melt$Count==0 | is.na(dat_melt$Count),"Count"] <- NA
+  return(dat_melt)
+}
+
+
+
+
+NOTT_2019.prepare_regulatory_overlap <- function(merged_DT,
+                                                  snp_filter){
+  gr.reg <- NOTT_2019.get_regulatory_regions(finemap_dat = merged_DT,
+                                             as.granges = T)
+  finemap_sub <- subset(merged_DT, eval(parse(text=snp_filter)), .drop=F)
+  gr.hits.reg <- GRanges_overlap(dat1 = finemap_sub,
+                                 chrom_col.1 = "CHR",
+                                 start_col.1 = "POS",
+                                 end_col.1 = "POS",
+                                 dat2 = gr.reg)
+  merged_annot.reg <- find_topConsensus(dat = data.frame(gr.hits.reg) %>% dplyr::rename(Assay=Element),
+                                        grouping_vars = c("Locus","Cell_type","Assay"))
+  dat_melt.reg <- count_and_melt(merged_annot = merged_annot.reg,
+                                 snp_filter = snp_filter)
+  return(dat_melt.reg)
+}
+
+
+
+
+
 
 
 
@@ -377,19 +506,28 @@ NOTT_2019.get_epigenomic_peaks <- function(peak.dir="/pd-omics/data/Nott_2019/pe
 #' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
 NOTT_2019.get_regulatory_regions <- function(finemap_dat,
                                              as.granges=F,
-                                             nCores=1){
+                                             nThread=1,
+                                             verbose=T){
 
   selected_sheets <- grep("promoters$|enhancers$",names(echolocatoR::NOTT_2019.interactome), value = T)
   regions <- parallel::mclapply(selected_sheets, function(s){
     printer("Importing",s,"...")
     dat <- echolocatoR::NOTT_2019.interactome[[s]]
-    dat$Name <- s
+    dat$Name <- tolower(s)
     return(dat)
-  }, mc.cores = nCores) %>% data.table::rbindlist(fill=T)
+  }, mc.cores = nThread) %>% data.table::rbindlist(fill=T)
+
+  cell_dict <- c("astrocyte"="astrocytes",
+                 "neuronal"="neurons",
+                 "oligo"="oligo",
+                 "microglia"="microglia")
   regions_sub <- regions %>%
     tidyr::separate(Name, into=c("Cell_type","Element"), remove=F) %>%
-    dplyr::mutate(middle=as.integer( end-abs(end-start)/2) )
+    dplyr::mutate(middle = as.integer( end-abs(end-start)/2),
+                  Cell_type = cell_dict[Cell_type])
+
   if(as.granges){
+    printer("+ Converting to GRanges.",v=verbose)
     regions_sub <- GenomicRanges::makeGRangesFromDataFrame(df = regions_sub,#dplyr::mutate(regions_sub, chr = as.numeric(gsub("chr","",chr))),
                                                      seqnames.field = "chr",
                                                      start.field = "start",
@@ -440,7 +578,7 @@ NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
                                     width=7,
                                     dpi=300){
   # data("BST1"); print_plot=T; save_plot=T; title=NULL; index_SNP=NULL; xlims=NULL; zoom_window=NULL; return_consensus_overlap =T
-  if(!"Consensus_SNP" %in% colnames(finemap_dat)){finemap_dat <- find_consensus_SNPs(finemap_dat)}
+  if(!"Consensus_SNP" %in% colnames(finemap_dat)){finemap_dat <- find_consensus_SNPs(finemap_dat, verbose = F)}
   marker_key <- list(PU1 = "Microglia", Olig2 = "Oligo", NeuN = "Neuronal", LHX2 = "Astrocyte")
   if (is.null(index_SNP)) {
     lead.pos <- subset(finemap_dat, leadSNP)$POS

@@ -212,6 +212,18 @@ GGBIO.SNP_track <- function(gr.snp,
 
 
 
+
+guess_pvalue_col <- function(dat,
+                             QTL_prefix=NULL){
+  p_options <- c("p","p-value","p-values","pvalue","pvalues","pval")
+  p_options <- c(p_options, stringr::str_to_sentence(p_options))
+  pval_col <- paste0(QTL_prefix,p_options)[paste0(QTL_prefix,p_options) %in% colnames(dat)][1]
+  return(pval_col)
+}
+
+
+
+
 #' Plot QTL data
 #'
 #' @inheritParams finemap_pipeline
@@ -223,7 +235,7 @@ GGBIO.SNP_track <- function(gr.snp,
 #' gr.snp <- DT_to_GRanges(dat)
 #' ## Create fake QTL P-values
 #' gr.snp$fake_eQTL.P <- gr.snp$P  * c(1,.9,.7)
-#' qtl.track <- GGBIO.QTL_track(gr.snp=gr.snp, QTL_prefix="fake_eQTL", labels_subset=c("Lead SNP"), color_r2=F)
+#' qtl.track <- GGBIO.QTL_track(gr.snp=gr.snp, QTL_prefix="fake_eQTL.", labels_subset=c("Lead SNP"), color_r2=F)
 GGBIO.QTL_track <- function(gr.snp,
                             QTL_prefix="QTL",
                             labels_subset = c("Lead SNP", "Credible Set", "Consensus SNP"),
@@ -233,7 +245,8 @@ GGBIO.QTL_track <- function(gr.snp,
                             sig_cutoff=5e-8){
   if(color_r2==F){gr.snp$r2 <- NA}
   dat <- as.data.frame(gr.snp)
-  pval_col <- paste0(QTL_prefix,".P")
+  pval_col <- guess_pvalue_col(dat = dat,
+                               QTL_prefix = QTL_prefix)
   ### Label set
   labelSNPs <- construct_SNPs_labels(subset_DT = dat,
                                      lead="Lead SNP" %in% labels_subset,
@@ -479,7 +492,9 @@ GGBIO.plot <- function(finemap_dat,
   # Set up data
   finemap_dat <- find_consensus_SNPs(finemap_dat = finemap_dat,
                                     credset_thresh = PP_threshold,
-                                    consensus_thresh = consensus_thresh)
+                                    consensus_thresh = consensus_thresh,
+                                    verbose = F)
+  finemap_dat <- fillNA_CS_PP(finemap_dat = finemap_dat)
 
   available_methods <- gsub("\\.PP$","",grep("*\\.PP$",colnames(finemap_dat),
                                              value = T)) %>% unique()
