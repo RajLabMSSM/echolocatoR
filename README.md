@@ -1,9 +1,9 @@
 <center><h1> )    )   )  ) ))) 🦇 echolocatoR  🦇 ((( (  (   (    ( </h1></center>  
 
-### __Automated statistical and functional fine-mapping with extensive access to genome-wide datasets.  
+### __tomated statistical and functional fine-mapping with extensive access to genome-wide datasets.  
 
 F
-ne-mapping methods are a powerful means of identifying causal variants underlying a given phenotype, but are underutilized due to the technical challenges of implementation. __*echolocatoR*__ is an R package that automates end-to-end genomics fine-mapping, annotation, and plotting in order to identify the most probable causal variants associated with a given phenotype.
+ninmapping methods are a powerful means of identifying causal variants underlying a given phenotype, but are underutilized due to the technical challenges of implementation. __*echolocatoR*__ is an R package that automates end-to-end genomics fine-mapping, annotation, and plotting in order to identify the most probable causal variants associated with a given phenotype.
 
 It requires minimal input from users (a GWAS or QTL summary statistics file), and includes a suite of statistical and functional fine-mapping tools. It also includes extensive access to datasets (linkage disequilibrium panels, epigenomic and genome-wide annotations, QTL).
 
