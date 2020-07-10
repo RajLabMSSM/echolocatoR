@@ -11,8 +11,8 @@ limit_SNPs(max_snps = 500, subset_DT)
 
 \item{subset_DT}{A data.frame that contains at least the following columns:
 \describe{
-\item{SNP}{RSID for each SNP.}
-\item{POS}{Each SNP's genomic position (in basepairs).}
+  \item{SNP}{RSID for each SNP.}
+  \item{POS}{Each SNP's genomic position (in basepairs).}
 }}
 }
 \description{

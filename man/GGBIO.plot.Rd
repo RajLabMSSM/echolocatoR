@@ -49,13 +49,13 @@ For exmaple, P-values for the \emph{Fairfax_2014} QTL study would be
 stored in the column \emph{Fairfax_2014.P}.}
 
 \item{PP_threshold}{The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
-For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\\% Credible Set SNPs.}
+For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.}
 
 \item{max_transcripts}{Max number of transcripts per gene to show.}
 
 \item{plot.window}{Zoom into the center of the locus when plotting (without editing the fine-mapping results file).}
 
-\item{verbose}{Whether \emph{echolocatoR} should be verbose or silent.}
+\item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
 }
 \description{
 Plots fine-mapping results from \emph{echolocatoR}.

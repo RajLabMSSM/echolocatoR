@@ -2,7 +2,7 @@
 % Please edit documentation in R/COJO.R
 \name{COJO.make_locus_subdir}
 \alias{COJO.make_locus_subdir}
-\title{Make COJOJ path}
+\title{Make \emph{GCTA-COJO} path}
 \source{
 \url{https://www.nature.com/articles/ng.2213}
 \url{https://www.cell.com/ajhg/fulltext/S0002-9297(10)00598-7}
@@ -12,7 +12,7 @@
 COJO.make_locus_subdir(locus_dir)
 }
 \description{
-Make COJOJ path
+Make \emph{GCTA-COJO} path
 }
 \examples{
 data("locus_dir")

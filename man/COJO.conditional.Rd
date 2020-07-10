@@ -2,7 +2,7 @@
 % Please edit documentation in R/COJO.R
 \name{COJO.conditional}
 \alias{COJO.conditional}
-\title{Run COJO conditional analysis}
+\title{Run \emph{GCTA-COJO} conditional analysis}
 \source{
 \url{https://www.nature.com/articles/ng.2213}
 \url{https://www.cell.com/ajhg/fulltext/S0002-9297(10)00598-7}

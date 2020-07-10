@@ -15,8 +15,8 @@ snp_groups <- SUMMARISE.get_SNPgroup_counts(merged_DT=merged_DT)
 }
 \seealso{
 Other summarise: 
-\code{\link{SUMARISE.CS_counts_plot}()},
 \code{\link{SUMMARISE.CS_bin_plot}()},
+\code{\link{SUMMARISE.CS_counts_plot}()},
 \code{\link{SUMMARISE.get_CS_bins}()},
 \code{\link{SUMMARISE.get_CS_counts}()},
 \code{\link{SUMMARISE.peak_overlap_plot}()}

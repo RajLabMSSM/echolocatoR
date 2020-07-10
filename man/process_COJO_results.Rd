@@ -2,12 +2,12 @@
 % Please edit documentation in R/COJO.R
 \name{process_COJO_results}
 \alias{process_COJO_results}
-\title{Gather all GCTA-COJO results}
+\title{Gather all \emph{GCTA-COJO} results}
 \usage{
 process_COJO_results(subset_DT, locus_dir, freq_cutoff = 0.1)
 }
 \description{
-Gather all GCTA-COJO results
+Gather all \emph{GCTA-COJO} results
 }
 \seealso{
 Other COJO

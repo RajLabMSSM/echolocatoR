@@ -2,7 +2,7 @@
 % Please edit documentation in R/COJO.R
 \name{COJO.stepwise}
 \alias{COJO.stepwise}
-\title{Conditional stepwise procedure}
+\title{Run \emph{GCTA-COJO} conditional stepwise procedure}
 \usage{
 COJO.stepwise(
   GCTA_path = system.file("tools/gcta_1.92.1beta5_mac/bin", "gcta64", package =
@@ -13,7 +13,7 @@ COJO.stepwise(
 )
 }
 \description{
-Runs the GCTA-COJO conditional stepwise procedure to identify independent signals.
+Runs the \emph{GCTA-COJO} conditional stepwise procedure to identify independent signals.
 Should only be run on full, genome-wide summary stats at once.
 }
 \seealso{

@@ -2,10 +2,10 @@
 % Please edit documentation in R/query.R
 \name{gene_locus_list}
 \alias{gene_locus_list}
-\title{Generate a named list of \link{e}gene-locus pairs}
+\title{Generate a named list of [e]gene-locus pairs}
 \usage{
 gene_locus_list(top_SNPs)
 }
 \description{
-Generate a named list of \link{e}gene-locus pairs
+Generate a named list of [e]gene-locus pairs
 }

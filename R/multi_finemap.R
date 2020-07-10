@@ -1,17 +1,3 @@
-# ---------------
-# Multi-finemap
-# ---------------
-
-# FINE-MAPPING TOOLS TO ADD
-
-## MFM: https://jennasimit.github.io/MFM/articles/MFM.html
-## CAVIAR
-## eCAVIAR
-## DeepFIGV
-## coloc (updated)
-## enloc
-
-
 
 
 #' Check for necessary columns
@@ -24,13 +10,14 @@ check_necessary_cols <- function(subset_DT,
                                  finemap_methods,
                                  sample_size=NULL,
                                  verbose=T){
-  for_all <- c("SNP","CHR","POS")
-  method_dict <- list(ABF=c(for_all,"proportion_cases","MAF","Effect","StdErr"),
-                      FINEMAP=c(for_all,"Effect","StdErr","A1","A2","MAF","N"),
-                      SUSIE=c(for_all,"Effect","StdErr","N"),
-                      POLYFUN_SUSIE=c(for_all,"Effect","StdErr","A1","A2","P","N"), #,"MAF"
-                      # COLOC=c(for_all,)
-                      COJO=c(for_all,"Effect","StdErr","A1","A2","Freq","P","N"))
+  for_all <- c("SNP","CHR","POS","Effect","StdErr")
+  method_dict <- list(ABF=c(for_all,"proportion_cases","MAF"),
+                      FINEMAP=c(for_all,"A1","A2","MAF","N"),
+                      SUSIE=c(for_all,"N"),
+                      POLYFUN_SUSIE=c(for_all,"A1","A2","P","N"), #,"MAF"
+                      COLOC=c(for_all),
+                      PAINTOR=c(for_all),
+                      COJO=c(for_all,"A1","A2","Freq","P","N"))
   for(m in finemap_methods){
     message("Checking for necessary columns: ",m)
     if(!all(method_dict[[m]] %in% colnames(subset_DT))){
@@ -116,8 +103,8 @@ find_consensus_SNPs <- function(finemap_dat,
 #' along with the original per-SNP GWAS/QTL summary statistics.
 #' Each tools will have the following columns:
 #' \describe{
-#' \item{<tool>.PP}{The posterior probability (PP) of a SNP being causal for the trait. Though this is a generalization and the exact meaning of PP will differ by tools (e.g. Posterior Inclusion Probability for SUSIE).}
-#' \item{<tool>.CS}{Which credible set the SNP is part of (within a locus). If \code{=0}, then the SNP was not part of any credible set. Some tools only produce one credible set per locus.}
+#'  \item{<tool>.PP}{The posterior probability (PP) of a SNP being causal for the trait. Though this is a generalization and the exact meaning of PP will differ by tools (e.g. Posterior Inclusion Probability for SUSIE).}
+#'  \item{<tool>.CS}{Which credible set the SNP is part of (within a locus). If \code{=0}, then the SNP was not part of any credible set. Some tools only produce one credible set per locus.}
 #' }
 #'
 #' @family finemapping functions

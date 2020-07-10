@@ -25,7 +25,7 @@ in \code{\link{GRanges}} format.}
 \item{show.legend}{Whether to show legend.}
 
 \item{PP_threshold}{The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
-For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\\% Credible Set SNPs.}
+For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.}
 
 \item{r2}{Whether color the points by LD r2.}
 }

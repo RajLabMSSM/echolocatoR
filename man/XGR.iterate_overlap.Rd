@@ -15,7 +15,7 @@ XGR.iterate_overlap(
 \arguments{
 \item{lib.selections}{Which XGR annotations to check overlap with.
 For full list of libraries see:
-\url{http://xgr.r-forge.r-project.org/#annotations-at-the-genomic-region-level}}
+ \url{http://xgr.r-forge.r-project.org/#annotations-at-the-genomic-region-level}}
 
 \item{subset_DT}{Data.frame with at least the following columns:
 \describe{
@@ -30,7 +30,7 @@ For full list of libraries see:
 }
 \description{
 Automatically handles different file formats provided by XGR
-(e.g. varying kinds of nested/unnested \code{GRanges}).
+ (e.g. varying kinds of nested/unnested \code{GRanges}).
 Then returns a \code{Granges} object with only the XGR annotation ranges
 that overlap with the SNPs in \code{subset_DT}.
 The \code{GRanges} merges hits from \code{subset_DT}.

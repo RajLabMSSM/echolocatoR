@@ -23,7 +23,7 @@ Can be "chr1" or "1" format.
 Must be in units of basepairs.
 (\emph{default: ="POS"})}
 
-\item{verbose}{Whether \emph{echolocatoR} should be verbose or silent.}
+\item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
 }
 \description{
 Convert summary stats file to tabix format

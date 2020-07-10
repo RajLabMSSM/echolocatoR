@@ -2,7 +2,7 @@
 % Please edit documentation in R/COJO.R
 \name{COJO}
 \alias{COJO}
-\title{Run GCTA-COJO}
+\title{Run \emph{GCTA-COJO}}
 \usage{
 COJO(
   subset_DT,
@@ -28,7 +28,7 @@ COJO(
 }
 \description{
 Main function to run either the conditional stepwise procedure (genome-wide)
-or the conditional analysis (locus-specific) from GCTA-COJO.
+or the conditional analysis (locus-specific) from \emph{GCTA-COJO}.
 }
 \seealso{
 Other COJO

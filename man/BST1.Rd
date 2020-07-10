@@ -3,14 +3,14 @@
 \docType{data}
 \name{BST1}
 \alias{BST1}
-\title{\emph{echolocatoR} output example (BST1 locus)}
+\title{\pkg{echolocatoR} output example (BST1 locus)}
 \format{
 data.table
 \describe{
-\item{SNP}{SNP RSID}
-\item{CHR}{Chromosome}
-\item{POS}{Genomic position (in basepairs)}
-\item{...}{Optional: extra columns}
+  \item{SNP}{SNP RSID}
+  \item{CHR}{Chromosome}
+  \item{POS}{Genomic position (in basepairs)}
+  \item{...}{Optional: extra columns}
 }
 }
 \source{
@@ -21,7 +21,7 @@ BST1
 }
 \description{
 An example results file after running
-\code{\link{finemap_loci}} on the \emph{BST1} locus.
+\code{\link[=finemap_loci]{finemap_loci()}} on the \emph{BST1} locus.
 }
 \details{
 Data originally comes from the Parkinson's disease GWAS

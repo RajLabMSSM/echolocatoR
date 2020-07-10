@@ -10,7 +10,7 @@ subset_common_snps(LD_matrix, finemap_dat, fillNA = 0, verbose = F)
 data.frame
 }
 \description{
-Find the SNPs that are shared between an LD matrix and another data.frame with a \code{SNP} column.
+Find the SNPs that are shared between an LD matrix and another data.frame with a `SNP` column.
 Then remove any non-shared SNPs from both objects.
 }
 \examples{

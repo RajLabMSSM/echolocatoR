@@ -16,7 +16,7 @@ find_consensus_SNPs(
 \arguments{
 \item{consensus_thresh}{Threshold for determining \strong{Consensus_SNP} status.}
 
-\item{verbose}{Whether \emph{echolocatoR} should be verbose or silent.}
+\item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
 }
 \description{
 Adds several columns that summarise the results across all fine-mapping tools that were run:

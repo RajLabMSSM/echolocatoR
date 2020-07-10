@@ -7,10 +7,10 @@
 \format{
 data.table
 \describe{
-\item{SNP}{SNP RSID}
-\item{CHR}{Chromosome}
-\item{POS}{Genomic position (in basepairs)}
-\item{...}{Optional: extra columns}
+  \item{SNP}{SNP RSID}
+  \item{CHR}{Chromosome}
+  \item{POS}{Genomic position (in basepairs)}
+  \item{...}{Optional: extra columns}
 }
 }
 \source{
@@ -21,7 +21,7 @@ MEX3C
 }
 \description{
 An example results file after running
-\code{\link{finemap_loci}} on the \emph{MEX3C} locus.
+\code{\link[=finemap_loci]{finemap_loci()}} on the \emph{MEX3C} locus.
 }
 \details{
 Data originally comes from the Parkinson's disease GWAS

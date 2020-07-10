@@ -30,11 +30,11 @@ LD.load_or_create(
 \item{subset_DT}{The locus subset of the full summary stats file.}
 
 \item{force_new_LD}{By default, if an LD matrix file for a given locus is already present,
-then \emph{echolocatoR} will just use the preexisting file.
+then \pkg{echolocatoR} will just use the preexisting file.
 Set \code{force_new_LD=T} to override this and extract a new subset.}
 
 \item{download_reference}{When acquiring LD matrixes,
-the default is to delete the full vcf or npz files after \emph{echolocator} has extracted the necssary subset.
+the default is to delete the full vcf or npz files after \pkg{echolocatoR} has extracted the necssary subset.
 However, if you wish to keep these full files (which can be quite large) set \code{download_reference=T}.}
 
 \item{min_r2}{Remove any SNPs are below the LD r2 threshold with the lead SNP within their respective locus.}
@@ -47,11 +47,29 @@ However, if you wish to keep these full files (which can be quite large) set \co
 This is paramter currently only works when \code{LD_reference!="UKB"}.}
 
 \item{remove_correlates}{If \code{remove_correlates} is set to a value between 0-1,
-removes any SNPs that are in LD with any of the \code{remove_variants} above the threshold provided by \code{remove_correlates}.}
+removes any SNPs that are in LD with any of the \code{remove_variants} above the threshold provided by \code{remove_correlates}.
 
-\item{verbose}{Whether \emph{echolocatoR} should be verbose or silent.}
+ @param LD_reference Which linkage disequilibrium reference panel do you want to use.
+ Options include:
+ \describe{
+ \item{"UKB"}{A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See \href{https://www.biorxiv.org/content/10.1101/807792v2}{Wiessbrod et al. (2019)} for more details.}
+ \item{"1KGphase1"}{Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.}
+ \item{"1KGphase3"}{Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.}
+ }
+ @param superpopulation Subset your LD reference panel by superopulation.
+ Setting the superpopulation is not currently possible when \code{LD_reference="UKB"}.
+ \href{https://www.internationalgenome.org/faq/which-populations-are-part-your-study/}{1KGphase1 options} include:
+ \describe{
+ \item{"AFR"}{African [descent]}
+ \item{"AMR"}{Ad-mixed American}
+ \item{"EAS"}{East Asian}
+ \item{"EUR"}{European}
+ \item{"SAS"}{South Asian}
+ }}
 
-\item{server}{Whether \emph{echolocatoR} is being run on a computing cluster/server or on a local machine.}
+\item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
+
+\item{server}{Whether \pkg{echolocatoR} is being run on a computing cluster/server or on a local machine.}
 
 \item{remove_tmps}{Whether to remove any temporary files (e.g. FINEMAP output files) after the pipeline is done running.}
 }
@@ -67,7 +85,7 @@ Options:
 \itemize{
 \item Download pre-computed LD matrix from UK Biobank.
 \item Download raw vcf file from 1KG and compute LD on the fly.
-\item Compute LD fon the fly from a user-supplied vcf file.
+\item Compute LD on the fly from a user-supplied vcf file.
 \item Use a user-supplied pre-computed LD-matrix.
 }
 }
@@ -76,7 +94,7 @@ Options:
 data("BST1"); data("locus_dir");
 locus_dir <- file.path("~/Desktop",locus_dir)
 # UK Biobank LD
-LD.load_or_create(locus_dir=locus_dir, subset_DT=BST1, locus="BST1", )
+LD.load_or_create(locus_dir=locus_dir, subset_DT=BST1, locus="BST1")
 }
 }
 \seealso{

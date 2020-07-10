@@ -18,7 +18,7 @@ LD.filter_vcf_gaston(
 
 \item{popDat}{The metadata file listing the superpopulation to which each sample belongs.}
 
-\item{verbose}{Whether \emph{echolocatoR} should be verbose or silent.}
+\item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
 }
 \description{
 Subset a vcf by superpopulation

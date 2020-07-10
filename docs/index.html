@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Automated genomic fine-mapping">
-<meta property="og:description" content="Automated statistical and functional fine-mapping pipeline with extensive API access to datasets.  ">
+<meta property="og:description" content="Automated statistical and functional fine-mapping with extensive access to genome-wide datasets.  ">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -90,7 +90,13 @@
 ) ) ) ) ))) 🦇 echolocatoR 🦇 ((( ( ( ( (
 </h1></div>
 </center>
-<p><strong><em>echolocatoR</em></strong> is an R package for automating statistical and functional fine-mapping with extensive API access to datasets.</p>
+<div id="automated-statistical-and-functional-fine-mapping-with-extensive-access-to-genome-wide-datasets-" class="section level3">
+<h3 class="hasAnchor">
+<a href="#automated-statistical-and-functional-fine-mapping-with-extensive-access-to-genome-wide-datasets-" class="anchor"></a>__Automated statistical and functional fine-mapping with extensive access to genome-wide datasets.</h3>
+<p>F ne-mapping methods are a powerful means of identifying causal variants underlying a given phenotype, but are underutilized due to the technical challenges of implementation. <strong><em>echolocatoR</em></strong> is an R package that automates end-to-end genomics fine-mapping, annotation, and plotting in order to identify the most probable causal variants associated with a given phenotype.</p>
+<p>It requires minimal input from users (a GWAS or QTL summary statistics file), and includes a suite of statistical and functional fine-mapping tools. It also includes extensive access to datasets (linkage disequilibrium panels, epigenomic and genome-wide annotations, QTL).</p>
+<p>The elimination of data gathering and preprocessing steps enables rapid fine-mapping of many loci in any phenotype, complete with locus-specific publication-ready figure generation. All results are merged into a single per-SNP summary file for additional downstream analysis and results sharing. Therefore <strong><em>echolocatoR</em></strong> drastically reduces the barriers to identifying causal variants by making the entire fine-mapping pipeline rapid, robust and scalable.</p>
+</div>
 <div id="documentation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#documentation" class="anchor"></a>Documentation</h2>
@@ -108,12 +114,14 @@
 <h3 class="hasAnchor">
 <a href="#plotting-vignette" class="anchor"></a><a href="https://rajlabmssm.github.io/echolocatoR/articles/plotting_vignette.html">Plotting vignette</a>
 </h3>
+<p><br></p>
 </div>
 </div>
 <div id="workflow" class="section level2">
 <h2 class="hasAnchor">
 <a href="#workflow" class="anchor"></a>Workflow</h2>
 <p><img src="./images/PD_Finemapping_Flowchart_plus.png" alt="echoFlow"></p>
+<p><br></p>
 </div>
 <div id="quick-installation" class="section level2">
 <h2 class="hasAnchor">
@@ -146,155 +154,123 @@
 <div class="sourceCode" id="cb4"><pre class="r"><span class="kw">if</span>(!<span class="st">"devtools"</span> <span class="kw">%in%</span> <span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages</a></span>()){<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"devtools"</span>)}
 <span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"RajLabMSSM/echolocatoR"</span>)</pre></div>
 <p>To make sure <strong><em>echolocatoR</em></strong> uses the packages in this env (esp. if using from RStudio), you can then supply the env name to the <code><a href="reference/finemap_loci.html">finemap_loci()</a></code> function using <code>conda_env="echoR"</code>.</p>
+<p><br></p>
 </div>
 <div id="dependencies" class="section level2">
 <h2 class="hasAnchor">
 <a href="#dependencies" class="anchor"></a>Dependencies</h2>
+<p>For a full list of suggested packages, see <a href="https://github.com/RajLabMSSM/echolocatoR/blob/master/DESCRIPTION">DESCRIPTION</a>.</p>
 <p>* = <em>optional</em></p>
 <div id="r" class="section level3">
 <h3 class="hasAnchor">
 <a href="#r" class="anchor"></a>R</h3>
-<ul>
-<li>magrittr<br>
-</li>
-<li>R.utils<br>
-</li>
-<li>dplyr<br>
-</li>
-<li>BiocManager</li>
-<li>tidyverse</li>
-<li>knitr</li>
-<li>rmarkdown<br>
-</li>
-<li>data.table<br>
-</li>
-<li>foreign<br>
-</li>
-<li>reticulate<br>
-</li>
-<li>ggplot2<br>
-</li>
-<li>ggrepel<br>
-</li>
-<li>coloc<br>
-</li>
-<li>RColorBrewer<br>
-</li>
-<li>patchwork<br>
-</li>
-<li>htmltools<br>
-</li>
-<li>stringr<br>
-</li>
-<li>openxlsx<br>
-</li>
-<li>EnsDb.Hsapiens.v75<br>
-</li>
-<li>ensembldb<br>
-</li>
-<li>ggbio<br>
-</li>
-<li>BSgenome<br>
-</li>
-<li>Ckmeans.1d.dp<br>
-</li>
-<li>refGenome<br>
-</li>
-<li><ul>
-<li><em>For a full list of suggested packages, see <a href="https://github.com/RajLabMSSM/echolocatoR/blob/master/DESCRIPTION">DESCRIPTION</a>.</em></li>
-</ul></li>
-</ul>
+<pre><code>- magrittr  
+- R.utils  
+- dplyr  
+- BiocManager 
+- tidyverse
+- knitr
+- rmarkdown  
+- data.table  
+- foreign  
+- reticulate  
+- ggplot2    
+- ggrepel  
+- coloc    
+- RColorBrewer   
+- patchwork   
+- htmltools  
+- stringr    
+- openxlsx  
+- EnsDb.Hsapiens.v75    
+- ensembldb   
+- ggbio    
+- BSgenome  
+- Ckmeans.1d.dp  
+- refGenome   </code></pre>
 </div>
 <div id="python" class="section level3">
 <h3 class="hasAnchor">
 <a href="#python" class="anchor"></a>Python</h3>
-<ul>
-<li>python&gt;=3.6.1<br>
-</li>
-<li>pandas&gt;=0.25.0<br>
-</li>
-<li>pandas-plink<br>
-</li>
-<li>pyarrow<br>
-</li>
-<li>fastparquet<br>
-</li>
-<li>scipy<br>
-</li>
-<li>scikit-learn<br>
-</li>
-<li>tqdm<br>
-</li>
-<li>bitarray<br>
-</li>
-<li>networkx<br>
-</li>
-<li>rpy2<br>
-</li>
-<li>requests</li>
-</ul>
+<pre><code>- python&gt;=3.6.1  
+- pandas&gt;=0.25.0   
+- pandas-plink  
+- pyarrow  
+- fastparquet  
+- scipy  
+- scikit-learn  
+- tqdm  
+- bitarray  
+- networkx  
+- rpy2  
+- requests  </code></pre>
 </div>
 <div id="command-line" class="section level3">
 <h3 class="hasAnchor">
 <a href="#command-line" class="anchor"></a>Command line</h3>
-<ul>
-<li>
-<a href="http://www.htslib.org/doc/tabix.html"><strong>Tabix</strong></a>:
+<div id="tabix" class="section level4">
+<h4 class="hasAnchor">
+<a href="#tabix" class="anchor"></a><a href="http://www.htslib.org/doc/tabix.html">Tabix</a>
+</h4>
 <ul>
 <li>Rapid querying of summary stats files.<br>
 </li>
-<li>To use it, specify <code>download_method = "axel"</code> in <code><a href="reference/finemap_loci.html">finemap_loci()</a></code> .</li>
-</ul>
-</li>
 <li>
-<a href="http://samtools.github.io/bcftools/bcftools.html"><strong>bcftools</strong></a>:
-<ul>
-<li>Used here for filtering populations in vcf files.<br>
+<p>To use it, specify <code>query_by="tabix"</code> in <code><a href="reference/finemap_loci.html">finemap_loci()</a></code>.</p>
+<h4 id="bcftools"><a href="http://samtools.github.io/bcftools/bcftools.html">bcftools</a></h4>
 </li>
-</ul>
+<li>Used here for filtering populations in vcf files.
+#### <a href="https://github.com/axel-download-accelerator/axel">Axel</a> *<br>
 </li>
-<li>
-<a href="https://github.com/axel-download-accelerator/axel"><strong>Axel</strong></a>:*
-<ul>
 <li>Rapid multi-core downloading of large files (e.g. LD matrices from UK Biobank).<br>
 </li>
+<li><p>To use it, specify <code>download_method="axel"</code> in <code><a href="reference/finemap_loci.html">finemap_loci()</a></code>.</p></li>
 </ul>
-</li>
-<li>
-<a href="https://hbctraining.github.io/Intro-to-ChIPseq/lessons/05_peak_calling_macs.html"><strong>MACS2</strong></a>:*
-<ul>
-<li>Epigenomic peak calling.</li>
-</ul>
-</li>
-</ul>
+<p><br></p>
+</div>
 </div>
 </div>
 <div id="fine-mapping-tools" class="section level2">
 <h2 class="hasAnchor">
 <a href="#fine-mapping-tools" class="anchor"></a>Fine-mapping Tools</h2>
-<p>All methods require colums: <code>SNP</code>, <code>CHR</code>, <code>POS</code>.</p>
+<p><strong><em>echolocatoR</em></strong> will automatically check whether you have the necessary columns to run each tool you selected in <code><a href="reference/finemap_loci.html">finemap_loci(finemap_methods=...)</a></code>. It will remove any tools that for which there are missing necessary columns, and produces a message letting you know which columns are missing. Note that some columns (e.g. <code>MAF</code>,<code>N</code>,<code>t-stat</code>) can be automatically inferred if missing.<br>
+For easy reference, we list the necessary columns here as well.<br>
+See <code>?finemap_loci()</code> for descriptions of these columns.<br>
+All methods require the columns: <code>SNP</code>,<code>CHR</code>,<code>POS</code>,<code>Effect</code>,<code>StdErr</code></p>
+<p>Additional required columns:</p>
+<div id="abf" class="section level3">
+<h3 class="hasAnchor">
+<a href="#abf" class="anchor"></a><a href="https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html">ABF</a>
+</h3>
 <ul>
 <li>
-<a href="https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html">ABF</a>
-<ul>
-<li>Required columns: <code>proportion_cases</code>,<code>MAF</code>,<code>Effect</code>,<code>StdErr</code>
-</li>
-</ul>
+<p><code>proportion_cases</code>,<code>MAF</code></p>
+<h3 id="finemap"><a href="http://www.christianbenner.com">FINEMAP</a></h3>
 </li>
 <li>
-<a href="https://github.com/stephenslab/susieR">SuSiE</a><br>
+<p><code>A1</code>,<code>A2</code>,<code>MAF</code>,<code>N</code></p>
+<h3 id="susie"><a href="https://github.com/stephenslab/susieR">SuSiE</a></h3>
 </li>
 <li>
-<a href="http://www.christianbenner.com">FINEMAP</a><br>
+<p><code>N</code></p>
+<h3 id="polyfun"><a href="https://github.com/omerwe/polyfun">PolyFun</a></h3>
 </li>
-<li><a href="https://github.com/omerwe/polyfun">PolyFun</a></li>
-<li><a href="https://cnsgenomics.com/software/gcta/#COJO">GCTA-COJO</a></li>
 <li>
-<a href="https://github.com/gkichaev/PAINTOR_V3.0">PAINTOR</a><br>
+<p><code>A1</code>,<code>A2</code>,<code>P</code>,<code>N</code></p>
+<h3 id="paintor"><a href="https://github.com/gkichaev/PAINTOR_V3.0">PAINTOR</a></h3>
 </li>
-<li><a href="https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html">coloc</a></li>
+<li>
+<p><code>A1</code>,<code>A2</code>,<code>t-stat</code></p>
+<h3 id="gcta-cojo"><a href="https://cnsgenomics.com/software/gcta/#COJO">GCTA-COJO</a></h3>
+</li>
+<li>
+<p><code>A1</code>,<code>A2</code>,<code>Freq</code>,<code>P</code>,<code>N</code></p>
+<h3 id="coloc"><a href="https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html">coloc</a></h3>
+</li>
+<li><p><code>N</code>,<code>MAF</code></p></li>
 </ul>
 <p><br></p>
+</div>
 </div>
 <div id="datasets" class="section level2">
 <h2 class="hasAnchor">
@@ -311,16 +287,14 @@
 <li><p>Data from this publication contains results from cell type-specific (neurons, oligodendrocytes, astrocytes, microglia, &amp; peripheral myeloid cells) epigenomic assays (H3K27ac, ATAC, H3K4me3) from human brain tissue.</p></li>
 <li>
 <p>For detailed metadata, see:</p>
-<div class="sourceCode" id="cb5"><pre class="r"><span class="kw pkg">echolocatoR</span><span class="kw ns">::</span><span class="no"><a href="reference/NOTT_2019.bigwig_metadata.html">NOTT_2019.bigwig_metadata</a></span>
-<span class="co"># Or </span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"NOTT_2019.bigwig_metadata"</span>)</pre></div>
+<div class="sourceCode" id="cb7"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"NOTT_2019.bigwig_metadata"</span>)</pre></div>
 </li>
 <li>Built-in datasets:
 <ul>
 <li>Enhancer/promoter coordinates (as <em>GenomicRanges</em>)<br>
 </li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"NOTT_2019.interactome"</span>)
+<div class="sourceCode" id="cb8"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"NOTT_2019.interactome"</span>)
 <span class="co"># Examples of the data nested in "NOTT_2019.interactome" object:</span>
 <span class="no">NOTT_2019.interactome</span>$<span class="no">`Neuronal promoters`</span>
 <span class="no">NOTT_2019.interactome</span>$<span class="no">`Neuronal enhancers`</span>
@@ -332,7 +306,7 @@
 <li>PLAC-seq enhancer-promoter interactome coordinates<br>
 </li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="r"><span class="no">NOTT_2019.interactome</span>$<span class="no">H3K4me3_around_TSS_annotated_pe</span>
+<div class="sourceCode" id="cb9"><pre class="r"><span class="no">NOTT_2019.interactome</span>$<span class="no">H3K4me3_around_TSS_annotated_pe</span>
 <span class="no">NOTT_2019.interactome</span>$<span class="no">`Microglia interactome`</span>
 <span class="no">NOTT_2019.interactome</span>$<span class="no">`Neuronal interactome`</span>
 <span class="no">NOTT_2019.interactome</span>$<span class="no">`Oligo interactome`</span>
@@ -354,8 +328,8 @@
 </h4>
 <ul>
 <li>
-<p>Data from this preprint contains results from single-cell chromatin accessibility epigenomic assays in from 39 human brains.</p>
-<div class="sourceCode" id="cb8"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"CORCES_2020.bulkATACseq_peaks"</span>)
+<p>Data from this preprint contains results from bulk and single-cell chromatin accessibility epigenomic assays in 39 human brains.</p>
+<div class="sourceCode" id="cb10"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"CORCES_2020.bulkATACseq_peaks"</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"CORCES_2020.cicero_coaccessibility"</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"CORCES_2020.HiChIP_FitHiChIP_loop_calls"</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"CORCES_2020.scATACseq_celltype_peaks"</span>)
@@ -475,7 +449,7 @@
 <div id="author" class="section level2">
 <h2 class="hasAnchor">
 <a href="#author" class="anchor"></a>Author</h2>
-<p><a href="https://bschilder.github.io/BMSchilder/" target="_blank">Brian M. Schilder, Bioinformatician II</a><br><a href="https://rajlab.org" target="_blank">Raj Lab</a><br><a href="https://icahn.mssm.edu/about/departments/neuroscience" target="_blank">Department of Neuroscience, Icahn School of Medicine at Mount Sinai</a><br><img src="./inst/images/sinai.png" alt="Sinai"></p>
+<p><a href="https://bschilder.github.io/BMSchilder/" target="_blank">Brian M. Schilder, Bioinformatician II</a><br><a href="https://rajlab.org" target="_blank">Raj Lab</a><br><a href="https://icahn.mssm.edu/about/departments/neuroscience" target="_blank">Department of Neuroscience, Icahn School of Medicine at Mount Sinai</a><br><img src="./images/sinai.png" alt="Sinai"></p>
 </div>
 
   </div>

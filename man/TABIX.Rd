@@ -37,7 +37,7 @@ Only use this parameter when fine-mapping one locus at a time.}
 \code{max_POS} can clip the window size set by \code{bp_distance}.
 Only use this parameter when fine-mapping one locus at a time.}
 
-\item{verbose}{Whether \emph{echolocatoR} should be verbose or silent.}
+\item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
 }
 \value{
 data.table of locus subset summary statistics

@@ -7,7 +7,7 @@
 get_stepwise_results(cojo_dir)
 }
 \description{
-Gather and preprocess the results of the GCTA-COJO conditional stepwise procedure.
+Gather and preprocess the results of the \emph{GCTA-COJO} conditional stepwise procedure.
 }
 \seealso{
 Other COJO

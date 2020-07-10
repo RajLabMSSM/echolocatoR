@@ -28,7 +28,7 @@
 #' \itemize{
 #' \item Download pre-computed LD matrix from UK Biobank.
 #' \item Download raw vcf file from 1KG and compute LD on the fly.
-#' \item Compute LD fon the fly from a user-supplied vcf file.
+#' \item Compute LD on the fly from a user-supplied vcf file.
 #' \item Use a user-supplied pre-computed LD-matrix.
 #' }
 #'
@@ -42,7 +42,7 @@
 #' data("BST1"); data("locus_dir");
 #' locus_dir <- file.path("~/Desktop",locus_dir)
 #' # UK Biobank LD
-#' LD.load_or_create(locus_dir=locus_dir, subset_DT=BST1, locus="BST1", )
+#' LD.load_or_create(locus_dir=locus_dir, subset_DT=BST1, locus="BST1")
 #' }
 LD.load_or_create <- function(locus_dir,
                               subset_DT,
@@ -409,6 +409,7 @@ LD.calculate_LD <- function(locus_dir,
 
 
 
+
 #' Create LD matrix from plink output
 #'
 #' Depending on which parameters you give \emph{plink} when calculating LD, you get different file outputs.
@@ -422,6 +423,7 @@ LD.read_bin <- function(ld.path){
   bin.vector <- readBin(ld.path, what = "numeric", n=length(bim$SNP)^2)
   ld.matrix <- matrix(bin.vector, nrow = length(bim$SNP), dimnames = list(bim$SNP, bim$SNP))
 }
+
 
 
 

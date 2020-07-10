@@ -43,7 +43,7 @@ extract_SNP_subset(
 }
 \description{
 Use either \emph{tabix} or \emph{awk} to extract a locus subset
-from the full summary statistics file.
+ from the full summary statistics file.
 }
 \seealso{
 Other query functions: 

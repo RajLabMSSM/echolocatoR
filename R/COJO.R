@@ -1,5 +1,5 @@
 
-#' Make COJOJ path
+#' Make \emph{GCTA-COJO} path
 #' @family COJO
 #' @keywords internal
 #' @source
@@ -18,7 +18,8 @@ COJO.make_locus_subdir <- function(locus_dir){
 
 
 
-#' Run COJO conditional analysis
+
+#' Run \emph{GCTA-COJO} conditional analysis
 #'
 #' Condition on a given SNP (or list of SNPs)
 #' and calculate residual effects of all other SNPs.
@@ -67,9 +68,10 @@ get_conditional_results <- function(cojo_dir){
 
 
 
-#' Conditional stepwise procedure
+
+#' Run \emph{GCTA-COJO} conditional stepwise procedure
 #'
-#' Runs the GCTA-COJO conditional stepwise procedure to identify independent signals.
+#' Runs the \emph{GCTA-COJO} conditional stepwise procedure to identify independent signals.
 #' Should only be run on full, genome-wide summary stats at once.
 #' @family COJO
 #' \url{https://www.nature.com/articles/ng.2213}
@@ -101,9 +103,10 @@ COJO.stepwise <- function(GCTA_path=system.file("tools/gcta_1.92.1beta5_mac/bin"
 
 
 
+
 #' Gather stepwise conditional results
 #'
-#' Gather and preprocess the results of the GCTA-COJO conditional stepwise procedure.
+#' Gather and preprocess the results of the \emph{GCTA-COJO} conditional stepwise procedure.
 #' @family COJO
 #' \url{https://www.nature.com/articles/ng.2213}
 #' \url{https://www.cell.com/ajhg/fulltext/S0002-9297(10)00598-7}
@@ -119,7 +122,9 @@ get_stepwise_results <- function(cojo_dir){
 }
 
 
-#' Gather all GCTA-COJO results
+
+
+#' Gather all \emph{GCTA-COJO} results
 #' @family COJO
 #' \url{https://www.nature.com/articles/ng.2213}
 #' \url{https://www.cell.com/ajhg/fulltext/S0002-9297(10)00598-7}
@@ -151,10 +156,11 @@ process_COJO_results <- function(subset_DT,
 
 
 
-#' Run GCTA-COJO
+
+#' Run \emph{GCTA-COJO}
 #'
 #' Main function to run either the conditional stepwise procedure (genome-wide)
-#' or the conditional analysis (locus-specific) from GCTA-COJO.
+#' or the conditional analysis (locus-specific) from \emph{GCTA-COJO}.
 #' @family COJO
 #' \url{https://www.nature.com/articles/ng.2213}
 #' \url{https://www.cell.com/ajhg/fulltext/S0002-9297(10)00598-7}

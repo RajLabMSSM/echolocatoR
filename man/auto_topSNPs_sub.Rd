@@ -8,8 +8,8 @@ auto_topSNPs_sub(top_SNPs, query, locus)
 }
 \description{
 If no \code{top_SNPs} dataframe is supplied,
-this function will sort by p-value and then effect size,
-and use the SNP in the first row.
+ this function will sort by p-value and then effect size,
+ and use the SNP in the first row.
 }
 \seealso{
 Other standardization functions: 

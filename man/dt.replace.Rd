@@ -10,7 +10,7 @@ dt.replace(DT, target, replacement)
 data.frame
 }
 \description{
-Annoyingly, there is no native function to do simple find-and-replace in the \code{DT} library.
+Annoyingly, there is no native function to do simple find-and-replace in the `DT` library.
 }
 \seealso{
 Other general: 

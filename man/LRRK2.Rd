@@ -3,14 +3,14 @@
 \docType{data}
 \name{LRRK2}
 \alias{LRRK2}
-\title{\emph{echolocatoR} output example (LRRK2 locus)}
+\title{\pkg{echolocatoR} output example (LRRK2 locus)}
 \format{
 data.table
 \describe{
-\item{SNP}{SNP RSID}
-\item{CHR}{Chromosome}
-\item{POS}{Genomic position (in basepairs)}
-\item{...}{Optional: extra columns}
+  \item{SNP}{SNP RSID}
+  \item{CHR}{Chromosome}
+  \item{POS}{Genomic position (in basepairs)}
+  \item{...}{Optional: extra columns}
 }
 }
 \source{
@@ -21,7 +21,7 @@ LRRK2
 }
 \description{
 An example results file after running
-\code{\link{finemap_loci}} on the \emph{LRRK2} locus.
+\code{\link[=finemap_loci]{finemap_loci()}} on the \emph{LRRK2} locus.
 }
 \details{
 Data originally comes from the Parkinson's disease GWAS

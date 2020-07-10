@@ -11,7 +11,7 @@ LD.filter_vcf(subset_vcf, popDat, superpopulation, remove_tmp = T, verbose = T)
 
 \item{popDat}{The metadata file listing the superpopulation to which each sample belongs.}
 
-\item{verbose}{Whether \emph{echolocatoR} should be verbose or silent.}
+\item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
 }
 \description{
 Uses \emph{bcftools} to filter a vcf by min/max genomic coordinates (in basepairs).

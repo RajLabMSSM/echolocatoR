@@ -22,7 +22,7 @@ merge_finemapping_results(
 }
 \arguments{
 \item{dataset}{Path to the folder you want to recursively search for results files within
-(e.g. \url{"Data/GWAS/Nalls23andMe_2019"}).
+ (e.g. \url{"Data/GWAS/Nalls23andMe_2019"}).
 Set this to a path that includes multiple subfolders if you want to gather results
 from multiple studies at once
 (e.g. \url{"Data/GWAS"}).}

@@ -12,7 +12,7 @@ CORCES_2020.get_HiChIP_FitHiChIP_overlap(finemap_dat, verbose = T)
 \description{
 Anchors are the genomic regions that have evidence of being
 functionally connected to one another (coaccessible),
-e.g. enhancer-promoter interactions.
+ e.g. enhancer-promoter interactions.
 }
 \seealso{
 Other CORCES_2020: 

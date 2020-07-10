@@ -101,16 +101,16 @@
 
 
 
-#' Run \emph{echolocatoR} pipeline on a single locus
+#' Run \pkg{echolocatoR} pipeline on a single locus
 #'
 #' Unlike \code{finemap_loci}, you don't need to provide a \code{top_SNPs} data.frame.
 #' Instead, just manually provide the coordinates of the locus you want to fine-map.
 #'
-#' The primary functions of \emph{echolocatoR} that expedite fine-mapping
-#'  by wrapping many other \emph{echolocatoR} functions into one.
+#' The primary functions of \pkg{echolocatoR} that expedite fine-mapping
+#'  by wrapping many other \pkg{echolocatoR} functions into one.
 #'  Encompasses steps including:
 #'  \describe{
-#'  \item{Subset & standardize}{Extract subsets of the full summmary stats GWAS or QTL file and reformat them to be compatible with \emph{echolocatoR}'s various functions }
+#'  \item{Subset & standardize}{Extract subsets of the full summmary stats GWAS or QTL file and reformat them to be compatible with \pkg{echolocatoR}'s various functions }
 #'  \item{Calculate linkage disequilibrium}{Download and prepare the necessary LD matrix.}
 #'  \item{Fine-map}{Run various fine-mapping tools and merge the results into a single multi-finemap data.frame.}
 #'  \item{Plot}{Summarise the results in a multi-track plot for each locus.}
@@ -224,15 +224,15 @@
 #' @section overwrite existing files:
 #'
 #' @param force_new_subset By default, if a subset of the full summary stats file for a given locus is already present,
-#' then \emph{echolocatoR} will just use the preexisting file.
+#' then \pkg{echolocatoR} will just use the pre-existing file.
 #' Set \code{force_new_subset=T} to override this and extract a new subset.
 #' Subsets are saved in the following path structure:
 #' \emph{Data/<dataset_type>/<dataset_name>/<locus>/Multi-finemap/<locus>_<dataset_name>_Multi-finemap.tsv.gz}
 #' @param force_new_LD  By default, if an LD matrix file for a given locus is already present,
-#' then \emph{echolocatoR} will just use the preexisting file.
+#' then \pkg{echolocatoR} will just use the preexisting file.
 #' Set \code{force_new_LD=T} to override this and extract a new subset.
 #' @param force_new_finemap By default, if an fine-mapping results file for a given locus is already present,
-#' then \emph{echolocatoR} will just use the preexisting file.
+#' then \pkg{echolocatoR} will just use the preexisting file.
 #' Set \code{force_new_finemap=T} to override this and re-run fine-mapping.
 #'
 #' @section fine-mapping parameters:
@@ -277,8 +277,6 @@
 #' @param remove_correlates If \code{remove_correlates} is set to a value between 0-1,
 #' removes any SNPs that are in LD with any of the \code{remove_variants} above the threshold provided by \code{remove_correlates}.
 #'
-#' @section LD parameters:
-#'
 #'  @param LD_reference Which linkage disequilibrium reference panel do you want to use.
 #'  Options include:
 #'  \describe{
@@ -297,11 +295,10 @@
 #'  \item{"SAS"}{South Asian}
 #'  }
 #' @param download_reference When acquiring LD matrixes,
-#'  the default is to delete the full vcf or npz files after \emph{echolocator} has extracted the necssary subset.
+#'  the default is to delete the full vcf or npz files after \pkg{echolocatoR} has extracted the necssary subset.
 #'  However, if you wish to keep these full files (which can be quite large) set \code{download_reference=T}.
 #' @param plot_LD Whether to plot a subset of the LD matix.
 #'
-#' @section plotting parameters:
 #'
 #' @param plot.types Which kinds of plots to include.
 #' Options:
@@ -312,17 +309,16 @@
 #' @param plot.window Zoom into the center of the locus when plotting (without editing the fine-mapping results file).
 #' @param plot.Nott_binwidth When including Nott et al. (2019) epigenomic data in the track plots,
 #' adjust the bin width of the histograms.
-#' @param plot.Nott_bigwig_dir Instead of pulling Nott et al. (2019) epigenomic data from the UCSC Genome Browsers, use a set of local bigwig files.
+#' @param plot.Nott_bigwig_dir Instead of pulling Nott et al. (2019) epigenomic data
+#' from the \emph{UCSC Genome Browser}, use a set of local bigwig files.
 #' @param plot.Roadmap Find and plot annotations from Roadmap.
 #' @param plot.Roadmap_query Only plot annotations from Roadmap whose metadata contains a string or any items from  a list of strings
-#' (e.g. "brain" or c("brain","liver","monocytes"))
+#' (e.g. \code{"brain"} or \code{c("brain","liver","monocytes")}).
 #'
-#' @section general parameters:
-#'
-#' @param verbose Whether \emph{echolocatoR} should be verbose or silent.
+#' @param verbose Whether \pkg{echolocatoR} should be verbose or silent.
 #' @param remove_tmps Whether to remove any temporary files (e.g. FINEMAP output files) after the pipeline is done running.
 #' @param server
-#' Whether \emph{echolocatoR} is being run on a computing cluster/server or on a local machine.
+#' Whether \pkg{echolocatoR} is being run on a computing cluster/server or on a local machine.
 #' @param conda_env The name of a conda environment to use.
 #'
 #' @family MAIN
@@ -582,7 +578,7 @@ finemap_pipeline <- function(locus,
 
 #' Fine-map multiple loci
 #'
-#' \emph{echolocatoR} will automatically fine-map each locus.
+#' \pkg{echolocatoR} will automatically fine-map each locus.
 #' Uses the \code{top_SNPs} data.frame to define locus coordinates.
 #'
 #' @family MAIN

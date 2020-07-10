@@ -6,7 +6,7 @@ Authors@R: as.person(c(
     "Brian Schilder <brian_schilder@alumni.brown.edu> [aut, cre]",
     "Jack Humphrey [ctb]"
   ))
-Description: Automated statistical and functional fine-mapping pipeline with extensive API access to datasets.  
+Description: Automated statistical and functional fine-mapping with extensive access to genome-wide datasets.  
 License: MIT + file LICENSE
 URL: https://github.com/RajLabMSSM/echolocatoR
 BugReports: https://github.com/RajLabMSSM/echolocatoR/issues
@@ -75,4 +75,3 @@ Suggests:
     SummarizedExperiment
 RoxygenNote: 7.1.0
 VignetteBuilder: knitr
-Roxygen: list(markdown = TRUE)

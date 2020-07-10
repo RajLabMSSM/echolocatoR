@@ -2,7 +2,7 @@
 % Please edit documentation in R/MAIN.R
 \name{finemap_pipeline}
 \alias{finemap_pipeline}
-\title{Run \emph{echolocatoR} pipeline on a single locus}
+\title{Run \pkg{echolocatoR} pipeline on a single locus}
 \usage{
 finemap_pipeline(
   locus,
@@ -98,17 +98,17 @@ At minimum, \code{top_SNPs} should include the following columns:
 }}
 
 \item{force_new_subset}{By default, if a subset of the full summary stats file for a given locus is already present,
-then \emph{echolocatoR} will just use the preexisting file.
+then \pkg{echolocatoR} will just use the pre-existing file.
 Set \code{force_new_subset=T} to override this and extract a new subset.
 Subsets are saved in the following path structure:
 \emph{Data/<dataset_type>/<dataset_name>/<locus>/Multi-finemap/<locus>_<dataset_name>_Multi-finemap.tsv.gz}}
 
 \item{force_new_LD}{By default, if an LD matrix file for a given locus is already present,
-then \emph{echolocatoR} will just use the preexisting file.
+then \pkg{echolocatoR} will just use the preexisting file.
 Set \code{force_new_LD=T} to override this and extract a new subset.}
 
 \item{force_new_finemap}{By default, if an fine-mapping results file for a given locus is already present,
-then \emph{echolocatoR} will just use the preexisting file.
+then \pkg{echolocatoR} will just use the preexisting file.
 Set \code{force_new_finemap=T} to override this and re-run fine-mapping.}
 
 \item{finemap_methods}{Which fine-mapping methods you want to use.}
@@ -161,29 +161,29 @@ Can be inferred from \strong{freq_col} if missing from the dataset.
 (\emph{default: ="MAF"})}
 
 \item{A1_col}{Name of the effect/risk allele column in the full summary stats.
-\strong{\emph{IMPORTANT}}: Make sure this actually the case for your full summary stats file.
+ \strong{\emph{IMPORTANT}}: Make sure this actually the case for your full summary stats file.
 Unfortunately, different studies report different kinds of allele information in a non-standardized way.
 Meaning that A1/A2 can refer to any number of things:
-\describe{
-\item{effect/other alleles}{in the case of diseases}
-\item{ref/alt alleles}{where ref is the reference genome being used}
-\item{major/minor alleles}{This dichotomy holds true for bi-allelic SNPs but not necessary multi-allelic SNPs}
-}
-This makes comparing summary stats across GWAS/QTL datasets very confusing for several reasons:
-\describe{
-\item{Multi-allelic SNPs}{SNPs can have more than just 2 possible alleles (multi-allelic SNPs). Even if you compare the same SNP between two studies, you may accidentally be comparing totally different alleles.}
-\item{Valence}{The valence (+/-) of per-SNP GWAS effect sizes/beta can be relative to different allele types between studies.
-For example, let's say in one GWAS study your effect size for SNP A is 1.5 relative to the major allele in one study,
-and the minor allele happens to be the one found in the reference genome.
-You then try to compare that effect size to that of the same SNP in another GWAS.
-But, the valence of the effect sizes in the 2nd GWAS study are all relative to the reference genome (instead of the minor allele),
-giving the same SNP a value of -1.2. If you took the effect sizes at face value you'd say the signals are in opposite directions.
-But once you take into account how the valences were determined in each study you realize that they're actually both positive relative to the major allele.}
-}
+ \describe{
+ \item{effect/other alleles}{in the case of diseases}
+ \item{ref/alt alleles}{where ref is the reference genome being used}
+ \item{major/minor alleles}{This dichotomy holds true for bi-allelic SNPs but not necessary multi-allelic SNPs}
+ }
+ This makes comparing summary stats across GWAS/QTL datasets very confusing for several reasons:
+ \describe{
+ \item{Multi-allelic SNPs}{SNPs can have more than just 2 possible alleles (multi-allelic SNPs). Even if you compare the same SNP between two studies, you may accidentally be comparing totally different alleles.}
+ \item{Valence}{The valence (+/-) of per-SNP GWAS effect sizes/beta can be relative to different allele types between studies.
+ For example, let's say in one GWAS study your effect size for SNP A is 1.5 relative to the major allele in one study,
+  and the minor allele happens to be the one found in the reference genome.
+  You then try to compare that effect size to that of the same SNP in another GWAS.
+  But, the valence of the effect sizes in the 2nd GWAS study are all relative to the reference genome (instead of the minor allele),
+  giving the same SNP a value of -1.2. If you took the effect sizes at face value you'd say the signals are in opposite directions.
+  But once you take into account how the valences were determined in each study you realize that they're actually both positive relative to the major allele.}
+ }
 This process of reversing per-SNP valences based on aligning the alleles is known as allele flipping.
 This is important when comparing individual SNPs, but can also have an impact on colocalization results.}
 
-\item{gene_col}{For QTL studies, the name of the \link{e}gene column in the full summary stats file (\emph{default: "gene"}).
+\item{gene_col}{For QTL studies, the name of the [e]gene column in the full summary stats file (\emph{default: "gene"}).
 This column will be used for filtering summary stats if supplying a named list of gene:Locus pairs to \code{loci}.}
 
 \item{N_cases_col}{Name of the column in the full summary stats that has the number of case subjects in the study.
@@ -193,8 +193,8 @@ This column is not necesssary if \code{N_cases} parameter is provided.
 (\emph{default: ="N_cases"})}
 
 \item{N_controls_col}{Name of the column in the full summary stats that has the number of control subjects in the study.
-This can either be per SNP sample sizes, or one number repeated across all rows.
-This column is not necesssary if \code{N_controls} parameter is provided.
+ This can either be per SNP sample sizes, or one number repeated across all rows.
+ This column is not necesssary if \code{N_controls} parameter is provided.
 (\emph{default: ="N_controls"})}
 
 \item{N_cases}{The number of case subjects in the study.
@@ -211,7 +211,7 @@ If none is given, and \strong{N_cases} and \strong{N_controls} columns are prese
 then sample_size is inferred to be:  \code{max(N_cases) + max(N_controls)}.}
 
 \item{download_reference}{When acquiring LD matrixes,
-the default is to delete the full vcf or npz files after \emph{echolocator} has extracted the necssary subset.
+the default is to delete the full vcf or npz files after \pkg{echolocatoR} has extracted the necssary subset.
 However, if you wish to keep these full files (which can be quite large) set \code{download_reference=T}.}
 
 \item{min_POS}{Manually set the minimum genomic position for your locus subset.
@@ -232,7 +232,7 @@ Set \code{trim_gene_limits=F} to not limit by gene coordinates (\emph{default}).
 
 \item{max_snps}{The maximum number of SNPs to include in the locus.
 If the current window size yields > \code{max_snps},
-then the outer edges of the of the locus are trimmed until the number of SNPs ≤ \code{max_snps}.}
+ then the outer edges of the of the locus are trimmed until the number of SNPs ≤ \code{max_snps}.}
 
 \item{file_sep}{The separator in the full summary stats file.
 This parameter is only necessary if \code{query_by!="tabix"}.}
@@ -256,7 +256,25 @@ Methods include:
 \item{remove_variants}{A list of variants to remove from the locus subset file.}
 
 \item{remove_correlates}{If \code{remove_correlates} is set to a value between 0-1,
-removes any SNPs that are in LD with any of the \code{remove_variants} above the threshold provided by \code{remove_correlates}.}
+removes any SNPs that are in LD with any of the \code{remove_variants} above the threshold provided by \code{remove_correlates}.
+
+ @param LD_reference Which linkage disequilibrium reference panel do you want to use.
+ Options include:
+ \describe{
+ \item{"UKB"}{A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See \href{https://www.biorxiv.org/content/10.1101/807792v2}{Wiessbrod et al. (2019)} for more details.}
+ \item{"1KGphase1"}{Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.}
+ \item{"1KGphase3"}{Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.}
+ }
+ @param superpopulation Subset your LD reference panel by superopulation.
+ Setting the superpopulation is not currently possible when \code{LD_reference="UKB"}.
+ \href{https://www.internationalgenome.org/faq/which-populations-are-part-your-study/}{1KGphase1 options} include:
+ \describe{
+ \item{"AFR"}{African [descent]}
+ \item{"AMR"}{Ad-mixed American}
+ \item{"EAS"}{East Asian}
+ \item{"EUR"}{European}
+ \item{"SAS"}{South Asian}
+ }}
 
 \item{probe_path}{The location of the file containing translations between probe IDs and gene symbols.
 Only used for certain eQTL datasets.}
@@ -276,26 +294,27 @@ Options:
 
 \item{PAINTOR_QTL_datasets}{A list of QTL datasets to be used when conducting joint functional fine-mapping with \emph{PAINTOR}.}
 
-\item{server}{Whether \emph{echolocatoR} is being run on a computing cluster/server or on a local machine.}
+\item{server}{Whether \pkg{echolocatoR} is being run on a computing cluster/server or on a local machine.}
 
 \item{PP_threshold}{The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
-For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\\% Credible Set SNPs.}
+For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.}
 
 \item{plot.window}{Zoom into the center of the locus when plotting (without editing the fine-mapping results file).}
 
 \item{plot.Nott_binwidth}{When including Nott et al. (2019) epigenomic data in the track plots,
 adjust the bin width of the histograms.}
 
-\item{plot.Nott_bigwig_dir}{Instead of pulling Nott et al. (2019) epigenomic data from the UCSC Genome Browsers, use a set of local bigwig files.}
+\item{plot.Nott_bigwig_dir}{Instead of pulling Nott et al. (2019) epigenomic data
+from the \emph{UCSC Genome Browser}, use a set of local bigwig files.}
 
 \item{plot.Roadmap}{Find and plot annotations from Roadmap.}
 
 \item{plot.Roadmap_query}{Only plot annotations from Roadmap whose metadata contains a string or any items from  a list of strings
-(e.g. "brain" or c("brain","liver","monocytes"))}
+(e.g. \code{"brain"} or \code{c("brain","liver","monocytes")}).}
 
 \item{conda_env}{The name of a conda environment to use.}
 
-\item{verbose}{Whether \emph{echolocatoR} should be verbose or silent.}
+\item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
 
 \item{loci}{Character list of loci in \strong{Locus} col of \code{top_SNPs}.}
 }
@@ -304,15 +323,15 @@ Unlike \code{finemap_loci}, you don't need to provide a \code{top_SNPs} data.fra
 Instead, just manually provide the coordinates of the locus you want to fine-map.
 }
 \details{
-The primary functions of \emph{echolocatoR} that expedite fine-mapping
-by wrapping many other \emph{echolocatoR} functions into one.
-Encompasses steps including:
-\describe{
-\item{Subset & standardize}{Extract subsets of the full summmary stats GWAS or QTL file and reformat them to be compatible with \emph{echolocatoR}'s various functions }
-\item{Calculate linkage disequilibrium}{Download and prepare the necessary LD matrix.}
-\item{Fine-map}{Run various fine-mapping tools and merge the results into a single multi-finemap data.frame.}
-\item{Plot}{Summarise the results in a multi-track plot for each locus.}
-}
+The primary functions of \pkg{echolocatoR} that expedite fine-mapping
+ by wrapping many other \pkg{echolocatoR} functions into one.
+ Encompasses steps including:
+ \describe{
+ \item{Subset & standardize}{Extract subsets of the full summmary stats GWAS or QTL file and reformat them to be compatible with \pkg{echolocatoR}'s various functions }
+ \item{Calculate linkage disequilibrium}{Download and prepare the necessary LD matrix.}
+ \item{Fine-map}{Run various fine-mapping tools and merge the results into a single multi-finemap data.frame.}
+ \item{Plot}{Summarise the results in a multi-track plot for each locus.}
+ }
 }
 \section{input file parameters}{
 
@@ -331,36 +350,6 @@ Encompasses steps including:
 }
 
 \section{SNP filtering parameters}{
-
-}
-
-\section{LD parameters}{
-
-
-@param LD_reference Which linkage disequilibrium reference panel do you want to use.
-Options include:
-\describe{
-\item{"UKB"}{A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See \href{https://www.biorxiv.org/content/10.1101/807792v2}{Wiessbrod et al. (2019)} for more details.}
-\item{"1KGphase1"}{Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.}
-\item{"1KGphase3"}{Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.}
-}
-@param superpopulation Subset your LD reference panel by superopulation.
-Setting the superpopulation is not currently possible when \code{LD_reference="UKB"}.
-\href{https://www.internationalgenome.org/faq/which-populations-are-part-your-study/}{1KGphase1 options} include:
-\describe{
-\item{"AFR"}{African \link{descent}}
-\item{"AMR"}{Ad-mixed American}
-\item{"EAS"}{East Asian}
-\item{"EUR"}{European}
-\item{"SAS"}{South Asian}
-}
-}
-
-\section{plotting parameters}{
-
-}
-
-\section{general parameters}{
 
 }
 

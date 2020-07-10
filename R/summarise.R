@@ -510,8 +510,8 @@ SUMMARISE.get_SNPgroup_counts <- function(merged_DT){
 #' Loci ordered by UCS size (smallest to largest).
 #' @family summarise
 #' @examples
-#' gg_CS <- SUMARISE.CS_counts_plot(merged_DT=merged_DT)
-SUMARISE.CS_counts_plot <- function(merged_DT,
+#' gg_CS <- SUMMARISE.CS_counts_plot(merged_DT=merged_DT)
+SUMMARISE.CS_counts_plot <- function(merged_DT,
                                     ylabel="Locus",
                                     show_plot=T){
   # Group and melt CS sizes
@@ -587,9 +587,9 @@ ggplot(data=melt.dat, aes(y=Locus, x=`Credible Set size`, fill=Method)) +
 #' @examples
 #' data("merged_DT");
 #'
-#' # Consensus SNPs
+#' ... Consensus SNPs ...
 #' gg_peaks <- NOTT_2019.peak_overlap_plot(merged_DT=merged_DT, snp_filter="Consensus_SNP==T", fill_title="Consensus SNPs in epigenomic peaks")
-#' # UCS SNPs
+#' ... UCS SNPs ...
 #' gg_peaks <- NOTT_2019.peak_overlap_plot(merged_DT=merged_DT, snp_filter="Support>0", fill_title="UCS SNPs in epigenomic peaks")
 SUMMARISE.peak_overlap_plot <- function(merged_DT,
                                         snp_filter="Consensus_SNP==T",

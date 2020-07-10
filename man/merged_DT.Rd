@@ -7,10 +7,10 @@
 \format{
 data.table
 \describe{
-\item{SNP}{SNP RSID}
-\item{CHR}{Chromosome}
-\item{POS}{Genomic position (in basepairs)}
-\item{...}{Optional: extra columns}
+  \item{SNP}{SNP RSID}
+  \item{CHR}{Chromosome}
+  \item{POS}{Genomic position (in basepairs)}
+  \item{...}{Optional: extra columns}
 }
 }
 \source{
@@ -20,8 +20,8 @@ data.table
 merged_DT
 }
 \description{
-An example results file after running \code{\link{finemap_loci}}
-on all Parkinson's disease (PD)-associated loci.
+An example results file after running \code{\link[=finemap_loci]{finemap_loci()}}
+ on all Parkinson's disease (PD)-associated loci.
 }
 \details{
 Data originally comes from the PD GWAS

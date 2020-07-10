@@ -1,11 +1,9 @@
 
 
-
-
-#' \emph{echolocatoR} output example (BST1 locus)
+#' \pkg{echolocatoR} output example (BST1 locus)
 #'
 #' An example results file after running
-#' \code{\link{finemap_loci}} on the \emph{BST1} locus.
+#' \code{\link[=finemap_loci]{finemap_loci()}} on the \emph{BST1} locus.
 #'
 #' Data originally comes from the Parkinson's disease GWAS
 #' by \href{https://www.biorxiv.org/content/10.1101/388165v3}{Nalls et al. (bioRxiv)}.
@@ -31,10 +29,10 @@
 
 
 
-#' \emph{echolocatoR} output example (LRRK2 locus)
+#' \pkg{echolocatoR} output example (LRRK2 locus)
 #'
 #' An example results file after running
-#' \code{\link{finemap_loci}} on the \emph{LRRK2} locus.
+#' \code{\link[=finemap_loci]{finemap_loci()}} on the \emph{LRRK2} locus.
 #'
 #' Data originally comes from the Parkinson's disease GWAS
 #' by \href{https://www.biorxiv.org/content/10.1101/388165v3}{Nalls et al. (bioRxiv)}.
@@ -63,7 +61,7 @@
 #' \emph{echolocatoR} output example (MEX3C locus)
 #'
 #' An example results file after running
-#' \code{\link{finemap_loci}} on the \emph{MEX3C} locus.
+#' \code{\link[=finemap_loci]{finemap_loci()}} on the \emph{MEX3C} locus.
 #'
 #' Data originally comes from the Parkinson's disease GWAS
 #' by \href{https://www.biorxiv.org/content/10.1101/388165v3}{Nalls et al. (bioRxiv)}.
@@ -146,7 +144,7 @@
 #' LD with the lead SNP (BST1 locus)
 #'
 #' Precomputed LD within the \emph{BST1} locus
-#'  (defined in \code{\link{finemap_DT}}.
+#'  (defined in \code{\link[=BST1]{BST1}}.
 #' LD derived white British subpopulation in the UK Biobank.
 #' Only includes a subset of all the SNPs for storage purposes
 #' (including the lead GWAS/QTL SNP).
@@ -184,7 +182,7 @@
 
 #' \emph{echolocatoR} output example (all loci)
 #'
-#' An example results file after running \code{\link{finemap_loci}}
+#' An example results file after running \code{\link[=finemap_loci]{finemap_loci()}}
 #'  on all Parkinson's disease (PD)-associated loci.
 #'
 #' Data originally comes from the PD GWAS

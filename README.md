@@ -1,6 +1,13 @@
 <center><h1> )    )   )  ) ))) 🦇 echolocatoR  🦇 ((( (  (   (    ( </h1></center>  
 
-__*echolocatoR*__ is an R package for automating statistical and functional fine-mapping with extensive API access to datasets.  
+### __Automated statistical and functional fine-mapping with extensive access to genome-wide datasets.  
+
+F
+ne-mapping methods are a powerful means of identifying causal variants underlying a given phenotype, but are underutilized due to the technical challenges of implementation. __*echolocatoR*__ is an R package that automates end-to-end genomics fine-mapping, annotation, and plotting in order to identify the most probable causal variants associated with a given phenotype.
+
+It requires minimal input from users (a GWAS or QTL summary statistics file), and includes a suite of statistical and functional fine-mapping tools. It also includes extensive access to datasets (linkage disequilibrium panels, epigenomic and genome-wide annotations, QTL).
+
+The elimination of data gathering and preprocessing steps enables rapid fine-mapping of many loci in any phenotype, complete with locus-specific publication-ready figure generation. All results are merged into a single per-SNP summary file for additional downstream analysis and results sharing. Therefore __*echolocatoR*__ drastically reduces the barriers to identifying causal variants by making the entire fine-mapping pipeline rapid, robust and scalable.  
 
 
 ## Documentation
@@ -12,9 +19,15 @@ __*echolocatoR*__ is an R package for automating statistical and functional fine
 ### [Plotting vignette](https://rajlabmssm.github.io/echolocatoR/articles/plotting_vignette.html)
 
 
+<br>
+
+
 ## Workflow  
 
 ![echoFlow](./images/PD_Finemapping_Flowchart_plus.png)  
+
+
+<br>
 
 
 ## Quick installation  
@@ -57,10 +70,17 @@ devtools::install_github("RajLabMSSM/echolocatoR")
 To make sure __*echolocatoR*__ uses the packages in this env (esp. if using from RStudio), you can then supply the env name to the `finemap_loci()` function using `conda_env="echoR"`.
 
 
+<br>
+
+
 ## Dependencies   
+
+For a full list of suggested packages, see [DESCRIPTION](https://github.com/RajLabMSSM/echolocatoR/blob/master/DESCRIPTION).  
+
 \* = _optional_  
 
 ### R  
+```
 - magrittr  
 - R.utils  
 - dplyr  
@@ -84,10 +104,11 @@ To make sure __*echolocatoR*__ uses the packages in this env (esp. if using from
 - ggbio    
 - BSgenome  
 - Ckmeans.1d.dp  
-- refGenome  
-- * _For a full list of suggested packages, see [DESCRIPTION](https://github.com/RajLabMSSM/echolocatoR/blob/master/DESCRIPTION)._  
+- refGenome   
+```
 
 ### Python  
+```
 - python>=3.6.1  
 - pandas>=0.25.0   
 - pandas-plink  
@@ -100,32 +121,49 @@ To make sure __*echolocatoR*__ uses the packages in this env (esp. if using from
 - networkx  
 - rpy2  
 - requests  
+```
 
 ### Command line   
 
-- [**Tabix**](http://www.htslib.org/doc/tabix.html):  
-  + Rapid querying of summary stats files.  
-  + To use it, specify `download_method = "axel"` in `finemap_loci()` . 
-- [**bcftools**](http://samtools.github.io/bcftools/bcftools.html):  
+#### [Tabix](http://www.htslib.org/doc/tabix.html)  
+  + Rapid querying of summary stats files.   
+  + To use it, specify `query_by="tabix"` in `finemap_loci()`.
+#  ### [bcftools](http://samtools.github.io/bcftools/bcftools.html)  
   + Used here for filtering populations in vcf files.  
-- [**Axel**](https://github.com/axel-download-accelerator/axel):*  
+#### [Axel](https://github.com/axel-download-accelerator/axel)  *    
   + Rapid multi-core downloading of large files (e.g. LD matrices from UK Biobank).  
-- [**MACS2**](https://hbctraining.github.io/Intro-to-ChIPseq/lessons/05_peak_calling_macs.html):*  
-  + Epigenomic peak calling.  
+  + To use it, specify `download_method="axel"` in `finemap_loci()`.  
  
+ 
+<br>
+
 
 ## Fine-mapping Tools  
 
-All methods require colums: `SNP`, `CHR`, `POS`.  
+__*echolocatoR*__ will automatically check whether you have the necessary columns 
+to run each tool you selected in `finemap_loci(finemap_methods=...)`. 
+It will remove any tools that for which there are missing necessary columns, 
+and produces a message letting you know which columns are missing.
+Note that some columns (e.g. `MAF`,`N`,`t-stat`) can be automatically inferred if missing.  
+For easy reference, we list the necessary columns here as well.   
+See `?finemap_loci()` for descriptions of these columns.  
+All methods require the columns: `SNP`,`CHR`,`POS`,`Effect`,`StdErr`    
 
-- [ABF](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)  
-  + Required columns: `proportion_cases`,`MAF`,`Effect`,`StdErr`
-- [SuSiE](https://github.com/stephenslab/susieR)  
-- [FINEMAP](http://www.christianbenner.com)  
-- [PolyFun](https://github.com/omerwe/polyfun)
-- [GCTA-COJO](https://cnsgenomics.com/software/gcta/#COJO)
-- [PAINTOR](https://github.com/gkichaev/PAINTOR_V3.0)  
-- [coloc](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)
+Additional required columns: 
+### [ABF](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)  
+  + `proportion_cases`,`MAF` 
+### [FINEMAP](http://www.christianbenner.com)  
+  + `A1`,`A2`,`MAF`,`N`  
+### [SuSiE](https://github.com/stephenslab/susieR)  
+  + `N`  
+### [PolyFun](https://github.com/omerwe/polyfun)
+  + `A1`,`A2`,`P`,`N`   
+### [PAINTOR](https://github.com/gkichaev/PAINTOR_V3.0)  
+  + `A1`,`A2`,`t-stat`  
+### [GCTA-COJO](https://cnsgenomics.com/software/gcta/#COJO)  
+  + `A1`,`A2`,`Freq`,`P`,`N`  
+### [coloc](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)  
+  + `N`,`MAF`  
 
 
 <br>
@@ -146,8 +184,6 @@ For more detailed information about each dataset, use `?`:
 
 - For detailed metadata, see:
   ```R
-  echolocatoR::NOTT_2019.bigwig_metadata
-  # Or 
   data("NOTT_2019.bigwig_metadata")
   ```  
 - Built-in datasets:  
@@ -176,7 +212,7 @@ For more detailed information about each dataset, use `?`:
   + Aggregate epigenomic *score* for each cell type - assay combination     
   
 #### [Corces et al. (2020)](https://www.biorxiv.org/content/10.1101/2020.01.06.896159v1)  
-- Data from this preprint contains results from single-cell chromatin accessibility epigenomic assays in from 39 human brains. 
+- Data from this preprint contains results from bulk and single-cell chromatin accessibility epigenomic assays in 39 human brains. 
   ```R
   data("CORCES_2020.bulkATACseq_peaks")
   data("CORCES_2020.cicero_coaccessibility")
@@ -187,7 +223,6 @@ For more detailed information about each dataset, use `?`:
   
 #### [XGR](http://xgr.r-forge.r-project.org)    
 - API access to a diverse library of cell type/line-specific epigenomic (e.g. ENCODE) and other genome-wide annotations.    
-
 
 #### [Roadmap](http://www.roadmapepigenomics.org)  
 - API access to cell type-specific epigenomic data.  
@@ -241,4 +276,4 @@ For more detailed information about each dataset, use `?`:
 <a href="https://bschilder.github.io/BMSchilder/" target="_blank">Brian M. Schilder, Bioinformatician II</a>  
 <a href="https://rajlab.org" target="_blank">Raj Lab</a>  
 <a href="https://icahn.mssm.edu/about/departments/neuroscience" target="_blank">Department of Neuroscience, Icahn School of Medicine at Mount Sinai</a>  
-![Sinai](./inst/images/sinai.png)
+![Sinai](./images/sinai.png)

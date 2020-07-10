@@ -40,6 +40,8 @@
 
 
 <meta property="og:title" content="Fine-map multiple loci — finemap_loci" />
+<meta property="og:description" content="echolocatoR will automatically fine-map each locus.
+Uses the top_SNPs data.frame to define locus coordinates." />
 
 
 
@@ -131,6 +133,8 @@
     </div>
 
     <div class="ref-description">
+    <p><span class="pkg">echolocatoR</span> will automatically fine-map each locus.
+Uses the <code>top_SNPs</code> data.frame to define locus coordinates.</p>
     </div>
 
     <pre class="usage"><span class='fu'>finemap_loci</span>(
@@ -230,7 +234,7 @@ This will also be used when creating the subdirectory where your results will be
     <tr>
       <th>force_new_subset</th>
       <td><p>By default, if a subset of the full summary stats file for a given locus is already present,
-then <em>echolocatoR</em> will just use the preexisting file.
+then <span class="pkg">echolocatoR</span> will just use the pre-existing file.
 Set <code>force_new_subset=T</code> to override this and extract a new subset.
 Subsets are saved in the following path structure:
 <em>Data/&lt;dataset_type&gt;/&lt;dataset_name&gt;/&lt;locus&gt;/Multi-finemap/&lt;locus&gt;_&lt;dataset_name&gt;_Multi-finemap.tsv.gz</em></p></td>
@@ -238,13 +242,13 @@ Subsets are saved in the following path structure:
     <tr>
       <th>force_new_LD</th>
       <td><p>By default, if an LD matrix file for a given locus is already present,
-then <em>echolocatoR</em> will just use the preexisting file.
+then <span class="pkg">echolocatoR</span> will just use the preexisting file.
 Set <code>force_new_LD=T</code> to override this and extract a new subset.</p></td>
     </tr>
     <tr>
       <th>force_new_finemap</th>
       <td><p>By default, if an fine-mapping results file for a given locus is already present,
-then <em>echolocatoR</em> will just use the preexisting file.
+then <span class="pkg">echolocatoR</span> will just use the preexisting file.
 Set <code>force_new_finemap=T</code> to override this and re-run fine-mapping.</p></td>
     </tr>
     <tr>
@@ -341,29 +345,29 @@ This column is not necessary unless <code>MAF_col="calculate"</code> or the MAF 
     <tr>
       <th>A1_col</th>
       <td><p>Name of the effect/risk allele column in the full summary stats.
-<strong><em>IMPORTANT</em></strong>: Make sure this actually the case for your full summary stats file.
+ <strong><em>IMPORTANT</em></strong>: Make sure this actually the case for your full summary stats file.
 Unfortunately, different studies report different kinds of allele information in a non-standardized way.
 Meaning that A1/A2 can refer to any number of things:</p><dl'>
-<dt>effect/other alleles</dt><dd><p>in the case of diseases</p></dd>
-<dt>ref/alt alleles</dt><dd><p>where ref is the reference genome being used</p></dd>
-<dt>major/minor alleles</dt><dd><p>This dichotomy holds true for bi-allelic SNPs but not necessary multi-allelic SNPs</p></dd>
-
+ <dt>effect/other alleles</dt><dd><p>in the case of diseases</p></dd>
+ <dt>ref/alt alleles</dt><dd><p>where ref is the reference genome being used</p></dd>
+ <dt>major/minor alleles</dt><dd><p>This dichotomy holds true for bi-allelic SNPs but not necessary multi-allelic SNPs</p></dd>
+ 
 </dl><p>This makes comparing summary stats across GWAS/QTL datasets very confusing for several reasons:</p><dl'>
-<dt>Multi-allelic SNPs</dt><dd><p>SNPs can have more than just 2 possible alleles (multi-allelic SNPs). Even if you compare the same SNP between two studies, you may accidentally be comparing totally different alleles.</p></dd>
-<dt>Valence</dt><dd><p>The valence (+/-) of per-SNP GWAS effect sizes/beta can be relative to different allele types between studies.
-For example, let's say in one GWAS study your effect size for SNP A is 1.5 relative to the major allele in one study,
-and the minor allele happens to be the one found in the reference genome.
-You then try to compare that effect size to that of the same SNP in another GWAS.
-But, the valence of the effect sizes in the 2nd GWAS study are all relative to the reference genome (instead of the minor allele),
-giving the same SNP a value of -1.2. If you took the effect sizes at face value you'd say the signals are in opposite directions.
-But once you take into account how the valences were determined in each study you realize that they're actually both positive relative to the major allele.</p></dd>
-
+ <dt>Multi-allelic SNPs</dt><dd><p>SNPs can have more than just 2 possible alleles (multi-allelic SNPs). Even if you compare the same SNP between two studies, you may accidentally be comparing totally different alleles.</p></dd>
+ <dt>Valence</dt><dd><p>The valence (+/-) of per-SNP GWAS effect sizes/beta can be relative to different allele types between studies.
+ For example, let's say in one GWAS study your effect size for SNP A is 1.5 relative to the major allele in one study,
+  and the minor allele happens to be the one found in the reference genome.
+  You then try to compare that effect size to that of the same SNP in another GWAS.
+  But, the valence of the effect sizes in the 2nd GWAS study are all relative to the reference genome (instead of the minor allele),
+  giving the same SNP a value of -1.2. If you took the effect sizes at face value you'd say the signals are in opposite directions.
+  But once you take into account how the valences were determined in each study you realize that they're actually both positive relative to the major allele.</p></dd>
+ 
 </dl><p>This process of reversing per-SNP valences based on aligning the alleles is known as allele flipping.
 This is important when comparing individual SNPs, but can also have an impact on colocalization results.</p></td>
     </tr>
     <tr>
       <th>gene_col</th>
-      <td><p>For QTL studies, the name of the egene column in the full summary stats file (<em>default: "gene"</em>).
+      <td><p>For QTL studies, the name of the [e]gene column in the full summary stats file (<em>default: "gene"</em>).
 This column will be used for filtering summary stats if supplying a named list of gene:Locus pairs to <code>loci</code>.</p></td>
     </tr>
     <tr>
@@ -377,8 +381,8 @@ This column is not necesssary if <code>N_cases</code> parameter is provided.
     <tr>
       <th>N_controls_col</th>
       <td><p>Name of the column in the full summary stats that has the number of control subjects in the study.
-This can either be per SNP sample sizes, or one number repeated across all rows.
-This column is not necesssary if <code>N_controls</code> parameter is provided.
+ This can either be per SNP sample sizes, or one number repeated across all rows.
+ This column is not necesssary if <code>N_controls</code> parameter is provided.
 (<em>default: ="N_controls"</em>)</p></td>
     </tr>
     <tr>
@@ -405,7 +409,7 @@ then sample_size is inferred to be:  <code>max(N_cases) + max(N_controls)</code>
     <tr>
       <th>download_reference</th>
       <td><p>When acquiring LD matrixes,
-the default is to delete the full vcf or npz files after <em>echolocator</em> has extracted the necssary subset.
+the default is to delete the full vcf or npz files after <span class="pkg">echolocatoR</span> has extracted the necssary subset.
 However, if you wish to keep these full files (which can be quite large) set <code>download_reference=T</code>.</p></td>
     </tr>
     <tr>
@@ -436,7 +440,7 @@ Set <code>trim_gene_limits=F</code> to not limit by gene coordinates (<em>defaul
       <th>max_snps</th>
       <td><p>The maximum number of SNPs to include in the locus.
 If the current window size yields &gt; <code>max_snps</code>,
-then the outer edges of the of the locus are trimmed until the number of SNPs ≤ <code>max_snps</code>.</p></td>
+ then the outer edges of the of the locus are trimmed until the number of SNPs ≤ <code>max_snps</code>.</p></td>
     </tr>
     <tr>
       <th>file_sep</th>
@@ -476,7 +480,23 @@ Methods include:</p><dl'>
     <tr>
       <th>remove_correlates</th>
       <td><p>If <code>remove_correlates</code> is set to a value between 0-1,
-removes any SNPs that are in LD with any of the <code>remove_variants</code> above the threshold provided by <code>remove_correlates</code>.</p></td>
+removes any SNPs that are in LD with any of the <code>remove_variants</code> above the threshold provided by <code>remove_correlates</code>.</p>
+<p>@param LD_reference Which linkage disequilibrium reference panel do you want to use.
+ Options include:</p><dl'>
+ <dt>"UKB"</dt><dd><p>A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See <a href='https://www.biorxiv.org/content/10.1101/807792v2'>Wiessbrod et al. (2019)</a> for more details.</p></dd>
+ <dt>"1KGphase1"</dt><dd><p>Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.</p></dd>
+ <dt>"1KGphase3"</dt><dd><p>Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.</p></dd>
+ 
+</dl><p>@param superpopulation Subset your LD reference panel by superopulation.
+ Setting the superpopulation is not currently possible when <code>LD_reference="UKB"</code>.
+ <a href='https://www.internationalgenome.org/faq/which-populations-are-part-your-study/'>1KGphase1 options</a> include:</p><dl'>
+ <dt>"AFR"</dt><dd><p>African [descent]</p></dd>
+ <dt>"AMR"</dt><dd><p>Ad-mixed American</p></dd>
+ <dt>"EAS"</dt><dd><p>East Asian</p></dd>
+ <dt>"EUR"</dt><dd><p>European</p></dd>
+ <dt>"SAS"</dt><dd><p>South Asian</p></dd>
+ 
+</dl></td>
     </tr>
     <tr>
       <th>probe_path</th>
@@ -501,33 +521,69 @@ Only used for certain eQTL datasets.</p></td>
     </tr>
     <tr>
       <th>server</th>
-      <td><p>Whether <em>echolocatoR</em> is being run on a computing cluster/server or on a local machine.</p></td>
+      <td><p>Whether <span class="pkg">echolocatoR</span> is being run on a computing cluster/server or on a local machine.</p></td>
     </tr>
     <tr>
       <th>PP_threshold</th>
       <td><p>The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
-For example, <code>PP_threshold=.95</code> means that all Credible Set SNPs will be 95\<!-- % Credible Set SNPs.} --></p>
-<p>plot.typesWhich kinds of plots to include.
-Options:
-<dl'>
+For example, <code>PP_threshold=.95</code> means that all Credible Set SNPs will be 95% Credible Set SNPs.</p></td>
+    </tr>
+    <tr>
+      <th>plot.types</th>
+      <td><p>Which kinds of plots to include.
+Options:</p><dl'>
 <dt>"simple"</dt><dd><p>Just plot the following tracks: GWAS, fine-mapping, gene models</p></dd>
-<dt>"fancy"</dt><dd><p>Additionally plot XGR annotation tracks (XGR, Roadmap, Nott).</p></dd></dl></p>
-<p>plot.windowZoom into the center of the locus when plotting (without editing the fine-mapping results file).</p>
-<p>plot.Nott_binwidthWhen including Nott et al. (2019) epigenomic data in the track plots,
-adjust the bin width of the histograms.</p>
-<p>plot.Nott_bigwig_dirInstead of pulling Nott et al. (2019) epigenomic data from the UCSC Genome Browsers, use a set of local bigwig files.</p>
-<p>plot.RoadmapFind and plot annotations from Roadmap.</p>
-<p>plot.Roadmap_queryOnly plot annotations from Roadmap whose metadata contains a string or any items from  a list of strings
-(e.g. "brain" or c("brain","liver","monocytes"))</p>
-<p>conda_envThe name of a conda environment to use.</p>
-<p>verboseWhether <em>echolocatoR</em> should be verbose or silent.</p>
-<p>subset_pathThe file you want your locus subset saved as.
+<dt>"fancy"</dt><dd><p>Additionally plot XGR annotation tracks (XGR, Roadmap, Nott).</p></dd>
+
+</dl></td>
+    </tr>
+    <tr>
+      <th>plot.window</th>
+      <td><p>Zoom into the center of the locus when plotting (without editing the fine-mapping results file).</p></td>
+    </tr>
+    <tr>
+      <th>plot.Nott_binwidth</th>
+      <td><p>When including Nott et al. (2019) epigenomic data in the track plots,
+adjust the bin width of the histograms.</p></td>
+    </tr>
+    <tr>
+      <th>plot.Nott_bigwig_dir</th>
+      <td><p>Instead of pulling Nott et al. (2019) epigenomic data
+from the <em>UCSC Genome Browser</em>, use a set of local bigwig files.</p></td>
+    </tr>
+    <tr>
+      <th>plot.Roadmap</th>
+      <td><p>Find and plot annotations from Roadmap.</p></td>
+    </tr>
+    <tr>
+      <th>plot.Roadmap_query</th>
+      <td><p>Only plot annotations from Roadmap whose metadata contains a string or any items from  a list of strings
+(e.g. <code>"brain"</code> or <code><a href='https://rdrr.io/r/base/c.html'>c("brain","liver","monocytes")</a></code>).</p></td>
+    </tr>
+    <tr>
+      <th>conda_env</th>
+      <td><p>The name of a conda environment to use.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>Whether <span class="pkg">echolocatoR</span> should be verbose or silent.</p></td>
+    </tr>
+    <tr>
+      <th>subset_path</th>
+      <td><p>The file you want your locus subset saved as.
 Only use when fine-mapping one locus at a time.
 If <code>subset_path="auto"</code> (<em>default</em>), a locus subset file name is automatically constructed as:
 <em>Data/&lt;dataset_type&gt;/&lt;dataset_name&gt;/&lt;locus&gt;/Multi-finemap/&lt;locus&gt;_&lt;dataset_name&gt;_Multi-finemap.tsv.gz</em></p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A merged data.frame with all fine-mapping results from all loci.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other MAIN: 
+<code><a href='finemap_pipeline.html'>finemap_pipeline</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

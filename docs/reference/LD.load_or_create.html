@@ -169,13 +169,13 @@ or user-supplied datasets.</p>
     <tr>
       <th>force_new_LD</th>
       <td><p>By default, if an LD matrix file for a given locus is already present,
-then <em>echolocatoR</em> will just use the preexisting file.
+then <span class="pkg">echolocatoR</span> will just use the preexisting file.
 Set <code>force_new_LD=T</code> to override this and extract a new subset.</p></td>
     </tr>
     <tr>
       <th>download_reference</th>
       <td><p>When acquiring LD matrixes,
-the default is to delete the full vcf or npz files after <em>echolocator</em> has extracted the necssary subset.
+the default is to delete the full vcf or npz files after <span class="pkg">echolocatoR</span> has extracted the necssary subset.
 However, if you wish to keep these full files (which can be quite large) set <code>download_reference=T</code>.</p></td>
     </tr>
     <tr>
@@ -198,15 +198,31 @@ This is paramter currently only works when <code>LD_reference!="UKB"</code>.</p>
     <tr>
       <th>remove_correlates</th>
       <td><p>If <code>remove_correlates</code> is set to a value between 0-1,
-removes any SNPs that are in LD with any of the <code>remove_variants</code> above the threshold provided by <code>remove_correlates</code>.</p></td>
+removes any SNPs that are in LD with any of the <code>remove_variants</code> above the threshold provided by <code>remove_correlates</code>.</p>
+<p>@param LD_reference Which linkage disequilibrium reference panel do you want to use.
+ Options include:</p><dl'>
+ <dt>"UKB"</dt><dd><p>A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See <a href='https://www.biorxiv.org/content/10.1101/807792v2'>Wiessbrod et al. (2019)</a> for more details.</p></dd>
+ <dt>"1KGphase1"</dt><dd><p>Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.</p></dd>
+ <dt>"1KGphase3"</dt><dd><p>Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.</p></dd>
+ 
+</dl><p>@param superpopulation Subset your LD reference panel by superopulation.
+ Setting the superpopulation is not currently possible when <code>LD_reference="UKB"</code>.
+ <a href='https://www.internationalgenome.org/faq/which-populations-are-part-your-study/'>1KGphase1 options</a> include:</p><dl'>
+ <dt>"AFR"</dt><dd><p>African [descent]</p></dd>
+ <dt>"AMR"</dt><dd><p>Ad-mixed American</p></dd>
+ <dt>"EAS"</dt><dd><p>East Asian</p></dd>
+ <dt>"EUR"</dt><dd><p>European</p></dd>
+ <dt>"SAS"</dt><dd><p>South Asian</p></dd>
+ 
+</dl></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>Whether <em>echolocatoR</em> should be verbose or silent.</p></td>
+      <td><p>Whether <span class="pkg">echolocatoR</span> should be verbose or silent.</p></td>
     </tr>
     <tr>
       <th>server</th>
-      <td><p>Whether <em>echolocatoR</em> is being run on a computing cluster/server or on a local machine.</p></td>
+      <td><p>Whether <span class="pkg">echolocatoR</span> is being run on a computing cluster/server or on a local machine.</p></td>
     </tr>
     <tr>
       <th>remove_tmps</th>
@@ -222,7 +238,7 @@ removes any SNPs that are in LD with any of the <code>remove_variants</code> abo
     <p>Options:</p><ul>
 <li><p>Download pre-computed LD matrix from UK Biobank.</p></li>
 <li><p>Download raw vcf file from 1KG and compute LD on the fly.</p></li>
-<li><p>Compute LD fon the fly from a user-supplied vcf file.</p></li>
+<li><p>Compute LD on the fly from a user-supplied vcf file.</p></li>
 <li><p>Use a user-supplied pre-computed LD-matrix.</p></li>
 </ul>
 
@@ -253,7 +269,7 @@ removes any SNPs that are in LD with any of the <code>remove_variants</code> abo
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"BST1"</span>); <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"locus_dir"</span>);
 <span class='no'>locus_dir</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='st'>"~/Desktop"</span>,<span class='no'>locus_dir</span>)
 <span class='co'># UK Biobank LD</span>
-<span class='fu'>LD.load_or_create</span>(<span class='kw'>locus_dir</span><span class='kw'>=</span><span class='no'>locus_dir</span>, <span class='kw'>subset_DT</span><span class='kw'>=</span><span class='no'>BST1</span>, <span class='kw'>locus</span><span class='kw'>=</span><span class='st'>"BST1"</span>, )
+<span class='fu'>LD.load_or_create</span>(<span class='kw'>locus_dir</span><span class='kw'>=</span><span class='no'>locus_dir</span>, <span class='kw'>subset_DT</span><span class='kw'>=</span><span class='no'>BST1</span>, <span class='kw'>locus</span><span class='kw'>=</span><span class='st'>"BST1"</span>)
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -13,8 +13,8 @@ Requires the columns \strong{N_cases} and \strong{N_controls}.}
 \description{
 This is an often-cited approximation for the effective sample size in a case-control study.
 i.e., this is the sample size required to identify an association with a
-quantitative trait with the same power as in your present study.
-(from email correpsondence with Omer Weissbrod)
+ quantitative trait with the same power as in your present study.
+ (from email correpsondence with Omer Weissbrod)
 }
 \examples{
 data("BST1");
