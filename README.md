@@ -1,9 +1,8 @@
 <center><h1> )    )   )  ) ))) 🦇 echolocatoR  🦇 ((( (  (   (    ( </h1></center>  
 
-### __tomated statistical and functional fine-mapping with extensive access to genome-wide datasets.  
+### Automated statistical and functional fine-mapping with extensive access to genome-wide datasets.   
 
-F
-ninmapping methods are a powerful means of identifying causal variants underlying a given phenotype, but are underutilized due to the technical challenges of implementation. __*echolocatoR*__ is an R package that automates end-to-end genomics fine-mapping, annotation, and plotting in order to identify the most probable causal variants associated with a given phenotype.
+Fine-mapping methods are a powerful means of identifying causal variants underlying a given phenotype, but are underutilized due to the technical challenges of implementation. __*echolocatoR*__ is an R package that automates end-to-end genomics fine-mapping, annotation, and plotting in order to identify the most probable causal variants associated with a given phenotype.
 
 It requires minimal input from users (a GWAS or QTL summary statistics file), and includes a suite of statistical and functional fine-mapping tools. It also includes extensive access to datasets (linkage disequilibrium panels, epigenomic and genome-wide annotations, QTL).
 
@@ -127,9 +126,11 @@ For a full list of suggested packages, see [DESCRIPTION](https://github.com/RajL
 
 #### [Tabix](http://www.htslib.org/doc/tabix.html)  
   + Rapid querying of summary stats files.   
-  + To use it, specify `query_by="tabix"` in `finemap_loci()`.  
+  + To use it, specify `query_by="tabix"` in `finemap_loci()`.   
+
 #### [bcftools](http://samtools.github.io/bcftools/bcftools.html)  
   + Used here for filtering populations in vcf files.  
+  
 #### [Axel](https://github.com/axel-download-accelerator/axel)  *    
   + Rapid multi-core downloading of large files (e.g. LD matrices from UK Biobank).  
   + To use it, specify `download_method="axel"` in `finemap_loci()`.  
