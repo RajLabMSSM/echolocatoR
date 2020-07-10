@@ -127,8 +127,8 @@ For a full list of suggested packages, see [DESCRIPTION](https://github.com/RajL
 
 #### [Tabix](http://www.htslib.org/doc/tabix.html)  
   + Rapid querying of summary stats files.   
-  + To use it, specify `query_by="tabix"` in `finemap_loci()`.
-#  ### [bcftools](http://samtools.github.io/bcftools/bcftools.html)  
+  + To use it, specify `query_by="tabix"` in `finemap_loci()`.  
+#### [bcftools](http://samtools.github.io/bcftools/bcftools.html)  
   + Used here for filtering populations in vcf files.  
 #### [Axel](https://github.com/axel-download-accelerator/axel)  *    
   + Rapid multi-core downloading of large files (e.g. LD matrices from UK Biobank).  
@@ -150,20 +150,13 @@ See `?finemap_loci()` for descriptions of these columns.
 All methods require the columns: `SNP`,`CHR`,`POS`,`Effect`,`StdErr`    
 
 Additional required columns: 
-### [ABF](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)  
-  + `proportion_cases`,`MAF` 
-### [FINEMAP](http://www.christianbenner.com)  
-  + `A1`,`A2`,`MAF`,`N`  
-### [SuSiE](https://github.com/stephenslab/susieR)  
-  + `N`  
-### [PolyFun](https://github.com/omerwe/polyfun)
-  + `A1`,`A2`,`P`,`N`   
-### [PAINTOR](https://github.com/gkichaev/PAINTOR_V3.0)  
-  + `A1`,`A2`,`t-stat`  
-### [GCTA-COJO](https://cnsgenomics.com/software/gcta/#COJO)  
-  + `A1`,`A2`,`Freq`,`P`,`N`  
-### [coloc](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)  
-  + `N`,`MAF`  
+### [ABF](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html): `proportion_cases`,`MAF`  
+### [FINEMAP](http://www.christianbenner.com):`A1`,`A2`,`MAF`,`N`  
+### [SuSiE](https://github.com/stephenslab/susieR): `N`  
+### [PolyFun](https://github.com/omerwe/polyfun): `A1`,`A2`,`P`,`N`   
+### [PAINTOR](https://github.com/gkichaev/PAINTOR_V3.0): `A1`,`A2`,`t-stat`  
+### [GCTA-COJO](https://cnsgenomics.com/software/gcta/#COJO): `A1`,`A2`,`Freq`,`P`,`N`  
+### [coloc](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html): `N`,`MAF`  
 
 
 <br>
