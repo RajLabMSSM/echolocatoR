@@ -262,7 +262,8 @@ standardize_subset <- function(locus,
       dplyr::slice(1) %>%
       dplyr::group_by(SNP) %>%
       dplyr::slice(1)
-
+    # dplyr doesn't like working with grouped tables downstream.
+    query_mod <- ungroup(query_mod)
     # Trim whitespaces
     ## Extra whitespace causes problems when you try to make space-delimited files
     printer("++ Removing extra whitespace", v=verbose)
