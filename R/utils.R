@@ -1008,7 +1008,10 @@ merge_coloc_results <- function(all_obj,
   }
   merged_results <- suffix_to_prefix(dat=merged_results, suffix = ".gwas")
   merged_results <- suffix_to_prefix(dat=merged_results, suffix = ".qtl")
-
+ 
+  # get N_cases and N_controls from N.gwas and proportion_controls
+    merged_results$N_cases <- floor(merged_results$gwas.N * merged_results$s)
+    merged_results$N_controls <- merged_results$gwas.N - merged_results$N_cases
 
   if(save_path!=F){
     data.table::fwrite(merged_results, file.path(save_path,paste0("merged_coloc_results.",results_level,".tsv.gz")),
