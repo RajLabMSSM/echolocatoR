@@ -269,7 +269,7 @@ query_by_coordinates <- function(top_SNPs,
                                  min_POS,
                                  max_POS,
                                  bp_distance){
-  gz.reader <- ifelse(endsWith(fullSS_path,".gz"), " gzcat ","")
+  gz.reader <- ifelse(endsWith(fullSS_path,".gz"), " zcat "," cat ")
   topSNP_sub <- top_SNPs[top_SNPs$Locus==locus & !is.na(top_SNPs$Locus),]
   if(detect_genes(loci = locus, verbose = F)){
     topSNP_sub <- subset(topSNP_sub, Gene==names(locus))
