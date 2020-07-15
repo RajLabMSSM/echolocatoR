@@ -207,9 +207,9 @@ LD.1KG_download_vcf <- function(subset_DT,
   } else if (LD_reference=="1KGphase1") {
     printer("LD Reference Panel = 1KGphase1", v=verbose)
     if(download_reference){## With internet
-      vcf_URL <- paste("ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20110521/ALL.chr",chrom,
+      vcf_URL <- paste("ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20110521/ALL.chr",chrom,
                        ".phase1_release_v3.20101123.snps_indels_svs.genotypes.vcf.gz", sep="")
-      popDat_URL = "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20110521/phase1_integrated_calls.20101123.ALL.panel"
+      popDat_URL = "ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20110521/phase1_integrated_calls.20101123.ALL.panel"
     }else{## WithOUT internet
       vcf_URL <- paste(vcf_folder,"/ALL.chr",chrom,
                        ".phase1_release_v3.20101123.snps_indels_svs.genotypes.vcf.gz", sep="")
