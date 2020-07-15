@@ -45,7 +45,13 @@ SUSIE <- function(subset_DT,
                   estimate_residual_variance=F,
                   verbose=T){
   vars <- get_var_y(subset_DT, dataset_type)
+  
+  if( ! "N" %in% names(subset_DT) ){
+      subset_DT <- get_sample_size(subset_DT)
+  }
+  # if sample_size is NULL then SUSIE fails
   sample_size <- max(subset_DT$N)
+  
   printer("+ SUSIE:: n_causal =",n_causal, v=verbose)
   if(!is.null(prior_weights)){
     printer("Utilizing prior_weights for",length(prior_weights),"SNPs.",v=verbose)
