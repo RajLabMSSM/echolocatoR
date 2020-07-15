@@ -54,7 +54,7 @@ SUSIE <- function(subset_DT,
                                 finemap_dat=subset_DT,
                                 fillNA = 0,
                                 verbose = verbose)
-  LD_matrix <- sub.out$LD
+  LD_matrix <- as.matrix(sub.out$LD)
   subset_DT <- sub.out$DT
 
   library(susieR)
