@@ -6,7 +6,7 @@
 \alias{echolocatoR-package}
 \title{echolocatoR: Automated genomic fine-mapping}
 \description{
-Automated statistical and functional fine-mapping pipeline with extensive API access to datasets.
+Automated statistical and functional fine-mapping with extensive access to genome-wide datasets.
 }
 \details{
 Fine-mapping methods are a powerful means of identifying causal variants underlying a given phenotype,

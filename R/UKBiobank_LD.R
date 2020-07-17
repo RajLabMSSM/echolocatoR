@@ -19,6 +19,7 @@ LD.UKBiobank <- function(subset_DT=NULL,
                          download_method="direct",
                          nThread=4,
                          return_matrix=F,
+                         conda_env="echoR",
                          remove_tmps=T){
 
   LD.UKB_find_ld_prefix <- function(chrom, min_pos){
@@ -120,8 +121,8 @@ LD.UKBiobank <- function(subset_DT=NULL,
     # RSIDs file
     # rsids <- data.table::fread(gz.path, nThread = 4)
     printer("+ LD:: ...this could take some time...")
+    CONDA.activate_env(conda_env = conda_env)
     reticulate::source_python(system.file("tools","load_ld.py",package = "echolocatoR"))
-
 
     # load_ld(ld_prefix=URL, server=F)
     ld.out <- tryFunc(input = URL, load_ld, server)

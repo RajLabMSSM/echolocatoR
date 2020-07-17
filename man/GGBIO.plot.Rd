@@ -66,6 +66,7 @@ Uses \code{\link{ggbio}}.
 \examples{
 \dontrun{
 data("BST1"); data("BST1_LD_matrix"); data("locus_dir");
+locus_dir <- file.path("~/Desktop",locus_dir)
 
 # Using NO annotations
 trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, save_plot=F, color_r2=T)
@@ -82,7 +83,7 @@ trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=loc
 trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, Roadmap=T, Roadmap_query="monocyte", save_plot=F)
 
 # Using only Nott_2019 annotations
-trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, Nott_epigenome=T, XGR_libnames=NULL)
+trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, Nott_epigenome=T, XGR_libnames=NULL, plot.window=500000)
 }
 }
 \seealso{

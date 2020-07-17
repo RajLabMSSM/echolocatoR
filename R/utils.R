@@ -870,7 +870,7 @@ GRanges_overlap <- function(dat1,
                             start_col.2="start",
                             end_col.2="end",
                             return_merged=T,
-                            verbose=T){
+                            verbose=F){
   # dat1
   if(class(dat1)[1]=="GRanges"){
     printer("+ dat1 already in GRanges format", v=verbose)
@@ -1058,13 +1058,30 @@ LIFTOVER <- function(dat,
 
 
 
-
-order_loci_by_UCS_size <- function(dat,
-                                   merged_DT,
-                                   verbose=F){
-  printer("+ Ordering loci by UCS size.",v=verbose)
-  locus_order <- SUMMARISE.get_CS_counts(merged_DT)
-  dat$Locus <- factor(dat$Locus,  levels = locus_order$Locus, ordered = T)
+#' Order loci by UCS size, or alphabetically
+#'
+#' @examples
+#' data("merged_DT");
+#' ... by UCS size ...
+#' merged_DT <- order_loci(dat=merged_DT, merged_DT=merged_DT, descending=F)
+#' ... alphabetically ...
+order_loci <- function(dat,
+                       merged_DT,
+                       by_UCS_size=F,
+                       descending=T,
+                       verbose=F){
+  if(by_UCS_size){
+    printer("+ Ordering loci by UCS size.",v=verbose)
+    locus_order <- SUMMARISE.get_CS_counts(merged_DT)
+    dat$Locus <- factor(dat$Locus,  levels = locus_order$Locus, ordered = T)
+  } else{
+    printer("+ Ordering loci alphabetically.",v=verbose)
+    if(descending){
+      dat$Locus <- factor(dat$Locus,  levels = rev(sort(unique(merged_DT$Locus))), ordered = T)
+    } else {
+      dat$Locus <- factor(dat$Locus,  levels = sort(unique(merged_DT$Locus)), ordered = T)
+    }
+  }
   return(dat)
 }
 

@@ -12,6 +12,18 @@ IMPACT.get_top_annotations(
 )
 }
 \description{
-Get the annotation(s) with the top mean IMPACT for a given set of SNPs.
+Get the annotation(s) with the top mean \emph{IMPACT} for a given set of SNPs.
 }
+\seealso{
+Other IMPACT: 
+\code{\link{IMPACT.get_annotation_key}()},
+\code{\link{IMPACT.get_annotations}()},
+\code{\link{IMPACT.iterate_get_annotations}()},
+\code{\link{IMPACT.postprocess_annotations}()},
+\code{\link{IMPACT.snp_group_boxplot}()},
+\code{\link{IMPACT_annotation_key}},
+\code{\link{IMPACT_heatmap}()},
+\code{\link{prepare_mat_meta}()}
+}
+\concept{IMPACT}
 \keyword{internal}

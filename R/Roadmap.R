@@ -77,25 +77,26 @@ ROADMAP.tabix <- function(results_path,
 #' @family ROADMAP
 #' @examples
 #' data("BST1")
-#' finemap_DT <- BST1
-#' gr.snp <- DT_to_GRanges(subset_DT = finemap_DT)
-#' grl.roadmap <- ROADMAP.query(results_path="./Roadmap", gr.snp=gr.snp, keyword_query="placenta")
+#' grl.roadmap <- ROADMAP.query(results_path="./Roadmap", gr.snp=BST1, keyword_query="placenta")
 ROADMAP.query <- function(results_path,
                           gr.snp,
                           keyword_query=NULL,
-                          limit_files=NULL){
+                          limit_files=NULL,
+                          nThread=4,
+                          verbose=T){
   rm_start = Sys.time()
+  if(class(gr.snp)[1]!="GRanges") gr.snp <- DT_to_GRanges(subset_DT = gr.snp)
   roadmap_ref <- ROADMAP.construct_reference(keyword_query=keyword_query)
   if(!is.null(limit_files)){
     roadmap_ref <- roadmap_ref[1:limit_files,]
   }
   # Download via tabix (fast)
   counter <- 1
-  gr.roadmap <- lapply(unique(roadmap_ref$EID), function(eid,
+  gr.roadmap <- parallel::mclapply(unique(roadmap_ref$EID), function(eid,
                                                          gr.snp.=gr.snp,
                                                          results_path.=results_path){
-    printer("+ Querying subset from Roadmap API:",
-            eid," - ",counter,"/",length(unique(roadmap_ref$EID)))
+    printer("+ ROADMAP:: Querying subset from Roadmap API:",
+            eid," - ",counter,"/",length(unique(roadmap_ref$EID)), v=verbose)
     counter <<- counter+1
     dat <- GenomicRanges::GRanges()
     try({
@@ -109,13 +110,14 @@ ROADMAP.query <- function(results_path,
     if(length(GenomicRanges::seqnames(dat))>0){
       return(dat)
     } else{return(NULL)}
-  })
+  }, mc.cores = nThread)
   remove(counter)
   grl.roadmap <- GR.name_filter_convert(GR.final = gr.roadmap,
                                         GR.names =  roadmap_ref$`Epigenome name (from EDACC Release 9 directory)`,
                                         min_hits=1)
   rm_end = Sys.time()
-  printer("All downloads complete in",round(rm_end-rm_start,1),"minutes")
+  printer("ROADMAP:: All downloads complete")
+  print(round(rm_end-rm_start,1))
   return(grl.roadmap)
 }
 

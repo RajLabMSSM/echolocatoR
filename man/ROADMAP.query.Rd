@@ -4,7 +4,14 @@
 \alias{ROADMAP.query}
 \title{Query Roadmap by genomic coordinates}
 \usage{
-ROADMAP.query(results_path, gr.snp, keyword_query = NULL, limit_files = NULL)
+ROADMAP.query(
+  results_path,
+  gr.snp,
+  keyword_query = NULL,
+  limit_files = NULL,
+  nThread = 4,
+  verbose = T
+)
 }
 \arguments{
 \item{results_path}{Where to store query results.}
@@ -18,9 +25,7 @@ Query Roadmap by genomic coordinates
 }
 \examples{
 data("BST1")
-finemap_DT <- BST1
-gr.snp <- DT_to_GRanges(subset_DT = finemap_DT)
-grl.roadmap <- ROADMAP.query(results_path="./Roadmap", gr.snp=gr.snp, keyword_query="placenta")
+grl.roadmap <- ROADMAP.query(results_path="./Roadmap", gr.snp=BST1, keyword_query="placenta")
 }
 \seealso{
 Other ROADMAP: 

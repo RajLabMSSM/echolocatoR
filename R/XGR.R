@@ -34,10 +34,13 @@ annotation_file_name <- function(locus_dir,
 #' @keywords internal
 GRanges_to_BED <- function(GR.annotations,
                            output_path,
-                           sep="\t"){
-  BED_paths <- lapply(names(GR.annotations), function(name){
+                           sep="\t",
+                           nThread=4,
+                           gzip=F){
+  BED_paths <- parallel::mclapply(names(GR.annotations), function(name,
+                                                                  .gzip=gzip){
     GR <- GR.annotations[[name]]
-    BED <- GR %>% as.data.table() %>%
+    BED <- data.table::as.data.table(GR) %>%
       dplyr::select(chrom=seqnames,
                     chromStart=start,
                     chromEnd=end,
@@ -45,8 +48,12 @@ GRanges_to_BED <- function(GR.annotations,
     BED_path <- file.path(output_path,paste0(gsub(":","-",name),".bed.txt"))
     dir.create(dirname(BED_path), recursive = T, showWarnings = F)
     data.table::fwrite(BED, BED_path, sep=sep, col.names = F, quote = F)
+    if(.gzip){
+      R.utils::gzip(BED_path, overwrite=T)
+      BED_path <- paste0(BED_path,".gz")
+    }
     return(BED_path)
-  }) %>% unlist()
+  }, mc.cores = nThread) %>% unlist()
   return(BED_paths)
 }
 

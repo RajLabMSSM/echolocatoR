@@ -249,6 +249,10 @@ For more detailed information about each dataset, use `?`:
 - Inlcudes 187-annotation baseline model from [Gazal et al. 2018](https://www.nature.com/articles/s41588-018-0231-8).  
 - You can alternatively supply a custom annotations matrix.
 
+### [motifbreakR](https://github.com/Simon-Coetzee/motifBreakR)  
+- Identification of transcript factor binding motifs (TFBM) and prediction of SNP disruption to said motifs. 
+- Includes a comprehensive list of TFBM databases via [MotifDB](https://bioconductor.org/packages/release/bioc/html/MotifDb.html) (9,900+ annotated position frequency matrices from 14 public sources, for multiple organisms).  
+
 ### [GARFIELD](https://www.bioconductor.org/packages/release/bioc/html/garfield.html) (**under construction**)
 - Genomic enrichment with LD-informed heuristics.   
 

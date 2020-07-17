@@ -6,6 +6,8 @@
 \usage{
 LD.plink_LD(
   leadSNP,
+  subset_DT,
+  remove_excess_snps = T,
   LD_folder,
   min_r2 = F,
   min_Dprime = F,

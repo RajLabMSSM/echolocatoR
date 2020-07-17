@@ -23,6 +23,7 @@ LD.load_or_create(
   verbose = T,
   server = F,
   remove_tmps = T,
+  conda_env = "echoR",
   nThread = 4
 )
 }
@@ -72,6 +73,8 @@ removes any SNPs that are in LD with any of the \code{remove_variants} above the
 \item{server}{Whether \pkg{echolocatoR} is being run on a computing cluster/server or on a local machine.}
 
 \item{remove_tmps}{Whether to remove any temporary files (e.g. FINEMAP output files) after the pipeline is done running.}
+
+\item{conda_env}{The name of a conda environment to use.}
 }
 \value{
 A symmetric LD matrix of pairwise \emph{r} values.
@@ -93,8 +96,13 @@ Options:
 \dontrun{
 data("BST1"); data("locus_dir");
 locus_dir <- file.path("~/Desktop",locus_dir)
-# UK Biobank LD
-LD.load_or_create(locus_dir=locus_dir, subset_DT=BST1, locus="BST1")
+ # BST1 <- limit_SNPs(500, BST1)
+
+... UK Biobank LD ...
+LD_matrix <- LD.load_or_create(locus_dir=locus_dir, subset_DT=BST1, locus="BST1", LD_reference="UKB")
+
+... 1000 Genomes ...
+LD_matrix <- LD.load_or_create(locus_dir=locus_dir, subset_DT=BST1, locus="BST1", LD_reference="1KGphase1")
 }
 }
 \seealso{

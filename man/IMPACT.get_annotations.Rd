@@ -2,17 +2,41 @@
 % Please edit documentation in R/IMPACT.R
 \name{IMPACT.get_annotations}
 \alias{IMPACT.get_annotations}
-\title{Download IMPACT annotations}
+\title{Download \emph{IMPACT} annotations}
 \usage{
 IMPACT.get_annotations(
   baseURL = "https://github.com/immunogenomics/IMPACT/raw/master/IMPACT707/Annotations",
   chrom = NULL,
   subset_DT = NULL,
   nThread = 4,
-  all_snps_in_range = F
+  all_snps_in_range = F,
+  verbose = T
 )
 }
 \description{
-Includes the raw annotation itself, as well as per-SNP IMPACT scores for each annotation.
+Includes the raw annotation itself,
+as well as per-SNP \emph{IMPACT} scores for each annotation.
 }
+\details{
+Unfortunately, you have to download the entire chromosome file at once,
+ because they aren't Tabix indexed. To minimize the memory load,
+ this function only keeps the portion of the \emph{IMPACT} file that overlaps with the
+ coordinates in \code{subset_DT}.
+}
+\examples{
+data("BST1")
+annot_melt <- IMPACT.get_annotations(subset_DT=BST1)
+}
+\seealso{
+Other IMPACT: 
+\code{\link{IMPACT.get_annotation_key}()},
+\code{\link{IMPACT.get_top_annotations}()},
+\code{\link{IMPACT.iterate_get_annotations}()},
+\code{\link{IMPACT.postprocess_annotations}()},
+\code{\link{IMPACT.snp_group_boxplot}()},
+\code{\link{IMPACT_annotation_key}},
+\code{\link{IMPACT_heatmap}()},
+\code{\link{prepare_mat_meta}()}
+}
+\concept{IMPACT}
 \keyword{internal}

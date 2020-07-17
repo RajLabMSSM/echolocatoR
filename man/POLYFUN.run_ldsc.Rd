@@ -9,13 +9,13 @@ https://www.biorxiv.org/content/10.1101/807792v3
 \usage{
 POLYFUN.run_ldsc(
   polyfun = NULL,
-  PF.output.path,
+  output_dir = NULL,
   munged.path,
   min_INFO = 0.6,
   min_MAF = 0.05,
   annotations.path = file.path(polyfun, "example_data/annotations."),
   weights.path = file.path(polyfun, "example_data/weights."),
-  prefix = "PD_GWAS_LDSC",
+  prefix = "LDSC",
   chrom = "all",
   compute_ldscores = F,
   allow_missing_SNPs = T,
@@ -23,7 +23,7 @@ POLYFUN.run_ldsc(
     munged_path = "/sc/arion/projects/pd-omics/tools/polyfun/Nalls23andMe_2019.sumstats_munged.parquet",
   ref.prefix = "/sc/arion/projects/pd-omics/data/1000_Genomes/Phase1/1000G.mac5eur.",
   freq.prefix = "/sc/arion/projects/pd-omics/tools/polyfun/1000G_frq/1000G.mac5eur.",
-  server = F
+  conda_env = "echoR"
 )
 }
 \description{

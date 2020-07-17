@@ -41,8 +41,13 @@
 #' \dontrun{
 #' data("BST1"); data("locus_dir");
 #' locus_dir <- file.path("~/Desktop",locus_dir)
-#' # UK Biobank LD
-#' LD.load_or_create(locus_dir=locus_dir, subset_DT=BST1, locus="BST1")
+#'  # BST1 <- limit_SNPs(500, BST1)
+#'
+#' ... UK Biobank LD ...
+#' LD_matrix <- LD.load_or_create(locus_dir=locus_dir, subset_DT=BST1, locus="BST1", LD_reference="UKB")
+#'
+#' ... 1000 Genomes ...
+#' LD_matrix <- LD.load_or_create(locus_dir=locus_dir, subset_DT=BST1, locus="BST1", LD_reference="1KGphase1")
 #' }
 LD.load_or_create <- function(locus_dir,
                               subset_DT,
@@ -62,6 +67,7 @@ LD.load_or_create <- function(locus_dir,
                               verbose=T,
                               server=F,
                               remove_tmps=T,
+                              conda_env="echoR",
                               nThread=4){
   if(is.null(locus)){locus <- basename(locus_dir)}
   if(LD_reference=="UKB"){
@@ -73,6 +79,7 @@ LD.load_or_create <- function(locus_dir,
                               download_method = download_method,
                               nThread = nThread,
                               return_matrix = T,
+                              conda_env = conda_env,
                               remove_tmps = remove_tmps)
   } else if (LD_reference == "1KGphase1" | LD_reference == "1KGphase3") {
     LD_path <- file.path(locus_dir,"LD",paste0(locus,".",LD_reference,"_LD.RDS"))
@@ -181,7 +188,12 @@ LD.1KG_download_vcf <- function(subset_DT,
                                 nThread=4,
                                 query_by_regions=F,
                                 verbose=T){
+  # Old FTP (deprecated?)
   ## http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/
+  # New FTP
+  ## ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20110521/
+  FTP <- "ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20110521/"
+
   # Download portion of vcf from 1KG website
   if(is.null(locus)){locus <- basename(locus_dir)}
   vcf_folder <- LD.get_vcf_folder(vcf_folder=vcf_folder,
@@ -194,7 +206,7 @@ LD.1KG_download_vcf <- function(subset_DT,
   if(LD_reference=="1KGphase3"){
     printer("LD Reference Panel = 1KGphase3", v=verbose)
     if(download_reference){## With internet
-      vcf_URL <- paste("ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ALL.chr",chrom,
+      vcf_URL <- paste(FTP,"/ALL.chr",chrom,
                        ".phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz",sep="")
       popDat_URL = "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/integrated_call_samples_v3.20130502.ALL.panel"
     }else{## WithOUT internet
@@ -207,9 +219,10 @@ LD.1KG_download_vcf <- function(subset_DT,
   } else if (LD_reference=="1KGphase1") {
     printer("LD Reference Panel = 1KGphase1", v=verbose)
     if(download_reference){## With internet
-      vcf_URL <- paste("ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20110521/ALL.chr",chrom,
+      vcf_URL <- paste(FTP,"/ALL.chr",chrom,
                        ".phase1_release_v3.20101123.snps_indels_svs.genotypes.vcf.gz", sep="")
-      popDat_URL = "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20110521/phase1_integrated_calls.20101123.ALL.panel"
+      # popDat_URL = "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20110521/phase1_integrated_calls.20101123.ALL.panel"
+      popDat_URL <- file.path(FTP,"phase1_integrated_calls.20101123.ALL.panel")
     }else{## WithOUT internet
       vcf_URL <- paste(vcf_folder,"/ALL.chr",chrom,
                        ".phase1_release_v3.20101123.snps_indels_svs.genotypes.vcf.gz", sep="")
@@ -228,7 +241,7 @@ LD.1KG_download_vcf <- function(subset_DT,
   # Create directory if it doesn't exist
   dir.create(path = dirname(subset_vcf), recursive = T, showWarnings = F)
   # Download and subset vcf if the subset doesn't exist already
-  if(!file.exists(subset_vcf) | force_new_vcf){
+  if((!file.exists(subset_vcf)) | force_new_vcf){
     printer("LD:: Querying 1000 Genomes API for VCF subset", v=verbose)
     if(whole_vcf){
       region <- ""
@@ -515,6 +528,7 @@ LD.plink_file <- function(base_url=system.file("tools/plink",package = "echoloca
 #' @examples
 #' \dontrun{
 #' data("BST1"); data("locus_dir");
+#' BST1 <- limit_SNPs(max_snps = 500, subset_DT = BST1)
 #' LD_matrix <- LD.1KG(locus_dir=file.path("~/Desktop",locus_dir), subset_DT=BST1, locus="BST1", LD_reference="1KGphase1")
 #' }
 LD.1KG <- function(locus_dir,
@@ -537,7 +551,7 @@ LD.1KG <- function(locus_dir,
   # locus <- "LRRK2"; data("locus_dir"); LD_reference="1KGphase1"; vcf_folder=NULL; superpopulation="EUR";  min_r2=F; LD_block=F; LD_block_size=.7; min_Dprime=F;  remove_correlates=F; download_reference=T;
   if(is.null(locus)){locus <- basename(locus_dir)}
   vcf_folder <- LD.get_vcf_folder(vcf_folder = vcf_folder,
-                               locus_dir = locus_dir)
+                                  locus_dir = locus_dir)
   printer("LD:: Using 1000Genomes LD reference panel...", v=verbose)
   vcf_info <- LD.1KG_download_vcf(subset_DT=subset_DT,
                                   locus_dir=locus_dir,
@@ -567,6 +581,8 @@ LD.1KG <- function(locus_dir,
     leadSNP = subset(subset_DT, leadSNP==T)$SNP #rs76904798
     # Plink LD method
     LD_matrix <- LD.plink_LD(LD_folder = file.path(locus_dir,"LD"),
+                             subset_DT = subset_DT,
+                             remove_excess_snps=T,
                              leadSNP = leadSNP,
                              min_r2 = min_r2,
                              min_Dprime = min_Dprime,
@@ -654,6 +670,8 @@ LD.run_plink_LD <- function(bim,
 #' @family LD
 #' @keywords internal
 LD.plink_LD <-function(leadSNP,
+                       subset_DT,
+                       remove_excess_snps=T,
                        LD_folder,
                        min_r2=F,
                        min_Dprime=F,
@@ -665,6 +683,14 @@ LD.plink_LD <-function(leadSNP,
   # Calculate LD
   printer("++ Reading in BIM file...", v=verbose)
   bim <- data.table::fread(file.path(LD_folder, "plink.bim"), col.names = c("CHR","SNP","V3","POS","A1","A2"))
+  if(remove_excess_snps){
+    orig_n <- nrow(bim)
+    bim.merged <- data.table::merge.data.table(bim,
+                                 subset_DT,
+                                 by=c("CHR","POS"))
+    bim <- subset(bim, SNP %in% bim.merged$SNP.x)
+    printer("LD:PLINK:: Removing RSIDs that don't appear in locus subset:",orig_n,"==>",nrow(bim),"SNPs",v=verbose)
+  }
   data.table::fwrite(subset(bim, select="SNP"), file.path(LD_folder,"SNPs.txt"), col.names = F)
 
   printer("++ Calculating LD", v=verbose)

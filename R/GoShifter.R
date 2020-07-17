@@ -4,16 +4,25 @@
 ##----------------------------------------------------##
 
  # GitHub Repo:
- # https://github.com/immunogenomics/goshifter
-
  #
 
 
 
+GOSHIFTER.find_goshifter_folder <- function(goshifter=NULL){
+  if(is.null(goshifter)){
+    goshifter <- system.file("tools/goshifter",package = "echolocatoR")
+  }
+ return(goshifter)
+}
 
-GoShifter.create_snpmap <- function(snp_df, GS_results, verbose=T){
+
+
+GOSHIFTER.create_snpmap <- function(finemap_dat,
+                                    GS_results,
+                                    nThread=4,
+                                    verbose=T){
   printer("++ GoShifter: Creating snpmap file...", v=verbose)
-  snp_df %>%
+  finemap_dat %>%
     dplyr::rename(Chrom = CHR, BP = POS) %>%
     dplyr::mutate(Chrom = paste0("chr",Chrom)) %>%
     dplyr::select(SNP, Chrom, BP) %>%
@@ -23,29 +32,63 @@ GoShifter.create_snpmap <- function(snp_df, GS_results, verbose=T){
 
 
 
-GoShifter.create_LD <- function(results_path, verbose=T){
+GOSHIFTER.create_LD <- function(locus_dir,
+                                finemap_dat=NULL,
+                                LD_path=NULL,
+                                verbose=T){
   printer("++ GoShifter: Creating LD file(s)...", v=verbose)
   # (chrA\tposA\trsIdA\tposB\trsIdB\tRsquared\tDPrime)
-  GS_results_path <- file.path(results_path,"GoShifter")
-  plink.ld <- data.table::fread(file.path(results_path,"plink","saved","plink.ld"))
-  ld_file <- plink.ld %>% dplyr::rename(chrA = CHR_A,
-                                        posA = BP_A,
-                                        rsIdA = SNP_A,
-                                        posB = BP_B,
-                                        rsIdB = SNP_B,
-                                        Rsquared = R,
-                                        DPrime = DP) %>%
-    dplyr::mutate(Rsquared = Rsquared^2, chrA = paste0("chr",chrA)) %>%
-    dplyr::select(chrA,posA,rsIdA,posB,rsIdB,Rsquared,DPrime)
+  GS_results_path <- file.path(locus_dir,"GoShifter")
+  if(is.null(LD_path)) LD_path <- list.files(file.path(locus_dir,'LD'),".RDS", full.names = T)[1]
+
+  if(endsWith(LD_path,"UKB_LD.RDS")){
+    printer("++ GoShifter:: Reformatting UKB LD",v=verbose)
+    LD_matrix <- readRDS(LD_path)
+    LD_df <- setNames(reshape2::melt(LD_matrix), c('rsIdA', 'rsIdB', 'Rsquared'))
+    LD_df$Rsquared <- LD_df$Rsquared^2
+
+    if(is.null(finemap_dat)){
+      finemap_dat <- data.table::fread(list.files(file.path(locus_dir,"Multi-finemap"),
+                                                  "_Multi-finemap.tsv.gz", full.names = T)[1])
+    }
+    LD_df <-subset(LD_df, rsIdA %in% finemap_dat$SNP | rsIdB %in% finemap_dat$SNP)
+    ld_file <- data.table::merge.data.table(data.table::data.table(LD_df),
+                                           subset(finemap_dat, select=c("SNP","CHR","POS"))%>% dplyr::rename(chrA=CHR,posA=POS),
+                                           by.x = "rsIdA",
+                                           by.y="SNP")  %>%
+      data.table::merge.data.table(subset(finemap_dat, select=c("SNP","CHR","POS"))%>% dplyr::rename(chrB=CHR,posB=POS),
+                                            by.x = "rsIdB",
+                                            by.y="SNP") %>%
+      dplyr::mutate(chrA=paste0(gsub("chr","",chrA)),
+                    chrB=paste0(gsub("chr","",chrB)) ) %>%
+      dplyr::arrange(chrA,posA) %>%
+      dplyr::select(chrA,posA,rsIdA,posB,rsIdB,Rsquared)
+  }
+
+  if(endsWith(LD_path,"plink.ld")){
+    printer("++ GoShifter:: Reformatting 1000 Genomes LD",v=verbose)
+    ld_file <- LD_path %>% dplyr::rename(chrA = CHR_A,
+                                          posA = BP_A,
+                                          rsIdA = SNP_A,
+                                          posB = BP_B,
+                                          rsIdB = SNP_B,
+                                          Rsquared = R,
+                                          DPrime = DP) %>%
+      dplyr::mutate(Rsquared = Rsquared^2, chrA = paste0("chr",chrA)) %>%
+      dplyr::select(chrA,posA,rsIdA,posB,rsIdB,Rsquared,DPrime)
+  }
+
+
   # Create tabix file(s)
   LD_folder <- file.path(GS_results_path,"LD")
   dir.create(LD_folder, showWarnings = F, recursive = T)
   for(chr in unique(ld_file$chrA)){
     ld_path <- file.path(LD_folder, paste0(chr,".EUR.tsv"))
     gz_path <- paste0(ld_path,".gz")
-    file.remove(gz_path)
+    out <- suppressWarnings(file.remove(gz_path))
     data.table::fwrite(subset(ld_file, chrA==chr), ld_path,
-                       sep="\t", quote = F, col.names = F)
+                       sep="\t", quote = F, col.names = F,
+                       nThread=nThread)
     # gzip(ld_path, destname = gz_path)
     system(paste("bgzip",ld_path))
     cmd <- paste("tabix",
@@ -59,7 +102,7 @@ GoShifter.create_LD <- function(results_path, verbose=T){
 }
 
 
-GoShifter.search_ROADMAP <- function(Roadmap_reference = system.file("extdata/ROADMAP","ROADMAP_Epigenomic.js", package = "echolocatoR"),
+GOSHIFTER.search_ROADMAP <- function(Roadmap_reference = system.file("extdata/ROADMAP","ROADMAP_Epigenomic.js", package = "echolocatoR"),
                                      EID_filter = NA,
                                      GROUP_filter = NA,
                                      ANATOMY_filter = NA,
@@ -91,7 +134,8 @@ GoShifter.search_ROADMAP <- function(Roadmap_reference = system.file("extdata/RO
 }
 
 
-GoShifter.bed_names <- function(RM_ref, suffix="_15_coreMarks_mnemonics.bed.gz"){
+GOSHIFTER.bed_names <- function(RM_ref,
+                                suffix="_15_coreMarks_mnemonics.bed.gz"){
   # All files found here:
   # https://egg2.wustl.edu/roadmap/data/byFileType/chromhmmSegmentations/ChmmModels/coreMarks/jointModel/final/
 
@@ -108,7 +152,10 @@ GoShifter.bed_names <- function(RM_ref, suffix="_15_coreMarks_mnemonics.bed.gz")
   return(bed_names)
 }
 
-GoShifter.list_chromatin_states <- function(annotations_path = "./annotations"){
+
+
+
+GOSHIFTER.list_chromatin_states <- function(annotations_path = "./annotations"){
   # Term key for chromatin states
   chromState_key <- data.table::fread(file.path(annotations_path, "ROADMAP",
                                                 "ROADMAP_chromatinState_HMM.tsv"))
@@ -117,7 +164,7 @@ GoShifter.list_chromatin_states <- function(annotations_path = "./annotations"){
 
 
 
-GoShifter.get_roadmap_annotations <- function(annotations_path = "./annotations",
+GOSHIFTER.get_roadmap_annotations <- function(annotations_path = "./annotations",
                                               bed.list,
                                               chromatin_state = "TssA",
                                               verbose = T){
@@ -165,8 +212,8 @@ GoShifter.get_roadmap_annotations <- function(annotations_path = "./annotations"
   return(output_paths)
 }
 
-GoShifter.process_results <- function(RoadMap_ref,
-                                      results_path,
+GOSHIFTER.process_results <- function(RoadMap_ref,
+                                      locus_dir,
                                       output_bed,
                                       out.prefix){
   # From GitHub Repo: https://github.com/immunogenomics/goshifter
@@ -175,7 +222,7 @@ GoShifter.process_results <- function(RoadMap_ref,
   ##The smaller the value the more likely a locus overlaps an annotation not by chance.
   ##Loci not overlapping any annotation are denoted as “N/A”.
   ## ** NOTE **: This file is terribly named. Each SNP is not necessarily a "locus".
-  .locusscore<- data.table::fread(file.path(results_path,"GoShifter",
+  .locusscore<- data.table::fread(file.path(locus_dir,"GoShifter",
                                             paste0(out.prefix,".nperm1000.locusscore")),sep="\t")
   .locusscore$Annotation <- basename(output_bed)
   eid <- strsplit(basename(output_bed),"_")[[1]][1]
@@ -189,7 +236,7 @@ GoShifter.process_results <- function(RoadMap_ref,
   ## number of loci where at least one SNP overlaps an annotation allSnps
   ## – total number of tested loci enrichment – nSnpOverlap/allSnps
   # ***Note***, P-value is the number of times the “enrichment” is greater or equal to the observed overlap divided by total number of permutations.
-  .enrich <- data.table::fread(file.path(results_path,"GoShifter",
+  .enrich <- data.table::fread(file.path(locus_dir,"GoShifter",
                                                     paste0(out.prefix,".nperm1000.enrich")) ,sep="\t")
   # Manually calculate p-value...annoying that they don't just provide this in output files
   GS.stats$pval <- sum(.enrich$enrichment >= .enrich$nSnpOverlap) / max(.enrich$nperm)
@@ -205,7 +252,7 @@ GoShifter.process_results <- function(RoadMap_ref,
 }
 
 
-GoShifter.check_overlap <- function(output_bed,
+GOSHIFTER.check_overlap <- function(output_bed,
                                     GS_results_path,
                                     overlap_threshold = 1){
   bed.file <- data.table::fread(output_bed, col.names = c("Chrom", "Start","End","State","NA"))
@@ -219,43 +266,57 @@ GoShifter.check_overlap <- function(output_bed,
   return(bed.overlap)
 }
 
-GoShifter.run <- function(RoadMap_ref,
-                           results_path,
-                           permutations = 1000,
-                           goshifter_path = "./echolocatoR/tools/goshifter",
-                           chromatin_state = "TssA",
-                           R2_filter = 0.8,
-                           remove_tmps = T,
-                           verbose = T,
-                           overlap_threshold = 1){
-  bed_names <- GoShifter.bed_names(RoadMap_ref)
-  GS_results_path <- file.path(results_path,"GoShifter")
+
+#' Run \code{GoShifter} enrichment test
+#'
+#'  \code{GoShifter}: Locus-specific enrichment tool.
+#'
+#' @source
+#' \href{https://github.com/immunogenomics/goshifter}{GitHub}
+#' \href{https://pubmed.ncbi.nlm.nih.gov/26140449/}{Publication}
+GOSHIFTER.run <- function(locus_dir,
+                          grl.roadmap,
+                          permutations = 1000,
+                          goshifter_path = NULL,
+                          chromatin_state = "TssA",
+                          R2_filter = 0.8,
+                          remove_tmps = T,
+                          verbose = T,
+                          overlap_threshold = 1){
+  goshifter_path <- GOSHIFTER.find_goshifter_folder(goshifter = goshifter_path)
+  # python <- CONDA.find_python_path(conda_env = "goshifter")
+  GS_results_path <- file.path(locus_dir,"GoShifter")
   # Iterate over each bed file
-  GS_results <- lapply(bed_names, function(bed,
-                                           remove_tmps. = remove_tmps,
-                                           results_path. = results_path,
-                                           RoadMap_ref. = RoadMap_ref,
-                                           R2_filter. = R2_filter,
-                                           overlap_threshold. = overlap_threshold){
-      output_bed <- GoShifter.get_roadmap_annotations(bed.list = bed,
-                                                      verbose = verbose,
-                                                      chromatin_state = chromatin_state)
+  GS_results <- lapply(names(grl.roadmap), function(gr.name,
+                                                    finemap_dat,
+                                                    remove_tmps. = remove_tmps,
+                                                    locus_dir. = locus_dir,
+                                                    R2_filter. = R2_filter,
+                                                    overlap_threshold. = overlap_threshold){
+      message(gr.name)
+      gr.roadmap <- grl.roadmap[[gr.name]]
       # Check if there's any overlap first
-      bed.overlap <- GoShifter.check_overlap(output_bed,
-                                             GS_results_path,
-                                             overlap_threshold.)
-      if(nrow(bed.overlap) >= overlap_threshold){
-        printer("GoShifter:: SNPs overlapping between snpmap and bed files =",nrow(bed.overlap) )
-        printer("GoShifter: Testing for enrichment of SNPs within annotation:",
-                basename(output_bed), v=verbose)
-        out.prefix <- gsub(".bed.gz","",basename(output_bed))
-        cmd <- paste(
-          file.path(goshifter_path,"goshifter.py"),
+      gr.hits <- GRanges_overlap(dat1 = finemap_dat,chrom_col.1 = "CHR",
+                                  start_col.1 = "POS",
+                                  end_col.1 = "POS",
+                                  dat2 = gr.roadmap)
+
+      if(length(gr.hits) >= overlap_threshold){
+
+        bed_dir <- file.path(locus_dir,"annotations","Roadmap")
+        printer("++ GoShifter:: Converting GRanges to BED",)
+        bed_file <- GRanges_to_BED(GR.annotations = grl.roadmap[gr.name],
+                                   output_path = bed_dir,
+                                   gzip = T,
+                                   nThread = 1)
+        printer("GoShifter: Overlapping SNPs detected", v=verbose)
+        cmd <- paste("python2.7",
+                     file.path(goshifter_path,"goshifter.py"),
           "--snpmap",file.path(GS_results_path,"snpmap.txt"),
-          "--annotation",output_bed,
+          "--annotation",bed_file,
           "--permute",permutations,
           "--ld",file.path(GS_results_path,"LD"),
-          "--out",file.path(GS_results_path, out.prefix),
+          "--out",file.path(GS_results_path, gr.name),
           "--rsquared",R2_filter. # Optional
           # "--window",window, # Optional
           # "--min-shift",min_shift, # Optional
@@ -266,10 +327,10 @@ GoShifter.run <- function(RoadMap_ref,
         cmd.out <- system(cmd, intern = T)
         cat(paste(cmd.out,collapse="\n"))
         # Gather results from written output files
-        GS.stats <- GoShifter.process_results(RoadMap_ref = RoadMap_ref.,
-                                              results_path = results_path.,
+        GS.stats <- GOSHIFTER.process_results(RoadMap_ref = RoadMap_ref.,
+                                              locus_dir = locus_dir.,
                                               output_bed = output_bed,
-                                              out.prefix = out.prefix)
+                                              out.prefix = gr.name)
         GS.stats$chromatin_state <- chromatin_state
         # Extract p-value from console output
         GS.pval <- gsub("p-value = ","",cmd.out[startsWith(cmd.out, "p-value")]) %>% as.numeric()
@@ -294,7 +355,7 @@ GoShifter.run <- function(RoadMap_ref,
 
 
 
-GoShifter.summarise_results <- function(GS_results){
+GOSHIFTER.summarise_results <- function(GS_results){
   # Summarise results
   sig_results <- GS_results %>%
     # Apply bonferonni correction
@@ -320,10 +381,19 @@ GoShifter.summarise_results <- function(GS_results){
 
 ####----- Go Shifter: Main Function -----####
 
-GoShifter <- function(results_path,
+
+
+#' Run \code{GoShifter} enrichment pipeline
+#'
+#'  \code{GoShifter}: Locus-specific enrichment tool.
+#'
+#' @source
+#' \href{https://github.com/immunogenomics/goshifter}{GitHub}
+#' \href{https://pubmed.ncbi.nlm.nih.gov/26140449/}{Publication}
+GOSHIFTER <- function(locus_dir,
                       snp_df,
                       SNP.Group = "",
-                      goshifter_path = "./echolocatoR/tools/goshifter",
+                      goshifter_path = NULL,
                       permutations = 1000,
                       ROADMAP_search = "",
                       ROADMAP_type = NA, # PrimaryTissue
@@ -334,35 +404,45 @@ GoShifter <- function(results_path,
                       remove_tmps = T,
                       verbose = T,
                       save_results = T){
-  # results_path <-  "./Data/GWAS/Nalls23andMe_2019/LRRK2"; Roadmap_chromatinMarks_search <- "monocytes"; CredibleSet_only = T; permutations = 1000; chromatin_state = NA;  R2_filter = 0.8
+  # locus_dir <-  "./Data/GWAS/Nalls23andMe_2019/LRRK2"; Roadmap_chromatinMarks_search <- "monocytes"; CredibleSet_only = T; permutations = 1000; chromatin_state = NA;  R2_filter = 0.8
   # Cleanup pyc tmp files
-  suppressWarnings(file.remove(
+  goshifter <- GOSHIFTER.find_goshifter_folder(goshifter=goshifter_path)
+  out <- suppressWarnings(file.remove(
     file.path(goshifter_path,
               c("chromtree.pyc",
                 "data.pyc",
                 "docopt.pyc",
                 "functions.pyc")) ) )
   # Term key for chromatin states
-  chromState_key <- data.table::fread(file.path("./echolocatoR/tools/Annotations/ROADMAP/ROADMAP_chromatinState_HMM.tsv"))
+  chromState_key <- data.table::fread(system.file("extdata/ROADMAP","ROADMAP_chromatinState_HMM.tsv",package = "echolocatoR"))
 
   # Create GoShifter folder
-  # results_path="Data/GWAS/Nalls23andMe_2019/LRRK2"
-  GS_results_path <- file.path(results_path,"GoShifter")
+  # locus_dir="Data/GWAS/Nalls23andMe_2019/LRRK2"
+  GS_results_path <- file.path(locus_dir,"GoShifter")
   dir.create(GS_results_path, showWarnings = F, recursive = T)
   GS.RESULTS.path <- file.path(GS_results_path,
-                               paste0("GoShifter.",paste(chromatin_states, collapse = "-"),".",SNP.Group,".txt"))
+                               paste0("GOSHIFTER.",paste(chromatin_states, collapse = "-"),".",SNP.Group,".txt"))
 
   # snpmap file
-  GoShifter.create_snpmap(snp_df, GS_results_path, verbose = verbose)
+  GOSHIFTER.create_snpmap(finemap_dat = finemap_dat,
+                          GS_results = GS_results_path,
+                          verbose = verbose)
   # OR, copy file directly from example
   # file.copy(file.path(goshifter_path,"test_data","bc.snpmappings.hg19.txt"),
   #           file.path(GS_results_path,"snpmap.txt"),overwrite = T)
 
   # LD file
-  GoShifter.create_LD(results_path, verbose = verbose)
+  GOSHIFTER.create_LD(locus_dir = locus_dir,
+                      finemap_dat = finemap_dat,
+                      verbose = verbose)
   # Gather Annotation BED files
-  RoadMap_ref <- GoShifter.search_ROADMAP(fuzzy_search = ROADMAP_search)
-  if(any(!is.na(ROADMAP_type))){RoadMap_ref <- subset(RoadMap_ref, TYPE %in% ROADMAP_type)}
+  # RoadMap_ref <- GOSHIFTER.search_ROADMAP(fuzzy_search = ROADMAP_search)
+  grl.roadmap <- ROADMAP.query(results_path = file.path(locus_dir,"annotations"),
+                               gr.snp = finemap_dat,
+                               keyword_query = ROADMAP_search,
+                               nThread = 4)
+
+  # if(any(!is.null(ROADMAP_type))){RoadMap_ref <- subset(RoadMap_ref, TYPE %in% ROADMAP_type)}
 
   # Use existing results
   if(file.exists(GS.RESULTS.path) & force_new_goshifter==F){
@@ -372,9 +452,9 @@ GoShifter <- function(results_path,
     GS.RESULTS <- lapply(chromatin_states, function(chromatin_state){
       try({
         printer("+ GoShifter:: Running on chromatin state subset:",chromatin_state)
-        GS_results <- GoShifter.run(goshifter_path = goshifter_path,
+        GS_results <- GOSHIFTER.run(goshifter_path = goshifter_path,
                                     RoadMap_ref = RoadMap_ref,
-                                    results_path = results_path,
+                                    locus_dir = locus_dir,
                                     chromatin_state = chromatin_state,
                                     R2_filter = R2_filter,
                                     permutations = permutations,
@@ -410,7 +490,7 @@ GoShifter <- function(results_path,
 
 # ######## PLOTS  # ########
 
-GoShifter.histograms_pvals <- function(GS_results){
+GOSHIFTER.histograms_pvals <- function(GS_results){
   GS <- GS_results[,c("Annotation","pval","GS.pval")] %>% unique() %>%
     data.table::melt.data.table(id.vars = "Annotation", variable.name = "P.value Source", value.name = "P.value")
   hst <- ggplot(data = GS, aes(x=P.value, fill=`P.value Source`)) +
@@ -419,7 +499,7 @@ GoShifter.histograms_pvals <- function(GS_results){
   print(hst)
 }
 
-GoShifter.histograms_SNPgroups <- function(GS.groups, show_plot = T){
+GOSHIFTER.histograms_SNPgroups <- function(GS.groups, show_plot = T){
   GS <- GS.groups[,c("SNP.Group","Annotation","pval","GS.pval")] %>% unique()
   hst <- ggplot(GS, aes(x=pval, fill=SNP.Group)) +
     geom_histogram(alpha=.7)
@@ -427,7 +507,7 @@ GoShifter.histograms_SNPgroups <- function(GS.groups, show_plot = T){
   return(hst)
 }
 
-GoShifter.heatmap <- function(GS.groups, show_plot = T){
+GOSHIFTER.heatmap <- function(GS.groups, show_plot = T){
   # GS_results <- GS_results_CS
   sig.tests <- subset(GS.groups, pval<=0.05)
   mat <- reshape2::acast(sig.tests,

@@ -2,17 +2,34 @@
 % Please edit documentation in R/IMPACT.R
 \name{IMPACT.get_annotation_key}
 \alias{IMPACT.get_annotation_key}
-\title{Get IMPACT annotation key}
+\title{Get \emph{IMPACT} annotation key}
 \usage{
 IMPACT.get_annotation_key(
  
     URL = "https://github.com/immunogenomics/IMPACT/raw/master/IMPACT707/IMPACT_annotation_key.txt",
-  save_path = "./echolocatoR/annotations/IMPACT/IMPACT_annotation_key.txt.gz",
-  force_new_download = F
+  save_path = "./IMPACT/IMPACT_annotation_key.txt.gz",
+  save_key = F,
+  force_new_download = F,
+  verbose = T
 )
 }
 \description{
 Inlcludes the study source, tissue,cell type/line,
-and cell subtype of each of the 500 annotations in IMPACT
+and cell subtype of each of the 500 annotations in \emph{IMPACT}.
 }
+\examples{
+annot.key <- IMPACT.get_annotation_key(save_key=F)
+}
+\seealso{
+Other IMPACT: 
+\code{\link{IMPACT.get_annotations}()},
+\code{\link{IMPACT.get_top_annotations}()},
+\code{\link{IMPACT.iterate_get_annotations}()},
+\code{\link{IMPACT.postprocess_annotations}()},
+\code{\link{IMPACT.snp_group_boxplot}()},
+\code{\link{IMPACT_annotation_key}},
+\code{\link{IMPACT_heatmap}()},
+\code{\link{prepare_mat_meta}()}
+}
+\concept{IMPACT}
 \keyword{internal}

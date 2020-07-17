@@ -2,19 +2,45 @@
 % Please edit documentation in R/IMPACT.R
 \name{IMPACT.iterate_get_annotations}
 \alias{IMPACT.iterate_get_annotations}
-\title{Download IMPACT annotations}
+\title{Gather all \emph{IMPACT} annotations that overlap with your query}
 \usage{
 IMPACT.iterate_get_annotations(
   merged_DT,
   IMPACT_score_thresh = 0.1,
-  baseURL = "/Volumes/Steelix/IMPACT/IMPACT707/Annotations",
+  baseURL = "https://github.com/immunogenomics/IMPACT/raw/master/IMPACT707/Annotations",
   all_snps_in_range = T,
   top_annotations = F,
   force_one_annot_per_locus = F,
-  snp.filter = "!is.na(SNP)"
+  snp.filter = "!is.na(SNP)",
+  nThread = 4,
+  verbose = T
 )
 }
 \description{
-Includes the raw annotation itself, as well as per-SNP IMPACT scores for each annotation.
+Iterates over each unique locus.
+\bold{\emph{WARNING!}} These files are quite large and you need to make sure you
+have ample memory and storage on your computer for best results.
 }
+\details{
+Unfortunately, you have to download the entire chromosome file at once,
+ because they aren't Tabix indexed. To minimize the memory load,
+ this function only keeps the portion of the \emph{IMPACT} file that overlaps with the
+ coordinates in \code{subset_DT}.
+}
+\examples{
+data("merged_DT")
+ANNOT_MELT <- IMPACT.iterate_get_annotations(merged_DT=subset(merged_DT, Locus=="BST1"))
+}
+\seealso{
+Other IMPACT: 
+\code{\link{IMPACT.get_annotation_key}()},
+\code{\link{IMPACT.get_annotations}()},
+\code{\link{IMPACT.get_top_annotations}()},
+\code{\link{IMPACT.postprocess_annotations}()},
+\code{\link{IMPACT.snp_group_boxplot}()},
+\code{\link{IMPACT_annotation_key}},
+\code{\link{IMPACT_heatmap}()},
+\code{\link{prepare_mat_meta}()}
+}
+\concept{IMPACT}
 \keyword{internal}
