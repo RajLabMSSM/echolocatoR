@@ -449,7 +449,7 @@ effective_sample_size <- function(finemap_dat,
                                   verbose=T){
   if(is.null(sample_size)){
     if(all(c("N_cases","N_controls") %in% colnames(finemap_dat))){
-      finemap_dat$N <- (4.0 / (1.0/finemap_dat$N_cases + 1.0/finemap_dat$N_controls) )
+      finemap_dat$N <- round(4.0 / (1.0/finemap_dat$N_cases + 1.0/finemap_dat$N_controls), digits = 0 )
       printer("Calculating effective sample size (`N`) from `N_cases` and `N_controls`", v=verbose)
     }
   }else{
