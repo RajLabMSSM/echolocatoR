@@ -49,23 +49,31 @@ calculate_tstat <- function(finemap_dat,
 #' download MAF from UK Biobank and use that instead.
 #'
 #' @family standardizing functions
+#' @examples
+#' data("BST1");
+#' subset_DT <- data.frame(BST1)[,colnames(BST1)!="MAF"]
+#' BST1 <- get_UKB_MAF(subset_DT=subset_DT )
 get_UKB_MAF <- function(subset_DT,
                         output_path = "./Data/Reference/UKB_MAF",
-                        force_new_maf = F){
+                        force_new_maf = F,
+                        download_method="axel",
+                        nThread=4){
   printer("UKB MAF:: Extracting MAF from UKB reference.")
   # Documentation: http://biobank.ctsu.ox.ac.uk/showcase/field.cgi?id=22801
   # subset_DT = data.table::fread("Data/GWAS/Kunkle_2019/PTK2B/PTK2B_Kunkle_2019_subset.tsv.gz")
   chrom <- unique(subset_DT$CHR)
-  input.url <- paste0("biobank.ctsu.ox.ac.uk/showcase/showcase/auxdata/ukb_mfi_chr",chrom,"_v3.txt")
-  out.file <- file.path(output_path, basename(input.url))
-  if(file.exists(out.file) & force_new_maf==F){
+  input_url <- paste0("biobank.ctsu.ox.ac.uk/showcase/showcase/auxdata/ukb_mfi_chr",chrom,"_v3.txt")
+  out_file <- file.path(output_path, basename(input_url))
+  if(file.exists(out_file) & force_new_maf==F){
     printer("+ UKB MAF:: Importing pre-existing file")
   } else{
-    out.file <- axel(input_url = input_url,
-                     output_path = output_path,
-                     background = F)
+    out_file <- downloader(input_url = input_url,
+                           output_path = output_path,
+                           background = F,
+                           download_method = download_method,
+                           nThread = nThread)
   }
-  maf <- data.table::fread(out.file, nThread = 4,
+  maf <- data.table::fread(out_file, nThread = nThread,
                            select = c(3,6),
                            col.names = c("POS","MAF"))
   maf <- subset(maf, POS %in% subset_DT$POS)
@@ -108,6 +116,7 @@ standardize_subset <- function(locus,
                               QTL_prefixes=NULL,
                               return_dt=T,
                               nThread=4,
+                              download_method="axel",
                               verbose=T){
   printer("",v=verbose)
   message("---------------- Step 1.5: Standardize ----------")
@@ -122,7 +131,7 @@ standardize_subset <- function(locus,
                                nThread = nThread)
     ## Calculate StdErr
     if(stderr_col=="calculate"){
-      printer("Calculating Standard Error...")
+      printer("Calculating Standard Error...",v=verbose)
       query$StdErr <- subset(query, select=effect_col) / subset(query, select=tstat_col)
       stderr_col <- "StdErr"
     }
@@ -168,8 +177,11 @@ standardize_subset <- function(locus,
     } else {
       # As a last resort download UKB MAF
       query_mod <- get_UKB_MAF(subset_DT = query_mod,
-                               output_path = "./Data/Reference/UKB_MAF",
-                               force_new_maf = F)
+                               output_path = file.path(dirname(dirname(dirname(subset_path))),
+                                                       "Reference/UKB_MAF"),
+                               force_new_maf = F,
+                               nThread = nThread,
+                               download_method = download_method)
     }
     query_mod$MAF <- abs(query_mod$MAF)
     printer("++ Removing SNPs with MAF== 0 | NULL | NA", v=verbose)
