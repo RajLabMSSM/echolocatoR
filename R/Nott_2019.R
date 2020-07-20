@@ -43,7 +43,7 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
   # library(BiocGenerics)
   # library(GenomicRanges)
   # library(ggbio)
-  # show_plot=T;save_plot=T;full_data=T;return_assay_track=F;binwidth=2500; geom="histogram";plot_formula="Assay + Cell_type ~.";show_regulatory_rects=T;  bigwig_dir=NULL; verbose=T; nThread=4; finemap_dat=BST1;
+  # show_plot=T;save_plot=T;full_data=T;return_assay_track=F;binwidth=2500; geom="histogram";plot_formula="Assay + Cell_type ~.";show_regulatory_rects=T;  bigwig_dir=NULL; verbose=T; nThread=4; finemap_dat=BST1; plot.window=500000;
 
   # UCSC Tracks
   import.bw.filt <- function(bw.file,
@@ -104,6 +104,7 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
   # names(bw.grlist) <- bw.cols
   bw.gr <- unlist(GenomicRanges::GRangesList(bw.grlist))
   bw.gr$Assay <- gsub("atac","ATAC",bw.gr$Assay)
+  bw.gr$Cell_type <- gsub("oligodendrocytes","oligo",bw.gr$Cell_type)
 
   xlims <- get_window_limits(finemap_dat = finemap_dat,
                              plot.window = plot.window)
@@ -566,6 +567,7 @@ NOTT_2019.get_regulatory_regions <- function(finemap_dat,
   cell_dict <- c("astrocyte"="astrocytes",
                  "neuronal"="neurons",
                  "oligo"="oligo",
+                 "oligodendrocytes"="oligo",
                  "microglia"="microglia")
   regions_sub <- regions %>%
     tidyr::separate(Name, into=c("Cell_type","Element"), remove=F) %>%
@@ -625,7 +627,8 @@ NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
                                     dpi=300){
   # data("BST1"); print_plot=T; save_plot=T; title=NULL; index_SNP=NULL; xlims=NULL; zoom_window=NULL; return_consensus_overlap =T
   if(!"Consensus_SNP" %in% colnames(finemap_dat)){finemap_dat <- find_consensus_SNPs(finemap_dat, verbose = F)}
-  marker_key <- list(PU1 = "Microglia", Olig2 = "Oligo", NeuN = "Neuronal", LHX2 = "Astrocyte")
+  marker_key <- list(PU1 = "microglia", Olig2 = "oligo",
+                     NeuN = "neurons", LHX2 = "astrocytes")
   if (is.null(index_SNP)) {
     lead.pos <- subset(finemap_dat, leadSNP)$POS
   } else {
@@ -717,6 +720,7 @@ NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
     scale_y_reverse() + theme_classic() +
     theme(legend.key.width = unit(1.5, "line"), legend.key.height = unit(1.5, "line"), axis.text.y = element_blank())
 
+  # Show enhancers/promoters as rectangles
   if (show_regulatory_rects) {
     NOTT.interact_trk <- NOTT.interact_trk +
       ggbio::geom_rect(data = regions,

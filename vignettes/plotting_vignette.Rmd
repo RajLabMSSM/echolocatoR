@@ -65,6 +65,14 @@ data("BST1"); data("LD_matrix"); data("locus_dir");
 locus_dir <- file.path("~/Desktop",locus_dir)
 finemap_DT <- BST1 
 show_plot <- T
+
+
+locus <- "SYT17"
+locus_dir <- file.path("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019",locus)
+LD_matrix <- readRDS(file.path(locus_dir,"plink/UKB_LD.RDS"))
+finemap_DT <- data.table::fread(file.path(locus_dir,"Multi-finemap/Multi-finemap_results.txt"))
+finemap_DT <- find_consensus_SNPs(finemap_DT) 
+finemap_DT <- update_CS_cols(finemap_DT)
 ```
 
 ## Using NO annotations  
@@ -121,11 +129,15 @@ trk_plot.nott_2019 <- GGBIO.plot(finemap_dat=finemap_DT,
                                  locus_dir=locus_dir, 
                                  XGR_libnames=NULL, 
                                  Nott_epigenome=T, 
+                                 plot.window = 50000,
                                  Nott_binwidth = 100,
                                  Nott_regulatory_rects = T, 
                                  Nott_show_placseq = T,
-                                 save_plot=F,
+                                 save_plot=T,
                                  show_plot=show_plot)
+# ggbio::ggsave("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/LRRK2/multiview_LRRK2_.svg",
+#               trk_plot.nott_2019, 
+#               height=12, width=10)
 ```
 
 

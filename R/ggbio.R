@@ -489,7 +489,7 @@ GGBIO.plot <- function(finemap_dat,
                        Nott_epigenome=F,
                        Nott_regulatory_rects=T,
                        Nott_show_placseq=T,
-                       Nott_binwidth=2500,
+                       Nott_binwidth=200, #2500
                        Nott_bigwig_dir=NULL,
 
                        save_plot=T,

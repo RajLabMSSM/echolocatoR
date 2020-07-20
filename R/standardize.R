@@ -50,14 +50,14 @@ calculate_tstat <- function(finemap_dat,
 #'
 #' @family standardizing functions
 get_UKB_MAF <- function(subset_DT,
-                        output.path = "./Data/Reference/UKB_MAF",
+                        output_path = "./Data/Reference/UKB_MAF",
                         force_new_maf = F){
   printer("UKB MAF:: Extracting MAF from UKB reference.")
   # Documentation: http://biobank.ctsu.ox.ac.uk/showcase/field.cgi?id=22801
   # subset_DT = data.table::fread("Data/GWAS/Kunkle_2019/PTK2B/PTK2B_Kunkle_2019_subset.tsv.gz")
   chrom <- unique(subset_DT$CHR)
   input.url <- paste0("biobank.ctsu.ox.ac.uk/showcase/showcase/auxdata/ukb_mfi_chr",chrom,"_v3.txt")
-  out.file <- file.path(output.path, basename(input.url))
+  out.file <- file.path(output_path, basename(input.url))
   if(file.exists(out.file) & force_new_maf==F){
     printer("+ UKB MAF:: Importing pre-existing file")
   } else{
@@ -162,17 +162,18 @@ standardize_subset <- function(locus,
       query <- query %>% dplyr::rename(Freq=freq_col)
       query_mod$Freq <- as.numeric(query$Freq)
       if(MAF_col=="calculate" | !(MAF_col %in% colnames(query)) ){
-        printer("+Inferring MAF from frequency column...")
-        query_mod$MAF <- ifelse(query$Freq<0.5, query$Freq, abs(1-query$Freq))
+        printer("++ Inferring MAF from frequency column...")
+        query_mod$MAF <- ifelse(abs(query$Freq<0.5), abs(query$Freq), abs(1-query$Freq))
       }
     } else {
       # As a last resort download UKB MAF
       query_mod <- get_UKB_MAF(subset_DT = query_mod,
-                               output.path = "./Data/Reference/UKB_MAF",
+                               output_path = "./Data/Reference/UKB_MAF",
                                force_new_maf = F)
     }
     query_mod$MAF <- abs(query_mod$MAF)
-
+    printer("++ Removing SNPs with MAF== 0 | NULL | NA", v=verbose)
+    query_mod <- subset(query_mod, !(is.na(MAF) | is.null(MAF) | MAF==0))
 
 
     ## Add proportion of cases if available
