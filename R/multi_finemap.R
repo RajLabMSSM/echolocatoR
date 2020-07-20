@@ -179,7 +179,7 @@ multi_finemap <- function(locus_dir,
                                      PAINTOR_QTL_datasets = PAINTOR_QTL_datasets,
                                      PP_threshold = PP_threshold,
                                      conditioned_snps = conditioned_snps,
-                                     conda_env=conda_env)
+                                     conda_env = conda_env)
      })
       # },
       # # WARNING
@@ -422,7 +422,7 @@ finemap_handler <- function(locus_dir,
                                    PAINTOR_QTL_datasets = PAINTOR_QTL_datasets,
                                    PP_threshold = PP_threshold,
 
-                                   conda_env="echoR")
+                                   conda_env = conda_env)
       save_finemap_results(finemap_dat, file_path)
     }
   end_FM <- Sys.time()
