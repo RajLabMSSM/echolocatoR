@@ -3,36 +3,57 @@
 # https://github.com/immunogenomics/IMPACT
 
 
-#' Get IMPACT annotation key
+#' Get \emph{IMPACT} annotation key
 #'
 #' Inlcludes the study source, tissue,cell type/line,
-#' and cell subtype of each of the 500 annotations in IMPACT
+#' and cell subtype of each of the 500 annotations in \emph{IMPACT}.
 #' @keywords internal
+#' @family IMPACT
+#' @examples
+#' annot.key <- IMPACT.get_annotation_key(save_key=F)
 IMPACT.get_annotation_key <- function(URL="https://github.com/immunogenomics/IMPACT/raw/master/IMPACT707/IMPACT_annotation_key.txt",
-                                      save_path="./echolocatoR/annotations/IMPACT/IMPACT_annotation_key.txt.gz",
-                                      force_new_download=F){
+                                      save_path="./IMPACT/IMPACT_annotation_key.txt.gz",
+                                      save_key=F,
+                                      force_new_download=F,
+                                      verbose=T){
   if(file.exists(save_path) & force_new_download==F){
-    print("+ IMPACT:: Importing local anotation key...")
+    print("+ IMPACT:: Importing local anotation key...",v=verbose)
     annot.key <- data.table::fread(save_path)
   } else {
-    print("+ IMPACT:: Downloading annotation key from GitHub...")
+    print("+ IMPACT:: Downloading annotation key from GitHub...",v=verbose)
     annot.key <- data.table::fread(URL)
-    data.table::fwrite(annot.key, save_path, sep="\t")
-    R.utils::gzip(save_path)
+    if(save_key!=F){
+      data.table::fwrite(annot.key, save_path, sep="\t")
+      R.utils::gzip(save_path)
+    }
   }
   annot.key$Annot <- as.factor(paste0("Annot",annot.key$IMPACT))
   return(annot.key)
 }
 
-#' Download IMPACT annotations
+
+
+
+#' Download \emph{IMPACT} annotations
 #'
-#' Includes the raw annotation itself, as well as per-SNP IMPACT scores for each annotation.
+#' Includes the raw annotation itself,
+#' as well as per-SNP \emph{IMPACT} scores for each annotation.
+#'
+#' Unfortunately, you have to download the entire chromosome file at once,
+#'  because they aren't Tabix indexed. To minimize the memory load,
+#'  this function only keeps the portion of the \emph{IMPACT} file that overlaps with the
+#'  coordinates in \code{subset_DT}.
 #' @keywords internal
+#' @family IMPACT
+#' @examples
+#' data("BST1")
+#' annot_melt <- IMPACT.get_annotations(subset_DT=BST1)
 IMPACT.get_annotations <- function(baseURL="https://github.com/immunogenomics/IMPACT/raw/master/IMPACT707/Annotations",
                                    chrom=NULL,
                                    subset_DT=NULL,
                                    nThread=4,
-                                   all_snps_in_range=F){
+                                   all_snps_in_range=F,
+                                   verbose=T){
   # These are large files stored via GitHub's large file storage (lfs)
   # Install LFS: https://git-lfs.github.com
   # Getting started with LFS: https://www.atlassian.com/git/tutorials/git-lfs
@@ -46,6 +67,7 @@ IMPACT.get_annotations <- function(baseURL="https://github.com/immunogenomics/IM
 
 
   URL <- file.path(baseURL, paste0("IMPACT707_EAS_chr",chrom,".annot.gz"))
+  printer("IMPACT:: Importing",URL, v=verbose)
   annot <- data.table::fread(URL, nThread = nThread)
 
   if(!is.null(subset_DT)){
@@ -73,28 +95,38 @@ IMPACT.get_annotations <- function(baseURL="https://github.com/immunogenomics/IM
 
 
 
-# quick_finemap()
-# annot_melt <- IMPACT.get_annotations(baseURL = "/Volumes/Steelix/IMPACT/IMPACT707/Annotations", subset_DT = subset_DT)
 
+#' Gather all \emph{IMPACT} annotations that overlap with your query
+#'
+#' Iterates over each unique locus.
+#' \bold{\emph{WARNING!}} These files are quite large and you need to make sure you
+#' have ample memory and storage on your computer for best results.
+#'
 #' @inherit IMPACT.get_annotations
 #' @keywords internal
+#' @family IMPACT
+#' @examples
+#' data("merged_DT")
+#' ANNOT_MELT <- IMPACT.iterate_get_annotations(merged_DT=subset(merged_DT, Locus=="BST1"))
 IMPACT.iterate_get_annotations <- function(merged_DT,
                                            IMPACT_score_thresh=.1,
-                                           baseURL="/Volumes/Steelix/IMPACT/IMPACT707/Annotations",
+                                           baseURL="https://github.com/immunogenomics/IMPACT/raw/master/IMPACT707/Annotations",
                                            all_snps_in_range=T,
                                            top_annotations=F,
                                            force_one_annot_per_locus=F,
-                                           snp.filter="!is.na(SNP)"){
+                                           snp.filter="!is.na(SNP)",
+                                           nThread=4,
+                                           verbose=T){
   ANNOT_MELT <- lapply(unique(merged_DT$Locus), function(locus){
-    message("+ IMPACT:: Gathering annotations for Locus = ",locus)
+    message("+ IMPACT:: Gathering annotations for Locus = ",locus, v=verbose)
     try({
       subset_DT <- subset(merged_DT, Locus==locus)
-      annot_melt <- IMPACT.get_annotations(
-                                           baseURL = baseURL,
+      annot_melt <- IMPACT.get_annotations(baseURL = baseURL,
                                            # baseURL = "../../data/IMPACT/IMPACT707/Annotations",
                                            subset_DT = subset_DT,
                                            all_snps_in_range = all_snps_in_range,
-                                           nThread = 4)
+                                           nThread = nThread,
+                                           verbose = verbose)
       if(top_annotations!=F){
         top_impact <- IMPACT.get_top_annotations(ANNOT_MELT = annot_melt,
                                                  snp.filter = snp.filter,
@@ -106,7 +138,7 @@ IMPACT.iterate_get_annotations <- function(merged_DT,
                                          TF %in% top_impact$TF)
       }
       annot_melt <- subset(annot_melt, IMPACT_score >= IMPACT_score_thresh)
-      printer("+ IMPACT::",nrow(annot_melt),"annotations found at IMPACT_score ≥", IMPACT_score_thresh)
+      printer("+ IMPACT::",nrow(annot_melt),"annotations found at IMPACT_score ≥", IMPACT_score_thresh, v=verbose)
       return(annot_melt)
     })
   }) %>% data.table::rbindlist()
@@ -116,11 +148,13 @@ IMPACT.iterate_get_annotations <- function(merged_DT,
 
 
 
-#' Prepare IMPACT annotations
+
+#' Prepare \emph{IMPACT} annotations
 #'
-#' Transform IMPACT annotations from wide format (one row per SNP) to
+#' Transform \emph{IMPACT} annotations from wide format (one row per SNP) to
 #' long format (multiple rows per SNP).
 #' @keywords internal
+#' @family IMPACT
 IMPACT.postprocess_annotations <- function(ANNOT_MELT,
                                            order_loci = T,
                                            no_no_loci = NULL){
@@ -172,10 +206,12 @@ IMPACT.postprocess_annotations <- function(ANNOT_MELT,
 
 
 
+
 #' Get the top annotation(s)
 #'
-#' Get the annotation(s) with the top mean IMPACT for a given set of SNPs.
+#' Get the annotation(s) with the top mean \emph{IMPACT} for a given set of SNPs.
 #' @keywords internal
+#' @family IMPACT
 IMPACT.get_top_annotations <- function(ANNOT_MELT,
                                        snp.filter="!is.na(IMPACT_score)",
                                        top_annotations=1,
@@ -214,9 +250,12 @@ IMPACT.get_top_annotations <- function(ANNOT_MELT,
   return(top_impact)
 }
 
-#' Prepare IMPACT data for for ComplexHeatmap
+
+
+#' Prepare \emph{IMPACT} data for for \pkg{ComplexHeatmap}
 #'
 #' @keywords internal
+#' @family IMPACT
 prepare_mat_meta <- function(TOP_IMPACT,
                              TOP_IMPACT_all,
                              snp.group="Consensus",
@@ -250,9 +289,18 @@ prepare_mat_meta <- function(TOP_IMPACT,
 }
 
 
-#' Plot ComplexHeatmap of IMPACT scores
+
+
+#' Plot \pkg{ComplexHeatmap} of \emph{IMPACT} scores
 #'
 #' @keywords internal
+#' @family IMPACT
+#' @examples
+#' \dontrun{
+#' ANNOT_MELT <- data.table::fread("~/Desktop/Fine_mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/IMPACT/IMPACT_overlap.csv.gz")
+#' no_no_loci =  c("HLA-DRB5","MAPT","ATG14","SP1","LMNB1","ATP6V0A1", "RETREG3","UBTF","FAM171A2","MAP3K14","CRHR1","MAPT-AS1","KANSL1","NSF","WNT3")
+#' ANNOT_MELT <- IMPACT.postprocess_annotations(ANNOT_MELT, no_no_loci = no_no_loci)
+#' }
 IMPACT_heatmap <- function(ANNOT_MELT){
   library(dplyr)
   library(ComplexHeatmap);# devtools::install_github("jokergoo/ComplexHeatmap")
@@ -264,13 +312,6 @@ IMPACT_heatmap <- function(ANNOT_MELT){
   #                                              all_snps_in_range=T,
   #                                              top_annotations_only=F)
   # data.table::fwrite(ANNOT_MELT,"../../data/IMPACT/IMPACT707/Annotations/IMPACT_overlap.csv.gz")
-  ANNOT_MELT <- data.table::fread("Data/GWAS/Nalls23andMe_2019/_genome_wide/IMPACT/IMPACT_overlap.csv.gz")
-  no_no_loci =  c("HLA-DRB5","MAPT","ATG14","SP1","LMNB1","ATP6V0A1",
-                  "RETREG3","UBTF","FAM171A2","MAP3K14","CRHR1","MAPT-AS1","KANSL1","NSF","WNT3")
-  ANNOT_MELT <- IMPACT.postprocess_annotations(ANNOT_MELT, no_no_loci = no_no_loci)
-
-
-
 
   snp.groups <- c("Lead_GWAS" = "leadSNP==T",
                   "UCS"="Support>0",
@@ -304,6 +345,7 @@ IMPACT_heatmap <- function(ANNOT_MELT){
     return(top_impact)
   }) %>% data.table::rbindlist()
   TOP_IMPACT_all <- subset(TOP_IMPACT_all, !Locus %in% no_no_loci)
+  TOP_IMPACT_all$SNP_group <- factor(TOP_IMPACT_all$SNP_group, levels = names(snp.groups), ordered = T)
   # Use a less averaged version of the data to gain power
   TOP_IMPACT_all$rowID <- 1:nrow(TOP_IMPACT_all)
   # Depending on if and at what stage you fill na with 0, you get very different boxplot and tstats
@@ -313,10 +355,19 @@ IMPACT_heatmap <- function(ANNOT_MELT){
                                   value.var="mean_IMPACT") %>%
    dplyr::select(Lead_GWAS, UCS, Consensus)
 
-  IMPACT.snp_group_boxplot(TOP_IMPACT_all)
-  res <- pairwise.t.test(x =  TOP_IMPACT_all$mean_IMPACT,
-                         g =  TOP_IMPACT_all$SNP_group)
+  bp <- IMPACT.snp_group_boxplot(TOP_IMPACT_all)
+  # res <- pairwise.t.test(x =  TOP_IMPACT_all$mean_IMPACT,
+  #                        g =  TOP_IMPACT_all$SNP_group)
   # res
+  make_boxplot <- function(boxplot_mat){
+    HeatmapAnnotation("mean IMPACT scores" = anno_boxplot(boxplot_mat, gp = gpar(fill = c("red","green3","goldenrod3","goldenrod2"), col = "black", border = "gray", alpha=.75)),
+                      annotation_name_side = "left",
+                      height=unit(3, "cm"),
+                      annotation_name_gp = gpar(cex=.5))
+  }
+
+
+  # draw(make_boxplot(boxplot_mat))
 
 
   # ComplexHeatmap
@@ -358,10 +409,7 @@ IMPACT_heatmap <- function(ANNOT_MELT){
                       cluster_rows = F,
                       # row_km = 4,
                       # row_dend_width =  unit(2, "cm"),
-                      top_annotation = HeatmapAnnotation("mean IMPACT scores" = anno_boxplot(boxplot_mat, gp = gpar(fill = c("red","green3","goldenrod3","goldenrod2"), col = "black", border = "gray", alpha=.75)),
-                                                         annotation_name_side = "left",
-                                                         height=unit(3, "cm"),
-                                                         annotation_name_gp = gpar(cex=.5))
+                      top_annotation = make_boxplot(boxplot_mat = boxplot_mat)
                       # top_annotation = columnAnnotation("} Mean IMPACT score (all loci)"=colMeans(mat,na.rm = T ) )
     )
     return(ha)
@@ -375,7 +423,8 @@ IMPACT_heatmap <- function(ANNOT_MELT){
     # widths <- widths*width_factor
 
     master_dict <- hierarchical_colors(mat_meta)
-    ha = Heatmap(meta, name = "Metadata_table",
+    ha = Heatmap(meta,
+                 name = "Metadata_table",
                  # width =widths,
                  show_heatmap_legend = F,
                  col = master_dict,
@@ -402,7 +451,7 @@ IMPACT_heatmap <- function(ANNOT_MELT){
   }
 
 
-  annotation_col <- function(meta, variable, width_factor=.6, rot=0, na_fill=NA, cex=.5, text_color="white"){
+  annotation_col <- function(mat_meta, variable, width_factor=.6, rot=0, na_fill=NA, cex=.5, text_color="white"){
     meta <- data.frame(mat_meta)
     meta[is.na(mat_meta[[variable]]), variable] <-  na_fill
 
@@ -434,11 +483,14 @@ IMPACT_heatmap <- function(ANNOT_MELT){
 
 
   # png("Data/GWAS/Nalls23andMe_2019/_genome_wide/IMPACT/IMPACT_summary_heatmap.png")
+  svg("~/Desktop/IMPACT_heatmap.svg")
   {
     set.seed(2019)
-    ht_list = main_heatmap(mat = mat_meta[,names(snp.groups)],
+    # dev.off()
+    ht_list = main_heatmap(mat = as.matrix(subset(mat_meta, select=names(snp.groups))),
                            row_split = mat_meta$Tissue)  +
-      annotation_table(mat_meta) +
+      # annotation_table(mat_meta) +
+
       # annotation_col(mat_meta, "Tissue") +
       # annotation_col(mat_meta, "CellDeriv") +
       # annotation_col(mat_meta, "Cell" ) +
@@ -448,7 +500,7 @@ IMPACT_heatmap <- function(ANNOT_MELT){
          heatmap_legend_side="left")
          # height = unit(30, "cm"))
   }
-  # dev.off();
+  dev.off();
 
 
 
@@ -521,16 +573,49 @@ IMPACT_heatmap <- function(ANNOT_MELT){
 }
 
 
-#' IMPACT box plot
-#' Box plot of IMPACT scores from each SNP group.
+
+
+
+#' \emph{IMPACT} box plot with \pkg{ggpubr}
+#'
+#' Box plot of \emph{IMPACT} scores from each SNP group.
+#'
 #' @keywords internal
-IMPACT.snp_group_boxplot <- function(TOP_IMPACT_all){
-  bp <- ggplot(data=TOP_IMPACT_all, aes(x=SNP_group, y=max_IMPACT, fill=SNP_group)) +
-    geom_boxplot(alpha=.5,notch = T, outlier.alpha = 0) +
-    geom_violin(alpha=.5) +
-    geom_jitter(alpha=.1,width = .25)
-  print(bp)
+#' @family IMPACT
+#' @source
+#' \href{https://www.r-bloggers.com/add-p-values-and-significance-levels-to-ggplots/}{ggpubr example}
+#' @examples
+#' \dontrun{
+#' TOP_IMPACT_all <- reshape2::melt(boxplot_mat) %>% `colnames<-`(c("SNP_group","max_IMPACT"))
+#' bp <- IMPACT.snp_group_boxplot(TOP_IMPACT_all, method="t.test")
+#' bp <- IMPACT.snp_group_boxplot(TOP_IMPACT_all, method="wilcox.test")
+#' }
+IMPACT.snp_group_boxplot <- function(TOP_IMPACT_all,
+                                      method="t.test",
+                                      show_plot=T){
+  library(ggpubr)
+  # tests <- compare_means(max_IMPACT ~ SNP_group,  data = TOP_IMPACT_all, method=method)
+  snp.groups=levels(TOP_IMPACT_all$SNP_group)
+  comparisons <- list(c(snp.groups[1],snp.groups[2]),
+                      c(snp.groups[2],snp.groups[3]),
+                      c(snp.groups[1],snp.groups[3]))
+
+  bp <- ggboxplot(TOP_IMPACT_all,
+                 x = "SNP_group", y = "max_IMPACT",
+                 fill = "SNP_group",
+                 alpha=.6) +
+    stat_compare_means(method = method, comparisons = comparisons, label = "p.signif") +
+    stat_compare_means(method = method, comparisons = comparisons, label = "p.format", vjust=1.75)  +
+    geom_jitter(alpha=.5,width = .25, show.legend = F, shape=16) +
+    scale_fill_manual(values =  c("red","green3","goldenrod3")) +
+    labs(y="max IMPACT score", x="SNP group") +
+    theme(legend.position = "none")
+  if(show_plot)print(bp)
+  if(save_path!=F) ggplot2::ggsave(save_path, bp)
+  return(bp)
 }
+
+
 
 
 #' Color tissues/cell types

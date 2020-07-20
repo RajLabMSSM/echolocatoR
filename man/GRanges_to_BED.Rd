@@ -4,7 +4,7 @@
 \alias{GRanges_to_BED}
 \title{Convert GRanges object to BED format and save}
 \usage{
-GRanges_to_BED(GR.annotations, output_path, sep = "\\t")
+GRanges_to_BED(GR.annotations, output_path, sep = "\\t", nThread = 4, gzip = F)
 }
 \description{
 Convert GRanges object to BED format and save

@@ -2,13 +2,33 @@
 % Please edit documentation in R/IMPACT.R
 \name{IMPACT.snp_group_boxplot}
 \alias{IMPACT.snp_group_boxplot}
-\title{IMPACT box plot
-Box plot of IMPACT scores from each SNP group.}
+\title{\emph{IMPACT} box plot with \pkg{ggpubr}}
+\source{
+\href{https://www.r-bloggers.com/add-p-values-and-significance-levels-to-ggplots/}{ggpubr example}
+}
 \usage{
-IMPACT.snp_group_boxplot(TOP_IMPACT_all)
+IMPACT.snp_group_boxplot(TOP_IMPACT_all, method = "t.test", show_plot = T)
 }
 \description{
-IMPACT box plot
-Box plot of IMPACT scores from each SNP group.
+Box plot of \emph{IMPACT} scores from each SNP group.
 }
+\examples{
+\dontrun{
+TOP_IMPACT_all <- reshape2::melt(boxplot_mat) \%>\% `colnames<-`(c("SNP_group","max_IMPACT"))
+bp <- IMPACT.snp_group_boxplot(TOP_IMPACT_all, method="t.test")
+bp <- IMPACT.snp_group_boxplot(TOP_IMPACT_all, method="wilcox.test")
+}
+}
+\seealso{
+Other IMPACT: 
+\code{\link{IMPACT.get_annotation_key}()},
+\code{\link{IMPACT.get_annotations}()},
+\code{\link{IMPACT.get_top_annotations}()},
+\code{\link{IMPACT.iterate_get_annotations}()},
+\code{\link{IMPACT.postprocess_annotations}()},
+\code{\link{IMPACT_annotation_key}},
+\code{\link{IMPACT_heatmap}()},
+\code{\link{prepare_mat_meta}()}
+}
+\concept{IMPACT}
 \keyword{internal}

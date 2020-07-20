@@ -70,6 +70,7 @@ GGBIO.invisible_legend <- function(gg){
 
 
 
+
 #' Track plot for SNPs
 #'
 #' Uses \code{\link{ggbio}}.
@@ -402,6 +403,22 @@ GGBIO.transcript_model_track <- function(gr.snp_CHR,
 
 
 
+get_window_limits <- function(finemap_dat,
+                              plot.window){
+  lead.pos <- subset(finemap_dat, leadSNP)$POS
+  if(!is.null(plot.window)){
+    xlims <- c(lead.pos-as.integer(plot.window/2),
+               lead.pos+as.integer(plot.window/2))
+  } else {
+    xlims <- c(min(finemap_dat$POS),
+               max(finemap_dat$POS))
+  }
+  return(xlims)
+}
+
+
+
+
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
 ############ PLOT ALL TRACKS TOGETHER ############
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
@@ -428,6 +445,7 @@ GGBIO.transcript_model_track <- function(gr.snp_CHR,
 #' @examples
 #' \dontrun{
 #' data("BST1"); data("BST1_LD_matrix"); data("locus_dir");
+#' locus_dir <- file.path("~/Desktop",locus_dir)
 #'
 #' # Using NO annotations
 #' trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, save_plot=F, color_r2=T)
@@ -444,7 +462,7 @@ GGBIO.transcript_model_track <- function(gr.snp_CHR,
 #' trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, Roadmap=T, Roadmap_query="monocyte", save_plot=F)
 #'
 #' # Using only Nott_2019 annotations
-#' trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, Nott_epigenome=T, XGR_libnames=NULL)
+#' trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, Nott_epigenome=T, XGR_libnames=NULL, plot.window=100000)
 #' }
 GGBIO.plot <- function(finemap_dat,
                        locus_dir,
@@ -502,14 +520,8 @@ GGBIO.plot <- function(finemap_dat,
   if(mean.PP){method_list <- unique(c(method_list, "mean"))}
 
   # Set window limits
-  lead.pos <- subset(finemap_dat, leadSNP)$POS
-  if(!is.null(plot.window)){
-    xlims <- c(lead.pos-as.integer(plot.window/2),
-               lead.pos+as.integer(plot.window/2))
-  } else {
-    xlims <- c(min(finemap_dat$POS),
-               max(finemap_dat$POS))
-  }
+  xlims <- get_window_limits(finemap_dat = finemap_dat,
+                             plot.window = plot.window)
 
   TRACKS_list <- NULL
 
@@ -661,6 +673,7 @@ GGBIO.plot <- function(finemap_dat,
                                                         show_plot=F,
                                                         save_plot=F,
                                                         full_data=T,
+                                                        plot.window = plot.window,
                                                         return_assay_track=T,
                                                         binwidth=Nott_binwidth,
                                                         bigwig_dir=Nott_bigwig_dir,
@@ -761,7 +774,9 @@ GGBIO.track_heights_dict <- function(TRACKS_list,
 #' @family plot
 #' @keywords internal
 GGBIO.add_lines <- function(trks,
-                            finemap_dat){
+                            finemap_dat,
+                            alpha=.7,
+                            size=.3){
   # Add lines
   lead.pos <- subset(finemap_dat, leadSNP)$POS
   consensus.pos <- subset(finemap_dat, Consensus_SNP==T)$POS
@@ -769,9 +784,9 @@ GGBIO.add_lines <- function(trks,
   TRKS_FINAL <- suppressWarnings(suppressMessages(
     trks +
      geom_vline(xintercept = consensus.pos, color="goldenrod2",
-                 alpha=1, size=.3, linetype='solid') +
+                 alpha=alpha, size=size, linetype='solid') +
      geom_vline(xintercept = lead.pos, color="red",
-                alpha=1, size=.3, linetype='solid') +
+                alpha=alpha, size=size, linetype='solid') +
      theme(strip.text.y = element_text(angle = 0),
            strip.text = element_text(size = 7),
            panel.background = element_rect(fill = "white", colour = "black", linetype = "solid"),

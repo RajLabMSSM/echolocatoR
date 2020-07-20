@@ -32,9 +32,10 @@ Other CORCES_2020:
 \code{\link{CORCES_2020.HiChIP_FitHiChIP_loop_calls}},
 \code{\link{CORCES_2020.bulkATACseq_peaks}},
 \code{\link{CORCES_2020.cicero_coaccessibility}},
+\code{\link{CORCES_2020.get_ATAC_peak_overlap}()},
 \code{\link{CORCES_2020.get_HiChIP_FitHiChIP_overlap}()},
-\code{\link{CORCES_2020.get_scATAC_peak_overlap}()},
-\code{\link{CORCES_2020.prepare_peak_overlap}()},
+\code{\link{CORCES_2020.prepare_bulkATAC_peak_overlap}()},
+\code{\link{CORCES_2020.prepare_scATAC_peak_overlap}()},
 \code{\link{CORCES_2020.scATACseq_celltype_peaks}}
 }
 \concept{CORCES_2020}

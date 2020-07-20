@@ -2,11 +2,30 @@
 % Please edit documentation in R/IMPACT.R
 \name{IMPACT_heatmap}
 \alias{IMPACT_heatmap}
-\title{Plot ComplexHeatmap of IMPACT scores}
+\title{Plot \pkg{ComplexHeatmap} of \emph{IMPACT} scores}
 \usage{
 IMPACT_heatmap(ANNOT_MELT)
 }
 \description{
-Plot ComplexHeatmap of IMPACT scores
+Plot \pkg{ComplexHeatmap} of \emph{IMPACT} scores
 }
+\examples{
+\dontrun{
+ANNOT_MELT <- data.table::fread("~/Desktop/Fine_mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/IMPACT/IMPACT_overlap.csv.gz")
+no_no_loci =  c("HLA-DRB5","MAPT","ATG14","SP1","LMNB1","ATP6V0A1", "RETREG3","UBTF","FAM171A2","MAP3K14","CRHR1","MAPT-AS1","KANSL1","NSF","WNT3")
+ANNOT_MELT <- IMPACT.postprocess_annotations(ANNOT_MELT, no_no_loci = no_no_loci)
+}
+}
+\seealso{
+Other IMPACT: 
+\code{\link{IMPACT.get_annotation_key}()},
+\code{\link{IMPACT.get_annotations}()},
+\code{\link{IMPACT.get_top_annotations}()},
+\code{\link{IMPACT.iterate_get_annotations}()},
+\code{\link{IMPACT.postprocess_annotations}()},
+\code{\link{IMPACT.snp_group_boxplot}()},
+\code{\link{IMPACT_annotation_key}},
+\code{\link{prepare_mat_meta}()}
+}
+\concept{IMPACT}
 \keyword{internal}

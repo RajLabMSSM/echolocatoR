@@ -543,39 +543,35 @@ POLYFUN.compute_priors <- function(polyfun=NULL,
 #' @keywords internal
 #' @family polyfun
 POLYFUN.run_ldsc <- function(polyfun=NULL,
-                             PF.output.path,
+                             output_dir=NULL,
                              munged.path,
                              min_INFO = 0.6,
                              min_MAF = 0.05,
                              annotations.path=file.path(polyfun,"example_data/annotations."),
                              weights.path=file.path(polyfun,"example_data/weights."),
-                             prefix="PD_GWAS_LDSC",
+                             prefix="LDSC",
                              chrom="all",
                              compute_ldscores=F,
                              allow_missing_SNPs=T,
                              munged_path="/sc/arion/projects/pd-omics/tools/polyfun/Nalls23andMe_2019.sumstats_munged.parquet",
                              ref.prefix="/sc/arion/projects/pd-omics/data/1000_Genomes/Phase1/1000G.mac5eur.",
                              freq.prefix="/sc/arion/projects/pd-omics/tools/polyfun/1000G_frq/1000G.mac5eur.",
-                             server=F){
+                             conda_env="echoR"){
   polyfun <- POLYFUN.find_polyfun_folder(polyfun_path = polyfun)
-  if(server){
-    annotations.path <-  "/sc/arion/projects/pd-omics/tools/polyfun/annotations/baselineLF2.2.UKB/baselineLF2.2.UKB."
-    weights.path <-  "/sc/arion/projects/pd-omics/tools/polyfun/annotations/baselineLF2.2.UKB/weights.UKB."
-  }
+  python <- CONDA.find_python_path(conda_env = conda_env)
+  # if(server){
+  #   annotations.path <-  "/sc/arion/projects/pd-omics/tools/polyfun/annotations/baselineLF2.2.UKB/baselineLF2.2.UKB."
+  #   weights.path <-  "/sc/arion/projects/pd-omics/tools/polyfun/annotations/baselineLF2.2.UKB/weights.UKB."
+  # }
 
   # 0. Create paths
-  locus_dir <- file.path(dirname(Directory_info(dataset_name = dataset, "fullSS.local")), "_genome_wide")
-  if(server){
-    PF.output.path <- file.path("/sc/arion/projects/pd-omics/tools/polyfun")
-  } else {
-    PF.output.path <- file.path(locus_dir, "PolyFun")
-  }
-  dir.create(PF.output.path, showWarnings = F, recursive = T)
-  out.path <- file.path(PF.output.path,"output")
+  dir.create(output_dir, showWarnings = F, recursive = T)
+  out.path <- file.path(output_dir,"output")
   output_prefix <- file.path(out.path, prefix, prefix)
   dir.create(out.path, showWarnings = F, recursive = T)
   # https://github.com/bulik/ldsc/wiki/Partitioned-Heritability
-  cmd <- paste("python",file.path(polyfun,"ldsc.py"),
+  cmd <- paste(python,
+               file.path(polyfun,"ldsc.py"),
                 "--h2",munged_path,
                 "--ref-ld-chr",annotations.path,
                 "--w-ld-chr",weights.path,
@@ -586,7 +582,6 @@ POLYFUN.run_ldsc <- function(polyfun=NULL,
   # help_cmd <- paste("python",file.path(polyfun,"ldsc.py -h"))
   print(cmd)
   system(cmd)
-
 }
 
 

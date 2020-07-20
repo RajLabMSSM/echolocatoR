@@ -512,11 +512,12 @@ SUMMARISE.get_SNPgroup_counts <- function(merged_DT){
 #' @examples
 #' gg_CS <- SUMMARISE.CS_counts_plot(merged_DT=merged_DT)
 SUMMARISE.CS_counts_plot <- function(merged_DT,
-                                    ylabel="Locus",
-                                    show_plot=T){
-  # Group and melt CS sizes
-  locus_order <- SUMMARISE.get_CS_counts(merged_DT = merged_DT)
-
+                                     show_numbers=T,
+                                     ylabel="Locus",
+                                     legend_nrow=3,
+                                     label_yaxis=T,
+                                     show_plot=T){
+  locus_order <- SUMMARISE.get_CS_counts(merged_DT)
   melt.dat <-
     locus_order %>%
     dplyr::mutate(Locus_UCS=paste0(Locus,"  (",UCS.CS_size,")")) %>%
@@ -525,9 +526,9 @@ SUMMARISE.CS_counts_plot <- function(merged_DT,
                                value.name = "Credible Set size") %>%
   dplyr::mutate(Method=gsub(".CS_size$","", CS)) %>%
   dplyr::arrange(Locus, Method) %>%
-  dplyr::mutate(Method=factor(Method),
-                Locus_UCS=factor(Locus_UCS,levels = unique(Locus_UCS), ordered = T)) %>%
+  dplyr::mutate(Method=factor(Method)) %>%
   subset(Method!="mean")
+  melt.dat <- order_loci(dat = melt.dat, merged_DT = merged_DT)
   melt.dat[melt.dat$`Credible Set size`==0 | is.na(melt.dat$`Credible Set size`),"Credible Set size"] <- NA
 
 
@@ -542,10 +543,6 @@ ggplot(data=melt.dat, aes(y=Locus, x=`Credible Set size`, fill=Method)) +
   gg_CS <- ggplot(data = melt.dat,
                   aes(y=Locus, x=`Credible Set size`, fill=Method)) +
     geom_bar(stat = "identity", color="white", size=.05) +
-    geom_text(aes(label = `Credible Set size`), color="grey20",
-              size=3, show.legend = F, position = position_stack(vjust = .5)) +
-    geom_text(aes(x=sum(`Credible Set size`), label = Locus_UCS),
-              size=3, show.legend = F, position = position_stack(vjust = 1)) +
     labs(x=NULL, y=ylabel) +
     theme_bw() +
     theme(legend.position = "top",
@@ -555,9 +552,19 @@ ggplot(data=melt.dat, aes(y=Locus, x=`Credible Set size`, fill=Method)) +
           panel.grid.minor.x = element_blank(),
           legend.text = element_text(size = 8),
           legend.key.size = unit(.5, units = "cm" )) +
-    guides(fill = guide_legend(nrow = 2,
+    guides(fill = guide_legend(nrow = legend_nrow,
                                title.position = "top",
                                title.hjust = .5))
+  if(show_numbers){
+    gg_CS <- gg_CS + geom_text(aes(label = `Credible Set size`), color="grey20",
+              size=3, show.legend = F, position = position_stack(vjust = .5)) +
+      geom_text(aes(x=sum(`Credible Set size`), label = Locus_UCS),
+                size=3, show.legend = F, position = position_stack(vjust = 1))
+  }
+
+  if(label_yaxis==F){
+    gg_CS <- gg_CS + theme(axis.text.y = element_blank())
+  }
   if(show_plot)print(gg_CS)
   return(list(plot=gg_CS,
               data=melt.dat))
@@ -572,12 +579,12 @@ ggplot(data=melt.dat, aes(y=Locus, x=`Credible Set size`, fill=Method)) +
 #' Plot overlap between some SNP group and various epigenomic data
 #'
 #' @param include.NOTT_2019_peaks Plot SNP subset overlap with
-#' cell type-specific epigenomic peaks.
+#'  peaks from cell-type-specific bulk ATAC, H3K27ac, and H3K4me3 assays.
 #' @param include.NOTT_2019_enhancers_promoters Plot SNP subset overlap with
 #' cell enhancers and promoters.
-#' @param include.Corces_2020_scATACpeaks Plot SNP subset overlap with
+#' @param include.CORCES_2020_scATACpeaks Plot SNP subset overlap with
 #' cell-type-specific scATAC-seq peaks.
-#' @param include.Corces_2020_Cicero_coaccess Plot SNP subset overlap with
+#' @param include.CORCES_2020_Cicero_coaccess Plot SNP subset overlap with
 #' Cicero coaccessibility peaks (derived from scATACseq).
 #' @keywords internal
 #' @family summarise
@@ -588,33 +595,37 @@ ggplot(data=melt.dat, aes(y=Locus, x=`Credible Set size`, fill=Method)) +
 #' data("merged_DT");
 #'
 #' ... Consensus SNPs ...
-#' gg_peaks <- NOTT_2019.peak_overlap_plot(merged_DT=merged_DT, snp_filter="Consensus_SNP==T", fill_title="Consensus SNPs in epigenomic peaks")
+#' gg_peaks <- SUMMARISE.peak_overlap_plot(merged_DT=merged_DT, snp_filter="Consensus_SNP==T", fill_title="Consensus SNPs in epigenomic peaks")
 #' ... UCS SNPs ...
-#' gg_peaks <- NOTT_2019.peak_overlap_plot(merged_DT=merged_DT, snp_filter="Support>0", fill_title="UCS SNPs in epigenomic peaks")
+#' gg_peaks <- SUMMARISE.peak_overlap_plot(merged_DT=merged_DT, snp_filter="Support>0", fill_title="UCS SNPs in epigenomic peaks")
 SUMMARISE.peak_overlap_plot <- function(merged_DT,
                                         snp_filter="Consensus_SNP==T",
                                         include.NOTT_2019_peaks=T,
                                         include.NOTT_2019_enhancers_promoters=T,
                                         include.NOTT_2019_PLACseq=T,
-                                        include.Corces_2020_scATACpeaks=T,
-                                        include.Corces_2020_Cicero_coaccess=T,
-                                        include.Corces_2020_HiChIP_FitHiChIP_coaccess=T,
+                                        include.CORCES_2020_scATACpeaks=T,
+                                        include.CORCES_2020_Cicero_coaccess=T,
+                                        include.CORCES_2020_bulkATACpeaks=T,
+                                        include.CORCES_2020_HiChIP_FitHiChIP_coaccess=T,
+                                        include.CORCES_2020_gene_annotations=T,
+                                        plot_celltype_specificity=T,
                                         facets_formula=". ~ Cell_type",
                                         show_plot=T,
                                         label_yaxis=T,
-                                        x_strip_angle=0,
+                                        x_strip_angle=90,
                                         x_tick_angle=40,
                                         drop_empty_cols=F,
                                         fill_title=paste(snp_filter,"\nin epigenomic peaks"),
                                         save_path=F,
                                         height=11,
-                                        width=15,
+                                        width=12,
+                                        subplot_widths = c(1,.5),
                                         verbose=T){
   # no_no_loci<- c("HLA-DRB5","MAPT","ATG14","SP1","LMNB1","ATP6V0A1",
   #                "RETREG3","UBTF","FAM171A2","MAP3K14","CRHR1","MAPT-AS1","KANSL1","NSF","WNT3")
   # merged_DT <- subset(merged_DT, !Locus %in% no_no_loci)
   dat_melt <- data.frame()
-
+  ######## NOTT et al. 2019 #########
   if(include.NOTT_2019_peaks){
     dat_melt.NOTTpeaks <- NOTT_2019.prepare_peak_overlap(merged_DT = merged_DT,
                                                          snp_filter = snp_filter)
@@ -639,30 +650,39 @@ SUMMARISE.peak_overlap_plot <- function(merged_DT,
     dat_melt <- rbind(dat_melt, dat_melt.NOTTplac)
   }
 
-  if(include.Corces_2020_scATACpeaks){
-    dat_melt.CORCESpeaks <- CORCES_2020.prepare_peak_overlap(merged_DT = merged_DT,
+  ######## CORCES et al. 2020 #########
+  if(include.CORCES_2020_scATACpeaks){
+    dat_melt.CORCES_scPeaks <- CORCES_2020.prepare_scATAC_peak_overlap(merged_DT = merged_DT,
                                                              snp_filter = snp_filter,
-                                                             add_cicero = include.Corces_2020_Cicero_coaccess,
-                                                             add_HiChIP_FitHiChIP = include.Corces_2020_HiChIP_FitHiChIP_coaccess,
+                                                             add_cicero = include.CORCES_2020_Cicero_coaccess,
+                                                             annotate_genes = include.CORCES_2020_gene_annotations,
                                                              verbose = verbose)
-    dat_melt.CORCESpeaks$background <- NA
-    dat_melt.CORCESpeaks$Study <- "Corces et al. (2020)"
-    dat_melt <- rbind(dat_melt, dat_melt.CORCESpeaks)
+    dat_melt.CORCES_scPeaks$background <- NA
+    dat_melt.CORCES_scPeaks$Study <- "Corces et al. (2020)"
+    dat_melt <- rbind(dat_melt, dat_melt.CORCES_scPeaks, fill=T)
+  }
+  if(include.CORCES_2020_bulkATACpeaks){
+    dat_melt.CORCES_bulkPeaks <- CORCES_2020.prepare_bulkATAC_peak_overlap(merged_DT = merged_DT,
+                                                                    snp_filter = snp_filter,
+                                                                    add_HiChIP_FitHiChIP = include.CORCES_2020_HiChIP_FitHiChIP_coaccess,
+                                                                    annotate_genes = include.CORCES_2020_gene_annotations,
+                                                                    verbose = verbose)
+    dat_melt.CORCES_bulkPeaks$background <- NA
+    dat_melt.CORCES_bulkPeaks$Study <- "Corces et al. (2020)"
+    dat_melt <- rbind(dat_melt, dat_melt.CORCES_bulkPeaks, fill=T)
   }
 
 
-  plot_dat <- order_loci_by_UCS_size(dat = dat_melt,
+  plot_dat <- order_loci(dat = dat_melt,
                                      merged_DT = merged_DT)
-  plot_dat$Assay <- factor(plot_dat$Assay, levels = c("H3K27ac","H3K4me3","ATAC","scATAC","PLAC-seq","Cicero","HiChIP_FitHiChIP","enhancers","promoters"), ordered = T)
+  plot_dat$Assay <- factor(plot_dat$Assay, levels = c("H3K27ac","H3K4me3","ATAC","bulkATAC","scATAC","PLAC","Cicero","HiChIP_FitHiChIP","enhancers","promoters"), ordered = T)
+  if(x_strip_angle!=90) plot_dat$Cell_type <- gsub(" ","\n",plot_dat$Cell_type);
   neuronal_cols <- grep("neuron",unique(plot_dat$Cell_type), value = T)
   plot_dat$Cell_type <- factor(plot_dat$Cell_type, levels = c("astrocytes","microglia","oligo","OPCs",neuronal_cols,"brain"), ordered = T)
   plot_dat$background <- as.numeric(plot_dat$background)
-  plot_dat$Cell_type <- gsub(" ","\n",plot_dat$Cell_type)
-
-
 
   # Plot
-  gg_peaks <- ggplot(data=plot_dat, aes(x=Assay, y=Locus, fill=Count)) +
+  gg_pks <- ggplot(data=plot_dat, aes(x=Assay, y=Locus, fill=Count)) +
     geom_tile(color="white") +
     # scale_fill_manual(values = consensus_colors) +
     # scale_fill_discrete(na.value = "transparent") +
@@ -697,7 +717,8 @@ SUMMARISE.peak_overlap_plot <- function(merged_DT,
           # panel.grid.major.x = element_line(color="gray", size=.5),
           # panel.grid.major.x = element_line(color="gray", size=.5),
 
-          panel.grid.minor = element_line(color="white", size=.5)) +
+          panel.grid.minor = element_line(color="white", size=.5),
+          plot.margin = unit(rep(.1,4), "cm")) +
     guides(color = guide_legend(nrow = 1, reverse = F,
                                 title.position = "top",
                                 # label.position = "top",
@@ -705,20 +726,182 @@ SUMMARISE.peak_overlap_plot <- function(merged_DT,
                                 label.hjust = -1)) +
     # Keep unused levels/Loci
     scale_y_discrete(drop=FALSE)
-
   if(label_yaxis==F){
-    gg_peaks <- gg_peaks + theme(axis.text.y = element_blank())
+    gg_pks <- gg_pks + theme(axis.text.y = element_blank())
   }
 
-  if(show_plot) print(gg_peaks)
+  if(plot_celltype_specificity){
+    gg_cells <- SUMMARISE.cell_type_specificity(plot_dat = plot_dat,
+                                                merged_DT = merged_DT,
+                                                label_yaxis = F,
+                                                y_lab = NULL,
+                                                x_strip_angle = x_strip_angle,
+                                                show_plot = F)
+    library(patchwork)
+    gg_pks <- gg_pks + gg_cells$plot + patchwork::plot_layout(nrow = 1, widths = subplot_widths)
+  }
+
+  if(show_plot) print(gg_pks)
   if(save_path!=F){
     printer("+ Saving plot ==>",save_path,v=verbose)
-    ggplot2::ggsave(save_path, gg_peaks, height=height, width=width)
+    ggplot2::ggsave(save_path, gg_pks, height=height, width=width)
   }
   return(list(data=dat_melt,
-              plot=gg_peaks))
+              plot=gg_pks))
 }
 
+
+
+
+#' Get cell-type-specifity score for each cell type
+#'
+#' Aggregate SNP overlap across various epigenomic datasets
+#' and then identify the number of SNPs overlapping by each cell type
+#'
+SUMMARISE.cell_type_specificity <- function(plot_dat,
+                                            merged_DT,
+                                            min_count=NULL,
+                                            top_celltype_only=F,
+                                            label_yaxis=T,
+                                            y_lab=NULL,
+                                            text_fill="Gene_Symbol",
+                                            x_strip_angle=40,
+                                            show_plot=T){
+  Cell_group_dict <- c("astrocytes"="astrocytes",
+                       "microglia"="microglia",
+                       "oligo"="oligo",
+                       "OPCs"="oligo",
+                       "neurons"="neurons",
+                       "neurons (+)"="neurons",
+                       "neurons (-)"="neurons",
+                       "neurons (nigral)"="neurons",
+                       "brain"="brain")
+
+  cell_tally <- plot_dat %>%
+    dplyr::mutate(Assay_count=ifelse(Count>0,1,0), # Set any overlap ==1
+                  Cell_group=factor(Cell_group_dict[Cell_type],
+                                    levels = unique(unname(Cell_group_dict)), ordered = T )) %>%
+    dplyr::group_by(Locus, Cell_group, .drop=F) %>%
+    dplyr::summarise(Assay_count=sum(Assay_count,na.rm=T),
+                     SNP_Count=sum(Count,na.rm = T),
+                     Gene_Symbol=gsub("^NA$",NA,Gene_Symbol),
+                     Annotation=Annotation )
+
+  if(top_celltype_only){
+    cell_tally <- dplyr::top_n(cell_tally, n = 1, wt="Cell_group")
+  }
+  if(!is.null(min_count)){
+    cell_tally[cell_tally$Count < min_count,"Count"] <- NA
+  }
+
+  cell_tally <- order_loci(dat = cell_tally,
+                           merged_DT = merged_DT)
+  gg_tally <- ggplot(data = cell_tally, aes(x=Cell_group, y=Locus, fill=Assay_count)) +
+    geom_tile() +
+    geom_text(aes(label=eval(parse(text=text_fill))), size=3, color="cyan") +
+    facet_grid(facets = . ~ Cell_group,
+               scales = "free_x") +
+    scale_fill_viridis_c(na.value = "transparent") +
+    labs(y=y_lab) +
+    theme_bw() +
+    # scale_x_discrete(position = "top") +
+    theme(axis.text.x = element_blank(),#element_text(angle = x_text_angle, hjust = 0),
+          legend.box="horizontal",
+          legend.position = "top",
+          legend.text = element_text(size = 8),
+          legend.text.align = .5,
+          strip.text.x = element_text(angle=x_strip_angle, color="white"),
+          strip.background.x = element_rect(fill="black"),
+          panel.spacing = unit(.1, "lines"),
+          plot.margin = unit(rep(.1,4), "cm")) +
+    scale_y_discrete(drop=FALSE)
+  if(label_yaxis==F){
+    gg_tally <- gg_tally + theme(axis.text.y = element_blank())
+  }
+  if(label_yaxis=="right"){
+    gg_tally <- gg_tally + scale_y_discrete(position = "right")
+  }
+  if(show_plot) print(gg_tally)
+  return(list(plot=gg_tally,
+              data=cell_tally))
+}
+
+
+#' Nominate target genes within each locus
+#'
+#' Across all GWAS-QTL colocalization tests across all studies,
+#' take the eGene with the highest colocalziation probability (PP.H4)
+#' and assign it as the most likely causal gene in that locus.
+#'
+#' eQTL queries and colocalization test done with \pkg{catalogueR}.
+#'
+#' @examples
+#' \dontrun{
+#' data("merged_DT")
+#' base_url <- "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019"
+#' coloc_results_path <- file.path(base_url,"_genome_wide/COLOC/coloc.eQTL_Catalogue_ALL.csv.gz")
+#' gg_egene <- SUMMARISE.coloc_nominated_eGenes(coloc_results_path, merged_DT=merged_DT, fill_var=NULL)
+#' }
+SUMMARISE.coloc_nominated_eGenes <- function(coloc_results_path,
+                                             merged_DT,
+                                             label_yaxis=T,
+                                             y_lab="Locus",
+                                             x_lab=NULL,
+                                             fill_var='PP.H4',
+                                             text_size=2,
+                                             PP_threshold=NULL,
+                                             nThread=4,
+                                             show_plot=T,
+                                             verbose=T){
+  # Check Corces gene annotations against eQTL/coloc eGenes
+  printer("+ SUMMARISE:: Nominating genes by top colocalized eQTL eGenes",v=verbose)
+  dat <- data.table::fread(coloc_results_path, nThread = nThread)
+
+  top_eGenes <- dat %>%
+    subset(PP.H4>if(is.null(PP_threshold)) 0 else PP_threshold) %>%
+    # Remove RP11 and other spurious RP genes
+    subset(!(startsWith(eGene,"RP") | eGene=="NA" | is.na(eGene)) ) %>%
+    dplyr::group_by(Locus.GWAS) %>%
+    dplyr::top_n(n = 1, wt = PP.H4) %>%
+    # Ensure only 1 eGene per Locus
+    dplyr::arrange(desc(PP.H4),desc(SNP.PP.H4)) %>%
+    dplyr::group_by(Locus.GWAS) %>%
+    dplyr::slice(1) %>%
+    dplyr::mutate(Locus=as.character(Locus.GWAS))
+
+  top_eGenes <- order_loci(dat = top_eGenes,
+                           merged_DT = merged_DT)
+  top_eGenes <- subset(top_eGenes, !is.na(Locus))
+  top_eGenes$dummy <- "Top\ncolocalized\neGene"
+
+  if(is.null(fill_var)){
+    text_color="grey20"
+  }else {text_color="white"}
+
+  gg_egene <- ggplot(top_eGenes, aes(x=dummy, y=Locus)) +
+    labs(x=x_lab, y=y_lab) +
+    geom_tile(fill='transparent') +
+    geom_text(aes(label=eGene), color=text_color, size=text_size) +
+    # scale_fill_viridis_c(end = .8, na.value = "transparent") +
+    # scale_fill_gradient(low = "blue", high = "red", na.value = "transparent") +
+    theme_bw() +
+    # scale_x_discrete(position = "top") +
+    theme(#axis.text.x = element_blank(),
+          legend.box="vertical",
+          legend.position = "top",
+          legend.text = element_text(size = 8),
+          legend.text.align = .5,
+          plot.margin = unit(rep(.1,4), "cm")) +
+    guides(colour = guide_colourbar(title.position="top", title.hjust = 0.5),
+           size = guide_legend(title.position="top", title.hjust = 0.5)) +
+    scale_y_discrete(drop=F)
+  if(label_yaxis==F){
+    gg_egene <- gg_egene + theme(axis.text.y = element_blank())
+  }
+  if(show_plot) print(gg_egene)
+  return(list(data=data.table::data.table(top_eGenes),
+              plot=gg_egene))
+}
 
 
 
@@ -734,7 +917,7 @@ count_and_melt <- function(merged_annot,
     consensus_melt <- subset(consensus_melt,
                              !is.na(dplyr::vars(grouping_vars[2])) &
                                !is.na(dplyr::vars(grouping_vars[3]) ), .drop=F)%>%
-      dplyr::mutate(Annotation = paste0(eval(parse(text=grouping_vars[2])),"_",eval(parse(text=grouping_vars[3]))))
+      dplyr::mutate(Celltype_Assay = paste0(eval(parse(text=grouping_vars[2])),"_",eval(parse(text=grouping_vars[3]))))
   }
   return(consensus_melt)
 }

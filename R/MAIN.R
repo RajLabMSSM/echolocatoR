@@ -455,6 +455,7 @@ finemap_pipeline <- function(locus,
                                  remove_correlates=remove_correlates,
                                  server=server,
                                  remove_tmps=remove_tmps,
+                                 conda_env=conda_env,
                                  verbose=verbose)
 
   #### ***** SNP Filters ***** ###

@@ -4,7 +4,14 @@
 \alias{SUMMARISE.CS_counts_plot}
 \title{Bar plot of tool-specific CS sizes}
 \usage{
-SUMMARISE.CS_counts_plot(merged_DT, ylabel = "Locus", show_plot = T)
+SUMMARISE.CS_counts_plot(
+  merged_DT,
+  show_numbers = T,
+  ylabel = "Locus",
+  legend_nrow = 3,
+  label_yaxis = T,
+  show_plot = T
+)
 }
 \description{
 Loci ordered by UCS size (smallest to largest).

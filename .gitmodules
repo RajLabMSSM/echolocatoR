@@ -1,3 +1,6 @@
 [submodule "inst/polyfun"]
 	path = inst/polyfun
 	url = https://github.com/RajLabMSSM/polyfun.git
+[submodule "inst/tools/goshifter"]
+	path = inst/tools/goshifter
+	url = https://github.com/immunogenomics/goshifter.git

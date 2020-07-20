@@ -16,15 +16,26 @@ NOTT_2019.epigenomic_histograms(
   full_data = T,
   return_assay_track = F,
   binwidth = 2500,
+  plot.window = 5e+05,
   geom = "histogram",
   plot_formula = "Assay + Cell_type ~.",
   bigwig_dir = NULL,
-  nCores = 4,
-  save_annot = F
+  nThread = 4,
+  save_annot = F,
+  verbose = T
 )
+}
+\arguments{
+\item{plot.window}{Zoom into the center of the locus when plotting (without editing the fine-mapping results file).}
+
+\item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
 }
 \description{
 Brain cell-specific epigenomic data from Nott et al. (2019).
+}
+\examples{
+data("BST1"); data("locus_dir");
+ track.Nott_histo <- NOTT_2019.epigenomic_histograms(finemap_dat = BST1, locus_dir = locus_dir, save_plot=F, return_assay_track=T, save_annot=F)
 }
 \seealso{
 Other NOTT_2019: 

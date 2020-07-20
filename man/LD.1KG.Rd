@@ -76,6 +76,7 @@ This approach does not have this limitations, allowing you to fine-map loci more
 \examples{
 \dontrun{
 data("BST1"); data("locus_dir");
+BST1 <- limit_SNPs(max_snps = 500, subset_DT = BST1)
 LD_matrix <- LD.1KG(locus_dir=file.path("~/Desktop",locus_dir), subset_DT=BST1, locus="BST1", LD_reference="1KGphase1")
 }
 }

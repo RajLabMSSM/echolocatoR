@@ -23,6 +23,9 @@
 #' @source
 #' \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
 #' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
+#' @examples
+#' data("BST1"); data("locus_dir");
+#'  track.Nott_histo <- NOTT_2019.epigenomic_histograms(finemap_dat = BST1, locus_dir = locus_dir, save_plot=F, return_assay_track=T, save_annot=F)
 NOTT_2019.epigenomic_histograms <- function(finemap_dat,
                                             locus_dir,
                                             show_plot=T,
@@ -30,15 +33,17 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
                                             full_data=T,
                                             return_assay_track=F,
                                             binwidth=2500,
+                                            plot.window=500000,
                                             geom="histogram",
                                             plot_formula="Assay + Cell_type ~.",
                                             bigwig_dir=NULL,
-                                            nCores=4,
-                                            save_annot=F){
+                                            nThread=4,
+                                            save_annot=F,
+                                            verbose=T){
   # library(BiocGenerics)
   # library(GenomicRanges)
   # library(ggbio)
-  # show_plot=T;save_plot=T;full_data=T;return_assay_track=F;binwidth=2500; geom="histogram";plot_formula="Assay + Cell_type ~.";show_regulatory_rects=T; nCores=4; bigwig_dir=NULL;
+  # show_plot=T;save_plot=T;full_data=T;return_assay_track=F;binwidth=2500; geom="histogram";plot_formula="Assay + Cell_type ~.";show_regulatory_rects=T;  bigwig_dir=NULL; verbose=T; nThread=4; finemap_dat=BST1;
 
   # UCSC Tracks
   import.bw.filt <- function(bw.file,
@@ -75,7 +80,7 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
                                                     start.field = "start.end",
                                                     end.field = "start.end",
                                                     keep.extra.columns = T)
-
+  printer("NOTT_2019:: Importing bigWig subsets from UCSC...", v=verbose)
   bw.grlist <- parallel::mclapply(1:nrow(bigWigFiles), function(i){
     if(!is.null(bigwig_dir)){
       bw.file <- file.path(bigwig_dir,paste0(bigWigFiles$long_name[i],".ucsc.bigWig"))
@@ -94,11 +99,18 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
     # bw.filt$cell_type <-strsplit(bw.name, "_")[[1]][[1]]
     # bw.filt$assay <- strsplit(bw.name, "_")[[1]][[2]]
     return(bw.filt)
-  }, mc.cores = nCores)
+  }, mc.cores = nThread)
   bw.cols <- bigWigFiles$name
   # names(bw.grlist) <- bw.cols
   bw.gr <- unlist(GenomicRanges::GRangesList(bw.grlist))
+  bw.gr$Assay <- gsub("atac","ATAC",bw.gr$Assay)
 
+  xlims <- get_window_limits(finemap_dat = finemap_dat,
+                             plot.window = plot.window)
+  bw.gr <- subset(bw.gr,
+                  GenomicRanges::seqnames(bw.gr)==paste0("chr",finemap_dat$CHR[1]) &
+                  GenomicRanges::start(bw.gr)>=xlims[1] &
+                  GenomicRanges::end(bw.gr)<=xlims[2])
   # merge into a single granges object
   # gr.snp <- Reduce(function(x, y) GenomicRanges::merge(x, y, all.x=T),
   #                  append(bw.grlist, gr.dat))
@@ -111,6 +123,14 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
                                        lib_name = "Nott_2019.epigenomics")
     saveRDS(bw.gr, annot_file)
   }
+
+  PEAKS <- NOTT_2019.get_epigenomic_peaks(nThread = nThread,
+                                          verbose = verbose)
+  gr.peaks <- GRanges_overlap(dat1 = bw.gr,
+                              dat2 = PEAKS)
+  GenomicRanges::mcols(gr.peaks)[,c("chr","start","end","score")] <- NULL
+  gr.peaks <- unique(gr.peaks)
+  # Make plot
   nott_tracks <-  ggbio::autoplot(object=bw.gr,
                                   geom=geom,
                                   # facets= Experiment~.,
@@ -121,6 +141,18 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
                                   alpha=.7,
                                   position="identity",
                                   aes(fill=Cell_type), show.legend=T) +
+    xlim(xlims)
+  # Pause and calculate max histo height
+  max_height <- GGBIO.get_max_histogram_height(gg=nott_tracks)
+  rect_height <- as.integer(max_height/8)
+  gr.peaks$y <- max_height - rect_height
+  nott_tracks <- nott_tracks +
+    ggbio::geom_rect(gr.peaks,
+                     stat="identity",
+                     rect.height= rect_height,
+                     aes(y=y),
+                     alpha=.7,
+                     color="transparent") +
     facet_grid(facets = formula(plot_formula)) +
     theme_classic() +
     theme(legend.position="right", strip.text.y = element_text(angle = 0))
@@ -177,6 +209,20 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
   return(trks_plus_lines)
 }
 
+
+
+
+GGBIO.get_max_histogram_height <- function(gg,
+                                           round_to=NULL,
+                                           verbose=T){
+  printer("+ GGBIO:: Calculating max histogram height",v=verbose)
+  dat <- ggplot_build(gg@ggplot)$data[[1]]
+  max_height <- max(dat$ymax)
+  if(!is.null(round_to)){
+    max_height <- DescTools::RoundTo(max_height, round_to)
+  }
+  return(max_height)
+}
 
 
 
@@ -662,7 +708,8 @@ NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
   }else{
     NOTT.interact_trk <-
       ggbio::ggbio() +
-      ggbio::geom_arch(data = interact.DT, alpha = 0.6, color = "gray60", max.height = 10, aes(x = Start, xend = End))
+      ggbio::geom_arch(data = interact.DT, alpha = 0.6, color = "gray60",
+                       max.height = 10, aes(x = Start, xend = End))
   }
 
   NOTT.interact_trk <- NOTT.interact_trk +

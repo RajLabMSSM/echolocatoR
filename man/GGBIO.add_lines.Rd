@@ -4,7 +4,7 @@
 \alias{GGBIO.add_lines}
 \title{Add vertical lines}
 \usage{
-GGBIO.add_lines(trks, finemap_dat)
+GGBIO.add_lines(trks, finemap_dat, alpha = 0.7, size = 0.3)
 }
 \description{
 Adds vertical lines indicates key SNPs

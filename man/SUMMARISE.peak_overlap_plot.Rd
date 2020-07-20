@@ -14,33 +14,37 @@ SUMMARISE.peak_overlap_plot(
   include.NOTT_2019_peaks = T,
   include.NOTT_2019_enhancers_promoters = T,
   include.NOTT_2019_PLACseq = T,
-  include.Corces_2020_scATACpeaks = T,
-  include.Corces_2020_Cicero_coaccess = T,
-  include.Corces_2020_HiChIP_FitHiChIP_coaccess = T,
+  include.CORCES_2020_scATACpeaks = T,
+  include.CORCES_2020_Cicero_coaccess = T,
+  include.CORCES_2020_bulkATACpeaks = T,
+  include.CORCES_2020_HiChIP_FitHiChIP_coaccess = T,
+  include.CORCES_2020_gene_annotations = T,
+  plot_celltype_specificity = T,
   facets_formula = ". ~ Cell_type",
   show_plot = T,
   label_yaxis = T,
-  x_strip_angle = 0,
+  x_strip_angle = 90,
   x_tick_angle = 40,
   drop_empty_cols = F,
   fill_title = paste(snp_filter, "\\nin epigenomic peaks"),
   save_path = F,
   height = 11,
-  width = 15,
+  width = 12,
+  subplot_widths = c(1, 0.5),
   verbose = T
 )
 }
 \arguments{
 \item{include.NOTT_2019_peaks}{Plot SNP subset overlap with
-cell type-specific epigenomic peaks.}
+peaks from cell-type-specific bulk ATAC, H3K27ac, and H3K4me3 assays.}
 
 \item{include.NOTT_2019_enhancers_promoters}{Plot SNP subset overlap with
 cell enhancers and promoters.}
 
-\item{include.Corces_2020_scATACpeaks}{Plot SNP subset overlap with
+\item{include.CORCES_2020_scATACpeaks}{Plot SNP subset overlap with
 cell-type-specific scATAC-seq peaks.}
 
-\item{include.Corces_2020_Cicero_coaccess}{Plot SNP subset overlap with
+\item{include.CORCES_2020_Cicero_coaccess}{Plot SNP subset overlap with
 Cicero coaccessibility peaks (derived from scATACseq).}
 }
 \description{
@@ -50,9 +54,9 @@ Plot overlap between some SNP group and various epigenomic data
 data("merged_DT");
 
 ... Consensus SNPs ...
-gg_peaks <- NOTT_2019.peak_overlap_plot(merged_DT=merged_DT, snp_filter="Consensus_SNP==T", fill_title="Consensus SNPs in epigenomic peaks")
+gg_peaks <- SUMMARISE.peak_overlap_plot(merged_DT=merged_DT, snp_filter="Consensus_SNP==T", fill_title="Consensus SNPs in epigenomic peaks")
 ... UCS SNPs ...
-gg_peaks <- NOTT_2019.peak_overlap_plot(merged_DT=merged_DT, snp_filter="Support>0", fill_title="UCS SNPs in epigenomic peaks")
+gg_peaks <- SUMMARISE.peak_overlap_plot(merged_DT=merged_DT, snp_filter="Support>0", fill_title="UCS SNPs in epigenomic peaks")
 }
 \seealso{
 Other summarise: 

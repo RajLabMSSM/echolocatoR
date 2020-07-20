@@ -44,12 +44,14 @@ SUSIE <- function(subset_DT,
                   scaled_prior_variance=0.001,
                   estimate_residual_variance=F,
                   verbose=T){
-  vars <- get_var_y(subset_DT, dataset_type)
   
   if( ! "N" %in% names(subset_DT) ){
       subset_DT <- get_sample_size(subset_DT)
   }
   # if sample_size is NULL then SUSIE fails
+
+  susie_vars <- get_var_y(subset_DT, dataset_type)
+
   sample_size <- max(subset_DT$N)
   
   printer("+ SUSIE:: n_causal =",n_causal, v=verbose)
@@ -65,12 +67,10 @@ SUSIE <- function(subset_DT,
 
   library(susieR)
   # SUSIE's authors "merge[d] susie_ss and susie_bhat to susie_suff_stat" in 11/2019.
-  susie_func <- ifelse(length(find("susie_bhat"))==0,
-                       susieR::susie_suff_stat,
-                       susieR::susie_bhat)
+  susie_func <- if(length(find("susie_bhat"))==0){susieR::susie_suff_stat} else {susieR::susie_bhat}
   fitted_bhat <- susie_func(bhat = subset_DT$Effect,
                             shat = subset_DT$StdErr,
-                            R = LD_matrix,
+                            R = as.matrix(LD_matrix),
                             n = sample_size, # Number of samples/individuals in the dataset
                             L = n_causal, # we assume there are at *most* 'L' causal variables
                             ## NOTE: setting L == 1 has a strong tendency to simply return the SNP with the largest effect size.
@@ -79,7 +79,7 @@ SUSIE <- function(subset_DT,
                             residual_variance = NULL,
                             # standardize = TRUE,
                             estimate_residual_variance = estimate_residual_variance, # TRUE
-                            var_y = vars$phenotype_variance, # Variance of the phenotype (e.g. gene expression, or disease status)
+                            var_y = susie_vars$phenotype_variance, # Variance of the phenotype (e.g. gene expression, or disease status)
 
                             # A p vector of prior probability that each element is non-zero
                             prior_weights = prior_weights,
