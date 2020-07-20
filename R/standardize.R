@@ -92,6 +92,14 @@ get_UKB_MAF <- function(subset_DT,
 #'
 #' @family standardizing functions
 #' @inheritParams finemap_pipeline
+#' @examples
+#' data("BST1")
+#' ... Screw up MAF to see if function can fix it ...
+#' data.frame(BST1)[,colnames(BST1)!="MAF"]
+#' BST1[c(10,30,55),"Freq"] <- 0
+#' BST1[c(12,22),"Freq"] <- NA
+#' data.table::fwrite(BST1, "~/Desktop/results/GWAS/Nalls23andMe_2019/BST1/BST1.tsv")
+#' query_mod <- standardize_subset(locus="BST1", subset_path="~/Desktop/results/GWAS/Nalls23andMe_2019/BST1/BST1.tsv", MAF_col="calculate")
 standardize_subset <- function(locus,
                               top_SNPs=NULL,
                               subset_path="./Data",
@@ -185,9 +193,8 @@ standardize_subset <- function(locus,
     }
     query_mod$MAF <- abs(query_mod$MAF)
     printer("++ Removing SNPs with MAF== 0 | NULL | NA", v=verbose)
-    query <- subset(query, !(is.na(MAF) | is.null(MAF) | MAF==0))
     query_mod <- subset(query_mod, !(is.na(MAF) | is.null(MAF) | MAF==0))
-
+    query <- subset(query, SNP %in% unique(query_mod$SNP))
 
     ## Add proportion of cases if available
     printer("++ Preparing N_cases,N_controls cols", v=verbose)
