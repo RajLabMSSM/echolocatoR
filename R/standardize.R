@@ -185,6 +185,7 @@ standardize_subset <- function(locus,
     }
     query_mod$MAF <- abs(query_mod$MAF)
     printer("++ Removing SNPs with MAF== 0 | NULL | NA", v=verbose)
+    query <- subset(query, !(is.na(MAF) | is.null(MAF) | MAF==0))
     query_mod <- subset(query_mod, !(is.na(MAF) | is.null(MAF) | MAF==0))
 
 
