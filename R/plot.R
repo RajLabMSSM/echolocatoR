@@ -181,14 +181,6 @@ snp_plot <- function(finemap_dat,
                   method = 'loess', span=.1) +
       geom_hline(yintercept=0,alpha=.5, linetype=1, size=.5) +
       geom_hline(yintercept= -log10(5e-8), alpha=.5, linetype=2, size=.5, color="black")
-# =======
-#   if(method=="original"){
-#     DT <- finemap_dat
-#
-#     is.na(DT$Probability) <- 0
-#
-#     p <- ggplot(data = DT, aes(x=POS, y= -log10(P), label=SNP, color= -log10(P) ))
-# >>>>>>> 1e2aecb9b38f6c049a9c6f1d9baed0f0d268e0b4:echolocatoR/R/plot.R
     title <- "GWAS"#paste0(locus," : Before fine-mapping")
     tag_SNPs <- labelSNPs <- construct_SNPs_labels(DT, lead=T, method = F, consensus = T)
     subtitle <- if(is.na(subtitle)){paste0(length(DT$SNP)," SNPs")}else{subtitle}
@@ -206,12 +198,6 @@ snp_plot <- function(finemap_dat,
                                  CS = paste0(method,".CS"))
       is.na(DT$Probability) <- 0
       p <- ggplot(data = DT, aes(x=POS, y=Probability, color= r2 )) +
-# =======
-#       DT <- finemap_dat %>% dplyr::rename(Probability = paste0(method,".PP"),
-#                                          CS = paste0(method,".CS"))
-#       is.na(DT$Probability) <- 0
-#       p <- ggplot(data = DT, aes(x=POS, y=Probability, label=SNP, color= -log10(P) )) +
-# >>>>>>> 1e2aecb9b38f6c049a9c6f1d9baed0f0d268e0b4:echolocatoR/R/plot.R
         ylim(c(0,1.2))
       subtitle <- if(is.na(subtitle)){
         paste0(length(subset(DT, CS>0)$SNP), " Candidate SNP(s)")
