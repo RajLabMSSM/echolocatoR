@@ -449,7 +449,7 @@ effective_sample_size <- function(finemap_dat,
                                   verbose=T){
   if(is.null(sample_size)){
     if(all(c("N_cases","N_controls") %in% colnames(finemap_dat))){
-      finemap_dat$N <- (4.0 / (1.0/finemap_dat$N_cases + 1.0/finemap_dat$N_controls) )
+      finemap_dat$N <- round(4.0 / (1.0/finemap_dat$N_cases + 1.0/finemap_dat$N_controls), digits = 0 )
       printer("Calculating effective sample size (`N`) from `N_cases` and `N_controls`", v=verbose)
     }
   }else{
@@ -1008,7 +1008,10 @@ merge_coloc_results <- function(all_obj,
   }
   merged_results <- suffix_to_prefix(dat=merged_results, suffix = ".gwas")
   merged_results <- suffix_to_prefix(dat=merged_results, suffix = ".qtl")
-
+ 
+  # get N_cases and N_controls from N.gwas and proportion_controls
+    merged_results$N_cases <- floor(merged_results$gwas.N * merged_results$s)
+    merged_results$N_controls <- merged_results$gwas.N - merged_results$N_cases
 
   if(save_path!=F){
     data.table::fwrite(merged_results, file.path(save_path,paste0("merged_coloc_results.",results_level,".tsv.gz")),
