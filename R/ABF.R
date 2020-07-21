@@ -18,15 +18,25 @@
 #' finemap_DT <- ABF(subset_DT=finemap_DT)
 ABF <- function(subset_DT,
                 PP_threshold=.95,
-                type="cc"){
+                case_control = TRUE){
   #data.table::fread("Data/GWAS/Nalls23andMe_2019/LRRK2/LRRK2_Nalls23andMe_2019_subset.txt")
+  if( case_control == TRUE){
   finemap_dat <- coloc::finemap.abf(dataset = list(beta = subset_DT$Effect,
                                                   varbeta = subset_DT$StdErr^2, # MUST be squared
-                                                  N = length(subset_DT$Effect),
+                                                  N = unique(subset_DT$N), # use sample size
                                                   s = subset_DT$proportion_cases,
                                                   snp = subset_DT$SNP,
                                                   MAF = subset_DT$MAF,
-                                                  type=type))
+                                                  type="cc"))
+  }else{
+  finemap_dat <- coloc::finemap.abf(dataset = list(beta = subset_DT$Effect,
+                                                  varbeta = subset_DT$StdErr^2, # MUST be squared
+                                                  N = unique(subset_DT$N), # use sample size
+                                                  snp = subset_DT$SNP,
+                                                  MAF = subset_DT$MAF,
+                                                  type="quant"))
+
+  }
   finemap_dat <- subset(finemap_dat, snp!="null") %>%
     dplyr::rename(SNP=snp, PP=SNP.PP) %>%
     dplyr::arrange(desc(PP))
