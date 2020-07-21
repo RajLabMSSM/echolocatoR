@@ -128,7 +128,7 @@ get_var_y <- function(subset_DT, dataset_type){
   } else {
     printer("++ Phenotype variance could not be calculated from this data.")
     printer("    Estimating prior variance instead...")
-    phenotype_variance <- NA
+    phenotype_variance <- 1
   }
   return(list(phenotype_variance=phenotype_variance))
 }
