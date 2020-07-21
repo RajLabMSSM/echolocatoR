@@ -192,9 +192,7 @@ LD.1KG_download_vcf <- function(subset_DT,
   ## http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/
   # New FTP
   ## ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20110521/
-  FTP <- "ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20110521/"
-
-  # Download portion of vcf from 1KG website
+    # Download portion of vcf from 1KG website
   if(is.null(locus)){locus <- basename(locus_dir)}
   vcf_folder <- LD.get_vcf_folder(vcf_folder=vcf_folder,
                                   locus_dir=locus_dir)
@@ -204,11 +202,12 @@ LD.1KG_download_vcf <- function(subset_DT,
 
   # PHASE 3 DATA
   if(LD_reference=="1KGphase3"){
+    FTP <- "ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20130502/"
     printer("LD Reference Panel = 1KGphase3", v=verbose)
     if(download_reference){## With internet
-      vcf_URL <- paste(FTP,"/ALL.chr",chrom,
-                       ".phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz",sep="")
-      popDat_URL = "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/integrated_call_samples_v3.20130502.ALL.panel"
+      vcf_URL <- paste0(FTP,"/ALL.chr",chrom,
+                       ".phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz")
+      popDat_URL = paste0(FTP, "integrated_call_samples_v3.20130502.ALL.panel")
     }else{## WithOUT internet
       vcf_URL <- paste(vcf_folder, "/ALL.chr",chrom,
                        ".phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz",sep="")
@@ -217,7 +216,10 @@ LD.1KG_download_vcf <- function(subset_DT,
 
     # PHASE 1 DATA
   } else if (LD_reference=="1KGphase1") {
+    FTP <- "ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20110521/"
+    
     printer("LD Reference Panel = 1KGphase1", v=verbose)
+    
     if(download_reference){## With internet
       vcf_URL <- paste(FTP,"/ALL.chr",chrom,
                        ".phase1_release_v3.20101123.snps_indels_svs.genotypes.vcf.gz", sep="")
