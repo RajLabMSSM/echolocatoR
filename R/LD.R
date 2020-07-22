@@ -188,6 +188,11 @@ LD.1KG_download_vcf <- function(subset_DT,
                                 nThread=4,
                                 query_by_regions=F,
                                 verbose=T){
+  # throw error if anything but phase 1 or phase 3 are specified
+  if( ! LD_reference %in% c("1KGphase1", "1KGphase3" )){ 
+    stop("LD_reference must be one of \"1KGphase1\" or \"1KGphase3\" ") 
+  }
+
   # Old FTP (deprecated?)
   ## http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/
   # New FTP
@@ -231,9 +236,13 @@ LD.1KG_download_vcf <- function(subset_DT,
       popDat_URL = file.path(vcf_folder, "phase1_integrated_calls.20101123.ALL.panel")
     }
   }
+  printer(paste("Reading population data from ", popDat_URL), v=verbose)
   phase <- gsub("1KG","",LD_reference)
-  popDat <-  data.table::fread(text=gsub(",\t",",",readLines(popDat_URL)),
-                               header = F, sep="\t",  fill=T, stringsAsFactors = F,
+  # phase 1 has no header whereas phase 3 does
+  if( LD_reference == "1KGphase1" ){ use_header <- FALSE }
+  if( LD_reference == "1KGphase3" ){ use_header <- TRUE }
+  popDat <-  data.table::fread(text=trimws(gsub(",\t",",",readLines(popDat_URL))),
+                               header = use_header, sep="\t",  fill=T, stringsAsFactors = FALSE,
                                col.names = c("sample","population","superpop","platform"),
                                nThread = nThread)
   # library(Rsamtools); #BiocManager::install("Rsamtools")
