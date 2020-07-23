@@ -428,7 +428,6 @@ finemap_handler <- function(locus_dir,
                                    A2_col = A2_col,
                                    PAINTOR_QTL_datasets = PAINTOR_QTL_datasets,
                                    PP_threshold = PP_threshold,
-                                   consensus_threshold =  consensus_threshold,
                                    case_control = case_control,
 
                                    conda_env = conda_env)
