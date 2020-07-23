@@ -471,7 +471,7 @@ GGBIO.plot <- function(finemap_dat,
                        QTL_prefixes=NULL,
                        mean.PP=T,
                        PP_threshold=.95,
-                       consensus_thresh=2,
+                       consensus_threshold=2,
                        sig_cutoff=5e-8,
 
                        XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes",
@@ -508,7 +508,7 @@ GGBIO.plot <- function(finemap_dat,
   # Set up data
   finemap_dat <- find_consensus_SNPs(finemap_dat = finemap_dat,
                                     credset_thresh = PP_threshold,
-                                    consensus_thresh = consensus_thresh,
+                                    consensus_thresh = consensus_threshold,
                                     verbose = F)
   finemap_dat <- fillNA_CS_PP(finemap_dat = finemap_dat)
 
@@ -567,7 +567,7 @@ GGBIO.plot <- function(finemap_dat,
 
 
 
-
+  # QTLs
   for (qtl in QTL_prefixes){
     printer("++ GGBIO::",qtl,"track", v=verbose)
     qtl_track <- GGBIO.QTL_track(gr.snp = gr.snp,
@@ -578,7 +578,7 @@ GGBIO.plot <- function(finemap_dat,
                                  PP_threshold=PP_threshold,
                                  sig_cutoff=sig_cutoff)
     TRACKS_list <- append(TRACKS_list, qtl_track)
-    names(TRACKS_list)[length(TRACKS_list)] <- qtl
+    names(TRACKS_list)[length(TRACKS_list)] <- gsub("\\.$|_$|-$","",qtl)
   }
 
 

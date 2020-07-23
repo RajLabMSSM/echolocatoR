@@ -67,7 +67,8 @@ find_consensus_SNPs <- function(finemap_dat,
   finemap_dat$Consensus_SNP <- finemap_dat$Support >= consensus_thresh
   # Sort
   if(sort_by_support){
-    finemap_dat <- finemap_dat %>% arrange(desc(Consensus_SNP), desc(Support))
+    finemap_dat <- finemap_dat %>%
+      dplyr::arrange(dplyr::desc(Consensus_SNP), dplyr::desc(Support))
   }
   # Calculate mean PP
   printer("+ Calculating mean Posterior Probability (mean.PP)...",v=verbose)
@@ -135,6 +136,7 @@ multi_finemap <- function(locus_dir,
                           A2_col="A2",
                           PAINTOR_QTL_datasets=NULL,
                           PP_threshold=.95,
+                          case_control=T,
                           verbose=T,
                           conda_env="echoR"){
   # PAINTOR_QTL_datasets=NULL;PP_threshold=.95; effect_col="Effect"; n_causal=5; sample_size=1000; stderr_col="StdErr"; pval_col="P"; N_cases_col="N_cases"; N_controls_col="N_controls"; A1_col="A1"; A2_col="A2";conditioned_snps=NULL;
@@ -160,26 +162,27 @@ multi_finemap <- function(locus_dir,
       # EXPRESSION
      try({
        finemap_dat <- finemap_method_handler(fullSS_path = fullSS_path,
-                                     locus_dir = locus_dir,
-                                     finemap_method = m,
-                                     subset_DT = data.table::as.data.table(subset_DT),
-                                     dataset_type = dataset_type,
-                                     LD_matrix = LD_matrix,
-                                     n_causal = n_causal,
-                                     sample_size = sample_size,
-                                     snp_col = snp_col,
-                                     freq_col = freq_col,
-                                     effect_col = effect_col,
-                                     stderr_col = stderr_col,
-                                     pval_col = pval_col,
-                                     N_cases_col = N_cases_col,
-                                     N_controls_col = N_controls_col,
-                                     A1_col = A1_col,
-                                     A2_col = A2_col,
-                                     PAINTOR_QTL_datasets = PAINTOR_QTL_datasets,
-                                     PP_threshold = PP_threshold,
-                                     conditioned_snps = conditioned_snps,
-                                     conda_env = conda_env)
+                                             locus_dir = locus_dir,
+                                             finemap_method = m,
+                                             subset_DT = data.table::as.data.table(subset_DT),
+                                             dataset_type = dataset_type,
+                                             LD_matrix = LD_matrix,
+                                             n_causal = n_causal,
+                                             sample_size = sample_size,
+                                             snp_col = snp_col,
+                                             freq_col = freq_col,
+                                             effect_col = effect_col,
+                                             stderr_col = stderr_col,
+                                             pval_col = pval_col,
+                                             N_cases_col = N_cases_col,
+                                             N_controls_col = N_controls_col,
+                                             A1_col = A1_col,
+                                             A2_col = A2_col,
+                                             PAINTOR_QTL_datasets = PAINTOR_QTL_datasets,
+                                             PP_threshold = PP_threshold,
+                                             case_control = case_control,
+                                             conditioned_snps = conditioned_snps,
+                                             conda_env = conda_env)
      })
       # },
       # # WARNING
@@ -271,6 +274,7 @@ finemap_method_handler <- function(locus_dir,
                                    A2_col="A2",
                                    PAINTOR_QTL_datasets=NULL,
                                    PP_threshold=.95,
+                                   case_control=T,
                                    conda_env="echoR"){
   sub.out <- subset_common_snps(LD_matrix=LD_matrix,
                                 finemap_dat=subset_DT,
@@ -302,7 +306,8 @@ finemap_method_handler <- function(locus_dir,
   }else if(finemap_method=="ABF"){
     # coloc - finemap.abf
     finemap_dat <- ABF(subset_DT = subset_DT,
-                      PP_threshold = PP_threshold)
+                      PP_threshold = PP_threshold,
+                      case_control = case_control)
 
 
   } else if(finemap_method=="FINEMAP"){
@@ -377,6 +382,8 @@ finemap_handler <- function(locus_dir,
                             A2_col="A2",
                             PAINTOR_QTL_datasets=NULL,
                             PP_threshold=.95,
+                            consensus_threshold=2,
+                            case_control=T,
                             conda_env="echoR",
                             verbose=T){
   message("-------- Step 4: Statistically Fine-map --------")
@@ -421,8 +428,14 @@ finemap_handler <- function(locus_dir,
                                    A2_col = A2_col,
                                    PAINTOR_QTL_datasets = PAINTOR_QTL_datasets,
                                    PP_threshold = PP_threshold,
+                                   consensus_threshold =  consensus_threshold,
+                                   case_control = case_control,
 
                                    conda_env = conda_env)
+      finemap_dat <- find_consensus_SNPs(finemap_dat = finemap_dat,
+                                         credset_thresh = PP_threshold,
+                                         consensus_thresh = consensus_threshold,
+                                         verbose = verbose)
       save_finemap_results(finemap_dat, file_path)
     }
   end_FM <- Sys.time()

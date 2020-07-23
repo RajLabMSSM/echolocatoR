@@ -250,7 +250,9 @@
 #' @param PAINTOR_QTL_datasets A list of QTL datasets to be used when conducting joint functional fine-mapping with \emph{PAINTOR}.
 #' @param PP_threshold The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
 #' For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.
-#'
+#' @param consensus_threshold The minimum number of fine-mapping tools that include a SNP
+#'  in their 95% Credible Sets to consider that it a "Consensus SNP".
+#'  (\emph{default=2})
 #' @section SNP filtering parameters:
 #'
 #' @param min_POS Manually set the minimum genomic position for your locus subset.
@@ -307,6 +309,8 @@
 #' \item{"fancy"}{Additionally plot XGR annotation tracks (XGR, Roadmap, Nott).}
 #' }
 #' @param plot.window Zoom into the center of the locus when plotting (without editing the fine-mapping results file).
+#' You can also pass a list of window sizes (e.g. \code{c(50000,100000,500000)}) to automatically generate
+#' multiple views of each locus.
 #' @param plot.Nott_binwidth When including Nott et al. (2019) epigenomic data in the track plots,
 #' adjust the bin width of the histograms.
 #' @param plot.Nott_bigwig_dir Instead of pulling Nott et al. (2019) epigenomic data
@@ -380,6 +384,8 @@ finemap_pipeline <- function(locus,
                              PAINTOR_QTL_datasets=NULL,
                              server=F,
                              PP_threshold=.95,
+                             consensus_threshold=2,
+                             case_control=T,
                              QTL_prefixes=NULL,
 
                              plot.window=NULL,
@@ -498,54 +504,64 @@ finemap_pipeline <- function(locus,
                                 A2_col = A2_col,
                                 PAINTOR_QTL_datasets = PAINTOR_QTL_datasets,
                                 PP_threshold = PP_threshold,
+                                consensus_threshold = consensus_threshold,
+                                case_control = case_control,
                                 conda_env = conda_env,
                                 verbose = verbose)
   finemap_dat <- find_consensus_SNPs(finemap_dat,
                                      credset_thresh = PP_threshold,
+                                     consensus_thresh = consensus_threshold,
                                      verbose = verbose)
 
   # Plot
   message("--------------- Step 7: Visualize --------------")
-  if("simple" %in% plot.types){
-    try({
-      mf_plot <- GGBIO.plot(finemap_dat = finemap_dat,
-                            LD_matrix = LD_matrix,
-                            locus_dir = locus_dir,
-                            method_list = finemap_methods,
-                            QTL_prefixes = QTL_prefixes,
-                            Nott_epigenome = F,
-                            mean.PP = T,
-                            XGR_libnames = NULL,
-                            max_transcripts = 1,
-                            plot.window = plot.window,
-                            save_plot = T,
-                            show_plot = T,
-                            verbose = verbose)
-    })
+  for(p.window in plot.window){
+    if("simple" %in% plot.types){
+      try({
+        mf_plot <- GGBIO.plot(finemap_dat = finemap_dat,
+                              LD_matrix = LD_matrix,
+                              locus_dir = locus_dir,
+                              method_list = finemap_methods,
+                              PP_threshold = PP_threshold,
+                              consensus_threshold = consensus_threshold,
+                              QTL_prefixes = QTL_prefixes,
+                              Nott_epigenome = F,
+                              mean.PP = T,
+                              XGR_libnames = NULL,
+                              max_transcripts = 1,
+                              plot.window = p.window,
+                              save_plot = T,
+                              show_plot = T,
+                              verbose = verbose)
+      })
+    }
+    if("fancy" %in% plot.types){
+      try({
+        trx <- GGBIO.plot(finemap_dat = finemap_dat,
+                          LD_matrix = LD_matrix,
+                          locus_dir = locus_dir,
+                          method_list = finemap_methods,
+                          PP_threshold = PP_threshold,
+                          consensus_threshold = consensus_threshold,
+                          QTL_prefixes = QTL_prefixes,
+                          max_transcripts = 1,
+                          plot.window = p.window,
+                          save_plot = T,
+                          show_plot = T,
+
+                          XGR_libnames = plot.XGR_libnames,
+
+                          Roadmap = plot.Roadmap,
+                          Roadmap_query = plot.Roadmap_query,
+
+                          Nott_epigenome = plot.Nott_epigenome,
+                          Nott_binwidth = plot.Nott_binwidth,
+                          Nott_bigwig_dir = plot.Nott_bigwig_dir,
+                          verbose = verbose)
+      })
+    }
   }
-  if("fancy" %in% plot.types){
-    try({
-      trx <- GGBIO.plot(finemap_dat = finemap_dat,
-                        LD_matrix = LD_matrix,
-                        locus_dir = locus_dir,
-                        method_list = finemap_methods,
-                        QTL_prefixes = QTL_prefixes,
-                        max_transcripts = 1,
-                        plot.window = plot.window,
-                        save_plot = T,
-                        show_plot = T,
 
-                        XGR_libnames = plot.XGR_libnames,
-
-                        Roadmap = plot.Roadmap,
-                        Roadmap_query = plot.Roadmap_query,
-
-                        Nott_epigenome = plot.Nott_epigenome,
-                        Nott_binwidth = plot.Nott_binwidth,
-                        Nott_bigwig_dir = plot.Nott_bigwig_dir,
-                        verbose = verbose)
-    })
-  }
 
   # Plot LD
   if(plot_LD){
@@ -645,6 +661,7 @@ finemap_loci <- function(loci,
                          PAINTOR_QTL_datasets=NULL,
                          server=F,
                          PP_threshold=.95,
+                         consensus_threshold=2,
                          QTL_prefixes=NULL,
 
                          plot.types = c("simple"),
@@ -735,6 +752,8 @@ finemap_loci <- function(loci,
                                      PAINTOR_QTL_datasets=PAINTOR_QTL_datasets,
                                      server=server,
                                      PP_threshold=PP_threshold,
+                                     consensus_threshold=consensus_threshold,
+                                     case_control=case_control,
                                      QTL_prefixes=QTL_prefixes,
 
                                      plot.window=plot.window,
@@ -756,7 +775,11 @@ finemap_loci <- function(loci,
   return(finemap_dat)
   }) # end for loop
   FINEMAP_DAT <- data.table::rbindlist(FINEMAP_DAT, fill = T)
-  print(createDT_html( subset(FINEMAP_DAT, Support >0) ))
+  FINEMAP_DAT <- find_consensus_SNPs(finemap_dat = FINEMAP_DAT,
+                                     credset_thresh = PP_threshold,
+                                     consensus_thresh = consensus_threshold,
+                                     verbose = T)
+  pverboseint(createDT_html( subset(FINEMAP_DAT, Support >0) ))
   return(FINEMAP_DAT)
 }
 

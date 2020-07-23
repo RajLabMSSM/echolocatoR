@@ -14,7 +14,7 @@ merge_finemapping_results(
   regulomeDB_annotation = F,
   biomart_annotation = F,
   PP_threshold = 0.95,
-  consensus_thresh = 2,
+  consensus_threshold = 2,
   exclude_methods = NULL,
   verbose = T,
   nThread = 4
@@ -46,13 +46,13 @@ of fine-mapping tools that contained the SNP in their Credible Set.}
 \item{PP_threshold}{Mean posterior probability threshold to include SNPs in mean PP Credible Set
 (averaged across all fine-mapping tools).}
 
-\item{consensus_thresh}{The minimum number of tools that have the SNPs in their Credible Set
-to classify it as a \strong{Consensus_SNP}.}
-
 \item{exclude_methods}{Exclude certain fine-mapping methods when estimating
 \strong{mean.CS} and \strong{Consensus_SNP}.}
 
 \item{verbose}{Print messages.}
+
+\item{consensus_thresh}{The minimum number of tools that have the SNPs in their Credible Set
+to classify it as a \strong{Consensus_SNP}.}
 }
 \description{
 Gather fine-mapping results from \emph{echolocatoR} across all loci

@@ -24,6 +24,7 @@ multi_finemap(
   A2_col = "A2",
   PAINTOR_QTL_datasets = NULL,
   PP_threshold = 0.95,
+  case_control = T,
   verbose = T,
   conda_env = "echoR"
 )

@@ -26,7 +26,9 @@ NOTT_2019.epigenomic_histograms(
 )
 }
 \arguments{
-\item{plot.window}{Zoom into the center of the locus when plotting (without editing the fine-mapping results file).}
+\item{plot.window}{Zoom into the center of the locus when plotting (without editing the fine-mapping results file).
+You can also pass a list of window sizes (e.g. \code{c(50000,100000,500000)}) to automatically generate
+multiple views of each locus.}
 
 \item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
 }

@@ -61,6 +61,8 @@ finemap_pipeline(
   PAINTOR_QTL_datasets = NULL,
   server = F,
   PP_threshold = 0.95,
+  consensus_threshold = 2,
+  case_control = T,
   QTL_prefixes = NULL,
   plot.window = NULL,
   plot.Nott_epigenome = plot.Nott_epigenome,
@@ -299,7 +301,13 @@ Options:
 \item{PP_threshold}{The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
 For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.}
 
-\item{plot.window}{Zoom into the center of the locus when plotting (without editing the fine-mapping results file).}
+\item{consensus_threshold}{The minimum number of fine-mapping tools that include a SNP
+in their 95% Credible Sets to consider that it a "Consensus SNP".
+(\emph{default=2})}
+
+\item{plot.window}{Zoom into the center of the locus when plotting (without editing the fine-mapping results file).
+You can also pass a list of window sizes (e.g. \code{c(50000,100000,500000)}) to automatically generate
+multiple views of each locus.}
 
 \item{plot.Nott_binwidth}{When including Nott et al. (2019) epigenomic data in the track plots,
 adjust the bin width of the histograms.}
