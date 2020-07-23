@@ -251,9 +251,7 @@
 #' @param PP_threshold The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
 #' For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.
 #' @param consensus_threshold The minimum number of fine-mapping tools that include a SNP
-#'  in their 95% Credible Sets to consider that it a "Consensus SNP".
-#'  (\emph{default=2})
-#' @section SNP filtering parameters:
+#'  in their 95\% Credible Sets to consider that it a "Consensus SNP" (\emph{default=2}).
 #'
 #' @param min_POS Manually set the minimum genomic position for your locus subset.
 #' \code{min_POS} can clip the window size set by \code{bp_distance}.
@@ -279,14 +277,14 @@
 #' @param remove_correlates If \code{remove_correlates} is set to a value between 0-1,
 #' removes any SNPs that are in LD with any of the \code{remove_variants} above the threshold provided by \code{remove_correlates}.
 #'
-#'  @param LD_reference Which linkage disequilibrium reference panel do you want to use.
+#' @param LD_reference Which linkage disequilibrium reference panel do you want to use.
 #'  Options include:
 #'  \describe{
 #'  \item{"UKB"}{A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See \href{https://www.biorxiv.org/content/10.1101/807792v2}{Wiessbrod et al. (2019)} for more details.}
 #'  \item{"1KGphase1"}{Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.}
 #'  \item{"1KGphase3"}{Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.}
 #'  }
-#'  @param superpopulation Subset your LD reference panel by superopulation.
+#' @param superpopulation Subset your LD reference panel by superopulation.
 #'  Setting the superpopulation is not currently possible when \code{LD_reference="UKB"}.
 #'  \href{https://www.internationalgenome.org/faq/which-populations-are-part-your-study/}{1KGphase1 options} include:
 #'  \describe{
@@ -778,8 +776,8 @@ finemap_loci <- function(loci,
   FINEMAP_DAT <- find_consensus_SNPs(finemap_dat = FINEMAP_DAT,
                                      credset_thresh = PP_threshold,
                                      consensus_thresh = consensus_threshold,
-                                     verbose = T)
-  pverboseint(createDT_html( subset(FINEMAP_DAT, Support >0) ))
+                                     verbose = verbose)
+  print(createDT_html( subset(FINEMAP_DAT, Support >0) ))
   return(FINEMAP_DAT)
 }
 
