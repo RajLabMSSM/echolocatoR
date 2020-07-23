@@ -6,13 +6,20 @@
 \usage{
 get_UKB_MAF(
   subset_DT,
-  output.path = "./Data/Reference/UKB_MAF",
-  force_new_maf = F
+  output_path = "./Data/Reference/UKB_MAF",
+  force_new_maf = F,
+  download_method = "axel",
+  nThread = 4
 )
 }
 \description{
 If \strong{MAF} column is missing,
 download MAF from UK Biobank and use that instead.
+}
+\examples{
+data("BST1");
+subset_DT <- data.frame(BST1)[,colnames(BST1)!="MAF"]
+BST1 <- get_UKB_MAF(subset_DT=subset_DT )
 }
 \seealso{
 Other standardizing functions: 

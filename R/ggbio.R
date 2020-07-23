@@ -121,8 +121,9 @@ GGBIO.SNP_track <- function(gr.snp,
 
   ## Make track
   if(method=="original"){
+    orig_sigcutoff <- sig_cutoff
     sig_cutoff <- -log10(sig_cutoff)
-    cutoff_lab <- paste("P <",sig_cutoff)
+    cutoff_lab <- paste("P <",orig_sigcutoff)
     ymax <- max(-log10(gr.snp$P))
     r2_multiply <- 150
     a1 <- ggbio::plotGrandLinear(gr.snp,
@@ -184,8 +185,7 @@ GGBIO.SNP_track <- function(gr.snp,
                      label.size=NA,
                      alpha=.6,
                      seed = 1,
-                     size = 3,
-                     min.segment.length = 1) +
+                     size = 3) +
     ### Foreground color label
     ggrepel::geom_label_repel(data=labelSNPs_labels,
                      aes(label=SNP),
@@ -198,8 +198,7 @@ GGBIO.SNP_track <- function(gr.snp,
                      fill = NA,
                      alpha=1,
                      seed = 1,
-                     size = 3,
-                     min.segment.length = 1) +
+                     size = 3 ) +
     theme_classic() +
     theme(legend.title = element_text(size=8),
           legend.text = element_text(size=6),
@@ -308,8 +307,7 @@ GGBIO.QTL_track <- function(gr.snp,
                               label.size=NA,
                               alpha=.6,
                               seed = 1,
-                              size = 3,
-                              min.segment.length = 1) +
+                              size = 3) +
     ### Foreground color label
     ggrepel::geom_label_repel(data=labelSNPs_labels,
                               aes(label=SNP),
@@ -322,8 +320,7 @@ GGBIO.QTL_track <- function(gr.snp,
                               fill = NA,
                               alpha=1,
                               seed = 1,
-                              size = 3,
-                              min.segment.length = 1) +
+                              size = 3) +
     theme_classic() +
     theme(legend.title = element_text(size=8),
           legend.text = element_text(size=6),
@@ -469,6 +466,7 @@ GGBIO.plot <- function(finemap_dat,
                        LD_matrix=NULL,
                        color_r2=T,
                        method_list=c("ABF","FINEMAP","SUSIE","POLYFUN_SUSIE"),
+                       label_snps=T,
                        dot_summary=F,
                        QTL_prefixes=NULL,
                        mean.PP=T,
@@ -562,7 +560,7 @@ GGBIO.plot <- function(finemap_dat,
   track.gwas <- GGBIO.SNP_track(gr.snp = gr.snp,
                           method = "original",
                           sig_cutoff=sig_cutoff,
-                          labels_subset = c("Lead SNP","Consensus SNP"),
+                          labels_subset = if(label_snps) c("Lead SNP","Consensus SNP") else NULL,
                           color_r2 = color_r2)
   TRACKS_list <- append(TRACKS_list, track.gwas)
   names(TRACKS_list)[ifelse(is.null(TRACKS_list),1,length(TRACKS_list))] <- "GWAS"
@@ -574,7 +572,7 @@ GGBIO.plot <- function(finemap_dat,
     printer("++ GGBIO::",qtl,"track", v=verbose)
     qtl_track <- GGBIO.QTL_track(gr.snp = gr.snp,
                                  QTL_prefix=qtl,
-                                 labels_subset = c("Lead SNP", "Consensus SNP"),
+                                 labels_subset = if(label_snps) c("Lead SNP", "Consensus SNP") else NULL,
                                  color_r2=color_r2,
                                  show.legend=F,
                                  PP_threshold=PP_threshold,
@@ -588,7 +586,7 @@ GGBIO.plot <- function(finemap_dat,
   for(m in method_list){
     printer("++ GGBIO::",m,"track", v=verbose)
     track.finemapping <- GGBIO.SNP_track(gr.snp, method = m,
-                                   labels_subset = c("Lead SNP", "Credible Set"),
+                                   labels_subset = if(label_snps) c("Lead SNP", "Credible Set") else NULL,
                                    color_r2 = color_r2,
                                    show.legend = F)
     TRACKS_list <- append(TRACKS_list, track.finemapping)

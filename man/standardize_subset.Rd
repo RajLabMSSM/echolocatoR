@@ -29,6 +29,7 @@ standardize_subset(
   QTL_prefixes = NULL,
   return_dt = T,
   nThread = 4,
+  download_method = "axel",
   verbose = T
 )
 }
@@ -135,6 +136,16 @@ This column will be used for filtering summary stats if supplying a named list o
 After querying a subset of the full summary statistics,
 this function converts it into a standardized format
 that the rest of \emph{echolocatoR} can work with.
+}
+\examples{
+data("BST1")
+... Screw up Freq to see if function can fix it and infer MAF ...
+BST1$rsid <- BST1$SNP
+BST1 <- data.frame(BST1)[,!colnames(BST1) \%in\% c("MAF","SNP")]
+BST1[c(10,30,55),"Freq"] <- 0
+BST1[c(12,22),"Freq"] <- NA
+data.table::fwrite(BST1, "~/Desktop/results/GWAS/Nalls23andMe_2019/BST1/BST1.tsv")
+query_mod <- standardize_subset(locus="BST1", subset_path="~/Desktop/results/GWAS/Nalls23andMe_2019/BST1/BST1.tsv", MAF_col="calculate", snp_col="rsid")
 }
 \seealso{
 Other standardizing functions: 

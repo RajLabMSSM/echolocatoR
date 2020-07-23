@@ -23,7 +23,7 @@ ABF <- function(subset_DT,
   if( case_control == TRUE){
   finemap_dat <- coloc::finemap.abf(dataset = list(beta = subset_DT$Effect,
                                                   varbeta = subset_DT$StdErr^2, # MUST be squared
-                                                  N = unique(subset_DT$N), # use sample size
+                                                  N = max(subset_DT$N), # use sample size
                                                   s = subset_DT$proportion_cases,
                                                   snp = subset_DT$SNP,
                                                   MAF = subset_DT$MAF,
@@ -31,7 +31,7 @@ ABF <- function(subset_DT,
   }else{
   finemap_dat <- coloc::finemap.abf(dataset = list(beta = subset_DT$Effect,
                                                   varbeta = subset_DT$StdErr^2, # MUST be squared
-                                                  N = unique(subset_DT$N), # use sample size
+                                                  N = max(subset_DT$N), # use sample size
                                                   snp = subset_DT$SNP,
                                                   MAF = subset_DT$MAF,
                                                   type="quant"))

@@ -67,7 +67,7 @@ finemap_DT <- BST1
 show_plot <- T
 
 
-locus <- "SYT17"
+locus <- "DNAH17"
 locus_dir <- file.path("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019",locus)
 LD_matrix <- readRDS(file.path(locus_dir,"plink/UKB_LD.RDS"))
 finemap_DT <- data.table::fread(file.path(locus_dir,"Multi-finemap/Multi-finemap_results.txt"))
@@ -124,12 +124,13 @@ trk_plot.roadmap <- GGBIO.plot(finemap_dat=finemap_DT,
 (see `?NOTT_2019.bigwig_metadata` for details).
 
 ```{r trk_plot.nott_2019} 
-trk_plot.nott_2019 <- GGBIO.plot(finemap_dat=finemap_DT, 
+trk_plot.nott_2019 <- GGBIO.plot(finemap_dat=finemap_DT,  
                                  LD_matrix=LD_matrix, 
-                                 locus_dir=locus_dir, 
+                                 locus_dir=locus_dir,
+                                 label_snps=F,
                                  XGR_libnames=NULL, 
                                  Nott_epigenome=T, 
-                                 plot.window = 50000,
+                                 plot.window = NULL,
                                  Nott_binwidth = 100,
                                  Nott_regulatory_rects = T, 
                                  Nott_show_placseq = T,
