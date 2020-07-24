@@ -226,13 +226,13 @@ FINEMAP <- function(subset_DT,
   # Command line
   ## Example:
   ## cmd <- paste(FINEMAP_path," --sss --in-files",file.path(dirname(FINEMAP_path),"example","master"), "--dataset 1 --n-causal-snps 5")
-  if(startsWith(getwd(),"/sc/")){server <- T}
-  if(server){
-    FINEMAP_path <- paste0("ml finemap/",finemap_version," && finemap")
-  } else {
+  # if(startsWith(getwd(),"/sc/")){server <- T}
+  # if(server){
+  #   FINEMAP_path <- paste0("ml finemap/",finemap_version," && finemap")
+  # } else {
     FINEMAP_path <- FINEMAP.find_executable()
     finemap_version <- "1.3"
-  }
+  # }
 
   cmd <- paste("cd",locus_dir,"&&",
                FINEMAP_path,
