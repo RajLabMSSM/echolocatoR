@@ -78,7 +78,10 @@ get_UKB_MAF <- function(subset_DT,
                            col.names = c("POS","MAF"))
   maf <- subset(maf, POS %in% subset_DT$POS)
   merged_dat <- data.table::merge.data.table(subset_DT, maf,
-                                             by = "POS")
+                                             by = "POS") %>%
+    # Make sure each SNP just appears once
+    dplyr::group_by(merged_dat, SNP) %>%
+    dplyr::slice(1)
   return(merged_dat)
 }
 
@@ -176,21 +179,23 @@ standardize_subset <- function(locus,
     if(MAF_col %in% colnames(query)){
       query <- query %>% dplyr::rename(MAF=MAF_col)
       query_mod$MAF <- as.numeric(query$MAF)
-    } else if(freq_col %in% colnames(query)){
-      query <- query %>% dplyr::rename(Freq=freq_col)
-      query_mod$Freq <- as.numeric(query$Freq)
-      if(MAF_col=="calculate" | !(MAF_col %in% colnames(query)) ){
-        printer("++ Inferring MAF from frequency column...")
-        query_mod$MAF <- ifelse(abs(query$Freq<0.5), abs(query$Freq), abs(1-query$Freq))
-      }
     } else {
-      # As a last resort download UKB MAF
-      query_mod <- get_UKB_MAF(subset_DT = query_mod,
-                               output_path = file.path(dirname(dirname(dirname(subset_path))),
-                                                       "Reference/UKB_MAF"),
-                               force_new_maf = F,
-                               nThread = nThread,
-                               download_method = download_method)
+      if(freq_col %in% colnames(query)){
+        query <- query %>% dplyr::rename(Freq=freq_col)
+        query_mod$Freq <- as.numeric(query$Freq)
+        if(MAF_col=="calculate" | !(MAF_col %in% colnames(query)) ){
+          printer("++ Inferring MAF from frequency column...")
+          query_mod$MAF <- ifelse(abs(query$Freq<0.5), abs(query$Freq), abs(1-query$Freq))
+        }
+      } else {
+        # As a last resort download UKB MAF
+        query_mod <- get_UKB_MAF(subset_DT = query_mod,
+                                 output_path = file.path(dirname(dirname(dirname(subset_path))),
+                                                         "Reference/UKB_MAF"),
+                                 force_new_maf = F,
+                                 nThread = nThread,
+                                 download_method = download_method)
+      }
     }
     query_mod$MAF <- abs(query_mod$MAF)
     printer("++ Removing SNPs with MAF== 0 | NULL | NA", v=verbose)
