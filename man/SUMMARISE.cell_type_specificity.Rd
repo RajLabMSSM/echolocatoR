@@ -11,7 +11,7 @@ SUMMARISE.cell_type_specificity(
   top_celltype_only = F,
   label_yaxis = T,
   y_lab = NULL,
-  text_fill = "Gene_Symbol",
+  show_genes = F,
   x_strip_angle = 40,
   show_plot = T
 )

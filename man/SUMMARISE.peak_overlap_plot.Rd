@@ -20,6 +20,7 @@ SUMMARISE.peak_overlap_plot(
   include.CORCES_2020_HiChIP_FitHiChIP_coaccess = T,
   include.CORCES_2020_gene_annotations = T,
   plot_celltype_specificity = T,
+  plot_celltype_specificity_genes = F,
   facets_formula = ". ~ Cell_type",
   show_plot = T,
   label_yaxis = T,
@@ -64,7 +65,8 @@ Other summarise:
 \code{\link{SUMMARISE.CS_counts_plot}()},
 \code{\link{SUMMARISE.get_CS_bins}()},
 \code{\link{SUMMARISE.get_CS_counts}()},
-\code{\link{SUMMARISE.get_SNPgroup_counts}()}
+\code{\link{SUMMARISE.get_SNPgroup_counts}()},
+\code{\link{results_report}()}
 }
 \concept{summarise}
 \keyword{internal}

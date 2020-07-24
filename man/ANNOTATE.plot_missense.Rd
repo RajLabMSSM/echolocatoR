@@ -4,7 +4,15 @@
 \alias{ANNOTATE.plot_missense}
 \title{Plot any missense variants}
 \usage{
-ANNOTATE.plot_missense(merged_DT, snp_filter = "Support>0", show_plot = T)
+ANNOTATE.plot_missense(
+  merged_DT,
+  snp_filter = "Support>0",
+  label_yaxis = F,
+  x_label = "UCS missense\\nmutations",
+  show.legend = T,
+  show_numbers = F,
+  show_plot = T
+)
 }
 \description{
 Plot any missense variants

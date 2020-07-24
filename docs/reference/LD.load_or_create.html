@@ -96,13 +96,16 @@ or user-supplied datasets." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+      <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
+      <a href="../articles/full_pipeline_vignette.html">Full pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/plotting_vignette.html">echolocatoR: plotting vignette</a>
+      <a href="../articles/plotting_vignette.html">Plotting vignette</a>
+    </li>
+    <li>
+      <a href="../articles/summarise_vignette.html">Summarise vignette</a>
     </li>
   </ul>
 </li>
@@ -156,6 +159,7 @@ or user-supplied datasets.</p>
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>,
   <span class='kw'>server</span> <span class='kw'>=</span> <span class='no'>F</span>,
   <span class='kw'>remove_tmps</span> <span class='kw'>=</span> <span class='no'>T</span>,
+  <span class='kw'>conda_env</span> <span class='kw'>=</span> <span class='st'>"echoR"</span>,
   <span class='kw'>nThread</span> <span class='kw'>=</span> <span class='fl'>4</span>
 )</pre>
 
@@ -171,6 +175,29 @@ or user-supplied datasets.</p>
       <td><p>By default, if an LD matrix file for a given locus is already present,
 then <span class="pkg">echolocatoR</span> will just use the preexisting file.
 Set <code>force_new_LD=T</code> to override this and extract a new subset.</p></td>
+    </tr>
+    <tr>
+      <th>LD_reference</th>
+      <td><p>Which linkage disequilibrium reference panel do you want to use.
+Options include:</p><dl'>
+<dt>"UKB"</dt><dd><p>A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See <a href='https://www.biorxiv.org/content/10.1101/807792v2'>Wiessbrod et al. (2019)</a> for more details.</p></dd>
+<dt>"1KGphase1"</dt><dd><p>Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.</p></dd>
+<dt>"1KGphase3"</dt><dd><p>Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.</p></dd>
+
+</dl></td>
+    </tr>
+    <tr>
+      <th>superpopulation</th>
+      <td><p>Subset your LD reference panel by superopulation.
+Setting the superpopulation is not currently possible when <code>LD_reference="UKB"</code>.
+<a href='https://www.internationalgenome.org/faq/which-populations-are-part-your-study/'>1KGphase1 options</a> include:</p><dl'>
+<dt>"AFR"</dt><dd><p>African [descent]</p></dd>
+<dt>"AMR"</dt><dd><p>Ad-mixed American</p></dd>
+<dt>"EAS"</dt><dd><p>East Asian</p></dd>
+<dt>"EUR"</dt><dd><p>European</p></dd>
+<dt>"SAS"</dt><dd><p>South Asian</p></dd>
+
+</dl></td>
     </tr>
     <tr>
       <th>download_reference</th>
@@ -198,23 +225,7 @@ This is paramter currently only works when <code>LD_reference!="UKB"</code>.</p>
     <tr>
       <th>remove_correlates</th>
       <td><p>If <code>remove_correlates</code> is set to a value between 0-1,
-removes any SNPs that are in LD with any of the <code>remove_variants</code> above the threshold provided by <code>remove_correlates</code>.</p>
-<p>@param LD_reference Which linkage disequilibrium reference panel do you want to use.
- Options include:</p><dl'>
- <dt>"UKB"</dt><dd><p>A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See <a href='https://www.biorxiv.org/content/10.1101/807792v2'>Wiessbrod et al. (2019)</a> for more details.</p></dd>
- <dt>"1KGphase1"</dt><dd><p>Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.</p></dd>
- <dt>"1KGphase3"</dt><dd><p>Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.</p></dd>
- 
-</dl><p>@param superpopulation Subset your LD reference panel by superopulation.
- Setting the superpopulation is not currently possible when <code>LD_reference="UKB"</code>.
- <a href='https://www.internationalgenome.org/faq/which-populations-are-part-your-study/'>1KGphase1 options</a> include:</p><dl'>
- <dt>"AFR"</dt><dd><p>African [descent]</p></dd>
- <dt>"AMR"</dt><dd><p>Ad-mixed American</p></dd>
- <dt>"EAS"</dt><dd><p>East Asian</p></dd>
- <dt>"EUR"</dt><dd><p>European</p></dd>
- <dt>"SAS"</dt><dd><p>South Asian</p></dd>
- 
-</dl></td>
+removes any SNPs that are in LD with any of the <code>remove_variants</code> above the threshold provided by <code>remove_correlates</code>.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -227,6 +238,10 @@ removes any SNPs that are in LD with any of the <code>remove_variants</code> abo
     <tr>
       <th>remove_tmps</th>
       <td><p>Whether to remove any temporary files (e.g. FINEMAP output files) after the pipeline is done running.</p></td>
+    </tr>
+    <tr>
+      <th>conda_env</th>
+      <td><p>The name of a conda environment to use.</p></td>
     </tr>
     </table>
 
@@ -265,12 +280,7 @@ removes any SNPs that are in LD with any of the <code>remove_variants</code> abo
 <code><a href='LD.vcf_to_bed.html'>LD.vcf_to_bed</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"BST1"</span>); <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"locus_dir"</span>);
-<span class='no'>locus_dir</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='st'>"~/Desktop"</span>,<span class='no'>locus_dir</span>)
-<span class='co'># UK Biobank LD</span>
-<span class='fu'>LD.load_or_create</span>(<span class='kw'>locus_dir</span><span class='kw'>=</span><span class='no'>locus_dir</span>, <span class='kw'>subset_DT</span><span class='kw'>=</span><span class='no'>BST1</span>, <span class='kw'>locus</span><span class='kw'>=</span><span class='st'>"BST1"</span>)
-}</div></pre>
+    <pre class="examples"></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

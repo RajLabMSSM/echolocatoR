@@ -212,6 +212,25 @@ if \code{proportion_cases="calculate"} then this is inferred:  \code{N_controls 
 If none is given, and \strong{N_cases} and \strong{N_controls} columns are present,
 then sample_size is inferred to be:  \code{max(N_cases) + max(N_controls)}.}
 
+\item{LD_reference}{Which linkage disequilibrium reference panel do you want to use.
+Options include:
+\describe{
+\item{"UKB"}{A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See \href{https://www.biorxiv.org/content/10.1101/807792v2}{Wiessbrod et al. (2019)} for more details.}
+\item{"1KGphase1"}{Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.}
+\item{"1KGphase3"}{Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.}
+}}
+
+\item{superpopulation}{Subset your LD reference panel by superopulation.
+Setting the superpopulation is not currently possible when \code{LD_reference="UKB"}.
+\href{https://www.internationalgenome.org/faq/which-populations-are-part-your-study/}{1KGphase1 options} include:
+\describe{
+\item{"AFR"}{African [descent]}
+\item{"AMR"}{Ad-mixed American}
+\item{"EAS"}{East Asian}
+\item{"EUR"}{European}
+\item{"SAS"}{South Asian}
+}}
+
 \item{download_reference}{When acquiring LD matrixes,
 the default is to delete the full vcf or npz files after \pkg{echolocatoR} has extracted the necssary subset.
 However, if you wish to keep these full files (which can be quite large) set \code{download_reference=T}.}
@@ -258,25 +277,7 @@ Methods include:
 \item{remove_variants}{A list of variants to remove from the locus subset file.}
 
 \item{remove_correlates}{If \code{remove_correlates} is set to a value between 0-1,
-removes any SNPs that are in LD with any of the \code{remove_variants} above the threshold provided by \code{remove_correlates}.
-
- @param LD_reference Which linkage disequilibrium reference panel do you want to use.
- Options include:
- \describe{
- \item{"UKB"}{A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See \href{https://www.biorxiv.org/content/10.1101/807792v2}{Wiessbrod et al. (2019)} for more details.}
- \item{"1KGphase1"}{Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.}
- \item{"1KGphase3"}{Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.}
- }
- @param superpopulation Subset your LD reference panel by superopulation.
- Setting the superpopulation is not currently possible when \code{LD_reference="UKB"}.
- \href{https://www.internationalgenome.org/faq/which-populations-are-part-your-study/}{1KGphase1 options} include:
- \describe{
- \item{"AFR"}{African [descent]}
- \item{"AMR"}{Ad-mixed American}
- \item{"EAS"}{East Asian}
- \item{"EUR"}{European}
- \item{"SAS"}{South Asian}
- }}
+removes any SNPs that are in LD with any of the \code{remove_variants} above the threshold provided by \code{remove_correlates}.}
 
 \item{probe_path}{The location of the file containing translations between probe IDs and gene symbols.
 Only used for certain eQTL datasets.}
@@ -302,8 +303,7 @@ Options:
 For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.}
 
 \item{consensus_threshold}{The minimum number of fine-mapping tools that include a SNP
-in their 95% Credible Sets to consider that it a "Consensus SNP".
-(\emph{default=2})}
+in their 95\% Credible Sets to consider that it a "Consensus SNP" (\emph{default=2}).}
 
 \item{plot.window}{Zoom into the center of the locus when plotting (without editing the fine-mapping results file).
 You can also pass a list of window sizes (e.g. \code{c(50000,100000,500000)}) to automatically generate
@@ -354,10 +354,6 @@ The primary functions of \pkg{echolocatoR} that expedite fine-mapping
 }
 
 \section{fine-mapping parameters}{
-
-}
-
-\section{SNP filtering parameters}{
 
 }
 

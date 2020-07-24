@@ -188,8 +188,8 @@ MOTIFBREAKR.plot <- function(mb.results,
 #' # root_dir <- "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/motifbreakR"
 #' root_dir <- "/pd-omics/brian/results/_genome_wide/motifbreakR"
 #' mb.results <- readRDS(file.path(root_dir, "motifbreakR_results.rds"))
-#'  mb.lrrk2 <- readRDS("/pd-omics/brian/results/_genome_wide/motifbreakR/motifbreakR_results.p_values_LRRK2.rds")
-#'  mb.encode <- readRDS("/pd-omics/brian/results/_genome_wide/motifbreakR/motifbreakR_results.encode.lrrk2.rds")
+#' mb.lrrk2 <- readRDS("/pd-omics/brian/results/_genome_wide/motifbreakR/motifbreakR_results.p_values_LRRK2.rds")
+#' mb.encode <- readRDS("/pd-omics/brian/results/_genome_wide/motifbreakR/motifbreakR_results.encode.lrrk2.rds")
 #' }
 MOTIFBREAKR.summarize <- function(merged_DT,
                                   mb.results,
@@ -197,12 +197,15 @@ MOTIFBREAKR.summarize <- function(merged_DT,
                                   pvalue_threshold=1e-4,
                                   effect_strengths=c("strong"),
                                   snp_filter="Consensus_SNP==T",
-                                  no_no_loci=NULL){
+                                  no_no_loci=NULL,
+                                  verbose=T){
+  # Quickstart
+  # pct_threshold=.7; verbose=T;
+  # pvalue_threshold=1e-4;
+  # effect_strengths=c("strong");
+  # snp_filter="Consensus_SNP==T";
   # no_no_loci<- c("HLA-DRB5","MAPT","ATG14","SP1","LMNB1","ATP6V0A1",
-  #                "RETREG3","UBTF","FAM171A2","MAP3K14","CRHR1","MAPT-AS1","KANSL1","NSF","WNT3")
-
-  # subset(mb.results, !is.na(Refpvalue) | !is.na(Altpvalue))
-  # subset(mb.results, SNP_id %in% c("rs6781790","rs7599054"))
+  #                "RETREG3","UBTF","FAM171A2","MAP3K14","CRHR1","MAPT-AS1","KANSL1","NSF","WNT3");
 
 
   # mb.results <- MOTIFBREAKR.filter_by_metadata(mb.results = mb.results,

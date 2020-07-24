@@ -1,5 +1,5 @@
 ---
-title: "echolocatoR: plotting vignette"
+title: "Plotting vignette"
 knit: (function(input_file, encoding) {
   out_dir <- 'doc';
   rmarkdown::render(input_file,
@@ -67,12 +67,12 @@ finemap_DT <- BST1
 show_plot <- T
 
 
-locus <- "DNAH17"
-locus_dir <- file.path("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019",locus)
-LD_matrix <- readRDS(file.path(locus_dir,"plink/UKB_LD.RDS"))
-finemap_DT <- data.table::fread(file.path(locus_dir,"Multi-finemap/Multi-finemap_results.txt"))
-finemap_DT <- find_consensus_SNPs(finemap_DT) 
-finemap_DT <- update_CS_cols(finemap_DT)
+# locus <- "DNAH17"
+# locus_dir <- file.path("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019",locus)
+# LD_matrix <- readRDS(file.path(locus_dir,"plink/UKB_LD.RDS"))
+# finemap_DT <- data.table::fread(file.path(locus_dir,"Multi-finemap/Multi-finemap_results.txt"))
+# finemap_DT <- find_consensus_SNPs(finemap_DT) 
+# finemap_DT <- update_CS_cols(finemap_DT)
 ```
 
 ## Using NO annotations  

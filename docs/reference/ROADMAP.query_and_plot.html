@@ -95,13 +95,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+      <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
+      <a href="../articles/full_pipeline_vignette.html">Full pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/plotting_vignette.html">echolocatoR: plotting vignette</a>
+      <a href="../articles/plotting_vignette.html">Plotting vignette</a>
+    </li>
+    <li>
+      <a href="../articles/summarise_vignette.html">Summarise vignette</a>
     </li>
   </ul>
 </li>
@@ -200,13 +203,8 @@ Can provide multiple keywords in list form:
 <span class='no'>finemap_DT</span> <span class='kw'>&lt;-</span> <span class='no'>BST1</span>
 <span class='no'>roadmap_plot_query</span> <span class='kw'>&lt;-</span> <span class='fu'>ROADMAP.query_and_plot</span>(<span class='kw'>subset_DT</span><span class='kw'>=</span><span class='no'>finemap_DT</span>, <span class='kw'>keyword_query</span><span class='kw'>=</span><span class='st'>"monocytes"</span>)</div><div class='output co'>#&gt; [1] "ROADMAP:: Converting data to GRanges..."
 #&gt; [1] "+ ROADMAP:: 2 annotation(s) identified that match `keyword_query`."
-#&gt; [1] "+ Querying subset from Roadmap API: E124  -  1 / 2"
-#&gt; [1] "++ Downloading Roadmap Chromatin Marks: E124"
-#&gt; [1] "cd ./ROADMAP &amp;&amp; tabix -p bed --begin 2 --end 3 https://egg2.wustl.edu/roadmap/data/byFileType/chromhmmSegmentations/ChmmModels/coreMarks/jointModel/final/E124_15_coreMarks_dense.bed.bgz chr4:14737349-16737284"</div><div class='output co'>#&gt; <span class='warning'>Warning: File '/var/folders/sw/km9819713937hp640lj59ygw0000gn/T//Rtmp7AAdNZ/file132a73fa26906' has size 0. Returning a NULL data.table.</span></div><div class='output co'>#&gt; Error in `[.data.frame`(x, i, j) : undefined columns selected
-#&gt; [1] "+ Querying subset from Roadmap API: E029  -  2 / 2"
-#&gt; [1] "++ Downloading Roadmap Chromatin Marks: E029"
-#&gt; [1] "cd ./ROADMAP &amp;&amp; tabix -p bed --begin 2 --end 3 https://egg2.wustl.edu/roadmap/data/byFileType/chromhmmSegmentations/ChmmModels/coreMarks/jointModel/final/E029_15_coreMarks_dense.bed.bgz chr4:14737349-16737284"</div><div class='output co'>#&gt; <span class='warning'>Warning: File '/var/folders/sw/km9819713937hp640lj59ygw0000gn/T//Rtmp7AAdNZ/file132a73f9d298d' has size 0. Returning a NULL data.table.</span></div><div class='output co'>#&gt; Error in `[.data.frame`(x, i, j) : undefined columns selected
-#&gt; [1] "All downloads complete in 0.1 minutes"</div><div class='output co'>#&gt; <span class='error'>Error in save_annotations(gr = grl.roadmap, anno_path = anno_path, libName = lib): could not find function "save_annotations"</span></div></pre>
+#&gt; [1] "ROADMAP:: All downloads complete"
+#&gt; Time difference of 0.1 secs</div><div class='output co'>#&gt; <span class='error'>Error in save_annotations(gr = grl.roadmap, anno_path = anno_path, libName = lib): could not find function "save_annotations"</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

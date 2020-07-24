@@ -25,6 +25,7 @@ Other summarise:
 \code{\link{SUMMARISE.get_CS_bins}()},
 \code{\link{SUMMARISE.get_CS_counts}()},
 \code{\link{SUMMARISE.get_SNPgroup_counts}()},
-\code{\link{SUMMARISE.peak_overlap_plot}()}
+\code{\link{SUMMARISE.peak_overlap_plot}()},
+\code{\link{results_report}()}
 }
 \concept{summarise}

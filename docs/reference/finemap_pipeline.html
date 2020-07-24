@@ -96,13 +96,16 @@ Instead, just manually provide the coordinates of the locus you want to fine-map
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+      <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
+      <a href="../articles/full_pipeline_vignette.html">Full pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/plotting_vignette.html">echolocatoR: plotting vignette</a>
+      <a href="../articles/plotting_vignette.html">Plotting vignette</a>
+    </li>
+    <li>
+      <a href="../articles/summarise_vignette.html">Summarise vignette</a>
     </li>
   </ul>
 </li>
@@ -194,6 +197,8 @@ Instead, just manually provide the coordinates of the locus you want to fine-map
   <span class='kw'>PAINTOR_QTL_datasets</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>server</span> <span class='kw'>=</span> <span class='no'>F</span>,
   <span class='kw'>PP_threshold</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
+  <span class='kw'>consensus_threshold</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+  <span class='kw'>case_control</span> <span class='kw'>=</span> <span class='no'>T</span>,
   <span class='kw'>QTL_prefixes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>plot.window</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>plot.Nott_epigenome</span> <span class='kw'>=</span> <span class='no'>plot.Nott_epigenome</span>,
@@ -402,6 +407,29 @@ If none is given, and <strong>N_cases</strong> and <strong>N_controls</strong> c
 then sample_size is inferred to be:  <code>max(N_cases) + max(N_controls)</code>.</p></td>
     </tr>
     <tr>
+      <th>LD_reference</th>
+      <td><p>Which linkage disequilibrium reference panel do you want to use.
+Options include:</p><dl'>
+<dt>"UKB"</dt><dd><p>A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See <a href='https://www.biorxiv.org/content/10.1101/807792v2'>Wiessbrod et al. (2019)</a> for more details.</p></dd>
+<dt>"1KGphase1"</dt><dd><p>Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.</p></dd>
+<dt>"1KGphase3"</dt><dd><p>Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.</p></dd>
+
+</dl></td>
+    </tr>
+    <tr>
+      <th>superpopulation</th>
+      <td><p>Subset your LD reference panel by superopulation.
+Setting the superpopulation is not currently possible when <code>LD_reference="UKB"</code>.
+<a href='https://www.internationalgenome.org/faq/which-populations-are-part-your-study/'>1KGphase1 options</a> include:</p><dl'>
+<dt>"AFR"</dt><dd><p>African [descent]</p></dd>
+<dt>"AMR"</dt><dd><p>Ad-mixed American</p></dd>
+<dt>"EAS"</dt><dd><p>East Asian</p></dd>
+<dt>"EUR"</dt><dd><p>European</p></dd>
+<dt>"SAS"</dt><dd><p>South Asian</p></dd>
+
+</dl></td>
+    </tr>
+    <tr>
       <th>download_reference</th>
       <td><p>When acquiring LD matrixes,
 the default is to delete the full vcf or npz files after <span class="pkg">echolocatoR</span> has extracted the necssary subset.
@@ -475,23 +503,7 @@ Methods include:</p><dl'>
     <tr>
       <th>remove_correlates</th>
       <td><p>If <code>remove_correlates</code> is set to a value between 0-1,
-removes any SNPs that are in LD with any of the <code>remove_variants</code> above the threshold provided by <code>remove_correlates</code>.</p>
-<p>@param LD_reference Which linkage disequilibrium reference panel do you want to use.
- Options include:</p><dl'>
- <dt>"UKB"</dt><dd><p>A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See <a href='https://www.biorxiv.org/content/10.1101/807792v2'>Wiessbrod et al. (2019)</a> for more details.</p></dd>
- <dt>"1KGphase1"</dt><dd><p>Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.</p></dd>
- <dt>"1KGphase3"</dt><dd><p>Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.</p></dd>
- 
-</dl><p>@param superpopulation Subset your LD reference panel by superopulation.
- Setting the superpopulation is not currently possible when <code>LD_reference="UKB"</code>.
- <a href='https://www.internationalgenome.org/faq/which-populations-are-part-your-study/'>1KGphase1 options</a> include:</p><dl'>
- <dt>"AFR"</dt><dd><p>African [descent]</p></dd>
- <dt>"AMR"</dt><dd><p>Ad-mixed American</p></dd>
- <dt>"EAS"</dt><dd><p>East Asian</p></dd>
- <dt>"EUR"</dt><dd><p>European</p></dd>
- <dt>"SAS"</dt><dd><p>South Asian</p></dd>
- 
-</dl></td>
+removes any SNPs that are in LD with any of the <code>remove_variants</code> above the threshold provided by <code>remove_correlates</code>.</p></td>
     </tr>
     <tr>
       <th>probe_path</th>
@@ -533,8 +545,15 @@ Options:</p><dl'>
 For example, <code>PP_threshold=.95</code> means that all Credible Set SNPs will be 95% Credible Set SNPs.</p></td>
     </tr>
     <tr>
+      <th>consensus_threshold</th>
+      <td><p>The minimum number of fine-mapping tools that include a SNP
+in their 95% Credible Sets to consider that it a "Consensus SNP" (<em>default=2</em>).</p></td>
+    </tr>
+    <tr>
       <th>plot.window</th>
-      <td><p>Zoom into the center of the locus when plotting (without editing the fine-mapping results file).</p></td>
+      <td><p>Zoom into the center of the locus when plotting (without editing the fine-mapping results file).
+You can also pass a list of window sizes (e.g. <code><a href='https://rdrr.io/r/base/c.html'>c(50000,100000,500000)</a></code>) to automatically generate
+multiple views of each locus.</p></td>
     </tr>
     <tr>
       <th>plot.Nott_binwidth</th>
@@ -597,11 +616,6 @@ from the <em>UCSC Genome Browser</em>, use a set of local bigwig files.</p></td>
 
 
     <h2 class="hasAnchor" id="fine-mapping-parameters"><a class="anchor" href="#fine-mapping-parameters"></a>fine-mapping parameters</h2>
-
-    
-
-
-    <h2 class="hasAnchor" id="snp-filtering-parameters"><a class="anchor" href="#snp-filtering-parameters"></a>SNP filtering parameters</h2>
 
     
 

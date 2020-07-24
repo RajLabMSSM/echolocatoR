@@ -609,6 +609,7 @@ SUMMARISE.peak_overlap_plot <- function(merged_DT,
                                         include.CORCES_2020_HiChIP_FitHiChIP_coaccess=T,
                                         include.CORCES_2020_gene_annotations=T,
                                         plot_celltype_specificity=T,
+                                        plot_celltype_specificity_genes=F,
                                         facets_formula=". ~ Cell_type",
                                         show_plot=T,
                                         label_yaxis=T,
@@ -686,7 +687,9 @@ SUMMARISE.peak_overlap_plot <- function(merged_DT,
     geom_tile(color="white") +
     # scale_fill_manual(values = consensus_colors) +
     # scale_fill_discrete(na.value = "transparent") +
-    scale_fill_gradient(na.value = "transparent",low = scales::alpha("blue",.7), high = scales::alpha("red",.7)) +
+    scale_fill_gradient(na.value = "transparent",
+                        low = scales::alpha("blue",.7),
+                        high = scales::alpha("red",.7)) +
     # geom_point(aes(size=ifelse(Count>0, "dot", "no_dot")), show.legend = F, alpha=.8, color="white") +
 
     # geom_rect( aes(xmin = Assay, xmax = dplyr::lead(Assay), ymin = -0.5, ymax = Inf, fill = background),
@@ -734,6 +737,7 @@ SUMMARISE.peak_overlap_plot <- function(merged_DT,
     gg_cells <- SUMMARISE.cell_type_specificity(plot_dat = plot_dat,
                                                 merged_DT = merged_DT,
                                                 label_yaxis = F,
+                                                show_genes = plot_celltype_specificity_genes,
                                                 y_lab = NULL,
                                                 x_strip_angle = x_strip_angle,
                                                 show_plot = F)
@@ -764,7 +768,7 @@ SUMMARISE.cell_type_specificity <- function(plot_dat,
                                             top_celltype_only=F,
                                             label_yaxis=T,
                                             y_lab=NULL,
-                                            text_fill="Gene_Symbol",
+                                            show_genes=F,
                                             x_strip_angle=40,
                                             show_plot=T){
   Cell_group_dict <- c("astrocytes"="astrocytes",
@@ -797,8 +801,7 @@ SUMMARISE.cell_type_specificity <- function(plot_dat,
   cell_tally <- order_loci(dat = cell_tally,
                            merged_DT = merged_DT)
   gg_tally <- ggplot(data = cell_tally, aes(x=Cell_group, y=Locus, fill=Assay_count)) +
-    geom_tile() +
-    geom_text(aes(label=eval(parse(text=text_fill))), size=3, color="cyan") +
+    geom_tile(color="white") +
     facet_grid(facets = . ~ Cell_group,
                scales = "free_x") +
     scale_fill_viridis_c(na.value = "transparent") +
@@ -813,8 +816,12 @@ SUMMARISE.cell_type_specificity <- function(plot_dat,
           strip.text.x = element_text(angle=x_strip_angle, color="white"),
           strip.background.x = element_rect(fill="black"),
           panel.spacing = unit(.1, "lines"),
-          plot.margin = unit(rep(.1,4), "cm")) +
+          plot.margin = unit(c(.1,2,.1,.1), "cm")) +
     scale_y_discrete(drop=FALSE)
+  if(show_genes){
+    gg_tally <- gg_tally +
+      geom_text(aes(label=eval(parse(text="Gene_Symbol"))), size=3, color="cyan")
+  }
   if(label_yaxis==F){
     gg_tally <- gg_tally + theme(axis.text.y = element_blank())
   }
@@ -921,3 +928,36 @@ count_and_melt <- function(merged_annot,
   }
   return(consensus_melt)
 }
+
+
+
+
+
+
+
+#' Give a quick summary report of the fine-mapping results
+#' @family summarise
+#' @examples
+#' data("merged_DT");
+#' results_report(merged_DT)
+results_report <- function(merged_dat){
+  message("echolocatoR results report (all loci):")
+  printer("+ Overall report:")
+  printer("++",length(unique(merged_dat$Locus)),"Loci.")
+  printer("++",nrow(merged_dat),"SNPs.")
+  cat('\n')
+  printer("+ Lead SNP report:")
+  printer("++", length(subset(merged_dat, leadSNP)$SNP),"lead SNPs.")
+  printer("++ Lead SNP mean PP =", round(mean(subset(merged_dat, leadSNP)$mean.PP, na.rm = T),2))
+  cat('\n')
+  printer("+ Union Credible Set report:")
+  printer("++", length(subset(merged_dat, Support>0)$SNP),"UCS SNPs.")
+  printer("++ UCS mean PP =", round(mean(subset(merged_dat, Support>0)$mean.PP, na.rm = T),2))
+  printer("++",nrow(subset(merged_dat, Support>0 & leadSNP)),"UCS SNPs that are also lead SNPs")
+  cat('\n')
+  printer("+ Consensus SNP report:")
+  printer("++", length(subset(merged_dat, Consensus_SNP)$SNP),"Consensus SNPs.")
+  printer("++ Consensus SNP mean PP =", round(mean(subset(merged_dat, Consensus_SNP)$mean.PP, na.rm = T),2))
+  printer("++",nrow(subset(merged_dat, Consensus_SNP & leadSNP)),"Consensus SNPs that are also lead SNPs")
+}
+

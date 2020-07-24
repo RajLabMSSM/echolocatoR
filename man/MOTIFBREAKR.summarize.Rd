@@ -11,7 +11,8 @@ MOTIFBREAKR.summarize(
   pvalue_threshold = 1e-04,
   effect_strengths = c("strong"),
   snp_filter = "Consensus_SNP==T",
-  no_no_loci = NULL
+  no_no_loci = NULL,
+  verbose = T
 )
 }
 \description{
@@ -30,7 +31,7 @@ data("merged_DT")
 # root_dir <- "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/motifbreakR"
 root_dir <- "/pd-omics/brian/results/_genome_wide/motifbreakR"
 mb.results <- readRDS(file.path(root_dir, "motifbreakR_results.rds"))
- mb.lrrk2 <- readRDS("/pd-omics/brian/results/_genome_wide/motifbreakR/motifbreakR_results.p_values_LRRK2.rds")
- mb.encode <- readRDS("/pd-omics/brian/results/_genome_wide/motifbreakR/motifbreakR_results.encode.lrrk2.rds")
+mb.lrrk2 <- readRDS("/pd-omics/brian/results/_genome_wide/motifbreakR/motifbreakR_results.p_values_LRRK2.rds")
+mb.encode <- readRDS("/pd-omics/brian/results/_genome_wide/motifbreakR/motifbreakR_results.encode.lrrk2.rds")
 }
 }

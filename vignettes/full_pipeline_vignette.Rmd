@@ -1,5 +1,5 @@
 ---
-title: "echolocatoR: full pipeline vignette" 
+title: "Full pipeline vignette" 
 author: "Brian M. Schilder"
 date: "Most recent update:<br> `r Sys.Date()`"
 output: rmarkdown::html_vignette

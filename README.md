@@ -23,7 +23,7 @@ The elimination of data gathering and preprocessing steps enables rapid fine-map
 
 ## Workflow  
 
-![echoFlow](./images/PDecholocatoR_Fig1ng)  
+![echoFlow](./images/echolocatoR_Fig1.png)  
 
 
 <br>

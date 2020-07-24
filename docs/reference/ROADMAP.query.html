@@ -95,13 +95,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+      <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
+      <a href="../articles/full_pipeline_vignette.html">Full pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/plotting_vignette.html">echolocatoR: plotting vignette</a>
+      <a href="../articles/plotting_vignette.html">Plotting vignette</a>
+    </li>
+    <li>
+      <a href="../articles/summarise_vignette.html">Summarise vignette</a>
     </li>
   </ul>
 </li>
@@ -135,7 +138,14 @@
     <p>Query Roadmap by genomic coordinates</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ROADMAP.query</span>(<span class='no'>results_path</span>, <span class='no'>gr.snp</span>, <span class='kw'>keyword_query</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>limit_files</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>ROADMAP.query</span>(
+  <span class='no'>results_path</span>,
+  <span class='no'>gr.snp</span>,
+  <span class='kw'>keyword_query</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>limit_files</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>nThread</span> <span class='kw'>=</span> <span class='fl'>4</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -164,16 +174,9 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"BST1"</span>)
-<span class='no'>finemap_DT</span> <span class='kw'>&lt;-</span> <span class='no'>BST1</span>
-<span class='no'>gr.snp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='DT_to_GRanges.html'>DT_to_GRanges</a></span>(<span class='kw'>subset_DT</span> <span class='kw'>=</span> <span class='no'>finemap_DT</span>)
-<span class='no'>grl.roadmap</span> <span class='kw'>&lt;-</span> <span class='fu'>ROADMAP.query</span>(<span class='kw'>results_path</span><span class='kw'>=</span><span class='st'>"./Roadmap"</span>, <span class='kw'>gr.snp</span><span class='kw'>=</span><span class='no'>gr.snp</span>, <span class='kw'>keyword_query</span><span class='kw'>=</span><span class='st'>"placenta"</span>)</div><div class='output co'>#&gt; [1] "+ ROADMAP:: 2 annotation(s) identified that match `keyword_query`."
-#&gt; [1] "+ Querying subset from Roadmap API: E091  -  1 / 2"
-#&gt; [1] "++ Downloading Roadmap Chromatin Marks: E091"
-#&gt; [1] "cd ./Roadmap &amp;&amp; tabix -p bed --begin 2 --end 3 https://egg2.wustl.edu/roadmap/data/byFileType/chromhmmSegmentations/ChmmModels/coreMarks/jointModel/final/E091_15_coreMarks_dense.bed.bgz chr4:14737349-16737284"</div><div class='output co'>#&gt; <span class='warning'>Warning: File '/var/folders/sw/km9819713937hp640lj59ygw0000gn/T//Rtmp7AAdNZ/file132a7316bbe2d' has size 0. Returning a NULL data.table.</span></div><div class='output co'>#&gt; Error in `[.data.frame`(x, i, j) : undefined columns selected
-#&gt; [1] "+ Querying subset from Roadmap API: E099  -  2 / 2"
-#&gt; [1] "++ Downloading Roadmap Chromatin Marks: E099"
-#&gt; [1] "cd ./Roadmap &amp;&amp; tabix -p bed --begin 2 --end 3 https://egg2.wustl.edu/roadmap/data/byFileType/chromhmmSegmentations/ChmmModels/coreMarks/jointModel/final/E099_15_coreMarks_dense.bed.bgz chr4:14737349-16737284"</div><div class='output co'>#&gt; <span class='warning'>Warning: File '/var/folders/sw/km9819713937hp640lj59ygw0000gn/T//Rtmp7AAdNZ/file132a7189295b4' has size 0. Returning a NULL data.table.</span></div><div class='output co'>#&gt; Error in `[.data.frame`(x, i, j) : undefined columns selected
-#&gt; [1] "All downloads complete in 0 minutes"</div></pre>
+<span class='no'>grl.roadmap</span> <span class='kw'>&lt;-</span> <span class='fu'>ROADMAP.query</span>(<span class='kw'>results_path</span><span class='kw'>=</span><span class='st'>"./Roadmap"</span>, <span class='kw'>gr.snp</span><span class='kw'>=</span><span class='no'>BST1</span>, <span class='kw'>keyword_query</span><span class='kw'>=</span><span class='st'>"placenta"</span>)</div><div class='output co'>#&gt; [1] "+ ROADMAP:: 2 annotation(s) identified that match `keyword_query`."
+#&gt; [1] "ROADMAP:: All downloads complete"
+#&gt; Time difference of 0.1 secs</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

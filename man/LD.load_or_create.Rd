@@ -34,6 +34,25 @@ LD.load_or_create(
 then \pkg{echolocatoR} will just use the preexisting file.
 Set \code{force_new_LD=T} to override this and extract a new subset.}
 
+\item{LD_reference}{Which linkage disequilibrium reference panel do you want to use.
+Options include:
+\describe{
+\item{"UKB"}{A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See \href{https://www.biorxiv.org/content/10.1101/807792v2}{Wiessbrod et al. (2019)} for more details.}
+\item{"1KGphase1"}{Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.}
+\item{"1KGphase3"}{Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.}
+}}
+
+\item{superpopulation}{Subset your LD reference panel by superopulation.
+Setting the superpopulation is not currently possible when \code{LD_reference="UKB"}.
+\href{https://www.internationalgenome.org/faq/which-populations-are-part-your-study/}{1KGphase1 options} include:
+\describe{
+\item{"AFR"}{African [descent]}
+\item{"AMR"}{Ad-mixed American}
+\item{"EAS"}{East Asian}
+\item{"EUR"}{European}
+\item{"SAS"}{South Asian}
+}}
+
 \item{download_reference}{When acquiring LD matrixes,
 the default is to delete the full vcf or npz files after \pkg{echolocatoR} has extracted the necssary subset.
 However, if you wish to keep these full files (which can be quite large) set \code{download_reference=T}.}
@@ -48,25 +67,7 @@ However, if you wish to keep these full files (which can be quite large) set \co
 This is paramter currently only works when \code{LD_reference!="UKB"}.}
 
 \item{remove_correlates}{If \code{remove_correlates} is set to a value between 0-1,
-removes any SNPs that are in LD with any of the \code{remove_variants} above the threshold provided by \code{remove_correlates}.
-
- @param LD_reference Which linkage disequilibrium reference panel do you want to use.
- Options include:
- \describe{
- \item{"UKB"}{A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See \href{https://www.biorxiv.org/content/10.1101/807792v2}{Wiessbrod et al. (2019)} for more details.}
- \item{"1KGphase1"}{Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.}
- \item{"1KGphase3"}{Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.}
- }
- @param superpopulation Subset your LD reference panel by superopulation.
- Setting the superpopulation is not currently possible when \code{LD_reference="UKB"}.
- \href{https://www.internationalgenome.org/faq/which-populations-are-part-your-study/}{1KGphase1 options} include:
- \describe{
- \item{"AFR"}{African [descent]}
- \item{"AMR"}{Ad-mixed American}
- \item{"EAS"}{East Asian}
- \item{"EUR"}{European}
- \item{"SAS"}{South Asian}
- }}
+removes any SNPs that are in LD with any of the \code{remove_variants} above the threshold provided by \code{remove_correlates}.}
 
 \item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
 

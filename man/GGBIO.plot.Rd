@@ -13,12 +13,11 @@ GGBIO.plot(
   LD_matrix = NULL,
   color_r2 = T,
   method_list = c("ABF", "FINEMAP", "SUSIE", "POLYFUN_SUSIE"),
-  label_snps = T,
   dot_summary = F,
   QTL_prefixes = NULL,
   mean.PP = T,
   PP_threshold = 0.95,
-  consensus_threshold = 2,
+  consensus_thresh = 2,
   sig_cutoff = 5e-08,
   XGR_libnames = c("ENCODE_TFBS_ClusteredV3_CellTypes",
     "ENCODE_DNaseI_ClusteredV3_CellTypes", "Broad_Histone"),
@@ -30,7 +29,7 @@ GGBIO.plot(
   Nott_epigenome = F,
   Nott_regulatory_rects = T,
   Nott_show_placseq = T,
-  Nott_binwidth = 200,
+  Nott_binwidth = 2500,
   Nott_bigwig_dir = NULL,
   save_plot = T,
   show_plot = T,
@@ -51,10 +50,6 @@ stored in the column \emph{Fairfax_2014.P}.}
 
 \item{PP_threshold}{The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
 For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.}
-
-\item{consensus_threshold}{The minimum number of fine-mapping tools that include a SNP
-in their 95% Credible Sets to consider that it a "Consensus SNP".
-(\emph{default=2})}
 
 \item{max_transcripts}{Max number of transcripts per gene to show.}
 
@@ -90,7 +85,7 @@ trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=loc
 trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, Roadmap=T, Roadmap_query="monocyte", save_plot=F)
 
 # Using only Nott_2019 annotations
-trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, Nott_epigenome=T, XGR_libnames=NULL, plot.window=100000)
+trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, Nott_epigenome=T, XGR_libnames=NULL)
 }
 }
 \seealso{

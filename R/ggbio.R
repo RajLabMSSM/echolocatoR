@@ -70,7 +70,6 @@ GGBIO.invisible_legend <- function(gg){
 
 
 
-
 #' Track plot for SNPs
 #'
 #' Uses \code{\link{ggbio}}.
@@ -121,9 +120,8 @@ GGBIO.SNP_track <- function(gr.snp,
 
   ## Make track
   if(method=="original"){
-    orig_sigcutoff <- sig_cutoff
     sig_cutoff <- -log10(sig_cutoff)
-    cutoff_lab <- paste("P <",orig_sigcutoff)
+    cutoff_lab <- paste("P <",sig_cutoff)
     ymax <- max(-log10(gr.snp$P))
     r2_multiply <- 150
     a1 <- ggbio::plotGrandLinear(gr.snp,
@@ -185,7 +183,8 @@ GGBIO.SNP_track <- function(gr.snp,
                      label.size=NA,
                      alpha=.6,
                      seed = 1,
-                     size = 3) +
+                     size = 3,
+                     min.segment.length = 1) +
     ### Foreground color label
     ggrepel::geom_label_repel(data=labelSNPs_labels,
                      aes(label=SNP),
@@ -198,7 +197,8 @@ GGBIO.SNP_track <- function(gr.snp,
                      fill = NA,
                      alpha=1,
                      seed = 1,
-                     size = 3 ) +
+                     size = 3,
+                     min.segment.length = 1) +
     theme_classic() +
     theme(legend.title = element_text(size=8),
           legend.text = element_text(size=6),
@@ -307,7 +307,8 @@ GGBIO.QTL_track <- function(gr.snp,
                               label.size=NA,
                               alpha=.6,
                               seed = 1,
-                              size = 3) +
+                              size = 3,
+                              min.segment.length = 1) +
     ### Foreground color label
     ggrepel::geom_label_repel(data=labelSNPs_labels,
                               aes(label=SNP),
@@ -320,7 +321,8 @@ GGBIO.QTL_track <- function(gr.snp,
                               fill = NA,
                               alpha=1,
                               seed = 1,
-                              size = 3) +
+                              size = 3,
+                              min.segment.length = 1) +
     theme_classic() +
     theme(legend.title = element_text(size=8),
           legend.text = element_text(size=6),
@@ -400,22 +402,6 @@ GGBIO.transcript_model_track <- function(gr.snp_CHR,
 
 
 
-get_window_limits <- function(finemap_dat,
-                              plot.window){
-  lead.pos <- subset(finemap_dat, leadSNP)$POS
-  if(!is.null(plot.window)){
-    xlims <- c(lead.pos-as.integer(plot.window/2),
-               lead.pos+as.integer(plot.window/2))
-  } else {
-    xlims <- c(min(finemap_dat$POS),
-               max(finemap_dat$POS))
-  }
-  return(xlims)
-}
-
-
-
-
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
 ############ PLOT ALL TRACKS TOGETHER ############
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
@@ -459,19 +445,18 @@ get_window_limits <- function(finemap_dat,
 #' trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, Roadmap=T, Roadmap_query="monocyte", save_plot=F)
 #'
 #' # Using only Nott_2019 annotations
-#' trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, Nott_epigenome=T, XGR_libnames=NULL, plot.window=100000)
+#' trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, Nott_epigenome=T, XGR_libnames=NULL)
 #' }
 GGBIO.plot <- function(finemap_dat,
                        locus_dir,
                        LD_matrix=NULL,
                        color_r2=T,
                        method_list=c("ABF","FINEMAP","SUSIE","POLYFUN_SUSIE"),
-                       label_snps=T,
                        dot_summary=F,
                        QTL_prefixes=NULL,
                        mean.PP=T,
                        PP_threshold=.95,
-                       consensus_threshold=2,
+                       consensus_thresh=2,
                        sig_cutoff=5e-8,
 
                        XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes",
@@ -487,7 +472,7 @@ GGBIO.plot <- function(finemap_dat,
                        Nott_epigenome=F,
                        Nott_regulatory_rects=T,
                        Nott_show_placseq=T,
-                       Nott_binwidth=200, #2500
+                       Nott_binwidth=2500,
                        Nott_bigwig_dir=NULL,
 
                        save_plot=T,
@@ -508,7 +493,7 @@ GGBIO.plot <- function(finemap_dat,
   # Set up data
   finemap_dat <- find_consensus_SNPs(finemap_dat = finemap_dat,
                                     credset_thresh = PP_threshold,
-                                    consensus_thresh = consensus_threshold,
+                                    consensus_thresh = consensus_thresh,
                                     verbose = F)
   finemap_dat <- fillNA_CS_PP(finemap_dat = finemap_dat)
 
@@ -518,8 +503,14 @@ GGBIO.plot <- function(finemap_dat,
   if(mean.PP){method_list <- unique(c(method_list, "mean"))}
 
   # Set window limits
-  xlims <- get_window_limits(finemap_dat = finemap_dat,
-                             plot.window = plot.window)
+  lead.pos <- subset(finemap_dat, leadSNP)$POS
+  if(!is.null(plot.window)){
+    xlims <- c(lead.pos-as.integer(plot.window/2),
+               lead.pos+as.integer(plot.window/2))
+  } else {
+    xlims <- c(min(finemap_dat$POS),
+               max(finemap_dat$POS))
+  }
 
   TRACKS_list <- NULL
 
@@ -560,25 +551,25 @@ GGBIO.plot <- function(finemap_dat,
   track.gwas <- GGBIO.SNP_track(gr.snp = gr.snp,
                           method = "original",
                           sig_cutoff=sig_cutoff,
-                          labels_subset = if(label_snps) c("Lead SNP","Consensus SNP") else NULL,
+                          labels_subset = c("Lead SNP","Consensus SNP"),
                           color_r2 = color_r2)
   TRACKS_list <- append(TRACKS_list, track.gwas)
   names(TRACKS_list)[ifelse(is.null(TRACKS_list),1,length(TRACKS_list))] <- "GWAS"
 
 
 
-  # QTLs
+
   for (qtl in QTL_prefixes){
     printer("++ GGBIO::",qtl,"track", v=verbose)
     qtl_track <- GGBIO.QTL_track(gr.snp = gr.snp,
                                  QTL_prefix=qtl,
-                                 labels_subset = if(label_snps) c("Lead SNP", "Consensus SNP") else NULL,
+                                 labels_subset = c("Lead SNP", "Consensus SNP"),
                                  color_r2=color_r2,
                                  show.legend=F,
                                  PP_threshold=PP_threshold,
                                  sig_cutoff=sig_cutoff)
     TRACKS_list <- append(TRACKS_list, qtl_track)
-    names(TRACKS_list)[length(TRACKS_list)] <- gsub("\\.$|_$|-$","",qtl)
+    names(TRACKS_list)[length(TRACKS_list)] <- qtl
   }
 
 
@@ -586,7 +577,7 @@ GGBIO.plot <- function(finemap_dat,
   for(m in method_list){
     printer("++ GGBIO::",m,"track", v=verbose)
     track.finemapping <- GGBIO.SNP_track(gr.snp, method = m,
-                                   labels_subset = if(label_snps) c("Lead SNP", "Credible Set") else NULL,
+                                   labels_subset = c("Lead SNP", "Credible Set"),
                                    color_r2 = color_r2,
                                    show.legend = F)
     TRACKS_list <- append(TRACKS_list, track.finemapping)
@@ -671,7 +662,6 @@ GGBIO.plot <- function(finemap_dat,
                                                         show_plot=F,
                                                         save_plot=F,
                                                         full_data=T,
-                                                        plot.window = plot.window,
                                                         return_assay_track=T,
                                                         binwidth=Nott_binwidth,
                                                         bigwig_dir=Nott_bigwig_dir,
@@ -772,9 +762,7 @@ GGBIO.track_heights_dict <- function(TRACKS_list,
 #' @family plot
 #' @keywords internal
 GGBIO.add_lines <- function(trks,
-                            finemap_dat,
-                            alpha=.7,
-                            size=.3){
+                            finemap_dat){
   # Add lines
   lead.pos <- subset(finemap_dat, leadSNP)$POS
   consensus.pos <- subset(finemap_dat, Consensus_SNP==T)$POS
@@ -782,9 +770,9 @@ GGBIO.add_lines <- function(trks,
   TRKS_FINAL <- suppressWarnings(suppressMessages(
     trks +
      geom_vline(xintercept = consensus.pos, color="goldenrod2",
-                 alpha=alpha, size=size, linetype='solid') +
+                 alpha=1, size=.3, linetype='solid') +
      geom_vline(xintercept = lead.pos, color="red",
-                alpha=alpha, size=size, linetype='solid') +
+                alpha=1, size=.3, linetype='solid') +
      theme(strip.text.y = element_text(angle = 0),
            strip.text = element_text(size = 7),
            panel.background = element_rect(fill = "white", colour = "black", linetype = "solid"),

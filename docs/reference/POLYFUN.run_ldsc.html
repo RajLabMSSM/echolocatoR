@@ -95,13 +95,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+      <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
+      <a href="../articles/full_pipeline_vignette.html">Full pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/plotting_vignette.html">echolocatoR: plotting vignette</a>
+      <a href="../articles/plotting_vignette.html">Plotting vignette</a>
+    </li>
+    <li>
+      <a href="../articles/summarise_vignette.html">Summarise vignette</a>
     </li>
   </ul>
 </li>
@@ -137,13 +140,13 @@
 
     <pre class="usage"><span class='fu'>POLYFUN.run_ldsc</span>(
   <span class='kw'>polyfun</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>PF.output.path</span>,
+  <span class='kw'>output_dir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='no'>munged.path</span>,
   <span class='kw'>min_INFO</span> <span class='kw'>=</span> <span class='fl'>0.6</span>,
   <span class='kw'>min_MAF</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
   <span class='kw'>annotations.path</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='no'>polyfun</span>, <span class='st'>"example_data/annotations."</span>),
   <span class='kw'>weights.path</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='no'>polyfun</span>, <span class='st'>"example_data/weights."</span>),
-  <span class='kw'>prefix</span> <span class='kw'>=</span> <span class='st'>"PD_GWAS_LDSC"</span>,
+  <span class='kw'>prefix</span> <span class='kw'>=</span> <span class='st'>"LDSC"</span>,
   <span class='kw'>chrom</span> <span class='kw'>=</span> <span class='st'>"all"</span>,
   <span class='kw'>compute_ldscores</span> <span class='kw'>=</span> <span class='no'>F</span>,
   <span class='kw'>allow_missing_SNPs</span> <span class='kw'>=</span> <span class='no'>T</span>,
@@ -151,7 +154,7 @@
     <span class='kw'>munged_path</span> <span class='kw'>=</span> <span class='st'>"/sc/arion/projects/pd-omics/tools/polyfun/Nalls23andMe_2019.sumstats_munged.parquet"</span>,
   <span class='kw'>ref.prefix</span> <span class='kw'>=</span> <span class='st'>"/sc/arion/projects/pd-omics/data/1000_Genomes/Phase1/1000G.mac5eur."</span>,
   <span class='kw'>freq.prefix</span> <span class='kw'>=</span> <span class='st'>"/sc/arion/projects/pd-omics/tools/polyfun/1000G_frq/1000G.mac5eur."</span>,
-  <span class='kw'>server</span> <span class='kw'>=</span> <span class='no'>F</span>
+  <span class='kw'>conda_env</span> <span class='kw'>=</span> <span class='st'>"echoR"</span>
 )</pre>
 
 

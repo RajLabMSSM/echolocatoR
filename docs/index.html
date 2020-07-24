@@ -54,13 +54,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+      <a href="articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
     <li>
-      <a href="articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
+      <a href="articles/full_pipeline_vignette.html">Full pipeline vignette</a>
     </li>
     <li>
-      <a href="articles/plotting_vignette.html">echolocatoR: plotting vignette</a>
+      <a href="articles/plotting_vignette.html">Plotting vignette</a>
+    </li>
+    <li>
+      <a href="articles/summarise_vignette.html">Summarise vignette</a>
     </li>
   </ul>
 </li>
@@ -215,16 +218,24 @@
 <ul>
 <li>Rapid querying of summary stats files.<br>
 </li>
-<li>
-<p>To use it, specify <code>query_by="tabix"</code> in <code><a href="reference/finemap_loci.html">finemap_loci()</a></code>.</p>
-<h4 id="bcftools"><a href="http://samtools.github.io/bcftools/bcftools.html">bcftools</a></h4>
-</li>
-<li>Used here for filtering populations in vcf files.
-#### <a href="https://github.com/axel-download-accelerator/axel">Axel</a> *<br>
-</li>
+<li>To use it, specify <code>query_by="tabix"</code> in <code><a href="reference/finemap_loci.html">finemap_loci()</a></code>.</li>
+</ul>
+</div>
+<div id="bcftools" class="section level4">
+<h4 class="hasAnchor">
+<a href="#bcftools" class="anchor"></a><a href="http://samtools.github.io/bcftools/bcftools.html">bcftools</a>
+</h4>
+<ul>
+<li>Used here for filtering populations in vcf files.</li>
+</ul>
+</div>
+<div id="axel" class="section level4">
+<h4 class="hasAnchor">
+<a href="#axel" class="anchor"></a><a href="https://github.com/axel-download-accelerator/axel">Axel</a> *</h4>
+<ul>
 <li>Rapid multi-core downloading of large files (e.g. LD matrices from UK Biobank).<br>
 </li>
-<li><p>To use it, specify <code>download_method="axel"</code> in <code><a href="reference/finemap_loci.html">finemap_loci()</a></code>.</p></li>
+<li>To use it, specify <code>download_method="axel"</code> in <code><a href="reference/finemap_loci.html">finemap_loci()</a></code>.</li>
 </ul>
 <p><br></p>
 </div>
@@ -238,37 +249,40 @@ For easy reference, we list the necessary columns here as well.<br>
 See <code>?finemap_loci()</code> for descriptions of these columns.<br>
 All methods require the columns: <code>SNP</code>,<code>CHR</code>,<code>POS</code>,<code>Effect</code>,<code>StdErr</code></p>
 <p>Additional required columns:</p>
-<div id="abf" class="section level3">
+<div id="abf-proportion_casesmaf" class="section level3">
 <h3 class="hasAnchor">
-<a href="#abf" class="anchor"></a><a href="https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html">ABF</a>
+<a href="#abf-proportion_casesmaf" class="anchor"></a><a href="https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html">ABF</a>: <code>proportion_cases</code>,<code>MAF</code>
 </h3>
-<ul>
-<li>
-<p><code>proportion_cases</code>,<code>MAF</code></p>
-<h3 id="finemap"><a href="http://www.christianbenner.com">FINEMAP</a></h3>
-</li>
-<li>
-<p><code>A1</code>,<code>A2</code>,<code>MAF</code>,<code>N</code></p>
-<h3 id="susie"><a href="https://github.com/stephenslab/susieR">SuSiE</a></h3>
-</li>
-<li>
-<p><code>N</code></p>
-<h3 id="polyfun"><a href="https://github.com/omerwe/polyfun">PolyFun</a></h3>
-</li>
-<li>
-<p><code>A1</code>,<code>A2</code>,<code>P</code>,<code>N</code></p>
-<h3 id="paintor"><a href="https://github.com/gkichaev/PAINTOR_V3.0">PAINTOR</a></h3>
-</li>
-<li>
-<p><code>A1</code>,<code>A2</code>,<code>t-stat</code></p>
-<h3 id="gcta-cojo"><a href="https://cnsgenomics.com/software/gcta/#COJO">GCTA-COJO</a></h3>
-</li>
-<li>
-<p><code>A1</code>,<code>A2</code>,<code>Freq</code>,<code>P</code>,<code>N</code></p>
-<h3 id="coloc"><a href="https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html">coloc</a></h3>
-</li>
-<li><p><code>N</code>,<code>MAF</code></p></li>
-</ul>
+</div>
+<div id="finemapa1a2mafn" class="section level3">
+<h3 class="hasAnchor">
+<a href="#finemapa1a2mafn" class="anchor"></a><a href="http://www.christianbenner.com">FINEMAP</a>:<code>A1</code>,<code>A2</code>,<code>MAF</code>,<code>N</code>
+</h3>
+</div>
+<div id="susie-n" class="section level3">
+<h3 class="hasAnchor">
+<a href="#susie-n" class="anchor"></a><a href="https://github.com/stephenslab/susieR">SuSiE</a>: <code>N</code>
+</h3>
+</div>
+<div id="polyfun-a1a2pn" class="section level3">
+<h3 class="hasAnchor">
+<a href="#polyfun-a1a2pn" class="anchor"></a><a href="https://github.com/omerwe/polyfun">PolyFun</a>: <code>A1</code>,<code>A2</code>,<code>P</code>,<code>N</code>
+</h3>
+</div>
+<div id="paintor-a1a2t-stat" class="section level3">
+<h3 class="hasAnchor">
+<a href="#paintor-a1a2t-stat" class="anchor"></a><a href="https://github.com/gkichaev/PAINTOR_V3.0">PAINTOR</a>: <code>A1</code>,<code>A2</code>,<code>t-stat</code>
+</h3>
+</div>
+<div id="gcta-cojo-a1a2freqpn" class="section level3">
+<h3 class="hasAnchor">
+<a href="#gcta-cojo-a1a2freqpn" class="anchor"></a><a href="https://cnsgenomics.com/software/gcta/#COJO">GCTA-COJO</a>: <code>A1</code>,<code>A2</code>,<code>Freq</code>,<code>P</code>,<code>N</code>
+</h3>
+</div>
+<div id="coloc-nmaf" class="section level3">
+<h3 class="hasAnchor">
+<a href="#coloc-nmaf" class="anchor"></a><a href="https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html">coloc</a>: <code>N</code>,<code>MAF</code>
+</h3>
 <p><br></p>
 </div>
 </div>
@@ -414,6 +428,15 @@ All methods require the columns: <code>SNP</code>,<code>CHR</code>,<code>POS</co
 <li>Inlcudes 187-annotation baseline model from <a href="https://www.nature.com/articles/s41588-018-0231-8">Gazal et al. 2018</a>.<br>
 </li>
 <li>You can alternatively supply a custom annotations matrix.</li>
+</ul>
+</div>
+<div id="motifbreakr" class="section level3">
+<h3 class="hasAnchor">
+<a href="#motifbreakr" class="anchor"></a><a href="https://github.com/Simon-Coetzee/motifBreakR">motifbreakR</a>
+</h3>
+<ul>
+<li>Identification of transcript factor binding motifs (TFBM) and prediction of SNP disruption to said motifs.</li>
+<li>Includes a comprehensive list of TFBM databases via <a href="https://bioconductor.org/packages/release/bioc/html/MotifDb.html">MotifDB</a> (9,900+ annotated position frequency matrices from 14 public sources, for multiple organisms).</li>
 </ul>
 </div>
 <div id="garfield-under-construction" class="section level3">

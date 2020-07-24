@@ -95,13 +95,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+      <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
+      <a href="../articles/full_pipeline_vignette.html">Full pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/plotting_vignette.html">echolocatoR: plotting vignette</a>
+      <a href="../articles/plotting_vignette.html">Plotting vignette</a>
+    </li>
+    <li>
+      <a href="../articles/summarise_vignette.html">Summarise vignette</a>
     </li>
   </ul>
 </li>
@@ -147,6 +150,19 @@
     <tr>
       <th>popDat</th>
       <td><p>The metadata file listing the superpopulation to which each sample belongs.</p></td>
+    </tr>
+    <tr>
+      <th>superpopulation</th>
+      <td><p>Subset your LD reference panel by superopulation.
+Setting the superpopulation is not currently possible when <code>LD_reference="UKB"</code>.
+<a href='https://www.internationalgenome.org/faq/which-populations-are-part-your-study/'>1KGphase1 options</a> include:</p><dl'>
+<dt>"AFR"</dt><dd><p>African [descent]</p></dd>
+<dt>"AMR"</dt><dd><p>Ad-mixed American</p></dd>
+<dt>"EAS"</dt><dd><p>East Asian</p></dd>
+<dt>"EUR"</dt><dd><p>European</p></dd>
+<dt>"SAS"</dt><dd><p>South Asian</p></dd>
+
+</dl></td>
     </tr>
     <tr>
       <th>verbose</th>

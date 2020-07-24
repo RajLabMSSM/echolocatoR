@@ -95,13 +95,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+      <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
+      <a href="../articles/full_pipeline_vignette.html">Full pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/plotting_vignette.html">echolocatoR: plotting vignette</a>
+      <a href="../articles/plotting_vignette.html">Plotting vignette</a>
+    </li>
+    <li>
+      <a href="../articles/summarise_vignette.html">Summarise vignette</a>
     </li>
   </ul>
 </li>
@@ -162,7 +165,7 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>output_prefix</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"tools/polyfun/gold"</span>,<span class='st'>""</span>,<span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"echolocatoR"</span>),<span class='st'>"testrun.22"</span>)
-<span class='no'>ldscore</span> <span class='kw'>&lt;-</span> <span class='fu'>POLYFUN.gather_ldscores</span>(<span class='kw'>output_prefix</span><span class='kw'>=</span><span class='no'>output_prefix</span>)</div><div class='output co'>#&gt; [1] "POLYFUN:: &gt;1 ldscore file detected. Only using the first: /private/var/folders/sw/km9819713937hp640lj59ygw0000gn/T/RtmpMx1Q9S/temp_libpath12dcc68381cc9/echolocatoR/tools/polyfun/gold/polyloc_test.22.l2.ldscore.parquet"
+<span class='no'>ldscore</span> <span class='kw'>&lt;-</span> <span class='fu'>POLYFUN.gather_ldscores</span>(<span class='kw'>output_prefix</span><span class='kw'>=</span><span class='no'>output_prefix</span>)</div><div class='output co'>#&gt; [1] "POLYFUN:: &gt;1 ldscore file detected. Only using the first: /private/var/folders/sw/km9819713937hp640lj59ygw0000gn/T/RtmpUagrNk/temp_libpath15b4e60d13514/echolocatoR/tools/polyfun/gold/polyloc_test.22.l2.ldscore.parquet"
 #&gt; [1] "+ Importing parquet file with `pandas (Python)`"
 #&gt; [1] "+ CONDA:: conda already installed."</div></pre>
   </div>

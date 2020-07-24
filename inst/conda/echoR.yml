@@ -1,9 +1,9 @@
 name: echoR
 channels:
   - defaults
-  - bioconda 
+  - bioconda
   - biobuilds
-  - conda-forge 
+  - conda-forge
   - anaconda
 dependencies:
   - python>=3.6.1
@@ -13,7 +13,7 @@ dependencies:
   - fastparquet
   - scipy
   - scikit-learn
-  - tqdm 
+  - tqdm
   - bitarray
   - networkx
   - rpy2
@@ -24,8 +24,11 @@ dependencies:
   - bcftools
   - r-base>=3.6.0
   - r-devtools
-  - r-reticulate  
+  - r-reticulate
   - r-rlang
+  - r-mvtnorm
+  - r-desctools
+  - r-exact
   - r-data.table
   - r-ggplot2
   - r-ckmeans.1d.dp
@@ -36,7 +39,6 @@ dependencies:
   - r-coloc
   - r-biocmanager
   - bioconductor-snpstats
-  - bioconductor-ggbio  
+  - bioconductor-ggbio
   - bioconductor-ensdb.hsapiens.v75
   - bioconductor-biomart
- 

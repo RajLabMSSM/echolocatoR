@@ -98,13 +98,16 @@ Uses ggbio." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+      <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
+      <a href="../articles/full_pipeline_vignette.html">Full pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/plotting_vignette.html">echolocatoR: plotting vignette</a>
+      <a href="../articles/plotting_vignette.html">Plotting vignette</a>
+    </li>
+    <li>
+      <a href="../articles/summarise_vignette.html">Summarise vignette</a>
     </li>
   </ul>
 </li>
@@ -147,11 +150,12 @@ Uses <code>ggbio</code>.</p>
   <span class='kw'>LD_matrix</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>color_r2</span> <span class='kw'>=</span> <span class='no'>T</span>,
   <span class='kw'>method_list</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ABF"</span>, <span class='st'>"FINEMAP"</span>, <span class='st'>"SUSIE"</span>, <span class='st'>"POLYFUN_SUSIE"</span>),
+  <span class='kw'>label_snps</span> <span class='kw'>=</span> <span class='no'>T</span>,
   <span class='kw'>dot_summary</span> <span class='kw'>=</span> <span class='no'>F</span>,
   <span class='kw'>QTL_prefixes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>mean.PP</span> <span class='kw'>=</span> <span class='no'>T</span>,
   <span class='kw'>PP_threshold</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
-  <span class='kw'>consensus_thresh</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+  <span class='kw'>consensus_threshold</span> <span class='kw'>=</span> <span class='fl'>2</span>,
   <span class='kw'>sig_cutoff</span> <span class='kw'>=</span> <span class='fl'>5e-08</span>,
   <span class='kw'>XGR_libnames</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ENCODE_TFBS_ClusteredV3_CellTypes"</span>,
     <span class='st'>"ENCODE_DNaseI_ClusteredV3_CellTypes"</span>, <span class='st'>"Broad_Histone"</span>),
@@ -163,7 +167,7 @@ Uses <code>ggbio</code>.</p>
   <span class='kw'>Nott_epigenome</span> <span class='kw'>=</span> <span class='no'>F</span>,
   <span class='kw'>Nott_regulatory_rects</span> <span class='kw'>=</span> <span class='no'>T</span>,
   <span class='kw'>Nott_show_placseq</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>Nott_binwidth</span> <span class='kw'>=</span> <span class='fl'>2500</span>,
+  <span class='kw'>Nott_binwidth</span> <span class='kw'>=</span> <span class='fl'>200</span>,
   <span class='kw'>Nott_bigwig_dir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>save_plot</span> <span class='kw'>=</span> <span class='no'>T</span>,
   <span class='kw'>show_plot</span> <span class='kw'>=</span> <span class='no'>T</span>,
@@ -194,12 +198,19 @@ stored in the column <em>Fairfax_2014.P</em>.</p></td>
 For example, <code>PP_threshold=.95</code> means that all Credible Set SNPs will be 95% Credible Set SNPs.</p></td>
     </tr>
     <tr>
+      <th>consensus_threshold</th>
+      <td><p>The minimum number of fine-mapping tools that include a SNP
+in their 95% Credible Sets to consider that it a "Consensus SNP" (<em>default=2</em>).</p></td>
+    </tr>
+    <tr>
       <th>max_transcripts</th>
       <td><p>Max number of transcripts per gene to show.</p></td>
     </tr>
     <tr>
       <th>plot.window</th>
-      <td><p>Zoom into the center of the locus when plotting (without editing the fine-mapping results file).</p></td>
+      <td><p>Zoom into the center of the locus when plotting (without editing the fine-mapping results file).
+You can also pass a list of window sizes (e.g. <code><a href='https://rdrr.io/r/base/c.html'>c(50000,100000,500000)</a></code>) to automatically generate
+multiple views of each locus.</p></td>
     </tr>
     <tr>
       <th>verbose</th>

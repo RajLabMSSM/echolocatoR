@@ -6,8 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>IMPACT box plot
-Box plot of IMPACT scores from each SNP group. — IMPACT.snp_group_boxplot • echolocatoR</title>
+<title><em>IMPACT</em> box plot with <span class="pkg">ggpubr</span> — IMPACT.snp_group_boxplot • echolocatoR</title>
 
 
 <!-- jquery -->
@@ -40,10 +39,8 @@ Box plot of IMPACT scores from each SNP group. — IMPACT.snp_group_boxplot • 
 
 
 
-<meta property="og:title" content="IMPACT box plot
-Box plot of IMPACT scores from each SNP group. — IMPACT.snp_group_boxplot" />
-<meta property="og:description" content="IMPACT box plot
-Box plot of IMPACT scores from each SNP group." />
+<meta property="og:title" content="<em>IMPACT</em> box plot with <span class="pkg">ggpubr</span> — IMPACT.snp_group_boxplot" />
+<meta property="og:description" content="Box plot of IMPACT scores from each SNP group." />
 
 
 
@@ -98,13 +95,16 @@ Box plot of IMPACT scores from each SNP group." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+      <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
+      <a href="../articles/full_pipeline_vignette.html">Full pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/plotting_vignette.html">echolocatoR: plotting vignette</a>
+      <a href="../articles/plotting_vignette.html">Plotting vignette</a>
+    </li>
+    <li>
+      <a href="../articles/summarise_vignette.html">Summarise vignette</a>
     </li>
   </ul>
 </li>
@@ -129,21 +129,39 @@ Box plot of IMPACT scores from each SNP group." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>IMPACT box plot
-Box plot of IMPACT scores from each SNP group.</h1>
+    <h1><em>IMPACT</em> box plot with <span class="pkg">ggpubr</span></h1>
     <small class="dont-index">Source: <a href='https://github.com/RajLabMSSM/echolocatoR/blob/master/R/IMPACT.R'><code>R/IMPACT.R</code></a></small>
     <div class="hidden name"><code>IMPACT.snp_group_boxplot.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>IMPACT box plot
-Box plot of IMPACT scores from each SNP group.</p>
+    <p>Box plot of <em>IMPACT</em> scores from each SNP group.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>IMPACT.snp_group_boxplot</span>(<span class='no'>TOP_IMPACT_all</span>)</pre>
+    <pre class="usage"><span class='fu'>IMPACT.snp_group_boxplot</span>(<span class='no'>TOP_IMPACT_all</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"t.test"</span>, <span class='kw'>show_plot</span> <span class='kw'>=</span> <span class='no'>T</span>)</pre>
 
 
+    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
+    <p><a href='https://www.r-bloggers.com/add-p-values-and-significance-levels-to-ggplots/'>ggpubr example</a></p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other IMPACT: 
+<code><a href='IMPACT.get_annotation_key.html'>IMPACT.get_annotation_key</a>()</code>,
+<code><a href='IMPACT.get_annotations.html'>IMPACT.get_annotations</a>()</code>,
+<code><a href='IMPACT.get_top_annotations.html'>IMPACT.get_top_annotations</a>()</code>,
+<code><a href='IMPACT.iterate_get_annotations.html'>IMPACT.iterate_get_annotations</a>()</code>,
+<code><a href='IMPACT.postprocess_annotations.html'>IMPACT.postprocess_annotations</a>()</code>,
+<code><a href='IMPACT_annotation_key.html'>IMPACT_annotation_key</a></code>,
+<code><a href='IMPACT_heatmap.html'>IMPACT_heatmap</a>()</code>,
+<code><a href='prepare_mat_meta.html'>prepare_mat_meta</a>()</code></p></div>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='no'>TOP_IMPACT_all</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>reshape2</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/reshape2/man/melt.html'>melt</a></span>(<span class='no'>boxplot_mat</span>) <span class='kw'>%&gt;%</span> <span class='fu'>`colnames&lt;-`</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SNP_group"</span>,<span class='st'>"max_IMPACT"</span>))
+<span class='no'>bp</span> <span class='kw'>&lt;-</span> <span class='fu'>IMPACT.snp_group_boxplot</span>(<span class='no'>TOP_IMPACT_all</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='st'>"t.test"</span>)
+<span class='no'>bp</span> <span class='kw'>&lt;-</span> <span class='fu'>IMPACT.snp_group_boxplot</span>(<span class='no'>TOP_IMPACT_all</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='st'>"wilcox.test"</span>)
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -96,13 +96,16 @@ download MAF from UK Biobank and use that instead." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+      <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
+      <a href="../articles/full_pipeline_vignette.html">Full pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/plotting_vignette.html">echolocatoR: plotting vignette</a>
+      <a href="../articles/plotting_vignette.html">Plotting vignette</a>
+    </li>
+    <li>
+      <a href="../articles/summarise_vignette.html">Summarise vignette</a>
     </li>
   </ul>
 </li>
@@ -139,8 +142,10 @@ download MAF from UK Biobank and use that instead.</p>
 
     <pre class="usage"><span class='fu'>get_UKB_MAF</span>(
   <span class='no'>subset_DT</span>,
-  <span class='kw'>output.path</span> <span class='kw'>=</span> <span class='st'>"./Data/Reference/UKB_MAF"</span>,
-  <span class='kw'>force_new_maf</span> <span class='kw'>=</span> <span class='no'>F</span>
+  <span class='kw'>output_path</span> <span class='kw'>=</span> <span class='st'>"./Data/Reference/UKB_MAF"</span>,
+  <span class='kw'>force_new_maf</span> <span class='kw'>=</span> <span class='no'>F</span>,
+  <span class='kw'>download_method</span> <span class='kw'>=</span> <span class='st'>"axel"</span>,
+  <span class='kw'>nThread</span> <span class='kw'>=</span> <span class='fl'>4</span>
 )</pre>
 
 
@@ -149,6 +154,11 @@ download MAF from UK Biobank and use that instead.</p>
     <div class='dont-index'><p>Other standardizing functions: 
 <code><a href='standardize_subset.html'>standardize_subset</a>()</code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"BST1"</span>);
+<span class='no'>subset_DT</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='no'>BST1</span>)[,<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span>(<span class='no'>BST1</span>)<span class='kw'>!=</span><span class='st'>"MAF"</span>]
+<span class='no'>BST1</span> <span class='kw'>&lt;-</span> <span class='fu'>get_UKB_MAF</span>(<span class='kw'>subset_DT</span><span class='kw'>=</span><span class='no'>subset_DT</span> )</div><div class='output co'>#&gt; [1] "UKB MAF:: Extracting MAF from UKB reference."
+#&gt; [1] "+ UKB MAF:: Importing pre-existing file"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

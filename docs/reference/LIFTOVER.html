@@ -95,13 +95,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+      <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
+      <a href="../articles/full_pipeline_vignette.html">Full pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/plotting_vignette.html">echolocatoR: plotting vignette</a>
+      <a href="../articles/plotting_vignette.html">Plotting vignette</a>
+    </li>
+    <li>
+      <a href="../articles/summarise_vignette.html">Summarise vignette</a>
     </li>
   </ul>
 </li>
@@ -156,9 +159,9 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"BST1"</span>)
-<span class='no'>gr.lifted</span> <span class='kw'>&lt;-</span> <span class='fu'>LIFTOVER</span>(<span class='kw'>dat</span><span class='kw'>=</span><span class='no'>BST1</span>, <span class='kw'>build.conversion</span><span class='kw'>=</span><span class='st'>"hg19.to.hg38"</span>)</div><div class='output co'>#&gt; [1] "XGR:: Lifting genome build: hg19.to.hg38"</div><div class='output co'>#&gt; <span class='message'>Start at 2020-07-09 21:28:09</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>First, import the files formatted as 'GRanges' (2020-07-09 21:28:09) ...</span></div><div class='output co'>#&gt; <span class='message'>	import the data file (2020-07-09 21:28:09) ...</span></div><div class='output co'>#&gt; <span class='message'>Second, construct GenomicRanges object (2020-07-09 21:28:09) ...</span></div><div class='output co'>#&gt; <span class='message'>Third, lift intervals between genome builds 'hg19.to.hg38' (2020-07-09 21:28:09) ...</span></div><div class='output co'>#&gt; <span class='message'>Start at 2020-07-09 21:28:09</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>'chain' (from http://galahad.well.ox.ac.uk/bigdata/chain.RData) has been loaded into the working environment (at 2020-07-09 21:28:10)</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>End at 2020-07-09 21:28:10</span></div><div class='output co'>#&gt; <span class='message'>Runtime in total is: 1 secs</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>End at 2020-07-09 21:28:10</span></div><div class='output co'>#&gt; <span class='message'>Runtime in total is: 1 secs</span></div></pre>
+<span class='no'>gr.lifted</span> <span class='kw'>&lt;-</span> <span class='fu'>LIFTOVER</span>(<span class='kw'>dat</span><span class='kw'>=</span><span class='no'>BST1</span>, <span class='kw'>build.conversion</span><span class='kw'>=</span><span class='st'>"hg19.to.hg38"</span>)</div><div class='output co'>#&gt; [1] "XGR:: Lifting genome build: hg19.to.hg38"</div><div class='output co'>#&gt; <span class='message'>Start at 2020-07-23 22:58:03</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>First, import the files formatted as 'GRanges' (2020-07-23 22:58:03) ...</span></div><div class='output co'>#&gt; <span class='message'>	import the data file (2020-07-23 22:58:03) ...</span></div><div class='output co'>#&gt; <span class='message'>Second, construct GenomicRanges object (2020-07-23 22:58:03) ...</span></div><div class='output co'>#&gt; <span class='message'>Third, lift intervals between genome builds 'hg19.to.hg38' (2020-07-23 22:58:03) ...</span></div><div class='output co'>#&gt; <span class='message'>Start at 2020-07-23 22:58:03</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>'chain' (from http://galahad.well.ox.ac.uk/bigdata/chain.RData) has been loaded into the working environment (at 2020-07-23 22:58:06)</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>End at 2020-07-23 22:58:06</span></div><div class='output co'>#&gt; <span class='message'>Runtime in total is: 3 secs</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>End at 2020-07-23 22:58:06</span></div><div class='output co'>#&gt; <span class='message'>Runtime in total is: 3 secs</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

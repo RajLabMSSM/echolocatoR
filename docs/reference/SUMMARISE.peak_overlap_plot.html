@@ -95,13 +95,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+      <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
+      <a href="../articles/full_pipeline_vignette.html">Full pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/plotting_vignette.html">echolocatoR: plotting vignette</a>
+      <a href="../articles/plotting_vignette.html">Plotting vignette</a>
+    </li>
+    <li>
+      <a href="../articles/summarise_vignette.html">Summarise vignette</a>
     </li>
   </ul>
 </li>
@@ -141,19 +144,24 @@
   <span class='kw'>include.NOTT_2019_peaks</span> <span class='kw'>=</span> <span class='no'>T</span>,
   <span class='kw'>include.NOTT_2019_enhancers_promoters</span> <span class='kw'>=</span> <span class='no'>T</span>,
   <span class='kw'>include.NOTT_2019_PLACseq</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>include.Corces_2020_scATACpeaks</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>include.Corces_2020_Cicero_coaccess</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>include.Corces_2020_HiChIP_FitHiChIP_coaccess</span> <span class='kw'>=</span> <span class='no'>T</span>,
+  <span class='kw'>include.CORCES_2020_scATACpeaks</span> <span class='kw'>=</span> <span class='no'>T</span>,
+  <span class='kw'>include.CORCES_2020_Cicero_coaccess</span> <span class='kw'>=</span> <span class='no'>T</span>,
+  <span class='kw'>include.CORCES_2020_bulkATACpeaks</span> <span class='kw'>=</span> <span class='no'>T</span>,
+  <span class='kw'>include.CORCES_2020_HiChIP_FitHiChIP_coaccess</span> <span class='kw'>=</span> <span class='no'>T</span>,
+  <span class='kw'>include.CORCES_2020_gene_annotations</span> <span class='kw'>=</span> <span class='no'>T</span>,
+  <span class='kw'>plot_celltype_specificity</span> <span class='kw'>=</span> <span class='no'>T</span>,
+  <span class='kw'>plot_celltype_specificity_genes</span> <span class='kw'>=</span> <span class='no'>F</span>,
   <span class='kw'>facets_formula</span> <span class='kw'>=</span> <span class='st'>". ~ Cell_type"</span>,
   <span class='kw'>show_plot</span> <span class='kw'>=</span> <span class='no'>T</span>,
   <span class='kw'>label_yaxis</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>x_strip_angle</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+  <span class='kw'>x_strip_angle</span> <span class='kw'>=</span> <span class='fl'>90</span>,
   <span class='kw'>x_tick_angle</span> <span class='kw'>=</span> <span class='fl'>40</span>,
   <span class='kw'>drop_empty_cols</span> <span class='kw'>=</span> <span class='no'>F</span>,
   <span class='kw'>fill_title</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='no'>snp_filter</span>, <span class='st'>"\nin epigenomic peaks"</span>),
   <span class='kw'>save_path</span> <span class='kw'>=</span> <span class='no'>F</span>,
   <span class='kw'>height</span> <span class='kw'>=</span> <span class='fl'>11</span>,
-  <span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>15</span>,
+  <span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>12</span>,
+  <span class='kw'>subplot_widths</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>0.5</span>),
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>
 )</pre>
 
@@ -163,7 +171,7 @@
     <tr>
       <th>include.NOTT_2019_peaks</th>
       <td><p>Plot SNP subset overlap with
-cell type-specific epigenomic peaks.</p></td>
+peaks from cell-type-specific bulk ATAC, H3K27ac, and H3K4me3 assays.</p></td>
     </tr>
     <tr>
       <th>include.NOTT_2019_enhancers_promoters</th>
@@ -171,12 +179,12 @@ cell type-specific epigenomic peaks.</p></td>
 cell enhancers and promoters.</p></td>
     </tr>
     <tr>
-      <th>include.Corces_2020_scATACpeaks</th>
+      <th>include.CORCES_2020_scATACpeaks</th>
       <td><p>Plot SNP subset overlap with
 cell-type-specific scATAC-seq peaks.</p></td>
     </tr>
     <tr>
-      <th>include.Corces_2020_Cicero_coaccess</th>
+      <th>include.CORCES_2020_Cicero_coaccess</th>
       <td><p>Plot SNP subset overlap with
 Cicero coaccessibility peaks (derived from scATACseq).</p></td>
     </tr>
@@ -193,7 +201,8 @@ Cicero coaccessibility peaks (derived from scATACseq).</p></td>
 <code><a href='SUMMARISE.CS_counts_plot.html'>SUMMARISE.CS_counts_plot</a>()</code>,
 <code><a href='SUMMARISE.get_CS_bins.html'>SUMMARISE.get_CS_bins</a>()</code>,
 <code><a href='SUMMARISE.get_CS_counts.html'>SUMMARISE.get_CS_counts</a>()</code>,
-<code><a href='SUMMARISE.get_SNPgroup_counts.html'>SUMMARISE.get_SNPgroup_counts</a>()</code></p></div>
+<code><a href='SUMMARISE.get_SNPgroup_counts.html'>SUMMARISE.get_SNPgroup_counts</a>()</code>,
+<code><a href='results_report.html'>results_report</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"></pre>

@@ -1,5 +1,5 @@
 ---
-title: "echolocatoR: QTL pipeline vignette" 
+title: "QTL pipeline vignette" 
 author: "Brian M. Schilder"
 date: "Most recent update:<br> `r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -35,7 +35,7 @@ So we're just going to make one directly from the full summary stats file itself
 - In this case, you'll want to make sure to set `grouping_vars=c("Locus","Gene")` so that you get top SNPs for each eGene-locus pair (not just one SNP per locus).  
 
 ```{r  Prepare `top_SNPs` data.frame}
-fullSS_path <- "~/Desktop/merged_coloc_results.snp.tsv.gz"
+fullSS_path <- "/ad-omics/microglia_omics/Fine_Mapping/Kunkle_Microglia_all_regions/merged_coloc_results.snp.tsv.gz"
 
 top_SNPs <- import_topSNPs(  
   topSS = fullSS_path,

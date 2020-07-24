@@ -5,5 +5,6 @@ articles:
   QTL_pipeline_vignette: QTL_pipeline_vignette.html
   full_pipeline_vignette: full_pipeline_vignette.html
   plotting_vignette: plotting_vignette.html
-last_built: 2020-07-10T01:27Z
+  summarise_vignette: summarise_vignette.html
+last_built: 2020-07-24T02:50Z
 

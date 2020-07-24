@@ -96,13 +96,16 @@ and merge into a single data.frame." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+      <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
+      <a href="../articles/full_pipeline_vignette.html">Full pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/plotting_vignette.html">echolocatoR: plotting vignette</a>
+      <a href="../articles/plotting_vignette.html">Plotting vignette</a>
+    </li>
+    <li>
+      <a href="../articles/summarise_vignette.html">Summarise vignette</a>
     </li>
   </ul>
 </li>
@@ -147,7 +150,7 @@ and merge into a single data.frame.</p>
   <span class='kw'>regulomeDB_annotation</span> <span class='kw'>=</span> <span class='no'>F</span>,
   <span class='kw'>biomart_annotation</span> <span class='kw'>=</span> <span class='no'>F</span>,
   <span class='kw'>PP_threshold</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
-  <span class='kw'>consensus_thresh</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+  <span class='kw'>consensus_threshold</span> <span class='kw'>=</span> <span class='fl'>2</span>,
   <span class='kw'>exclude_methods</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>,
   <span class='kw'>nThread</span> <span class='kw'>=</span> <span class='fl'>4</span>
@@ -200,11 +203,6 @@ of fine-mapping tools that contained the SNP in their Credible Set.</p></td>
 (averaged across all fine-mapping tools).</p></td>
     </tr>
     <tr>
-      <th>consensus_thresh</th>
-      <td><p>The minimum number of tools that have the SNPs in their Credible Set
-to classify it as a <strong>Consensus_SNP</strong>.</p></td>
-    </tr>
-    <tr>
       <th>exclude_methods</th>
       <td><p>Exclude certain fine-mapping methods when estimating
 <strong>mean.CS</strong> and <strong>Consensus_SNP</strong>.</p></td>
@@ -212,6 +210,11 @@ to classify it as a <strong>Consensus_SNP</strong>.</p></td>
     <tr>
       <th>verbose</th>
       <td><p>Print messages.</p></td>
+    </tr>
+    <tr>
+      <th>consensus_thresh</th>
+      <td><p>The minimum number of tools that have the SNPs in their Credible Set
+to classify it as a <strong>Consensus_SNP</strong>.</p></td>
     </tr>
     </table>
 

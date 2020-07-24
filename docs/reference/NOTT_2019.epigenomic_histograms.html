@@ -95,13 +95,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+      <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
+      <a href="../articles/full_pipeline_vignette.html">Full pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/plotting_vignette.html">echolocatoR: plotting vignette</a>
+      <a href="../articles/plotting_vignette.html">Plotting vignette</a>
+    </li>
+    <li>
+      <a href="../articles/summarise_vignette.html">Summarise vignette</a>
     </li>
   </ul>
 </li>
@@ -143,13 +146,29 @@
   <span class='kw'>full_data</span> <span class='kw'>=</span> <span class='no'>T</span>,
   <span class='kw'>return_assay_track</span> <span class='kw'>=</span> <span class='no'>F</span>,
   <span class='kw'>binwidth</span> <span class='kw'>=</span> <span class='fl'>2500</span>,
+  <span class='kw'>plot.window</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>,
   <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"histogram"</span>,
   <span class='kw'>plot_formula</span> <span class='kw'>=</span> <span class='st'>"Assay + Cell_type ~."</span>,
   <span class='kw'>bigwig_dir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>nCores</span> <span class='kw'>=</span> <span class='fl'>4</span>,
-  <span class='kw'>save_annot</span> <span class='kw'>=</span> <span class='no'>F</span>
+  <span class='kw'>nThread</span> <span class='kw'>=</span> <span class='fl'>4</span>,
+  <span class='kw'>save_annot</span> <span class='kw'>=</span> <span class='no'>F</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>
 )</pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>plot.window</th>
+      <td><p>Zoom into the center of the locus when plotting (without editing the fine-mapping results file).
+You can also pass a list of window sizes (e.g. <code><a href='https://rdrr.io/r/base/c.html'>c(50000,100000,500000)</a></code>) to automatically generate
+multiple views of each locus.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>Whether <span class="pkg">echolocatoR</span> should be verbose or silent.</p></td>
+    </tr>
+    </table>
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
@@ -170,6 +189,13 @@
 <code><a href='NOTT_2019.superenhancer_interactome.html'>NOTT_2019.superenhancer_interactome</a></code>,
 <code><a href='NOTT_2019.superenhancers.html'>NOTT_2019.superenhancers</a>()</code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"BST1"</span>); <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"locus_dir"</span>);
+ <span class='no'>track.Nott_histo</span> <span class='kw'>&lt;-</span> <span class='fu'>NOTT_2019.epigenomic_histograms</span>(<span class='kw'>finemap_dat</span> <span class='kw'>=</span> <span class='no'>BST1</span>, <span class='kw'>locus_dir</span> <span class='kw'>=</span> <span class='no'>locus_dir</span>, <span class='kw'>save_plot</span><span class='kw'>=</span><span class='no'>F</span>, <span class='kw'>return_assay_track</span><span class='kw'>=</span><span class='no'>T</span>, <span class='kw'>save_annot</span><span class='kw'>=</span><span class='no'>F</span>)</div><div class='output co'>#&gt; [1] "NOTT_2019:: Importing bigWig subsets from UCSC..."
+#&gt; [1] "++ Nott_2019:: Downloading and merging 12 BED files."
+#&gt; [1] "++ NOTT_2019:: Converting merged BED files to GRanges."
+#&gt; [1] "++ Nott_2019:: 634540 ranges retrieved."</div><div class='output co'>#&gt; <span class='message'>503961 query SNP(s) detected with reference overlap.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: no non-missing arguments to max; returning -Inf</span></div><div class='output co'>#&gt; <span class='message'>Scale for 'x' is already present. Adding another scale for 'x', which will</span>
+#&gt; <span class='message'>replace the existing scale.</span></div><div class='output co'>#&gt; [1] "+ GGBIO:: Calculating max histogram height"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

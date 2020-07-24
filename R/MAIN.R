@@ -597,9 +597,7 @@ finemap_pipeline <- function(locus,
 #' Uses the \code{top_SNPs} data.frame to define locus coordinates.
 #'
 #' @family MAIN
-#' @param loci The list of loci you want to fine-map
-#' @param subset_path The file you want your locus subset saved as.
-#' Only use when fine-mapping one locus at a time.
+#' @param loci The list of loci you want to fine-map.
 #' If \code{subset_path="auto"} (\emph{default}), a locus subset file name is automatically constructed as:
 #' \emph{Data/<dataset_type>/<dataset_name>/<locus>/Multi-finemap/<locus>_<dataset_name>_Multi-finemap.tsv.gz}
 #' @inheritParams finemap_pipeline
@@ -660,6 +658,7 @@ finemap_loci <- function(loci,
                          server=F,
                          PP_threshold=.95,
                          consensus_threshold=2,
+                         case_control=T,
                          QTL_prefixes=NULL,
 
                          plot.types = c("simple"),

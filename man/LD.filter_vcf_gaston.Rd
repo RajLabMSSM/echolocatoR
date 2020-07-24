@@ -16,6 +16,17 @@ LD.filter_vcf_gaston(
 \arguments{
 \item{subset_vcf}{Path to the locus subset vcf.}
 
+\item{superpopulation}{Subset your LD reference panel by superopulation.
+Setting the superpopulation is not currently possible when \code{LD_reference="UKB"}.
+\href{https://www.internationalgenome.org/faq/which-populations-are-part-your-study/}{1KGphase1 options} include:
+\describe{
+\item{"AFR"}{African [descent]}
+\item{"AMR"}{Ad-mixed American}
+\item{"EAS"}{East Asian}
+\item{"EUR"}{European}
+\item{"SAS"}{South Asian}
+}}
+
 \item{popDat}{The metadata file listing the superpopulation to which each sample belongs.}
 
 \item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
