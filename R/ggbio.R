@@ -3,9 +3,33 @@
 # ----------------------- #
 
 
+#' Get window size limits for plot
+#'
+#' @family plot
+#' @keywords internal
+#' @examples
+#' data("BST1");
+#' xlims <- get_window_limits(finemap_dat=BST1, plot.window=50000)
+get_window_limits <- function(finemap_dat,
+                              plot.window=NULL,
+                              verbose=T){
+  printer("+ GGBIO:: Identifying plot window limits.",v=verbose)
+  if(is.null(plot.window)){
+    min_limit <- min(finemap_dat$POS)
+    max_limit <- max(finemap_dat$POS)
+  } else {
+    lead_pos <- subset(finemap_dat, leadSNP)$POS[1]
+    min_limit <- lead_pos - as.integer(plot.window/2)
+    max_limit <- lead_pos + as.integer(plot.window/2)
+  }
+  xlims <- c(min_limit, max_limit)
+  return(xlims)
+}
+
 
 #' Multi-fine-map summary dot plot
 #'
+#' @family plot
 #' @examples
 #' data("BST1")
 #' gp <- GGBIO.dot_summary(finemap_dat=BST1)
@@ -502,16 +526,8 @@ GGBIO.plot <- function(finemap_dat,
   method_list <- unique(method_list[method_list %in% available_methods])
   if(mean.PP){method_list <- unique(c(method_list, "mean"))}
 
-  # Set window limits
-  lead.pos <- subset(finemap_dat, leadSNP)$POS
-  if(!is.null(plot.window)){
-    xlims <- c(lead.pos-as.integer(plot.window/2),
-               lead.pos+as.integer(plot.window/2))
-  } else {
-    xlims <- c(min(finemap_dat$POS),
-               max(finemap_dat$POS))
-  }
-
+  xlims <- get_window_limits(finemap_dat=finemap_dat,
+                             plot.window=plot.window)
   TRACKS_list <- NULL
 
   # Add LD into the dat

@@ -14,9 +14,11 @@ Other plot:
 \code{\link{GGBIO.QTL_track}()},
 \code{\link{GGBIO.SNP_track}()},
 \code{\link{GGBIO.add_lines}()},
+\code{\link{GGBIO.dot_summary}()},
 \code{\link{GGBIO.plot}()},
 \code{\link{GGBIO.track_heights_dict}()},
-\code{\link{GGBIO.transcript_model_track}()}
+\code{\link{GGBIO.transcript_model_track}()},
+\code{\link{get_window_limits}()}
 }
 \concept{plot}
 \keyword{internal}

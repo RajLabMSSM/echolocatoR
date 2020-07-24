@@ -13,3 +13,15 @@ Multi-fine-map summary dot plot
 data("BST1")
 gp <- GGBIO.dot_summary(finemap_dat=BST1)
 }
+\seealso{
+Other plot: 
+\code{\link{GGBIO.QTL_track}()},
+\code{\link{GGBIO.SNP_track}()},
+\code{\link{GGBIO.add_lines}()},
+\code{\link{GGBIO.invisible_legend}()},
+\code{\link{GGBIO.plot}()},
+\code{\link{GGBIO.track_heights_dict}()},
+\code{\link{GGBIO.transcript_model_track}()},
+\code{\link{get_window_limits}()}
+}
+\concept{plot}
