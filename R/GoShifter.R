@@ -212,8 +212,7 @@ GOSHIFTER.get_roadmap_annotations <- function(annotations_path = "./annotations"
   return(output_paths)
 }
 
-GOSHIFTER.process_results <- function(RoadMap_ref,
-                                      locus_dir,
+GOSHIFTER.process_results <- function(locus_dir,
                                       output_bed,
                                       out.prefix){
   # From GitHub Repo: https://github.com/immunogenomics/goshifter
@@ -227,6 +226,7 @@ GOSHIFTER.process_results <- function(RoadMap_ref,
   .locusscore$Annotation <- basename(output_bed)
   eid <- strsplit(basename(output_bed),"_")[[1]][1]
   .locusscore$EID <- eid
+  RoadMap_ref <- ROADMAP.construct_reference()
   data <- subset(RoadMap_ref, EID == eid)
   GS.stats <- data.table:::merge.data.table(.locusscore, data.table::data.table(data), by="EID")
 
@@ -275,7 +275,7 @@ GOSHIFTER.check_overlap <- function(output_bed,
 #' \href{https://github.com/immunogenomics/goshifter}{GitHub}
 #' \href{https://pubmed.ncbi.nlm.nih.gov/26140449/}{Publication}
 GOSHIFTER.run <- function(locus_dir,
-                          grl.roadmap,
+                          grl.ap,
                           permutations = 1000,
                           goshifter_path = NULL,
                           chromatin_state = "TssA",
@@ -287,12 +287,12 @@ GOSHIFTER.run <- function(locus_dir,
   # python <- CONDA.find_python_path(conda_env = "goshifter")
   GS_results_path <- file.path(locus_dir,"GoShifter")
   # Iterate over each bed file
-  GS_results <- lapply(names(grl.roadmap), function(gr.name,
-                                                    finemap_dat,
-                                                    remove_tmps. = remove_tmps,
-                                                    locus_dir. = locus_dir,
-                                                    R2_filter. = R2_filter,
-                                                    overlap_threshold. = overlap_threshold){
+  GS_results <- lapply(names(grl.ap), function(gr.name,
+                                               finemap_dat,
+                                               remove_tmps. = remove_tmps,
+                                               locus_dir. = locus_dir,
+                                               R2_filter. = R2_filter,
+                                               overlap_threshold. = overlap_threshold){
       message(gr.name)
       gr.roadmap <- grl.roadmap[[gr.name]]
       # Check if there's any overlap first
@@ -327,8 +327,7 @@ GOSHIFTER.run <- function(locus_dir,
         cmd.out <- system(cmd, intern = T)
         cat(paste(cmd.out,collapse="\n"))
         # Gather results from written output files
-        GS.stats <- GOSHIFTER.process_results(RoadMap_ref = RoadMap_ref.,
-                                              locus_dir = locus_dir.,
+        GS.stats <- GOSHIFTER.process_results(locus_dir = locus_dir.,
                                               output_bed = output_bed,
                                               out.prefix = gr.name)
         GS.stats$chromatin_state <- chromatin_state
@@ -453,7 +452,6 @@ GOSHIFTER <- function(locus_dir,
       try({
         printer("+ GoShifter:: Running on chromatin state subset:",chromatin_state)
         GS_results <- GOSHIFTER.run(goshifter_path = goshifter_path,
-                                    RoadMap_ref = RoadMap_ref,
                                     locus_dir = locus_dir,
                                     chromatin_state = chromatin_state,
                                     R2_filter = R2_filter,

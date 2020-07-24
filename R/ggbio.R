@@ -456,7 +456,7 @@ GGBIO.plot <- function(finemap_dat,
                        QTL_prefixes=NULL,
                        mean.PP=T,
                        PP_threshold=.95,
-                       consensus_thresh=2,
+                       consensus_threshold=2,
                        sig_cutoff=5e-8,
 
                        XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes",
@@ -483,7 +483,7 @@ GGBIO.plot <- function(finemap_dat,
                        height=12,
                        width=10,
                        verbose=T){
-  # consensus_thresh=2; XGR_libnames="ENCODE_TFBS_ClusteredV3_CellTypes";n_top_xgr=5; mean.PP=T; Roadmap=T; PP_threshold=.95;  Nott_epigenome=T;  save_plot=T; show_plot=T; method_list=c("ABF","SUSIE","POLYFUN_SUSIE","FINEMAP","mean"); full_data=T;  max_transcripts=3; plot.window=100000;
+  # consensus_threshold=2; XGR_libnames="ENCODE_TFBS_ClusteredV3_CellTypes";n_top_xgr=5; mean.PP=T; Roadmap=T; PP_threshold=.95;  Nott_epigenome=T;  save_plot=T; show_plot=T; method_list=c("ABF","SUSIE","POLYFUN_SUSIE","FINEMAP","mean"); full_data=T;  max_transcripts=3; plot.window=100000;
   # Nott_epigenome=T; Nott_regulatory_rects=T; Nott_show_placseq=T; Nott_binwidth=2500; max_transcripts=1; dpi=400; height=12; width=10; results_path=NULL;  n_top_roadmap=7; annot_overlap_threshold=5; Nott_bigwig_dir=NULL; locus="BST1"; Roadmap_query=NULL; sig_cutoff=5e-8; verbose=T; QTL_prefixes=NULL;
 
   # tracks <- ggbio::tracks
@@ -493,7 +493,7 @@ GGBIO.plot <- function(finemap_dat,
   # Set up data
   finemap_dat <- find_consensus_SNPs(finemap_dat = finemap_dat,
                                     credset_thresh = PP_threshold,
-                                    consensus_thresh = consensus_thresh,
+                                    consensus_thresh = consensus_threshold,
                                     verbose = F)
   finemap_dat <- fillNA_CS_PP(finemap_dat = finemap_dat)
 
