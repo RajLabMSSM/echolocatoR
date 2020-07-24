@@ -40,14 +40,14 @@ Imports:
     ensembldb, 
     ggbio,
     BSgenome,
-    Ckmeans.1d.dp,
-    refGenome
+    Ckmeans.1d.dp
 Remotes:
   github::stephenslab/susieR@0.9.0, 
   github::kvnkuang/pbmcapply,
   bioc::3.10/remotes,  
   bioc::3.10/snpStats,
-  bioc::3.10/ggbio
+  bioc::3.10/ggbio,
+  url::https://cran.r-project.org/src/contrib/Archive/refGenome/refGenome_1.7.7.tar.gz
 Suggests: 
     devtools,
     XGR,
