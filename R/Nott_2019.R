@@ -40,6 +40,7 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
                                             nThread=4,
                                             save_annot=F,
                                             verbose=T){
+  printer("NOTT_2019:: Creating epigenomic histograms plot",v=verbose)
   # library(BiocGenerics)
   # library(GenomicRanges)
   # library(ggbio)
@@ -304,7 +305,9 @@ NOTT_2019.get_promoter_celltypes <- function(annot_sub,
 #' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
 NOTT_2019.get_interactome <- function(annot_sub,
                                       top.consensus.pos,
-                                      marker_key){
+                                      marker_key,
+                                      verbose=T){
+  printer("+ NOTT_2019:: Getting interactome data.", v=verbose)
   interact.cols <- grep("*_interactions", colnames(annot_sub), value = T)
   interact.DT <- lapply(interact.cols, function(column){
     coords <- strsplit(annot_sub[,column][[1]], ",")
@@ -624,7 +627,9 @@ NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
                                     point_size=2,
                                     height=7,
                                     width=7,
-                                    dpi=300){
+                                    dpi=300,
+                                    verbose=T){
+  printer("NOTT_2019:: Creating PLAC-seq interactome plot",v=verbose)
   # data("BST1"); print_plot=T; save_plot=T; title=NULL; index_SNP=NULL; xlims=NULL; zoom_window=NULL; return_consensus_overlap =T
   if(!"Consensus_SNP" %in% colnames(finemap_dat)){finemap_dat <- find_consensus_SNPs(finemap_dat, verbose = F)}
   marker_key <- list(PU1 = "microglia", Olig2 = "oligo",
@@ -703,34 +708,44 @@ NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
     geom_point(alpha=.5, shape=16, size=point_size) +
     scale_color_viridis_c(breaks = c(0,0.5, 1), limits = c(0, 1)) + ylim(0, 1)
 
+  max.height=10;
+
   if(highlight_plac){
     NOTT.interact_trk <-
       ggbio::ggbio() +
-      ggbio::geom_arch(data = interact.DT, aes(x = Start, xend = End, alpha = consensus_snp_overlap), max.height = 10, colour = "black") +
+      ggbio::geom_arch(data = interact.DT, aes(x = Start, xend = End, alpha = consensus_snp_overlap),
+                       max.height = max.height, colour = "black") +
       scale_alpha_manual("Consensus SNP overlaps", values = c(0.05, 1))
   }else{
     NOTT.interact_trk <-
       ggbio::ggbio() +
       ggbio::geom_arch(data = interact.DT, alpha = 0.6, color = "gray60",
-                       max.height = 10, aes(x = Start, xend = End))
+                       max.height = max.height, aes(x = Start, xend = End))
   }
 
   NOTT.interact_trk <- NOTT.interact_trk +
     facet_grid(facets = Cell_type ~ .) +
     scale_y_reverse() + theme_classic() +
-    theme(legend.key.width = unit(1.5, "line"), legend.key.height = unit(1.5, "line"), axis.text.y = element_blank())
+    theme(legend.key.width = unit(1.5, "line"),
+          legend.key.height = unit(1.5, "line"),
+          axis.text.y = element_blank())
 
   # Show enhancers/promoters as rectangles
   if (show_regulatory_rects) {
+    printer("++ NOTT_2019:: Adding enhancer/promoter rectangles",v=verbose)
+    rect_height <- as.integer(max.height/8)
+    regions$y <- rect_height
     NOTT.interact_trk <- NOTT.interact_trk +
       ggbio::geom_rect(data = regions,
-                       aes(xmin = start, xmax = end, ymin = 1, ymax = -1,
-                           fill = Element), alpha = 0.7, inherit.aes = F,
-                       color = "transparent") + scale_fill_manual(values = c("turquoise2",
-                                                                             "purple2")) +
+                       stat="identity",
+                       rect.height= rect_height,
+                       aes(y=y, fill = Element),
+                       alpha = .7, inherit.aes = F,
+                       color = "transparent") +
+      scale_fill_manual(values = c("turquoise2", "purple2")) +
       geom_point(data = data.frame(regions),
                  aes(x = middle, y = 0, color = Element), size = 0.5,
-                 inherit.aes = F, alpha = 0.8) +
+                 inherit.aes = F, alpha = 0.7) +
       scale_color_manual(values = c("turquoise",
                                     "purple")) + geom_hline(yintercept = Inf, alpha = 0.2,
                                                             show.legend = F) + scale_y_reverse()
@@ -765,6 +780,7 @@ NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
     return(trks_plus_lines)
   }
 }
+
 
 
 

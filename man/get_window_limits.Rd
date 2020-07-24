@@ -2,12 +2,12 @@
 % Please edit documentation in R/ggbio.R
 \name{get_window_limits}
 \alias{get_window_limits}
-\title{Get window size limits for plots}
+\title{Get window size limits for plot}
 \usage{
 get_window_limits(finemap_dat, plot.window = NULL, verbose = T)
 }
 \description{
-Get window size limits for plots
+Get window size limits for plot
 }
 \examples{
 data("BST1");
@@ -25,3 +25,4 @@ Other plot:
 \code{\link{GGBIO.transcript_model_track}()}
 }
 \concept{plot}
+\keyword{internal}

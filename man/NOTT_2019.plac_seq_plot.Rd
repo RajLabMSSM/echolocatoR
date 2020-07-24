@@ -26,7 +26,8 @@ NOTT_2019.plac_seq_plot(
   point_size = 2,
   height = 7,
   width = 7,
-  dpi = 300
+  dpi = 300,
+  verbose = T
 )
 }
 \description{

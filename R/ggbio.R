@@ -672,30 +672,35 @@ GGBIO.plot <- function(finemap_dat,
 
 
   if(Nott_epigenome){
-    # Epigenomic histograms
-    track.Nott_histo <- NOTT_2019.epigenomic_histograms(finemap_dat = finemap_dat,
-                                                        locus_dir = locus_dir,
-                                                        show_plot=F,
-                                                        save_plot=F,
-                                                        full_data=T,
-                                                        return_assay_track=T,
-                                                        binwidth=Nott_binwidth,
-                                                        bigwig_dir=Nott_bigwig_dir,
-                                                        save_annot=T)
-    TRACKS_list <- append(TRACKS_list, track.Nott_histo)
-    names(TRACKS_list)[length(TRACKS_list)] <- "Nott (2019)\nRead Densities"
+    try({
+      track.Nott_histo <- NOTT_2019.epigenomic_histograms(finemap_dat = finemap_dat,
+                                                          locus_dir = locus_dir,
+                                                          show_plot=F,
+                                                          save_plot=F,
+                                                          full_data=T,
+                                                          return_assay_track=T,
+                                                          binwidth=Nott_binwidth,
+                                                          bigwig_dir=Nott_bigwig_dir,
+                                                          save_annot=T,
+                                                          verbose=verbose)
+      TRACKS_list <- append(TRACKS_list, track.Nott_histo)
+      names(TRACKS_list)[length(TRACKS_list)] <- "Nott (2019)\nRead Densities"
+    })
 
     # PLAC-seq
     if(Nott_show_placseq){
-      track.Nott_plac <- NOTT_2019.plac_seq_plot(finemap_dat = finemap_dat,
-                                                 locus_dir=locus_dir,
-                                                 title=locus,
-                                                 show_regulatory_rects=Nott_regulatory_rects,
-                                                 return_interaction_track=T,
-                                                 show_arches=T,
-                                                 save_annot=T)
-      TRACKS_list <- append(TRACKS_list, track.Nott_plac)
-      names(TRACKS_list)[length(TRACKS_list)] <- "Nott (2019)\nPLAC-seq"
+      try({
+        track.Nott_plac <- NOTT_2019.plac_seq_plot(finemap_dat = finemap_dat,
+                                                   locus_dir=locus_dir,
+                                                   title=locus,
+                                                   show_regulatory_rects=Nott_regulatory_rects,
+                                                   return_interaction_track=T,
+                                                   show_arches=T,
+                                                   save_annot=T,
+                                                   verbose=verbose)
+        TRACKS_list <- append(TRACKS_list, track.Nott_plac)
+        names(TRACKS_list)[length(TRACKS_list)] <- "Nott (2019)\nPLAC-seq"
+      })
     }
 
   }
@@ -723,7 +728,11 @@ GGBIO.plot <- function(finemap_dat,
   }
 
   if(save_plot){
-    window_suffix <- ifelse(is.null(plot.window),"",paste0(plot.window/1000,"kb"))
+    window_suffix <- if(is.null(plot.window)){
+      paste0(DescTools::RoundTo((max(finemap_dat$POS) - min(finemap_dat$POS))/1000, 100),"kb")
+    } else {
+      paste0(plot.window/1000,"kb")
+    }
     plot_path <- file.path(locus_dir,paste0("multiview_",locus,"_",window_suffix,".png"))
     printer("+ GGBIO:: Saving plot ==>",plot_path)
     ggbio::ggsave(filename = plot_path,
