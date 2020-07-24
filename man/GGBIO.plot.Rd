@@ -17,7 +17,7 @@ GGBIO.plot(
   QTL_prefixes = NULL,
   mean.PP = T,
   PP_threshold = 0.95,
-  consensus_thresh = 2,
+  consensus_threshold = 2,
   sig_cutoff = 5e-08,
   XGR_libnames = c("ENCODE_TFBS_ClusteredV3_CellTypes",
     "ENCODE_DNaseI_ClusteredV3_CellTypes", "Broad_Histone"),
@@ -50,6 +50,9 @@ stored in the column \emph{Fairfax_2014.P}.}
 
 \item{PP_threshold}{The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
 For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.}
+
+\item{consensus_threshold}{The minimum number of fine-mapping tools that include a SNP
+in their 95\% Credible Sets to consider that it a "Consensus SNP" (\emph{default=2}).}
 
 \item{max_transcripts}{Max number of transcripts per gene to show.}
 

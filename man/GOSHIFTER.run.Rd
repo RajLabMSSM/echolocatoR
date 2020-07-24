@@ -10,7 +10,7 @@
 \usage{
 GOSHIFTER.run(
   locus_dir,
-  grl.roadmap,
+  grl.ap,
   permutations = 1000,
   goshifter_path = NULL,
   chromatin_state = "TssA",

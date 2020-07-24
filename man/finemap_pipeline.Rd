@@ -237,11 +237,11 @@ However, if you wish to keep these full files (which can be quite large) set \co
 
 \item{min_POS}{Manually set the minimum genomic position for your locus subset.
 \code{min_POS} can clip the window size set by \code{bp_distance}.
-Only use this parameter when fine-mapping one locus at a time.}
+Can also be a list of positions (one for each locus) (e.g. \code{min_POS=top_SNPs$min_POS}).}
 
 \item{max_POS}{Manually set the maximum genomic position for your locus subset.
 \code{max_POS} can clip the window size set by \code{bp_distance}.
-Only use this parameter when fine-mapping one locus at a time.}
+Can also be a list of positions (one for each locus) (e.g. \code{max_POS=top_SNPs$max_POS}).}
 
 \item{min_MAF}{Remove any SNPs with \strong{MAF} < \code{min_MAF}.}
 

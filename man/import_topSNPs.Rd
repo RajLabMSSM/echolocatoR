@@ -10,6 +10,8 @@ import_topSNPs(
   sheet = 1,
   chrom_col = "CHR",
   position_col = "POS",
+  min_POS_col = NULL,
+  max_POS_col = NULL,
   snp_col = "SNP",
   pval_col = "P",
   effect_col = "Effect",

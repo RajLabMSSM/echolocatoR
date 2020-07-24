@@ -255,10 +255,10 @@
 #'
 #' @param min_POS Manually set the minimum genomic position for your locus subset.
 #' \code{min_POS} can clip the window size set by \code{bp_distance}.
-#' Only use this parameter when fine-mapping one locus at a time.
+#' Can also be a list of positions (one for each locus) (e.g. \code{min_POS=top_SNPs$min_POS}).
 #' @param max_POS Manually set the maximum genomic position for your locus subset.
 #' \code{max_POS} can clip the window size set by \code{bp_distance}.
-#' Only use this parameter when fine-mapping one locus at a time.
+#' Can also be a list of positions (one for each locus) (e.g. \code{max_POS=top_SNPs$max_POS}).
 #' @param min_MAF Remove any SNPs with \strong{MAF} < \code{min_MAF}.
 #' @param trim_gene_limits If a valid gene symbol is provided to \code{trim_gene_limits},
 #' the gene's canonical coordinates are pulled from \code{biomaRt}.
@@ -688,6 +688,8 @@ finemap_loci <- function(loci,
       lead_SNP <- .arg_list_handler(conditioned_snps, i)
       gene_limits <- .arg_list_handler(trim_gene_limits, i)
       conditioned_snp <- .arg_list_handler(conditioned_snps, i)
+      min_pos <- .arg_list_handler(min_POS, i)
+      max_pos <- .arg_list_handler(max_POS, i)
       # message("^^^^^^^^^ Running echolocatoR on: ",locus," ^^^^^^^^^")
       # cat('  \n###', locus, '  \n')
       # Delete the old subset if force_new_subset == T
@@ -727,8 +729,8 @@ finemap_loci <- function(loci,
                                      LD_reference=LD_reference,
                                      superpopulation=superpopulation,
                                      download_method=download_method,
-                                     min_POS=min_POS,
-                                     max_POS=max_POS,
+                                     min_POS=min_pos,
+                                     max_POS=max_pos,
                                      min_MAF=min_MAF,
 
                                      trim_gene_limits=gene_limits,

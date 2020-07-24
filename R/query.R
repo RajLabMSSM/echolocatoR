@@ -31,6 +31,8 @@ import_topSNPs <- function(topSS,
                            sheet = 1,
                            chrom_col="CHR",
                            position_col="POS",
+                           min_POS_col=NULL,
+                           max_POS_col=NULL,
                            snp_col="SNP",
                            pval_col="P",
                            effect_col="Effect",
@@ -38,10 +40,10 @@ import_topSNPs <- function(topSS,
                            grouping_vars=c("Locus"),
                            gene_col="Gene",
                            remove_variants=NULL,
-                           nThread=4
-                           ){
+                           nThread=4){
   # Import top SNPs
-  topSNPs_reader <- function(topSS, sheet = 1){
+  topSNPs_reader <- function(topSS,
+                             sheet = 1){
     if(is.data.frame(topSS)){
       return(topSS)
     } else{
@@ -59,6 +61,23 @@ import_topSNPs <- function(topSS,
   top_SNPs <- topSNPs_reader(topSS, sheet)
   orig_top_SNPs <- top_SNPs
 
+  # Add Locus/Gene columns
+  if(is.null(gene_col) & is.null(locus_col)){
+    printer("+ Constructing locus names from CHR and index SNP")
+    # locus_chr1_rs10737496
+    top_SNPs <- dplyr::mutate(top_SNPs, Locus=paste0("locus_chr",CHR,"_",SNP))
+    locus_col <- gene_col <- "Locus";
+  }
+  if(gene_col %in% colnames(top_SNPs) &  all(!is.na(top_SNPs[[gene_col]])) ){
+    top_SNPs <- cbind(Gene=top_SNPs[[gene_col]], top_SNPs)
+  } else {
+    print("+ Assigning locus name to gene_col")
+    top_SNPs <- cbind(Gene=top_SNPs$Locus, top_SNPs)
+  }
+  top_SNPs$Gene <- gsub("/","_",top_SNPs$Gene)
+  top_SNPs$Locus <- gsub("/","_",top_SNPs$Locus)
+
+
   # Standardize col names
   if(!effect_col %in% colnames(top_SNPs)){
     printer("+ Filling in `Effect` column with placeholder (1).")
@@ -66,22 +85,18 @@ import_topSNPs <- function(topSS,
   }
 
   top_SNPs <- top_SNPs %>%
-    dplyr::select(Locus=locus_col,
+    dplyr::select(Locus,
+                  Gene,
                   CHR=chrom_col,
                   POS=position_col,
                   SNP=snp_col,
                   P=pval_col,
-                  Effect=effect_col)
-    # Add Locus column
-    if(gene_col %in% colnames(orig_top_SNPs) &  all(!is.na(orig_top_SNPs[[gene_col]])) ){
-      top_SNPs <- cbind(Gene=orig_top_SNPs[[gene_col]], top_SNPs)
-    } else {
-      print("+ Assigning locus name to gene col")
-      top_SNPs <- cbind(Gene=top_SNPs$Locus, top_SNPs)
+                  Effect=effect_col,
+                  min_POS=min_POS_col,
+                  max_POS=max_POS_col)
+    if("min_POS" %in% colnames(top_SNPs) & "max_POS" %in% colnames(top_SNPs)){
+      top_SNPs <- dplyr::mutate(top_SNPs, span_kb=(max_POS-min_POS)/1000)
     }
-    top_SNPs$Gene <- gsub("/","_",top_SNPs$Gene)
-    top_SNPs$Locus <- gsub("/","_",top_SNPs$Locus)
-
 
     # Remove specific variants
     if(!is.null(remove_variants)){
@@ -90,13 +105,13 @@ import_topSNPs <- function(topSS,
 
     # Get the top representative SNP and Gene per locus (by lowest p-value and effect size)
      if(!is.null(grouping_vars)){
-      top_SNPs <- top_SNPs %>%
-        arrange(P, desc(Effect)) %>%
+      top_SNPs <- suppressWarnings(top_SNPs %>%
+        arrange(P, dplyr::desc(Effect)) %>%
         dplyr::group_by(.dots=grouping_vars) %>%
         dplyr::slice(1) %>%
         replace(., .=="NA", NA) %>%
         subset(!is.na(Locus)) %>%
-        dplyr::mutate(CHR=as.numeric(gsub("chr", "",CHR)))
+        dplyr::mutate(CHR=as.numeric(gsub("chr", "",CHR))) )
     }
 
   # Make sure cols are numeric
@@ -107,6 +122,8 @@ import_topSNPs <- function(topSS,
   }
   return(data.table::data.table(top_SNPs))
 }
+
+
 
 
 #' Generate a named list of [e]gene-locus pairs
