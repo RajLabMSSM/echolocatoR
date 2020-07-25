@@ -118,53 +118,31 @@ SUSIE <- function(subset_DT,
     susie_func <- get("susie_bhat", asNamespace("susieR"))
   }
 
-  fitted_bhat <- tryCatch(expr = {
-    susie_func(bhat = subset_DT$Effect,
-                shat = subset_DT$StdErr,
-                R = LD_matrix,
-                n = sample_size, # Number of samples/individuals in the dataset
-                L = max_causal, # maximum number of non-zero effects
-                ## NOTE: setting L == 1 has a strong tendency to simply return the SNP with the largest effect size.
-                scaled_prior_variance = scaled_prior_variance, # 0.1: Equates to "proportion of variance explained"
-                estimate_prior_variance = estimate_prior_variance, # default = FALSE
-                residual_variance = residual_variance,
-                # Raising max_iter can help susie converge
-                max_iter = max_iter,
-                # standardize = TRUE,
-                estimate_residual_variance = estimate_residual_variance, # TRUE
+  fitted_bhat <-  susie_func(bhat = subset_DT$Effect,
+                             shat = subset_DT$StdErr,
+                             R = LD_matrix,
+                             n = sample_size, # Number of samples/individuals in the dataset
+                             L = max_causal, # maximum number of non-zero effects
+                             ## NOTE: setting L == 1 has a strong tendency to simply return the SNP with the largest effect size.
+                             scaled_prior_variance = scaled_prior_variance, # 0.1: Equates to "proportion of variance explained"
+                             estimate_prior_variance = estimate_prior_variance,
+                             residual_variance = residual_variance,
+                             # Raising max_iter can help susie converge
+                             max_iter = max_iter,
+                             # standardize = TRUE,
+                             estimate_residual_variance = estimate_residual_variance, # TRUE
 
-                # IMPORTANT!! susieR uses the missing() function,
-                ## which means supplying var_y=NULL will give you errors!!!
-                ## When var_y is missing, it will be calculated automatically.
-                # var_y = var_y, # Variance of the phenotype (e.g. gene expression, or disease status)
+                             # IMPORTANT!! susieR uses the missing() function,
+                             ## which means supplying var_y=NULL will give you errors!!!
+                             ## When var_y is missing, it will be calculated automatically.
+                             # var_y = var_y, # Variance of the phenotype (e.g. gene expression, or disease status)
 
-                # A p vector of prior probability that each element is non-zero
-                prior_weights = prior_weights,
-                coverage = PP_threshold,
-                track_fit = plot_track_fit,
+                             # A p vector of prior probability that each element is non-zero
+                             prior_weights = prior_weights,
+                             coverage = PP_threshold,
+                             track_fit = plot_track_fit,
 
-                verbose = F)
-  },
-  error=function(cond) {
-    message("SUSIE:: Error encounterd, retrying with  `estimate_residual_variance=F`")
-    susie_func(bhat = subset_DT$Effect,
-               shat = subset_DT$StdErr,
-               R = LD_matrix,
-               n = sample_size,
-               L = max_causal,
-               scaled_prior_variance = scaled_prior_variance,
-               estimate_prior_variance = estimate_prior_variance,
-               residual_variance = residual_variance,
-               max_iter = max_iter,
-               estimate_residual_variance = F, # IMPORTANT
-               prior_weights = prior_weights,
-               coverage = PP_threshold,
-               track_fit = plot_track_fit,
-               verbose = F)
-  },
-  warning=function(cond) {
-    message("SUSIE:: See `SUSIE()` documentation for suggestions on how to avoid Warnings.")
-  })
+                             verbose = F)
 
   if(plot_track_fit){
     try({susieR::susie_plot_iteration(fitted_bhat, n_causal, 'test_track_fit')})
