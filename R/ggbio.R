@@ -335,6 +335,7 @@ GGBIO.plot <- function(finemap_dat,
 #' data("BST1");
 #' xlims <- get_window_limits(finemap_dat=BST1, plot.zoom=50000)
 #' xlims <- get_window_limits(finemap_dat=BST1, plot.zoom="all")
+#' xlims <- get_window_limits(finemap_dat=BST1, plot.zoom="5x")
 get_window_limits <- function(finemap_dat,
                               plot.zoom=NULL,
                               verbose=T){
@@ -345,21 +346,21 @@ get_window_limits <- function(finemap_dat,
     lead_pos <- subset(finemap_dat, leadSNP)$POS[1]
     min_limit <- lead_pos - as.integer(new_window/2)
     max_limit <- lead_pos + as.integer(new_window/2)
-  }
-
-  # Basepairs as input
-  printer("+ GGBIO:: Identifying plot limits from bp =",plot.zoom, v=verbose)
-  if(is.null(plot.zoom)){
-    min_limit <- min(finemap_dat$POS)
-    max_limit <- max(finemap_dat$POS)
   } else {
-    if(plot.zoom=="all"){
+    # Basepairs as input
+    printer("+ GGBIO:: Identifying plot limits from bp =",plot.zoom, v=verbose)
+    if(is.null(plot.zoom)){
       min_limit <- min(finemap_dat$POS)
       max_limit <- max(finemap_dat$POS)
     } else {
-      lead_pos <- subset(finemap_dat, leadSNP)$POS[1]
-      min_limit <- lead_pos - as.integer(plot.zoom/2)
-      max_limit <- lead_pos + as.integer(plot.zoom/2)
+      if(plot.zoom=="all"){
+        min_limit <- min(finemap_dat$POS)
+        max_limit <- max(finemap_dat$POS)
+      } else {
+        lead_pos <- subset(finemap_dat, leadSNP)$POS[1]
+        min_limit <- lead_pos - as.integer(plot.zoom/2)
+        max_limit <- lead_pos + as.integer(plot.zoom/2)
+      }
     }
   }
   xlims <- c(min_limit, max_limit)

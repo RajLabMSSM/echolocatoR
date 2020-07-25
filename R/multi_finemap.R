@@ -193,7 +193,7 @@ multi_finemap <- function(locus_dir,
       #   return(null_DT)
       #   }
       # ) ## End tryCatch
-      try({printer("++ Credible Set SNPS identified =",nrow(subset(finemap_dat, CS>0)),v=verbose )})
+      try({printer("++ Credible Set SNPs identified =",nrow(subset(finemap_dat, CS>0)),v=verbose )})
       # Add results to method-specific columns
       printer("++ Merging",m,"results with multi-finemap data.",v=verbose);
       value_var <- if(m=="COJO"){"Conditioned_Effect"}else{"PP"};

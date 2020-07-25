@@ -87,7 +87,7 @@ SUSIE <- function(subset_DT,
 
   # susie_vars <- get_var_y(subset_DT, dataset_type)
 
-  printer("+ SUSIE:: n_causal =",n_causal, v=verbose)
+  printer("+ SUSIE:: max_causal =",max_causal, v=verbose)
   if(!is.null(prior_weights)){
     printer("+ SUSIE:: Utilizing prior_weights for",length(prior_weights),"SNPs.",v=verbose)
     if(rescale_priors){
