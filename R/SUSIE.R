@@ -10,15 +10,12 @@
 # + L=2: Warns "IBSS algorithm did not converge in 100 iterations!", but gives good variation in PIP.
 # + L=3: Warns "IBSS algorithm did not converge in 100 iterations!". All PIPs 1s and 0s.
 # + These results seem to be at least partially dependent on whether the ethnic composition of the LD matrix.
-# * Notes on variance:
-#   + If 'estimate_residual_variance' = TRUE _without_ providing 'var_y' _and_ L>1, susieR will throw error:
-#   __"Estimating residual variance failed: the estimated value is negative"__
-# + Running susieR with 'var_y = var(b)' provides _exactly_ the same results.
+
 # * Statistical Terms:
 #   + posterior inclusion probability (PIP)
-# + coefficient estimate (Beta)
-# + Effect allele frequency (EAF)
-# + The I^2 statistic describes the percentage of variation across studies that seems not to be due to chance.
+#   + coefficient estimate (Beta)
+#   + Effect allele frequency (EAF)
+#   + The I^2 statistic describes the percentage of variation across studies that seems not to be due to chance.
 
 
 
@@ -29,14 +26,22 @@
 #' Sum of Single Effects (SuSiE): Iterative Bayesian Step-wise Selection
 #'
 #' \strong{Notes on convergence:}
-#' \code{susieR} will often give the warning: \code{IBSS algorithm did not converge in 100 iterations!}.
+#' \pkg{susieR} will often give the warning: \code{IBSS algorithm did not converge in 100 iterations!}.
 #' This means the results might not necessarily be reliable.
 #' There's several things you can try to avoid this:
 #' \itemize{
+#' \item{Make sure \code{susieR} is up-to-date: \code{ devtools::install_github("stephenslab/susieR@@0.9.0")}}
 #' \item{Increase \code{max_causal} (e.g. 5 => 10).}
 #' \item{Increase \code{max_iter} (e.g. 100 => 1000), though this will take longer.}
 #' \item{Decrease the locus window size, which will also speed up the algorithm but potentially miss causal variants far from the lead SNP.}
 #' }
+#'
+#' \strong{Notes on variance:}
+#' \href{https://github.com/stephenslab/susieR/issues/90}{GitHub Issue}
+#' If \code{estimate_residual_variance=TRUE} \emph{without} providing \code{var_y}
+#' \emph{and} \code{L>1}, \pkg{susieR} will throw error:
+#' \code{Estimating residual variance failed: the estimated value is negative}
+#' Running \pkg{susieR} with \code{var_y = var(b)} provides \emph{exactly} the same results.
 #'
 #' @param max_causal The maximum number of non-zero effects (and thus causal variants).
 #' @param rescale_priors If prior probabiltities are supplied,
@@ -52,7 +57,7 @@
 #' @examples
 #' data("BST1"); data("LD_matrix");
 #' # LD_matrix <- readRDS("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/BST1/plink/UKB_LD.RDS")
-#' finemap_DT <- SUSIE(subset_DT=BST1, LD_matrix=LD_matrix)
+#' finemap_DT <- SUSIE(subset_DT=BST1, LD_matrix=LD_matrix, estimate_residual_variance=T)
 SUSIE <- function(subset_DT,
                   LD_matrix,
                   dataset_type="GWAS",
@@ -80,7 +85,7 @@ SUSIE <- function(subset_DT,
                   plot_track_fit=F,
                   verbose=T){
   # if sample_size is NULL then SUSIE fails
-  if(!"N" %in% names(subset_DT)){
+  if(!"N" %in% names(subset_DT) & is.null(sample_size)){
       subset_DT <- get_sample_size(subset_DT)
   }
   sample_size <- max(subset_DT$N)
@@ -113,32 +118,53 @@ SUSIE <- function(subset_DT,
     susie_func <- get("susie_bhat", asNamespace("susieR"))
   }
 
+  fitted_bhat <- tryCatch(expr = {
+    susie_func(bhat = subset_DT$Effect,
+                shat = subset_DT$StdErr,
+                R = LD_matrix,
+                n = sample_size, # Number of samples/individuals in the dataset
+                L = max_causal, # maximum number of non-zero effects
+                ## NOTE: setting L == 1 has a strong tendency to simply return the SNP with the largest effect size.
+                scaled_prior_variance = scaled_prior_variance, # 0.1: Equates to "proportion of variance explained"
+                estimate_prior_variance = estimate_prior_variance, # default = FALSE
+                residual_variance = residual_variance,
+                # Raising max_iter can help susie converge
+                max_iter = max_iter,
+                # standardize = TRUE,
+                estimate_residual_variance = estimate_residual_variance, # TRUE
 
-  fitted_bhat <- susie_func(bhat = subset_DT$Effect,
-                            shat = subset_DT$StdErr,
-                            R = LD_matrix,
-                            n = sample_size, # Number of samples/individuals in the dataset
-                            L = max_causal, # maximum number of non-zero effects
-                            ## NOTE: setting L == 1 has a strong tendency to simply return the SNP with the largest effect size.
-                            scaled_prior_variance = scaled_prior_variance, # 0.1: Equates to "proportion of variance explained"
-                            estimate_prior_variance = estimate_prior_variance, # default = FALSE
-                            residual_variance = residual_variance,
-                            # Raising max_iter can help susie converge
-                            max_iter = max_iter,
-                            # standardize = TRUE,
-                            estimate_residual_variance = estimate_residual_variance, # TRUE
+                # IMPORTANT!! susieR uses the missing() function,
+                ## which means supplying var_y=NULL will give you errors!!!
+                ## When var_y is missing, it will be calculated automatically.
+                # var_y = var_y, # Variance of the phenotype (e.g. gene expression, or disease status)
 
-                            # IMPORTANT!! susieR uses the missing() function,
-                            ## which means supplying var_y=NULL will give you errors!!!
-                            ## When var_y is missing, it will be calculated automatically.
-                            # var_y = var_y, # Variance of the phenotype (e.g. gene expression, or disease status)
+                # A p vector of prior probability that each element is non-zero
+                prior_weights = prior_weights,
+                coverage = PP_threshold,
+                track_fit = plot_track_fit,
 
-                            # A p vector of prior probability that each element is non-zero
-                            prior_weights = prior_weights,
-                            coverage = PP_threshold,
-                            track_fit = plot_track_fit,
-
-                            verbose = F)
+                verbose = F)
+  },
+  error=function(cond) {
+    message("SUSIE:: Error encounterd, retrying with  `estimate_residual_variance=F`")
+    susie_func(bhat = subset_DT$Effect,
+               shat = subset_DT$StdErr,
+               R = LD_matrix,
+               n = sample_size,
+               L = max_causal,
+               scaled_prior_variance = scaled_prior_variance,
+               estimate_prior_variance = estimate_prior_variance,
+               residual_variance = residual_variance,
+               max_iter = max_iter,
+               estimate_residual_variance = F, # IMPORTANT
+               prior_weights = prior_weights,
+               coverage = PP_threshold,
+               track_fit = plot_track_fit,
+               verbose = F)
+  },
+  warning=function(cond) {
+    message("SUSIE:: See `SUSIE()` documentation for suggestions on how to avoid Warnings.")
+  })
 
   if(plot_track_fit){
     try({susieR::susie_plot_iteration(fitted_bhat, n_causal, 'test_track_fit')})

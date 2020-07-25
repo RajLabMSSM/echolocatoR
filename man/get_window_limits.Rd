@@ -13,6 +13,7 @@ Get window size limits for plot
 data("BST1");
 xlims <- get_window_limits(finemap_dat=BST1, plot.zoom=50000)
 xlims <- get_window_limits(finemap_dat=BST1, plot.zoom="all")
+xlims <- get_window_limits(finemap_dat=BST1, plot.zoom="5x")
 }
 \seealso{
 Other plot: 
