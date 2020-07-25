@@ -28,7 +28,8 @@ At minimum, \code{top_SNPs} should include the following columns:
 \item{\emph{POS}}{The genomic position of the SNP (in basepairs)}
 }}
 
-\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.}
+\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.
+It is usually best to provide the absolute path rather than the relative path.}
 
 \item{file_sep}{The separator in the full summary stats file.
 This parameter is only necessary if \code{query_by!="tabix"}.}

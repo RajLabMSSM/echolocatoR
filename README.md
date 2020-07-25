@@ -246,7 +246,7 @@ For more detailed information about each dataset, use `?`:
 
 ### [S-LDSC](https://www.nature.com/articles/ng.3954)
 - Genome-wide stratified LD score regression.
-- Inlcudes 187-annotation baseline model from [Gazal et al. 2018](https://www.nature.com/articles/s41588-018-0231-8).  
+- Inlccles 187-annotation baseline model from [Gazal et al. 2018](https://www.nature.com/articles/s41588-018-0231-8).  
 - You can alternatively supply a custom annotations matrix.
 
 ### [motifbreakR](https://github.com/Simon-Coetzee/motifBreakR)  

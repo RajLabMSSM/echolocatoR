@@ -21,7 +21,8 @@ query_handler(
 )
 }
 \arguments{
-\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.}
+\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.
+It is usually best to provide the absolute path rather than the relative path.}
 
 \item{top_SNPs}{A data.frame with the genomic coordinates of the lead SNP for each locus.
 The lead SNP will be used as the center of the window when extracting subset from the full GWAS/QTL summary statistics file.

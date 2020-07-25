@@ -117,7 +117,7 @@ Kunkle_2019.microgliaQTL <- finemap_loci(# GENERAL ARGUMENTS
                  
                  # PLOT ARGUMENTS 
                  plot.types=c("simple"),
-                 plot.window = 500000/2, 
+                 plot.zoom = 500000/2, 
                  )
 ```
 

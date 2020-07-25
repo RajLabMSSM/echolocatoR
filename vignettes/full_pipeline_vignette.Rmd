@@ -89,7 +89,7 @@ Here are some key arguments:
 * *results_dir*: Where you want to store all of your results.  
 * *finemap_methods*: Which fine-mapping methods you want to run (currently includes ABF, FINEMAP, SUSIE, POLYFUN_SUSIE, and COJO).  
 * *bp_distance*: Controls window size. Specifically, `bp_distance` is the number of basepairs upstream/downstream you want to extract for each locus. For example, if you want a 2Mb window (+/- 1Mb from the lead/index SNP in `top_SNPs`), set `bp_distance=1e+06`.  
-* *plot.window*: Zoom in/out from the center of each locus when producing the multiview plot.  
+* *plot.zoom*: Zoom in/out from the center of each locus when producing the multiview plot.  
 You can adjust this separately from `bp_distance` so that you don't have rerun the whole pipeline each time (locus subsets, LD matrices, and fine-mapping results are all automatically saved in locus-specific folders).  
 
 ```{r Run fine-mapping pipeline}
@@ -131,7 +131,9 @@ Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS
                  # PLOT ARGUMENTS 
                  ## general   
                  plot.types=c("fancy"),
-                 plot.window = 100000,
+                 ## Generate multiple plots of different window sizes; 
+                 ### all SNPs, 4x zoomed-in, and a 50000bp window
+                 plot.zoom = c("all","4x",50000),
                  ## XGR
                  # plot.XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes"), 
                  ## Roadmap

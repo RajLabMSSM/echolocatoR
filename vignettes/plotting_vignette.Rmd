@@ -43,7 +43,7 @@ Generate a multiview plot using `GGBIO.plot()`.
 
 * You can mix and match different tracks and annotations using the different arguments 
 (see `?GGBIO.plot` for details).  
-* Zoom in/out by adjusting the `plot.window` size (in units of basepairs).  
+* Zoom in/out by adjusting the `plot.zoom` size (in units of basepairs).  
 The plot is centered on the lead/index SNP.  
 * `GGBIO.plot()` returns a `ggbio` track object. 
   + Further modify this object using `ggplot2` functions like `+ theme()`.
@@ -52,7 +52,7 @@ The plot is centered on the lead/index SNP.
   + Further increase resolution by adjusting the `dpi` argument (*default=300*).
   + Adjust the `height` and `width` of the saved plot using these respective arguments.
   + The plot will be automatically saved in the locus-specific directory as:  
-  *multiview_<locus>_<plot.window>.png*.
+  *multiview_<locus>_<plot.zoom>.png*.
    
 ## Load example data   
 
@@ -130,7 +130,7 @@ trk_plot.nott_2019 <- GGBIO.plot(finemap_dat=finemap_DT,
                                  label_snps=F,
                                  XGR_libnames=NULL, 
                                  Nott_epigenome=T, 
-                                 plot.window = NULL,
+                                 plot.zoom = NULL,
                                  Nott_binwidth = 100,
                                  Nott_regulatory_rects = T, 
                                  Nott_show_placseq = T,

@@ -4,14 +4,15 @@
 \alias{get_window_limits}
 \title{Get window size limits for plot}
 \usage{
-get_window_limits(finemap_dat, plot.window = NULL, verbose = T)
+get_window_limits(finemap_dat, plot.zoom = NULL, verbose = T)
 }
 \description{
 Get window size limits for plot
 }
 \examples{
 data("BST1");
-xlims <- get_window_limits(finemap_dat=BST1, plot.window=50000)
+xlims <- get_window_limits(finemap_dat=BST1, plot.zoom=50000)
+xlims <- get_window_limits(finemap_dat=BST1, plot.zoom="all")
 }
 \seealso{
 Other plot: 
@@ -22,7 +23,8 @@ Other plot:
 \code{\link{GGBIO.invisible_legend}()},
 \code{\link{GGBIO.plot}()},
 \code{\link{GGBIO.track_heights_dict}()},
-\code{\link{GGBIO.transcript_model_track}()}
+\code{\link{GGBIO.transcript_model_track}()},
+\code{\link{get_window_suffix}()}
 }
 \concept{plot}
 \keyword{internal}

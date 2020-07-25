@@ -32,8 +32,8 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
                                             save_plot=T,
                                             full_data=T,
                                             return_assay_track=F,
-                                            binwidth=2500,
-                                            plot.window=500000,
+                                            binwidth=200,
+                                            plot.zoom="1x",
                                             geom="histogram",
                                             plot_formula="Assay + Cell_type ~.",
                                             bigwig_dir=NULL,
@@ -44,7 +44,7 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
   # library(BiocGenerics)
   # library(GenomicRanges)
   # library(ggbio)
-  # show_plot=T;save_plot=T;full_data=T;return_assay_track=F;binwidth=2500; geom="histogram";plot_formula="Assay + Cell_type ~.";show_regulatory_rects=T;  bigwig_dir=NULL; verbose=T; nThread=4; finemap_dat=BST1; plot.window=500000;
+  # show_plot=T;save_plot=T;full_data=T;return_assay_track=F;binwidth=2500; geom="histogram";plot_formula="Assay + Cell_type ~.";show_regulatory_rects=T;  bigwig_dir=NULL; verbose=T; nThread=4; finemap_dat=BST1; plot.zoom=500000;
 
   # UCSC Tracks
   import.bw.filt <- function(bw.file,
@@ -61,7 +61,8 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
       gr.span <- gr.dat
       }
     # bw.dat <- rtracklayer::BigWigSelection(ranges = gr.dat,  colnames = "score")
-    bw.filt <- rtracklayer::import.bw(con = bw.file, selection = gr.span)
+    bw.filt <- rtracklayer::import.bw(con = bw.file,
+                                      selection = gr.span,)
     # plot(x = start(bw.filt), y=bw.filt$score)
     return(bw.filt)
   }
@@ -88,17 +89,13 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
     } else { bw.file <- bigWigFiles$data_link[i]}
 
     bw.name <- gsub("_pooled|pooled_","",bigWigFiles$name[i])
-    printer("GVIZ:: Importing...",paste0("[",i,"]"),bw.name)
+    printer("+ NOTT_2019:: Importing...",paste0("[",i,"]"),bw.name)
     bw.filt <- import.bw.filt(bw.file=bw.file,
                               gr.dat=gr.dat,
                               full_data=full_data)
     bw.filt$Cell_type <- bigWigFiles$cell_type[i]
     bw.filt$Assay <- bigWigFiles$assay[i]
     bw.filt$Experiment <- gsub("_"," ",bw.name)
-    # colnames(mcols(bw.filt))[1] <- bw.name
-    # bw.filt$expt_name <- bw.name
-    # bw.filt$cell_type <-strsplit(bw.name, "_")[[1]][[1]]
-    # bw.filt$assay <- strsplit(bw.name, "_")[[1]][[2]]
     return(bw.filt)
   }, mc.cores = nThread)
   bw.cols <- bigWigFiles$name
@@ -108,7 +105,7 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
   bw.gr$Cell_type <- gsub("oligodendrocytes","oligo",bw.gr$Cell_type)
 
   xlims <- get_window_limits(finemap_dat = finemap_dat,
-                             plot.window = plot.window)
+                             plot.zoom = plot.zoom)
   bw.gr <- subset(bw.gr,
                   GenomicRanges::seqnames(bw.gr)==paste0("chr",finemap_dat$CHR[1]) &
                   GenomicRanges::start(bw.gr)>=xlims[1] &
@@ -353,7 +350,7 @@ NOTT_2019.get_interactions <- function(finemap_dat){
   interactomes <- lapply(selected_sheets, function(s){
     printer("Importing",s,"...")
     # Read the sheet you want
-    dat <- NOTT_2019.interactome[[s]]
+    dat <- echolocatoR::NOTT_2019.interactome[[s]]
     dat$Name <- s
     return(dat)
   }) %>% data.table::rbindlist()
@@ -465,10 +462,12 @@ NOTT_2019.get_epigenomic_peaks <- function(assays=c("ATAC","H3K27ac","H3K4me3"),
                      H3K4me3="_optimal_peak.H3K4me3.bed")
   file_names <- unlist(lapply(assays, function(assay){file.path(assay,paste0(cell_dict[cell_types],assay_dict[assay])) }))
 
-  printer("++ Nott_2019:: Downloading and merging",length(file_names),"BED files.", v=verbose)
+  printer("++ NOTT_2019:: Downloading and merging",length(file_names),"BED files.", v=verbose)
   PEAKS <- parallel::mclapply(file_names, function(f, .verbose=verbose){
     printer("++ NOTT_2019:: Downloading",f, v=.verbose)
-    bed_dat <- data.table::fread(file.path(baseURL,f), col.names = c("chr","start","end"))
+    bed_dat <- data.table::fread(file.path(baseURL,f),
+                                 col.names = c("chr","start","end"),
+                                 nThread = 1) #IMPORTANT! must =1 if parallelizing
     bed_dat$Assay <- dirname(f)
     bed_dat$Marker <- strsplit(basename(f),"_")[[1]][1]
     bed_dat$Cell_type <- cell_dict_invert[[strsplit(basename(f),"_")[[1]][1]]]
@@ -479,7 +478,7 @@ NOTT_2019.get_epigenomic_peaks <- function(assays=c("ATAC","H3K27ac","H3K4me3"),
     printer("++ NOTT_2019:: Converting merged BED files to GRanges.", v=verbose)
     PEAKS <- biovizBase::transformDfToGr(PEAKS, seqnames = "chr", start = "start", end="end")
   }
-  printer("++ Nott_2019::",length(PEAKS),"ranges retrieved.", v=verbose)
+  printer("++ NOTT_2019::",length(PEAKS),"ranges retrieved.", v=verbose)
   return(PEAKS)
 }
 

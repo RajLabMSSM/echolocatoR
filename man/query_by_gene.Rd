@@ -7,7 +7,8 @@
 query_by_gene(fullSS_path, subset_path, gene, gene_col, file_sep)
 }
 \arguments{
-\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.}
+\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.
+It is usually best to provide the absolute path rather than the relative path.}
 
 \item{subset_path}{Path of the resulting locus subset file.}
 

@@ -16,6 +16,7 @@ Depends: R (>= 3.6.0)
 SystemRequirements: Python (>= 3.7.0)
 biocViews:
 Imports: 
+    devtools,
     magrittr,
     R.utils, 
     BiocManager, 
@@ -47,10 +48,10 @@ Remotes:
   bioc::3.10/remotes,  
   bioc::3.10/snpStats,
   bioc::3.10/ggbio,
-  url::https://cran.r-project.org/src/contrib/Archive/refGenome/refGenome_1.7.7.tar.gz
-Suggests: 
-    devtools,
-    XGR,
+  url::https://cran.r-project.org/src/contrib/Archive/foreign/foreign_0.8-76.tar.gz,
+  url::https://cran.r-project.org/src/contrib/Archive/refGenome/refGenome_1.7.7.tar.gz,
+  url::https://cran.r-project.org/src/contrib/Archive/XGR/XGR_1.1.7.tar.gz
+Suggests:
     gaston,
     GenomeInfoDb,
     ggnetwork,

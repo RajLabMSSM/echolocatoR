@@ -10,7 +10,7 @@ find_consensus_SNPs(
   consensus_thresh = 2,
   sort_by_support = T,
   exclude_methods = NULL,
-  verbose = T
+  verbose = F
 )
 }
 \arguments{

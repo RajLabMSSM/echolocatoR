@@ -64,9 +64,9 @@ finemap_pipeline(
   consensus_threshold = 2,
   case_control = T,
   QTL_prefixes = NULL,
-  plot.window = NULL,
+  plot.zoom = "1x",
   plot.Nott_epigenome = plot.Nott_epigenome,
-  plot.Nott_binwidth = 2500,
+  plot.Nott_binwidth = 200,
   plot.Nott_bigwig_dir = NULL,
   plot.XGR_libnames = NULL,
   plot.Roadmap = F,
@@ -76,9 +76,12 @@ finemap_pipeline(
 )
 }
 \arguments{
-\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.}
+\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.
+It is usually best to provide the absolute path rather than the relative path.}
 
-\item{results_dir}{Where to store all results.}
+\item{results_dir}{Where to store all results.
+\strong{IMPORTANT!:} It is usually best to provide the absolute path rather than the relative path.
+This is especially important for \emph{FINEMAP}.}
 
 \item{dataset_name}{The name you want to assign to the dataset being fine-mapped,
 This will be used to name the subdirectory where your results will be stored
@@ -305,9 +308,15 @@ For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95
 \item{consensus_threshold}{The minimum number of fine-mapping tools that include a SNP
 in their 95\% Credible Sets to consider that it a "Consensus SNP" (\emph{default=2}).}
 
-\item{plot.window}{Zoom into the center of the locus when plotting (without editing the fine-mapping results file).
-You can also pass a list of window sizes (e.g. \code{c(50000,100000,500000)}) to automatically generate
-multiple views of each locus.}
+\item{plot.zoom}{Zoom into the center of the locus when plotting (without editing the fine-mapping results file).
+You can provide either:
+\itemize{
+\item{The size of your plot window in terms of basepairs (e.g. \code{plot.zoom=50000} for a 50kb window)}.
+\item{How much you want to zoom in (e.g. \code{plot.zoom="1x"} for the full locus, \code{plot.zoom="2x"} for 2x zoom into the center of the locus, etc.)}.
+}
+You can pass a list of window sizes (e.g. \code{c(50000,100000,500000)}) to automatically generate
+multiple views of each locus.
+This can even be a mix of different style inputs: e.g. \code{c("1x","4.5x",25000)}.}
 
 \item{plot.Nott_binwidth}{When including Nott et al. (2019) epigenomic data in the track plots,
 adjust the bin width of the histograms.}

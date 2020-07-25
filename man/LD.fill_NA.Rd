@@ -4,7 +4,7 @@
 \alias{LD.fill_NA}
 \title{Fill NAs in an LD matrix}
 \usage{
-LD.fill_NA(LD_matrix, fillNA = 0, verbose = T)
+LD.fill_NA(LD_matrix, fillNA = 0, verbose = F)
 }
 \description{
 Trickier than it looks.

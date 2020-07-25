@@ -36,7 +36,8 @@ Other plot:
 \code{\link{GGBIO.invisible_legend}()},
 \code{\link{GGBIO.plot}()},
 \code{\link{GGBIO.track_heights_dict}()},
-\code{\link{get_window_limits}()}
+\code{\link{get_window_limits}()},
+\code{\link{get_window_suffix}()}
 }
 \concept{plot}
 \keyword{internal}

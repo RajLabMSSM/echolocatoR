@@ -354,7 +354,7 @@ plot_mean.PP <- function(results_path, top_snps=20){
   locus <- basename(results_path)
   gene_DT <- data.table::fread(file.path(results_path,"Multi-finemap/Multi-finemap_results.txt"),
                                nThread = 4)
-  gene_DT <- find_consensus_SNPs(gene_DT)
+  gene_DT <- find_consensus_SNPs(gene_DT,)
   lead.rsid <- subset(gene_DT, leadSNP==T)$SNP
 
   LD_matrix <- readRDS(file.path(results_path,"plink/LD_matrix.RData"))

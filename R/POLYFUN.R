@@ -649,10 +649,10 @@ POLYFUN_SUSIE <- function(locus_dir,
   subset_DT <- SUSIE(subset_DT=new_DT,
                      LD_matrix=LD_matrix,
                      dataset_type=dataset_type,
-                     n_causal=n_causal,
+                     max_causal=n_causal,
                      sample_size=sample_size,
-                     var_y="estimate",
                      prior_weights=new_DT$POLYFUN.h2,
+                     rescale_priors = T,
                      PP_threshold=PP_threshold)
   # subset_DT.precomputed <- subset_DT
   # subset_DT.computed <- subset_DT

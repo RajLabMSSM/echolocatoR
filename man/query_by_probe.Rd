@@ -17,7 +17,8 @@ query_by_probe(
 )
 }
 \arguments{
-\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.}
+\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.
+It is usually best to provide the absolute path rather than the relative path.}
 
 \item{gene_col}{For QTL studies, the name of the [e]gene column in the full summary stats file (\emph{default: "gene"}).
 This column will be used for filtering summary stats if supplying a named list of gene:Locus pairs to \code{loci}.}

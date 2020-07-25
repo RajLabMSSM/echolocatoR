@@ -30,7 +30,8 @@ multi_finemap(
 )
 }
 \arguments{
-\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.}
+\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.
+It is usually best to provide the absolute path rather than the relative path.}
 
 \item{dataset_type}{The kind dataset you're fine-mapping (e.g. GWAS, eQTL, tQTL).
 This will also be used when creating the subdirectory where your results will be stored

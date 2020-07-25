@@ -22,6 +22,7 @@ Other plot:
 \code{\link{GGBIO.plot}()},
 \code{\link{GGBIO.track_heights_dict}()},
 \code{\link{GGBIO.transcript_model_track}()},
-\code{\link{get_window_limits}()}
+\code{\link{get_window_limits}()},
+\code{\link{get_window_suffix}()}
 }
 \concept{plot}

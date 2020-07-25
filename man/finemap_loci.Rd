@@ -65,9 +65,9 @@ finemap_loci(
   case_control = T,
   QTL_prefixes = NULL,
   plot.types = c("simple"),
-  plot.window = NULL,
+  plot.zoom = NULL,
   plot.Nott_epigenome = F,
-  plot.Nott_binwidth = 2500,
+  plot.Nott_binwidth = 200,
   plot.Nott_bigwig_dir = NULL,
   plot.XGR_libnames = NULL,
   plot.Roadmap = F,
@@ -81,7 +81,8 @@ finemap_loci(
 If \code{subset_path="auto"} (\emph{default}), a locus subset file name is automatically constructed as:
 \emph{Data/<dataset_type>/<dataset_name>/<locus>/Multi-finemap/<locus>_<dataset_name>_Multi-finemap.tsv.gz}}
 
-\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.}
+\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.
+It is usually best to provide the absolute path rather than the relative path.}
 
 \item{dataset_name}{The name you want to assign to the dataset being fine-mapped,
 This will be used to name the subdirectory where your results will be stored
@@ -106,7 +107,9 @@ Set \code{force_new_LD=T} to override this and extract a new subset.}
 then \pkg{echolocatoR} will just use the preexisting file.
 Set \code{force_new_finemap=T} to override this and re-run fine-mapping.}
 
-\item{results_dir}{Where to store all results.}
+\item{results_dir}{Where to store all results.
+\strong{IMPORTANT!:} It is usually best to provide the absolute path rather than the relative path.
+This is especially important for \emph{FINEMAP}.}
 
 \item{top_SNPs}{A data.frame with the genomic coordinates of the lead SNP for each locus.
 The lead SNP will be used as the center of the window when extracting subset from the full GWAS/QTL summary statistics file.
@@ -310,9 +313,15 @@ Options:
 \item{"fancy"}{Additionally plot XGR annotation tracks (XGR, Roadmap, Nott).}
 }}
 
-\item{plot.window}{Zoom into the center of the locus when plotting (without editing the fine-mapping results file).
-You can also pass a list of window sizes (e.g. \code{c(50000,100000,500000)}) to automatically generate
-multiple views of each locus.}
+\item{plot.zoom}{Zoom into the center of the locus when plotting (without editing the fine-mapping results file).
+You can provide either:
+\itemize{
+\item{The size of your plot window in terms of basepairs (e.g. \code{plot.zoom=50000} for a 50kb window)}.
+\item{How much you want to zoom in (e.g. \code{plot.zoom="1x"} for the full locus, \code{plot.zoom="2x"} for 2x zoom into the center of the locus, etc.)}.
+}
+You can pass a list of window sizes (e.g. \code{c(50000,100000,500000)}) to automatically generate
+multiple views of each locus.
+This can even be a mix of different style inputs: e.g. \code{c("1x","4.5x",25000)}.}
 
 \item{plot.Nott_binwidth}{When including Nott et al. (2019) epigenomic data in the track plots,
 adjust the bin width of the histograms.}

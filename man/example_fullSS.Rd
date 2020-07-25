@@ -10,7 +10,8 @@ example_fullSS(
 )
 }
 \arguments{
-\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.}
+\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.
+It is usually best to provide the absolute path rather than the relative path.}
 }
 \description{
 Store \code{\link{fullSS_dat}}

@@ -4,28 +4,79 @@
 \alias{SUSIE}
 \title{Fine-map with SUSIE}
 \source{
-\url{https://stephenslab.github.io/susieR/}
+\href{https://stephenslab.github.io/susieR/}{GitHub}
+\href{https://rss.onlinelibrary.wiley.com/doi/full/10.1111/rssb.12388}{Publication}
 }
 \usage{
 SUSIE(
   subset_DT,
   LD_matrix,
   dataset_type = "GWAS",
-  n_causal = 5,
+  max_causal = 5,
   sample_size = NULL,
-  var_y = "estimate",
   prior_weights = NULL,
   PP_threshold = 0.95,
-  scaled_prior_variance = 0.001,
-  estimate_residual_variance = F,
+  scaled_prior_variance = 1e-04,
+  estimate_residual_variance = T,
+  estimate_prior_variance = T,
+  residual_variance = NULL,
+  max_iter = 100,
+  rescale_priors = T,
+  plot_track_fit = F,
   verbose = T
 )
+}
+\arguments{
+\item{dataset_type}{The kind dataset you're fine-mapping (e.g. GWAS, eQTL, tQTL).
+This will also be used when creating the subdirectory where your results will be stored
+(e.g. \emph{Data/<dataset_type>/Kunkle_2019}).}
+
+\item{max_causal}{The maximum number of non-zero effects (and thus causal variants).}
+
+\item{sample_size}{The overall sample size of the study.
+If none is given, and \strong{N_cases} and \strong{N_controls} columns are present,
+then sample_size is inferred to be:  \code{max(N_cases) + max(N_controls)}.}
+
+\item{prior_weights}{a p vector of prior probability that each element is non-zero}
+
+\item{PP_threshold}{The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
+For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.}
+
+\item{scaled_prior_variance}{the scaled prior variance (vector of length L, or scalar. In latter case gets repeated L times)}
+
+\item{estimate_residual_variance}{indicates whether to estimate residual variance}
+
+\item{estimate_prior_variance}{indicates whether to estimate prior}
+
+\item{residual_variance}{the residual variance (defaults to variance of y)}
+
+\item{max_iter}{maximum number of iterations to perform}
+
+\item{rescale_priors}{If prior probabiltities are supplied,
+rescale them from 0-1 (i.e. \code{rescaled_priors = priors / sum(priors)}).}
+
+\item{plot_track_fit}{Record each iteration and make a GIF of the
+fine-mapping algorithm learning the causal variants.
+\strong{WARNING!:} Making this plot can take a long time if there's many iterations.}
+
+\item{verbose}{if true outputs some progress messages}
 }
 \description{
 Sum of Single Effects (SuSiE): Iterative Bayesian Step-wise Selection
 }
+\details{
+\strong{Notes on convergence:}
+\code{susieR} will often give the warning: \code{IBSS algorithm did not converge in 100 iterations!}.
+This means the results might not necessarily be reliable.
+There's several things you can try to avoid this:
+\itemize{
+\item{Increase \code{max_causal} (e.g. 5 => 10).}
+\item{Increase \code{max_iter} (e.g. 100 => 1000), though this will take longer.}
+\item{Decrease the locus window size, which will also speed up the algorithm but potentially miss causal variants far from the lead SNP.}
+}
+}
 \examples{
 data("BST1"); data("LD_matrix");
-BST1 <- get_sample_size(subset_DT = BST1)
+# LD_matrix <- readRDS("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/BST1/plink/UKB_LD.RDS")
 finemap_DT <- SUSIE(subset_DT=BST1, LD_matrix=LD_matrix)
 }

@@ -51,7 +51,7 @@ find_consensus_SNPs <- function(finemap_dat,
                                 consensus_thresh=2,
                                 sort_by_support=T,
                                 exclude_methods=NULL,
-                                verbose=T){
+                                verbose=F){
   printer("+ Identifying Consensus SNPs...",v=verbose)
   exclude_methods <- append(exclude_methods,"mean")
   # Find SNPs that are in the credible set for all fine-mapping tools
@@ -278,7 +278,7 @@ finemap_method_handler <- function(locus_dir,
                                    conda_env="echoR"){
   sub.out <- subset_common_snps(LD_matrix=LD_matrix,
                                 finemap_dat=subset_DT,
-                                verbose = T)
+                                verbose = F)
   LD_matrix <- sub.out$LD
   subset_DT <- sub.out$DT
   # INITIATE FINE-MAPPING
@@ -287,7 +287,7 @@ finemap_method_handler <- function(locus_dir,
     finemap_dat <- SUSIE(subset_DT = subset_DT,
                         dataset_type = dataset_type,
                         LD_matrix = LD_matrix,
-                        n_causal = n_causal,
+                        max_causal = n_causal,
                         sample_size = sample_size,
                         PP_threshold = PP_threshold)
 
@@ -434,7 +434,7 @@ finemap_handler <- function(locus_dir,
       finemap_dat <- find_consensus_SNPs(finemap_dat = finemap_dat,
                                          credset_thresh = PP_threshold,
                                          consensus_thresh = consensus_threshold,
-                                         verbose = verbose)
+                                         verbose = F)
       save_finemap_results(finemap_dat, file_path)
     }
   end_FM <- Sys.time()

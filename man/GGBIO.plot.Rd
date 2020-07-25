@@ -29,12 +29,12 @@ GGBIO.plot(
   Nott_epigenome = F,
   Nott_regulatory_rects = T,
   Nott_show_placseq = T,
-  Nott_binwidth = 2500,
+  Nott_binwidth = 200,
   Nott_bigwig_dir = NULL,
   save_plot = T,
   show_plot = T,
   max_transcripts = 1,
-  plot.window = NULL,
+  plot.zoom = "1x",
   dpi = 300,
   height = 12,
   width = 10,
@@ -56,9 +56,15 @@ in their 95\% Credible Sets to consider that it a "Consensus SNP" (\emph{default
 
 \item{max_transcripts}{Max number of transcripts per gene to show.}
 
-\item{plot.window}{Zoom into the center of the locus when plotting (without editing the fine-mapping results file).
-You can also pass a list of window sizes (e.g. \code{c(50000,100000,500000)}) to automatically generate
-multiple views of each locus.}
+\item{plot.zoom}{Zoom into the center of the locus when plotting (without editing the fine-mapping results file).
+You can provide either:
+\itemize{
+\item{The size of your plot window in terms of basepairs (e.g. \code{plot.zoom=50000} for a 50kb window)}.
+\item{How much you want to zoom in (e.g. \code{plot.zoom="1x"} for the full locus, \code{plot.zoom="2x"} for 2x zoom into the center of the locus, etc.)}.
+}
+You can pass a list of window sizes (e.g. \code{c(50000,100000,500000)}) to automatically generate
+multiple views of each locus.
+This can even be a mix of different style inputs: e.g. \code{c("1x","4.5x",25000)}.}
 
 \item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
 }
@@ -100,7 +106,8 @@ Other plot:
 \code{\link{GGBIO.invisible_legend}()},
 \code{\link{GGBIO.track_heights_dict}()},
 \code{\link{GGBIO.transcript_model_track}()},
-\code{\link{get_window_limits}()}
+\code{\link{get_window_limits}()},
+\code{\link{get_window_suffix}()}
 }
 \concept{plot}
 \keyword{internal}

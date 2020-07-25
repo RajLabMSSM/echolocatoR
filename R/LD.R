@@ -189,8 +189,8 @@ LD.1KG_download_vcf <- function(subset_DT,
                                 query_by_regions=F,
                                 verbose=T){
   # throw error if anything but phase 1 or phase 3 are specified
-  if( ! LD_reference %in% c("1KGphase1", "1KGphase3" )){ 
-    stop("LD_reference must be one of \"1KGphase1\" or \"1KGphase3\" ") 
+  if( ! LD_reference %in% c("1KGphase1", "1KGphase3" )){
+    stop("LD_reference must be one of \"1KGphase1\" or \"1KGphase3\" ")
   }
 
   # Old FTP (deprecated?)
@@ -222,9 +222,9 @@ LD.1KG_download_vcf <- function(subset_DT,
     # PHASE 1 DATA
   } else if (LD_reference=="1KGphase1") {
     FTP <- "ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20110521/"
-    
+
     printer("LD Reference Panel = 1KGphase1", v=verbose)
-    
+
     if(download_reference){## With internet
       vcf_URL <- paste(FTP,"/ALL.chr",chrom,
                        ".phase1_release_v3.20101123.snps_indels_svs.genotypes.vcf.gz", sep="")
@@ -759,7 +759,7 @@ LD.plink_LD <-function(leadSNP,
 #' }
 LD.fill_NA <- function(LD_matrix,
                        fillNA=0,
-                       verbose=T){
+                       verbose=F){
   printer("LD:: Removing unnamed rows/cols", v=verbose)
   # First, filter any rows/cols without names
   LD_matrix <- data.frame(LD_matrix)

@@ -77,7 +77,7 @@ merge_finemapping_results <- function(dataset="./Data/GWAS",
                                         credset_thresh = PP_threshold,
                                         consensus_thresh = consensus_threshold,
                                         exclude_methods = exclude_methods,
-                                        verbose = T)
+                                        verbose = verbose)
   merged_results <- subset(merged_results, Support>=minimum_support)
   if(!"Locus" %in% colnames(merged_results)){
     merged_results <- merged_results %>% dplyr::rename(Locus=Gene) %>% data.table::data.table()

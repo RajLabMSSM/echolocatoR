@@ -262,7 +262,7 @@ Zscore <- function(x, z.info){
 #' These functions are necessary for \code{\link{PAINTOR}}.
 #' @keywords internal
 zscore <- function(vec){
-  z <- scale(vec, center = T, scale = T)
+  z <- scale(vec, center = T, scale = T)[,1]
   return(z)
 }
 
@@ -1008,7 +1008,7 @@ merge_coloc_results <- function(all_obj,
   }
   merged_results <- suffix_to_prefix(dat=merged_results, suffix = ".gwas")
   merged_results <- suffix_to_prefix(dat=merged_results, suffix = ".qtl")
- 
+
   # get N_cases and N_controls from N.gwas and proportion_controls
     merged_results$N_cases <- floor(merged_results$gwas.N * merged_results$s)
     merged_results$N_controls <- merged_results$gwas.N - merged_results$N_cases

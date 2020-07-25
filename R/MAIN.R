@@ -121,7 +121,10 @@
 #'
 #' @param loci Character list of loci in \strong{Locus} col of \code{top_SNPs}.
 #' @param fullSS_path Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.
+#' It is usually best to provide the absolute path rather than the relative path.
 #' @param results_dir Where to store all results.
+#' \strong{IMPORTANT!:} It is usually best to provide the absolute path rather than the relative path.
+#' This is especially important for \emph{FINEMAP}.
 #' @param file_sep The separator in the full summary stats file.
 #' This parameter is only necessary if \code{query_by!="tabix"}.
 #' @param query_by Choose which method you want to use to extract locus subsets from the full summary stats file.
@@ -306,9 +309,15 @@
 #' \item{"simple"}{Just plot the following tracks: GWAS, fine-mapping, gene models}
 #' \item{"fancy"}{Additionally plot XGR annotation tracks (XGR, Roadmap, Nott).}
 #' }
-#' @param plot.window Zoom into the center of the locus when plotting (without editing the fine-mapping results file).
-#' You can also pass a list of window sizes (e.g. \code{c(50000,100000,500000)}) to automatically generate
+#' @param plot.zoom Zoom into the center of the locus when plotting (without editing the fine-mapping results file).
+#' You can provide either:
+#' \itemize{
+#' \item{The size of your plot window in terms of basepairs (e.g. \code{plot.zoom=50000} for a 50kb window)}.
+#' \item{How much you want to zoom in (e.g. \code{plot.zoom="1x"} for the full locus, \code{plot.zoom="2x"} for 2x zoom into the center of the locus, etc.)}.
+#' }
+#' You can pass a list of window sizes (e.g. \code{c(50000,100000,500000)}) to automatically generate
 #' multiple views of each locus.
+#' This can even be a mix of different style inputs: e.g. \code{c("1x","4.5x",25000)}.
 #' @param plot.Nott_binwidth When including Nott et al. (2019) epigenomic data in the track plots,
 #' adjust the bin width of the histograms.
 #' @param plot.Nott_bigwig_dir Instead of pulling Nott et al. (2019) epigenomic data
@@ -386,9 +395,9 @@ finemap_pipeline <- function(locus,
                              case_control=T,
                              QTL_prefixes=NULL,
 
-                             plot.window=NULL,
+                             plot.zoom="1x",
                              plot.Nott_epigenome = plot.Nott_epigenome,
-                             plot.Nott_binwidth=2500,
+                             plot.Nott_binwidth=200,
                              plot.Nott_bigwig_dir=NULL,
                              plot.XGR_libnames=NULL,
                              plot.Roadmap=F,
@@ -509,11 +518,11 @@ finemap_pipeline <- function(locus,
   finemap_dat <- find_consensus_SNPs(finemap_dat,
                                      credset_thresh = PP_threshold,
                                      consensus_thresh = consensus_threshold,
-                                     verbose = verbose)
+                                     verbose = F)
 
   # Plot
   message("--------------- Step 7: Visualize --------------")
-  for(p.window in plot.window){
+  for(p.window in plot.zoom){
     if("simple" %in% plot.types){
       try({
         mf_plot <- GGBIO.plot(finemap_dat = finemap_dat,
@@ -527,7 +536,7 @@ finemap_pipeline <- function(locus,
                               mean.PP = T,
                               XGR_libnames = NULL,
                               max_transcripts = 1,
-                              plot.window = p.window,
+                              plot.zoom = p.window,
                               save_plot = T,
                               show_plot = T,
                               verbose = verbose)
@@ -543,7 +552,7 @@ finemap_pipeline <- function(locus,
                           consensus_threshold = consensus_threshold,
                           QTL_prefixes = QTL_prefixes,
                           max_transcripts = 1,
-                          plot.window = p.window,
+                          plot.zoom = p.window,
                           save_plot = T,
                           show_plot = T,
 
@@ -662,9 +671,9 @@ finemap_loci <- function(loci,
                          QTL_prefixes=NULL,
 
                          plot.types = c("simple"),
-                         plot.window=NULL,
+                         plot.zoom=NULL,
                          plot.Nott_epigenome=F,
-                         plot.Nott_binwidth=2500,
+                         plot.Nott_binwidth=200,
                          plot.Nott_bigwig_dir=NULL,
                          plot.XGR_libnames=NULL,
                          plot.Roadmap=F,
@@ -755,7 +764,7 @@ finemap_loci <- function(loci,
                                      case_control=case_control,
                                      QTL_prefixes=QTL_prefixes,
 
-                                     plot.window=plot.window,
+                                     plot.zoom=plot.zoom,
                                      plot.Nott_epigenome=plot.Nott_epigenome,
                                      plot.Nott_binwidth=plot.Nott_binwidth,
                                      plot.Nott_bigwig_dir=plot.Nott_bigwig_dir,
@@ -778,7 +787,7 @@ finemap_loci <- function(loci,
                                      credset_thresh = PP_threshold,
                                      consensus_thresh = consensus_threshold,
                                      verbose = verbose)
-  print(createDT_html( subset(FINEMAP_DAT, Support >0) ))
+  # print(createDT_html( subset(FINEMAP_DAT, Support >0) ))
   return(FINEMAP_DAT)
 }
 
