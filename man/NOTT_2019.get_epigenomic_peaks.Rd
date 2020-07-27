@@ -21,7 +21,7 @@ API access to brain cell type-specific epigenomic peaks (bed format)
 from Nott et al. (2019).
 }
 \examples{
-PEAKS <- NOTT_2019.get_epigenomic_peaks()
+PEAKS <- NOTT_2019.get_epigenomic_peaks(nThread=1)
 }
 \seealso{
 Other NOTT_2019: 

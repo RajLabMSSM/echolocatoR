@@ -26,6 +26,7 @@ multi_finemap(
   PP_threshold = 0.95,
   case_control = T,
   verbose = T,
+  nThread = 4,
   conda_env = "echoR"
 )
 }

@@ -73,6 +73,7 @@ finemap_loci(
   plot.Roadmap = F,
   plot.Roadmap_query = NULL,
   conda_env = "echoR",
+  nThread = 4,
   verbose = T
 )
 }

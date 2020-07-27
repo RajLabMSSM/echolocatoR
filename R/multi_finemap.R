@@ -154,6 +154,7 @@ multi_finemap <- function(locus_dir,
                           PP_threshold=.95,
                           case_control=T,
                           verbose=T,
+                          nThread=4,
                           conda_env="echoR"){
   # PAINTOR_QTL_datasets=NULL;PP_threshold=.95; effect_col="Effect"; n_causal=5; sample_size=1000; stderr_col="StdErr"; pval_col="P"; N_cases_col="N_cases"; N_controls_col="N_controls"; A1_col="A1"; A2_col="A2";conditioned_snps=NULL;
   printer("++ Fine-mapping using multiple tools:", paste(finemap_method_list, collapse=", "),v=verbose)
@@ -198,6 +199,9 @@ multi_finemap <- function(locus_dir,
                                              PP_threshold = PP_threshold,
                                              case_control = case_control,
                                              conditioned_snps = conditioned_snps,
+
+                                             verbose = verbose,
+                                             nThread=nThread,
                                              conda_env = conda_env)
      })
       # },
@@ -291,6 +295,9 @@ finemap_method_handler <- function(locus_dir,
                                    PAINTOR_QTL_datasets=NULL,
                                    PP_threshold=.95,
                                    case_control=T,
+
+                                   verbose=T,
+                                   nThread=4,
                                    conda_env="echoR"){
   sub.out <- subset_common_snps(LD_matrix=LD_matrix,
                                 finemap_dat=subset_DT,
@@ -305,7 +312,8 @@ finemap_method_handler <- function(locus_dir,
                         LD_matrix = LD_matrix,
                         max_causal = n_causal,
                         sample_size = sample_size,
-                        PP_threshold = PP_threshold)
+                        PP_threshold = PP_threshold,
+                        verbose = verbose)
 
   } else if(finemap_method=="POLYFUN_SUSIE"){
     # PolyFun+SUSIE
@@ -401,6 +409,7 @@ finemap_handler <- function(locus_dir,
                             consensus_threshold=2,
                             case_control=T,
                             conda_env="echoR",
+                            nThread=4,
                             verbose=T){
   message("-------- Step 4: Statistically Fine-map --------")
   start_FM <- Sys.time()
@@ -409,8 +418,8 @@ finemap_handler <- function(locus_dir,
   # if(length(finemap_methods)>1){
     ## Next, see if fine-mapping has previously been done (with multi-finemap)
     file_path <- create_method_dir(locus_dir = locus_dir,
-                                  finemap_method = "Multi-finemap",
-                                  compress = T)
+                                   finemap_method = "Multi-finemap",
+                                   compress = T)
     old_file_path <- file.path(dirname(file_path),"Multi-finemap_results.txt")
     if(!file.exists(file_path) & file.exists(old_file_path)){file_path <- old_file_path }
 
@@ -446,6 +455,8 @@ finemap_handler <- function(locus_dir,
                                    PP_threshold = PP_threshold,
                                    case_control = case_control,
 
+                                   verbose = verbose,
+                                   nThread = nThread,
                                    conda_env = conda_env)
       finemap_dat <- find_consensus_SNPs(finemap_dat = finemap_dat,
                                          credset_thresh = PP_threshold,

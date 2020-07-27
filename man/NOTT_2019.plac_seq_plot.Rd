@@ -27,6 +27,7 @@ NOTT_2019.plac_seq_plot(
   height = 7,
   width = 7,
   dpi = 300,
+  nThread = 4,
   verbose = T
 )
 }

@@ -107,7 +107,7 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
   xlims <- get_window_limits(finemap_dat = finemap_dat,
                              plot.zoom = plot.zoom)
   bw.gr <- subset(bw.gr,
-                  GenomicRanges::seqnames(bw.gr)==paste0("chr",finemap_dat$CHR[1]) &
+                  GenomicRanges::seqnames(bw.gr)==paste0("chr",gsub("chr",finemap_dat$CHR[1])) &
                   GenomicRanges::start(bw.gr)>=xlims[1] &
                   GenomicRanges::end(bw.gr)<=xlims[2])
   # merge into a single granges object
@@ -308,10 +308,10 @@ NOTT_2019.get_interactome <- function(annot_sub,
   interact.cols <- grep("*_interactions", colnames(annot_sub), value = T)
   interact.DT <- lapply(interact.cols, function(column){
     coords <- strsplit(annot_sub[,column][[1]], ",")
-    coord.dt <- lapply(coords, function(coord){
-      data.table::data.table(Interaction=column,
-                             Cell_type=marker_key[gsub("\\_.*","",column)],
-                             Coordinates=coord) %>% return()
+    coord.dt <- lapply(coords, function(coord, .column=column){
+      data.table::data.table(Interaction=.column,
+                             Cell_type=marker_key[gsub("\\_.*","",.column)],
+                             Coordinates=coord)
     }) %>% data.table::rbindlist()
     return(coord.dt)
   } )  %>% data.table::rbindlist()
@@ -444,7 +444,7 @@ NOTT_2019.get_epigenomic_peaks_macs2 <- function(peak.dir="/pd-omics/data/Nott_2
 #' \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
 #' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
 #' @examples
-#' PEAKS <- NOTT_2019.get_epigenomic_peaks()
+#' PEAKS <- NOTT_2019.get_epigenomic_peaks(nThread=1)
 NOTT_2019.get_epigenomic_peaks <- function(assays=c("ATAC","H3K27ac","H3K4me3"),
                                            cell_types=c("neurons","microglia","oligo","astrocytes"),
                                            convert_to_GRanges=T,
@@ -462,7 +462,7 @@ NOTT_2019.get_epigenomic_peaks <- function(assays=c("ATAC","H3K27ac","H3K4me3"),
                      H3K4me3="_optimal_peak.H3K4me3.bed")
   file_names <- unlist(lapply(assays, function(assay){file.path(assay,paste0(cell_dict[cell_types],assay_dict[assay])) }))
 
-  printer("++ NOTT_2019:: Downloading and merging",length(file_names),"BED files.", v=verbose)
+  printer("++ NOTT_2019:: Downloading and merging",length(file_names),"peaks BED files.", v=verbose)
   PEAKS <- parallel::mclapply(file_names, function(f, .verbose=verbose){
     printer("++ NOTT_2019:: Downloading",f, v=.verbose)
     bed_dat <- data.table::fread(file.path(baseURL,f),
@@ -627,9 +627,10 @@ NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
                                     height=7,
                                     width=7,
                                     dpi=300,
+                                    nThread=4,
                                     verbose=T){
   printer("NOTT_2019:: Creating PLAC-seq interactome plot",v=verbose)
-  # data("BST1"); print_plot=T; save_plot=T; title=NULL; index_SNP=NULL; xlims=NULL; zoom_window=NULL; return_consensus_overlap =T
+  # data("BST1"); finemap_dat=BST1; print_plot=T; save_plot=T; title=NULL; index_SNP=NULL; xlims=NULL; zoom_window=NULL; return_consensus_overlap =T; nThread=1;
   if(!"Consensus_SNP" %in% colnames(finemap_dat)){finemap_dat <- find_consensus_SNPs(finemap_dat, verbose = F)}
   marker_key <- list(PU1 = "microglia", Olig2 = "oligo",
                      NeuN = "neurons", LHX2 = "astrocytes")
@@ -659,10 +660,12 @@ NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
                                                          marker_key = marker_key)
   # get PLAC-seq junctions
   interact.DT <- NOTT_2019.get_interactome(annot_sub = annot_sub,
-                                           top.consensus.pos = top.consensus.pos, marker_key = marker_key)
+                                           top.consensus.pos = top.consensus.pos,
+                                           marker_key = marker_key)
 
   # get promoter/enhancers
   regions <- NOTT_2019.get_regulatory_regions(finemap_dat = finemap_dat,
+                                              nThread = nThread,
                                               as.granges = T)
   regions <- subset(regions, as.character(GenomicRanges::seqnames(regions)) ==
                       paste0("chr", unique(finemap_dat$CHR))[1] & GenomicRanges::start(regions) >=

@@ -405,6 +405,7 @@ finemap_pipeline <- function(locus,
                              plot.Roadmap_query=NULL,
 
                              conda_env="echoR",
+                             nThread=4,
                              verbose=T){
    # Create paths
    subset_path <- get_subset_path(results_dir = results_dir,
@@ -470,6 +471,7 @@ finemap_pipeline <- function(locus,
                                  server=server,
                                  remove_tmps=remove_tmps,
                                  conda_env=conda_env,
+                                 nThread=nThread,
                                  verbose=verbose)
 
   #### ***** SNP Filters ***** ###
@@ -682,7 +684,9 @@ finemap_loci <- function(loci,
                          plot.Roadmap_query=NULL,
 
                          conda_env="echoR",
+                         nThread=4,
                          verbose=T){
+  data.table::setDTthreads(threads = nThread)
   conditioned_snps <- snps_to_condition(conditioned_snps, top_SNPs, loci)
   genes_detected <- detect_genes(loci = loci, verbose = verbose)
   if(genes_detected){
@@ -775,6 +779,7 @@ finemap_loci <- function(loci,
                                      plot.Roadmap_query=plot.Roadmap_query,
 
                                      conda_env=conda_env,
+                                     nThread=nThread,
                                      verbose=verbose)
       finemap_dat <- data.table::data.table(Locus=locus, finemap_dat)
       cat('  \n')

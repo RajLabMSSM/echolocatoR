@@ -83,6 +83,7 @@ GGBIO.plot <- function(finemap_dat,
                        dpi=300,
                        height=12,
                        width=10,
+                       nThread=1,
                        verbose=T){
   # consensus_threshold=2; XGR_libnames="ENCODE_TFBS_ClusteredV3_CellTypes";n_top_xgr=5; mean.PP=T; Roadmap=T; PP_threshold=.95;  Nott_epigenome=T;  save_plot=T; show_plot=T; method_list=c("ABF","SUSIE","POLYFUN_SUSIE","FINEMAP","mean"); full_data=T;  max_transcripts=3; plot.zoom=100000;
   # Nott_epigenome=T; Nott_regulatory_rects=T; Nott_show_placseq=T; Nott_binwidth=200; max_transcripts=1; dpi=400; height=12; width=10; results_path=NULL;  n_top_roadmap=7; annot_overlap_threshold=5; Nott_bigwig_dir=NULL; locus="BST1"; Roadmap_query=NULL; sig_cutoff=5e-8; verbose=T; QTL_prefixes=NULL;
@@ -196,7 +197,7 @@ GGBIO.plot <- function(finemap_dat,
                                        lib_name = paste0("XGR.",lib))
     gr.lib <- XGR.download_and_standardize(lib.selections = lib,
                                            finemap_dat = finemap_dat,
-                                           nCores=1)
+                                           nCores = nThread)
     gr.filt <- XGR.filter_sources(gr.lib=gr.lib, n_top_sources=n_top_xgr)
     gr.filt <- XGR.filter_assays(gr.lib=gr.filt, n_top_assays=n_top_xgr)
     saveRDS(gr.filt, annot_file)
@@ -233,7 +234,8 @@ GGBIO.plot <- function(finemap_dat,
       grl.roadmap <- ROADMAP.query(results_path = dirname(annot_file),
                                    gr.snp = gr.snp,
                                    keyword_query = Roadmap_query,
-                                   limit_files=F)
+                                   limit_files=F,
+                                   nThread = nThread)
       saveRDS(grl.roadmap, annot_file)
     }
     grl.roadmap.filt <- ROADMAP.merge_and_process_grl(grl.roadmap = grl.roadmap,
@@ -259,6 +261,7 @@ GGBIO.plot <- function(finemap_dat,
                                                           binwidth=Nott_binwidth,
                                                           bigwig_dir=Nott_bigwig_dir,
                                                           save_annot=T,
+                                                          nThread=nThread,
                                                           verbose=verbose)
       TRACKS_list <- append(TRACKS_list, track.Nott_histo)
       names(TRACKS_list)[length(TRACKS_list)] <- "Nott (2019)\nRead Densities"
@@ -348,7 +351,7 @@ get_window_limits <- function(finemap_dat,
     max_limit <- lead_pos + as.integer(new_window/2)
   } else {
     # Basepairs as input
-    printer("+ GGBIO:: Identifying plot limits from bp =",plot.zoom, v=verbose)
+    printer("+ GGBIO:: Inferring plot limits from bp =",plot.zoom, v=verbose)
     if(is.null(plot.zoom)){
       min_limit <- min(finemap_dat$POS)
       max_limit <- max(finemap_dat$POS)
