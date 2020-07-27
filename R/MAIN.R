@@ -333,6 +333,7 @@
 #' @param conda_env The name of a conda environment to use.
 #'
 #' @family MAIN
+#' @export
 finemap_pipeline <- function(locus,
                              fullSS_path,
                              results_dir,
@@ -611,6 +612,7 @@ finemap_pipeline <- function(locus,
 #' \emph{Data/<dataset_type>/<dataset_name>/<locus>/Multi-finemap/<locus>_<dataset_name>_Multi-finemap.tsv.gz}
 #' @inheritParams finemap_pipeline
 #' @return A merged data.frame with all fine-mapping results from all loci.
+#' @export
 finemap_loci <- function(loci,
                          fullSS_path,
                          dataset_name="dataset_name",

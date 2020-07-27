@@ -16,13 +16,15 @@ SUSIE(
   sample_size = NULL,
   prior_weights = NULL,
   PP_threshold = 0.95,
-  scaled_prior_variance = 1e-04,
-  estimate_residual_variance = T,
+  scaled_prior_variance = 0.001,
+  estimate_residual_variance = F,
   estimate_prior_variance = T,
   residual_variance = NULL,
   max_iter = 100,
+  manual_var_y = F,
   rescale_priors = T,
   plot_track_fit = F,
+  return_all_CS = T,
   verbose = T
 )
 }
@@ -66,17 +68,25 @@ Sum of Single Effects (SuSiE): Iterative Bayesian Step-wise Selection
 }
 \details{
 \strong{Notes on convergence:}
-\code{susieR} will often give the warning: \code{IBSS algorithm did not converge in 100 iterations!}.
+\pkg{susieR} will often give the warning: \code{IBSS algorithm did not converge in 100 iterations!}.
 This means the results might not necessarily be reliable.
 There's several things you can try to avoid this:
 \itemize{
+\item{Make sure \code{susieR} is up-to-date: \code{ devtools::install_github("stephenslab/susieR@0.9.0")}}
 \item{Increase \code{max_causal} (e.g. 5 => 10).}
 \item{Increase \code{max_iter} (e.g. 100 => 1000), though this will take longer.}
 \item{Decrease the locus window size, which will also speed up the algorithm but potentially miss causal variants far from the lead SNP.}
 }
+
+\strong{Notes on variance:}
+\href{https://github.com/stephenslab/susieR/issues/90}{GitHub Issue}
+If \code{estimate_residual_variance=TRUE} \emph{without} providing \code{var_y}
+\emph{and} \code{L>1}, \pkg{susieR} will throw error:
+\code{Estimating residual variance failed: the estimated value is negative}
+Running \pkg{susieR} with \code{var_y = var(b)} provides \emph{exactly} the same results.
 }
 \examples{
 data("BST1"); data("LD_matrix");
 # LD_matrix <- readRDS("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/BST1/plink/UKB_LD.RDS")
-finemap_DT <- SUSIE(subset_DT=BST1, LD_matrix=LD_matrix)
+finemap_DT <- SUSIE(subset_DT=BST1, LD_matrix=LD_matrix, estimate_residual_variance=T)
 }

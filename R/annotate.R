@@ -72,7 +72,7 @@ merge_finemapping_results <- function(dataset="./Data/GWAS",
 
 
   # Add/Update Support/Consensus cols
-  finemap_results <- update_CS_cols(finemap_results)
+  finemap_results <- update_cols(finemap_results)
   merged_results <- find_consensus_SNPs(finemap_dat = finemap_results,
                                         credset_thresh = PP_threshold,
                                         consensus_thresh = consensus_threshold,

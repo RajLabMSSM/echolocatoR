@@ -30,37 +30,6 @@ LD.UKBiobank <- function(subset_DT=NULL,
     return(file.name)
   }
 
-
-  LD.download_UKB_LD <- function(LD.prefixes,
-                                 locus_dir,
-                                 alkes_url="https://data.broadinstitute.org/alkesgroup/UKBB_LD",
-                                 background=T,
-                                 force_overwrite=F,
-                                 download_method="direct",
-                                 nThread=4){
-    for(f in LD.prefixes){
-      gz.url <- file.path(alkes_url,paste0(f,".gz"))
-      npz.url <- file.path(alkes_url,paste0(f,".npz"))
-
-      for(furl in c(gz.url, npz.url)){
-        if(tolower(download_method)=="axel"){
-          out.file <- axel(input_url = furl,
-                           output_path = file.path(locus_dir,"LD"),
-                           background = background,
-                           nThread = nThread,
-                           force_overwrite = force_overwrite)
-        }
-        if(tolower(download_method)=="wget"){
-          out.file <- wget(input_url = furl,
-                           output_path = file.path(locus_dir,"LD"),
-                           background = background,
-                           force_overwrite = force_overwrite)
-        }
-      }
-    }
-    return(gsub("*.npz$","",out.file))
-  }
-
   #### Support functions
 
   # Begin download
@@ -164,4 +133,57 @@ LD.UKBiobank <- function(subset_DT=NULL,
 
 
 
+
+LD.download_UKB_LD <- function(LD.prefixes,
+                               locus_dir,
+                               alkes_url="https://data.broadinstitute.org/alkesgroup/UKBB_LD",
+                               background=T,
+                               force_overwrite=F,
+                               download_method="direct",
+                               nThread=4){
+  for(f in LD.prefixes){
+    gz.url <- file.path(alkes_url,paste0(f,".gz"))
+    npz.url <- file.path(alkes_url,paste0(f,".npz"))
+
+    for(furl in c(gz.url, npz.url)){
+      if(tolower(download_method)=="axel"){
+        out.file <- axel(input_url = furl,
+                         output_path = file.path(locus_dir,"LD"),
+                         background = background,
+                         nThread = nThread,
+                         force_overwrite = force_overwrite)
+      }
+      if(tolower(download_method)=="wget"){
+        out.file <- wget(input_url = furl,
+                         output_path = file.path(locus_dir,"LD"),
+                         background = background,
+                         force_overwrite = force_overwrite)
+      }
+    }
+  }
+  return(gsub("*.npz$","",out.file))
+}
+
+
+
+#' Convert .RDS file back to .npz format
+#'
+#' @family LD
+#' @keywords internal
+#' @examples
+#' \dontrun{
+#' data("BST1")
+#' npz_path <- LD.rds_to_npz(rds_path="/Users/schilder/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/BST1/plink/UKB_LD.RDS")
+#' }
+LD.rds_to_npz <- function(rds_path,
+                          conda_env="echoR",
+                          verbose=T){
+  printer("POLYFUN:: Converting LD .RDS to .npz:",rds_file, v=verbose)
+  LD_matrix <- readRDS(rds_path)
+  reticulate::use_condaenv(condaenv = conda_env)
+  np <- reticulate::import(module = "numpy")
+  npz_path <- gsub(".RDS",".npz", rds_path)
+  np$savez(npz_path, as.matrix(LD_matrix))
+  return(npz_path)
+}
 

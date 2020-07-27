@@ -46,23 +46,36 @@ check_necessary_cols <- function(subset_DT,
 #' @param consensus_thresh Threshold for determining \strong{Consensus_SNP} status.
 #' @inheritParams finemap_pipeline
 #' @keywords internal
+#' @examples
+#' data("merged_DT")
+#' merged_DT <- find_consensus_SNPs(finemap_dat=merged_DT, top_CS_only=T)
 find_consensus_SNPs <- function(finemap_dat,
                                 credset_thresh=.95,
                                 consensus_thresh=2,
                                 sort_by_support=T,
                                 exclude_methods=NULL,
+                                top_CS_only=T,
+                                replace_PP_NAs=T,
                                 verbose=F){
   printer("+ Identifying Consensus SNPs...",v=verbose)
   exclude_methods <- append(exclude_methods,"mean")
   # Find SNPs that are in the credible set for all fine-mapping tools
-  CS_cols <- grep(".CS$|.Credible_Set$",colnames(finemap_dat), value = T)
+  finemap_dat <- update_cols(finemap_dat = finemap_dat)
+  CS_cols <- grep(".CS$",colnames(finemap_dat), value = T)
   CS_cols <- CS_cols[!(CS_cols %in% c(paste0(exclude_methods,".CS"), paste0(exclude_methods,".Credible_Set")))]
   if(consensus_thresh=="all"){consensus_thresh<-length(CS_cols)}
   printer("++ support_thresh =",consensus_thresh,v=verbose)
   # Get the number of tools supporting each SNP
   ## Make sure each CS is set to 1
   support_sub <- subset(finemap_dat, select = CS_cols) %>% data.frame()
-  support_sub[sapply(support_sub, function(e){e>1})] <- 1
+  if(top_CS_only){
+    printer("++ top_CS_only=TRUE",v=verbose)
+    support_sub <- ifelse(support_sub == 1, 1, 0)
+  }else {
+    printer("++ top_CS_only=FALSE",v=verbose)
+    support_sub <- ifelse(support_sub >= 1, 1, 0)
+  }
+
   finemap_dat$Support <- rowSums(support_sub, na.rm = T)
   finemap_dat$Consensus_SNP <- finemap_dat$Support >= consensus_thresh
   # Sort
@@ -72,16 +85,19 @@ find_consensus_SNPs <- function(finemap_dat,
   }
   # Calculate mean PP
   printer("+ Calculating mean Posterior Probability (mean.PP)...",v=verbose)
-  PP.cols <- grep(".PP",colnames(finemap_dat), value = T)
+  PP.cols <- grep(".PP$",colnames(finemap_dat), value = T)
   PP.cols <- PP.cols[!(PP.cols %in% paste0(exclude_methods,".PP"))]
   PP.sub <- subset(finemap_dat, select=c("SNP",PP.cols)) %>% data.frame()# %>% unique()
-  PP.sub[is.na(PP.sub)] <- 0
+  if(replace_PP_NAs){
+    printer("+ Replacing PP==NA with 0", v=verbose)
+    PP.sub[is.na(PP.sub)] <- 0
+  }
   if(NCOL(PP.sub[,-1]) > 1){
     finemap_dat$mean.PP <- rowMeans(PP.sub[,-1], na.rm = T)
   } else{
     finemap_dat$mean.PP <- PP.sub[,-1]
   }
-  finemap_dat$mean.CS <- ifelse(finemap_dat$mean.PP>=credset_thresh,1,0)
+  finemap_dat$mean.CS <- ifelse(finemap_dat$mean.PP >= credset_thresh,1,0)
 
   # PP.sub %>% arrange(desc(mean.PP)) %>% head()
   printer("++",length(CS_cols),"fine-mapping methods used.",v=verbose)
@@ -297,7 +313,7 @@ finemap_method_handler <- function(locus_dir,
                                 finemap_dat = subset_DT,
                                 LD_matrix = LD_matrix,
                                 dataset_type = dataset_type,
-                                n_causal = n_causal,
+                                max_causal = n_causal,
                                 sample_size = sample_size,
                                 polyfun_approach = "precomputed",#"non-parametric",
                                 PP_threshold = PP_threshold,

@@ -58,6 +58,7 @@
 #' data("BST1"); data("LD_matrix");
 #' # LD_matrix <- readRDS("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/BST1/plink/UKB_LD.RDS")
 #' finemap_DT <- SUSIE(subset_DT=BST1, LD_matrix=LD_matrix, estimate_residual_variance=T)
+#' @export
 SUSIE <- function(subset_DT,
                   LD_matrix,
                   dataset_type="GWAS",
@@ -71,18 +72,20 @@ SUSIE <- function(subset_DT,
                   # susieR default PP_threshold=coverage=.95
                   PP_threshold=.95,
                   # PolyFun uses default `scaled_prior_variance=0.0001` (susieR default=0.2)
-                  scaled_prior_variance=0.0001,# (previously 0.001)
+                  scaled_prior_variance=0.001,# (previously 0.001)
                   # susieR default estimate_residual_variance=T
-                  estimate_residual_variance=T,
+                  estimate_residual_variance=F,
                   # susieR default estimate_prior_variance=T
                   estimate_prior_variance=T,
                   # susieR default residual_variance=NULL
                   residual_variance=NULL,
                   # susieR default max_iter=100
                   max_iter=100,
+                  manual_var_y=F,
 
                   rescale_priors=T,
                   plot_track_fit=F,
+                  return_all_CS=T,
                   verbose=T){
   # if sample_size is NULL then SUSIE fails
   if(!"N" %in% names(subset_DT) & is.null(sample_size)){
@@ -90,7 +93,11 @@ SUSIE <- function(subset_DT,
   }
   sample_size <- max(subset_DT$N)
 
-  # susie_vars <- get_var_y(subset_DT, dataset_type)
+  if(manual_var_y){
+    susie_vars <- get_var_y(subset_DT, dataset_type)
+    var_y <- susie_vars$var_y
+  }
+
 
   printer("+ SUSIE:: max_causal =",max_causal, v=verbose)
   if(!is.null(prior_weights)){
@@ -107,7 +114,7 @@ SUSIE <- function(subset_DT,
   LD_matrix <- as.matrix(sub.out$LD)
   subset_DT <- sub.out$DT
 
-  library(susieR)
+  # library(susieR)
   # SUSIE's authors "merge[d] susie_ss and susie_bhat to susie_suff_stat" in 11/2019.
   susie_version <- utils::packageVersion("susieR")
   if(length(find("susie_bhat"))==0){
@@ -155,15 +162,17 @@ SUSIE <- function(subset_DT,
   susie_snps <- names(fitted_bhat$X_column_scale_factors)
   CS <- lapply(CS_indices, function(x){susie_snps[x]})
   CS_dict <- list()
-  for(i in 1:length(CS)){
+  len <- if(return_all_CS) length(CS) else 1
+  for(i in 1:len){
     for(s in CS[[i]]){
       CS_dict <- append(CS_dict, setNames(i,s))
     }
   }
+  # Assign each SNP a CS group if it meets the PP threshold
   subset_DT$CS <- lapply(subset_DT$SNP, function(x){
     if(x %in% names(CS_dict) & subset(subset_DT, SNP==x)$PP>=PP_threshold){
       CS_dict[[x]]
-      } else{0}}) %>% unlist()
+    } else{0}}) %>% unlist()
   return(subset_DT)
 }
 
@@ -179,21 +188,22 @@ SUSIE <- function(subset_DT,
 
 
 
-# get_var_y <- function(subset_DT, dataset_type){
-#   if(dataset_type=="GWAS" & "N_cases" %in% colnames(subset_DT) & "N_controls" %in% colnames(subset_DT)){
-#     printer("++ Computing phenotype variance...")
-#     phenotype_variance <- var(c(rep(0, max(subset_DT$N_cases)),
-#                                 rep(1, max(subset_DT$N_controls)))
-#     )
-#   } else if(dataset_type=="eQTL" & "Expression" %in% colnames(subset_DT)){
-#     phenotype_variance <- var(subset_DT$Expression)
-#   } else {
-#     printer("++ Phenotype variance could not be calculated from this data.")
-#     printer("    Estimating prior variance instead...")
-#     phenotype_variance <- 1
-#   }
-#   return(list(phenotype_variance=phenotype_variance))
-# }
+get_var_y <- function(subset_DT,
+                      dataset_type){
+  if(dataset_type=="GWAS" & "N_cases" %in% colnames(subset_DT) & "N_controls" %in% colnames(subset_DT)){
+    printer("++ Computing phenotype variance...")
+    phenotype_variance <- var(c(rep(0, max(subset_DT$N_cases)),
+                                rep(1, max(subset_DT$N_controls)))
+    )
+  } else if(dataset_type=="eQTL" & "Expression" %in% colnames(subset_DT)){
+    phenotype_variance <- var(subset_DT$Expression)
+  } else {
+    printer("++ Phenotype variance could not be calculated from this data.")
+    printer("    Estimating prior variance instead...")
+    phenotype_variance <- 1
+  }
+  return(list(var_y=phenotype_variance))
+}
 
 
 

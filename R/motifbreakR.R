@@ -40,6 +40,7 @@ MOTIFBREAKR.filter_by_metadata <- function(mb.results,
 #' rsid_list <- c("rs11175620","rs7294619","rs74324737")
 #' mb.results <- MOTIFBREAKR(rsid_list=rsid_list, calculate_all_pval=T)
 #' }
+#' @export
 MOTIFBREAKR <- function(rsid_list,
                         save_rds=T,
                         dataset_dir="./results",
@@ -154,6 +155,7 @@ MOTIFBREAK.calc_pvals <- function(mb.results,
 #' data("example.results")
 #' motifbreakR::plotMB(mb.results=example.results, "rs2661839", effect = "strong")
 #' }
+#' @export
 MOTIFBREAKR.plot <- function(mb.results,
                              rsid=NULL,
                              effect=c("strong","weak")){
@@ -191,6 +193,7 @@ MOTIFBREAKR.plot <- function(mb.results,
 #' mb.lrrk2 <- readRDS("/pd-omics/brian/results/_genome_wide/motifbreakR/motifbreakR_results.p_values_LRRK2.rds")
 #' mb.encode <- readRDS("/pd-omics/brian/results/_genome_wide/motifbreakR/motifbreakR_results.encode.lrrk2.rds")
 #' }
+#' @export
 MOTIFBREAKR.summarize <- function(merged_DT,
                                   mb.results,
                                   pct_threshold=.7,

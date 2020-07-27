@@ -10,6 +10,8 @@ find_consensus_SNPs(
   consensus_thresh = 2,
   sort_by_support = T,
   exclude_methods = NULL,
+  top_CS_only = T,
+  replace_PP_NAs = T,
   verbose = F
 )
 }
@@ -25,6 +27,10 @@ Adds several columns that summarise the results across all fine-mapping tools th
 \item{mean.PP}{The mean per-SNP PP across all fine-mapping tools used.}
 \item{Consensus_SNP}{Whether or not the SNP was in the credible set of ≥ \code{consensus_thresh} SNPs (\emph{default=2}).}
 }
+}
+\examples{
+data("merged_DT")
+merged_DT <- find_consensus_SNPs(finemap_dat=merged_DT, top_CS_only=T)
 }
 \seealso{
 Other finemapping functions: 

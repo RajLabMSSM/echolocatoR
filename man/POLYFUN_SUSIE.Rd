@@ -14,7 +14,7 @@ POLYFUN_SUSIE(
   LD_matrix = NULL,
   polyfun_approach = "non-parametric",
   dataset_type = "GWAS",
-  n_causal = 5,
+  max_causal = 5,
   sample_size = NULL,
   server = F,
   PP_threshold = 0.95,

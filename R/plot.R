@@ -71,8 +71,8 @@ construct_SNPs_labels <- function(subset_DT,
                                   lead=T,
                                   method=T,
                                   consensus=T,
-                                  verbose=F,
-                                  remove_duplicates=T){
+                                  remove_duplicates=T,
+                                  verbose=F){
   printer("+ PLOT:: Constructing SNP labels...", v=verbose)
   labelSNPs <- data.table::data.table()
   subset_DT <- data.table::as.data.table(subset_DT)

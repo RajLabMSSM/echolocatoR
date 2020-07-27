@@ -29,6 +29,7 @@ Other LD:
 \code{\link{LD.load_or_create}()},
 \code{\link{LD.plink_LD}()},
 \code{\link{LD.plink_file}()},
+\code{\link{LD.rds_to_npz}()},
 \code{\link{LD.read_bin}()},
 \code{\link{LD.read_ld_table}()},
 \code{\link{LD.run_plink_LD}()},

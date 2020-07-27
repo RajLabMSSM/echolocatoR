@@ -34,6 +34,7 @@ printer <- function(..., v=T){if(v){print(paste(...))}}
 #' Some packages don't install very well via the DESCRIPTION file
 #' (e.g. wrong versions, wrong sources).
 #' This function ensures they're actually installed properly.
+#' @export
 install_tricky_packages <- function(){
   if(!"foreign" %in% installed.packages()){
     install.packages("https://cran.r-project.org/src/contrib/Archive/foreign/foreign_0.8-76.tar.gz",
@@ -919,13 +920,11 @@ GRanges_overlap <- function(dat1,
 #'
 #' Convert old col format: ".Credible_Set" => ".CS"
 #' @examples
-#' \dontrun{
 #' data("BST1");
-#' finemap_DT <- BST1
-#' finemap_DT <- update_CS_cols(finemap_dat=finemap_DT)
-#' }
-update_CS_cols <- function(finemap_dat){
+#' finemap_DT <- update_cols(finemap_dat=BST1)
+update_cols <- function(finemap_dat){
   colnames(finemap_dat) <- gsub("*.Credible_Set$",".CS",colnames(finemap_dat))
+  colnames(finemap_dat) <- gsub("*.Probability$",".PP",colnames(finemap_dat))
   return(finemap_dat)
 }
 

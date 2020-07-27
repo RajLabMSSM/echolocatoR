@@ -31,7 +31,7 @@ by \href{https://www.biorxiv.org/content/10.1101/388165v3}{Nalls et al. (bioRxiv
 \dontrun{
 root_dir <- "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/BST1/Multi-finemap"
 BST1 <- data.table::fread(file.path(root_dir,"Multi-finemap_results.txt"))
-BST1 <- update_CS_cols(finemap_dat=BST1)
+BST1 <- update_cols(finemap_dat=BST1)
 BST1 <- find_consensus_SNPs(finemap_dat=BST1)
 usethis::use_data(BST1, overwrite = T)
 }

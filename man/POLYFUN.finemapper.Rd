@@ -2,7 +2,7 @@
 % Please edit documentation in R/POLYFUN.R
 \name{POLYFUN.finemapper}
 \alias{POLYFUN.finemapper}
-\title{Run PolyFun+SUSIE fine-mapping pipeline}
+\title{Run \emph{PolyFun+SUSIE} fine-mapping pipeline}
 \source{
 https://www.biorxiv.org/content/10.1101/807792v3
 }
@@ -16,11 +16,16 @@ POLYFUN.finemapper(
   locus_dir,
   n_causal = 5,
   method = "susie",
-  h2_path
+  h2_path = NULL,
+  conda_env = "echoR"
 )
 }
 \description{
-Run PolyFun+SUSIE fine-mapping pipeline
+Run \emph{PolyFun+SUSIE} fine-mapping pipeline
+}
+\examples{
+data("BST1")
+finemap_dat=BST1
 }
 \seealso{
 Other polyfun: 
