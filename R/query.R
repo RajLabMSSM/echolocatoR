@@ -40,7 +40,8 @@ import_topSNPs <- function(topSS,
                            grouping_vars=c("Locus"),
                            gene_col="Gene",
                            remove_variants=NULL,
-                           nThread=4){
+                           nThread=4,
+                           verbose=T){
   # Import top SNPs
   topSNPs_reader <- function(topSS,
                              sheet = 1){
@@ -68,14 +69,16 @@ import_topSNPs <- function(topSS,
     top_SNPs <- dplyr::mutate(top_SNPs, Locus=paste0("locus_chr",CHR,"_",SNP))
     locus_col <- gene_col <- "Locus";
   }
-  if(gene_col %in% colnames(top_SNPs) &  all(!is.na(top_SNPs[[gene_col]])) ){
+  if(gene_col %in% colnames(top_SNPs) & all(!is.na(top_SNPs[[gene_col]])) ){
+    print("+ Assigning gene_col to locus_col",v=verbose)
     top_SNPs <- cbind(Gene=top_SNPs[[gene_col]], top_SNPs)
+    top_SNPs$Locus <- gsub("/","_",top_SNPs$Gene)
   } else {
-    print("+ Assigning locus name to gene_col")
-    top_SNPs <- cbind(Gene=top_SNPs$Locus, top_SNPs)
+    print("+ Assigning locus_col to gene_col",v=verbose)
+    top_SNPs <- cbind(Gene=top_SNPs[[locus_col]], top_SNPs)
+    top_SNPs$Gene <- gsub("/","_",top_SNPs$Locus)
   }
-  top_SNPs$Gene <- gsub("/","_",top_SNPs$Gene)
-  top_SNPs$Locus <- gsub("/","_",top_SNPs$Locus)
+
 
 
   # Standardize col names
@@ -85,8 +88,8 @@ import_topSNPs <- function(topSS,
   }
 
   top_SNPs <- top_SNPs %>%
-    dplyr::select(Locus,
-                  Gene,
+    dplyr::select(Locus=Locus,
+                  Gene=Gene,
                   CHR=chrom_col,
                   POS=position_col,
                   SNP=snp_col,

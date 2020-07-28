@@ -38,7 +38,7 @@
 #' # UCS and lead SNPs: With annotations
 #' merged_DT <- merge_finemapping_results(dataset=dataset_dir, minimum_support=1, include_leadSNPs=T, haploreg_annotation=T, biomart_annotation=T)
 merge_finemapping_results <- function(dataset="./Data/GWAS",
-                                      minimum_support=0,
+                                      minimum_support=1,
                                       include_leadSNPs=T,
                                       xlsx_path=F,#="./Data/annotated_finemapping_results.xlsx",
                                       from_storage=T,
@@ -48,6 +48,7 @@ merge_finemapping_results <- function(dataset="./Data/GWAS",
                                       PP_threshold=.95,
                                       consensus_threshold=2,
                                       exclude_methods=NULL,
+                                      top_CS_only=T,
                                       verbose=T,
                                       nThread=4){
   if(from_storage){
@@ -55,6 +56,11 @@ merge_finemapping_results <- function(dataset="./Data/GWAS",
     # Find all multi-finemap_results files
     multi_dirs <- list.files(dataset, pattern = "Multi-finemap_results.txt|*_Multi-finemap.tsv.gz",
                              recursive = T, full.names = T)
+    loci <- basename(dirname(dirname(multi_dirs)))
+    if(length(loci)>length(unique(loci))){
+      printer("+ Removing duplicate Multi-finemap files per locus.",v=verbose)
+      loci <- loci[!duplicated(loci)]
+    }
     dataset_names <- dirname(dirname(dirname(multi_dirs))) %>% unique()
     # Loop through each GENE
     finemap_results <- lapply(dataset_names, function(dn, multi_dirs.=multi_dirs){
@@ -64,6 +70,7 @@ merge_finemapping_results <- function(dataset="./Data/GWAS",
         gene <- basename(dirname(dirname(md)))
         printer("+ Importing results...",gene, v=verbose)
         multi_data <- data.table::fread(md, nThread = nThread)
+        multi_data <- update_cols(multi_data)
         multi_data <- cbind(data.table::data.table(Dataset=dn, Gene=gene), multi_data)
         return(multi_data)
       }) %>% data.table::rbindlist(fill=TRUE) # Bind genes
@@ -72,11 +79,11 @@ merge_finemapping_results <- function(dataset="./Data/GWAS",
 
 
   # Add/Update Support/Consensus cols
-  finemap_results <- update_cols(finemap_results)
   merged_results <- find_consensus_SNPs(finemap_dat = finemap_results,
                                         credset_thresh = PP_threshold,
                                         consensus_thresh = consensus_threshold,
                                         exclude_methods = exclude_methods,
+                                        top_CS_only = top_CS_only,
                                         verbose = verbose)
   merged_results <- subset(merged_results, Support>=minimum_support)
   if(!"Locus" %in% colnames(merged_results)){
@@ -508,7 +515,8 @@ ANNOTATE.plot_missense <- function(merged_DT,
                                    show_numbers=F,
                                    show_plot=T){
   locus_order <- SUMMARISE.get_CS_counts(merged_DT = merged_DT)
-  annotated_DT <- ANNOTATE.annotate_missense(merged_DT=merged_DT, snp_filter=snp_filter)
+  annotated_DT <- ANNOTATE.annotate_missense(merged_DT=merged_DT,
+                                             snp_filter=snp_filter)
   dat_melt <-
     data.table::setDT(annotated_DT)[, .(Missense = n_distinct(SNP[Missense==T], na.rm = T)),
                         by=c("Locus")]  %>%

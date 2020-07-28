@@ -29,8 +29,7 @@ by \href{https://www.biorxiv.org/content/10.1101/388165v3}{Nalls et al. (bioRxiv
 }
 \examples{
 \dontrun{
-merged_DT <- merge_finemapping_results(dataset = "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019")
-merged_DT <- update_cols(finemap_dat=merged_DT)
+merged_DT <- merge_finemapping_results(dataset = "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019", minimum_support=1)
 usethis::use_data(merged_DT, overwrite=T)
 }
 }

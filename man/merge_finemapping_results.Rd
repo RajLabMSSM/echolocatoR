@@ -6,7 +6,7 @@
 \usage{
 merge_finemapping_results(
   dataset = "./Data/GWAS",
-  minimum_support = 0,
+  minimum_support = 1,
   include_leadSNPs = T,
   xlsx_path = F,
   from_storage = T,
@@ -16,6 +16,7 @@ merge_finemapping_results(
   PP_threshold = 0.95,
   consensus_threshold = 2,
   exclude_methods = NULL,
+  top_CS_only = T,
   verbose = T,
   nThread = 4
 )

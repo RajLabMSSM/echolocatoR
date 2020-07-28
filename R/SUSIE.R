@@ -35,6 +35,7 @@
 #' \item{Increase \code{max_iter} (e.g. 100 => 1000), though this will take longer.}
 #' \item{Decrease the locus window size, which will also speed up the algorithm but potentially miss causal variants far from the lead SNP.}
 #' }
+#' Changing \code{estimate_prior_method} does not seem to affect covergence warnings.
 #'
 #' \strong{Notes on variance:}
 #' \href{https://github.com/stephenslab/susieR/issues/90}{GitHub Issue}
@@ -81,12 +82,19 @@ SUSIE <- function(subset_DT,
                   residual_variance=NULL,
                   # susieR default max_iter=100
                   max_iter=100,
+                  # susieR default="optim"
+                  estimate_prior_method="optim",
                   manual_var_y=F,
 
                   rescale_priors=T,
                   plot_track_fit=F,
                   return_all_CS=T,
                   verbose=T){
+  # Quickstart
+  # dataset_type="GWAS";max_causal=5;sample_size=NULL;prior_weights=NULL;PP_threshold=.95;scaled_prior_variance=0.001;
+  # estimate_residual_variance=F;estimate_prior_variance=T;residual_variance=NULL;max_iter=100;manual_var_y=F;rescale_priors=T;
+  # plot_track_fit=F;return_all_CS=T;verbose=T; subset_DT=BST1; LD_matrix <- readRDS("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/BST1/plink/UKB_LD.RDS");
+
   # if sample_size is NULL then SUSIE fails
   if(!"N" %in% names(subset_DT) & is.null(sample_size)){
       subset_DT <- get_sample_size(subset_DT)
@@ -103,7 +111,7 @@ SUSIE <- function(subset_DT,
   if(!is.null(prior_weights)){
     printer("+ SUSIE:: Utilizing prior_weights for",length(prior_weights),"SNPs.",v=verbose)
     if(rescale_priors){
-      printer("+ SUSIE:: Rescaling priors from 0-1",v=verbose)
+      printer("+ SUSIE:: Rescaling priors",v=verbose)
       prior_weights <- prior_weights / sum(prior_weights, na.rm = T)
     }
   }
@@ -136,12 +144,28 @@ SUSIE <- function(subset_DT,
                              residual_variance = residual_variance,
                              # Raising max_iter can help susie converge
                              max_iter = max_iter,
+                             ### Correspondence with Omer Weissbrod (7/28/2020):
+                             ## The value of var_y also shouldn't make a big difference if estimate_residual_variance=T,
+                             ## because it just sets the initial value of the optimization algorithm. However,
+                             ## if estimate_residual_variance=F it makes a big difference.
+                             ## I also found that I often get the error you mentioned if var_y is very small.
+                             ## It could be due to not supplying a good initial parameter value.
+                             ## I believe that you can change the optimization method to EM and then you will get more robust convergence. In any case, if the causal effects in your target locus is small, var_y=1 to a first order approximation should give you pretty robust results.
+                             estimate_prior_method = estimate_prior_method,
                              # standardize = TRUE,
                              estimate_residual_variance = estimate_residual_variance, # TRUE
 
-                             # IMPORTANT!! susieR uses the missing() function,
+                             #### IMPORTANT!! susieR uses the missing() function,
                              ## which means supplying var_y=NULL will give you errors!!!
                              ## When var_y is missing, it will be calculated automatically.
+                             ### Correspondence with Omer Weissbrod (7/28/2020):
+                             ## The value of var_y also shouldn't make a big difference if estimate_residual_variance=T,
+                             ## because it just sets the initial value of the optimization algorithm. However,
+                             ## if estimate_residual_variance=F it makes a big difference.
+                             ## I also found that I often get the error you mentioned ("Estimating residual variance failed: the estimated value is negative") if var_y is very small.
+                             ## It could be due to not supplying a good initial parameter value.
+                             ## I believe that you can change the optimization method to EM and then you will get more robust convergence.
+                             ##In any case, if the causal effects in your target locus is small, var_y=1 to a first order approximation should give you pretty robust results.
                              # var_y = var_y, # Variance of the phenotype (e.g. gene expression, or disease status)
 
                              # A p vector of prior probability that each element is non-zero
@@ -152,7 +176,9 @@ SUSIE <- function(subset_DT,
                              verbose = F)
 
   if(plot_track_fit){
-    try({susieR::susie_plot_iteration(fitted_bhat, n_causal, 'test_track_fit')})
+    track_path <- file.path(locus_dir, "SUSIE","test_track_fit")
+    dir.create(dirname(track_path),showWarnings = F, recursive = T)
+    try({susieR::susie_plot_iteration(fitted_bhat, n_causal, track_path)})
   }
   printer("+ SUSIE:: Extracting Credible Sets...",v=verbose)
   ## Get PIP
@@ -163,6 +189,7 @@ SUSIE <- function(subset_DT,
   CS <- lapply(CS_indices, function(x){susie_snps[x]})
   CS_dict <- list()
   len <- if(return_all_CS) length(CS) else 1
+  ## Assign a CS number for each group of SNPs
   for(i in 1:len){
     for(s in CS[[i]]){
       CS_dict <- append(CS_dict, setNames(i,s))
@@ -190,6 +217,10 @@ SUSIE <- function(subset_DT,
 
 get_var_y <- function(subset_DT,
                       dataset_type){
+  ### Correspondence with Omer Weissbrod (7/28/2020):
+  ## The rationale is that we're treating the trait as if were actually continuous,
+  ## so that we just coincidentally happen to see only zeros and ones. Of course it's incorrect,
+  ##but since we're doing this anyway it makes sense to be consistent and estimate var_y under this assumption as well.
   if(dataset_type=="GWAS" & "N_cases" %in% colnames(subset_DT) & "N_controls" %in% colnames(subset_DT)){
     printer("++ Computing phenotype variance...")
     phenotype_variance <- var(c(rep(0, max(subset_DT$N_cases)),

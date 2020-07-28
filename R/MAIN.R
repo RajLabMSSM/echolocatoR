@@ -524,7 +524,7 @@ finemap_pipeline <- function(locus,
                                      verbose = F)
 
   # Plot
-  message("--------------- Step 7: Visualize --------------")
+  if(!is.null(plot.types)) message("--------------- Step 7: Visualize --------------")
   for(p.window in plot.zoom){
     if("simple" %in% plot.types){
       try({
@@ -699,7 +699,8 @@ finemap_loci <- function(loci,
     finemap_dat <- NULL
     try({
       locus <- loci[i]
-      message("🦇 🦇 🦇 ",locus," 🦇 🦇 🦇 ")
+      message("\n")
+      message("🦇 🦇 🦇 ",locus,"(",i,"/",length(loci),")"," 🦇 🦇 🦇 ")
       lead_SNP <- .arg_list_handler(conditioned_snps, i)
       gene_limits <- .arg_list_handler(trim_gene_limits, i)
       conditioned_snp <- .arg_list_handler(conditioned_snps, i)
@@ -785,7 +786,7 @@ finemap_loci <- function(loci,
       cat('  \n')
     }) ## end try()
     end_gene <- Sys.time()
-    message("Fine-mappping complete:", locus)
+    message(locus," fine-mappping complete:")
     print(round(end_gene-start_gene,1))
   return(finemap_dat)
   }) # end for loop

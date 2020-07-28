@@ -242,6 +242,7 @@ multi_finemap <- function(locus_dir,
 #' @keywords internal
 create_method_dir <- function(locus_dir,
                               finemap_method,
+                              LD_reference=NULL,
                               compress=T){
   method_dir <- file.path(locus_dir, finemap_method)
   # Make finemapping results folder
@@ -250,8 +251,9 @@ create_method_dir <- function(locus_dir,
   dataset <- basename(dirname(locus_dir))
   locus <- basename(locus_dir)
   file_path <- file.path(method_dir,
-                        paste0(locus,"_",dataset,"_",finemap_method,".tsv",
-                               ifelse(compress,".gz","")))
+                        paste(locus,dataset,paste0(LD_reference,"_LD"),finemap_method,"tsv",
+                               if(compress) "gz" else "", sep=".")
+                        )
   return(file_path)
 }
 

@@ -101,6 +101,7 @@ lead.SNP.coords <- function(consensus_thresh=2){
 
 compare_finemapping_methods <- function(dataset="./Data/GWAS/Nalls23andMe_2019"){
   FM_orig <- merge_finemapping_results(minimum_support = 0,
+                                       top_CS_only=T,
                                        dataset = dataset,
                                        exclude_methods = NULL)
   # counts <- (FM_orig %>% group_by(Gene) %>% count())
@@ -115,14 +116,24 @@ compare_finemapping_methods <- function(dataset="./Data/GWAS/Nalls23andMe_2019")
   FM_all %>% group_by(Gene) %>% summarise(leadGWAS=sum(leadSNP==T)) %>% arrange(leadGWAS)
 
   # Proportion of CS SNPs that are the leadSNP (by tool)
-  dat <- FM_all %>%
-    summarise_at(.vars = vars(ends_with(".CS")),
-                 .funs = list(CS.sum=sum(.>0, na.rm = T),
-                      leadGWAS.sum=sum(leadSNP==T, na.rm = T),
-                      leadGWAS.CS.sum=sum(leadSNP==T & .>0, na.rm = T),
-                      PROP.SNPS=sum(leadSNP==T & .>0, na.rm = T)/sum(.>0, na.rm = T)) )
-  colnames(dat) <- gsub("\\.CS","", colnames(dat))
-  dat
+  if(top_CS_only){
+    dat <- FM_all %>%
+      summarise_at(.vars = vars(ends_with(".CS")),
+                   .funs = list(CS.sum=sum(.==1, na.rm = T),
+                                leadGWAS.sum=sum(leadSNP==T, na.rm = T),
+                                leadGWAS.CS.sum=sum(leadSNP==T & .==1, na.rm = T),
+                                PROP.SNPS=sum(leadSNP==T & .==1, na.rm = T)/sum(.==1, na.rm = T)) )
+    colnames(dat) <- gsub("\\.CS","", colnames(dat))
+
+  } else {
+    dat <- FM_all %>%
+      summarise_at(.vars = vars(ends_with(".CS")),
+                   .funs = list(CS.sum=sum(.>0, na.rm = T),
+                                leadGWAS.sum=sum(leadSNP==T, na.rm = T),
+                                leadGWAS.CS.sum=sum(leadSNP==T & .>0, na.rm = T),
+                                PROP.SNPS=sum(leadSNP==T & .>0, na.rm = T)/sum(.>0, na.rm = T)) )
+    colnames(dat) <- gsub("\\.CS","", colnames(dat))
+  }
 
   # Proportion of loci in which the CS contains the leadSNP (by tool)
   # dat3.1 <- FM_all %>% group_by(Gene) %>%
@@ -393,19 +404,28 @@ leadSNP_comparison <- function(top_SNPs, merged_results){
 #' @examples
 #' data("merged_DT");
 #' locus_order <- SUMMARISE.get_CS_counts(merged_DT=merged_DT)
-SUMMARISE.get_CS_counts <- function(merged_DT){
+SUMMARISE.get_CS_counts <- function(merged_DT,
+                                    top_CS_only=T){
   UCS_count <- suppressMessages(merged_DT %>%
     dplyr::group_by(Locus, .drop=F)  %>%
     dplyr::summarise(UCS.CS_size=dplyr::n_distinct(SNP[Support>0])))
 
-  locus_order <- suppressMessages(merged_DT %>%
-    dplyr::group_by(Locus, .drop=F) %>%
-    dplyr::summarise_at(.vars = vars(dplyr::ends_with("CS")),
-                        .funs=funs(size=dplyr::n_distinct(SNP[.>0], na.rm = T)
-                             # SNPs=paste(unique(SNP[.>0]),collapse=",")
-                             ) ) %>%
+  if(top_CS_only){
+    tmp <- suppressWarnings(merged_DT %>%
+                       dplyr::group_by(Locus, .drop=F) %>%
+                       dplyr::summarise_at(.vars = vars(dplyr::ends_with("CS")),
+                                           .funs=funs(size=dplyr::n_distinct(SNP[.==1], na.rm = T)
+                                           ) ))
+  }else {
+    tmp <- suppressWarnings(merged_DT %>%
+                              dplyr::group_by(Locus, .drop=F) %>%
+                              dplyr::summarise_at(.vars = vars(dplyr::ends_with("CS")),
+                                                  .funs=funs(size=dplyr::n_distinct(SNP[.>0], na.rm = T)
+                                                  ) ))
+  }
+  locus_order <- tmp %>%
     base::merge(UCS_count, by="Locus") %>%
-    dplyr::arrange(-UCS.CS_size))
+    dplyr::arrange(-UCS.CS_size)
   # locus_order <- locus_order[!endsWith(colnames(locus_order), ".CS_size")]
   locus_order$Locus <- factor(locus_order$Locus,  levels = locus_order$Locus, ordered = T)
   return(data.frame(locus_order))
@@ -455,12 +475,16 @@ SUMMARISE.get_CS_bins <- function(merged_DT){
 SUMMARISE.CS_bin_plot <- function(merged_DT,
                                   show_plot=T){
   bin_counts <- SUMMARISE.get_CS_bins(merged_DT = merged_DT)
+  # Assign bin colors
+  used_bins <- levels(bin_counts$bin)[levels(bin_counts$bin) %in% unique(bin_counts$bin)]
+  custom_colors <- RColorBrewer::brewer.pal(n=length(levels(bin_counts$bin)), "GnBu")
+  custom_colors_dict <- setNames(custom_colors[1:length(used_bins)], rev(used_bins))
+  custom_colors_dict[names(custom_colors_dict)=="0"] <- "lightgray"
 
-  custom_colors <- c("lightgrey",RColorBrewer::brewer.pal(n=5,"GnBu"))
   bin_plot <- ggplot(subset(bin_counts, Method!="mean"), aes(x=Method, fill=bin)) +
-    geom_bar(stat="count",show.legend = T, position = position_stack(reverse = F), color="lightblue") +
+    geom_bar(stat="count",show.legend = T, position = position_stack(reverse = F), color="white") +
     # scale_fill_brewer(palette = "Spectral", direction = -1) +
-    scale_fill_manual(values = rev(custom_colors)) +
+    scale_fill_manual(values = custom_colors_dict) +
     # geom_text(aes(label = paste(bin,"SNPs")), position =  position_stack(vjust = .5), vjust=-1, stat = "count") +
     geom_text(aes(label = ..count..),  position =  position_stack(vjust = .5), vjust=.5, stat = "count") +
     theme_bw() +
@@ -488,16 +512,20 @@ SUMMARISE.CS_bin_plot <- function(merged_DT,
 #' data("merged_DT");
 #' snp_groups <- SUMMARISE.get_SNPgroup_counts(merged_DT=merged_DT)
 SUMMARISE.get_SNPgroup_counts <- function(merged_DT){
-  snp_groups <- merged_DT %>%
+  snp_groups <- suppressMessages(merged_DT %>%
     dplyr::group_by(Locus) %>%
     dplyr::summarise(Total.SNPs=n_distinct(SNP, na.rm = T),
                      nom.sig.GWAS=n_distinct(SNP[P<.05], na.rm = T),
                      sig.GWAS=n_distinct(SNP[P<5e-8], na.rm = T),
                      CS=n_distinct(SNP[Support>0], na.rm = T),
-                     Consensus=n_distinct(SNP[Support>1], na.rm = T),
+                     Consensus=n_distinct(SNP[Consensus_SNP], na.rm = T),
                      topConsensus=n_distinct(SNP[Consensus_SNP & mean.PP==max(mean.PP)], na.rm = T ),
-                     topConsensus.leadGWAS=n_distinct(SNP[Consensus_SNP & leadSNP], na.rm = T ))
+                     topConsensus.leadGWAS=n_distinct(SNP[Consensus_SNP & leadSNP], na.rm = T )) )
+  message("Report:: all loci:")
   print(snp_groups[,-1] %>% colSums() / n_distinct(snp_groups$Locus))
+  message("Report:: loci with at least one Consensus SNP:")
+  consensus_present <- subset(snp_groups, Consensus > 0)
+  print(consensus_present[,-1] %>% colSums() / n_distinct(consensus_present$Locus))
   return(data.frame(snp_groups))
 }
 
@@ -516,8 +544,10 @@ SUMMARISE.CS_counts_plot <- function(merged_DT,
                                      ylabel="Locus",
                                      legend_nrow=3,
                                      label_yaxis=T,
+                                     top_CS_only=T,
                                      show_plot=T){
-  locus_order <- SUMMARISE.get_CS_counts(merged_DT)
+  locus_order <- SUMMARISE.get_CS_counts(merged_DT,
+                                         top_CS_only = top_CS_only)
   melt.dat <-
     locus_order %>%
     dplyr::mutate(Locus_UCS=paste0(Locus,"  (",UCS.CS_size,")")) %>%

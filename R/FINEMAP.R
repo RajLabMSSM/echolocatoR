@@ -61,7 +61,8 @@ FINEMAP.construct_data <- function(locus_dir,
   if( dim(data.z)[1]==dim(LD_filt)[1] ){
     # data.z
     data.z_path <- file.path(locus_dir,"FINEMAP","data.z")
-    data.table::fwrite(data.z, data.z_path, sep = " ", nThread = nThread)
+    data.table::fwrite(data.z, data.z_path, sep = " ",
+                       nThread = nThread)
     # Sys.chmod(data.z_path, "777", use_umask = FALSE)
     # data.ld
     data.ld_path <- file.path(locus_dir,"FINEMAP","data.ld")

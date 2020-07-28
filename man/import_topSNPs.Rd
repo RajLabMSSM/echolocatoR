@@ -19,7 +19,8 @@ import_topSNPs(
   grouping_vars = c("Locus"),
   gene_col = "Gene",
   remove_variants = NULL,
-  nThread = 4
+  nThread = 4,
+  verbose = T
 )
 }
 \arguments{
@@ -59,6 +60,8 @@ For example, if you want one index SNP per QTL eGene - GWAS locus pair, you coul
 \item{gene_col}{An optional column to keep track of the causal gene(s) in each locus (if known).}
 
 \item{remove_variants}{A list of variants to remove from the locus subset file.}
+
+\item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
 
 \item{top_SNPs}{Can be a data.frame with the top sumary stats per locus.
 Alternatively, you can provide a path to the stored top summary stats file.

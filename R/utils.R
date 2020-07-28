@@ -410,6 +410,9 @@ hgnc_to_ensembl <- function(gene_symbols){
   return(conversion)
 }
 
+
+
+
 #' Gene symbols -> Ensembl IDs
 #'
 #' Convert Ensembl IDs to HGNC gene symbols.
@@ -846,6 +849,7 @@ get_subset_path <- function(subset_path="auto",
 
 
 #' Extract the locus dir
+#'
 #' @family directory functions
 #' @keywords internal
 get_locus_dir <- function(subset_path){
@@ -853,6 +857,14 @@ get_locus_dir <- function(subset_path){
   return(locus_dir)
 }
 
+
+#' Create multi-finemap path
+#'
+#' @family directory functions
+#' @keywords internal
+get_multifinemap_path <- function(){
+  old_file_path <- file.path(dirname(file_path),"Multi-finemap_results.txt")
+}
 
 
 # -----GenomicRanges ------
