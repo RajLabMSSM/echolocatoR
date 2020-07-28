@@ -49,7 +49,10 @@ import_topSNPs <- function(topSS,
       return(topSS)
     } else{
       if(endsWith(topSS, ".xlsx") | endsWith(topSS, ".xlsm")){
-        topSS <- openxlsx::read.xlsx(topSS, sheet = sheet) %>% data.table::data.table()
+        topSS <- openxlsx::read.xlsx(topSS,
+                                     sheet = sheet,
+                                     # sep.names=" ", # Only in some versions?
+                                     check.names = F)
       } else {
         topSS <- data.table::fread(file=topSS,
                                    header = T,
@@ -61,23 +64,47 @@ import_topSNPs <- function(topSS,
   }
   top_SNPs <- topSNPs_reader(topSS, sheet)
   orig_top_SNPs <- top_SNPs
+  # Reassign colnames bc read.xlsx won't let you prevent this in some versions....
+  if(!is.data.frame(topSS)){
+    if(endsWith(topSS, ".xlsx") | endsWith(topSS, ".xlsm")){
+      locus_col=gsub(" ",".",locus_col)
+      gene_col=gsub(" ",".",gene_col)
+      chrom_col=gsub(" ",".",chrom_col)
+      position_col=gsub(" ",".",position_col)
+      snp_col=gsub(" ",".",snp_col)
+      pval_col=gsub(" ",".",pval_col)
+      effect_col=gsub(" ",".",effect_col)
+      position_col=gsub(" ",".",position_col)
+    }
+  }
+
+
 
   # Add Locus/Gene columns
-  if(is.null(gene_col) & is.null(locus_col)){
+  if((is.null(gene_col) & is.null(locus_col)) |
+     (!any(gene_col %in% colnames(top_SNPs)) & !any(gene_col %in% colnames(top_SNPs)))){
     printer("+ Constructing locus names from CHR and index SNP")
     # locus_chr1_rs10737496
     top_SNPs <- dplyr::mutate(top_SNPs, Locus=paste0("locus_chr",CHR,"_",SNP))
     locus_col <- gene_col <- "Locus";
   }
-  if(gene_col %in% colnames(top_SNPs) & all(!is.na(top_SNPs[[gene_col]])) ){
-    print("+ Assigning gene_col to locus_col",v=verbose)
-    top_SNPs <- cbind(Gene=top_SNPs[[gene_col]], top_SNPs)
-    top_SNPs$Locus <- gsub("/","_",top_SNPs$Gene)
+  if(gene_col %in% colnames(top_SNPs) & locus_col %in% colnames(top_SNPs)){
+    print("+ Assigning gene_col and locus_col independently",v=verbose)
+    top_SNPs$Gene <- gsub("/","_", orig_top_SNPs[[gene_col]])
+    top_SNPs$Locus <- gsub("/","_",orig_top_SNPs[[locus_col]]) # Get rid of problematic characters
+
   } else {
-    print("+ Assigning locus_col to gene_col",v=verbose)
-    top_SNPs <- cbind(Gene=top_SNPs[[locus_col]], top_SNPs)
-    top_SNPs$Gene <- gsub("/","_",top_SNPs$Locus)
+    if(gene_col %in% colnames(top_SNPs) & all(!is.na(top_SNPs[[gene_col]])) ){
+      print("+ Assigning gene_col to locus_col",v=verbose)
+      top_SNPs$Gene <- gsub("/","_", orig_top_SNPs[[gene_col]])
+      top_SNPs$Locus <- gsub("/","_",top_SNPs$Gene) # Get rid of problematic characters
+    } else {
+      print("+ Assigning locus_col to gene_col",v=verbose)
+      top_SNPs$Locus <- gsub("/","_",orig_top_SNPs[[locus_col]])
+      top_SNPs$Gene <- gsub("/","_",top_SNPs$Locus) # Get rid of problematic characters
+    }
   }
+
 
 
 
