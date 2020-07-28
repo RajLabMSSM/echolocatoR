@@ -11,6 +11,8 @@
 #' Creates and saves 1) the summary stats file, and 2) the LD matrix.
 #' @family FINEMAP
 #' @keywords internal
+#' @source
+#' \url{http://www.christianbenner.com}
 #' @examples
 #' data("locus_dir"); data("BST1"); data("BST1_LD_matrix");
 #' finemap_DT <- BST1
@@ -43,7 +45,6 @@ FINEMAP.construct_data <- function(locus_dir,
   cols_to_be_rectified <- names(data.z)[vapply(data.z, is.character, logical(1))]
   data.z <- data.z %>% mutate_at(.vars = vars(cols_to_be_rectified),
                                  .funs = trimws )
-
 
   ####### data.ld #######
   printer("++ Formatting LD Matrix for FINEMAP")
@@ -84,6 +85,8 @@ FINEMAP.construct_data <- function(locus_dir,
 #' which tells \code{FINEMAP} where to find each input file.
 #' @family FINEMAP
 #' @keywords internal
+#' @source
+#' \url{http://www.christianbenner.com}
 #' @examples
 #' data("locus_dir");
 #' master_path <- FINEMAP.construct_master(locus_dir=locus_dir, n_samples=25000)
@@ -118,6 +121,8 @@ FINEMAP.construct_master <- function(locus_dir,
 #'
 #' @family FINEMAP
 #' @keywords internal
+#' @source
+#' \url{http://www.christianbenner.com}
 #' @examples
 #' data("locus_dir"); data("BST1");
 #' finemap_DT <- BST1
@@ -144,33 +149,49 @@ FINEMAP.process_results <- function(locus_dir,
     # }) %>% data.table::rbindlist()
     # subset(CS, !is.na(SNP))
     printer("FINEMAP:: !!UNDER CONSTRUCTION!!")
-    top_config <- data.table::fread(file.path(locus_dir,"FINEMAP/data.config"))
+    top_config <- data.table::fread(file.path(locus_dir,"FINEMAP/data.config"),nThread=nThread)
     top_config <- subset(top_config, pvalue<pvalue_thresh)[1,]
 
   } else {
-     top_config <- data.table::fread(file.path(locus_dir,"FINEMAP/data.config"))
-     top_config <- subset(top_config, prob>=credset_thresh)[1,]
-  }
+    ## Configuration file
+    ### Gives all model results for all the configurations tested
+    ### (regardless of whether they're over the 95% probability threshold)
+    # top_config <- data.table::fread(file.path(locus_dir,"FINEMAP/data.config"), nThread=nThread)
+    # top_config <- subset(top_config, prob>=credset_thresh)[1,]
 
-  CS <- strsplit(top_config$config, ",")[[1]]
+    ## 95% Credible Set file
+    ### Same as "data.snp" file (as far I can tell), just different format,
+    ### and only give the configuration(s) that meet the 95% probability threshold
+    # top_CS <- data.table::fread(file.path(locus_dir,"FINEMAP/data.cred"), nThread=nThread)
+    # top_CS.snps <- as.character(data.frame(top_CS)[1,][,grep("cred_set_*",colnames(top_CS))])
+    # top_CS.probs <- as.numeric(data.frame(top_CS)[1,][,grep("prob_set_*",colnames(top_CS))])
+  }
+  # CS <- strsplit(top_config$config, ",")[[1]]
   # Import snp-level results
-  snp_level <- data.table::fread(file.path(locus_dir,"FINEMAP/data.snp"))
+  snp_level <- data.table::fread(file.path(locus_dir,"FINEMAP/data.snp"), nThread = nThread)
+  snp_level <- subset(snp_level, prob>credset_thresh & prob_group>credset_thresh) %>%
+    dplyr::mutate(CS=1)
+
   # Merge with original data
-  subset_DT$CS <- ifelse(subset_DT$SNP %in% CS, 1, 0)
+  # subset_DT$CS <- ifelse(subset_DT$SNP %in% CS, 1, 0)
+
   subset_DT <- data.table:::merge.data.table(data.table::data.table(subset_DT),
-                                             data.table::data.table(subset(snp_level, select=c("rsid","prob")) ),
+                                             data.table::data.table(subset(snp_level, select=c("rsid","prob","CS")) ),
                                              by.x = "SNP", by.y="rsid")
   subset_DT <- subset_DT %>%
     dplyr::rename(PP=prob) %>%
-    arrange(desc(CS))
+    dplyr::arrange(dplyr::desc(CS))
   return(subset_DT)
 }
+
 
 
 
 #' Retrieve location of \code{FINEMAP} executable
 #' @family FINEMAP
 #' @keywords internal
+#' @source
+#' \url{http://www.christianbenner.com}
 #' @examples
 #' FINEMAP_path <- FINEMAP.find_executable()
 FINEMAP.find_executable <- function(FINEMAP_path=NULL,
