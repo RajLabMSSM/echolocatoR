@@ -131,7 +131,8 @@ FINEMAP.process_results <- function(locus_dir,
                                     subset_DT,
                                     credset_thresh=.95,
                                     pvalue_thresh=.05,
-                                    finemap_version="1.3"){
+                                    finemap_version="1.3",
+                                    nThread=1){
   # Import credible sets
   if(finemap_version=="1.4"){
     # Annoying formatting differences between versions....
