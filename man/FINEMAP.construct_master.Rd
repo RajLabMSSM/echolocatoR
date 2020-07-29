@@ -3,6 +3,9 @@
 \name{FINEMAP.construct_master}
 \alias{FINEMAP.construct_master}
 \title{Construct the \code{FINAMAP} master file}
+\source{
+\url{http://www.christianbenner.com}
+}
 \usage{
 FINEMAP.construct_master(locus_dir, n_samples, dataset_number = 1, file.k = NA)
 }

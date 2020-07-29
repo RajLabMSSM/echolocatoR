@@ -54,7 +54,7 @@ find_consensus_SNPs <- function(finemap_dat,
                                 consensus_thresh=2,
                                 sort_by_support=T,
                                 exclude_methods=NULL,
-                                top_CS_only=T,
+                                top_CS_only=F,
                                 replace_PP_NAs=T,
                                 verbose=F){
   printer("+ Identifying Consensus SNPs...",v=verbose)
@@ -110,6 +110,7 @@ find_consensus_SNPs <- function(finemap_dat,
 # subset_DT <- fread( file.path(locus_dir,"PTK2B_Kunkle_2019_subset.txt"))
 # dataset_type <- "GWAS"
 # load(file.path(locus_dir, "plink/LD_matrix.RData"))
+
 
 
 
@@ -240,7 +241,7 @@ multi_finemap <- function(locus_dir,
 
 #' @family finemapping functions
 #' @keywords internal
-create_method_dir <- function(locus_dir,
+create_method_path <- function(locus_dir,
                               finemap_method,
                               LD_reference=NULL,
                               compress=T){
@@ -251,8 +252,8 @@ create_method_dir <- function(locus_dir,
   dataset <- basename(dirname(locus_dir))
   locus <- basename(locus_dir)
   file_path <- file.path(method_dir,
-                        paste(locus,dataset,paste0(LD_reference,"_LD"),finemap_method,"tsv",
-                               if(compress) "gz" else "", sep=".")
+                        paste0(paste(locus,dataset,paste0(LD_reference,"_LD"),finemap_method,"tsv", sep="."),
+                               if(compress) ".gz" else NULL)
                         )
   return(file_path)
 }
@@ -393,6 +394,7 @@ finemap_handler <- function(locus_dir,
                             subset_DT,
                             dataset_type="GWAS",
                             force_new_finemap=T,
+                            LD_reference=NULL,
                             LD_matrix=NULL,
                             n_causal=5,
                             sample_size=NULL,
@@ -419,7 +421,8 @@ finemap_handler <- function(locus_dir,
   # First, check if there's more than one fin-mapping method given. If so, switch to multi-finemap function
   # if(length(finemap_methods)>1){
     ## Next, see if fine-mapping has previously been done (with multi-finemap)
-    file_path <- create_method_dir(locus_dir = locus_dir,
+    file_path <- create_method_path(locus_dir = locus_dir,
+                                   LD_reference = LD_reference,
                                    finemap_method = "Multi-finemap",
                                    compress = T)
     old_file_path <- file.path(dirname(file_path),"Multi-finemap_results.txt")

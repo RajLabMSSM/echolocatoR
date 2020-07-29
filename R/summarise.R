@@ -101,7 +101,7 @@ lead.SNP.coords <- function(consensus_thresh=2){
 
 compare_finemapping_methods <- function(dataset="./Data/GWAS/Nalls23andMe_2019"){
   FM_orig <- merge_finemapping_results(minimum_support = 0,
-                                       top_CS_only=T,
+                                       top_CS_only=F,
                                        dataset = dataset,
                                        exclude_methods = NULL)
   # counts <- (FM_orig %>% group_by(Gene) %>% count())
@@ -405,7 +405,7 @@ leadSNP_comparison <- function(top_SNPs, merged_results){
 #' data("merged_DT");
 #' locus_order <- SUMMARISE.get_CS_counts(merged_DT=merged_DT)
 SUMMARISE.get_CS_counts <- function(merged_DT,
-                                    top_CS_only=T){
+                                    top_CS_only=F){
   UCS_count <- suppressMessages(merged_DT %>%
     dplyr::group_by(Locus, .drop=F)  %>%
     dplyr::summarise(UCS.CS_size=dplyr::n_distinct(SNP[Support>0])))
@@ -544,7 +544,7 @@ SUMMARISE.CS_counts_plot <- function(merged_DT,
                                      ylabel="Locus",
                                      legend_nrow=3,
                                      label_yaxis=T,
-                                     top_CS_only=T,
+                                     top_CS_only=F,
                                      show_plot=T){
   locus_order <- SUMMARISE.get_CS_counts(merged_DT,
                                          top_CS_only = top_CS_only)

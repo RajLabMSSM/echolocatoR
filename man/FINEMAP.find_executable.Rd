@@ -3,6 +3,9 @@
 \name{FINEMAP.find_executable}
 \alias{FINEMAP.find_executable}
 \title{Retrieve location of \code{FINEMAP} executable}
+\source{
+\url{http://www.christianbenner.com}
+}
 \usage{
 FINEMAP.find_executable(FINEMAP_path = NULL, OS = NULL)
 }

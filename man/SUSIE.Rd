@@ -21,6 +21,7 @@ SUSIE(
   estimate_prior_variance = T,
   residual_variance = NULL,
   max_iter = 100,
+  estimate_prior_method = "optim",
   manual_var_y = F,
   rescale_priors = T,
   plot_track_fit = F,
@@ -54,6 +55,8 @@ For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95
 
 \item{max_iter}{maximum number of iterations to perform}
 
+\item{estimate_prior_method}{The method used for estimating prior variance.}
+
 \item{rescale_priors}{If prior probabiltities are supplied,
 rescale them from 0-1 (i.e. \code{rescaled_priors = priors / sum(priors)}).}
 
@@ -77,6 +80,7 @@ There's several things you can try to avoid this:
 \item{Increase \code{max_iter} (e.g. 100 => 1000), though this will take longer.}
 \item{Decrease the locus window size, which will also speed up the algorithm but potentially miss causal variants far from the lead SNP.}
 }
+Changing \code{estimate_prior_method} does not seem to affect covergence warnings.
 
 \strong{Notes on variance:}
 \href{https://github.com/stephenslab/susieR/issues/90}{GitHub Issue}

@@ -3,6 +3,9 @@
 \name{FINEMAP.construct_data}
 \alias{FINEMAP.construct_data}
 \title{Prepare input files for \code{FINEMAP}}
+\source{
+\url{http://www.christianbenner.com}
+}
 \usage{
 FINEMAP.construct_data(locus_dir, subset_DT, LD_matrix, nThread = 4)
 }

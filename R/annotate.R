@@ -40,7 +40,9 @@
 merge_finemapping_results <- function(dataset="./Data/GWAS",
                                       minimum_support=1,
                                       include_leadSNPs=T,
-                                      xlsx_path=F,#="./Data/annotated_finemapping_results.xlsx",
+                                      LD_reference=NULL,
+                                      #="./Data/annotated_finemapping_results.xlsx",
+                                      xlsx_path=F,
                                       from_storage=T,
                                       haploreg_annotation=F,
                                       regulomeDB_annotation=F,
@@ -48,14 +50,25 @@ merge_finemapping_results <- function(dataset="./Data/GWAS",
                                       PP_threshold=.95,
                                       consensus_threshold=2,
                                       exclude_methods=NULL,
-                                      top_CS_only=T,
+                                      top_CS_only=F,
                                       verbose=T,
                                       nThread=4){
   if(from_storage){
     printer("+ Gathering all fine-mapping results from storage...", v=verbose)
     # Find all multi-finemap_results files
-    multi_dirs <- list.files(dataset, pattern = "Multi-finemap_results.txt|*_Multi-finemap.tsv.gz",
-                             recursive = T, full.names = T)
+    multifinemap_pattern <- create_method_path(locus_dir = file.path(dataset,"*"),
+                                               finemap_method = "Multi-finemap",
+                                               LD_reference = LD_reference,
+                                               compress = F)
+    multifinemap_pattern_gz <- create_method_path(locus_dir = file.path(dataset,"*"),
+                                                  finemap_method = "Multi-finemap",
+                                                  LD_reference = LD_reference,
+                                                  compress = T)
+    multi_dirs <- list.files(path = dataset,
+                             pattern = paste0( c(basename(multifinemap_pattern),
+                                                 basename(multifinemap_pattern_gz)), collapse="|"),
+                             recursive = T,
+                             full.names = T)
     loci <- basename(dirname(dirname(multi_dirs)))
     if(length(loci)>length(unique(loci))){
       printer("+ Removing duplicate Multi-finemap files per locus.",v=verbose)

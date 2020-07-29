@@ -3,6 +3,9 @@
 \name{FINEMAP.process_results}
 \alias{FINEMAP.process_results}
 \title{Post-processing of \code{FINEMAP} results}
+\source{
+\url{http://www.christianbenner.com}
+}
 \usage{
 FINEMAP.process_results(
   locus_dir,
