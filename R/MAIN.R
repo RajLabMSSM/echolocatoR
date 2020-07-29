@@ -701,7 +701,7 @@ finemap_loci <- function(loci,
     try({
       locus <- loci[i]
       message("\n","🦇 🦇 🦇 ",locus," (",i,"/",length(loci),")"," 🦇 🦇 🦇 ")
-      lead_SNPt_handler(conditioned_snps, i)
+      # lead_SNP <- .arg_list_handler(conditioned_snps, i)
       gene_limits <- .arg_list_handler(trim_gene_limits, i)
       conditioned_snp <- .arg_list_handler(conditioned_snps, i)
       min_pos <- .arg_list_handler(min_POS, i)
