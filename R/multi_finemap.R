@@ -48,7 +48,7 @@ check_necessary_cols <- function(subset_DT,
 #' @keywords internal
 #' @examples
 #' data("merged_DT")
-#' merged_DT <- find_consensus_SNPs(finemap_dat=merged_DT, top_CS_only=T)
+#' merged_DT <- find_consensus_SNPs(finemap_dat=merged_DT, top_CS_only=F)
 find_consensus_SNPs <- function(finemap_dat,
                                 credset_thresh=.95,
                                 consensus_thresh=2,
