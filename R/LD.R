@@ -978,26 +978,17 @@ LD.fill_NA <- function(LD_matrix,
   LD_matrix <- data.frame(LD_matrix)
   LD_matrix <- LD_matrix[rownames(LD_matrix)!=".", colnames(LD_matrix)!="."]
   LD_matrix_orig <- LD_matrix
-  LD_matrix <- data.table::data.table(LD_matrix)
 
   if(!is.null(fillNA)){
-    # Replace NAs
     printer("LD:: Replacing NAs with",fillNA, v=verbose)
-    replace_NAs = function(DT) {
-      # Does inplace
-      for (i in names(DT))
-        DT[is.na(get(i)), (i):=0]
+    if(sum(is.na(LD_matrix))>0){
+      LD_matrix[is.na(LD_matrix)] <- 0
     }
-    replace_NAs(LD_matrix)
   }
   # Check for duplicate SNPs
-  LD_fill <- data.frame(LD_matrix,
-                        row.names = rownames(LD_matrix_orig))
-  if(dplyr::n_distinct(rownames(LD_fill))!=nrow(LD_fill) |
-     dplyr::n_distinct(colnames(LD_fill))!=ncol(LD_fill)){
-    stop("There's more rows/cols than unique SNPs.")
-  }
-  return(LD_fill)
+  LD_matrix <- LD_matrix[row.names(LD_matrix)[!duplicated(row.names(LD_matrix))],
+                         colnames(LD_matrix)[!duplicated(colnames(LD_matrix))]]
+  return(LD_matrix)
 }
 
 

@@ -587,6 +587,7 @@ fillNA_CS_PP <- function(finemap_dat,
 #' @examples
 #' data("BST1"); data('LD_matrix');
 #' finemap_dat=BST1
+#' out <- subset_common_snps(LD_matrix=LD_matrix, finemap_dat=BST1)
 subset_common_snps <- function(LD_matrix,
                                finemap_dat,
                                fillNA=0,
@@ -596,13 +597,10 @@ subset_common_snps <- function(LD_matrix,
   LD_matrix <- LD.fill_NA(LD_matrix = LD_matrix,
                           fillNA = fillNA,
                           verbose = verbose)
-  nondup_rows <- which(!base::duplicated(rownames(LD_matrix)))
-  nondup_cols <- which(!base::duplicated(colnames(LD_matrix)))
-  LD_matrix <- LD_matrix[nondup_rows,nondup_cols]
-  ld.snps <- row.names(LD_matrix)
+  ld.snps <- unique(c(row.names(LD_matrix), colnames(LD_matrix)))
 
   # Remove duplicate SNPs
-  finemap_dat <- finemap_dat[which(!base::duplicated(finemap_dat$SNP)),]
+  finemap_dat <- finemap_dat[!base::duplicated(finemap_dat$SNP),]
   fm.snps <- finemap_dat$SNP
   common.snps <- base::intersect(ld.snps, fm.snps)
   printer("+ LD_matrix =",length(ld.snps),"SNPs.", v=verbose)
@@ -614,8 +612,7 @@ subset_common_snps <- function(LD_matrix,
   # Subset/order finemap_dat
   finemap_dat <- data.frame(finemap_dat)
   row.names(finemap_dat) <- finemap_dat$SNP
-  new_DT <- data.table::as.data.table(finemap_dat[common.snps, ])
-  new_DT <- unique(new_DT)
+  new_DT <- unique(data.table::as.data.table(finemap_dat[common.snps, ]))
   # Reassign the lead SNP if it's missing
   new_DT <- assign_lead_SNP(new_DT, verbose = verbose)
   # Check dimensions are correct
