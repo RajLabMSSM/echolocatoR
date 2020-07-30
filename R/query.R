@@ -483,23 +483,27 @@ query_handler <- function(locus,
                           position_col="POS",
                           file_sep="\t",
                           query_by="coordinates",
-                          probe_path = "./Data/eQTL/gene.ILMN.map"){
-  printer("++ Query Method: '",query_by, sep="")
+                          probe_path = "./Data/eQTL/gene.ILMN.map",
+                          conda_env="echoR",
+                          verbose=T){
+  printer("+ Query Method:",query_by,v=verbose)
 
   if(query_by=="tabix"){
     topSNP_sub <- top_SNPs[top_SNPs$Gene==locus & !is.na(top_SNPs$Gene),]
     if(is.na(min_POS)){min_POS <- topSNP_sub$POS - bp_distance}
     if(is.na(max_POS)){max_POS <- topSNP_sub$POS + bp_distance}
-    printer("---Min snp position:",min_POS, "---")
-    printer("---Max snp position:",max_POS, "---")
+    printer("---Min snp position:",min_POS, "---",v=verbose)
+    printer("---Max snp position:",max_POS, "---",v=verbose)
     query <- TABIX(fullSS_path=fullSS_path,
-                    subset_path=subset_path,
-                    # is_tabix=F,
-                    chrom_col=chrom_col,
-                    position_col=position_col,
-                    min_POS=min_POS,
-                    max_POS=max_POS,
-                    chrom= gsub("chr","",topSNP_sub$CHR[1])
+                   subset_path=subset_path,
+                   # is_tabix=F,
+                   chrom_col=chrom_col,
+                   position_col=position_col,
+                   min_POS=min_POS,
+                   max_POS=max_POS,
+                   chrom= gsub("chr","",topSNP_sub$CHR[1]),
+                   conda_env=conda_env,
+                   verbose=verbose
           )
   }
   if(query_by=="coordinates"){
@@ -528,7 +532,6 @@ query_handler <- function(locus,
     query_fullSS(fullSS_path=fullSS_path,
                  subset_path = subset_path)
   }
-
 }
 
 

@@ -5,7 +5,7 @@
 \title{Subset a vcf by superpopulation}
 \usage{
 LD.filter_vcf_gaston(
-  subset_vcf,
+  vcf_subset,
   subset_DT,
   locus_dir,
   superpopulation,
@@ -14,7 +14,7 @@ LD.filter_vcf_gaston(
 )
 }
 \arguments{
-\item{subset_vcf}{Path to the locus subset vcf.}
+\item{vcf_subset}{Path to the locus subset vcf.}
 
 \item{superpopulation}{Subset your LD reference panel by superopulation.
 Setting the superpopulation is not currently possible when \code{LD_reference="UKB"}.
@@ -41,14 +41,18 @@ Other LD:
 \code{\link{LD.LD_blocks}()},
 \code{\link{LD.UKBiobank}()},
 \code{\link{LD.calculate_LD}()},
+\code{\link{LD.construct_subset_vcf_name}()},
+\code{\link{LD.custom_panel}()},
 \code{\link{LD.dprime_table}()},
 \code{\link{LD.filter_vcf}()},
-\code{\link{LD.get_vcf_folder}()},
+\code{\link{LD.get_locus_vcf_folder}()},
+\code{\link{LD.index_vcf}()},
 \code{\link{LD.leadSNP_block}()},
 \code{\link{LD.load_or_create}()},
 \code{\link{LD.plink_LD}()},
 \code{\link{LD.plink_file}()},
 \code{\link{LD.plot}()},
+\code{\link{LD.query_vcf}()},
 \code{\link{LD.rds_to_npz}()},
 \code{\link{LD.read_bin}()},
 \code{\link{LD.read_ld_table}()},

@@ -10,7 +10,7 @@ SUMMARISE.CS_counts_plot(
   ylabel = "Locus",
   legend_nrow = 3,
   label_yaxis = T,
-  top_CS_only = T,
+  top_CS_only = F,
   show_plot = T
 )
 }

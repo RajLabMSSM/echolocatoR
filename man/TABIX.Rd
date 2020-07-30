@@ -15,6 +15,7 @@ TABIX(
   chrom = NULL,
   save_subset = T,
   nThread = 1,
+  conda_env = "echoR",
   verbose = T
 )
 }
@@ -37,6 +38,8 @@ Can also be a list of positions (one for each locus) (e.g. \code{min_POS=top_SNP
 \item{max_POS}{Manually set the maximum genomic position for your locus subset.
 \code{max_POS} can clip the window size set by \code{bp_distance}.
 Can also be a list of positions (one for each locus) (e.g. \code{max_POS=top_SNPs$max_POS}).}
+
+\item{conda_env}{The name of a conda environment to use.}
 
 \item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
 }

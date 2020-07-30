@@ -4,7 +4,7 @@
 \alias{CONDA.install}
 \title{Install conda if it's missing}
 \usage{
-CONDA.install(conda_path = "auto")
+CONDA.install(conda_path = "auto", verbose = F)
 }
 \description{
 Install conda if it's missing

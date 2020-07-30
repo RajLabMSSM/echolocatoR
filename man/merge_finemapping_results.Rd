@@ -8,6 +8,7 @@ merge_finemapping_results(
   dataset = "./Data/GWAS",
   minimum_support = 1,
   include_leadSNPs = T,
+  LD_reference = NULL,
   xlsx_path = F,
   from_storage = T,
   haploreg_annotation = F,
@@ -16,7 +17,7 @@ merge_finemapping_results(
   PP_threshold = 0.95,
   consensus_threshold = 2,
   exclude_methods = NULL,
-  top_CS_only = T,
+  top_CS_only = F,
   verbose = T,
   nThread = 4
 )

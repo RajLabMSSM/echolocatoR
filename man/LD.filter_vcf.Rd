@@ -4,10 +4,10 @@
 \alias{LD.filter_vcf}
 \title{Filter a vcf by min/max coordinates}
 \usage{
-LD.filter_vcf(subset_vcf, popDat, superpopulation, remove_tmp = T, verbose = T)
+LD.filter_vcf(vcf_subset, popDat, superpopulation, remove_tmp = T, verbose = T)
 }
 \arguments{
-\item{subset_vcf}{Path to the locus subset vcf.}
+\item{vcf_subset}{Path to the locus subset vcf.}
 
 \item{popDat}{The metadata file listing the superpopulation to which each sample belongs.}
 
@@ -34,14 +34,18 @@ Other LD:
 \code{\link{LD.LD_blocks}()},
 \code{\link{LD.UKBiobank}()},
 \code{\link{LD.calculate_LD}()},
+\code{\link{LD.construct_subset_vcf_name}()},
+\code{\link{LD.custom_panel}()},
 \code{\link{LD.dprime_table}()},
 \code{\link{LD.filter_vcf_gaston}()},
-\code{\link{LD.get_vcf_folder}()},
+\code{\link{LD.get_locus_vcf_folder}()},
+\code{\link{LD.index_vcf}()},
 \code{\link{LD.leadSNP_block}()},
 \code{\link{LD.load_or_create}()},
 \code{\link{LD.plink_LD}()},
 \code{\link{LD.plink_file}()},
 \code{\link{LD.plot}()},
+\code{\link{LD.query_vcf}()},
 \code{\link{LD.rds_to_npz}()},
 \code{\link{LD.read_bin}()},
 \code{\link{LD.read_ld_table}()},

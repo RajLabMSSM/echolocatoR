@@ -14,6 +14,13 @@ If \code{span=10}, only 10 SNPs upstream and 10 SNPs downstream of the lead SNP 
 \description{
 Uses \code{gaston} to plot a SNP-annotated LD matrix.
 }
+\examples{
+\dontrun{
+data("BST1");
+LD_matrix <- readRDS("/Volumes/Steelix/fine_mapping_files/GWAS/Nalls23andMe_2019/BST1/plink/UKB_LD.RDS")
+LD.plot(LD_matrix=LD_matrix, subset_DT=BST1)
+}
+}
 \seealso{
 Other LD: 
 \code{\link{LD.1KG_download_vcf}()},
@@ -21,14 +28,18 @@ Other LD:
 \code{\link{LD.LD_blocks}()},
 \code{\link{LD.UKBiobank}()},
 \code{\link{LD.calculate_LD}()},
+\code{\link{LD.construct_subset_vcf_name}()},
+\code{\link{LD.custom_panel}()},
 \code{\link{LD.dprime_table}()},
 \code{\link{LD.filter_vcf_gaston}()},
 \code{\link{LD.filter_vcf}()},
-\code{\link{LD.get_vcf_folder}()},
+\code{\link{LD.get_locus_vcf_folder}()},
+\code{\link{LD.index_vcf}()},
 \code{\link{LD.leadSNP_block}()},
 \code{\link{LD.load_or_create}()},
 \code{\link{LD.plink_LD}()},
 \code{\link{LD.plink_file}()},
+\code{\link{LD.query_vcf}()},
 \code{\link{LD.rds_to_npz}()},
 \code{\link{LD.read_bin}()},
 \code{\link{LD.read_ld_table}()},

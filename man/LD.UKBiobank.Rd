@@ -18,7 +18,8 @@ LD.UKBiobank(
   nThread = 4,
   return_matrix = F,
   conda_env = "echoR",
-  remove_tmps = T
+  remove_tmps = T,
+  verbose = T
 )
 }
 \description{
@@ -31,15 +32,19 @@ Other LD:
 \code{\link{LD.1KG}()},
 \code{\link{LD.LD_blocks}()},
 \code{\link{LD.calculate_LD}()},
+\code{\link{LD.construct_subset_vcf_name}()},
+\code{\link{LD.custom_panel}()},
 \code{\link{LD.dprime_table}()},
 \code{\link{LD.filter_vcf_gaston}()},
 \code{\link{LD.filter_vcf}()},
-\code{\link{LD.get_vcf_folder}()},
+\code{\link{LD.get_locus_vcf_folder}()},
+\code{\link{LD.index_vcf}()},
 \code{\link{LD.leadSNP_block}()},
 \code{\link{LD.load_or_create}()},
 \code{\link{LD.plink_LD}()},
 \code{\link{LD.plink_file}()},
 \code{\link{LD.plot}()},
+\code{\link{LD.query_vcf}()},
 \code{\link{LD.rds_to_npz}()},
 \code{\link{LD.read_bin}()},
 \code{\link{LD.read_ld_table}()},

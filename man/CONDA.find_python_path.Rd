@@ -4,7 +4,7 @@
 \alias{CONDA.find_python_path}
 \title{Find the python file for a specific env}
 \usage{
-CONDA.find_python_path(conda_env = "echoR")
+CONDA.find_python_path(conda_env = "echoR", verbose = T)
 }
 \description{
 Find the python file for a specific env

@@ -286,6 +286,7 @@
 #'  \item{"UKB"}{A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See \href{https://www.biorxiv.org/content/10.1101/807792v2}{Wiessbrod et al. (2019)} for more details.}
 #'  \item{"1KGphase1"}{Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.}
 #'  \item{"1KGphase3"}{Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.}
+#'  \item{"<path>/*.vcf" or "<path>/*.vcf.gz"}{Alternatively, users can provide their own custom panel by supplying a list of \emph{.vcf} file path (one per locus) which \pkg{echolocatoR} will use to compute LD (using \emph{plink}).}
 #'  }
 #' @param superpopulation Subset your LD reference panel by superopulation.
 #'  Setting the superpopulation is not currently possible when \code{LD_reference="UKB"}.
@@ -457,7 +458,6 @@ finemap_pipeline <- function(locus,
   message("--- Step 2: Calculate Linkage Disequilibrium ---")
   LD_matrix <- LD.load_or_create(locus_dir=locus_dir,
                                  subset_DT=subset_DT,
-                                 locus=locus,
                                  force_new_LD=force_new_LD,
                                  LD_reference=LD_reference,
                                  superpopulation=superpopulation,
@@ -700,12 +700,13 @@ finemap_loci <- function(loci,
     finemap_dat <- NULL
     try({
       locus <- loci[i]
-      message("\n","🦇 🦇 🦇 ",locus," (",i,"/",length(loci),")"," 🦇 🦇 🦇 ")
+      message("\n","🦇 🦇 🦇 ",locus," (",i ," / ",length(loci),")"," 🦇 🦇 🦇 ")
       # lead_SNP <- .arg_list_handler(conditioned_snps, i)
       gene_limits <- .arg_list_handler(trim_gene_limits, i)
       conditioned_snp <- .arg_list_handler(conditioned_snps, i)
       min_pos <- .arg_list_handler(min_POS, i)
       max_pos <- .arg_list_handler(max_POS, i)
+      LD_ref <- .arg_list_handler(LD_reference, i)
       # message("^^^^^^^^^ Running echolocatoR on: ",locus," ^^^^^^^^^")
       # cat('  \n###', locus, '  \n')
       # Delete the old subset if force_new_subset == T
@@ -742,7 +743,7 @@ finemap_loci <- function(loci,
                                      proportion_cases=proportion_cases,
                                      sample_size=sample_size,
 
-                                     LD_reference=LD_reference,
+                                     LD_reference=LD_ref,
                                      superpopulation=superpopulation,
                                      download_method=download_method,
                                      min_POS=min_pos,

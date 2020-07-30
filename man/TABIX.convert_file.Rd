@@ -9,6 +9,7 @@ TABIX.convert_file(
   results_path = NULL,
   chrom_col = "CHR",
   position_col = "POS",
+  conda_env = "echoR",
   verbose = T
 )
 }
@@ -23,6 +24,8 @@ Can be "chr1" or "1" format.
 \item{position_col}{Name of the genomic position column in the full summary stats file.
 Must be in units of basepairs.
 (\emph{default: ="POS"})}
+
+\item{conda_env}{The name of a conda environment to use.}
 
 \item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
 }

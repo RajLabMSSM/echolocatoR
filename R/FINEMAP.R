@@ -24,9 +24,10 @@
 FINEMAP.construct_data <- function(locus_dir,
                                    subset_DT,
                                    LD_matrix,
-                                   nThread=4){
+                                   nThread=4,
+                                   verbose=T){
   ####### data.z #######
-  printer("++ Formatting data.z file for FINEMAP")
+  printer("++ Formatting data.z file for FINEMAP",v=verbose)
   data.z <- subset_DT %>% dplyr::select(rsid=SNP,
                                         chromosome=CHR,
                                         position=POS,
@@ -47,7 +48,7 @@ FINEMAP.construct_data <- function(locus_dir,
                                  .funs = trimws )
 
   ####### data.ld #######
-  printer("++ Formatting LD Matrix for FINEMAP")
+  printer("++ FINEMAP:: Formatting LD Matrix",v=verbose)
   ## The order of the SNPs in the dataset.ld must correspond to the order of variants in dataset.z.
   # load(file.path(locus_dir,"plink","LD_matrix.RData"))
 
@@ -58,7 +59,7 @@ FINEMAP.construct_data <- function(locus_dir,
 
   # Write files
   ## MUST be space-delimited
-  printer("+++ Writing FINEMAP z and ld files...")
+  printer("++ FINEMAP:: Writing z and ld files...",v=verbose)
   if( dim(data.z)[1]==dim(LD_filt)[1] ){
     # data.z
     data.z_path <- file.path(locus_dir,"FINEMAP","data.z")
@@ -134,26 +135,26 @@ FINEMAP.process_results <- function(locus_dir,
                                     finemap_version="1.3",
                                     nThread=1){
   # Import credible sets
-  if(finemap_version=="1.4"){
-    # Annoying formatting differences between versions....
-    # data.cred <- data.table::fread(file.path(locus_dir,"FINEMAP/data.cred"),
-    #                                 skip=4, na.strings = c("<NA>","NA"))
-    # cred.cols <- grep("cred*", colnames(data.cred), value = T)
-    # prob.cols <- grep("prob*", colnames(data.cred), value = T)
-    # CS <- lapply(i:nrow(data.cred), function(i){
-    #     rsids <- subset(data.cred, select=cred.cols)[i,]
-    #   PP_vals <- subset(data.cred, select=prob.cols)[i,]
-    #   cred_sets <- data.table::data.table(SNP=unname( t(rsids)[,1] ),
-    #              PP=unname(t(PP_vals)[,1]),
-    #              CS=i)
-    #   return(cred_sets)
-    # }) %>% data.table::rbindlist()
-    # subset(CS, !is.na(SNP))
-    printer("FINEMAP:: !!UNDER CONSTRUCTION!!")
-    top_config <- data.table::fread(file.path(locus_dir,"FINEMAP/data.config"),nThread=nThread)
-    top_config <- subset(top_config, pvalue<pvalue_thresh)[1,]
-
-  } else {
+  # if(finemap_version=="1.4"){
+  #   # Annoying formatting differences between versions....
+  #   # data.cred <- data.table::fread(file.path(locus_dir,"FINEMAP/data.cred"),
+  #   #                                 skip=4, na.strings = c("<NA>","NA"))
+  #   # cred.cols <- grep("cred*", colnames(data.cred), value = T)
+  #   # prob.cols <- grep("prob*", colnames(data.cred), value = T)
+  #   # CS <- lapply(i:nrow(data.cred), function(i){
+  #   #     rsids <- subset(data.cred, select=cred.cols)[i,]
+  #   #   PP_vals <- subset(data.cred, select=prob.cols)[i,]
+  #   #   cred_sets <- data.table::data.table(SNP=unname( t(rsids)[,1] ),
+  #   #              PP=unname(t(PP_vals)[,1]),
+  #   #              CS=i)
+  #   #   return(cred_sets)
+  #   # }) %>% data.table::rbindlist()
+  #   # subset(CS, !is.na(SNP))
+  #   printer("FINEMAP:: !!UNDER CONSTRUCTION!!")
+  #   top_config <- data.table::fread(file.path(locus_dir,"FINEMAP/data.config"),nThread=nThread)
+  #   top_config <- subset(top_config, pvalue<pvalue_thresh)[1,]
+  #
+  # } else {
     ## Configuration file
     ### Gives all model results for all the configurations tested
     ### (regardless of whether they're over the 95% probability threshold)
@@ -166,10 +167,10 @@ FINEMAP.process_results <- function(locus_dir,
     # top_CS <- data.table::fread(file.path(locus_dir,"FINEMAP/data.cred"), nThread=nThread)
     # top_CS.snps <- as.character(data.frame(top_CS)[1,][,grep("cred_set_*",colnames(top_CS))])
     # top_CS.probs <- as.numeric(data.frame(top_CS)[1,][,grep("prob_set_*",colnames(top_CS))])
-  }
+  # }
   # CS <- strsplit(top_config$config, ",")[[1]]
   # Import snp-level results
-  snp_level <- data.table::fread(file.path(locus_dir,"FINEMAP/data.snp"), nThread = nThread)
+  snp_level <- data.table::fread(file.path(locus_dir,"FINEMAP/data.snp"))
   snp_level <- subset(snp_level, prob>credset_thresh & prob_group>credset_thresh) %>%
     dplyr::mutate(CS=1)
 
@@ -274,7 +275,7 @@ FINEMAP <- function(subset_DT,
                                         finemap_version = finemap_version)
   # Remove tmp files
   if(remove_tmps){
-    printer("+FINEMAP: Removing tmp files...")
+    printer("+ FINEMAP:: Removing tmp files...")
     tmp_files <- file.path(locus_dir,"FINEMAP",
                            c("data.snp",
                              "data.config",

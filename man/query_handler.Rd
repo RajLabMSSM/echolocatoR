@@ -17,7 +17,9 @@ query_handler(
   position_col = "POS",
   file_sep = "\\t",
   query_by = "coordinates",
-  probe_path = "./Data/eQTL/gene.ILMN.map"
+  probe_path = "./Data/eQTL/gene.ILMN.map",
+  conda_env = "echoR",
+  verbose = T
 )
 }
 \arguments{
@@ -71,6 +73,10 @@ Methods include:
 
 \item{probe_path}{The location of the file containing translations between probe IDs and gene symbols.
 Only used for certain eQTL datasets.}
+
+\item{conda_env}{The name of a conda environment to use.}
+
+\item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
 }
 \description{
 Handles which query method to use

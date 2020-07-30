@@ -12,7 +12,8 @@ FINEMAP.process_results(
   subset_DT,
   credset_thresh = 0.95,
   pvalue_thresh = 0.05,
-  finemap_version = "1.3"
+  finemap_version = "1.3",
+  nThread = 1
 )
 }
 \description{

@@ -7,7 +7,6 @@
 LD.load_or_create(
   locus_dir,
   subset_DT,
-  locus = NULL,
   force_new_LD = F,
   LD_reference = "1KGphase1",
   superpopulation = "EUR",
@@ -40,6 +39,7 @@ Options include:
 \item{"UKB"}{A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See \href{https://www.biorxiv.org/content/10.1101/807792v2}{Wiessbrod et al. (2019)} for more details.}
 \item{"1KGphase1"}{Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.}
 \item{"1KGphase3"}{Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.}
+\item{"<path>/*.vcf" or "<path>/*.vcf.gz"}{Alternatively, users can provide their own custom panel by supplying a \emph{.vcf} file which \pkg{echolocatoR} will use to compute LD (using \emph{plink}).}
 }}
 
 \item{superpopulation}{Subset your LD reference panel by superopulation.
@@ -99,11 +99,15 @@ data("BST1"); data("locus_dir");
 locus_dir <- file.path("~/Desktop",locus_dir)
  # BST1 <- limit_SNPs(500, BST1)
 
-... UK Biobank LD ...
-LD_matrix <- LD.load_or_create(locus_dir=locus_dir, subset_DT=BST1, locus="BST1", LD_reference="UKB")
+# UK Biobank LD
+LD_matrix <- LD.load_or_create(locus_dir=locus_dir, subset_DT=BST1, LD_reference="UKB")
 
-... 1000 Genomes ...
-LD_matrix <- LD.load_or_create(locus_dir=locus_dir, subset_DT=BST1, locus="BST1", LD_reference="1KGphase1")
+# 1000 Genomes
+LD_matrix <- LD.load_or_create(locus_dir=locus_dir, subset_DT=BST1, LD_reference="1KGphase1", force_new_LD=T)
+
+# Local vcf file
+LD_reference="~/Desktop/results/GWAS/Nalls23andMe_2019/BST1/LD/BST1.1KGphase1.vcf"
+LD_matrix <- LD.load_or_create(locus_dir=locus_dir, subset_DT=BST1, LD_reference=LD_reference, force_new_LD=T)
 }
 }
 \seealso{
@@ -113,14 +117,18 @@ Other LD:
 \code{\link{LD.LD_blocks}()},
 \code{\link{LD.UKBiobank}()},
 \code{\link{LD.calculate_LD}()},
+\code{\link{LD.construct_subset_vcf_name}()},
+\code{\link{LD.custom_panel}()},
 \code{\link{LD.dprime_table}()},
 \code{\link{LD.filter_vcf_gaston}()},
 \code{\link{LD.filter_vcf}()},
-\code{\link{LD.get_vcf_folder}()},
+\code{\link{LD.get_locus_vcf_folder}()},
+\code{\link{LD.index_vcf}()},
 \code{\link{LD.leadSNP_block}()},
 \code{\link{LD.plink_LD}()},
 \code{\link{LD.plink_file}()},
 \code{\link{LD.plot}()},
+\code{\link{LD.query_vcf}()},
 \code{\link{LD.rds_to_npz}()},
 \code{\link{LD.read_bin}()},
 \code{\link{LD.read_ld_table}()},

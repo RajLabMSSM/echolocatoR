@@ -4,7 +4,14 @@
 \alias{TABIX.query}
 \title{Query a tabix file}
 \usage{
-TABIX.query(fullSS.gz, chrom, start_pos, end_pos, verbose = T)
+TABIX.query(
+  fullSS.gz,
+  chrom,
+  start_pos,
+  end_pos,
+  conda_env = "echoR",
+  verbose = T
+)
 }
 \description{
 Query by genomic coordinates.

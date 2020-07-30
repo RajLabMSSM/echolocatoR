@@ -1,6 +1,9 @@
 
 
 
+
+
+
 #' Convert summary stats file to tabix format
 #'
 #' @family query functions
@@ -15,12 +18,13 @@ TABIX.convert_file <- function(fullSS_path,
                                results_path=NULL,
                                chrom_col="CHR",
                                position_col="POS",
+                               conda_env="echoR",
                                verbose=T){
   results_path <- ifelse(is.null(results_path),dirname(fullSS_path),results_path)
   fullSS.gz <- ifelse(endsWith(fullSS_path,".gz"), file.path(results_path, basename(fullSS_path)), paste0(file.path(results_path, basename(fullSS_path)),".gz"))
   z_grep <- ifelse(endsWith(fullSS_path,".gz"),"zgrep","grep")
   cDict <-  column_dictionary(file_path = fullSS_path) # header.path
-  print("TABIX:: Converting full summary stats file to tabix format for fast querying...")
+  printer("TABIX:: Converting full summary stats file to tabix format for fast querying...",v=verbose)
   cmd <- paste("(",
                # Extract the header col and sort everything else
                paste0(z_grep," '",chrom_col,"' ",fullSS_path,"; ",z_grep," -v ^'",chrom_col,"' ",fullSS_path),
@@ -38,9 +42,13 @@ TABIX.convert_file <- function(fullSS_path,
                           chrom_i=1,
                           pos_i=2,
                           skip_lines=1,
+                          conda_env="echoR",
                           verbose=T){
-    printer("TABIX:: Indexing ")
-    cmd2 <- paste("tabix",
+    tabix <- CONDA.find_package(package="tabix",
+                                conda_env=conda_env,
+                                verbose = verbose)
+    printer("TABIX:: Indexing",v=verbose)
+    cmd2 <- paste(tabix,
                   "-f", # Force overwrite of .tbi index file
                   "-S",skip_lines,#--skip-lines
                   "-s",chrom_i,
@@ -53,10 +61,13 @@ TABIX.convert_file <- function(fullSS_path,
   TABIX.index(fullSS.gz=fullSS.gz,
               chrom_i=cDict[[chrom_col]],
               pos_i=cDict[[position_col]],
-              skip_lines = 1,
+              skip_lines=1,
+              conda_env=conda_env,
               verbose=verbose)
   return(fullSS.gz)
 }
+
+
 
 
 #' Query a tabix file
@@ -68,11 +79,15 @@ TABIX.query <- function(fullSS.gz,
                         chrom,
                         start_pos,
                         end_pos,
+                        conda_env="echoR",
                         verbose=T){
+  tabix <- CONDA.find_package(package="tabix",
+                              conda_env=conda_env,
+                              verbose = verbose)
   coords <- paste0(chrom,":",start_pos,"-",end_pos)
   # cmd4 <- paste("tabix -h",fullSS.gz,coords,">",subset_path)
   printer("TABIX:: Extracting subset of sum stats", v=verbose)
-  dat <- data.table::fread(cmd=paste("tabix -h",fullSS.gz,coords))
+  dat <- data.table::fread(cmd=paste(tabix,"-h",fullSS.gz,coords))
   printer("++ Returning",paste(dim(dat),collapse=" x "),"data.table", v=verbose)
   return(dat)
 }
@@ -112,6 +127,7 @@ TABIX <- function(fullSS_path,
                   chrom=NULL,
                   save_subset=T,
                   nThread=1,
+                  conda_env="echoR",
                   verbose=T){
   # Check if it's already an indexed tabix file
   fullSS.gz <- ifelse(endsWith(fullSS_path,".gz"), fullSS_path, paste0(fullSS_path,".gz"))
@@ -120,15 +136,17 @@ TABIX <- function(fullSS_path,
     fullSS.gz <- TABIX.convert_file(fullSS_path = fullSS_path,
                                     chrom_col = chrom_col,
                                     position_col = position_col,
+                                    conda_env=conda_env,
                                     verbose=verbose)
-  } else { printer("TABIX:: Existing indexed tabix file detected") }
+  } else { printer("TABIX:: Existing indexed tabix file detected",v=verbose) }
   # Query
   cDict <- column_dictionary(file_path = fullSS.gz)
   dat <- TABIX.query(fullSS.gz=fullSS.gz,
-                      chrom=chrom,
-                      start_pos=min_POS,
-                      end_pos=max_POS,
-                      verbose=verbose)
+                     chrom=chrom,
+                     start_pos=min_POS,
+                     end_pos=max_POS,
+                     conda_env=conda_env,
+                     verbose=verbose)
   colnames(dat) <- names(cDict)
   if(save_subset){
     printer("++ Saving query ==>", subset_path, v=verbose)

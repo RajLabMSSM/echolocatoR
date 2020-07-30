@@ -4,7 +4,7 @@
 \alias{SUMMARISE.get_CS_counts}
 \title{Tally tool-specific and union CS sizes}
 \usage{
-SUMMARISE.get_CS_counts(merged_DT, top_CS_only = T)
+SUMMARISE.get_CS_counts(merged_DT, top_CS_only = F)
 }
 \description{
 Tally tool-specific and union CS sizes

@@ -4,7 +4,7 @@
 \alias{CONDA.activate_env}
 \title{Activate conda env}
 \usage{
-CONDA.activate_env(conda_env = "echoR")
+CONDA.activate_env(conda_env = "echoR", verbose = T)
 }
 \description{
 Activate conda env

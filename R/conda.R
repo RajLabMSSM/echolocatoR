@@ -40,13 +40,14 @@ CONDA.install_reticulate <- function(dependencies=c("devtools",
 #' Install conda if it's missing
 #'
 #' @family conda
-CONDA.install <- function(conda_path="auto"){
+CONDA.install <- function(conda_path="auto",
+                          verbose=F){
   conda_version <- NULL
   try({conda_version <- reticulate::conda_version(conda = conda_path)})
   if(is.null(conda_version)){
-    printer("+ CONDA:: conda not detected. Installing with reticulate...")
+    printer("+ CONDA:: conda not detected. Installing with reticulate...",v=verbose)
     reticulate::conda_install()
-  } else {printer("+ CONDA:: conda already installed.")}
+  } else {printer("+ CONDA:: conda already installed.",v=verbose)}
 }
 
 
@@ -57,14 +58,16 @@ CONDA.install <- function(conda_path="auto"){
 #' @family conda
 #' @examples
 #' CONDA.activate_env(conda_env="echoR")
-CONDA.activate_env <- function(conda_env="echoR"){
+CONDA.activate_env <- function(conda_env="echoR",
+                               verbose=T){
   CONDA.install()
   env_list <- reticulate::conda_list()
   if(conda_env %in% env_list$name){
-    printer("+ CONDA:: Activating conda env",paste0("'",conda_env,"'"))
+    printer("+ CONDA:: Activating conda env",paste0("'",conda_env,"'"), v=verbose)
     reticulate::use_condaenv(condaenv = conda_env)
   } else {
-    printer("+ CONDA::",paste0("'",conda_env,"'"),"conda environment not found. Using default 'base' instead.")
+    printer("+ CONDA::",paste0("'",conda_env,"'"),
+            "conda environment not found. Using default 'base' instead.", v=verbose)
     reticulate::use_condaenv(condaenv = "base")
   }
 }
@@ -74,18 +77,55 @@ CONDA.activate_env <- function(conda_env="echoR"){
 #' Find the python file for a specific env
 #'
 #' @family conda
-CONDA.find_python_path <- function(conda_env="echoR"){
-  CONDA.install()
+CONDA.find_python_path <- function(conda_env="echoR",
+                                   verbose=T){
+  CONDA.install(verbose=F)
   env_list <- reticulate::conda_list()
-  if(conda_env %in% env_list$name){
-    python_path <- subset(env_list,  name==conda_env)$python
-  } else {
-    printer("+ CONDA::",paste0("'",conda_env,"'"),"conda environment not found. Using default 'python' instead.")
+  if(is.null(conda_env)){
+    printer("CONDA:: No conda env supplied. Using default 'python' instead.",v=verbose)
     python_path <- "python"
+  } else {
+    if(conda_env %in% env_list$name){
+      python_path <- subset(env_list,  name==conda_env)$python
+    } else {
+      printer("+ CONDA::",paste0("'",conda_env,"'"),
+              "conda environment not found. Using default 'python' instead.",v=verbose)
+      python_path <- "python"
+    }
   }
  return(python_path)
 }
 
+
+
+
+#' Find package executable
+#'
+#' @family CONDA
+#' @keywords internal
+#' @examples
+#' # Tabix
+#' tabix <- CONDA.find_package(package="tabix", conda_env="echoR")
+#' tabix <- CONDA.find_package(package="tabix", conda_env=NULL)
+#' # bgzip
+#' bgzip <- CONDA.find_package(package="bgzip", conda_env="echoR")
+#' bgzip <- CONDA.find_package(package="bgzip", conda_env=NULL)
+CONDA.find_package <- function(package,
+                               conda_env="echoR",
+                               verbose=T){
+  python <- CONDA.find_python_path(conda_env = conda_env,
+                                   verbose = verbose)
+  packages <- list.files(dirname(python), full.names = T)
+  if(package %in% basename(packages)){
+    printer("+ CONDA:: Identified",package,"executable in",conda_env,"env.",v=verbose)
+    pkg_path <- packages[endsWith(packages,package)]
+  } else {
+    printer("CONDA:: Could not identify",package,"executable in",conda_env,"env.",
+            "Defaulting to generic",paste0("'",package,"'"),"command",v=verbose)
+    pkg_path <- package
+  }
+  return(pkg_path)
+}
 
 
 

@@ -172,7 +172,7 @@ multi_finemap <- function(locus_dir,
 
   for(i in 1:length(unique(finemap_method_list))){
     m <- unique(finemap_method_list)[i];
-    message("Multi-finemap:: ",m)
+    message("\n+++ Multi-finemap:: ",m," +++")
     finemap_dat <- null_DT <- data.table::data.table(SNP=merged_dat$SNP,
                                                      CS=NA,
                                                      PP=NA);
@@ -430,8 +430,8 @@ finemap_handler <- function(locus_dir,
 
     ### If so, import the previous results
     if(file.exists(file_path) & force_new_finemap==F){
-      printer("++ Previously multi-fine-mapped results identified. Importing...")
-      finemap_dat <- data.table::fread(file_path)
+      printer("++ Previously multi-fine-mapped results identified. Importing:",file_path, v=verbose)
+      finemap_dat <- data.table::fread(file_path, nThread=nThread)
     } else {
       ### If not, or if forcing new fine-mapping is set to TRUE, fine-map using multiple tools
       finemap_methods <- check_necessary_cols(subset_DT = subset_DT,

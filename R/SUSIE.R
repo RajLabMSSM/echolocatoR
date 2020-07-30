@@ -93,7 +93,7 @@ SUSIE <- function(subset_DT,
   # Quickstart
   # dataset_type="GWAS";max_causal=5;sample_size=NULL;prior_weights=NULL;PP_threshold=.95;scaled_prior_variance=0.001;
   # estimate_residual_variance=F;estimate_prior_variance=T;residual_variance=NULL;max_iter=100;manual_var_y=F;rescale_priors=T;
-  # plot_track_fit=F;return_all_CS=T;verbose=T; subset_DT=BST1; LD_matrix <- readRDS("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/BST1/plink/UKB_LD.RDS");
+  # plot_track_fit=F;return_all_CS=T;verbose=T; subset_DT=BST1; LD_matrix <- readRDS("/Volumes/Steelix/fine_mapping_files/GWAS/Nalls23andMe_2019/BST1/plink/UKB_LD.RDS");
 
   # if sample_size is NULL then SUSIE fails
   if(!"N" %in% names(subset_DT) & is.null(sample_size)){

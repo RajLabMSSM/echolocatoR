@@ -7,7 +7,13 @@
 \url{http://www.christianbenner.com}
 }
 \usage{
-FINEMAP.construct_data(locus_dir, subset_DT, LD_matrix, nThread = 4)
+FINEMAP.construct_data(
+  locus_dir,
+  subset_DT,
+  LD_matrix,
+  nThread = 4,
+  verbose = T
+)
 }
 \description{
 Creates and saves 1) the summary stats file, and 2) the LD matrix.

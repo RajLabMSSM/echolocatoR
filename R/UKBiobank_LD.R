@@ -20,7 +20,9 @@ LD.UKBiobank <- function(subset_DT=NULL,
                          nThread=4,
                          return_matrix=F,
                          conda_env="echoR",
-                         remove_tmps=T){
+                         remove_tmps=T,
+                         verbose=T){
+  printer("LD:: Using UK Biobank LD reference panel.", v=verbose)
 
   LD.UKB_find_ld_prefix <- function(chrom, min_pos){
     bp_starts <- seq(1,252000001, by = 1000000)
@@ -36,9 +38,10 @@ LD.UKBiobank <- function(subset_DT=NULL,
   if(!is.null(subset_DT)){
     finemap_dat <- subset_DT
   } else if(!is.null(sumstats_path)){
-    printer("+ Assigning chrom and min_pos based on summary stats file")
+    printer("+ Assigning chrom and min_pos based on summary stats file",v=verbose)
     # sumstats_path="./example_data/BST1_Nalls23andMe_2019_subset.txt"
-    finemap_dat <- data.table::fread(sumstats_path, nThread = 4)
+    finemap_dat <- data.table::fread(sumstats_path,
+                                     nThread = nThread)
   }
   chrom <- unique(finemap_dat$CHR)
   min_pos <- min(finemap_dat$POS)
@@ -51,10 +54,12 @@ LD.UKBiobank <- function(subset_DT=NULL,
   LD_dir <- file.path(locus_dir, "LD")
   dir.create(LD_dir, showWarnings = F, recursive = T)
   locus <- basename(locus_dir)
-  UKBB.LD.RDS <- file.path(LD_dir, paste0(locus,".UKB_LD.RDS"))
+  # UKBB.LD.RDS <- file.path(LD_dir, paste0(locus,".UKB_LD.RDS"))
+  UKBB.LD.RDS <- LD.get_rds_path(locus_dir=locus_dir,
+                                 LD_reference="UKB")
 
   if(file.exists(UKBB.LD.RDS) & force_new_LD==F){
-    printer("+ LD:: Pre-existing UKB_LD.RDS file detected. Importing...")
+    printer("+ LD:: Pre-existing UKB_LD.RDS file detected. Importing",UKBB.LD.RDS,v=verbose)
     LD_matrix <- readRDS(UKBB.LD.RDS)
   } else {
     if(download_method!="direct"){
@@ -70,18 +75,18 @@ LD.UKBiobank <- function(subset_DT=NULL,
         if(chimera){
           if(file.exists(file.path(chimera.path, paste0(LD.prefixes,".gz")))  &
              file.exists(file.path(chimera.path, paste0(LD.prefixes,".npz"))) ){
-            printer("+ LD:: Pre-existing UKB LD gz/npz files detected. Importing...")
+            printer("+ LD:: Pre-existing UKB LD gz/npz files detected. Importing...",v=verbose)
             URL <- chimera.path
           }
         } else {
           URL <- file.path(URL, LD.prefixes)
-          printer("+ LD:: Importing UKB LD file directly to R from:")
+          printer("+ LD:: Importing UKB LD file directly to R from:",v=verbose)
           print(URL)
         }
       }
     } else {
       URL <- file.path(URL, LD.prefixes)
-      printer("+ LD:: Importing UKB LD file directly to R from:")
+      printer("+ LD:: Importing UKB LD file directly to R from:",v=verbose)
       print(URL)
     }
 
@@ -89,8 +94,9 @@ LD.UKBiobank <- function(subset_DT=NULL,
 
     # RSIDs file
     # rsids <- data.table::fread(gz.path, nThread = 4)
-    printer("+ LD:: ...this could take some time...")
-    CONDA.activate_env(conda_env = conda_env)
+    printer("+ LD:: ...this could take some time...",v=verbose)
+    CONDA.activate_env(conda_env = conda_env,
+                       verbose = verbose)
     reticulate::source_python(system.file("tools","load_ld.py",package = "echolocatoR"))
 
     # load_ld(ld_prefix=URL, server=F)

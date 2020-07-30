@@ -14,8 +14,9 @@ LD.1KG_download_vcf(
   whole_vcf = F,
   download_method = "wget",
   force_new_vcf = F,
-  nThread = 4,
   query_by_regions = F,
+  nThread = 4,
+  conda_env = "echoR",
   verbose = T
 )
 }
@@ -26,6 +27,7 @@ Options include:
 \item{"UKB"}{A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See \href{https://www.biorxiv.org/content/10.1101/807792v2}{Wiessbrod et al. (2019)} for more details.}
 \item{"1KGphase1"}{Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.}
 \item{"1KGphase3"}{Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.}
+\item{"<path>/*.vcf" or "<path>/*.vcf.gz"}{Alternatively, users can provide their own custom panel by supplying a \emph{.vcf} file which \pkg{echolocatoR} will use to compute LD (using \emph{plink}).}
 }}
 
 \item{download_reference}{When acquiring LD matrixes,
@@ -38,6 +40,8 @@ However, if you wish to keep these full files (which can be quite large) set \co
 \item{\code{query_by_regions=T}}{Return a vcf with only the exact positions present in \code{subset_DT}. Takes up less storage but is MUCH slower}
 }}
 
+\item{conda_env}{The name of a conda environment to use.}
+
 \item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
 }
 \description{
@@ -47,7 +51,7 @@ Download vcf subset from 1000 Genomes
 \dontrun{
 data("BST1");
 subset_DT <- BST1
-subset_vcf.popDat <- LD.1KG_download_vcf(subset_DT=BST1, LD_reference="1KGphase1", locus_dir=file.path("~/Desktop",locus_dir))
+vcf_subset.popDat <- LD.1KG_download_vcf(subset_DT=BST1, LD_reference="1KGphase1", locus_dir=file.path("~/Desktop",locus_dir))
 }
 }
 \seealso{
@@ -56,15 +60,19 @@ Other LD:
 \code{\link{LD.LD_blocks}()},
 \code{\link{LD.UKBiobank}()},
 \code{\link{LD.calculate_LD}()},
+\code{\link{LD.construct_subset_vcf_name}()},
+\code{\link{LD.custom_panel}()},
 \code{\link{LD.dprime_table}()},
 \code{\link{LD.filter_vcf_gaston}()},
 \code{\link{LD.filter_vcf}()},
-\code{\link{LD.get_vcf_folder}()},
+\code{\link{LD.get_locus_vcf_folder}()},
+\code{\link{LD.index_vcf}()},
 \code{\link{LD.leadSNP_block}()},
 \code{\link{LD.load_or_create}()},
 \code{\link{LD.plink_LD}()},
 \code{\link{LD.plink_file}()},
 \code{\link{LD.plot}()},
+\code{\link{LD.query_vcf}()},
 \code{\link{LD.rds_to_npz}()},
 \code{\link{LD.read_bin}()},
 \code{\link{LD.read_ld_table}()},
