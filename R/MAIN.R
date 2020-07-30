@@ -519,11 +519,6 @@ finemap_pipeline <- function(locus,
                                 case_control = case_control,
                                 conda_env = conda_env,
                                 verbose = verbose)
-  finemap_dat <- find_consensus_SNPs(finemap_dat,
-                                     credset_thresh = PP_threshold,
-                                     consensus_thresh = consensus_threshold,
-                                     verbose = F)
-
   # Plot
   if(!is.null(plot.types)) message("--------------- Step 7: Visualize --------------")
   for(p.window in plot.zoom){

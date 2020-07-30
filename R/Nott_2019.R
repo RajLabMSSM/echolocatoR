@@ -107,7 +107,7 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
   xlims <- get_window_limits(finemap_dat = finemap_dat,
                              plot.zoom = plot.zoom)
   bw.gr <- subset(bw.gr,
-                  GenomicRanges::seqnames(bw.gr)==paste0("chr",gsub("chr",finemap_dat$CHR[1])) &
+                  GenomicRanges::seqnames(bw.gr)==paste0("chr",gsub("chr","",finemap_dat$CHR[1])) &
                   GenomicRanges::start(bw.gr)>=xlims[1] &
                   GenomicRanges::end(bw.gr)<=xlims[2])
   # merge into a single granges object

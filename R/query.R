@@ -78,8 +78,6 @@ import_topSNPs <- function(topSS,
     }
   }
 
-
-
   # Add Locus/Gene columns
   if((is.null(gene_col) & is.null(locus_col)) |
      (!any(gene_col %in% colnames(top_SNPs)) & !any(gene_col %in% colnames(top_SNPs)))){
@@ -105,9 +103,6 @@ import_topSNPs <- function(topSS,
     }
   }
 
-
-
-
   # Standardize col names
   if(!effect_col %in% colnames(top_SNPs)){
     printer("+ Filling in `Effect` column with placeholder (1).")
@@ -124,7 +119,8 @@ import_topSNPs <- function(topSS,
                   Effect=effect_col,
                   min_POS=min_POS_col,
                   max_POS=max_POS_col)
-    if("min_POS" %in% colnames(top_SNPs) & "max_POS" %in% colnames(top_SNPs)){
+    if("min_POS" %in% colnames(top_SNPs) &
+       "max_POS" %in% colnames(top_SNPs)){
       top_SNPs <- dplyr::mutate(top_SNPs, span_kb=(max_POS-min_POS)/1000)
     }
 

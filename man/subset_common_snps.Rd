@@ -16,6 +16,7 @@ Then remove any non-shared SNPs from both objects.
 \examples{
 data("BST1"); data('LD_matrix');
 finemap_dat=BST1
+out <- subset_common_snps(LD_matrix=LD_matrix, finemap_dat=BST1)
 }
 \seealso{
 Other SNP filters: 

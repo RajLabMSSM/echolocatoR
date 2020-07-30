@@ -244,10 +244,11 @@ multi_finemap <- function(locus_dir,
 create_method_path <- function(locus_dir,
                               finemap_method,
                               LD_reference=NULL,
+                              create_dir=T,
                               compress=T){
   method_dir <- file.path(locus_dir, finemap_method)
   # Make finemapping results folder
-  dir.create(method_dir, recursive = T, showWarnings = F)
+  if(create_dir) dir.create(method_dir, recursive = T, showWarnings = F)
   # Return results file name
   dataset <- basename(dirname(locus_dir))
   locus <- basename(locus_dir)
@@ -425,12 +426,9 @@ finemap_handler <- function(locus_dir,
                                    LD_reference = LD_reference,
                                    finemap_method = "Multi-finemap",
                                    compress = T)
-    old_file_path <- file.path(dirname(file_path),"Multi-finemap_results.txt")
-    if(!file.exists(file_path) & file.exists(old_file_path)){file_path <- old_file_path }
-
     ### If so, import the previous results
     if(file.exists(file_path) & force_new_finemap==F){
-      printer("++ Previously multi-fine-mapped results identified. Importing:",file_path, v=verbose)
+      printer("++ Previously multi-finemap results identified. Importing:",file_path, v=verbose)
       finemap_dat <- data.table::fread(file_path, nThread=nThread)
     } else {
       ### If not, or if forcing new fine-mapping is set to TRUE, fine-map using multiple tools
@@ -470,7 +468,7 @@ finemap_handler <- function(locus_dir,
       save_finemap_results(finemap_dat, file_path)
     }
   end_FM <- Sys.time()
-  printer("++ Fine-mapping with '", paste0(finemap_methods, collapse=", "),"' completed in ",round(end_FM-start_FM,2))
+  printer("+ Fine-mapping with '", paste0(finemap_methods, collapse=", "),"' completed in ",round(end_FM-start_FM,2))
   return(finemap_dat)
 }
 

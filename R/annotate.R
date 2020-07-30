@@ -59,16 +59,23 @@ merge_finemapping_results <- function(dataset="./Data/GWAS",
     multifinemap_pattern <- create_method_path(locus_dir = file.path(dataset,"*"),
                                                finemap_method = "Multi-finemap",
                                                LD_reference = LD_reference,
-                                               compress = F)
+                                               compress = F,
+                                               create_dir = F)
     multifinemap_pattern_gz <- create_method_path(locus_dir = file.path(dataset,"*"),
                                                   finemap_method = "Multi-finemap",
                                                   LD_reference = LD_reference,
-                                                  compress = T)
+                                                  compress = T,
+                                                  create_dir = F)
     multi_dirs <- list.files(path = dataset,
                              pattern = paste0( c(basename(multifinemap_pattern),
                                                  basename(multifinemap_pattern_gz)), collapse="|"),
                              recursive = T,
                              full.names = T)
+    if(length(multi_dirs)==0){
+      stop("+ No multi-finemap files found.")
+    } else {
+      printer("+",length(multi_dirs),"multi-finemap files found.",v=verbose)
+    }
     loci <- basename(dirname(dirname(multi_dirs)))
     if(length(loci)>length(unique(loci))){
       printer("+ Removing duplicate Multi-finemap files per locus.",v=verbose)
