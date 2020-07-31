@@ -83,7 +83,7 @@ GGBIO.plot <- function(finemap_dat,
                        dpi=300,
                        height=12,
                        width=10,
-                       nThread=1,
+                       nThread=4,
                        verbose=T){
   # consensus_threshold=2; XGR_libnames="ENCODE_TFBS_ClusteredV3_CellTypes";n_top_xgr=5; mean.PP=T; Roadmap=T; PP_threshold=.95;  Nott_epigenome=T;  save_plot=T; show_plot=T; method_list=c("ABF","SUSIE","POLYFUN_SUSIE","FINEMAP","mean"); full_data=T;  max_transcripts=3; plot.zoom=100000;
   # Nott_epigenome=T; Nott_regulatory_rects=T; Nott_show_placseq=T; Nott_binwidth=200; max_transcripts=1; dpi=400; height=12; width=10; results_path=NULL;  n_top_roadmap=7; annot_overlap_threshold=5; Nott_bigwig_dir=NULL; locus="BST1"; Roadmap_query=NULL; sig_cutoff=5e-8; verbose=T; QTL_prefixes=NULL;
@@ -277,6 +277,7 @@ GGBIO.plot <- function(finemap_dat,
                                                    return_interaction_track=T,
                                                    show_arches=T,
                                                    save_annot=T,
+                                                   nThread=nThread,
                                                    verbose=verbose)
         TRACKS_list <- append(TRACKS_list, track.Nott_plac)
         names(TRACKS_list)[length(TRACKS_list)] <- "Nott (2019)\nPLAC-seq"

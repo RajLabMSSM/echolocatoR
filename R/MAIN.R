@@ -538,6 +538,7 @@ finemap_pipeline <- function(locus,
                               plot.zoom = p.window,
                               save_plot = T,
                               show_plot = T,
+                              nThread = nThread,
                               verbose = verbose)
       })
     }
@@ -563,6 +564,7 @@ finemap_pipeline <- function(locus,
                           Nott_epigenome = plot.Nott_epigenome,
                           Nott_binwidth = plot.Nott_binwidth,
                           Nott_bigwig_dir = plot.Nott_bigwig_dir,
+                          nThread = nThread,
                           verbose = verbose)
       })
     }
