@@ -30,7 +30,7 @@ Adds several columns that summarise the results across all fine-mapping tools th
 }
 \examples{
 data("merged_DT")
-merged_DT <- find_consensus_SNPs(finemap_dat=merged_DT, top_CS_only=T)
+merged_DT <- find_consensus_SNPs(finemap_dat=merged_DT, top_CS_only=F)
 }
 \seealso{
 Other finemapping functions: 

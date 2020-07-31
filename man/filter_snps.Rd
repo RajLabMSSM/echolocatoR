@@ -10,8 +10,8 @@ filter_snps(
   remove_variants,
   locus,
   verbose = T,
-  min_POS = NULL,
-  max_POS = NULL,
+  min_POS = NA,
+  max_POS = NA,
   max_snps = NULL,
   min_MAF = NULL,
   trim_gene_limits = F

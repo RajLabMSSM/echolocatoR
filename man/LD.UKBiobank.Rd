@@ -15,6 +15,7 @@ LD.UKBiobank(
   server = T,
   download_full_ld = F,
   download_method = "direct",
+  fillNA = 0,
   nThread = 4,
   return_matrix = F,
   conda_env = "echoR",

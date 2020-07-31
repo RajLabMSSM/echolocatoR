@@ -84,6 +84,7 @@ LD.load_or_create <- function(locus_dir,
                               force_new_LD = force_new_LD,
                               chimera = server,
                               download_method = download_method,
+                              fillNA = fillNA,
                               nThread = nThread,
                               return_matrix = T,
                               conda_env = conda_env,
@@ -197,8 +198,38 @@ LD.custom_panel <- function(LD_reference,
   if(remove_tmps){
     suppressWarnings(file.remove(vcf_subset))
   }
-  printer("Saving LD matrix of size:", dim(LD_matrix)[1],"rows x",dim(LD_matrix)[2],"columns.", v=verbose)
+  # Save LD matrix
+  RDS_path <- LD.save_LD_matrix(LD_matrix=LD_matrix,
+                                subset_DT=subset_DT,
+                                locus_dir=locus_dir,
+                                LD_reference=LD_reference,
+                                verbose=verbose)
   return(LD_matrix)
+}
+
+
+
+#' Save LD_matrix
+#'
+#' @family LD
+#' @keywords internal
+#' @examples
+#' data("BST1"); data("LD_matrix"); data("locus_dir");
+#' RDS_path <- LD.save_LD_matrix(LD_matrix=LD_matrix, subset_DT=BST1, locus_dir=file.path("~/Desktop",locus_dir), LD_reference="UKB")
+#' RDS_path <- LD.save_LD_matrix(LD_matrix=LD_matrix, subset_DT=BST1, locus_dir=file.path("~/Desktop",locus_dir), LD_reference="custom_vcf")
+LD.save_LD_matrix <- function(LD_matrix,
+                              subset_DT,
+                              locus_dir,
+                              LD_reference,
+                              verbose=T){
+  RDS_path <- LD.get_rds_path(locus_dir = locus_dir,
+                              LD_reference = basename(LD_reference))
+  printer("+ LD:: Saving",dim(LD_matrix)[1],"x",dim(LD_matrix)[2],"LD_matrix ==>",RDS_path, v=verbose)
+  sub.out <- subset_common_snps(LD_matrix = LD_matrix,
+                                finemap_dat = subset_DT)
+  LD_matrix <- sub.out$LD
+  saveRDS(LD_matrix, file = RDS_path)
+  return(RDS_path)
 }
 
 
@@ -818,10 +849,11 @@ LD.1KG <- function(locus_dir,
   printer("Saving LD matrix of size:", dim(LD_matrix)[1],"rows x",dim(LD_matrix)[2],"columns.", v=verbose)
 
   # Save LD matrix
-  RDS_path <- LD.get_rds_path(locus_dir = locus_dir,
-                              LD_reference = LD_reference)
-  printer("+ LD:: Saving LD_matrix to:",RDS_path, v=verbose)
-  saveRDS(LD_matrix, file = RDS_path)
+  RDS_path <- LD.save_LD_matrix(LD_matrix=LD_matrix,
+                                subset_DT=subset_DT,
+                                locus_dir=locus_dir,
+                                LD_reference=LD_reference,
+                                verbose=verbose)
   return(LD_matrix)
 }
 

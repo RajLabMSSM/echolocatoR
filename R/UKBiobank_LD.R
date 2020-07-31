@@ -17,6 +17,7 @@ LD.UKBiobank <- function(subset_DT=NULL,
                          server=T,
                          download_full_ld=F,
                          download_method="direct",
+                         fillNA=0,
                          nThread=4,
                          return_matrix=F,
                          conda_env="echoR",
@@ -54,13 +55,13 @@ LD.UKBiobank <- function(subset_DT=NULL,
   LD_dir <- file.path(locus_dir, "LD")
   dir.create(LD_dir, showWarnings = F, recursive = T)
   locus <- basename(locus_dir)
-  # UKBB.LD.RDS <- file.path(LD_dir, paste0(locus,".UKB_LD.RDS"))
-  UKBB.LD.RDS <- LD.get_rds_path(locus_dir=locus_dir,
+  # RDS_path <- file.path(LD_dir, paste0(locus,".UKB_LD.RDS"))
+  RDS_path <- LD.get_rds_path(locus_dir=locus_dir,
                                  LD_reference="UKB")
 
-  if(file.exists(UKBB.LD.RDS) & force_new_LD==F){
-    printer("+ LD:: Pre-existing UKB_LD.RDS file detected. Importing",UKBB.LD.RDS,v=verbose)
-    LD_matrix <- readRDS(UKBB.LD.RDS)
+  if(file.exists(RDS_path) & force_new_LD==F){
+    printer("+ LD:: Pre-existing UKB_LD.RDS file detected. Importing",RDS_path,v=verbose)
+    LD_matrix <- readRDS(RDS_path)
   } else {
     if(download_method!="direct"){
       if(download_full_ld | force_new_LD | download_method %in% c("wget","axel")){
@@ -109,21 +110,27 @@ LD.UKBiobank <- function(subset_DT=NULL,
     ld_snps <- data.table::data.table(ld.out[[2]])
     row.names(ld_R) <- ld_snps$rsid
     colnames(ld_R) <- ld_snps$rsid
-
+    # Only save SNPs shared with subset data
+    sub.out <- subset_common_snps(LD_matrix = ld_R,
+                                  finemap_dat = finemap_dat,
+                                  fillNA = fillNA)
+    finemap_dat <- sub.out$DT
+    LD_matrix <- sub.out$LD
     # remove(ld.out)
     # ld_snps.sub <- subset(ld_snps, position %in% finemap_dat$POS)
-    indices <- which(ld_snps$position %in% finemap_dat$POS)
-    ld_snps.sub <- ld_snps[indices,]
-    LD_matrix <- ld_R[indices, indices]
-    row.names(LD_matrix) <- ld_snps.sub$rsid
-    colnames(LD_matrix) <- ld_snps.sub$rsid
-    LD_matrix[is.na(LD_matrix)] <- 0
-    # Save LD matrix as RDS
-    printer("LD matrix dimensions", paste(dim(LD_matrix),collapse=" x "))
-    printer("+ LD:: Saving LD =>",UKBB.LD.RDS)
-    dir.create(dirname(UKBB.LD.RDS), showWarnings = F, recursive = T)
-    saveRDS(LD_matrix, UKBB.LD.RDS)
+    # indices <- which(ld_snps$position %in% finemap_dat$POS)
+    # ld_snps.sub <- ld_snps[indices,]
+    # LD_matrix <- ld_R[indices, indices]
+    # row.names(LD_matrix) <- ld_snps.sub$rsid
+    # colnames(LD_matrix) <- ld_snps.sub$rsid
+    # LD_matrix[is.na(LD_matrix)] <- 0
 
+    # Save LD matrix as RDS
+    RDS_path <- LD.save_LD_matrix(LD_matrix=LD_matrix,
+                                  subset_DT=subset_DT,
+                                  locus_dir=locus_dir,
+                                  LD_reference=LD_reference,
+                                  verbose=verbose)
     if(remove_tmps){
       printer("+ Removing .gz/.npz files.")
       if(file.exists(paste0(URL,".gz"))){ file.remove(paste0(URL,".gz")) }
@@ -133,7 +140,7 @@ LD.UKBiobank <- function(subset_DT=NULL,
   if(return_matrix){
     return(LD_matrix)
   } else {
-    return(UKBB.LD.RDS)
+    return(RDS_path)
   }
 }
 
