@@ -197,6 +197,7 @@ detect_genes <- function(loci,
 extract_SNP_subset <- function(locus_dir,
                                fullSS_path,
                                subset_path,
+                               LD_reference,
                                force_new_subset=F,
                                top_SNPs="auto",
                                bp_distance=500000,
@@ -230,12 +231,16 @@ extract_SNP_subset <- function(locus_dir,
                                QTL_prefixes=NULL,
                                remove_tmps=T,
                                verbose=T){
-  ocus <- basename(locus_dir)
+  locus <- basename(locus_dir)
   # multi_path <- file.path(locus_dir,"Multi-finemap","Multi-finemap_results.txt")
-  multi_path <- list.files(path = locus_dir,
-                           pattern = "*Multi-finemap.tsv*",
-                           full.names = T,
-                           recursive = T)[1] %>% toString()
+  # multi_path <- list.files(path = locus_dir,
+  #                          pattern = "*Multi-finemap.tsv*",
+  #                          full.names = T,
+  #                          recursive = T)[1] %>% toString()
+  multi_path <- create_method_path(locus_dir = locus_dir,
+                                   LD_reference = LD_reference,
+                                   finemap_method = "Multi-finemap",
+                                   compress = T)
 
 
   if(file.exists(subset_path) & force_new_subset==F){

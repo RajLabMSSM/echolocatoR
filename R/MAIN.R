@@ -420,9 +420,10 @@ finemap_pipeline <- function(locus,
    message("\n------------------ Step 1: Query 🔍---------------")
    subset_DT <- extract_SNP_subset(locus_dir = locus_dir,
                                     top_SNPs = top_SNPs,
-                                    fullSS_path = fullSS_path,
-                                    subset_path  =  subset_path,
-                                    force_new_subset = force_new_subset,
+                                   fullSS_path = fullSS_path,
+                                  subset_path  =  subset_path,
+                                    LD_reference = LD_reference,
+                                   orce_new_subset = force_new_subset,
 
                                     chrom_col = chrom_col,
                                     position_col = position_col,
