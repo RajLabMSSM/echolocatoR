@@ -396,6 +396,7 @@ finemap_pipeline <- function(locus,
                              consensus_threshold=2,
                              case_control=T,
                              QTL_prefixes=NULL,
+                             fillNA=0,
 
                              plot.zoom="1x",
                              plot.Nott_epigenome = plot.Nott_epigenome,
@@ -701,8 +702,8 @@ finemap_loci <- function(loci,
     finemap_dat <- NULL
     try({
       locus <- loci[i]
-      message(")   )  ) ))))))}}}}}}}} {{{{{{{{{(((((( (  (   (")
-      message("\n","🦇 🦇 🦇 ",locus," (",i ," / ",length(loci),")"," 🦇 🦇 🦇 ")
+      message("\n)   )  ) ))))))}}}}}}}} {{{{{{{{{(((((( (  (   (")
+      message("🦇 🦇 🦇 ",locus," (",i ," / ",length(loci),")"," 🦇 🦇 🦇 ")
       message(")   )  ) ))))))}}}}}}}} {{{{{{{{{(((((( (  (   (")
 
       # lead_SNP <- .arg_list_handler(conditioned_snps, i)

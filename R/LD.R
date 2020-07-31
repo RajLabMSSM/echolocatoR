@@ -220,12 +220,15 @@ LD.custom_panel <- function(LD_reference,
 LD.save_LD_matrix <- function(LD_matrix,
                               subset_DT,
                               locus_dir,
+                              fillNA=0,
                               LD_reference,
+
                               verbose=T){
   RDS_path <- LD.get_rds_path(locus_dir = locus_dir,
                               LD_reference = basename(LD_reference))
   printer("+ LD:: Saving",dim(LD_matrix)[1],"x",dim(LD_matrix)[2],"LD_matrix ==>",RDS_path, v=verbose)
   sub.out <- subset_common_snps(LD_matrix = LD_matrix,
+                                fillNA = fillNA,
                                 finemap_dat = subset_DT)
   LD_matrix <- sub.out$LD
   saveRDS(LD_matrix, file = RDS_path)
