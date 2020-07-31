@@ -694,10 +694,10 @@ SUMMARISE.peak_overlap_plot <- function(merged_DT,
   }
   if(include.CORCES_2020_bulkATACpeaks){
     dat_melt.CORCES_bulkPeaks <- CORCES_2020.prepare_bulkATAC_peak_overlap(merged_DT = merged_DT,
-                                                                    snp_filter = snp_filter,
-                                                                    add_HiChIP_FitHiChIP = include.CORCES_2020_HiChIP_FitHiChIP_coaccess,
-                                                                    annotate_genes = include.CORCES_2020_gene_annotations,
-                                                                    verbose = verbose)
+                                                                          snp_filter = snp_filter,
+                                                                          add_HiChIP_FitHiChIP = include.CORCES_2020_HiChIP_FitHiChIP_coaccess,
+                                                                          annotate_genes = include.CORCES_2020_gene_annotations,
+                                                                          verbose = verbose)
     dat_melt.CORCES_bulkPeaks$background <- NA
     dat_melt.CORCES_bulkPeaks$Study <- "Corces et al. (2020)"
     dat_melt <- rbind(dat_melt, dat_melt.CORCES_bulkPeaks, fill=T)
@@ -990,4 +990,94 @@ results_report <- function(merged_dat){
   printer("++ Consensus SNP mean PP =", round(mean(subset(merged_dat, Consensus_SNP)$mean.PP, na.rm = T),2))
   printer("++",nrow(subset(merged_dat, Consensus_SNP & leadSNP)),"Consensus SNPs that are also lead SNPs")
 }
+
+
+
+
+#' Merge all summary plots into one super plot
+#'
+#' @family summarise
+super_summary_plot <- function(merged_DT,
+                               snp_filter="Consensus_SNP==T",
+                               coloc_results_path=NULL,
+                               show_plot=T,
+                               save_plot=F,
+                               height=15,
+                               width=13,
+                               dpi=500){
+  library(patchwork)
+
+  bin_plot <- SUMMARISE.CS_bin_plot(merged_DT = merged_DT,
+                                    show_plot = F)
+
+  if(!is.null(coloc_results_path)){
+    gg_egene <- SUMMARISE.coloc_nominated_eGenes(coloc_results_path = coloc_results_path,
+                                                 merged_DT=merged_DT,
+                                                 PP_threshold = .8,
+                                                 fill_var = NULL,
+                                                 text_size = 2.5,
+                                                 y_lab = "Locus",
+                                                 x_lab = NULL,
+                                                 label_yaxis = T,
+                                                 show_plot = F)
+    gg_egene_width <- .125
+  } else {
+    gg_egene<-c();
+    gg_egene$plot <- patchwork::plot_spacer();
+    gg_egene_width <- 0
+  }
+
+  gg_CS <- SUMMARISE.CS_counts_plot(merged_DT = merged_DT,
+                                    show_numbers=F,
+                                    label_yaxis=F,
+                                    ylabel=NULL,
+                                    show_plot = F)
+  try({
+    gg_missense <- ANNOTATE.plot_missense(merged_DT = merged_DT,
+                                          snp_filter=snp_filter,
+                                          show.legend = F,
+                                          show_plot = F)
+  })
+  # In case biomart times out
+  if(!exists("gg_missense")){
+    gg_missense<-c();
+    gg_missense$plot <- patchwork::plot_spacer();
+    gg_missense_width <- 0
+  } else {gg_missense_width <- .05}
+
+  gg_peaks <- SUMMARISE.peak_overlap_plot(merged_DT = merged_DT,
+                                          snp_filter=snp_filter,
+                                          include.NOTT_2019_peaks=T,
+                                          include.NOTT_2019_enhancers_promoters=T,
+                                          include.NOTT_2019_PLACseq=T,
+                                          include.CORCES_2020_scATACpeaks=T,
+                                          include.CORCES_2020_Cicero_coaccess=F,
+                                          include.CORCES_2020_bulkATACpeaks=T,
+                                          include.CORCES_2020_HiChIP_FitHiChIP_coaccess=T,
+                                          include.CORCES_2020_gene_annotations=T,
+                                          plot_celltype_specificity=T,
+                                          facets_formula=". ~ Cell_type",
+                                          show_plot=F,
+                                          label_yaxis=T,
+                                          subplot_widths = c(1,.2),
+                                          x_strip_angle = 90,
+                                          drop_empty_cols = T,
+                                          fill_title=paste(snp_filter,"SNPs\nin epigenomic peaks"),
+                                          # save_path="~/Desktop/super_peak_plot.png",
+                                          verbose=T)
+  # Merge
+  gg_merged <- (patchwork::plot_spacer() + bin_plot$plot + patchwork::plot_layout(widths = c(.4,.6)))  /
+    (gg_egene$plot + gg_CS$plot + gg_missense$plot + gg_peaks$plot +  patchwork::plot_layout(widths = c(gg_egene_width,.3,gg_missense_width,1))) +
+    patchwork::plot_layout(heights = c(.15,1),ncol = 1)
+
+  if(show_plot) print(gg_merged)
+  if(save_plot!=F){
+    ggplot2::ggsave(save_plot,
+                    gg_merged,
+                    dpi = dpi,
+                    height=height, width=width)
+  }
+ return(gg_merged)
+}
+
 

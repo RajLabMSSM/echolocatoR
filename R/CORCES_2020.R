@@ -245,7 +245,9 @@ CORCES_2020.prepare_bulkATAC_peak_overlap <- function(merged_DT,
   dat_melt <- count_and_melt(merged_annot = cell_melt,
                              grouping_vars = c("Locus","Cell_type","Assay",annot_cols),
                              snp_filter = snp_filter)
-  dat_melt[dat_melt$Count==0 | is.na(dat_melt$Count),"Count"] <- NA
+  try({
+    dat_melt[dat_melt$Count==0 | is.na(dat_melt$Count),"Count"] <- NA
+  })
   dat_melt <- subset(dat_melt, !is.na(Count))
   dat_melt$background <- NA
 

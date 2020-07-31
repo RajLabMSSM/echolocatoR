@@ -81,7 +81,7 @@ get_UKB_MAF <- function(subset_DT,
   merged_dat <- data.table::merge.data.table(subset_DT, maf,
                                              by = "POS") %>%
     # Make sure each SNP just appears once
-    dplyr::group_by(merged_dat, SNP) %>%
+    dplyr::group_by(SNP) %>%
     dplyr::slice(1)
   return(merged_dat)
 }

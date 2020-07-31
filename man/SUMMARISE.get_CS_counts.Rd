@@ -20,6 +20,7 @@ Other summarise:
 \code{\link{SUMMARISE.get_CS_bins}()},
 \code{\link{SUMMARISE.get_SNPgroup_counts}()},
 \code{\link{SUMMARISE.peak_overlap_plot}()},
-\code{\link{results_report}()}
+\code{\link{results_report}()},
+\code{\link{super_summary_plot}()}
 }
 \concept{summarise}
