@@ -38,7 +38,7 @@ GGBIO.plot(
   dpi = 300,
   height = 12,
   width = 10,
-  nThread = 1,
+  nThread = 4,
   verbose = T
 )
 }

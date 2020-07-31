@@ -9,7 +9,8 @@ get_UKB_MAF(
   output_path = "./Data/Reference/UKB_MAF",
   force_new_maf = F,
   download_method = "axel",
-  nThread = 4
+  nThread = 4,
+  verbose = T
 )
 }
 \description{
