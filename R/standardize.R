@@ -171,8 +171,8 @@ standardize_subset <- function(locus,
     printer("++ Preparing A1,A1 cols", v=verbose)
     if(A1_col %in% colnames(query) & A2_col %in% colnames(query)){
       query2 <- query %>% dplyr::rename(A1=A1_col, A2=A2_col)
-      query_mod$A1 <- query2$A1
-      query_mod$A2 <- query2$A2
+      query_mod$A1 <- toupper(query2$A1)
+      query_mod$A2 <- toupper(query2$A2)
     }
 
     # ------ Optional columns ------ #

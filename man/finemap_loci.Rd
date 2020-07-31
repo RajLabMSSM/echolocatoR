@@ -65,7 +65,7 @@ finemap_loci(
   case_control = T,
   QTL_prefixes = NULL,
   plot.types = c("simple"),
-  plot.zoom = NULL,
+  plot.zoom = "1x",
   plot.Nott_epigenome = F,
   plot.Nott_binwidth = 200,
   plot.Nott_bigwig_dir = NULL,

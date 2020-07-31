@@ -62,21 +62,27 @@ import_topSNPs <- function(topSS,
       return(topSS)
     }
   }
+
   top_SNPs <- topSNPs_reader(topSS, sheet)
   orig_top_SNPs <- top_SNPs
   # Reassign colnames bc read.xlsx won't let you prevent this in some versions....
   if(!is.data.frame(topSS)){
     if(endsWith(topSS, ".xlsx") | endsWith(topSS, ".xlsm")){
-      locus_col=gsub(" ",".",locus_col)
-      gene_col=gsub(" ",".",gene_col)
-      chrom_col=gsub(" ",".",chrom_col)
-      position_col=gsub(" ",".",position_col)
-      snp_col=gsub(" ",".",snp_col)
-      pval_col=gsub(" ",".",pval_col)
-      effect_col=gsub(" ",".",effect_col)
-      position_col=gsub(" ",".",position_col)
+      locus_col=gsub(" ",".",trimws(locus_col))
+      gene_col=gsub(" ",".",trimws(gene_col))
+      chrom_col=gsub(" ",".",trimws(chrom_col))
+      position_col=gsub(" ",".",trimws(position_col))
+      snp_col=gsub(" ",".",trimws(snp_col))
+      pval_col=gsub(" ",".",trimws(pval_col))
+      effect_col=gsub(" ",".",trimws(effect_col))
+      position_col=gsub(" ",".",trimws(position_col))
     }
   }
+
+  top_SNPs <- dplyr::rename(top_SNPs,
+                            CHR=gsub("chr","",chrom_col),
+                            POS=position_col,
+                            SNP=snp_col)
 
   # Add Locus/Gene columns
   if((is.null(gene_col) & is.null(locus_col))){
@@ -116,12 +122,13 @@ import_topSNPs <- function(topSS,
     top_SNPs$Effect <- 1
   }
 
+
   top_SNPs <- suppressMessages(top_SNPs %>%
     dplyr::select(Locus=Locus,
                   Gene=Gene,
-                  CHR=chrom_col,
-                  POS=position_col,
-                  SNP=snp_col,
+                  CHR=CHR,
+                  POS=POS,
+                  SNP=SNP,
                   P=pval_col,
                   Effect=effect_col,
                   min_POS=min_POS_col,
