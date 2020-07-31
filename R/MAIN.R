@@ -416,6 +416,7 @@ finemap_pipeline <- function(locus,
    locus_dir <- get_locus_dir(subset_path = subset_path)
 
    # Extract subset
+   message("\n------------------ Step 1: Query 🔍---------------")
    subset_DT <- extract_SNP_subset(locus_dir = locus_dir,
                                     top_SNPs = top_SNPs,
                                     fullSS_path = fullSS_path,
@@ -455,7 +456,7 @@ finemap_pipeline <- function(locus,
                                     remove_tmps = remove_tmps,
                                     verbose = verbose)
   ### Compute LD matrix
-  message("--- Step 2: Calculate Linkage Disequilibrium ---")
+  message("\n--- Step 2: Extract Linkage Disequilibrium ⏬---")
   LD_matrix <- LD.load_or_create(locus_dir=locus_dir,
                                  subset_DT=subset_DT,
                                  force_new_LD=force_new_LD,
@@ -477,7 +478,7 @@ finemap_pipeline <- function(locus,
   #### ***** SNP Filters ***** ###
   # Remove pre-specified SNPs
   ## Do this step AFTER saving the LD to disk so that it's easier to re-subset in different ways later without having to redownload LD.
-  message("-------------- Step 3: Filter SNPs -------------")
+  message("\n-------------- Step 3: Filter SNPs 🚰-------------")
   subset_DT <- filter_snps(subset_DT=subset_DT,
                             bp_distance=bp_distance,
                             remove_variants=remove_variants,
@@ -488,10 +489,13 @@ finemap_pipeline <- function(locus,
                             max_snps=max_snps,
                             trim_gene_limits=trim_gene_limits)
   # Subset LD and df to only overlapping SNPs
-  sub.out <- subset_common_snps(LD_matrix, subset_DT)
+  sub.out <- subset_common_snps(LD_matrix =LD_matrix,
+                                finemap_dat = subset_DT,
+                                fillNA = fillNA)
   LD_matrix <- sub.out$LD
   subset_DT <- sub.out$DT
   # finemap
+  message("\n-------- Step 4: Fine-map 🔊--------")
   finemap_dat <- finemap_handler(locus_dir = locus_dir,
                                 fullSS_path = fullSS_path,
                                 finemap_methods = finemap_methods,
@@ -520,7 +524,7 @@ finemap_pipeline <- function(locus,
                                 conda_env = conda_env,
                                 verbose = verbose)
   # Plot
-  if(!is.null(plot.types)) message("--------------- Step 7: Visualize --------------")
+  if(!is.null(plot.types)) message("\n--------------- Step 5: Visualize 📊--------------")
   for(p.window in plot.zoom){
     if("simple" %in% plot.types){
       try({
@@ -697,7 +701,10 @@ finemap_loci <- function(loci,
     finemap_dat <- NULL
     try({
       locus <- loci[i]
+      message(")   )  ) ))))))}}}}}}}} {{{{{{{{{(((((( (  (   (")
       message("\n","🦇 🦇 🦇 ",locus," (",i ," / ",length(loci),")"," 🦇 🦇 🦇 ")
+      message(")   )  ) ))))))}}}}}}}} {{{{{{{{{(((((( (  (   (")
+
       # lead_SNP <- .arg_list_handler(conditioned_snps, i)
       gene_limits <- .arg_list_handler(trim_gene_limits, i)
       conditioned_snp <- .arg_list_handler(conditioned_snps, i)

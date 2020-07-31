@@ -230,8 +230,7 @@ extract_SNP_subset <- function(locus_dir,
                                QTL_prefixes=NULL,
                                remove_tmps=T,
                                verbose=T){
-  message("------------------ Step 1: Query ---------------")
-  locus <- basename(locus_dir)
+  ocus <- basename(locus_dir)
   # multi_path <- file.path(locus_dir,"Multi-finemap","Multi-finemap_results.txt")
   multi_path <- list.files(path = locus_dir,
                            pattern = "*Multi-finemap.tsv*",

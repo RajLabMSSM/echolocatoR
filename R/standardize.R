@@ -57,15 +57,16 @@ get_UKB_MAF <- function(subset_DT,
                         output_path = "./Data/Reference/UKB_MAF",
                         force_new_maf = F,
                         download_method="axel",
-                        nThread=4){
-  printer("UKB MAF:: Extracting MAF from UKB reference.")
+                        nThread=4,
+                        verbose=T){
+  printer("UKB MAF:: Extracting MAF from UKB reference.",v=verbose)
   # Documentation: http://biobank.ctsu.ox.ac.uk/showcase/field.cgi?id=22801
   # subset_DT = data.table::fread("Data/GWAS/Kunkle_2019/PTK2B/PTK2B_Kunkle_2019_subset.tsv.gz")
   chrom <- unique(subset_DT$CHR)
   input_url <- paste0("biobank.ctsu.ox.ac.uk/showcase/showcase/auxdata/ukb_mfi_chr",chrom,"_v3.txt")
   out_file <- file.path(output_path, basename(input_url))
   if(file.exists(out_file) & force_new_maf==F){
-    printer("+ UKB MAF:: Importing pre-existing file")
+    printer("+ UKB MAF:: Importing pre-existing file",v=verbose)
   } else{
     out_file <- downloader(input_url = input_url,
                            output_path = output_path,
@@ -131,7 +132,7 @@ standardize_subset <- function(locus,
                               download_method="axel",
                               verbose=T){
   printer("",v=verbose)
-  message("---------------- Step 1.5: Standardize ----------")
+  printer("LD:: Standardizing summary statistics subset.",v=verbose)
   query_check <- data.table::fread(subset_path, nrows = 2)
 
   if(dim(query_check)[1]==0){
@@ -149,7 +150,8 @@ standardize_subset <- function(locus,
     }
 
     ## Rename subset DF
-    query_mod <- query %>% subset(select=c(chrom_col, position_col, snp_col, pval_col, effect_col, stderr_col)) %>%
+    query_mod <- query %>%
+      subset(select=c(chrom_col, position_col, snp_col, pval_col, effect_col, stderr_col)) %>%
       dplyr::rename(CHR=chrom_col,POS=position_col, SNP=snp_col, P=pval_col,
                     Effect=effect_col, StdErr=stderr_col)
 

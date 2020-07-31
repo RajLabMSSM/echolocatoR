@@ -416,7 +416,6 @@ finemap_handler <- function(locus_dir,
                             conda_env="echoR",
                             nThread=4,
                             verbose=T){
-  message("-------- Step 4: Statistically Fine-map --------")
   start_FM <- Sys.time()
   set.seed(1)
   # First, check if there's more than one fin-mapping method given. If so, switch to multi-finemap function
