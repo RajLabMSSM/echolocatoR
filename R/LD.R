@@ -202,7 +202,7 @@ LD.custom_panel <- function(LD_reference,
   RDS_path <- LD.save_LD_matrix(LD_matrix=LD_matrix,
                                 subset_DT=subset_DT,
                                 locus_dir=locus_dir,
-                                LD_reference=LD_reference,
+                                LD_reference=gsub(".vcf|.gz","",LD_reference),
                                 verbose=verbose)
   return(LD_matrix)
 }
