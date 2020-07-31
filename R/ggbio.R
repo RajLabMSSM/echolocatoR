@@ -59,6 +59,7 @@ GGBIO.plot <- function(finemap_dat,
                        PP_threshold=.95,
                        consensus_threshold=2,
                        sig_cutoff=5e-8,
+                       gene_track=T,
 
                        XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes",
                                       "ENCODE_DNaseI_ClusteredV3_CellTypes",
@@ -182,10 +183,16 @@ GGBIO.plot <- function(finemap_dat,
   # Track 3: Gene Model Track
   # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   # DB tutorial: https://rdrr.io/bioc/ensembldb/f/vignettes/ensembldb.Rmd
-  track.genes <- GGBIO.transcript_model_track(gr.snp_CHR = gr.snp_CHR,
-                                              max_transcripts = max_transcripts)
-  TRACKS_list <- append(TRACKS_list, track.genes)
-  names(TRACKS_list)[length(TRACKS_list)] <- "Gene Track"
+  if(gene_track){
+    printer("++ GGBIO:: Adding Gene model track.",v=verbose)
+    try({
+      track.genes <- GGBIO.transcript_model_track(gr.snp_CHR = gr.snp_CHR,
+                                                  max_transcripts = max_transcripts)
+      TRACKS_list <- append(TRACKS_list, track.genes)
+      names(TRACKS_list)[length(TRACKS_list)] <- "Gene Track"
+    })
+  }
+
 
   # Track 3: Annotation - XGR Annotations
   ## Download
