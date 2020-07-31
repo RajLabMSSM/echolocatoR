@@ -8,6 +8,7 @@ extract_SNP_subset(
   locus_dir,
   fullSS_path,
   subset_path,
+  LD_reference,
   force_new_subset = F,
   top_SNPs = "auto",
   bp_distance = 5e+05,

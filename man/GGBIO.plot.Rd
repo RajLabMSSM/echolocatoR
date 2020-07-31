@@ -19,6 +19,7 @@ GGBIO.plot(
   PP_threshold = 0.95,
   consensus_threshold = 2,
   sig_cutoff = 5e-08,
+  gene_track = T,
   XGR_libnames = c("ENCODE_TFBS_ClusteredV3_CellTypes",
     "ENCODE_DNaseI_ClusteredV3_CellTypes", "Broad_Histone"),
   n_top_xgr = 5,

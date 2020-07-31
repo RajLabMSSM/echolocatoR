@@ -4,7 +4,14 @@
 \alias{LD.save_LD_matrix}
 \title{Save LD_matrix}
 \usage{
-LD.save_LD_matrix(LD_matrix, subset_DT, locus_dir, LD_reference, verbose = T)
+LD.save_LD_matrix(
+  LD_matrix,
+  subset_DT,
+  locus_dir,
+  fillNA = 0,
+  LD_reference,
+  verbose = T
+)
 }
 \description{
 Save LD_matrix

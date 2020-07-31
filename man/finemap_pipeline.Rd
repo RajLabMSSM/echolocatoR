@@ -64,6 +64,7 @@ finemap_pipeline(
   consensus_threshold = 2,
   case_control = T,
   QTL_prefixes = NULL,
+  fillNA = 0,
   plot.zoom = "1x",
   plot.Nott_epigenome = plot.Nott_epigenome,
   plot.Nott_binwidth = 200,
