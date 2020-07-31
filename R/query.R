@@ -79,14 +79,21 @@ import_topSNPs <- function(topSS,
   }
 
   # Add Locus/Gene columns
-  if((is.null(gene_col) & is.null(locus_col)) |
-     (!any(gene_col %in% colnames(top_SNPs)) & !any(gene_col %in% colnames(top_SNPs)))){
+  if((is.null(gene_col) & is.null(locus_col))){
     printer("+ Constructing locus names from CHR and index SNP")
     # locus_chr1_rs10737496
-    top_SNPs <- dplyr::mutate(top_SNPs, Locus=paste0("locus_chr",CHR,"_",SNP))
+    top_SNPs <- dplyr::mutate(top_SNPs,
+                              Locus=paste0("locus_chr",CHR,"_",SNP),
+                              Gene=paste0("locus_chr",CHR,"_",SNP))
     locus_col <- gene_col <- "Locus";
-  }
-  if(gene_col %in% colnames(top_SNPs) & locus_col %in% colnames(top_SNPs)){
+  } else if(!any(gene_col %in% colnames(top_SNPs)) & !any(gene_col %in% colnames(top_SNPs))){
+    printer("+ Constructing locus names from CHR and index SNP")
+    # locus_chr1_rs10737496
+    top_SNPs <- dplyr::mutate(top_SNPs,
+                              Locus=paste0("locus_chr",CHR,"_",SNP),
+                              Gene=paste0("locus_chr",CHR,"_",SNP))
+    locus_col <- gene_col <- "Locus";
+  } else if(gene_col %in% colnames(top_SNPs) & locus_col %in% colnames(top_SNPs)){
     print("+ Assigning gene_col and locus_col independently",v=verbose)
     top_SNPs$Gene <- gsub("/","_", orig_top_SNPs[[gene_col]])
     top_SNPs$Locus <- gsub("/","_",orig_top_SNPs[[locus_col]]) # Get rid of problematic characters
@@ -109,7 +116,7 @@ import_topSNPs <- function(topSS,
     top_SNPs$Effect <- 1
   }
 
-  top_SNPs <- top_SNPs %>%
+  top_SNPs <- suppressMessages(top_SNPs %>%
     dplyr::select(Locus=Locus,
                   Gene=Gene,
                   CHR=chrom_col,
@@ -118,7 +125,7 @@ import_topSNPs <- function(topSS,
                   P=pval_col,
                   Effect=effect_col,
                   min_POS=min_POS_col,
-                  max_POS=max_POS_col)
+                  max_POS=max_POS_col))
     if("min_POS" %in% colnames(top_SNPs) &
        "max_POS" %in% colnames(top_SNPs)){
       top_SNPs <- dplyr::mutate(top_SNPs, span_kb=(max_POS-min_POS)/1000)
