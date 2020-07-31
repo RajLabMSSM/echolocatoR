@@ -464,11 +464,12 @@ finemap_handler <- function(locus_dir,
       finemap_dat <- find_consensus_SNPs(finemap_dat = finemap_dat,
                                          credset_thresh = PP_threshold,
                                          consensus_thresh = consensus_threshold,
-                                         verbose = F)
+                                         verbose = verbose)
       save_finemap_results(finemap_dat, file_path)
     }
   end_FM <- Sys.time()
-  printer("+ Fine-mapping with '", paste0(finemap_methods, collapse=", "),"' completed in ",round(end_FM-start_FM,2))
+  printer("+ Fine-mapping with '", paste0(finemap_methods, collapse=", "),"' completed:",v=verbose)
+  print(round(end_FM-start_FM,2))
   return(finemap_dat)
 }
 
