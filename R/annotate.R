@@ -91,7 +91,7 @@ merge_finemapping_results <- function(dataset="./Data/GWAS",
         printer("+ Importing results...",gene, v=verbose)
         multi_data <- data.table::fread(md, nThread = nThread)
         multi_data <- update_cols(multi_data)
-        multi_data <- cbind(data.table::data.table(Dataset=dn, Gene=gene), multi_data)
+        multi_data <- cbind(data.table::data.table(Dataset=basename(dn), Gene=gene), multi_data)
         return(multi_data)
       }) %>% data.table::rbindlist(fill=TRUE) # Bind genes
     }) %>% data.table::rbindlist(fill=TRUE) # Bind datasets
