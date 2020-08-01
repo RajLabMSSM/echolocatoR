@@ -95,6 +95,7 @@ TABIX.query <- function(fullSS.gz,
 
 
 
+
 #' Covert and query
 #'
 #' If it is not tabix format already
@@ -141,6 +142,10 @@ TABIX <- function(fullSS_path,
   } else { printer("TABIX:: Existing indexed tabix file detected",v=verbose) }
   # Query
   cDict <- column_dictionary(file_path = fullSS.gz)
+  has_chr <- chrom_has_chr(fullSS.gz=fullSS.gz,
+                           chrom_col=chrom_col,
+                           nThread=nThread)
+  if(has_chr) paste0("chr",gsub("chr","",chrom))
   dat <- TABIX.query(fullSS.gz=fullSS.gz,
                      chrom=chrom,
                      start_pos=min_POS,
@@ -157,4 +162,12 @@ TABIX <- function(fullSS_path,
 
 
 
+
+chrom_has_chr <- function(fullSS.gz,
+                          chrom_col="CHR",
+                          nThread=4){
+  header <- data.table::fread(fullSS.gz, nThread=nThread, nrows = 1)
+  has_chr <- grepl("ch",header[[chrom_col]][1])
+  return(has_chr)
+}
 

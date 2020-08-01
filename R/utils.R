@@ -706,12 +706,12 @@ filter_snps <- function(subset_DT,
                         bp_distance,
                         remove_variants,
                         locus,
-                        verbose=T,
                         min_POS=NA,
                         max_POS=NA,
                         max_snps=NULL,
                         min_MAF=NULL,
-                        trim_gene_limits=F){
+                        trim_gene_limits=F,
+                        verbose=T,){
   if(remove_variants!=F){
     printer("Removing specified variants:",paste(remove_variants, collapse=','), v=verbose)
     try({subset_DT <- subset(subset_DT, !(SNP %in% remove_variants) )})
@@ -724,15 +724,20 @@ filter_snps <- function(subset_DT,
                               max_POS=min_POS)
   }
   if(!is.null(max_snps)){
-    subset_DT <- limit_SNPs(max_snps = max_snps, subset_DT = subset_DT)
+    subset_DT <- limit_SNPs(max_snps = max_snps,
+                            subset_DT = subset_DT)
   }
-  if(!is.null(min_MAF) & length(min_MAF>0)>0){
-    printer("echolocatoR:: Removing SNPs w/ MAF <",min_MAF)
+  if(!is.null(min_MAF) &
+     any(min_MAF>0, na.rm = T) &
+     (!is.na(min_MAF)) &
+     "MAF" %in% colnames(subset_DT)){
+    printer("echolocatoR:: Removing SNPs with MAF <",min_MAF,v=verbose)
     subset_DT <- subset(subset_DT, MAF>=min_MAF)
   }
   # Limit range
   if(!is.null(bp_distance)){
-    subset_DT <- assign_lead_SNP(new_DT = subset_DT)
+    subset_DT <- assign_lead_SNP(new_DT = subset_DT,
+                                 verbose = verbose)
     lead.snp <- subset(subset_DT, leadSNP)
     subset_DT <- subset(subset_DT,
                         POS >= lead.snp$POS - bp_distance &
@@ -740,7 +745,7 @@ filter_snps <- function(subset_DT,
   }
   if(!is.na(min_POS)){subset_DT <- subset(subset_DT, POS>=min_POS)}
   if(!is.na(max_POS)){subset_DT <- subset(subset_DT, POS<=max_POS)}
-  printer("++ Post-filtered data:",paste(dim(subset_DT), collapse=" x "))
+  printer("++ Post-filtered data:",paste(dim(subset_DT), collapse=" x "),v=verbose)
   return(subset_DT)
 }
 

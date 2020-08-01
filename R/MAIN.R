@@ -483,14 +483,15 @@ finemap_pipeline <- function(locus,
   ## Do this step AFTER saving the LD to disk so that it's easier to re-subset in different ways later without having to redownload LD.
   message("\n-------------- Step 3: Filter SNPs 🚰-------------")
   subset_DT <- filter_snps(subset_DT=subset_DT,
-                            bp_distance=bp_distance,
-                            remove_variants=remove_variants,
-                            locus=locus,
-                            verbose=verbose,
-                            min_POS=min_POS,
-                            max_POS=max_POS,
-                            max_snps=max_snps,
-                            trim_gene_limits=trim_gene_limits)
+                           bp_distance=bp_distance,
+                           remove_variants=remove_variants,
+                           locus=locus,
+                           min_POS=min_POS,
+                           max_POS=max_POS,
+                           max_snps=max_snps,
+                           trim_gene_limits=trim_gene_limits,
+                           min_MAF = min_MAF,
+                           verbose=verbose)
   # Subset LD and df to only overlapping SNPs
   sub.out <- subset_common_snps(LD_matrix =LD_matrix,
                                 finemap_dat = subset_DT,

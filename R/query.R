@@ -275,7 +275,8 @@ extract_SNP_subset <- function(locus_dir,
                   max_POS=max_POS,
                   bp_distance=bp_distance,
                   query_by=query_by,
-                  probe_path=probe_path)
+                  probe_path=probe_path,
+                  verbose=verbose)
     # Clean file
     query <- standardize_subset(locus=locus,
                                 top_SNPs=top_SNPs,
@@ -368,7 +369,7 @@ query_by_coordinates_merged <- function(top_SNPs,
                                         min_POS,
                                         max_POS,
                                         bp_distance){
-  topSNP_sub <- top_SNPs[top_SNPs$Gene==locus & !is.na(top_SNPs$Gene),][1,]
+  topSNP_sub <- top_SNPs[top_SNPs$Locus==locus & !is.na(top_SNPs$Locus),][1,]
   if(is.na(min_POS)){min_POS <- topSNP_sub$POS - bp_distance}
   if(is.na(max_POS)){max_POS <- topSNP_sub$POS + bp_distance}
   printer("---Min snp position:",min_POS, "---")
@@ -503,7 +504,7 @@ query_handler <- function(locus,
   printer("+ Query Method:",query_by,v=verbose)
 
   if(query_by=="tabix"){
-    topSNP_sub <- top_SNPs[top_SNPs$Gene==locus & !is.na(top_SNPs$Gene),]
+    topSNP_sub <- top_SNPs[top_SNPs$Locus==locus & !is.na(top_SNPs$Locus),]
     if(is.na(min_POS)){min_POS <- topSNP_sub$POS - bp_distance}
     if(is.na(max_POS)){max_POS <- topSNP_sub$POS + bp_distance}
     printer("---Min snp position:",min_POS, "---",v=verbose)
@@ -515,7 +516,7 @@ query_handler <- function(locus,
                    position_col=position_col,
                    min_POS=min_POS,
                    max_POS=max_POS,
-                   chrom= gsub("chr","",topSNP_sub$CHR[1]),
+                   chrom=topSNP_sub$CHR[1],
                    conda_env=conda_env,
                    verbose=verbose
           )
