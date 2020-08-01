@@ -711,7 +711,7 @@ filter_snps <- function(subset_DT,
                         max_snps=NULL,
                         min_MAF=NULL,
                         trim_gene_limits=F,
-                        verbose=T,){
+                        verbose=T){
   if(remove_variants!=F){
     printer("Removing specified variants:",paste(remove_variants, collapse=','), v=verbose)
     try({subset_DT <- subset(subset_DT, !(SNP %in% remove_variants) )})
