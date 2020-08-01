@@ -636,11 +636,15 @@ POLYFUN_SUSIE <- function(locus_dir,
     priors <- .rbind.file.list(ldsc.files)
   }
 
+  # Ensure formatting is correct (sometimes SNP gets turned into logical?)
+  finemap_dat$SNP <- as.character(finemap_dat$SNP)
+  priors <- dplyr::select(priors, SNP, POLYFUN.h2=SNPVAR) %>%
+    data.table::data.table() %>%
+    dplyr::mutate(SNP=as.character(SNP))
   # Prepare data
-  merged_dat <- data.table:::merge.data.table(finemap_dat,
-                                              dplyr::select(priors, SNP, POLYFUN.h2=SNPVAR) %>%
-                                                data.table::data.table(),
-                                              by="SNP")
+  merged_dat <- data.table::merge.data.table(x = finemap_dat,
+                                             y = priors,
+                                             by="SNP")
   sub.out <- subset_common_snps(LD_matrix = LD_matrix,
                                 finemap_dat = merged_dat)
   LD_matrix <- sub.out$LD

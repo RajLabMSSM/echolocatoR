@@ -64,13 +64,13 @@ FINEMAP.construct_data <- function(locus_dir,
     # data.z
     data.z_path <- file.path(locus_dir,"FINEMAP","data.z")
     data.table::fwrite(data.z, data.z_path, sep = " ",
-                       nThread = nThread)
+                       nThread = 1)
     # Sys.chmod(data.z_path, "777", use_umask = FALSE)
     # data.ld
     data.ld_path <- file.path(locus_dir,"FINEMAP","data.ld")
     data.table::fwrite(data.table:::as.data.table.matrix(LD_filt),
                        data.ld_path, sep=" ", quote = F, col.names = F,
-                       nThread = nThread)
+                       nThread = 1)
     # Sys.chmod(data.ld_path, "777", use_umask = FALSE)
   } else {warning("+ FINEMAP:: Summary statistics file (data.z) and LD matrix (data.ld) must contain the same number of SNPs.")}
   return(c("Zscore_path"=data.z_path,
@@ -170,7 +170,7 @@ FINEMAP.process_results <- function(locus_dir,
   # }
   # CS <- strsplit(top_config$config, ",")[[1]]
   # Import snp-level results
-  snp_level <- data.table::fread(file.path(locus_dir,"FINEMAP/data.snp"))
+  snp_level <- data.table::fread(file.path(locus_dir,"FINEMAP/data.snp"), nThread = 1)
   snp_level <- subset(snp_level, prob>credset_thresh & prob_group>credset_thresh) %>%
     dplyr::mutate(CS=1)
 
