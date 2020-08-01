@@ -9,12 +9,12 @@ filter_snps(
   bp_distance,
   remove_variants,
   locus,
-  verbose = T,
   min_POS = NA,
   max_POS = NA,
   max_snps = NULL,
   min_MAF = NULL,
-  trim_gene_limits = F
+  trim_gene_limits = F,
+  verbose = T
 )
 }
 \description{

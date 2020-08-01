@@ -145,7 +145,7 @@ TABIX <- function(fullSS_path,
   has_chr <- chrom_has_chr(fullSS.gz=fullSS.gz,
                            chrom_col=chrom_col,
                            nThread=nThread)
-  if(has_chr) paste0("chr",gsub("chr","",chrom))
+  if(has_chr) paste0("chr",gsub("chr","",chrom)) else gsub("chr","",chrom)
   dat <- TABIX.query(fullSS.gz=fullSS.gz,
                      chrom=chrom,
                      start_pos=min_POS,

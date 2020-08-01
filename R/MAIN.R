@@ -795,7 +795,7 @@ finemap_loci <- function(loci,
       cat('  \n')
     }) ## end try()
     end_gene <- Sys.time()
-    message(locus," fine-mappping complete:")
+    message(locus," fine-mappping complte:")
     print(round(end_gene-start_gene,1))
   return(finemap_dat)
   }) # end for loop

@@ -75,14 +75,14 @@ import_topSNPs <- function(topSS,
       snp_col=gsub(" ",".",trimws(snp_col))
       pval_col=gsub(" ",".",trimws(pval_col))
       effect_col=gsub(" ",".",trimws(effect_col))
-      position_col=gsub(" ",".",trimws(position_col))
     }
   }
 
   top_SNPs <- dplyr::rename(top_SNPs,
-                            CHR=gsub("chr","",chrom_col),
+                            CHR=chrom_col,
                             POS=position_col,
-                            SNP=snp_col)
+                            SNP=snp_col) %>%
+    dplyr::mutate(CHR=gsub("chr","",CHR))
 
   # Add Locus/Gene columns
   if((is.null(gene_col) & is.null(locus_col))){
