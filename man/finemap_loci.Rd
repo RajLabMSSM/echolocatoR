@@ -8,7 +8,7 @@ finemap_loci(
   loci,
   fullSS_path,
   dataset_name = "dataset_name",
-  dataset_type = "dataset_type",
+  dataset_type = "GWAS",
   force_new_subset = F,
   force_new_LD = F,
   force_new_finemap = T,

@@ -169,7 +169,7 @@ standardize_subset <- function(locus,
 
     # Add ref/alt alleles if available
     printer("++ Preparing A1,A1 cols", v=verbose)
-    if(A1_col %in% colnames(query) & A2_col %in% colnames(query)){
+    if(any(A1_col %in% colnames(query)) & any(A2_col %in% colnames(query))){
       query2 <- query %>% dplyr::rename(A1=A1_col, A2=A2_col)
       query_mod$A1 <- toupper(query2$A1)
       query_mod$A2 <- toupper(query2$A2)
@@ -178,11 +178,11 @@ standardize_subset <- function(locus,
     # ------ Optional columns ------ #
     ## Infer MAF from freq (assuming MAF is alway less than 0.5)
     printer("++ Preparing MAF,Freq cols", v=verbose)
-    if(MAF_col %in% colnames(query)){
+    if(any(MAF_col %in% colnames(query))){
       query <- query %>% dplyr::rename(MAF=MAF_col)
       query_mod$MAF <- as.numeric(query$MAF)
     } else {
-      if(freq_col %in% colnames(query)){
+      if(any(freq_col %in% colnames(query))){
         query <- query %>% dplyr::rename(Freq=freq_col)
         query_mod$Freq <- as.numeric(query$Freq)
         if(MAF_col=="calculate" | !(MAF_col %in% colnames(query)) ){
@@ -206,7 +206,7 @@ standardize_subset <- function(locus,
 
     ## Add proportion of cases if available
     printer("++ Preparing N_cases,N_controls cols", v=verbose)
-    if(N_cases_col %in% colnames(query) & N_controls_col %in% colnames(query)){
+    if(any(N_cases_col %in% colnames(query)) & any(N_controls_col %in% colnames(query))){
       query <- query %>% dplyr::rename(N_cases=N_cases_col, N_controls=N_controls_col)
       query_mod$N_cases <- query$N_cases
       query_mod$N_controls <- query$N_controls

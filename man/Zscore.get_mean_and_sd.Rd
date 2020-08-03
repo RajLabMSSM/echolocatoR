@@ -5,12 +5,12 @@
 \title{Store info necessary for Z-score}
 \usage{
 Zscore.get_mean_and_sd(
-  fullSS = "./Data/GWAS/Nalls23andMe_2019/nallsEtAl2019_allSamples_allVariants.mod.txt",
+  fullSS,
   target_col = "statistic",
   effect_col = "beta",
   stderr_col = "se",
   use_saved = T,
-  output_path = "./Data/GWAS/Nalls23andMe_2019/z.info.RDS"
+  output_path
 )
 }
 \description{

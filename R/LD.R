@@ -941,12 +941,19 @@ LD.plink_LD <-function(leadSNP,
   start <- Sys.time()
   # Calculate LD
   printer("++ Reading in BIM file...", v=verbose)
-  bim <- data.table::fread(file.path(LD_folder, "plink.bim"), col.names = c("CHR","SNP","V3","POS","A1","A2"))
+  bim <- data.table::fread(file.path(LD_folder, "plink.bim"),
+                           col.names = c("CHR","SNP","V3","POS","A1","A2"),
+                           stringsAsFactors = F)
   if(remove_excess_snps){
     orig_n <- nrow(bim)
-    bim.merged <- data.table::merge.data.table(bim,
-                                 subset_DT,
-                                 by=c("CHR","POS"))
+    # Standardize format adn merge
+    bim.merged <- data.table::merge.data.table(dplyr::mutate(bim,
+                                                             CHR=as.integer(gsub("chr","",CHR)),
+                                                             POS=as.integer(POS)),
+                                               dplyr::mutate(subset_DT,
+                                                             CHR=as.integer(gsub("chr","",CHR)),
+                                                             POS=as.integer(POS)),
+                                               by=c("CHR","POS"))
     bim <- subset(bim, SNP %in% bim.merged$SNP.x)
     printer("LD:PLINK:: Removing RSIDs that don't appear in locus subset:",orig_n,"==>",nrow(bim),"SNPs",v=verbose)
   }

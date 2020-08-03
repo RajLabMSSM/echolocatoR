@@ -715,10 +715,10 @@ POLYFUN.finemapper <- function(polyfun=NULL,
                         paste0("finemapper_res.",basename(locus_dir),".gz"))
   dir.create(dirname(out_path), showWarnings = F, recursive = T)
 
-  if(is.null(h2_path)){
-    url_prefix <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/output/PD_GWAS."
-    h2_path <- paste0(url_prefix,chrom,".snpvar_constrained.gz")
-  }
+  # if(is.null(h2_path)){
+  #   url_prefix <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/output/PD_GWAS."
+  #   h2_path <- paste0(url_prefix,chrom,".snpvar_constrained.gz")
+  # }
 
   if(is.null(sample_size) & (!"N" %in% colnames(finemap_dat))){
     finemap_dat <- get_sample_size(finemap_dat)
@@ -955,7 +955,7 @@ POLYFUN.functional_enrichment <- function(finemap_dat,
   annot.file <- list.files(base_url, pattern = paste0(".UKB.",chrom,".annot.parquet"), full.names = T)
 
   library(reticulate)
-  reticulate::use_condaenv(conda_env = "polyfun_venv")
+  reticulate::use_condaenv(condaenv = "polyfun_venv")
   pd <- reticulate::import("pandas")
   annot <- POLYFUN.read_parquet(parquet_path = annot.file)
   annot_names <- annot %>% dplyr::select(-c(SNP,CHR,BP,A1,A2)) %>% colnames()

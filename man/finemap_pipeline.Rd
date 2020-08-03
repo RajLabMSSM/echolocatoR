@@ -9,7 +9,7 @@ finemap_pipeline(
   fullSS_path,
   results_dir,
   dataset_name = "dataset_name",
-  dataset_type = "dataset_type",
+  dataset_type = "GWAS",
   top_SNPs = "auto",
   force_new_subset = F,
   force_new_LD = F,

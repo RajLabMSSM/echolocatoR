@@ -206,12 +206,12 @@ tryFunc <- function(input, func, ...) {
 #'
 #' These functions are necessary for \code{\link{PAINTOR}}.
 #' @keywords internal
-Zscore.get_mean_and_sd <- function(fullSS="./Data/GWAS/Nalls23andMe_2019/nallsEtAl2019_allSamples_allVariants.mod.txt",
+Zscore.get_mean_and_sd <- function(fullSS,#="./Data/GWAS/Nalls23andMe_2019/nallsEtAl2019_allSamples_allVariants.mod.txt",
                                    target_col="statistic",
                                    effect_col="beta",
                                    stderr_col="se",
                                    use_saved=T,
-                                   output_path="./Data/GWAS/Nalls23andMe_2019/z.info.RDS"){
+                                   output_path){#="./Data/GWAS/Nalls23andMe_2019/z.info.RDS"){
   if(use_saved & file.exists(output_path)){
     printer("Reading in:",output_path,"...")
     z.info <- readRDS(output_path)
@@ -1114,6 +1114,7 @@ determine_chrom_type <- function(chrom_type=NULL,
     has_chr <- grepl("chr",chrom_type)
   } else {
     # Slow, but it works
+    printer("Determining chrom type from file header")
     header <- data.table::fread(fullSS.gz, nThread=nThread, nrows = 1)
     has_chr <- grepl("ch",header[[chrom_col]][1])
   }
