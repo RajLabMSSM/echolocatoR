@@ -18,6 +18,7 @@ finemap_pipeline(
   bp_distance = 5e+05,
   n_causal = 5,
   chrom_col = "CHR",
+  chrom_type = NULL,
   position_col = "POS",
   snp_col = "SNP",
   pval_col = "P",

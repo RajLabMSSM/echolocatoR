@@ -87,9 +87,10 @@ TABIX.query <- function(fullSS.gz,
   coords <- paste0(chrom,":",start_pos,"-",end_pos)
   # cmd4 <- paste("tabix -h",fullSS.gz,coords,">",subset_path)
   printer("TABIX:: Extracting subset of sum stats", v=verbose)
-  printer("+ TABIX::",paste(tabix,"-h",fullSS.gz,coords), v=verbose)
-  dat <- data.table::fread(cmd=paste(tabix,"-h",fullSS.gz,coords))
-  printer("++ Returning",paste(dim(dat),collapse=" x "),"data.table", v=verbose)
+  tabix_cmd <- paste(tabix,"-h",fullSS.gz,coords)
+  printer("+ TABIX::",tabix_cmd, v=verbose)
+  dat <- data.table::fread(cmd=tabix_cmd)
+  printer("+ TABIX:: Returning",paste(dim(dat),collapse=" x "),"data.table", v=verbose)
   return(dat)
 }
 

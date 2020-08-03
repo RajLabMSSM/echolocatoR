@@ -9,6 +9,7 @@ TABIX(
   subset_path = NULL,
   is_tabix = F,
   chrom_col = "CHR",
+  chrom_type = NULL,
   position_col = "POS",
   min_POS = NA,
   max_POS = NA,

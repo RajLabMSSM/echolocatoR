@@ -14,6 +14,7 @@ query_handler(
   bp_distance = 5e+05,
   locus_col = "Gene",
   chrom_col = "CHR",
+  chrom_type = NULL,
   position_col = "POS",
   file_sep = "\\t",
   query_by = "coordinates",

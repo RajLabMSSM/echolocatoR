@@ -14,6 +14,7 @@ extract_SNP_subset(
   top_SNPs = "auto",
   bp_distance = 5e+05,
   chrom_col = "CHR",
+  chrom_type = NULL,
   position_col = "POS",
   snp_col = "SNP",
   locus_col = "Locus",
