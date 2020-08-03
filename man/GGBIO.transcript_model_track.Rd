@@ -7,8 +7,10 @@
 GGBIO.transcript_model_track(
   gr.snp_CHR,
   max_transcripts = 1,
+  remove_RP11 = T,
   show.legend = T,
-  show_plot = F
+  show_plot = F,
+  verbose = T
 )
 }
 \arguments{

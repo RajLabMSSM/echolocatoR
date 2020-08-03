@@ -51,6 +51,7 @@
 GGBIO.plot <- function(finemap_dat,
                        locus_dir,
                        LD_matrix=NULL,
+                       LD_reference=NULL,
                        color_r2=T,
                        method_list=c("ABF","FINEMAP","SUSIE","POLYFUN_SUSIE"),
                        dot_summary=F,
@@ -318,7 +319,7 @@ GGBIO.plot <- function(finemap_dat,
   if(save_plot){
     window_suffix <- get_window_suffix(finemap_dat=finemap_dat,
                                        plot.zoom=plot.zoom)
-    plot_path <- file.path(locus_dir,paste0("multiview_",locus,"_",window_suffix,".png"))
+    plot_path <- file.path(locus_dir,paste("multiview",locus,LD_reference,window_suffix,"png",sep="."))
     printer("+ GGBIO:: Saving plot ==>",plot_path)
     ggbio::ggsave(filename = plot_path,
                   plot = TRKS_FINAL,
@@ -763,12 +764,14 @@ GGBIO.QTL_track <- function(gr.snp,
 #' track.genes <- GGBIO.transcript_model_track(gr.snp_CHR, max_transcripts=1)
 GGBIO.transcript_model_track <- function(gr.snp_CHR,
                                          max_transcripts=1,
+                                         remove_RP11=T,
                                          show.legend=T,
-                                         show_plot=F){
+                                         show_plot=F,
+                                         verbose=T){
   # library(ggbio)
-  printer("++ GGBIO:: Gene Model Track")
+  printer("+ GGBIO:: Gene Model Track",v=verbose)
   lead.index <- which(gr.snp_CHR$leadSNP==T)
-  printer("+ Annotating at transcript-level.")
+  printer("++ GGBIO:: Annotating at transcript-level.",v=verbose)
   db.gr <- ensembldb::transcripts(EnsDb.Hsapiens.v75::EnsDb.Hsapiens.v75) %>%
     data.table::as.data.table() %>%
     dplyr::mutate(index=row.names(.)) %>%
@@ -777,6 +780,11 @@ GGBIO.transcript_model_track <- function(gr.snp_CHR,
   if(!"symbol" %in% colnames(db.gr)){
     db.gr$symbol <- ensembl_to_hgnc(db.gr$gene_id)
   }
+  if(remove_RP11){
+    printer("++ GGBIO:: Removing RP11- genes",v=verbose)
+    db.gr <- subset(db.gr, !startsWith(as.character(symbol),"RP11"))
+  }
+
   # Subset to only the region encompassed by the sumstats
   db.gr <- subset(db.gr,
                     seqnames == unique(gr.snp_CHR$CHR) &

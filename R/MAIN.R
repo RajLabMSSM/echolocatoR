@@ -399,7 +399,8 @@ finemap_pipeline <- function(locus,
                              fillNA=0,
 
                              plot.zoom="1x",
-                             plot.Nott_epigenome = plot.Nott_epigenome,
+                             plot.Nott_epigenome=F,
+                             plot.Nott_show_placseq=F,
                              plot.Nott_binwidth=200,
                              plot.Nott_bigwig_dir=NULL,
                              plot.XGR_libnames=NULL,
@@ -416,10 +417,12 @@ finemap_pipeline <- function(locus,
                                   locus = locus)
    locus_dir <- get_locus_dir(subset_path = subset_path)
 
+
    # Extract subset
    message("\n------------------ Step 1: Query 🔍---------------")
 
-   subset_DT <- extract_SNP_subset(locus_dir = locus_dir,
+   subset_DT <- extract_SNP_subset(locus = locus,
+                                   locus_dir = locus_dir,
                                    top_SNPs = top_SNPs,
                                    fullSS_path = fullSS_path,
                                    subset_path  =  subset_path,
@@ -451,6 +454,7 @@ finemap_pipeline <- function(locus,
                                     superpopulation = superpopulation,
                                     min_POS = min_POS,
                                     max_POS = max_POS,
+
                                     file_sep = file_sep,
                                     query_by = query_by,
                                     probe_path = probe_path,
@@ -534,6 +538,7 @@ finemap_pipeline <- function(locus,
       try({
         mf_plot <- GGBIO.plot(finemap_dat = finemap_dat,
                               LD_matrix = LD_matrix,
+                              LD_reference = LD_reference,
                               locus_dir = locus_dir,
                               method_list = finemap_methods,
                               PP_threshold = PP_threshold,
@@ -554,6 +559,7 @@ finemap_pipeline <- function(locus,
       try({
         trx <- GGBIO.plot(finemap_dat = finemap_dat,
                           LD_matrix = LD_matrix,
+                          LD_reference = LD_reference,
                           locus_dir = locus_dir,
                           method_list = finemap_methods,
                           PP_threshold = PP_threshold,
@@ -570,6 +576,7 @@ finemap_pipeline <- function(locus,
                           Roadmap_query = plot.Roadmap_query,
 
                           Nott_epigenome = plot.Nott_epigenome,
+                          Nott_show_placseq = plot.Nott_show_placseq,
                           Nott_binwidth = plot.Nott_binwidth,
                           Nott_bigwig_dir = plot.Nott_bigwig_dir,
                           nThread = nThread,
@@ -683,6 +690,7 @@ finemap_loci <- function(loci,
                          plot.types = c("simple"),
                          plot.zoom="1x",
                          plot.Nott_epigenome=F,
+                         plot.Nott_show_placseq=F,
                          plot.Nott_binwidth=200,
                          plot.Nott_bigwig_dir=NULL,
                          plot.XGR_libnames=NULL,
@@ -693,14 +701,7 @@ finemap_loci <- function(loci,
                          nThread=4,
                          verbose=T){
   data.table::setDTthreads(threads = nThread)
-  conditioned_snps <- snps_to_condition(conditioned_snps, top_SNPs, loci)
-  genes_detected <- detect_genes(loci = loci, verbose = verbose)
-  if(genes_detected){
-    top_SNPs <- dplyr::mutate(top_SNPs, Locus_Gene=paste(Locus,Gene,sep="_"))
-    top_SNPs <- subset(top_SNPs, Locus_Gene %in% paste(unname(loci),names(loci),sep="_"))
-  }
-
-  FINEMAP_DAT <- lapply(1:length(unique(loci)), function(i){
+  conditioned_snps <- snps_to_condition(conditioned_snps, top_SNPs, loci)FINEMAP_DAT <- lapply(1:length(unique(loci)), function(i){
     start_gene <- Sys.time()
     finemap_dat <- NULL
     try({
@@ -782,6 +783,7 @@ finemap_loci <- function(loci,
 
                                      plot.zoom=plot.zoom,
                                      plot.Nott_epigenome=plot.Nott_epigenome,
+                                     plot.Nott_show_placseq=plot.Nott_show_placseq,
                                      plot.Nott_binwidth=plot.Nott_binwidth,
                                      plot.Nott_bigwig_dir=plot.Nott_bigwig_dir,
                                      plot.XGR_libnames=plot.XGR_libnames,

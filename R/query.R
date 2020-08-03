@@ -78,6 +78,11 @@ import_topSNPs <- function(topSS,
     }
   }
 
+  # Fill in missing cols with nonsense
+  if(is.na(chrom_col)) top_SNPs$CHR <- NA; chrom_col<-"CHR";
+  if(is.na(position_col)) top_SNPs$POS <- NA; position_col<-"POS";
+  if(!effect_col %in% colnames(top_SNPs)) top_SNPs$Effect <- 1; effect_col<-"Effect";
+
   top_SNPs <- dplyr::rename(top_SNPs,
                             CHR=chrom_col,
                             POS=position_col,
@@ -92,7 +97,7 @@ import_topSNPs <- function(topSS,
                               Locus=paste0("locus_chr",CHR,"_",SNP),
                               Gene=paste0("locus_chr",CHR,"_",SNP))
     locus_col <- gene_col <- "Locus";
-  } else if(!any(gene_col %in% colnames(top_SNPs)) & !any(gene_col %in% colnames(top_SNPs))){
+  } else if(!any(gene_col %in% colnames(top_SNPs)) & !any(locus_col %in% colnames(top_SNPs))){
     printer("+ Constructing locus names from CHR and index SNP")
     # locus_chr1_rs10737496
     top_SNPs <- dplyr::mutate(top_SNPs,
@@ -114,12 +119,6 @@ import_topSNPs <- function(topSS,
       top_SNPs$Locus <- gsub("/","_",orig_top_SNPs[[locus_col]])
       top_SNPs$Gene <- gsub("/","_",top_SNPs$Locus) # Get rid of problematic characters
     }
-  }
-
-  # Standardize col names
-  if(!effect_col %in% colnames(top_SNPs)){
-    printer("+ Filling in `Effect` column with placeholder (1).")
-    top_SNPs$Effect <- 1
   }
 
 
@@ -144,9 +143,9 @@ import_topSNPs <- function(topSS,
     }
 
     # Get the top representative SNP and Gene per locus (by lowest p-value and effect size)
-     if(!is.null(grouping_vars)){
+   if(!is.null(grouping_vars)){
       top_SNPs <- suppressWarnings(top_SNPs %>%
-        arrange(P, dplyr::desc(Effect)) %>%
+        dplyr::arrange(P, dplyr::desc(Effect)) %>%
         dplyr::group_by(.dots=grouping_vars) %>%
         dplyr::slice(1) %>%
         replace(., .=="NA", NA) %>%
@@ -201,7 +200,8 @@ detect_genes <- function(loci,
 #'
 #' @family query functions
 #' @keywords internal
-extract_SNP_subset <- function(locus_dir,
+extract_SNP_subset <- function(locus=NULL,
+                               locus_dir,
                                fullSS_path,
                                subset_path,
                                LD_reference,
@@ -232,23 +232,19 @@ extract_SNP_subset <- function(locus_dir,
                                superpopulation="",
                                min_POS=NA,
                                max_POS=NA,
+                               genes_detected=F,
+
                                file_sep="\t",
                                query_by="coordinates",
                                probe_path = "./Data/eQTL/gene.ILMN.map",
                                QTL_prefixes=NULL,
                                remove_tmps=T,
                                verbose=T){
-  locus <- basename(locus_dir)
-  # multi_path <- file.path(locus_dir,"Multi-finemap","Multi-finemap_results.txt")
-  # multi_path <- list.files(path = locus_dir,
-  #                          pattern = "*Multi-finemap.tsv*",
-  #                          full.names = T,
-  #                          recursive = T)[1] %>% toString()
+  if(is.null(locus)) locus <- basename(locus_dir)
   multi_path <- create_method_path(locus_dir = locus_dir,
                                    LD_reference = LD_reference,
                                    finemap_method = "Multi-finemap",
                                    compress = T)
-
 
   if(file.exists(subset_path) & force_new_subset==F){
     printer("+ Importing pre-existing file:",subset_path, v=verbose)
@@ -301,6 +297,13 @@ extract_SNP_subset <- function(locus_dir,
                                 proportion_cases=proportion_cases,
                                 sample_size=sample_size,
                                 QTL_prefixes=QTL_prefixes)
+    # Subset by eGene
+    genes_detected <- detect_genes(loci = locus, verbose = F)
+    if(genes_detected){
+      printer("+ Filtering query to only include Locus:eGene pair =",
+              paste(unname(locus),names(locus), sep=":"), v=verbose)
+      query <- subset(query, Gene==names(locus))
+    }
     end_query <- Sys.time()
     printer("+ Extraction completed in", round(end_query-start_query, 2),"seconds", v=verbose)
     printer("+", dim(query)[1], "SNPs x ",dim(query)[2],"columns", v=verbose)
