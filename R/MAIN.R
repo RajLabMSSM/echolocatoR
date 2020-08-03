@@ -700,8 +700,10 @@ finemap_loci <- function(loci,
                          conda_env="echoR",
                          nThread=4,
                          verbose=T){
-  data.table::setDTthreads(threads = nThread)
-  conditioned_snps <- snps_to_condition(conditioned_snps, top_SNPs, loci)FINEMAP_DAT <- lapply(1:length(unique(loci)), function(i){
+  data.table::setDTthreads(threads = nThread);
+  conditioned_snps <- snps_to_condition(conditioned_snps, top_SNPs, loci);
+
+  FINEMAP_DAT <- lapply(1:length(unique(loci)), function(i){
     start_gene <- Sys.time()
     finemap_dat <- NULL
     try({
@@ -716,9 +718,7 @@ finemap_loci <- function(loci,
       min_pos <- .arg_list_handler(min_POS, i)
       max_pos <- .arg_list_handler(max_POS, i)
       LD_ref <- .arg_list_handler(LD_reference, i)
-      # message("^^^^^^^^^ Running echolocatoR on: ",locus," ^^^^^^^^^")
-      # cat('  \n###', locus, '  \n')
-      # Delete the old subset if force_new_subset == T
+
       finemap_dat <- finemap_pipeline(locus=locus,
                                      top_SNPs=top_SNPs,
                                      fullSS_path=fullSS_path,
