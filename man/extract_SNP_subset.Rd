@@ -5,6 +5,7 @@
 \title{Extract a subset of the summary stats}
 \usage{
 extract_SNP_subset(
+  locus = NULL,
   locus_dir,
   fullSS_path,
   subset_path,
@@ -34,6 +35,7 @@ extract_SNP_subset(
   superpopulation = "",
   min_POS = NA,
   max_POS = NA,
+  genes_detected = F,
   file_sep = "\\t",
   query_by = "coordinates",
   probe_path = "./Data/eQTL/gene.ILMN.map",

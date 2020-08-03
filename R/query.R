@@ -209,6 +209,7 @@ extract_SNP_subset <- function(locus=NULL,
                                top_SNPs="auto",
                                bp_distance=500000,
                                chrom_col="CHR",
+                               chrom_type=NULL,
                                position_col="POS",
                                snp_col="SNP",
                                locus_col="Locus",
@@ -265,6 +266,7 @@ extract_SNP_subset <- function(locus=NULL,
                   top_SNPs=top_SNPs,
                   locus_col=locus_col,
                   chrom_col=chrom_col,
+                  chrom_type=chrom_type,
                   position_col=position_col,
                   file_sep=file_sep,
                   min_POS=min_POS,
@@ -498,6 +500,7 @@ query_handler <- function(locus,
                           bp_distance=500000,
                           locus_col="Gene",
                           chrom_col="CHR",
+                          chrom_type=NULL,
                           position_col="POS",
                           file_sep="\t",
                           query_by="coordinates",
@@ -508,14 +511,19 @@ query_handler <- function(locus,
 
   if(query_by=="tabix"){
     topSNP_sub <- top_SNPs[top_SNPs$Locus==locus & !is.na(top_SNPs$Locus),]
+    if(detect_genes(loci = locus, verbose = F)){
+      topSNP_sub <- subset(topSNP_sub, Gene==names(locus))
+    }
     if(is.na(min_POS)){min_POS <- topSNP_sub$POS - bp_distance}
     if(is.na(max_POS)){max_POS <- topSNP_sub$POS + bp_distance}
-    printer("---Min snp position:",min_POS, "---",v=verbose)
-    printer("---Max snp position:",max_POS, "---",v=verbose)
+    printer("+ QUERY: Chromosome =",topSNP_sub$CHR[1],
+            "; Min position =", min_POS,
+            "; Max position =", max_POS, v=verbose)
     query <- TABIX(fullSS_path=fullSS_path,
                    subset_path=subset_path,
                    # is_tabix=F,
                    chrom_col=chrom_col,
+                   chrom_type=chrom_type,
                    position_col=position_col,
                    min_POS=min_POS,
                    max_POS=max_POS,

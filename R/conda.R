@@ -4,9 +4,6 @@
 # ~~~~~~~~~~~~~# ~~~~~~~~~~~~~# ~~~~~~~~~~~~~
 
 
-printer <- function(..., v=T){if(v){print(paste(...))}}
-
-
 
 #' Install reticulate
 #'
@@ -20,7 +17,7 @@ CONDA.install_reticulate <- function(dependencies=c("devtools",
                                                     "rappdirs",
                                                     "Rcpp")){
   if("reticulate" %in% installed.packages()){
-    print("CONDA:: `reticulate` already installed.")
+    printer("CONDA:: `reticulate` already installed.")
   } else{
     required_packages <- dependencies[ ! dependencies %in% installed.packages() ]
     if(length(required_packages)>0){
@@ -222,7 +219,6 @@ CONDA.env_from_yaml <- function(yaml_path=system.file("conda","echoR.yml",packag
   print(cmd)
   system(cmd)
 }
-
 
 
 

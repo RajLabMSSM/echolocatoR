@@ -67,6 +67,7 @@ finemap_loci(
   plot.types = c("simple"),
   plot.zoom = "1x",
   plot.Nott_epigenome = F,
+  plot.Nott_show_placseq = F,
   plot.Nott_binwidth = 200,
   plot.Nott_bigwig_dir = NULL,
   plot.XGR_libnames = NULL,

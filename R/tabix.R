@@ -87,6 +87,7 @@ TABIX.query <- function(fullSS.gz,
   coords <- paste0(chrom,":",start_pos,"-",end_pos)
   # cmd4 <- paste("tabix -h",fullSS.gz,coords,">",subset_path)
   printer("TABIX:: Extracting subset of sum stats", v=verbose)
+  printer("+ TABIX::",paste(tabix,"-h",fullSS.gz,coords), v=verbose)
   dat <- data.table::fread(cmd=paste(tabix,"-h",fullSS.gz,coords))
   printer("++ Returning",paste(dim(dat),collapse=" x "),"data.table", v=verbose)
   return(dat)
@@ -122,6 +123,7 @@ TABIX <- function(fullSS_path,
                   subset_path=NULL,
                   is_tabix=F,
                   chrom_col="CHR",
+                  chrom_type=NULL,
                   position_col="POS",
                   min_POS=NA,
                   max_POS=NA,
@@ -142,10 +144,14 @@ TABIX <- function(fullSS_path,
   } else { printer("TABIX:: Existing indexed tabix file detected",v=verbose) }
   # Query
   cDict <- column_dictionary(file_path = fullSS.gz)
-  has_chr <- chrom_has_chr(fullSS.gz=fullSS.gz,
-                           chrom_col=chrom_col,
-                           nThread=nThread)
-  if(has_chr) paste0("chr",gsub("chr","",chrom)) else gsub("chr","",chrom)
+  # Determine chromosome format
+  has_chr <- determine_chrom_type(chrom_type=chrom_type,
+                                  file_path=fullSS.gz,
+                                  chrom_col=chrom_col,
+                                  nThread=nThread,
+                                  verbose=verbose)
+  chrom <- if(has_chr) paste0("chr",gsub("chr","",chrom)) else gsub("chr","",chrom)
+
   dat <- TABIX.query(fullSS.gz=fullSS.gz,
                      chrom=chrom,
                      start_pos=min_POS,
@@ -163,11 +169,4 @@ TABIX <- function(fullSS_path,
 
 
 
-chrom_has_chr <- function(fullSS.gz,
-                          chrom_col="CHR",
-                          nThread=4){
-  header <- data.table::fread(fullSS.gz, nThread=nThread, nrows = 1)
-  has_chr <- grepl("ch",header[[chrom_col]][1])
-  return(has_chr)
-}
 

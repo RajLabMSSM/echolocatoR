@@ -11,6 +11,7 @@ GGBIO.plot(
   finemap_dat,
   locus_dir,
   LD_matrix = NULL,
+  LD_reference = NULL,
   color_r2 = T,
   method_list = c("ABF", "FINEMAP", "SUSIE", "POLYFUN_SUSIE"),
   dot_summary = F,
@@ -44,6 +45,15 @@ GGBIO.plot(
 )
 }
 \arguments{
+\item{LD_reference}{Which linkage disequilibrium reference panel do you want to use.
+Options include:
+\describe{
+\item{"UKB"}{A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See \href{https://www.biorxiv.org/content/10.1101/807792v2}{Wiessbrod et al. (2019)} for more details.}
+\item{"1KGphase1"}{Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.}
+\item{"1KGphase3"}{Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.}
+\item{"<path>/*.vcf" or "<path>/*.vcf.gz"}{Alternatively, users can provide their own custom panel by supplying a list of \emph{.vcf} file path (one per locus) which \pkg{echolocatoR} will use to compute LD (using \emph{plink}).}
+}}
+
 \item{color_r2}{If an LD_matrix is supplied, color each SNP by its LD with the lead SNP from the GWAS ()}
 
 \item{QTL_prefixes}{Prefixes to the columns that contain QTL data.
