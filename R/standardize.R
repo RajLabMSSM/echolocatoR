@@ -69,41 +69,37 @@ standardize_subset <- function(locus,
       subset(select=c(chrom_col, position_col, snp_col, pval_col, effect_col, stderr_col)) %>%
       dplyr::rename(CHR=chrom_col,POS=position_col, SNP=snp_col, P=pval_col,
                     Effect=effect_col, StdErr=stderr_col)
+    if(!"SNP" %in% colnames(query)){
+      query <- dplyr::rename(query, SNP=snp_col)
+    }
     # Gene col
     printer("++ Preparing Gene col", v=verbose)
     if(gene_col %in% colnames(query)){
       query <- dplyr::rename(query, Gene=gene_col)
       query_mod$Gene <- query$Gene
+      # Subset by eGene
       if(detect_genes(loci = locus, verbose = F)){
         printer("+ Subsetting to gene =",names(locus), v=verbose)
         query_mod <- subset(query_mod, Gene==names(locus))
         query <- subset(query, Gene==names(locus))
         if(dplyr::n_distinct(query_mod$SNP)!=nrow(query_mod)) stop("N rows must be equal to N unique SNPS.")
       }
+
     }
 
-
-    # Subset by eGene
-    if(detect_genes(loci = locus, verbose = F)){
-      printer("+ Filtering query to only include Locus:eGene pair =",
-              paste(unname(locus),names(locus), sep=":"), v=verbose)
-      query <- subset(query, Gene==names(locus))
-      query_mod <- subset(query_mod, Gene==names(locus))
-    }
 
     # Liftover if needed
     ## Do this step BEFORE inferring MAF from external source
     if(!fullSS_genome_build %in% c("hg19","hg37")){
       query_mod <- LIFTOVER(dat = query_mod,
-                        build.conversion = paste0(fullSS_genome_build,".to.hg19"),
-                        chrom_col = "CHR", start_col = "POS", end_col = "POS",
-                        return_as_granges = F,
-                        verbose = verbose)
+                            build.conversion = paste0(fullSS_genome_build,".to.hg19"),
+                            chrom_col = "CHR", start_col = "POS", end_col = "POS",
+                            return_as_granges = F,
+                            verbose = verbose)
     }
-    if(!"SNP" %in% colnames(query)){
-      query <- dplyr::rename(query, SNP=snp_col)
-    }
+    # Have to subset both ways bc some SNPs only available in certain builds
     query <- subset(query, SNP %in% unique(query_mod$SNP))
+    query_mod <- subset(query_mod, SNP %in% unique(query$SNP))
 
 
     # Add ref/alt alleles if available
