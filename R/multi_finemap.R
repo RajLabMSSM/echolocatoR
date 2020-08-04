@@ -15,14 +15,14 @@ check_necessary_cols <- function(subset_DT,
   required_dict <- list(ABF=c(for_all, if(dataset_type=="GWAS") "proportion_cases" else NULL),
                         FINEMAP=c(for_all),
                         SUSIE=c(for_all),
-                        POLYFUN_SUSIE=c(for_all,"P"),
+                        POLYFUN_SUSIE=c(for_all,"P","A1","A2"),
                         COLOC=c(for_all),
                         PAINTOR=c(for_all),
                         COJO=c(for_all,"A1","A2"))
   suggested_dict <- list(ABF=c("MAF"),
                          FINEMAP=c("A1","A2","MAF","N"),
                          SUSIE=c("N"),
-                         POLYFUN_SUSIE=c("MAF","A1","A2","N"),
+                         POLYFUN_SUSIE=c("MAF","N"),
                          PAINTOR=c("MAF"),
                          COJO=c("Freq","P","N")) # check these
   finemap_methods_suggests <-  finemap_methods

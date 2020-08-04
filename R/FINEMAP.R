@@ -9,6 +9,10 @@
 #' Prepare input files for \code{FINEMAP}
 #'
 #' Creates and saves 1) the summary stats file, and 2) the LD matrix.
+#' "Columns beta and se are required for fine-mapping.
+#' Column maf is needed to output posterior effect size estimates on the
+#' allelic scale. All other columns are not required for computations and
+#' can be specified arbitrarily."
 #' @family FINEMAP
 #' @keywords internal
 #' @source
@@ -27,9 +31,9 @@ FINEMAP.construct_data <- function(locus_dir,
                                    nThread=4,
                                    verbose=T){
   ####### data.z #######
-  if(!"A1" %in% colnames(subset_DT)) A1 <- NULL;
-  if(!"A2" %in% colnames(subset_DT)) A2 <- NULL;
-  if(!"MAF" %in% colnames(subset_DT)) MAF <- NULL;
+  if(!"A1" %in% colnames(subset_DT)) A1 <- NA;
+  if(!"A2" %in% colnames(subset_DT)) A2 <- NA;
+  if(!"MAF" %in% colnames(subset_DT)) MAF <- NA;
   printer("++ Preparing data.z file for FINEMAP",v=verbose)
   data.z <- subset_DT %>% dplyr::select(rsid=SNP,
                                         chromosome=CHR,
