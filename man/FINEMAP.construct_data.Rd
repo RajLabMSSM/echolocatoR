@@ -17,6 +17,10 @@ FINEMAP.construct_data(
 }
 \description{
 Creates and saves 1) the summary stats file, and 2) the LD matrix.
+"Columns beta and se are required for fine-mapping.
+Column maf is needed to output posterior effect size estimates on the
+allelic scale. All other columns are not required for computations and
+can be specified arbitrarily."
 }
 \examples{
 data("locus_dir"); data("BST1"); data("BST1_LD_matrix");

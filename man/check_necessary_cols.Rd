@@ -8,6 +8,7 @@ check_necessary_cols(
   subset_DT,
   finemap_methods,
   sample_size = NULL,
+  dataset_type = "GWAS",
   verbose = T
 )
 }

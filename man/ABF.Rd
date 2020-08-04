@@ -10,7 +10,7 @@
 }
 }
 \usage{
-ABF(subset_DT, PP_threshold = 0.95, case_control = TRUE)
+ABF(subset_DT, PP_threshold = 0.95, sample_size = NULL, case_control = T)
 }
 \description{
 Conduct statistical (non-functional) fine-mapping with approximate Bayes factor (ABF).
