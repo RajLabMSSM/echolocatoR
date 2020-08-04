@@ -60,6 +60,7 @@ ROADMAP.tabix <- function(results_path,
   dat$File <- fname
   if(convert_to_GRanges){
     dat <- biovizBase::transformDfToGr(dat, seqnames = "Chrom", start = "Start", end="End")
+    GenomeInfoDb::seqlevelsStyle(dat) <- "NCBI"
   }
   tbx_end =  Sys.time()
   printer("BED subset downloaded in",round(tbx_end-tbx_start,3),"seconds")
@@ -233,6 +234,7 @@ ROADMAP.query_and_plot <- function(subset_DT,
                                           seqnames = "SEQnames",
                                           start = "POS",
                                           end = "POS")
+    GenomeInfoDb::seqlevelsStyle(gr.snp) <- "NCBI"
   } else {
     gr.snp <- subset_DT
   }

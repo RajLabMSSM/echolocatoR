@@ -4,7 +4,7 @@
 \alias{LD.run_plink_LD}
 \title{Calculate LD (r or r2)}
 \usage{
-LD.run_plink_LD(bim, LD_folder, r_format = "r")
+LD.run_plink_LD(bim, LD_folder, plink_prefix = "plink", r_format = "r")
 }
 \arguments{
 \item{bim}{A bim file produced by \emph{plink}}

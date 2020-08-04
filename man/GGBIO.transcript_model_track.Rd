@@ -27,6 +27,7 @@ Uses \code{\link{ggbio}}.
 \examples{
 data("BST1");
 gr.snp_CHR <- biovizBase::transformDfToGr(BST1, seqnames = "CHR", start = "POS", end = "POS")
+GenomeInfoDb::seqlevelsStyle(gr.snp_CHR) <- "NCBI"
 track.genes <- GGBIO.transcript_model_track(gr.snp_CHR, max_transcripts=1)
 }
 \seealso{

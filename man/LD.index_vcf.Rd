@@ -4,7 +4,7 @@
 \alias{LD.index_vcf}
 \title{Index vcf file if it hasn't been already}
 \usage{
-LD.index_vcf(vcf_file, force_new_index = T, conda_env = "echoR", verbose = T)
+LD.index_vcf(vcf_file, force_new_index = F, conda_env = "echoR", verbose = T)
 }
 \description{
 Index vcf file if it hasn't been already

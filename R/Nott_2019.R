@@ -54,8 +54,8 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
       # Get all ranges within min/max
       gr.span <- gr.dat[1,]
       GenomicRanges::mcols(gr.span) <- NULL
-      GenomicRanges::start(gr.span) <- min(gr.dat$POS)
-      GenomicRanges::end(gr.span) <- max(gr.dat$POS)
+      GenomicRanges::start(gr.span) <- min(gr.dat$POS,na.rm = T)
+      GenomicRanges::end(gr.span) <- max(gr.dat$POS, na.rm = T)
     } else {
       # Otherwise, just use the score for the exact values
       gr.span <- gr.dat
@@ -75,13 +75,15 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
   bigWigFiles <- dplyr::mutate(bigWigFiles, cell_type = gsub(" ",".",cell_type))
   # Convert finemap data to granges
   dat <- finemap_dat
-  dat$seqnames <- paste0("chr",dat$CHR)
+  dat$seqnames <- dat$CHR
   dat$start.end <- dat$POS
   gr.dat <- GenomicRanges::makeGRangesFromDataFrame(df = dat,
                                                     seqnames.field = "seqnames",
                                                     start.field = "start.end",
                                                     end.field = "start.end",
                                                     keep.extra.columns = T)
+  # ! IMPORTANT !: Needs to be in chr1 format in order to query!
+  GenomeInfoDb::seqlevelsStyle(gr.dat) <- "UCSC"
   printer("NOTT_2019:: Importing bigWig subsets from UCSC...", v=verbose)
   bw.grlist <- parallel::mclapply(1:nrow(bigWigFiles), function(i){
     if(!is.null(bigwig_dir)){
@@ -477,6 +479,7 @@ NOTT_2019.get_epigenomic_peaks <- function(assays=c("ATAC","H3K27ac","H3K4me3"),
   if(convert_to_GRanges){
     printer("++ NOTT_2019:: Converting merged BED files to GRanges.", v=verbose)
     PEAKS <- biovizBase::transformDfToGr(PEAKS, seqnames = "chr", start = "start", end="end")
+    GenomeInfoDb::seqlevelsStyle(PEAKS) <- "NCBI"
   }
   printer("++ NOTT_2019::",length(PEAKS),"ranges retrieved.", v=verbose)
   return(PEAKS)
@@ -579,10 +582,11 @@ NOTT_2019.get_regulatory_regions <- function(finemap_dat,
   if(as.granges){
     printer("+ Converting to GRanges.",v=verbose)
     regions_sub <- GenomicRanges::makeGRangesFromDataFrame(df = regions_sub,#dplyr::mutate(regions_sub, chr = as.numeric(gsub("chr","",chr))),
-                                                     seqnames.field = "chr",
-                                                     start.field = "start",
-                                                     end.field = "end",
-                                                     keep.extra.columns = T)
+                                                           seqnames.field = "chr",
+                                                           start.field = "start",
+                                                           end.field = "end",
+                                                           keep.extra.columns = T)
+    GenomeInfoDb::seqlevelsStyle(regions_sub) <- "NCBI"
   }
   return(regions_sub)
 }
@@ -634,22 +638,23 @@ NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
   if(!"Consensus_SNP" %in% colnames(finemap_dat)){finemap_dat <- find_consensus_SNPs(finemap_dat, verbose = F)}
   marker_key <- list(PU1 = "microglia", Olig2 = "oligo",
                      NeuN = "neurons", LHX2 = "astrocytes")
-  if (is.null(index_SNP)) {
+  if(is.null(index_SNP)) {
     lead.pos <- subset(finemap_dat, leadSNP)$POS
   } else {
     lead.pos <- subset(finemap_dat, SNP == index_SNP)$POS
   }
   consensus.pos <- subset(finemap_dat, Consensus_SNP == T)$POS
 
-  if (length(consensus.pos) > 0) {
-    top.consensus.pos <- (top_n(subset(finemap_dat, Consensus_SNP == T), n = 1, wt = mean.PP) %>%
-                            top_n(1, wt = Effect))$POS[1]
+  if(length(consensus.pos) > 0) {
+    top.consensus.pos <- (dplyr::top_n(subset(finemap_dat, Consensus_SNP == T), n = 1, wt = mean.PP) %>%
+                            dplyr::top_n(1, wt = Effect))$POS[1]
   } else {
-    top.consensus.pos <- (top_n(subset(finemap_dat, Support > 0), n = 1, wt = mean.PP) %>%
-                            top_n(1, wt = Effect))$POS[1]
+    top.consensus.pos <- (dplyr::top_n(subset(finemap_dat, Support > 0), n = 1, wt = mean.PP) %>%
+                            dplyr::top_n(1, wt = Effect))$POS[1]
   }
   if (is.null(xlims)) {
-    xlims = c(min(finemap_dat$POS), max(finemap_dat$POS))
+    xlims = c(min(finemap_dat$POS, na.rm = T),
+              max(finemap_dat$POS, na.rm = T))
   }
   if (!is.null(zoom_window)) {
     xlims = c(lead.pos - as.integer(zoom_window/2), lead.pos +
@@ -666,11 +671,13 @@ NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
   # get promoter/enhancers
   regions <- NOTT_2019.get_regulatory_regions(finemap_dat = finemap_dat,
                                               nThread = nThread,
-                                              as.granges = T)
+                                              as.granges = T,
+                                              verbose = verbose)
+  has_chr <- grepl("chr",unique(finemap_dat$CHR)[1])
   regions <- subset(regions, as.character(GenomicRanges::seqnames(regions)) ==
                       paste0("chr", unique(finemap_dat$CHR))[1] & GenomicRanges::start(regions) >=
-                      min(finemap_dat$POS) & GenomicRanges::end(regions) <=
-                      max(finemap_dat$POS))
+                      min(finemap_dat$POS, na.rm = T) & GenomicRanges::end(regions) <=
+                      max(finemap_dat$POS, na.rm = T))
 
   if(highlight_plac){
     # JH - which PLAC-Seq junctions overlap (5kb) the consensus SNPs?

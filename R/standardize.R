@@ -212,7 +212,8 @@ standardize_subset <- function(locus,
     printer("++ Ensuring Effect, StdErr, P are numeric", v=verbose)
     # Only convert to numeric AFTER removing NAs (otherwise as.numeric will turn them into 0s)
     query_mod <- query_mod  %>%
-      dplyr::mutate(Effect=as.numeric(Effect),
+      dplyr::mutate(CHR=as.integer(gsub("chr","",CHR)),
+                    Effect=as.numeric(Effect),
                     StdErr=as.numeric(StdErr),
                     P=as.numeric(P))
 

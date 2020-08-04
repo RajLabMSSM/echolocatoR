@@ -129,6 +129,7 @@ GGBIO.plot <- function(finemap_dat,
   gr.snp <- DT_to_GRanges(dat)
   gr.snp_CHR <- biovizBase::transformDfToGr(dat, seqnames = "CHR",
                                             start = "POS", end = "POS")
+  GenomeInfoDb::seqlevelsStyle(gr.snp_CHR) <- "NCBI"
 
 
   # Treack 0: Summary
@@ -142,7 +143,7 @@ GGBIO.plot <- function(finemap_dat,
   }
 
 
-  # Track 1: GWAS
+  ####  Track 1: GWAS ####
   printer("++ GGBIO::","GWAS","track", v=verbose)
   track.gwas <- GGBIO.SNP_track(gr.snp = gr.snp,
                                 method = "original",
@@ -154,7 +155,7 @@ GGBIO.plot <- function(finemap_dat,
 
 
 
-
+  #### Track 2x: QTL ####
   for (qtl in QTL_prefixes){
     printer("++ GGBIO::",qtl,"track", v=verbose)
     qtl_track <- GGBIO.QTL_track(gr.snp = gr.snp,
@@ -169,7 +170,7 @@ GGBIO.plot <- function(finemap_dat,
   }
 
 
-  # Tracks 2n: Fine-mapping
+  #### Tracks 2n: Fine-mapping ####
   for(m in method_list){
     printer("++ GGBIO::",m,"track", v=verbose)
     track.finemapping <- GGBIO.SNP_track(gr.snp, method = m,
@@ -181,8 +182,7 @@ GGBIO.plot <- function(finemap_dat,
   }
 
   # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  # Track 3: Gene Model Track
-  # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  ##### Track 3: Gene Model Track ####
   # DB tutorial: https://rdrr.io/bioc/ensembldb/f/vignettes/ensembldb.Rmd
   if(gene_track){
     printer("++ GGBIO:: Adding Gene model track.",v=verbose)
@@ -195,8 +195,7 @@ GGBIO.plot <- function(finemap_dat,
   }
 
 
-  # Track 3: Annotation - XGR Annotations
-  ## Download
+  #### Track 3: Annotation - XGR ####
   palettes <- c("Spectral","BrBG","PiYG", "PuOr")
   if(any(!is.null(XGR_libnames))){printer("++ GGBIO:: XGR Tracks")}
   i=1
@@ -228,7 +227,7 @@ GGBIO.plot <- function(finemap_dat,
     i = i+1
   }
 
-  # Track 4: Roadmap Chromatin Marks API
+  #### Track 4: Roadmap Chromatin Marks ####
   ## Download
   if(Roadmap){
     printer("+ GGBIO:: Creating Roadmap track")
@@ -257,7 +256,7 @@ GGBIO.plot <- function(finemap_dat,
     names(TRACKS_list)[length(TRACKS_list)] <- "Roadmap\nChromatinMarks\nCellTypes"
   }
 
-
+  #### NOTT_2019 ####
   if(Nott_epigenome){
     try({
       track.Nott_histo <- NOTT_2019.epigenomic_histograms(finemap_dat = finemap_dat,
@@ -285,6 +284,7 @@ GGBIO.plot <- function(finemap_dat,
                                                    return_interaction_track=T,
                                                    show_arches=T,
                                                    save_annot=T,
+                                                   xlims = xlims,
                                                    nThread=nThread,
                                                    verbose=verbose)
         TRACKS_list <- append(TRACKS_list, track.Nott_plac)
@@ -294,7 +294,7 @@ GGBIO.plot <- function(finemap_dat,
 
   }
 
-  # ------- Fuse all tracks
+  #### Fuse all tracks ####
   if(dot_summary){
     # Dot summary requires a special way of merging bc it doesn't share the same x-axis
     grob_list <- lapply(TRACKS_list, function(x){ggbio:::Grob(x)})
@@ -316,6 +316,7 @@ GGBIO.plot <- function(finemap_dat,
                                   finemap_dat = finemap_dat)
   }
 
+  #### Save plot ####
   if(save_plot){
     window_suffix <- get_window_suffix(finemap_dat=finemap_dat,
                                        plot.zoom=plot.zoom)
@@ -761,6 +762,7 @@ GGBIO.QTL_track <- function(gr.snp,
 #' @examples
 #' data("BST1");
 #' gr.snp_CHR <- biovizBase::transformDfToGr(BST1, seqnames = "CHR", start = "POS", end = "POS")
+#' GenomeInfoDb::seqlevelsStyle(gr.snp_CHR) <- "NCBI"
 #' track.genes <- GGBIO.transcript_model_track(gr.snp_CHR, max_transcripts=1)
 GGBIO.transcript_model_track <- function(gr.snp_CHR,
                                          max_transcripts=1,
@@ -791,6 +793,7 @@ GGBIO.transcript_model_track <- function(gr.snp_CHR,
                     start >= min(gr.snp_CHR$POS) &
                     end <= max(gr.snp_CHR$POS)) %>%
     GenomicRanges::makeGRangesFromDataFrame(keep.extra.columns = T)
+  GenomeInfoDb::seqlevelsStyle(db.gr) <- "NCBI"
   db.gr$symbol <- factor(db.gr$symbol, levels = unique(db.gr$symbol), ordered = T)
   edb <-  ensembldb::addFilter( EnsDb.Hsapiens.v75::EnsDb.Hsapiens.v75,
                                 AnnotationFilter::TxIdFilter(db.gr$tx_id))

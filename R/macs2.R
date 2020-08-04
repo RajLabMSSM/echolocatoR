@@ -154,6 +154,7 @@ MACS2.import_peaks <- function(peaks.paths,
       peaks <- GenomicRanges::makeGRangesFromDataFrame(df=peaks, keep.extra.columns = T, ignore.strand = T,
                                               seqnames.field = "chrom",
                                               start.field = "chromStart",end.field = "chromEnd")
+      GenomeInfoDb::seqlevelsStyle(peaks) <- "NCBI"
     }
     return(peaks)
   }, mc.cores = 4)

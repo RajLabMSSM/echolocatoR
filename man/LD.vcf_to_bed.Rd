@@ -4,7 +4,7 @@
 \alias{LD.vcf_to_bed}
 \title{Convert vcf file to BED file}
 \usage{
-LD.vcf_to_bed(vcf.gz.subset, locus_dir, verbose = T)
+LD.vcf_to_bed(vcf.gz.subset, locus_dir, plink_prefix = "plink", verbose = T)
 }
 \arguments{
 \item{vcf.gz.subset}{Path to the gzipped locus subset vcf.}

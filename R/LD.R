@@ -153,10 +153,13 @@ LD.get_rds_path <- function(locus_dir,
 #' LD_matrix <- LD.custom_panel(LD_reference=LD_reference, subset_DT=BST1, locus_dir=locus_dir)
 #'
 #' \dontrun{
+#' locus_dir <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/QTL/Microglia_all_regions/BIN1"
+#' subset_DT <- data.table::fread(file.path(locus_dir,"Multi-finemap/BIN1.Microglia_all_regions.1KGphase3_LD.Multi-finemap.tsv.gz"))
 #' LD_reference = "/sc/hydra/projects/pd-omics/glia_omics/eQTL/post_imputation_filtering/eur/filtered_variants/AllChr.hg38.sort.filt.dbsnp.snpeff.vcf.gz"
 #' LD_matrix <- LD.custom_panel(LD_reference=LD_reference, subset_DT=BST1, locus_dir=locus_dir, LD_genome_build="hg38")
 #' }
 LD.custom_panel <- function(LD_reference,
+                            fullSS_genome_build="hg19",
                             LD_genome_build="hg19",
                             subset_DT,
                             locus_dir,
@@ -174,11 +177,24 @@ LD.custom_panel <- function(LD_reference,
   printer("LD:: Computing LD from local vcf file:",LD_reference)
 
   if(!LD_genome_build %in% c("hg19","GRCh37","grch37")){
-    # Lift back over just to query LD
-    subset_DT <- LIFTOVER(dat = subset_DT,
-                          build.conversion = "hg19.to.hg38",
-                          return_as_granges = F,
-                          verbose = verbose)
+    printer("LD:: LD panel in hg38. Handling accordingly.",v=verbose)
+    if(!fullSS_genome_build %in% c("hg19","GRCh37","grch37")){
+      ## If the query was originally in hg38,
+      # that means it's already been lifted over to hg19.
+      # So you can use the old stored POS.hg38 when the
+      subset_DT <- subset_DT %>%
+        dplyr::rename(POS.hg19=POS) %>%
+        dplyr::rename(POS=POS.hg38)
+
+    } else {
+      ## If the query was originally in hg19,
+      # that means no liftover was done.
+      # So you need to lift it over now.
+      subset_DT <- LIFTOVER(dat = subset_DT,
+                            build.conversion = "hg19.to.hg38",
+                            return_as_granges = F,
+                            verbose = verbose)
+    }
   }
   vcf_file <- LD.index_vcf(vcf_file=LD_reference,
                            force_new_index=F,
@@ -196,14 +212,20 @@ LD.custom_panel <- function(LD_reference,
                              nThread=nThread,
                              conda_env=conda_env,
                              verbose=verbose)
-  LD.vcf_to_bed(vcf.gz.subset = vcf_subset,
-                locus_dir = locus_dir)
+  # vcf <- gaston::read.vcf(file = vcf_subset)
+
+  bed_bim_fam <- LD.vcf_to_bed(vcf.gz.subset = vcf_subset,
+                               locus_dir = locus_dir,
+                               plink_prefix = "plink",
+                               verbose =  verbose)
   # Get lead SNP rsid
   leadSNP = subset(subset_DT, leadSNP==T)$SNP
   # Plink LD method
   LD_matrix <- LD.plink_LD(LD_folder = file.path(locus_dir,"LD"),
                            subset_DT = subset_DT,
+                           bim_path = bed_bim_fam$bim,
                            remove_excess_snps=T,
+                           merge_by_RSID = F,
                            leadSNP = leadSNP,
                            min_r2 = min_r2,
                            min_Dprime = min_Dprime,
@@ -211,7 +233,9 @@ LD.custom_panel <- function(LD_reference,
                            fillNA = fillNA)
   # Filter out SNPs not in the same LD block as the lead SNP
   if(LD_block){
-    block_snps <- LD.leadSNP_block(leadSNP, "./plink_tmp", LD_block_size)
+    block_snps <- LD.leadSNP_block(leadSNP = leadSNP,
+                                   LD_folder = "./plink_tmp",
+                                   LD_block_size = LD_block_size)
     LD_matrix <- LD_matrix[row.names(LD_matrix) %in% block_snps, colnames(LD_matrix) %in% block_snps]
     LD_matrix <- LD_matrix[block_snps, block_snps]
   }
@@ -656,14 +680,22 @@ LD.filter_vcf_gaston <- function(vcf_subset,
 #' @keywords internal
 LD.vcf_to_bed <- function(vcf.gz.subset,
                           locus_dir,
+                          plink_prefix="plink",
                           verbose=T){
   plink <- LD.plink_file()
   printer("LD:PLINK:: Converting vcf.gz to .bed/.bim/.fam", v=verbose)
-  dir.create(file.path(locus_dir,"LD"), recursive = T, showWarnings = F)
+  LD_dir <- file.path(locus_dir,"LD")
+  dir.create(LD_dir, recursive = T, showWarnings = F)
   cmd <- paste(plink,
                "--vcf",vcf.gz.subset,
-               "--out", file.path(locus_dir,"LD","plink"))
+               "--out", file.path(LD_dir,plink_prefix))
   system(cmd)
+
+  return(
+    list(bed=file.path(LD_dir,paste0(plink_prefix,".bed")),
+         bim=file.path(LD_dir,paste0(plink_prefix,".bim")),
+         fam=file.path(LD_dir,paste0(plink_prefix,".fam")))
+  )
 }
 
 
@@ -841,9 +873,9 @@ LD.1KG <- function(locus_dir,
                                superpopulation = superpopulation,
                                remove_tmp = T,
                                verbose = verbose)
-  LD.vcf_to_bed(vcf.gz.subset = vcf.gz.path,
-                locus_dir = locus_dir,
-                verbose = verbose)
+  bed_bim_fam <- LD.vcf_to_bed(vcf.gz.subset = vcf.gz.path,
+                               locus_dir = locus_dir,
+                               verbose = verbose)
   # Calculate pairwise LD for all SNP combinations
   #### "Caution that the LD matrix has to be correlation matrix" -SuSiER documentation
   ### https://stephenslab.github.io/susieR/articles/finemapping_summary_statistics.html
@@ -934,14 +966,17 @@ LD.dprime_table <- function(SNP_list, LD_folder){
 #' @keywords internal
 LD.run_plink_LD <- function(bim,
                             LD_folder,
+                            plink_prefix="plink",
                             r_format="r"){
   plink <- LD.plink_file()
   # METHOD 2 (faster, but less control over parameters. Most importantly, can't get Dprime)
   system( paste(plink,
-                "--bfile",file.path(LD_folder,"plink"),
+                "--bfile",file.path(LD_folder,plink_prefix),
                 "--extract",file.path(LD_folder,"SNPs.txt"),
-                paste0("--",r_format," square bin"), "--out", file.path(LD_folder,"plink")) )
-  bin.vector <- readBin(file.path(LD_folder, "plink.ld.bin"), what = "numeric", n=length(bim$SNP)^2)
+                paste0("--",r_format," square bin"),
+                "--out", file.path(LD_folder,plink_prefix)) )
+  ld.bin <- file.path(LD_folder, paste0(plink_prefix,".ld.bin"))
+  bin.vector <- readBin(ld.bin, what = "numeric", n=length(bim$SNP)^2)
   ld.matrix <- matrix(bin.vector, nrow = length(bim$SNP), dimnames = list(bim$SNP, bim$SNP))
   return(ld.matrix)
 }
@@ -956,7 +991,9 @@ LD.run_plink_LD <- function(bim,
 #' @keywords internal
 LD.plink_LD <-function(leadSNP,
                        subset_DT,
+                       bim_path=NULL,
                        remove_excess_snps=T,
+                       merge_by_RSID=T,
                        LD_folder,
                        min_r2=F,
                        min_Dprime=F,
@@ -967,19 +1004,27 @@ LD.plink_LD <-function(leadSNP,
   start <- Sys.time()
   # Calculate LD
   printer("++ Reading in BIM file...", v=verbose)
-  bim <- data.table::fread(file.path(LD_folder, "plink.bim"),
+  if(is.null(bim_path)) bim_path <- file.path(LD_folder, "plink.bim");
+  bim <- data.table::fread(bim_path,
                            col.names = c("CHR","SNP","V3","POS","A1","A2"),
                            stringsAsFactors = F)
   if(remove_excess_snps){
     orig_n <- nrow(bim)
-    # Standardize format adn merge
-    bim.merged <- data.table::merge.data.table(dplyr::mutate(bim,
-                                                             CHR=as.integer(gsub("chr","",CHR)),
-                                                             POS=as.integer(POS)),
-                                               dplyr::mutate(subset_DT,
-                                                             CHR=as.integer(gsub("chr","",CHR)),
-                                                             POS=as.integer(POS)),
-                                               by=c("CHR","POS"))
+    if(merge_by_RSID){
+      bim.merged <- data.table::merge.data.table(bim,
+                                                 subset_DT,
+                                                 by=c("SNP"))
+    } else {
+      # Standardize format adn merge
+      bim.merged <- data.table::merge.data.table(dplyr::mutate(bim,
+                                                               CHR=as.integer(gsub("chr","",CHR)),
+                                                               POS=as.integer(POS)),
+                                                 dplyr::mutate(subset_DT,
+                                                               CHR=as.integer(gsub("chr","",CHR)),
+                                                               POS=as.integer(POS)),
+                                                 by=c("CHR","POS"))
+    }
+
     bim <- subset(bim, SNP %in% bim.merged$SNP.x)
     printer("LD:PLINK:: Removing RSIDs that don't appear in locus subset:",orig_n,"==>",nrow(bim),"SNPs",v=verbose)
   }

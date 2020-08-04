@@ -7,7 +7,9 @@
 LD.plink_LD(
   leadSNP,
   subset_DT,
+  bim_path = NULL,
   remove_excess_snps = T,
+  merge_by_RSID = T,
   LD_folder,
   min_r2 = F,
   min_Dprime = F,

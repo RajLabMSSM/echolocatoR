@@ -70,6 +70,7 @@ DT_to_GRanges <- function(subset_DT){
                                         seqnames = "SEQnames",
                                         start = "POS",
                                         end = "POS")
+  GenomeInfoDb::seqlevelsStyle(gr.snp) <- "NCBI"
   return(gr.snp)
 }
 

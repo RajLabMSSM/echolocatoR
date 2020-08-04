@@ -6,9 +6,11 @@
 \usage{
 LD.custom_panel(
   LD_reference,
+  fullSS_genome_build = "hg19",
   LD_genome_build = "hg19",
   subset_DT,
   locus_dir,
+  force_new_LD = F,
   min_r2 = F,
   min_Dprime = F,
   remove_correlates = F,
@@ -28,6 +30,13 @@ Compute LD from user-supplied vcf file
 data("BST1"); data("locus_dir")
 LD_reference="~/Desktop/results/Reference/custom_panel_chr4.vcf"
 LD_matrix <- LD.custom_panel(LD_reference=LD_reference, subset_DT=BST1, locus_dir=locus_dir)
+
+\dontrun{
+locus_dir <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/QTL/Microglia_all_regions/BIN1"
+subset_DT <- data.table::fread(file.path(locus_dir,"Multi-finemap/BIN1.Microglia_all_regions.1KGphase3_LD.Multi-finemap.tsv.gz"))
+LD_reference = "/sc/hydra/projects/pd-omics/glia_omics/eQTL/post_imputation_filtering/eur/filtered_variants/AllChr.hg38.sort.filt.dbsnp.snpeff.vcf.gz"
+LD_matrix <- LD.custom_panel(LD_reference=LD_reference, subset_DT=BST1, locus_dir=locus_dir, LD_genome_build="hg38")
+}
 }
 \seealso{
 Other LD: 
