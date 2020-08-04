@@ -165,6 +165,7 @@ LD.custom_panel <- function(LD_reference,
                             conda_env="echoR",
                             verbose=T){
   printer("LD:: Computing LD from local vcf file:",LD_reference)
+
   if(!LD_genome_build %in% c("hg19","GRCh37","grch37")){
     # Lift back over just to query LD
     subset_DT <- LIFTOVER(dat = subset_DT,
@@ -172,7 +173,6 @@ LD.custom_panel <- function(LD_reference,
                           return_as_granges = F,
                           verbose = verbose)
   }
-
   vcf_file <- LD.index_vcf(vcf_file=LD_reference)
 
   vcf_subset <- LD.query_vcf(subset_DT=subset_DT,

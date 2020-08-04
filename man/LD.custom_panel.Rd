@@ -6,6 +6,7 @@
 \usage{
 LD.custom_panel(
   LD_reference,
+  LD_genome_build = "hg19",
   subset_DT,
   locus_dir,
   min_r2 = F,

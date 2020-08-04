@@ -8,6 +8,7 @@ finemap_pipeline(
   locus,
   fullSS_path,
   fullSS_genome_build = "hg19",
+  LD_genome_build = "hg19",
   results_dir,
   dataset_name = "dataset_name",
   dataset_type = "GWAS",

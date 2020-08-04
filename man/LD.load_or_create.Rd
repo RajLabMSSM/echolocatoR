@@ -9,6 +9,7 @@ LD.load_or_create(
   subset_DT,
   force_new_LD = F,
   LD_reference = "1KGphase1",
+  LD_genome_build = "hg19",
   superpopulation = "EUR",
   download_reference = T,
   download_method = "direct",
