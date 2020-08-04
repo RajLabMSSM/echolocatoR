@@ -114,6 +114,7 @@ LD.load_or_create <- function(locus_dir,
                                  LD_genome_build=LD_genome_build,
                                  subset_DT=subset_DT,
                                  locus_dir=locus_dir,
+                                 force_new_LD=force_new_LD,
                                  min_r2=min_r2,
                                  min_Dprime=min_Dprime,
                                  remove_correlates=remove_correlates,
@@ -150,10 +151,16 @@ LD.get_rds_path <- function(locus_dir,
 #' data("BST1"); data("locus_dir")
 #' LD_reference="~/Desktop/results/Reference/custom_panel_chr4.vcf"
 #' LD_matrix <- LD.custom_panel(LD_reference=LD_reference, subset_DT=BST1, locus_dir=locus_dir)
+#'
+#' \dontrun{
+#' LD_reference = "/sc/hydra/projects/pd-omics/glia_omics/eQTL/post_imputation_filtering/eur/filtered_variants/AllChr.hg38.sort.filt.dbsnp.snpeff.vcf.gz"
+#' LD_matrix <- LD.custom_panel(LD_reference=LD_reference, subset_DT=BST1, locus_dir=locus_dir, LD_genome_build="hg38")
+#' }
 LD.custom_panel <- function(LD_reference,
                             LD_genome_build="hg19",
                             subset_DT,
                             locus_dir,
+                            force_new_LD=F,
                             min_r2=F,
                             min_Dprime=F,
                             remove_correlates=F,
@@ -173,7 +180,10 @@ LD.custom_panel <- function(LD_reference,
                           return_as_granges = F,
                           verbose = verbose)
   }
-  vcf_file <- LD.index_vcf(vcf_file=LD_reference)
+  vcf_file <- LD.index_vcf(vcf_file=LD_reference,
+                           force_new_index=F,
+                           conda_env=conda_env,
+                           verbose=verbose)
 
   vcf_subset <- LD.query_vcf(subset_DT=subset_DT,
                              locus_dir=locus_dir,
@@ -181,7 +191,7 @@ LD.custom_panel <- function(LD_reference,
                              vcf_URL=LD_reference,
                              whole_vcf=F,
                              remove_original_vcf=F,
-                             force_new_vcf=F,
+                             force_new_vcf=force_new_LD,
                              query_by_regions=F,
                              nThread=nThread,
                              conda_env=conda_env,
@@ -456,7 +466,7 @@ LD.construct_subset_vcf_name <- function(subset_DT,
 #' LD_reference <- "~/Desktop/results/Reference/custom_panel_chr4.vcf.gz"
 #' vcf_file <- LD.index_vcf(vcf_file=LD_reference)
 LD.index_vcf <- function(vcf_file,
-                         force_new_index=T,
+                         force_new_index=F,
                          conda_env="echoR",
                          verbose=T){
   if(!endsWith(vcf_file,".gz")){
@@ -829,9 +839,11 @@ LD.1KG <- function(locus_dir,
   vcf.gz.path <- LD.filter_vcf(vcf_subset = vcf_subset,
                                popDat = popDat,
                                superpopulation = superpopulation,
-                               remove_tmp = T)
+                               remove_tmp = T,
+                               verbose = verbose)
   LD.vcf_to_bed(vcf.gz.subset = vcf.gz.path,
-                locus_dir = locus_dir)
+                locus_dir = locus_dir,
+                verbose = verbose)
   # Calculate pairwise LD for all SNP combinations
   #### "Caution that the LD matrix has to be correlation matrix" -SuSiER documentation
   ### https://stephenslab.github.io/susieR/articles/finemapping_summary_statistics.html
@@ -849,10 +861,13 @@ LD.1KG <- function(locus_dir,
                            min_r2 = min_r2,
                            min_Dprime = min_Dprime,
                            remove_correlates = remove_correlates,
-                           fillNA = fillNA)
+                           fillNA = fillNA,
+                           verbose = verbose)
   # Filter out SNPs not in the same LD block as the lead SNP
   if(LD_block){
-    block_snps <- LD.leadSNP_block(leadSNP, "./plink_tmp", LD_block_size)
+    block_snps <- LD.leadSNP_block(leadSNP = leadSNP,
+                                   LD_folder = file.path(locus_dir,"LD","plink_tmp"),
+                                   LD_block_size = LD_block_size)
     LD_matrix <- LD_matrix[row.names(LD_matrix) %in% block_snps, colnames(LD_matrix) %in% block_snps]
     LD_matrix <- LD_matrix[block_snps, block_snps]
   }
