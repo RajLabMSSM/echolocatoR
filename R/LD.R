@@ -57,6 +57,7 @@ LD.load_or_create <- function(locus_dir,
                               subset_DT,
                               force_new_LD=F,
                               LD_reference="1KGphase1",
+                              LD_genome_build="hg19",
                               superpopulation="EUR",
                               download_reference=T,
                               download_method="direct",
@@ -110,6 +111,7 @@ LD.load_or_create <- function(locus_dir,
   } else if (endsWith(tolower(LD_reference),".vcf") |
              endsWith(tolower(LD_reference),".vcf.gz")){
     LD_matrix <- LD.custom_panel(LD_reference=LD_reference,
+                                 LD_genome_build=LD_genome_build,
                                  subset_DT=subset_DT,
                                  locus_dir=locus_dir,
                                  min_r2=min_r2,
@@ -149,6 +151,7 @@ LD.get_rds_path <- function(locus_dir,
 #' LD_reference="~/Desktop/results/Reference/custom_panel_chr4.vcf"
 #' LD_matrix <- LD.custom_panel(LD_reference=LD_reference, subset_DT=BST1, locus_dir=locus_dir)
 LD.custom_panel <- function(LD_reference,
+                            LD_genome_build="hg19",
                             subset_DT,
                             locus_dir,
                             min_r2=F,
@@ -162,6 +165,14 @@ LD.custom_panel <- function(LD_reference,
                             conda_env="echoR",
                             verbose=T){
   printer("LD:: Computing LD from local vcf file:",LD_reference)
+  if(!LD_genome_build %in% c("hg19","GRCh37","grch37")){
+    # Lift back over just to query LD
+    subset_DT <- LIFTOVER(dat = subset_DT,
+                          build.conversion = "hg19.to.hg38",
+                          return_as_granges = F,
+                          verbose = verbose)
+  }
+
   vcf_file <- LD.index_vcf(vcf_file=LD_reference)
 
   vcf_subset <- LD.query_vcf(subset_DT=subset_DT,
