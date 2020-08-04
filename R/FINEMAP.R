@@ -31,9 +31,9 @@ FINEMAP.construct_data <- function(locus_dir,
                                    nThread=4,
                                    verbose=T){
   ####### data.z #######
-  if(!"A1" %in% colnames(subset_DT)) {A1 <- "A"; printer("+ FINEMAP:: Optional A1 col missing. Replacing with all 'A's.")};
-  if(!"A2" %in% colnames(subset_DT)) {A2 <- "T";  printer("+ FINEMAP:: Optional A2 col missing. Replacing with all 'T's.")};
-  if(!"MAF" %in% colnames(subset_DT)) {MAF <- .1; printer(" + FINEMAP:: Optional MAF col missing. Replacing with all '.1's")};
+  if(!"A1" %in% colnames(subset_DT)) {subset_DT$A1 <- "A"; printer("+ FINEMAP:: Optional A1 col missing. Replacing with all 'A's.")};
+  if(!"A2" %in% colnames(subset_DT)) {subset_DT$A2 <- "T";  printer("+ FINEMAP:: Optional A2 col missing. Replacing with all 'T's.")};
+  if(!"MAF" %in% colnames(subset_DT)) {subset_DT$MAF <- .1; printer(" + FINEMAP:: Optional MAF col missing. Replacing with all '.1's")};
   printer("++ Preparing data.z file for FINEMAP",v=verbose)
   data.z <- subset_DT %>% dplyr::select(rsid=SNP,
                                         chromosome=CHR,

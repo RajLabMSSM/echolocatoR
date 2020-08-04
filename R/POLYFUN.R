@@ -136,9 +136,9 @@ POLYFUN.initialize <- function(locus_dir,
 #' @family polyfun
 #' @examples
 #' data("BST1"); data("locus_dir");
-#' finemap_DT <- BST1
+#' finemap_dat <- BST1
 #' PF.output.path <- file.path(locus_dir, "PolyFun")
-#' POLYFUN.prepare_snp_input(PF.output.path=PF.output.path, locus_dir=locus_dir, finemap_DT=finemap_DT)
+#' POLYFUN.prepare_snp_input(PF.output.path=PF.output.path, locus_dir=locus_dir, finemap_dat=finemap_dat)
 POLYFUN.prepare_snp_input <- function(PF.output.path,
                                       locus_dir,
                                       finemap_dat=NULL,

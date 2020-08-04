@@ -1054,8 +1054,8 @@ LIFTOVER <- function(dat,
                      verbose=T){
   printer("XGR:: Lifting genome build:", build.conversion, v = verbose)
   # Save original coordinates and SNP IDs
-  dat <- dat %>% dplyr::mutate(chrom=paste0("chr",gsub("chr","",eval(parse(text=chrom_col)))),
-                               POS.orig=eval(parse(text=start_col)))
+  dat <- dat %>% dplyr::mutate(chrom=paste0("chr",gsub("chr","",eval(parse(text=chrom_col)))) )
+  dat[,paste0("POS.",strsplit(build.conversion, "\\.")[[1]][1])] <- dat[[start_col]]
   # chain <- rtracklayer::import.chain(con = chain_paths$hg19_to_hg38)
   gr.dat <- GenomicRanges::makeGRangesFromDataFrame(df = dat,
                                                      keep.extra.columns = T,
