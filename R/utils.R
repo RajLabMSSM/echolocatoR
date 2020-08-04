@@ -1050,6 +1050,7 @@ LIFTOVER <- function(dat,
                      chrom_col="CHR",
                      start_col="POS",
                      end_col="POS",
+                     chr_format="NCBI",
                      return_as_granges=T,
                      verbose=T){
   printer("XGR:: Lifting genome build:", build.conversion, v = verbose)
@@ -1068,7 +1069,7 @@ LIFTOVER <- function(dat,
                               verbose = F ,
                               merged = F)  # merge must =F in order to work
   # Standardize seqnames format
-  GenomeInfoDb::seqlevelsStyle(gr.lifted) <- "NCBI"
+  GenomeInfoDb::seqlevelsStyle(gr.lifted) <- chr_format
   if(return_as_granges==F){
     gr.lifted <- data.frame(gr.lifted) %>%
       dplyr::mutate(POS=start) %>%

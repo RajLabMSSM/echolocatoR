@@ -200,6 +200,10 @@ LD.custom_panel <- function(LD_reference,
                            force_new_index=F,
                            conda_env=conda_env,
                            verbose=verbose)
+  # Make sure your query's chr format is the same as the vcf's chr format
+  has_chr <- LD.determine_chrom_type_vcf(vcf_file = vcf_file)
+  subset_DT <- dplyr::mutate(subset_DT,
+                             CHR=if(has_chr) paste0("chr",gsub("chr","",CHR)) else gsub("chr","",CHR))
 
   vcf_subset <- LD.query_vcf(subset_DT=subset_DT,
                              locus_dir=locus_dir,
@@ -212,7 +216,6 @@ LD.custom_panel <- function(LD_reference,
                              nThread=nThread,
                              conda_env=conda_env,
                              verbose=verbose)
-  # vcf <- gaston::read.vcf(file = vcf_subset)
 
   bed_bim_fam <- LD.vcf_to_bed(vcf.gz.subset = vcf_subset,
                                locus_dir = locus_dir,
@@ -250,6 +253,23 @@ LD.custom_panel <- function(LD_reference,
                                 LD_reference=gsub(".vcf|.gz","",LD_reference),
                                 verbose=verbose)
   return(LD_matrix)
+}
+
+
+
+
+LD.determine_chrom_type_vcf <- function(vcf_file,
+                                        conda_env="echoR",
+                                        verbose=T){
+
+  vcf <- gaston::read.vcf(vcf_file, max.snps = 1, convert.chr = F)
+  has_chr <- grepl("chr",vcf@snps$chr[1])
+  # bcftools <- CONDA.find_package(package = "bcftools",
+  #                                conda_env = conda_env,
+  #                                verbose = verbose)
+  # # bcf_cmd <- paste("bcftools view -f '%CHROM' -H",vcf_file,"|head -1")
+  # header <- data.table::fread(cmd=bcf_cmd)
+  return(has_chr)
 }
 
 
