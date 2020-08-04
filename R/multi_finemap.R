@@ -9,24 +9,37 @@
 check_necessary_cols <- function(subset_DT,
                                  finemap_methods,
                                  sample_size=NULL,
+                                 dataset_type="GWAS",
                                  verbose=T){
   for_all <- c("SNP","CHR","POS","Effect","StdErr")
-  method_dict <- list(ABF=c(for_all,"proportion_cases","MAF"),
-                      FINEMAP=c(for_all,"A1","A2","MAF","N"),
-                      SUSIE=c(for_all,"N"),
-                      POLYFUN_SUSIE=c(for_all,"A1","A2","P","N"), #,"MAF"
-                      COLOC=c(for_all),
-                      PAINTOR=c(for_all),
-                      COJO=c(for_all,"A1","A2","Freq","P","N"))
+  required_dict <- list(ABF=c(for_all,"MAF", if(dataset_type=="GWAS") "proportion_cases" else NULL),
+                        FINEMAP=c(for_all),
+                        SUSIE=c(for_all),
+                        POLYFUN_SUSIE=c(for_all,"P"),
+                        COLOC=c(for_all),
+                        PAINTOR=c(for_all),
+                        COJO=c(for_all,"A1","A2","Freq","P","N"))
+  suggested_dict <- list(ABF=NULL,
+                         FINEMAP=c("A1","A2","MAF","N"),
+                         SUSIE=c("N"),
+                         POLYFUN_SUSIE=c("MAF","A1","A2","N"),
+                         PAINTOR=NULL,
+                         COJO=NULL)
   for(m in finemap_methods){
-    message("Checking for necessary columns: ",m)
-    if(!all(method_dict[[m]] %in% colnames(subset_DT))){
+    message("vvvvv Checking for necessary columns: ",m," vvvvv")
+    # Check required cols
+    if(!all(required_dict[[m]] %in% colnames(subset_DT))){
       finemap_methods <- finemap_methods[finemap_methods!=m]
-      missing_cols <- method_dict[[m]][!method_dict[[m]] %in% colnames(subset_DT)]
-      warning("⛔Missing columns for ",m,": ",paste(missing_cols,collapse=", "),"\n",
-              "Skipping ",m)
-    }else{message("✅ All columns present")}
-    message("\n")
+      missing_cols <- required_dict[[m]][!required_dict[[m]] %in% colnames(subset_DT)]
+      message("⛔Missing required columns for ",m,": ",paste(missing_cols,collapse=", ")," (Skipping)");
+      next()
+    } else{message("✅ All required columns present.")}
+    # Check suggested cols
+    if(!all(suggested_dict[[m]] %in% colnames(subset_DT))){
+      finemap_methods <- finemap_methods[finemap_methods!=m]
+      missing_cols <- suggested_dict[[m]][!suggested_dict[[m]] %in% colnames(subset_DT)]
+      message("⚠️ Missing optional columns for ",m,": ",paste(missing_cols,collapse=", "))
+    } else{message("✅ All suggested columns present.")}
   }
   return(finemap_methods)
 }
@@ -439,6 +452,7 @@ finemap_handler <- function(locus_dir,
       finemap_methods <- check_necessary_cols(subset_DT = subset_DT,
                                               finemap_methods = finemap_methods,
                                               sample_size = sample_size,
+                                              dataset_type = dataset_type,
                                               verbose = verbose)
       finemap_dat <- multi_finemap(locus_dir = locus_dir,
                                    fullSS_path = fullSS_path,

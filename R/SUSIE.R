@@ -97,14 +97,15 @@ SUSIE <- function(subset_DT,
 
   # if sample_size is NULL then SUSIE fails
   if(!"N" %in% names(subset_DT) & is.null(sample_size)){
-      subset_DT <- get_sample_size(subset_DT)
+      ss_df <- get_sample_size(subset_DT)
+      sample_size <- if(is.null(ss_df)) rlang::missing_arg() else max(subset_DT$N, na.rm = T)
   }
-  sample_size <- max(subset_DT$N)
+
 
   if(manual_var_y){
     susie_vars <- get_var_y(subset_DT, dataset_type)
     var_y <- susie_vars$var_y
-  }
+  } else {var_y <- rlang::missing_arg()}
 
 
   printer("+ SUSIE:: max_causal =",max_causal, v=verbose)
@@ -166,7 +167,7 @@ SUSIE <- function(subset_DT,
                              ## It could be due to not supplying a good initial parameter value.
                              ## I believe that you can change the optimization method to EM and then you will get more robust convergence.
                              ##In any case, if the causal effects in your target locus is small, var_y=1 to a first order approximation should give you pretty robust results.
-                             # var_y = var_y, # Variance of the phenotype (e.g. gene expression, or disease status)
+                             var_y = var_y, # Variance of the phenotype (e.g. gene expression, or disease status)
 
                              # A p vector of prior probability that each element is non-zero
                              prior_weights = prior_weights,

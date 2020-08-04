@@ -1070,7 +1070,9 @@ LIFTOVER <- function(dat,
   # Standardize seqnames format
   GenomeInfoDb::seqlevelsStyle(gr.lifted) <- "NCBI"
   if(return_as_granges==F){
-    gr.lifted <- data.frame(gr.lifted) %>% dplyr::mutate(POS=start)
+    gr.lifted <- data.frame(gr.lifted) %>%
+      dplyr::mutate(POS=start) %>%
+      dplyr::select(-c("seqnames","start","end","width","strand"))
   }
   return(gr.lifted)
 }

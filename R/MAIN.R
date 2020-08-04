@@ -806,7 +806,7 @@ finemap_loci <- function(loci,
     }) ## end try()
     end_gene <- Sys.time()
     message(locus," fine-mappping complte:")
-    print(round(end_gene-start_gene,1))
+    eprint(round(end_gene-start_gene,1))
   return(finemap_dat)
   }) # end for loop
   FINEMAP_DAT <- data.table::rbindlist(FINEMAP_DAT, fill = T)

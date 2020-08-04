@@ -27,6 +27,9 @@ FINEMAP.construct_data <- function(locus_dir,
                                    nThread=4,
                                    verbose=T){
   ####### data.z #######
+  if(!"A1" %in% colnames(subset_DT)) A1 <- NULL;
+  if(!"A1" %in% colnames(subset_DT)) A1 <- NULL;
+  if(!"MAF" %in% colnames(subset_DT)) MAF <- NULL;
   printer("++ Formatting data.z file for FINEMAP",v=verbose)
   data.z <- subset_DT %>% dplyr::select(rsid=SNP,
                                         chromosome=CHR,
