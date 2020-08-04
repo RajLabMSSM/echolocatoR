@@ -20,21 +20,23 @@ ABF <- function(subset_DT,
                 PP_threshold=.95,
                 case_control = TRUE){
   #data.table::fread("Data/GWAS/Nalls23andMe_2019/LRRK2/LRRK2_Nalls23andMe_2019_subset.txt")
+  if("MAF" %in% colnames(subset_DT)) MAF <- NULL;
+
   if( case_control == TRUE){
   finemap_dat <- coloc::finemap.abf(dataset = list(beta = subset_DT$Effect,
                                                   varbeta = subset_DT$StdErr^2, # MUST be squared
                                                   N = max(subset_DT$N), # use sample size
                                                   s = subset_DT$proportion_cases,
                                                   snp = subset_DT$SNP,
-                                                  MAF = subset_DT$MAF,
-                                                  type="cc"))
+                                                  MAF = MAF,
+                                                  type = "cc"))
   }else{
   finemap_dat <- coloc::finemap.abf(dataset = list(beta = subset_DT$Effect,
                                                   varbeta = subset_DT$StdErr^2, # MUST be squared
                                                   N = max(subset_DT$N), # use sample size
                                                   snp = subset_DT$SNP,
-                                                  MAF = subset_DT$MAF,
-                                                  type="quant"))
+                                                  MAF = MAF,
+                                                  type = "quant"))
 
   }
   finemap_dat <- subset(finemap_dat, snp!="null") %>%

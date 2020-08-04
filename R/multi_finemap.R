@@ -12,22 +12,22 @@ check_necessary_cols <- function(subset_DT,
                                  dataset_type="GWAS",
                                  verbose=T){
   for_all <- c("SNP","CHR","POS","Effect","StdErr")
-  required_dict <- list(ABF=c(for_all,"MAF", if(dataset_type=="GWAS") "proportion_cases" else NULL),
+  required_dict <- list(ABF=c(for_all, if(dataset_type=="GWAS") "proportion_cases" else NULL),
                         FINEMAP=c(for_all),
                         SUSIE=c(for_all),
                         POLYFUN_SUSIE=c(for_all,"P"),
                         COLOC=c(for_all),
                         PAINTOR=c(for_all),
-                        COJO=c(for_all,"A1","A2","Freq","P","N"))
-  suggested_dict <- list(ABF=NULL,
+                        COJO=c(for_all,"A1","A2"))
+  suggested_dict <- list(ABF=c("MAF"),
                          FINEMAP=c("A1","A2","MAF","N"),
                          SUSIE=c("N"),
                          POLYFUN_SUSIE=c("MAF","A1","A2","N"),
-                         PAINTOR=NULL,
-                         COJO=NULL)
+                         PAINTOR=c("MAF"),
+                         COJO=c("Freq","P","N")) # check these
   finemap_methods_suggests <-  finemap_methods
   for(m in finemap_methods){
-    message("vvvvv--- Checking for necessary columns: ",m," ---vvvvv")
+    message("vvvvv-- ",m," --vvvvv")
     # Check required cols
     if(!all(required_dict[[m]] %in% colnames(subset_DT))){
       finemap_methods <- finemap_methods[finemap_methods!=m]
@@ -36,6 +36,8 @@ check_necessary_cols <- function(subset_DT,
       next()
     } else{message("✅ All required columns present.")}
     # Check suggested cols
+    if(!m %in% names(suggested_dict)) next()
+    if(is.null(suggested_dict[[m]])) next()
     if(!all(suggested_dict[[m]] %in% colnames(subset_DT))){
       finemap_methods_suggests <- finemap_methods_suggests[finemap_methods_suggests!=m]
       missing_cols <- finemap_methods_suggests[[m]][!finemap_methods_suggests[[m]] %in% colnames(subset_DT)]
