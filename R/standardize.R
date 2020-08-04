@@ -84,8 +84,7 @@ standardize_subset <- function(locus,
 
 
     # Subset by eGene
-    genes_detected <- detect_genes(loci = locus, verbose = verbose)
-    if(genes_detected){
+    if(detect_genes(loci = locus, verbose = F)){
       printer("+ Filtering query to only include Locus:eGene pair =",
               paste(unname(locus),names(locus), sep=":"), v=verbose)
       query <- subset(query, Gene==names(locus))
@@ -101,8 +100,10 @@ standardize_subset <- function(locus,
                         return_as_granges = F,
                         verbose = verbose)
     }
-    query <- subset(dplyr::rename(query, SNP=snp_col), SNP %in% unique(query_mod$SNP))
-
+    if(!"SNP" %in% colnames(query)){
+      query <- dplyr::rename(query, SNP=snp_col)
+    }
+    query <- subset(query, SNP %in% unique(query_mod$SNP))
 
 
     # Add ref/alt alleles if available
@@ -207,6 +208,10 @@ standardize_subset <- function(locus,
                                    query = query_mod,
                                    locus = locus)
     query_mod$leadSNP <- query_mod$SNP==topSNP_sub$SNP
+
+
+    # Remove any duplicate columns
+    query_mod <- query_mod[!duplicated(colnames(query_mod))]
 
     printer("++ Ensuring Effect, StdErr, P are numeric", v=verbose)
     # Only convert to numeric AFTER removing NAs (otherwise as.numeric will turn them into 0s)

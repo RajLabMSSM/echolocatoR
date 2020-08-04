@@ -79,9 +79,9 @@ import_topSNPs <- function(topSS,
   }
 
   # Fill in missing cols with nonsense
-  if(is.na(chrom_col)) top_SNPs$CHR <- NA; chrom_col<-"CHR";
-  if(is.na(position_col)) top_SNPs$POS <- NA; position_col<-"POS";
-  if(!effect_col %in% colnames(top_SNPs)) top_SNPs$Effect <- 1; effect_col<-"Effect";
+  if(is.na(chrom_col)) {top_SNPs$CHR <- NA; chrom_col<-"CHR";}
+  if(is.na(position_col)) {top_SNPs$POS <- NA; position_col<-"POS";}
+  if(!effect_col %in% colnames(top_SNPs)) {top_SNPs$Effect <- 1; effect_col<-"Effect";}
 
   top_SNPs <- dplyr::rename(top_SNPs,
                             CHR=chrom_col,

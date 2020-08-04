@@ -1119,7 +1119,7 @@ determine_chrom_type <- function(chrom_type=NULL,
   } else {
     # Slow, but it works
     printer("Determining chrom type from file header")
-    header <- data.table::fread(fullSS.gz, nThread=nThread, nrows = 1)
+    header <- data.table::fread(file_path, nThread=nThread, nrows = 1)
     has_chr <- grepl("ch",header[[chrom_col]][1])
   }
   printer("Chromosome format =",if(has_chr) "chr1" else "1", v=verbose)
