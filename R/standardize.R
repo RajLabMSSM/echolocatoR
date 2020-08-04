@@ -100,8 +100,8 @@ standardize_subset <- function(locus,
                         chrom_col = "CHR", start_col = "POS", end_col = "POS",
                         return_as_granges = F,
                         verbose = verbose)
-      query <- subset(dplyr::rename(query, SNP=snp_col), SNP %in% unique(query_mod$SNP))
     }
+    query <- subset(dplyr::rename(query, SNP=snp_col), SNP %in% unique(query_mod$SNP))
 
 
 
@@ -140,7 +140,7 @@ standardize_subset <- function(locus,
     query_mod$MAF <- abs(query_mod$MAF)
     printer("++ Removing SNPs with MAF== 0 | NULL | NA", v=verbose)
     query_mod <- subset(query_mod, !(is.na(MAF) | is.null(MAF) | MAF==0))
-    query <- subset(dplyr::rename(query, SNP=snp_col), SNP %in% unique(query_mod$SNP))
+    query <- subset(query, SNP %in% unique(query_mod$SNP))
 
     ## Add proportion of cases if available
     printer("++ Preparing N_cases,N_controls cols", v=verbose)
