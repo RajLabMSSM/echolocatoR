@@ -39,7 +39,6 @@ check_necessary_cols <- function(subset_DT,
     if(!m %in% names(suggested_dict)) next()
     if(is.null(suggested_dict[[m]])) next()
     if(!all(suggested_dict[[m]] %in% colnames(subset_DT))){
-      finemap_methods_suggests <- finemap_methods_suggests[finemap_methods_suggests!=m]
       missing_cols <- suggested_dict[[m]][!suggested_dict[[m]] %in% colnames(subset_DT)]
       message("⚠️ Missing optional columns for ",m,": ",paste(missing_cols,collapse=", "))
     } else{message("✅ All suggested columns present.")}

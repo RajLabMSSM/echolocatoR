@@ -144,7 +144,14 @@ POLYFUN.prepare_snp_input <- function(PF.output.path,
                                       finemap_dat=NULL,
                                       nThread=1){
   printer("PolyFun:: Preparing SNP input file...")
-  PF.dat <- dplyr::select(finemap_dat, SNP, CHR, BP=POS, A1, A2)
+  if(!"A1" %in% colnames(finemap_dat)) A1 <- NULL;
+  if(!"A2" %in% colnames(finemap_dat)) A2 <- NULL;
+  PF.dat <- dplyr::select(finemap_dat,
+                          SNP,
+                          CHR,
+                          BP=POS,
+                          A1=A1,
+                          A2=A2)
   printer("+ PolyFun::",nrow(PF.dat),"SNPs identified.")
   snp.path <- file.path(PF.output.path,"snps_to_finemap.txt.gz")
   printer("+ PolyFun:: Writing SNP file ==>",snp.path)
