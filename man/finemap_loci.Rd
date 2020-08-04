@@ -7,6 +7,7 @@
 finemap_loci(
   loci,
   fullSS_path,
+  fullSS_genome_build = "hg19",
   dataset_name = "dataset_name",
   dataset_type = "GWAS",
   force_new_subset = F,

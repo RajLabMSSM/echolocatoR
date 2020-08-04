@@ -10,6 +10,7 @@ LIFTOVER(
   chrom_col = "CHR",
   start_col = "POS",
   end_col = "POS",
+  return_as_granges = T,
   verbose = T
 )
 }

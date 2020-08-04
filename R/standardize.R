@@ -1,94 +1,7 @@
 ###### STANDARDIZE ######
 
 
-#' Automatically identify top SNP per locus
-#'
-#'  If no \code{top_SNPs} dataframe is supplied,
-#'  this function will sort by p-value and then effect size,
-#'  and use the SNP in the first row.
-#'
-#' @family standardization functions
-auto_topSNPs_sub <- function(top_SNPs,
-                             query,
-                             locus){
-  if(toString(top_SNPs)=="auto"){
-    top_SNPs <- query %>% dplyr::mutate(Locus=locus) %>%
-      dplyr::arrange(P, dplyr::desc(Effect)) %>% dplyr::group_by(Locus) %>% dplyr::slice(1)
-  }
-  topSNP_sub <- top_SNPs[top_SNPs$Locus==locus & !is.na(top_SNPs$Locus),][1,]
-  return(topSNP_sub)
-}
-
-
-
-
-#' Compute t-stat
-#'
-#' If \strong{tstat} column is missing,
-#' compute t-statistic from: \code{Effect / StdErr}.
-#' @family standardization functions
-calculate_tstat <- function(finemap_dat,
-                            tstat_col="t_stat"){
-  if(tstat_col %in% colnames(finemap_dat)){
-    finemap_dat <- finemap_dat %>% dplyr::rename(t_stat = tstat_col)
-  } else {
-    if(("Effect" %in% colnames(finemap_dat)) & ("StdErr" %in% colnames(finemap_dat))){
-      printer("+ Calculating t-statistic from Effect and StdErr...")
-      finemap_dat <- finemap_dat %>% dplyr::mutate(t_stat =  Effect/StdErr)
-    } else {
-      printer("+ Could not calculate t-stat due to missing Effect and/or StdErr columns. Returning input data.")
-    }
-  }
-  return(data.table::data.table(finemap_dat))
-}
-
-
-#' Get MAF from UK Biobank.
-#'
-#' If \strong{MAF} column is missing,
-#' download MAF from UK Biobank and use that instead.
-#'
-#' @family standardizing functions
-#' @examples
-#' data("BST1");
-#' subset_DT <- data.frame(BST1)[,colnames(BST1)!="MAF"]
-#' BST1 <- get_UKB_MAF(subset_DT=subset_DT )
-get_UKB_MAF <- function(subset_DT,
-                        output_path = "./Data/Reference/UKB_MAF",
-                        force_new_maf = F,
-                        download_method="axel",
-                        nThread=4,
-                        verbose=T){
-  printer("UKB MAF:: Extracting MAF from UKB reference.",v=verbose)
-  # Documentation: http://biobank.ctsu.ox.ac.uk/showcase/field.cgi?id=22801
-  # subset_DT = data.table::fread("Data/GWAS/Kunkle_2019/PTK2B/PTK2B_Kunkle_2019_subset.tsv.gz")
-  chrom <- unique(subset_DT$CHR)
-  input_url <- paste0("biobank.ctsu.ox.ac.uk/showcase/showcase/auxdata/ukb_mfi_chr",chrom,"_v3.txt")
-  out_file <- file.path(output_path, basename(input_url))
-  if(file.exists(out_file) & force_new_maf==F){
-    printer("+ UKB MAF:: Importing pre-existing file",v=verbose)
-  } else{
-    out_file <- downloader(input_url = input_url,
-                           output_path = output_path,
-                           background = F,
-                           download_method = download_method,
-                           nThread = nThread)
-  }
-  maf <- data.table::fread(out_file, nThread = nThread,
-                           select = c(3,6),
-                           col.names = c("POS","MAF"))
-  maf <- subset(maf, POS %in% subset_DT$POS)
-  merged_dat <- data.table::merge.data.table(subset_DT, maf,
-                                             by = "POS") %>%
-    # Make sure each SNP just appears once
-    dplyr::group_by(SNP) %>%
-    dplyr::slice(1)
-  return(merged_dat)
-}
-
-
-
-#' Stanardize the locus subset
+#' Standardize the locus subset
 #'
 #' After querying a subset of the full summary statistics,
 #' this function converts it into a standardized format
@@ -106,34 +19,35 @@ get_UKB_MAF <- function(subset_DT,
 #' data.table::fwrite(BST1, "~/Desktop/results/GWAS/Nalls23andMe_2019/BST1/BST1.tsv")
 #' query_mod <- standardize_subset(locus="BST1", subset_path="~/Desktop/results/GWAS/Nalls23andMe_2019/BST1/BST1.tsv", MAF_col="calculate", snp_col="rsid")
 standardize_subset <- function(locus,
-                              top_SNPs=NULL,
-                              subset_path="./Data",
-                              chrom_col="CHR",
-                              position_col="POS",
-                              snp_col="SNP",
-                              pval_col="P",
-                              effect_col="Effect",
-                              stderr_col="StdErr",
-                              tstat_col="t_stat",
-                              MAF_col="MAF",
-                              freq_col="Freq",
-                              N_cases_col="N_cases",
-                              N_controls_col="N_controls",
-                              N_cases=NULL,
-                              N_controls=NULL,
-                              proportion_cases="calculate",
-                              sample_size=NULL,
-                              A1_col="A1",
-                              A2_col="A2",
-                              gene_col="Gene",
-                              QTL_prefixes=NULL,
-                              return_dt=T,
-                              nThread=4,
-                              download_method="axel",
-                              verbose=T){
-  printer("",v=verbose)
+                               top_SNPs=NULL,
+                               fullSS_genome_build="hg19",
+                               subset_path="./Data",
+                               chrom_col="CHR",
+                               position_col="POS",
+                               snp_col="SNP",
+                               pval_col="P",
+                               effect_col="Effect",
+                               stderr_col="StdErr",
+                               tstat_col="t_stat",
+                               MAF_col="MAF",
+                               freq_col="Freq",
+                               N_cases_col="N_cases",
+                               N_controls_col="N_controls",
+                               N_cases=NULL,
+                               N_controls=NULL,
+                               proportion_cases="calculate",
+                               sample_size=NULL,
+                               A1_col="A1",
+                               A2_col="A2",
+                               gene_col="Gene",
+                               QTL_prefixes=NULL,
+                               return_dt=T,
+                               nThread=4,
+                               download_method="axel",
+                               verbose=T){
   printer("LD:: Standardizing summary statistics subset.",v=verbose)
   query_check <- data.table::fread(subset_path, nrows = 2)
+
 
   if(dim(query_check)[1]==0){
     file.remove(subset_path)
@@ -142,6 +56,7 @@ standardize_subset <- function(locus,
     query <- data.table::fread(subset_path,
                                header=T, stringsAsFactors = F,
                                nThread = nThread)
+
     ## Calculate StdErr
     if(stderr_col=="calculate"){
       printer("Calculating Standard Error...",v=verbose)
@@ -154,7 +69,7 @@ standardize_subset <- function(locus,
       subset(select=c(chrom_col, position_col, snp_col, pval_col, effect_col, stderr_col)) %>%
       dplyr::rename(CHR=chrom_col,POS=position_col, SNP=snp_col, P=pval_col,
                     Effect=effect_col, StdErr=stderr_col)
-
+    # Gene col
     printer("++ Preparing Gene col", v=verbose)
     if(gene_col %in% colnames(query)){
       query <- dplyr::rename(query, Gene=gene_col)
@@ -166,6 +81,29 @@ standardize_subset <- function(locus,
         if(dplyr::n_distinct(query_mod$SNP)!=nrow(query_mod)) stop("N rows must be equal to N unique SNPS.")
       }
     }
+
+
+    # Subset by eGene
+    genes_detected <- detect_genes(loci = locus, verbose = verbose)
+    if(genes_detected){
+      printer("+ Filtering query to only include Locus:eGene pair =",
+              paste(unname(locus),names(locus), sep=":"), v=verbose)
+      query <- subset(query, Gene==names(locus))
+      query_mod <- subset(query_mod, Gene==names(locus))
+    }
+
+    # Liftover if needed
+    ## Do this step BEFORE inferring MAF from external source
+    if(!fullSS_genome_build %in% c("hg19","hg37")){
+      query_mod <- LIFTOVER(dat = query_mod,
+                        build.conversion = paste0(fullSS_genome_build,".to.hg19"),
+                        chrom_col = "CHR", start_col = "POS", end_col = "POS",
+                        return_as_granges = F,
+                        verbose = verbose)
+      query <- subset(dplyr::rename(query, SNP=snp_col), SNP %in% unique(query_mod$SNP))
+    }
+
+
 
     # Add ref/alt alleles if available
     printer("++ Preparing A1,A1 cols", v=verbose)
@@ -306,6 +244,98 @@ standardize_subset <- function(locus,
     if(return_dt==T){return(query_mod)}
   }
 }
+
+
+
+
+
+#' Automatically identify top SNP per locus
+#'
+#'  If no \code{top_SNPs} dataframe is supplied,
+#'  this function will sort by p-value and then effect size,
+#'  and use the SNP in the first row.
+#'
+#' @family standardization functions
+auto_topSNPs_sub <- function(top_SNPs,
+                             query,
+                             locus){
+  if(toString(top_SNPs)=="auto"){
+    top_SNPs <- query %>% dplyr::mutate(Locus=locus) %>%
+      dplyr::arrange(P, dplyr::desc(Effect)) %>% dplyr::group_by(Locus) %>% dplyr::slice(1)
+  }
+  topSNP_sub <- top_SNPs[top_SNPs$Locus==locus & !is.na(top_SNPs$Locus),][1,]
+  return(topSNP_sub)
+}
+
+
+
+
+#' Compute t-stat
+#'
+#' If \strong{tstat} column is missing,
+#' compute t-statistic from: \code{Effect / StdErr}.
+#' @family standardization functions
+calculate_tstat <- function(finemap_dat,
+                            tstat_col="t_stat"){
+  if(tstat_col %in% colnames(finemap_dat)){
+    finemap_dat <- finemap_dat %>% dplyr::rename(t_stat = tstat_col)
+  } else {
+    if(("Effect" %in% colnames(finemap_dat)) & ("StdErr" %in% colnames(finemap_dat))){
+      printer("+ Calculating t-statistic from Effect and StdErr...")
+      finemap_dat <- finemap_dat %>% dplyr::mutate(t_stat =  Effect/StdErr)
+    } else {
+      printer("+ Could not calculate t-stat due to missing Effect and/or StdErr columns. Returning input data.")
+    }
+  }
+  return(data.table::data.table(finemap_dat))
+}
+
+
+#' Get MAF from UK Biobank.
+#'
+#' If \strong{MAF} column is missing,
+#' download MAF from UK Biobank and use that instead.
+#'
+#' @family standardizing functions
+#' @examples
+#' data("BST1");
+#' subset_DT <- data.frame(BST1)[,colnames(BST1)!="MAF"]
+#' BST1 <- get_UKB_MAF(subset_DT=subset_DT )
+get_UKB_MAF <- function(subset_DT,
+                        output_path = "./Data/Reference/UKB_MAF",
+                        force_new_maf = F,
+                        download_method="wget",
+                        nThread=4,
+                        verbose=T){
+  printer("UKB MAF:: Extracting MAF from UKB reference.",v=verbose)
+  # Documentation: http://biobank.ctsu.ox.ac.uk/showcase/field.cgi?id=22801
+  # subset_DT = data.table::fread("Data/GWAS/Kunkle_2019/PTK2B/PTK2B_Kunkle_2019_subset.tsv.gz")
+  chrom <- unique(subset_DT$CHR)
+  input_url <- paste0("biobank.ctsu.ox.ac.uk/showcase/showcase/auxdata/ukb_mfi_chr",chrom,"_v3.txt")
+  out_file <- file.path(output_path, basename(input_url))
+  if(file.exists(out_file) & force_new_maf==F){
+    printer("+ UKB MAF:: Importing pre-existing file",v=verbose)
+  } else{
+    out_file <- downloader(input_url = input_url,
+                           output_path = output_path,
+                           background = F,
+                           download_method = download_method,
+                           nThread = nThread)
+  }
+  maf <- data.table::fread(out_file, nThread = nThread,
+                           select = c(3,6),
+                           col.names = c("POS","MAF"))
+  maf <- subset(maf, POS %in% subset_DT$POS)
+  merged_dat <- data.table::merge.data.table(subset_DT, maf,
+                                             by = "POS") %>%
+    # Make sure each SNP just appears once
+    dplyr::group_by(SNP) %>%
+    dplyr::slice(1)
+  return(merged_dat)
+}
+
+
+
 
 
 

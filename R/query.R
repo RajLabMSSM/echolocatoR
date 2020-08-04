@@ -203,6 +203,7 @@ detect_genes <- function(loci,
 extract_SNP_subset <- function(locus=NULL,
                                locus_dir,
                                fullSS_path,
+                               fullSS_genome_build="hg19",
                                subset_path,
                                LD_reference,
                                force_new_subset=F,
@@ -278,6 +279,7 @@ extract_SNP_subset <- function(locus=NULL,
     # Clean file
     query <- standardize_subset(locus=locus,
                                 top_SNPs=top_SNPs,
+                                fullSS_genome_build=fullSS_genome_build,
                                 subset_path=subset_path,
                                 chrom_col=chrom_col,
                                 position_col=position_col,
@@ -299,13 +301,7 @@ extract_SNP_subset <- function(locus=NULL,
                                 proportion_cases=proportion_cases,
                                 sample_size=sample_size,
                                 QTL_prefixes=QTL_prefixes)
-    # Subset by eGene
-    genes_detected <- detect_genes(loci = locus, verbose = F)
-    if(genes_detected){
-      printer("+ Filtering query to only include Locus:eGene pair =",
-              paste(unname(locus),names(locus), sep=":"), v=verbose)
-      query <- subset(query, Gene==names(locus))
-    }
+
     end_query <- Sys.time()
     printer("+ Extraction completed in", round(end_query-start_query, 2),"seconds", v=verbose)
     printer("+", dim(query)[1], "SNPs x ",dim(query)[2],"columns", v=verbose)

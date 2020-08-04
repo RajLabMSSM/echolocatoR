@@ -8,7 +8,7 @@ get_UKB_MAF(
   subset_DT,
   output_path = "./Data/Reference/UKB_MAF",
   force_new_maf = F,
-  download_method = "axel",
+  download_method = "wget",
   nThread = 4,
   verbose = T
 )

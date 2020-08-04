@@ -1050,6 +1050,7 @@ LIFTOVER <- function(dat,
                      chrom_col="CHR",
                      start_col="POS",
                      end_col="POS",
+                     return_as_granges=T,
                      verbose=T){
   printer("XGR:: Lifting genome build:", build.conversion, v = verbose)
   # Save original coordinates and SNP IDs
@@ -1064,10 +1065,13 @@ LIFTOVER <- function(dat,
   gr.lifted <- XGR::xLiftOver(data.file = gr.dat,
                               format.file = "GRanges",
                               build.conversion = build.conversion,
-                              verbose = verbose ,
+                              verbose = F ,
                               merged = F)  # merge must =F in order to work
   # Standardize seqnames format
   GenomeInfoDb::seqlevelsStyle(gr.lifted) <- "NCBI"
+  if(return_as_granges==F){
+    gr.lifted <- data.frame(gr.lifted) %>% dplyr::mutate(POS=start)
+  }
   return(gr.lifted)
 }
 

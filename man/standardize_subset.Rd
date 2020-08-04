@@ -2,11 +2,12 @@
 % Please edit documentation in R/standardize.R
 \name{standardize_subset}
 \alias{standardize_subset}
-\title{Stanardize the locus subset}
+\title{Standardize the locus subset}
 \usage{
 standardize_subset(
   locus,
   top_SNPs = NULL,
+  fullSS_genome_build = "hg19",
   subset_path = "./Data",
   chrom_col = "CHR",
   position_col = "POS",
