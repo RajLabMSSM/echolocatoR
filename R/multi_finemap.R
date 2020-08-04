@@ -25,8 +25,9 @@ check_necessary_cols <- function(subset_DT,
                          POLYFUN_SUSIE=c("MAF","A1","A2","N"),
                          PAINTOR=NULL,
                          COJO=NULL)
+  finemap_methods_suggests <-  finemap_methods
   for(m in finemap_methods){
-    message("vvvvv Checking for necessary columns: ",m," vvvvv")
+    message("vvvvv--- Checking for necessary columns: ",m," ---vvvvv")
     # Check required cols
     if(!all(required_dict[[m]] %in% colnames(subset_DT))){
       finemap_methods <- finemap_methods[finemap_methods!=m]
@@ -36,8 +37,8 @@ check_necessary_cols <- function(subset_DT,
     } else{message("✅ All required columns present.")}
     # Check suggested cols
     if(!all(suggested_dict[[m]] %in% colnames(subset_DT))){
-      finemap_methods <- finemap_methods[finemap_methods!=m]
-      missing_cols <- suggested_dict[[m]][!suggested_dict[[m]] %in% colnames(subset_DT)]
+      finemap_methods_suggests <- finemap_methods_suggests[finemap_methods_suggests!=m]
+      missing_cols <- finemap_methods_suggests[[m]][!finemap_methods_suggests[[m]] %in% colnames(subset_DT)]
       message("⚠️ Missing optional columns for ",m,": ",paste(missing_cols,collapse=", "))
     } else{message("✅ All suggested columns present.")}
   }

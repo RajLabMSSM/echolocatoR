@@ -167,7 +167,7 @@ SUSIE <- function(subset_DT,
                              ## It could be due to not supplying a good initial parameter value.
                              ## I believe that you can change the optimization method to EM and then you will get more robust convergence.
                              ##In any case, if the causal effects in your target locus is small, var_y=1 to a first order approximation should give you pretty robust results.
-                             var_y = var_y, # Variance of the phenotype (e.g. gene expression, or disease status)
+                             # var_y = var_y, # Variance of the phenotype (e.g. gene expression, or disease status)
 
                              # A p vector of prior probability that each element is non-zero
                              prior_weights = prior_weights,
