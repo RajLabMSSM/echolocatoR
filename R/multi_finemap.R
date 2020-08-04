@@ -32,7 +32,7 @@ check_necessary_cols <- function(subset_DT,
     if(!all(required_dict[[m]] %in% colnames(subset_DT))){
       finemap_methods <- finemap_methods[finemap_methods!=m]
       missing_cols <- required_dict[[m]][!required_dict[[m]] %in% colnames(subset_DT)]
-      message("⛔Missing required columns for ",m,": ",paste(missing_cols,collapse=", ")," (Skipping)");
+      message("⛔ Missing required columns for ",m,": ",paste(missing_cols,collapse=", ")," (Skipping)");
       next()
     } else{message("✅ All required columns present.")}
     # Check suggested cols
@@ -40,7 +40,7 @@ check_necessary_cols <- function(subset_DT,
     if(is.null(suggested_dict[[m]])) next()
     if(!all(suggested_dict[[m]] %in% colnames(subset_DT))){
       missing_cols <- suggested_dict[[m]][!suggested_dict[[m]] %in% colnames(subset_DT)]
-      message("⚠️ Missing optional columns for ",m,": ",paste(missing_cols,collapse=", "))
+      message("⚠️  Missing optional columns for ",m,": ",paste(missing_cols,collapse=", "))
     } else{message("✅ All suggested columns present.")}
   }
   return(finemap_methods)
@@ -354,18 +354,19 @@ finemap_method_handler <- function(locus_dir,
   }else if(finemap_method=="ABF"){
     # coloc - finemap.abf
     finemap_dat <- ABF(subset_DT = subset_DT,
-                      PP_threshold = PP_threshold,
-                      case_control = case_control)
+                       PP_threshold = PP_threshold,
+                       sample_size = sample_size,
+                       case_control = case_control)
 
 
   } else if(finemap_method=="FINEMAP"){
     # FINEMAP
     finemap_dat <- FINEMAP(subset_DT = subset_DT,
-                          locus_dir = locus_dir,
-                          LD_matrix = LD_matrix,
-                          n_samples = sample_size,
-                          n_causal = n_causal,
-                          credset_thresh = PP_threshold)
+                           locus_dir = locus_dir,
+                           LD_matrix = LD_matrix,
+                           n_samples = sample_size,
+                           n_causal = n_causal,
+                           credset_thresh = PP_threshold)
 
 
   } else if("COJO" %in% finemap_method){
