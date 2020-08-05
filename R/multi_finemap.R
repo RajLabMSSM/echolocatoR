@@ -12,7 +12,9 @@ check_necessary_cols <- function(subset_DT,
                                  dataset_type="GWAS",
                                  verbose=T){
   for_all <- c("SNP","CHR","POS","Effect","StdErr")
-  required_dict <- list(ABF=c(for_all, if(dataset_type=="GWAS") "proportion_cases" else NULL),
+  required_dict <- list(ABF=c(for_all,
+                              if(is.null(sample_size)) "N" else NULL,
+                              if(dataset_type=="GWAS") "proportion_cases" else NULL),
                         FINEMAP=c(for_all),
                         SUSIE=c(for_all),
                         POLYFUN_SUSIE=c(for_all,"P","A1","A2"),

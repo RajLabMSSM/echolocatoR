@@ -182,7 +182,9 @@ GGBIO.plot <- function(finemap_dat,
     track.finemapping <- GGBIO.SNP_track(gr.snp, method = m,
                                          labels_subset = c("Lead SNP", "Credible Set"),
                                          color_r2 = color_r2,
-                                         show.legend = F)
+                                         show.legend = F,
+                                         point_size = point_size,
+                                         point_alpha = point_alpha)
     TRACKS_list <- append(TRACKS_list, track.finemapping)
     names(TRACKS_list)[length(TRACKS_list)] <- m
   }
@@ -547,6 +549,7 @@ GGBIO.SNP_track <- function(gr.snp,
                    coord = "genome",
                    size=point_size,
                    alpha=point_alpha,
+                   show.legend=show.legend,
                    aes(y = -log10(P), x=POS, color=r2),
                    facets=SEQnames~.) +
       labs(y="-log10(P-value)") +
@@ -564,6 +567,7 @@ GGBIO.SNP_track <- function(gr.snp,
                    legend = F,
                    size=point_size,
                    alpha=point_alpha,
+                   show.legend=show.legend,
                    facets=SEQnames~.) +
       ylim(c(0,1.1)) # PP is always 0-1 scale
     if(method=="COJO"){a1 <- a1 + labs(y="Conditioned Effect")}
@@ -691,6 +695,7 @@ GGBIO.QTL_track <- function(gr.snp,
                                coord = "genome",
                                size=point_size,
                                alpha=point_alpha,
+                               show.legend=show.legend,
                                aes(y = -log10(eval(parse(text=pval_col))),
                                    x=POS, color=r2),
                                facets=SEQnames~.) +
