@@ -595,9 +595,9 @@ finemap_pipeline <- function(locus,
   # Plot LD
   if(plot_LD){
     try({
-      LD.plot(LD__LDmatrix=LD_matrix,
-              subs   subset_DT=subset_DT,
-             span=10)
+      LD.plot_LD(LD_matrix=LD_matrix,
+                 subset_DT=subset_DT,
+                 span=10)
     })
   }
   # Cleanup:

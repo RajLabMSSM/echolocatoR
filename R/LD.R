@@ -338,7 +338,7 @@ LD.translate_population <- function(superpopulation){
 #' \dontrun{
 #' data("BST1");
 #' LD_matrix <- readRDS("/Volumes/Steelix/fine_mapping_files/GWAS/Nalls23andMe_2019/BST1/plink/UKB_LD.RDS")
-#' LD.plot(LD_matrix=LD_matrix, subset_DT=BST1)
+#' LD.plot_LD(LD_matrix=LD_matrix, subset_DT=BST1)
 #' }
 LD.plot_LD <- function(LD_matrix,
                        subset_DT,
@@ -366,6 +366,8 @@ LD.plot_LD <- function(LD_matrix,
   }
 
 }
+
+
 
 
 
