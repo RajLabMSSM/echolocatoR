@@ -13,9 +13,15 @@
 #' }
 #' @keywords internal
 #' @examples
+#' # GWAS
 #' data("BST1");
-#' subset_DT <- BST1
-#' finemap_DT <- ABF(subset_DT=subset_DT)
+#' finemap_DT <- ABF(subset_DT=BST1)
+#'
+#' # QTL
+#' locus_dir <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/QTL/Microglia_all_regions/BIN1"
+#' subset_DT <- data.table::fread(file.path(locus_dir,"/Multi-finemap/BIN1.Microglia_all_regions.1KGphase3_LD.Multi-finemap.tsv.gz"))
+#' finemap_DT <- ABF(subset_DT=subset_DT, case_control=F)
+#'
 ABF <- function(subset_DT,
                 PP_threshold=.95,
                 sample_size=NULL,
@@ -38,8 +44,10 @@ ABF <- function(subset_DT,
   # Add MAF
   if("MAF" %in% colnames(subset_DT)) dataset$MAF <- subset_DT$MAF;
   # Add sample size
-  if(!"N" %in% names(subset_DT) & is.null(sample_size)){
-    ss_df <- get_sample_size(subset_DT)
+  if(is.null(sample_size)){
+    ss_df <- get_sample_size(subset_DT = subset_DT,
+                             sample_size = sample_size,
+                             verbose = verbose)
     if(!is.null(ss_df)) dataset$N <-  max(ss_df$N, na.rm = T);
   }
 
