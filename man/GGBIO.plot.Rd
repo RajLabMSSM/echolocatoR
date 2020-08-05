@@ -24,6 +24,7 @@ GGBIO.plot(
   gene_track = T,
   point_size = 1,
   point_alpha = 0.6,
+  snp_group_lines = c("Lead", "UCS", "Consensus"),
   XGR_libnames = c("ENCODE_TFBS_ClusteredV3_CellTypes",
     "ENCODE_DNaseI_ClusteredV3_CellTypes", "Broad_Histone"),
   n_top_xgr = 5,

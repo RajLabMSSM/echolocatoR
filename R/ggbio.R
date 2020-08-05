@@ -155,8 +155,7 @@ GGBIO.plot <- function(finemap_dat,
                                 labels_subset = c("Lead SNP","Consensus SNP"),
                                 color_r2 = color_r2,
                                 point_size = point_size,
-                                point_alpha = point_alpha) +
-    xlim(xlims)
+                                point_alpha = point_alpha)
   TRACKS_list <- append(TRACKS_list, track.gwas)
   names(TRACKS_list)[ifelse(is.null(TRACKS_list),1,length(TRACKS_list))] <- dataset_type
 
@@ -173,8 +172,7 @@ GGBIO.plot <- function(finemap_dat,
                                  PP_threshold=PP_threshold,
                                  sig_cutoff=sig_cutoff,
                                  point_size = point_size,
-                                 point_alpha = point_alpha) +
-      xlim(xlims)
+                                 point_alpha = point_alpha)
     TRACKS_list <- append(TRACKS_list, qtl_track)
     names(TRACKS_list)[length(TRACKS_list)] <- qtl
   }
@@ -188,8 +186,7 @@ GGBIO.plot <- function(finemap_dat,
                                          color_r2 = color_r2,
                                          show.legend = F,
                                          point_size = point_size,
-                                         point_alpha = point_alpha) +
-      xlim(xlims)
+                                         point_alpha = point_alpha)
     TRACKS_list <- append(TRACKS_list, track.finemapping)
     names(TRACKS_list)[length(TRACKS_list)] <- m
   }
@@ -201,8 +198,7 @@ GGBIO.plot <- function(finemap_dat,
     printer("++ GGBIO:: Adding Gene model track.",v=verbose)
     try({
       track.genes <- GGBIO.transcript_model_track(gr.snp_CHR = gr.snp_CHR,
-                                                  max_transcripts = max_transcripts) +
-        xlim(xlims)
+                                                  max_transcripts = max_transcripts)
       TRACKS_list <- append(TRACKS_list, track.genes)
       names(TRACKS_list)[length(TRACKS_list)] <- "Gene Track"
     })
@@ -235,8 +231,7 @@ GGBIO.plot <- function(finemap_dat,
             strip.text = element_text(size=9)) +
       scale_fill_manual(values = grDevices::colorRampPalette(RColorBrewer::brewer.pal(8, palettes[i]))(colourCount) ) +
       scale_y_continuous(n.breaks = 3) +
-      guides(fill = guide_legend(ncol = 2, keyheight = .5, keywidth = .5)) +
-      xlim(xlims)
+      guides(fill = guide_legend(ncol = 2, keyheight = .5, keywidth = .5))
     TRACKS_list <- append(TRACKS_list, xgr.track)
     names(TRACKS_list)[length(TRACKS_list)] <- gsub("_|[.]","\n",lib)
     i = i+1
@@ -284,8 +279,7 @@ GGBIO.plot <- function(finemap_dat,
                                                           bigwig_dir=Nott_bigwig_dir,
                                                           save_annot=T,
                                                           nThread=nThread,
-                                                          verbose=verbose) +
-        xlim(xlims)
+                                                          verbose=verbose)
       TRACKS_list <- append(TRACKS_list, track.Nott_histo)
       names(TRACKS_list)[length(TRACKS_list)] <- "Nott (2019)\nRead Densities"
     })
@@ -302,8 +296,7 @@ GGBIO.plot <- function(finemap_dat,
                                                    save_annot=T,
                                                    # xlims = xlims,
                                                    nThread=nThread,
-                                                   verbose=verbose) +
-          xlim(xlims)
+                                                   verbose=verbose)
         TRACKS_list <- append(TRACKS_list, track.Nott_plac)
         names(TRACKS_list)[length(TRACKS_list)] <- "Nott (2019)\nPLAC-seq"
       })
