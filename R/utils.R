@@ -470,6 +470,7 @@ effective_sample_size <- function(finemap_dat,
 #'
 #' @family general
 #' @keywords internal
+#' @examples
 #' data("BST1")
 #' BST1 <- finemap_DT
 #' subset_DT <- get_sample_size(subset_DT = finemap_DT)
@@ -477,23 +478,25 @@ get_sample_size <- function(subset_DT,
                             sample_size=NULL,
                             effective_ss=T,
                             verbose=T){
+  printer("+ Preparing sample_size (N) column",v=verbose)
   if(!"N" %in% colnames(subset_DT)){
-    if(effective_ss){
-      subset_DT <- effective_sample_size(finemap_dat = subset_DT,
-                                         sample_size = sample_size,
-                                         verbose = verbose)
-    } else{
       if(is.null(sample_size)){
         if("N_cases" %in% colnames(subset_DT) & "N_controls" %in% colnames(subset_DT)){
-          sample_size <- max(subset_DT$N_cases) + max(subset_DT$N_controls)
-          printer("++ Inferring sample size from max(N_cases) + max(N_controls):",sample_size,v=verbose)
+          if(effective_ss){
+            printer("++ Computing effective sample size.",v=verbose)
+            subset_DT$N <- round(4.0 / (1.0/subset_DT$N_cases + 1.0/subset_DT$N_controls), digits = 0)
+          }else {
+            printer("++ Inferring sample size from max(N_cases) + max(N_controls):",sample_size,v=verbose)
+            subset_DT$N <- subset_DT$N_cases + subset_DT$N_controls
+          }
         } else {
-          sample_size <- NULL
+          subset_DT$N <- NULL
           printer("++ `sample_size` not provided.",v=verbose)
         }
-      } else{ printer(paste0("++ Using `sample_size = ",sample_size,"` ") )}
-      subset_DT$N <- sample_size
-    }
+      } else {
+          printer(paste0("++ Using `sample_size = ",sample_size,"` ",v=verbose) );
+          subset_DT$N <- sample_size
+      }
   } else {printer("+ `N` column already present in data.",v=verbose)}
   return(subset_DT)
 }

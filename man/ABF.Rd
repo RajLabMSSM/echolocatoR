@@ -17,7 +17,7 @@ Conduct statistical (non-functional) fine-mapping with approximate Bayes factor 
 }
 \examples{
 data("BST1");
-finemap_DT <- BST1
-finemap_DT <- ABF(subset_DT=finemap_DT)
+subset_DT <- BST1
+finemap_DT <- ABF(subset_DT=subset_DT)
 }
 \keyword{internal}

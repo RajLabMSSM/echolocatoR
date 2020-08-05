@@ -11,7 +11,9 @@ GGBIO.SNP_track(
   color_r2 = F,
   show.legend = T,
   PP_threshold = 0.95,
-  sig_cutoff = 5e-08
+  sig_cutoff = 5e-08,
+  point_size = 1,
+  point_alpha = 0.6
 )
 }
 \arguments{
