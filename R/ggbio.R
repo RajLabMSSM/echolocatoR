@@ -374,11 +374,16 @@ get_window_limits <- function(finemap_dat,
 
   if(grepl("x$",tolower(plot.zoom))==1){
     printer("++ GGBIO:: Inferring plot limits from zoom =",plot.zoom, v=verbose)
-    total_bp_span <- (max(finemap_dat$POS, na.rm = T) - min(finemap_dat$POS, na.rm = T))
-    new_window <- total_bp_span / as.numeric(gsub("x","",plot.zoom))
-    # Prevent extending beyond the borders of the data (producing blank space)
-    min_limit <- middle_pos - as.integer(new_window/2)
-    max_limit <- middle_pos + as.integer(new_window/2)
+    if(tolower(plot.zoom)=="1x") {
+      min_limit <- min(finemap_dat$POS, na.rm = T)
+      max_limit <- max(finemap_dat$POS, na.rm = T)
+    } else {
+      total_bp_span <- (max(finemap_dat$POS, na.rm = T) - min(finemap_dat$POS, na.rm = T))
+      new_window <- total_bp_span / as.numeric(gsub("x","",plot.zoom))
+      # Prevent extending beyond the borders of the data (producing blank space)
+      min_limit <- middle_pos - as.integer(new_window/2)
+      max_limit <- middle_pos + as.integer(new_window/2)
+    }
   } else {
     # Basepairs as input
     printer("+ GGBIO:: Inferring plot limits from bp =",plot.zoom, v=verbose)
