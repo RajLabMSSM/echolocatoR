@@ -52,6 +52,7 @@ GGBIO.plot <- function(finemap_dat,
                        locus_dir,
                        LD_matrix=NULL,
                        LD_reference=NULL,
+                       dataset_type="GWAS",
                        color_r2=T,
                        method_list=c("ABF","FINEMAP","SUSIE","POLYFUN_SUSIE"),
                        dot_summary=F,
@@ -145,8 +146,8 @@ GGBIO.plot <- function(finemap_dat,
   }
 
 
-  ####  Track 1: GWAS ####
-  printer("++ GGBIO::","GWAS","track", v=verbose)
+  ####  Track 1: Main (GWAS) ####
+  printer("++ GGBIO::",dataset_type,"track", v=verbose)
   track.gwas <- GGBIO.SNP_track(gr.snp = gr.snp,
                                 method = "original",
                                 sig_cutoff=sig_cutoff,
@@ -155,7 +156,7 @@ GGBIO.plot <- function(finemap_dat,
                                 point_size = point_size,
                                 point_alpha = point_alpha)
   TRACKS_list <- append(TRACKS_list, track.gwas)
-  names(TRACKS_list)[ifelse(is.null(TRACKS_list),1,length(TRACKS_list))] <- "GWAS"
+  names(TRACKS_list)[ifelse(is.null(TRACKS_list),1,length(TRACKS_list))] <- dataset_type
 
 
 

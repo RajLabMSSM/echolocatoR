@@ -322,7 +322,9 @@ NOTT_2019.get_interactome <- function(annot_sub,
                     into=c("chr","Start","End"), sep = ":|-") %>%
     tidyr::separate(col = Interaction, into=c("Marker","Element",NA), sep="_", remove = F )
   interact.DT <- interact.DT %>%
-    dplyr::mutate(Cell_type_interaction=paste(Cell_type,"-",Element))
+    # Standardize CHR (NCBI format)
+    dplyr::mutate(chr=gsub("chr","",chr),
+                  Cell_type_interaction=paste(Cell_type,"-",Element))
   interact.DT$Cell_type <- interact.DT$Cell_type %>% as.character()
   interact.DT$Start <- as.numeric(interact.DT$Start)
   interact.DT$End <- as.numeric(interact.DT$End)
@@ -560,7 +562,6 @@ NOTT_2019.get_regulatory_regions <- function(finemap_dat,
                                              as.granges=F,
                                              nThread=1,
                                              verbose=T){
-
   selected_sheets <- grep("promoters$|enhancers$",names(echolocatoR::NOTT_2019.interactome), value = T)
   regions <- parallel::mclapply(selected_sheets, function(s){
     printer("Importing",s,"...")
@@ -673,9 +674,10 @@ NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
                                               nThread = nThread,
                                               as.granges = T,
                                               verbose = verbose)
-  has_chr <- grepl("chr",unique(finemap_dat$CHR)[1])
-  regions <- subset(regions, as.character(GenomicRanges::seqnames(regions)) ==
-                      paste0("chr", unique(finemap_dat$CHR))[1] & GenomicRanges::start(regions) >=
+  # has_chr <- grepl("chr",unique(finemap_dat$CHR)[1])
+  regions <- subset(regions,
+                    as.character(GenomicRanges::seqnames(regions)) == gsub("chr","",unique(finemap_dat$CHR)[1]) &
+                      GenomicRanges::start(regions) >=
                       min(finemap_dat$POS, na.rm = T) & GenomicRanges::end(regions) <=
                       max(finemap_dat$POS, na.rm = T))
 

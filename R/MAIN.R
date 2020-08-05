@@ -413,7 +413,7 @@ finemap_pipeline <- function(locus,
                              conda_env="echoR",
                              nThread=4,
                              verbose=T){
-   # Create paths
+   #### Create paths ####
    subset_path <- get_subset_path(results_dir = results_dir,
                                   dataset_type = dataset_type,
                                   dataset_name = dataset_name,
@@ -421,7 +421,7 @@ finemap_pipeline <- function(locus,
    locus_dir <- get_locus_dir(subset_path = subset_path)
 
 
-   # Extract subset
+   ####  Query ####
    message("\n------------------ Step 1: Query 🔍---------------")
 
    subset_DT <- extract_SNP_subset(locus = locus,
@@ -467,7 +467,7 @@ finemap_pipeline <- function(locus,
 
                                     remove_tmps = remove_tmps,
                                     verbose = verbose)
-  ### Compute LD matrix
+  #### Extract LD ####
   message("\n--- Step 2: Extract Linkage Disequilibrium ⏬---")
   LD_matrix <- LD.load_or_create(locus_dir=locus_dir,
                                  subset_DT=subset_DT,
@@ -488,7 +488,7 @@ finemap_pipeline <- function(locus,
                                  nThread=nThread,
                                  verbose=verbose)
 
-  #### ***** SNP Filters ***** ###
+  #### Filter SNPs####
   # Remove pre-specified SNPs
   ## Do this step AFTER saving the LD to disk so that it's easier to re-subset in different ways later without having to redownload LD.
   message("\n-------------- Step 3: Filter SNPs 🚰-------------")
@@ -508,7 +508,7 @@ finemap_pipeline <- function(locus,
                                 fillNA = fillNA)
   LD_matrix <- sub.out$LD
   subset_DT <- sub.out$DT
-  # finemap
+  #### Fine-map ####
   message("\n-------- Step 4: Fine-map 🔊--------")
   finemap_dat <- finemap_handler(locus_dir = locus_dir,
                                 fullSS_path = fullSS_path,
@@ -537,7 +537,7 @@ finemap_pipeline <- function(locus,
                                 case_control = case_control,
                                 conda_env = conda_env,
                                 verbose = verbose)
-  # Plot
+  #### Visualize ####
   if(!is.null(plot.types)) message("\n--------------- Step 5: Visualize 📊--------------")
   for(p.window in plot.zoom){
     if("simple" %in% plot.types){
@@ -546,6 +546,7 @@ finemap_pipeline <- function(locus,
                               LD_matrix = LD_matrix,
                               LD_reference = LD_reference,
                               locus_dir = locus_dir,
+                              dataset_type = dataset_type,
                               method_list = finemap_methods,
                               PP_threshold = PP_threshold,
                               consensus_threshold = consensus_threshold,
@@ -567,6 +568,7 @@ finemap_pipeline <- function(locus,
                           LD_matrix = LD_matrix,
                           LD_reference = LD_reference,
                           locus_dir = locus_dir,
+                          dataset_type = dataset_type,
                           method_list = finemap_methods,
                           PP_threshold = PP_threshold,
                           consensus_threshold = consensus_threshold,
