@@ -365,12 +365,16 @@ GGBIO.plot <- function(finemap_dat,
 #' xlims <- get_window_limits(finemap_dat=BST1, plot.zoom="all")
 #' xlims <- get_window_limits(finemap_dat=BST1, plot.zoom="5x")
 get_window_limits <- function(finemap_dat,
+                              index_as_center=T,
                               plot.zoom=NULL,
                               verbose=T){
   # Zoom #x as  input
-  middle_pos <- finemap_dat[round(nrow(finemap_dat)/2),]$POS
-  # middle_pos <- subset(finemap_dat, leadSNP)$POS[1]
-  ## Lead Pos isn't always dead middle if manual xlims were used during querying
+  if(index_as_center) {
+    middle_pos <- subset(finemap_dat, leadSNP)$POS[1]
+  } else {
+    # Lead Pos isn't always dead middle if manual xlims were used during querying
+    middle_pos <- finemap_dat[round(nrow(finemap_dat)/2),]$POS
+  }
 
   if(grepl("x$",tolower(plot.zoom))==1){
     printer("++ GGBIO:: Inferring plot limits from zoom =",plot.zoom, v=verbose)
