@@ -21,7 +21,7 @@
 #' # QTL
 #' locus_dir <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/QTL/Microglia_all_regions/BIN1"
 #' subset_DT <- data.table::fread(file.path(locus_dir,"/Multi-finemap/BIN1.Microglia_all_regions.1KGphase3_LD.Multi-finemap.tsv.gz"))
-#' finemap_DT <- ABF(subset_DT=subset_DT, case_control=F)
+#' finemap_DT <- ABF(subset_DT=subset_DT, case_control=F, sample_size=90)
 ABF <- function(subset_DT,
                 PP_threshold=.95,
                 sample_size=NULL,
@@ -50,7 +50,7 @@ ABF <- function(subset_DT,
                              sample_size = sample_size,
                              verbose = verbose)
     if(!is.null(ss_df)) dataset$N <-  max(ss_df$N, na.rm = T);
-  }
+  } else {dataset$N <- sample_size}
 
   finemap_dat <- coloc::finemap.abf(dataset = dataset)
   finemap_dat <- subset(finemap_dat, snp!="null") %>%
