@@ -181,12 +181,15 @@ GGBIO.plot <- function(finemap_dat,
   #### Tracks 2n: Fine-mapping ####
   for(m in method_list){
     printer("++ GGBIO::",m,"track", v=verbose)
-    track.finemapping <- GGBIO.SNP_track(gr.snp, method = m,
+    track.finemapping <- GGBIO.SNP_track(gr.snp,
+                                         method = m,
                                          labels_subset = c("Lead SNP", "Credible Set"),
                                          color_r2 = color_r2,
-                                         show.legend = F,
+                                         # Important! Setting this to F misaligns the plots
+                                         show.legend = T,
                                          point_size = point_size,
-                                         point_alpha = point_alpha)
+                                         point_alpha = point_alpha) +
+      xlim(xlims)
     TRACKS_list <- append(TRACKS_list, track.finemapping)
     names(TRACKS_list)[length(TRACKS_list)] <- m
   }
@@ -877,7 +880,7 @@ GGBIO.track_heights_dict <- function(TRACKS_list,
 GGBIO.add_lines <- function(trks,
                             finemap_dat,
                             snp_groups=c("Lead","UCS","Consensus"),
-                            line_alpha=.7,
+                            line_alpha=1,
                             line_size=.3){
     if("UCS" %in% snp_groups){
       UCS.pos <- subset(finemap_dat, Support>0)$POS
@@ -895,7 +898,7 @@ GGBIO.add_lines <- function(trks,
       lead.pos <- subset(finemap_dat, leadSNP)$POS
       trks <- trks +  # Consensus
         geom_vline(xintercept = lead.pos, color="red",
-                   alpha=line_alpha, size=line_size, linetype='solid')
+                   alpha=line_alpha, size=line_size, linetype='dashed')
     }
   TRKS_FINAL <- suppressWarnings(suppressMessages(
     trks +
