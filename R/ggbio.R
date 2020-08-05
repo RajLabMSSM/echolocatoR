@@ -370,20 +370,21 @@ get_window_limits <- function(finemap_dat,
   # Zoom #x as  input
   if(grepl("x$",tolower(plot.zoom))==1){
     printer("++ GGBIO:: Inferring plot limits from zoom =",plot.zoom, v=verbose)
-    new_window <- (max(finemap_dat$POS) - min(finemap_dat$POS)) / as.numeric(gsub("x","",plot.zoom))
+    new_window <- (max(finemap_dat$POS, na.rm = T) - min(finemap_dat$POS, na.rm = T)) / as.numeric(gsub("x","",plot.zoom))
     lead_pos <- subset(finemap_dat, leadSNP)$POS[1]
-    min_limit <- lead_pos - as.integer(new_window/2)
-    max_limit <- lead_pos + as.integer(new_window/2)
+    # Prevent extending beyond the borders of the data (producing blank space)
+    min_limit <- max(lead_pos - as.integer(new_window/2),  min(finemap_dat$POS, na.rm = T), na.rm = T)
+    max_limit <- min(lead_pos + as.integer(new_window/2), max(finemap_dat$POS, na.rm = T), na.rm = T)
   } else {
     # Basepairs as input
     printer("+ GGBIO:: Inferring plot limits from bp =",plot.zoom, v=verbose)
     if(is.null(plot.zoom)){
-      min_limit <- min(finemap_dat$POS)
-      max_limit <- max(finemap_dat$POS)
+      min_limit <- min(finemap_dat$POS, na.rm = T)
+      max_limit <- max(finemap_dat$POS, na.rm = T)
     } else {
       if(plot.zoom=="all"){
-        min_limit <- min(finemap_dat$POS)
-        max_limit <- max(finemap_dat$POS)
+        min_limit <- min(finemap_dat$POS, na.rm = T)
+        max_limit <- max(finemap_dat$POS, na.rm = T)
       } else {
         lead_pos <- subset(finemap_dat, leadSNP)$POS[1]
         min_limit <- lead_pos - as.integer(plot.zoom/2)
@@ -891,7 +892,7 @@ GGBIO.add_lines <- function(trks,
     if("Consensus" %in% snp_groups){
       consensus.pos <- subset(finemap_dat, Consensus_SNP==T)$POS
       trks <- trks +  # Consensus
-        geom_vline(xintercept = consensus.pos, color="goldenrod2",
+        geom_vline(xintercept = consensus.pos, color="goldenrod1",
                    alpha=line_alpha, size=line_size, linetype='solid')
     }
     if("Lead" %in% snp_groups){
