@@ -10,6 +10,7 @@ LD.save_LD_matrix(
   locus_dir,
   fillNA = 0,
   LD_reference,
+  sparse = T,
   verbose = T
 )
 }
@@ -39,14 +40,15 @@ Other LD:
 \code{\link{LD.load_or_create}()},
 \code{\link{LD.plink_LD}()},
 \code{\link{LD.plink_file}()},
-\code{\link{LD.plot}()},
+\code{\link{LD.plot_LD}()},
 \code{\link{LD.query_vcf}()},
 \code{\link{LD.rds_to_npz}()},
 \code{\link{LD.read_bin}()},
 \code{\link{LD.read_ld_table}()},
 \code{\link{LD.run_plink_LD}()},
 \code{\link{LD.translate_population}()},
-\code{\link{LD.vcf_to_bed}()}
+\code{\link{LD.vcf_to_bed}()},
+\code{\link{saveSparse}()}
 }
 \concept{LD}
 \keyword{internal}

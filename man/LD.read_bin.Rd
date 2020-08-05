@@ -4,15 +4,21 @@
 \alias{LD.read_bin}
 \title{Create LD matrix from plink output}
 \usage{
-LD.read_bin(ld.path)
+LD.read_bin(LD_dir)
 }
 \arguments{
-\item{ld.path}{Directory that contains the bin/bim files.}
+\item{LD_dir}{Directory that contains the bin/bim files.}
 }
 \description{
 Depending on which parameters you give \emph{plink} when calculating LD, you get different file outputs.
 When it produces bin and bim files, use this function to create a proper LD matrix.
 For example, this happens when you try to calculate D' with the \code{--r dprime-signed} flag (instead of just r).
+}
+\examples{
+\dontrun{
+locus_dir <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/QTL/Microglia_all_regions/BIN1"
+ld.matrix <- LD.read_bin(LD_dir=file.path(locus_dir, "LD"))
+}
 }
 \seealso{
 Other LD: 
@@ -32,14 +38,15 @@ Other LD:
 \code{\link{LD.load_or_create}()},
 \code{\link{LD.plink_LD}()},
 \code{\link{LD.plink_file}()},
-\code{\link{LD.plot}()},
+\code{\link{LD.plot_LD}()},
 \code{\link{LD.query_vcf}()},
 \code{\link{LD.rds_to_npz}()},
 \code{\link{LD.read_ld_table}()},
 \code{\link{LD.run_plink_LD}()},
 \code{\link{LD.save_LD_matrix}()},
 \code{\link{LD.translate_population}()},
-\code{\link{LD.vcf_to_bed}()}
+\code{\link{LD.vcf_to_bed}()},
+\code{\link{saveSparse}()}
 }
 \concept{LD}
 \keyword{internal}

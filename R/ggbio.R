@@ -61,6 +61,8 @@ GGBIO.plot <- function(finemap_dat,
                        consensus_threshold=2,
                        sig_cutoff=5e-8,
                        gene_track=T,
+                       point_size=1,
+                       point_alpha=.6,
 
                        XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes",
                                       "ENCODE_DNaseI_ClusteredV3_CellTypes",
@@ -149,7 +151,9 @@ GGBIO.plot <- function(finemap_dat,
                                 method = "original",
                                 sig_cutoff=sig_cutoff,
                                 labels_subset = c("Lead SNP","Consensus SNP"),
-                                color_r2 = color_r2)
+                                color_r2 = color_r2,
+                                point_size = point_size,
+                                point_alpha = point_alpha)
   TRACKS_list <- append(TRACKS_list, track.gwas)
   names(TRACKS_list)[ifelse(is.null(TRACKS_list),1,length(TRACKS_list))] <- "GWAS"
 
@@ -164,7 +168,9 @@ GGBIO.plot <- function(finemap_dat,
                                  color_r2=color_r2,
                                  show.legend=F,
                                  PP_threshold=PP_threshold,
-                                 sig_cutoff=sig_cutoff)
+                                 sig_cutoff=sig_cutoff,
+                                 point_size = point_size,
+                                 point_alpha = point_alpha)
     TRACKS_list <- append(TRACKS_list, qtl_track)
     names(TRACKS_list)[length(TRACKS_list)] <- qtl
   }
@@ -503,7 +509,9 @@ GGBIO.SNP_track <- function(gr.snp,
                             color_r2=F,
                             show.legend=T,
                             PP_threshold=.95,
-                            sig_cutoff=5e-8){
+                            sig_cutoff=5e-8,
+                            point_size=1,
+                            point_alpha=.6){
   if(color_r2==F){gr.snp$r2 <- NA}
   # Format data
   if(!(method %in% c("original"))){
@@ -537,8 +545,8 @@ GGBIO.SNP_track <- function(gr.snp,
     a1 <- ggbio::plotGrandLinear(gr.snp,
                    geom = "point",
                    coord = "genome",
-                   size=2,
-                   alpha=.8,
+                   size=point_size,
+                   alpha=point_alpha,
                    aes(y = -log10(P), x=POS, color=r2),
                    facets=SEQnames~.) +
       labs(y="-log10(P-value)") +
@@ -554,8 +562,8 @@ GGBIO.SNP_track <- function(gr.snp,
                    coord = "genome",
                    aes(y = PP, x=POS, color=r2),
                    legend = F,
-                   size=2,
-                   alpha=.8,
+                   size=point_size,
+                   alpha=point_alpha,
                    facets=SEQnames~.) +
       ylim(c(0,1.1)) # PP is always 0-1 scale
     if(method=="COJO"){a1 <- a1 + labs(y="Conditioned Effect")}
@@ -652,7 +660,9 @@ GGBIO.QTL_track <- function(gr.snp,
                             color_r2=T,
                             show.legend=T,
                             PP_threshold=.95,
-                            sig_cutoff=5e-8){
+                            sig_cutoff=5e-8,
+                            point_size=1,
+                            point_alpha=.6){
   if(color_r2==F){gr.snp$r2 <- NA}
   dat <- as.data.frame(gr.snp)
   pval_col <- guess_pvalue_col(dat = dat,
@@ -679,8 +689,8 @@ GGBIO.QTL_track <- function(gr.snp,
   q1 <- ggbio::plotGrandLinear(gr.snp,
                                geom = "point",
                                coord = "genome",
-                               size=2,
-                               alpha=.8,
+                               size=point_size,
+                               alpha=point_alpha,
                                aes(y = -log10(eval(parse(text=pval_col))),
                                    x=POS, color=r2),
                                facets=SEQnames~.) +
@@ -717,8 +727,7 @@ GGBIO.QTL_track <- function(gr.snp,
                               label.size=NA,
                               alpha=.6,
                               seed = 1,
-                              size = 3,
-                              min.segment.length = 1) +
+                              size = 3) +
     ### Foreground color label
     ggrepel::geom_label_repel(data=labelSNPs_labels,
                               aes(label=SNP),
@@ -731,8 +740,7 @@ GGBIO.QTL_track <- function(gr.snp,
                               fill = NA,
                               alpha=1,
                               seed = 1,
-                              size = 3,
-                              min.segment.length = 1) +
+                              size = 3) +
     theme_classic() +
     theme(legend.title = element_text(size=8),
           legend.text = element_text(size=6),

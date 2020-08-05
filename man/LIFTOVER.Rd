@@ -10,6 +10,7 @@ LIFTOVER(
   chrom_col = "CHR",
   start_col = "POS",
   end_col = "POS",
+  chr_format = "NCBI",
   return_as_granges = T,
   verbose = T
 )
