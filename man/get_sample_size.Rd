@@ -9,6 +9,11 @@ get_sample_size(subset_DT, sample_size = NULL, effective_ss = T, verbose = T)
 \description{
 Infer sample size from summary stats
 }
+\examples{
+data("BST1")
+BST1 <- finemap_DT
+subset_DT <- get_sample_size(subset_DT = finemap_DT)
+}
 \seealso{
 Other general: 
 \code{\link{.rbind.file.list}()},
@@ -23,12 +28,4 @@ Other general:
 \code{\link{tryFunc}()}
 }
 \concept{general}
-\keyword{<-}
-\keyword{=}
-\keyword{BST1}
-\keyword{data("BST1")}
-\keyword{finemap_DT}
-\keyword{finemap_DT)}
-\keyword{get_sample_size(subset_DT}
 \keyword{internal}
-\keyword{subset_DT}

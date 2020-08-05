@@ -10,14 +10,25 @@
 }
 }
 \usage{
-ABF(subset_DT, PP_threshold = 0.95, sample_size = NULL, case_control = T)
+ABF(
+  subset_DT,
+  PP_threshold = 0.95,
+  sample_size = NULL,
+  sdY = NULL,
+  case_control = T
+)
 }
 \description{
 Conduct statistical (non-functional) fine-mapping with approximate Bayes factor (ABF).
 }
 \examples{
+# GWAS
 data("BST1");
-subset_DT <- BST1
-finemap_DT <- ABF(subset_DT=subset_DT)
+finemap_DT <- ABF(subset_DT=BST1)
+
+# QTL
+locus_dir <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/QTL/Microglia_all_regions/BIN1"
+subset_DT <- data.table::fread(file.path(locus_dir,"/Multi-finemap/BIN1.Microglia_all_regions.1KGphase3_LD.Multi-finemap.tsv.gz"))
+finemap_DT <- ABF(subset_DT=subset_DT, case_control=F, sample_size=90)
 }
 \keyword{internal}

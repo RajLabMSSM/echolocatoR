@@ -12,6 +12,7 @@ GGBIO.plot(
   locus_dir,
   LD_matrix = NULL,
   LD_reference = NULL,
+  dataset_type = "GWAS",
   color_r2 = T,
   method_list = c("ABF", "FINEMAP", "SUSIE", "POLYFUN_SUSIE"),
   dot_summary = F,
@@ -55,6 +56,10 @@ Options include:
 \item{"1KGphase3"}{Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.}
 \item{"<path>/*.vcf" or "<path>/*.vcf.gz"}{Alternatively, users can provide their own custom panel by supplying a list of \emph{.vcf} file path (one per locus) which \pkg{echolocatoR} will use to compute LD (using \emph{plink}).}
 }}
+
+\item{dataset_type}{The kind dataset you're fine-mapping (e.g. GWAS, eQTL, tQTL).
+This will also be used when creating the subdirectory where your results will be stored
+(e.g. \emph{Data/<dataset_type>/Kunkle_2019}).}
 
 \item{color_r2}{If an LD_matrix is supplied, color each SNP by its LD with the lead SNP from the GWAS ()}
 

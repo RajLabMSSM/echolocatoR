@@ -64,6 +64,7 @@ GGBIO.plot <- function(finemap_dat,
                        gene_track=T,
                        point_size=1,
                        point_alpha=.6,
+                       snp_group_lines=c("Lead","UCS","Consensus"),
 
                        XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes",
                                       "ENCODE_DNaseI_ClusteredV3_CellTypes",
@@ -154,7 +155,8 @@ GGBIO.plot <- function(finemap_dat,
                                 labels_subset = c("Lead SNP","Consensus SNP"),
                                 color_r2 = color_r2,
                                 point_size = point_size,
-                                point_alpha = point_alpha)
+                                point_alpha = point_alpha) +
+    xlim(xlims)
   TRACKS_list <- append(TRACKS_list, track.gwas)
   names(TRACKS_list)[ifelse(is.null(TRACKS_list),1,length(TRACKS_list))] <- dataset_type
 
@@ -171,7 +173,8 @@ GGBIO.plot <- function(finemap_dat,
                                  PP_threshold=PP_threshold,
                                  sig_cutoff=sig_cutoff,
                                  point_size = point_size,
-                                 point_alpha = point_alpha)
+                                 point_alpha = point_alpha) +
+      xlim(xlims)
     TRACKS_list <- append(TRACKS_list, qtl_track)
     names(TRACKS_list)[length(TRACKS_list)] <- qtl
   }
@@ -185,7 +188,8 @@ GGBIO.plot <- function(finemap_dat,
                                          color_r2 = color_r2,
                                          show.legend = F,
                                          point_size = point_size,
-                                         point_alpha = point_alpha)
+                                         point_alpha = point_alpha) +
+      xlim(xlims)
     TRACKS_list <- append(TRACKS_list, track.finemapping)
     names(TRACKS_list)[length(TRACKS_list)] <- m
   }
@@ -197,7 +201,8 @@ GGBIO.plot <- function(finemap_dat,
     printer("++ GGBIO:: Adding Gene model track.",v=verbose)
     try({
       track.genes <- GGBIO.transcript_model_track(gr.snp_CHR = gr.snp_CHR,
-                                                  max_transcripts = max_transcripts)
+                                                  max_transcripts = max_transcripts) +
+        xlim(xlims)
       TRACKS_list <- append(TRACKS_list, track.genes)
       names(TRACKS_list)[length(TRACKS_list)] <- "Gene Track"
     })
@@ -230,7 +235,8 @@ GGBIO.plot <- function(finemap_dat,
             strip.text = element_text(size=9)) +
       scale_fill_manual(values = grDevices::colorRampPalette(RColorBrewer::brewer.pal(8, palettes[i]))(colourCount) ) +
       scale_y_continuous(n.breaks = 3) +
-      guides(fill = guide_legend(ncol = 2, keyheight = .5, keywidth = .5))
+      guides(fill = guide_legend(ncol = 2, keyheight = .5, keywidth = .5)) +
+      xlim(xlims)
     TRACKS_list <- append(TRACKS_list, xgr.track)
     names(TRACKS_list)[length(TRACKS_list)] <- gsub("_|[.]","\n",lib)
     i = i+1
@@ -278,7 +284,8 @@ GGBIO.plot <- function(finemap_dat,
                                                           bigwig_dir=Nott_bigwig_dir,
                                                           save_annot=T,
                                                           nThread=nThread,
-                                                          verbose=verbose)
+                                                          verbose=verbose) +
+        xlim(xlims)
       TRACKS_list <- append(TRACKS_list, track.Nott_histo)
       names(TRACKS_list)[length(TRACKS_list)] <- "Nott (2019)\nRead Densities"
     })
@@ -293,9 +300,10 @@ GGBIO.plot <- function(finemap_dat,
                                                    return_interaction_track=T,
                                                    show_arches=T,
                                                    save_annot=T,
-                                                   xlims = xlims,
+                                                   # xlims = xlims,
                                                    nThread=nThread,
-                                                   verbose=verbose)
+                                                   verbose=verbose) +
+          xlim(xlims)
         TRACKS_list <- append(TRACKS_list, track.Nott_plac)
         names(TRACKS_list)[length(TRACKS_list)] <- "Nott (2019)\nPLAC-seq"
       })
@@ -321,7 +329,9 @@ GGBIO.plot <- function(finemap_dat,
                         xlim = xlims,
                         heights = heights)
     trks <- suppressMessages(do.call("tracks", append(TRACKS_list, params_list)))
+    #### Add vertical lines  ####
     TRKS_FINAL <- GGBIO.add_lines(trks = trks,
+                                  snp_groups = snp_group_lines,
                                   finemap_dat = finemap_dat)
   }
 
@@ -872,22 +882,36 @@ GGBIO.track_heights_dict <- function(TRACKS_list,
 #' @family plot
 #' @keywords internal
 GGBIO.add_lines <- function(trks,
-                            finemap_dat){
-  # Add lines
-  lead.pos <- subset(finemap_dat, leadSNP)$POS
-  consensus.pos <- subset(finemap_dat, Consensus_SNP==T)$POS
-
+                            finemap_dat,
+                            snp_groups=c("Lead","UCS","Consensus"),
+                            line_alpha=.7,
+                            line_size=.3){
+    if("UCS" %in% snp_groups){
+      UCS.pos <- subset(finemap_dat, Support>0)$POS
+      trks <- trks +  # Consensus
+        geom_vline(xintercept = UCS.pos, color="green3",
+                   alpha=line_alpha, size=line_size, linetype='solid')
+    }
+    if("Consensus" %in% snp_groups){
+      consensus.pos <- subset(finemap_dat, Consensus_SNP==T)$POS
+      trks <- trks +  # Consensus
+        geom_vline(xintercept = consensus.pos, color="goldenrod2",
+                   alpha=line_alpha, size=line_size, linetype='solid')
+    }
+    if("Lead" %in% snp_groups){
+      lead.pos <- subset(finemap_dat, leadSNP)$POS
+      trks <- trks +  # Consensus
+        geom_vline(xintercept = lead.pos, color="red",
+                   alpha=line_alpha, size=line_size, linetype='solid')
+    }
   TRKS_FINAL <- suppressWarnings(suppressMessages(
     trks +
-     geom_vline(xintercept = consensus.pos, color="goldenrod2",
-                 alpha=1, size=.3, linetype='solid') +
-     geom_vline(xintercept = lead.pos, color="red",
-                alpha=1, size=.3, linetype='solid') +
      theme(strip.text.y = element_text(angle = 0),
            strip.text = element_text(size = 7),
            panel.background = element_rect(fill = "white", colour = "black", linetype = "solid"),
            plot.subtitle = element_text(color = "turquoise", size = 8)) +
-     scale_x_continuous( labels=function(x)x/1000000)))
+     scale_x_continuous( labels=function(x)x/1000000))
+     )
   return(TRKS_FINAL)
 }
 
