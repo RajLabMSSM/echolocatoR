@@ -78,7 +78,8 @@ LD.load_or_create <- function(locus_dir,
 
   if(file.exists(RDS_path) & force_new_LD==F){
     printer("+  LD:: Previously computed LD_matrix detected. Importing...", RDS_path, v=verbose)
-    LD_matrix <- readRDS(RDS_path)
+    LD_matrix <- readSparse(LD_path = RDS_path,
+                            convert_to_df = T)
   } else if(LD_reference=="UKB"){
     LD_matrix <- LD.UKBiobank(subset_DT = subset_DT,
                               locus_dir = locus_dir,
@@ -287,7 +288,7 @@ LD.save_LD_matrix <- function(LD_matrix,
                               locus_dir,
                               fillNA=0,
                               LD_reference,
-
+                              sparse=T,
                               verbose=T){
   RDS_path <- LD.get_rds_path(locus_dir = locus_dir,
                               LD_reference = basename(LD_reference))
@@ -296,7 +297,13 @@ LD.save_LD_matrix <- function(LD_matrix,
                                 fillNA = fillNA,
                                 finemap_dat = subset_DT)
   LD_matrix <- sub.out$LD
-  saveRDS(LD_matrix, file = RDS_path)
+  if(sparse){
+    saveSparse(LD_matrix = LD_matrix,
+                LD_path = RDS_path,
+                verbose = verbose)
+  } else {
+    saveRDS(LD_matrix, file = RDS_path)
+  }
   return(RDS_path)
 }
 
@@ -333,24 +340,32 @@ LD.translate_population <- function(superpopulation){
 #' LD_matrix <- readRDS("/Volumes/Steelix/fine_mapping_files/GWAS/Nalls23andMe_2019/BST1/plink/UKB_LD.RDS")
 #' LD.plot(LD_matrix=LD_matrix, subset_DT=BST1)
 #' }
-LD.plot <- function(LD_matrix,
-                    subset_DT,
-                    span=10){
+LD.plot_LD <- function(LD_matrix,
+                       subset_DT,
+                       span=10,
+                       method=c("gaston","heatmap","image")){
   leadSNP = subset(subset_DT, leadSNP==T)$SNP
   lead_index = match(leadSNP, row.names(LD_matrix))
 
-  if(dim(LD_matrix)[1]<span){
-    start_pos = lead_index - dim(LD_matrix)[1]
-    end_pos = lead_index + dim(LD_matrix)[1]
-  } else{
-    start_pos = lead_index - span
-    end_pos = lead_index + span
-  }
+  start_pos = lead_index - min(span, dim(LD_matrix)[1],na.rm = T)
+  end_pos = lead_index +  min(span, dim(LD_matrix)[1],na.rm = T)
   sub_DT <- subset(subset_DT, SNP %in% rownames(LD_matrix))
-  gaston::LD.plot( LD_matrix[start_pos:end_pos, start_pos:end_pos],
-                   snp.positions = sub_DT$POS[start_pos:end_pos] )
-}
 
+  if(method[1]=="gaston"){
+    gaston::LD.plot(LD = LD_matrix[start_pos:end_pos,
+                                   start_pos:end_pos],
+                     snp.positions = sub_DT$POS[start_pos:end_pos] )
+  }
+  if(method[1]=="heatmap"){
+    heatmap(as.matrix(LD_sparse)[start_pos:end_pos,
+                                 start_pos:end_pos])
+  }
+  if(method[1]=="image"){
+    image(as.matrix(LD_sparse)[start_pos:end_pos,
+                               start_pos:end_pos])
+  }
+
+}
 
 
 
@@ -767,13 +782,20 @@ LD.calculate_LD <- function(locus_dir,
 #' Depending on which parameters you give \emph{plink} when calculating LD, you get different file outputs.
 #' When it produces bin and bim files, use this function to create a proper LD matrix.
 #' For example, this happens when you try to calculate D' with the \code{--r dprime-signed} flag (instead of just r).
-#' @param ld.path Directory that contains the bin/bim files.
+#' @param LD_dir Directory that contains the bin/bim files.
 #' @family LD
 #' @keywords internal
-LD.read_bin <- function(ld.path){
-  bim <- data.table::fread(file.path(dirname(ld.path), "plink.bim"), col.names = c("CHR","SNP","V3","POS","A1","A2"))
-  bin.vector <- readBin(ld.path, what = "numeric", n=length(bim$SNP)^2)
+#' @examples
+#' \dontrun{
+#' locus_dir <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/QTL/Microglia_all_regions/BIN1"
+#' ld.matrix <- LD.read_bin(LD_dir=file.path(locus_dir, "LD"))
+#' }
+
+LD.read_bin <- function(LD_dir){
+  bim <- data.table::fread(file.path(LD_dir, "plink.bim"), col.names = c("CHR","SNP","V3","POS","A1","A2"))
+  bin.vector <- readBin(file.path(LD_dir, "plink.ld.bin"), what = "numeric", n=length(bim$SNP)^2)
   ld.matrix <- matrix(bin.vector, nrow = length(bim$SNP), dimnames = list(bim$SNP, bim$SNP))
+  return(ld.matrix)
 }
 
 
@@ -1019,6 +1041,7 @@ LD.plink_LD <-function(leadSNP,
                        min_Dprime=F,
                        remove_correlates=F,
                        fillNA=0,
+                       plink_prefix="plink",
                        verbose=T){
   # Dprime ranges from -1 to 1
   start <- Sys.time()
@@ -1044,14 +1067,16 @@ LD.plink_LD <-function(leadSNP,
                                                                POS=as.integer(POS)),
                                                  by=c("CHR","POS"))
     }
-
     bim <- subset(bim, SNP %in% bim.merged$SNP.x)
     printer("LD:PLINK:: Removing RSIDs that don't appear in locus subset:",orig_n,"==>",nrow(bim),"SNPs",v=verbose)
   }
-  data.table::fwrite(subset(bim, select="SNP"), file.path(LD_folder,"SNPs.txt"), col.names = F)
+  data.table::fwrite(subset(bim, select="SNP"),
+                     file.path(LD_folder,"SNPs.txt"), col.names = F)
 
   printer("++ Calculating LD", v=verbose)
-  ld.matrix <- LD.run_plink_LD(bim, LD_folder)
+  ld.matrix <- LD.run_plink_LD(bim = bim,
+                               LD_folder = LD_folder,
+                               plink_prefix = plink_prefix)
 
   if((min_Dprime != F) | (min_r2 != F) | (remove_correlates != F)){
     plink.ld <- LD.dprime_table(SNP_list = row.names(ld.matrix), LD_folder)

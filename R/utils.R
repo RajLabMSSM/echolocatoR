@@ -1128,3 +1128,32 @@ determine_chrom_type <- function(chrom_type=NULL,
   printer("Chromosome format =",if(has_chr) "chr1" else "1", v=verbose)
   return(has_chr)
 }
+
+
+
+#' Save LD matrix as a sparse matrix
+#'
+#' Converting LD matrices to sparse format reduces file size by half.
+#' @family LD
+#' @keywords internal
+saveSparse <- function(LD_matrix,
+                        LD_path,
+                        verbose=T){
+  # https://cmdlinetips.com/2019/05/introduction-to-sparse-matrices-in-r/
+  LD_sparse <- Matrix::Matrix(as.matrix(LD_matrix), sparse = T)
+  # printer("Dense size:")
+  # print(object.size(LD_matrix),units="auto")
+  # printer("Sparse size:")
+  # print(object.size(LD_sparse),units="auto")
+  printer("LD:: Saving LD as sparse matrix ==>",output_path,v=verbose)
+  saveRDS(LD_sparse, LD_path)
+}
+
+
+readSparse <- function(LD_path,
+                       convert_to_df=T){
+  LD_sparse <- readRDS(LD_path)
+  if(convert_to_df) LD_sparse <-data.frame(as.matrix(LD_sparse))
+  return(LD_sparse)
+}
+
