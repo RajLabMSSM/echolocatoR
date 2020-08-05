@@ -6,6 +6,7 @@
 #'
 #' Conduct statistical (non-functional) fine-mapping with approximate Bayes factor (ABF).
 #'
+#' @inheritParams coloc::finemap.abf
 #' @source
 #' \itemize{
 #' \item JB Maller et al., Bayesian refinement of association signals for 14 loci in 3 common diseases. Nature Genetics. 44, 1294–1301 (2012).
@@ -21,14 +22,12 @@
 #' locus_dir <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/QTL/Microglia_all_regions/BIN1"
 #' subset_DT <- data.table::fread(file.path(locus_dir,"/Multi-finemap/BIN1.Microglia_all_regions.1KGphase3_LD.Multi-finemap.tsv.gz"))
 #' finemap_DT <- ABF(subset_DT=subset_DT, case_control=F)
-#'
 ABF <- function(subset_DT,
                 PP_threshold=.95,
                 sample_size=NULL,
+                sdY=NULL,
                 case_control=T){
   #data.table::fread("Data/GWAS/Nalls23andMe_2019/LRRK2/LRRK2_Nalls23andMe_2019_subset.txt")
-
-
   if(case_control){
    dataset <- list(beta = subset_DT$Effect,
                    varbeta = subset_DT$StdErr^2, # MUST be squared
@@ -40,6 +39,8 @@ ABF <- function(subset_DT,
                     varbeta = subset_DT$StdErr^2, # MUST be squared
                     snp = subset_DT$SNP,
                     type = "quant")
+    # Add sdY (standard deviation of quant trait)
+    if(!is.null(sdY)) dataset$sdY <- sdY
   }
   # Add MAF
   if("MAF" %in% colnames(subset_DT)) dataset$MAF <- subset_DT$MAF;
