@@ -22,7 +22,8 @@ Other annotate:
 \code{\link{epigenetics_enrichment}()},
 \code{\link{epigenetics_summary}()},
 \code{\link{haploR.HaploReg}()},
-\code{\link{haploR.regulomeDB}()}
+\code{\link{haploR.regulomeDB}()},
+\code{\link{merge_finemapping_results_each}()}
 }
 \concept{annotate}
 \keyword{internal}

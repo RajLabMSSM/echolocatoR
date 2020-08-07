@@ -8,7 +8,7 @@ GGBIO.add_lines(
   trks,
   finemap_dat,
   snp_groups = c("Lead", "UCS", "Consensus"),
-  line_alpha = 0.7,
+  line_alpha = 1,
   line_size = 0.3
 )
 }

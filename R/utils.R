@@ -890,6 +890,7 @@ GRanges_overlap <- function(dat1,
                             start_col.2="start",
                             end_col.2="end",
                             return_merged=T,
+                            chr_format="NCBI",
                             verbose=F){
   # dat1
   if(class(dat1)[1]=="GRanges"){
@@ -917,8 +918,8 @@ GRanges_overlap <- function(dat1,
                                                           keep.extra.columns = T)
   }
   # Standardize seqnames format
-  GenomeInfoDb::seqlevelsStyle(gr.dat1) <- "NCBI"
-  GenomeInfoDb::seqlevelsStyle(gr.dat2) <- "NCBI"
+  GenomeInfoDb::seqlevelsStyle(gr.dat1) <- chr_format
+  GenomeInfoDb::seqlevelsStyle(gr.dat2) <- chr_format
   hits <- GenomicRanges::findOverlaps(query = gr.dat1,
                                       subject = gr.dat2)
   gr.hits <- gr.dat2[ S4Vectors::subjectHits(hits), ]
@@ -928,7 +929,7 @@ GRanges_overlap <- function(dat1,
   #                         mcols(gr.consensus[S4Vectors::queryHits(hits),]) )
   message("",nrow(GenomicRanges::mcols(gr.hits))," query SNP(s) detected with reference overlap." )
   # print(data.frame(mcols(gr.hits[,c("Name","SNP")])) )
-  GenomeInfoDb::seqlevelsStyle(gr.hits) <- "NCBI"
+  GenomeInfoDb::seqlevelsStyle(gr.hits) <- chr_format
   return(gr.hits)
 }
 
@@ -984,7 +985,7 @@ example_fullSS <- function(fullSS_path="./Nalls23andMe_2019.fullSS_subset.tsv",
 #' @keywords internal
 #' @examples
 #' \dontrun{
-#' load("~/Desktop/Microglia_all_regions_Kunkle_2019_COLOC.RData")
+#' load("/sc/hydra/projects/ad-omics/microglia_omics/COLOC/Kunkle_2019/Microglia_all_regions_Kunkle_2019_COLOC.RData")
 #' merged_results <- merge_coloc_results(all_obj=all_obj, results_level="snp", save_path="~/Desktop")
 #' }
 merge_coloc_results <- function(all_obj,
@@ -1075,6 +1076,7 @@ LIFTOVER <- function(dat,
                               merged = F)  # merge must =F in order to work
   # Standardize seqnames format
   GenomeInfoDb::seqlevelsStyle(gr.lifted) <- chr_format
+  # Convert  to df
   if(return_as_granges==F){
     gr.lifted <- data.frame(gr.lifted) %>%
       dplyr::mutate(POS=start) %>%
@@ -1162,3 +1164,25 @@ readSparse <- function(LD_path,
   return(LD_sparse)
 }
 
+
+
+
+#' Bind GRanges with different mcols
+#'
+#' @family utils
+#' @keywords internal
+#' @examples
+#' data("merged_DT")
+#' gr.hits <- CORCES_2020.get_ATAC_peak_overlap(finemap_dat = merged_DT)
+#' gr.hits$extra_col <- "Extra"
+#' gr.anchor_hits <- CORCES_2020.get_HiChIP_FitHiChIP_overlap(finemap_dat = merged_DT)
+#' try({gr.bind <- c(gr.hits, gr.anchor_hits)})
+#' gr.bound <- rbind_GRanges(gr1, gr2)
+rbind_GRanges <- function(gr1, gr2){
+  gr1_not_gr2 <- colnames(GenomicRanges::mcols(gr1))[!colnames(GenomicRanges::mcols(gr1)) %in% colnames(GenomicRanges::mcols(gr2))]
+  gr2_not_gr1 <- colnames(GenomicRanges::mcols(gr2))[!colnames(GenomicRanges::mcols(gr2)) %in% colnames(GenomicRanges::mcols(gr1))]
+  gr1 <- gr1[,!colnames(GenomicRanges::mcols(gr1)) %in% c(gr1_not_gr2, gr2_not_gr1)]
+  gr2 <- gr2[,!colnames(GenomicRanges::mcols(gr2)) %in% c(gr1_not_gr2, gr2_not_gr1)]
+  gr.bound <- c(gr1, gr2)
+  return(gr.bound)
+}

@@ -25,7 +25,7 @@ Convert Jack's coloc results to \emph{echolocatoR} format
 }
 \examples{
 \dontrun{
-load("~/Desktop/Microglia_all_regions_Kunkle_2019_COLOC.RData")
+load("/sc/hydra/projects/ad-omics/microglia_omics/COLOC/Kunkle_2019/Microglia_all_regions_Kunkle_2019_COLOC.RData")
 merged_results <- merge_coloc_results(all_obj=all_obj, results_level="snp", save_path="~/Desktop")
 }
 }

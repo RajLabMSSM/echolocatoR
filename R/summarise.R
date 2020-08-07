@@ -655,57 +655,70 @@ SUMMARISE.peak_overlap_plot <- function(merged_DT,
   # no_no_loci<- c("HLA-DRB5","MAPT","ATG14","SP1","LMNB1","ATP6V0A1",
   #                "RETREG3","UBTF","FAM171A2","MAP3K14","CRHR1","MAPT-AS1","KANSL1","NSF","WNT3")
   # merged_DT <- subset(merged_DT, !Locus %in% no_no_loci)
+  # x_strip_angle=90;  facets_formula=". ~ Cell_type";  drop_empty_cols=F; x_tick_angle=40;  snp_filter="Consensus_SNP==T";
+  # fill_title=paste(snp_filter,"\nin epigenomic peaks"); subplot_widths = c(1,.5);plot_celltype_specificity_genes=F;
+
   dat_melt <- data.frame()
   ######## NOTT et al. 2019 #########
   if(include.NOTT_2019_peaks){
-    dat_melt.NOTTpeaks <- NOTT_2019.prepare_peak_overlap(merged_DT = merged_DT,
-                                                         snp_filter = snp_filter)
-    dat_melt.NOTTpeaks$background <- NA
-    dat_melt.NOTTpeaks$Study <- "Nott et al. (2019)"
-    dat_melt <- rbind(dat_melt, dat_melt.NOTTpeaks)
+   try({
+     dat_melt.NOTTpeaks <- NOTT_2019.prepare_peak_overlap(merged_DT = merged_DT,
+                                                          snp_filter = snp_filter)
+     dat_melt.NOTTpeaks$background <- NA
+     dat_melt.NOTTpeaks$Study <- "Nott et al. (2019)"
+     dat_melt <- rbind(dat_melt, dat_melt.NOTTpeaks, fill=T)
+   })
   }
 
   if(include.NOTT_2019_enhancers_promoters){
-    dat_melt.NOTTreg <- NOTT_2019.prepare_regulatory_overlap(merged_DT = merged_DT,
-                                                             snp_filter = snp_filter)
-    dat_melt.NOTTreg$background <- 1
-    dat_melt.NOTTreg$Study <- "Nott et al. (2019)"
-    dat_melt <- rbind(dat_melt, dat_melt.NOTTreg)
+    try({
+      dat_melt.NOTTreg <- NOTT_2019.prepare_regulatory_overlap(merged_DT = merged_DT,
+                                                               snp_filter = snp_filter)
+      dat_melt.NOTTreg$background <- 1
+      dat_melt.NOTTreg$Study <- "Nott et al. (2019)"
+      dat_melt <- rbind(dat_melt, dat_melt.NOTTreg, fill=T)
+    })
   }
 
   if(include.NOTT_2019_PLACseq){
-    dat_melt.NOTTplac <- NOTT_2019.prepare_placseq_overlap(merged_DT = merged_DT,
-                                                           snp_filter = snp_filter)
-    dat_melt.NOTTplac$background <- NA
-    dat_melt.NOTTplac$Study <- "Nott et al. (2019)"
-    dat_melt <- rbind(dat_melt, dat_melt.NOTTplac)
+    try({
+      dat_melt.NOTTplac <- NOTT_2019.prepare_placseq_overlap(merged_DT = merged_DT,
+                                                             snp_filter = snp_filter)
+      dat_melt.NOTTplac$background <- NA
+      dat_melt.NOTTplac$Study <- "Nott et al. (2019)"
+      dat_melt <- rbind(dat_melt, dat_melt.NOTTplac, fill=T)
+    })
   }
 
   ######## CORCES et al. 2020 #########
   if(include.CORCES_2020_scATACpeaks){
-    dat_melt.CORCES_scPeaks <- CORCES_2020.prepare_scATAC_peak_overlap(merged_DT = merged_DT,
-                                                             snp_filter = snp_filter,
-                                                             add_cicero = include.CORCES_2020_Cicero_coaccess,
-                                                             annotate_genes = include.CORCES_2020_gene_annotations,
-                                                             verbose = verbose)
-    dat_melt.CORCES_scPeaks$background <- NA
-    dat_melt.CORCES_scPeaks$Study <- "Corces et al. (2020)"
-    dat_melt <- rbind(dat_melt, dat_melt.CORCES_scPeaks, fill=T)
+    try({
+      dat_melt.CORCES_scPeaks <- CORCES_2020.prepare_scATAC_peak_overlap(merged_DT = merged_DT,
+                                                                         snp_filter = snp_filter,
+                                                                         add_cicero = include.CORCES_2020_Cicero_coaccess,
+                                                                         annotate_genes = include.CORCES_2020_gene_annotations,
+                                                                         verbose = verbose)
+      dat_melt.CORCES_scPeaks$background <- NA
+      dat_melt.CORCES_scPeaks$Study <- "Corces et al. (2020)"
+      dat_melt <- rbind(dat_melt, dat_melt.CORCES_scPeaks, fill=T)
+    })
   }
   if(include.CORCES_2020_bulkATACpeaks){
-    dat_melt.CORCES_bulkPeaks <- CORCES_2020.prepare_bulkATAC_peak_overlap(merged_DT = merged_DT,
-                                                                          snp_filter = snp_filter,
-                                                                          add_HiChIP_FitHiChIP = include.CORCES_2020_HiChIP_FitHiChIP_coaccess,
-                                                                          annotate_genes = include.CORCES_2020_gene_annotations,
-                                                                          verbose = verbose)
-    dat_melt.CORCES_bulkPeaks$background <- NA
-    dat_melt.CORCES_bulkPeaks$Study <- "Corces et al. (2020)"
-    dat_melt <- rbind(dat_melt, dat_melt.CORCES_bulkPeaks, fill=T)
+    try({
+      dat_melt.CORCES_bulkPeaks <- CORCES_2020.prepare_bulkATAC_peak_overlap(merged_DT = merged_DT,
+                                                                             snp_filter = snp_filter,
+                                                                             add_HiChIP_FitHiChIP = include.CORCES_2020_HiChIP_FitHiChIP_coaccess,
+                                                                             annotate_genes = include.CORCES_2020_gene_annotations,
+                                                                             verbose = verbose)
+      dat_melt.CORCES_bulkPeaks$background <- NA
+      dat_melt.CORCES_bulkPeaks$Study <- "Corces et al. (2020)"
+      dat_melt <- rbind(dat_melt, dat_melt.CORCES_bulkPeaks, fill=T)
+    })
   }
 
 
   plot_dat <- order_loci(dat = dat_melt,
-                                     merged_DT = merged_DT)
+                         merged_DT = merged_DT)
   plot_dat$Assay <- factor(plot_dat$Assay, levels = c("H3K27ac","H3K4me3","ATAC","bulkATAC","scATAC","PLAC","Cicero","HiChIP_FitHiChIP","enhancers","promoters"), ordered = T)
   if(x_strip_angle!=90) plot_dat$Cell_type <- gsub(" ","\n",plot_dat$Cell_type);
   neuronal_cols <- grep("neuron",unique(plot_dat$Cell_type), value = T)
@@ -764,15 +777,17 @@ SUMMARISE.peak_overlap_plot <- function(merged_DT,
   }
 
   if(plot_celltype_specificity){
-    gg_cells <- SUMMARISE.cell_type_specificity(plot_dat = plot_dat,
-                                                merged_DT = merged_DT,
-                                                label_yaxis = F,
-                                                show_genes = plot_celltype_specificity_genes,
-                                                y_lab = NULL,
-                                                x_strip_angle = x_strip_angle,
-                                                show_plot = F)
-    library(patchwork)
-    gg_pks <- gg_pks + gg_cells$plot + patchwork::plot_layout(nrow = 1, widths = subplot_widths)
+    try({
+      library(patchwork)
+      gg_cells <- SUMMARISE.cell_type_specificity(plot_dat = plot_dat,
+                                                  merged_DT = merged_DT,
+                                                  label_yaxis = F,
+                                                  show_genes = plot_celltype_specificity_genes,
+                                                  y_lab = NULL,
+                                                  x_strip_angle = x_strip_angle,
+                                                  show_plot = F)
+      gg_pks <- gg_pks + gg_cells$plot + patchwork::plot_layout(nrow = 1, widths = subplot_widths)
+    })
   }
 
   if(show_plot) print(gg_pks)
@@ -877,9 +892,15 @@ SUMMARISE.cell_type_specificity <- function(plot_dat,
 #' data("merged_DT")
 #' base_url <- "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019"
 #' coloc_results_path <- file.path(base_url,"_genome_wide/COLOC/coloc.eQTL_Catalogue_ALL.csv.gz")
-#' gg_egene <- SUMMARISE.coloc_nominated_eGenes(coloc_results_path, merged_DT=merged_DT, fill_var=NULL)
+#' gg_egene <- SUMMARISE.coloc_nominated_eGenes(coloc_results, merged_DT=merged_DT, fill_var=NULL)
+#'
+#' # QTL
+#' base_url <- "/sc/hydra/projects/ad-omics/microglia_omics/Fine_Mapping"
+#' coloc_results_path <- file.path(base_url, "Kunkle_Microglia_all_regions/QTL_merged_coloc_results.snp.tsv.gz")
+#' merged_DT <- data.table::fread("/pd-omics/brian/Fine_Mapping/Data/QTL/Microglia_all_regions/multiGWAS.microgliaQTL_finemapping.csv.gz")
+#' gg_egene <- SUMMARISE.coloc_nominated_eGenes(coloc_results, merged_DT=merged_DT, fill_var=NULL)
 #' }
-SUMMARISE.coloc_nominated_eGenes <- function(coloc_results_path,
+SUMMARISE.coloc_nominated_eGenes <- function(coloc_results,
                                              merged_DT,
                                              label_yaxis=T,
                                              y_lab="Locus",
@@ -892,7 +913,14 @@ SUMMARISE.coloc_nominated_eGenes <- function(coloc_results_path,
                                              verbose=T){
   # Check Corces gene annotations against eQTL/coloc eGenes
   printer("+ SUMMARISE:: Nominating genes by top colocalized eQTL eGenes",v=verbose)
-  dat <- data.table::fread(coloc_results_path, nThread = nThread)
+  if(is.data.frame(coloc_results)){
+    dat <- coloc_results
+  } else {
+    dat <- data.table::fread(coloc_results, nThread = nThread)
+  }
+
+  # for(column %in% c("gene","snp","chr"))
+  # if('gene' %in%)
 
   top_eGenes <- dat %>%
     subset(PP.H4>if(is.null(PP_threshold)) 0 else PP_threshold) %>%
@@ -999,19 +1027,19 @@ results_report <- function(merged_dat){
 #' @family summarise
 super_summary_plot <- function(merged_DT,
                                snp_filter="Consensus_SNP==T",
-                               coloc_results_path=NULL,
+                               coloc_results=NULL,
+                               plot_missense=T,
                                show_plot=T,
                                save_plot=F,
                                height=15,
                                width=13,
                                dpi=500){
   library(patchwork)
-
   bin_plot <- SUMMARISE.CS_bin_plot(merged_DT = merged_DT,
                                     show_plot = F)
 
-  if(!is.null(coloc_results_path)){
-    gg_egene <- SUMMARISE.coloc_nominated_eGenes(coloc_results_path = coloc_results_path,
+  if(!is.null(coloc_results)){
+    gg_egene <- SUMMARISE.coloc_nominated_eGenes(coloc_results = coloc_results,
                                                  merged_DT=merged_DT,
                                                  PP_threshold = .8,
                                                  fill_var = NULL,
@@ -1032,12 +1060,15 @@ super_summary_plot <- function(merged_DT,
                                     label_yaxis=F,
                                     ylabel=NULL,
                                     show_plot = F)
-  try({
-    gg_missense <- ANNOTATE.plot_missense(merged_DT = merged_DT,
-                                          snp_filter=snp_filter,
-                                          show.legend = F,
-                                          show_plot = F)
-  })
+  #### plot_missense ####
+  if(plot_missense){
+    try({
+      gg_missense <- ANNOTATE.plot_missense(merged_DT = merged_DT,
+                                            snp_filter=snp_filter,
+                                            show.legend = F,
+                                            show_plot = F)
+    })
+  }
   # In case biomart times out
   if(!exists("gg_missense")){
     gg_missense<-c();
@@ -1054,7 +1085,7 @@ super_summary_plot <- function(merged_DT,
                                           include.CORCES_2020_Cicero_coaccess=F,
                                           include.CORCES_2020_bulkATACpeaks=T,
                                           include.CORCES_2020_HiChIP_FitHiChIP_coaccess=T,
-                                          include.CORCES_2020_gene_annotations=T,
+                                          include.CORCES_2020_gene_annotations=F,
                                           plot_celltype_specificity=T,
                                           facets_formula=". ~ Cell_type",
                                           show_plot=F,
@@ -1080,4 +1111,35 @@ super_summary_plot <- function(merged_DT,
  return(gg_merged)
 }
 
+
+
+
+
+
+
+
+#' Plot inter-study SNP overlap
+#'
+#' Cross-tabulate SNP overlap (after applying filter)
+#' between each pair of studies.
+#' @family summarise
+SUMMARISE.plot_dataset_overlap <- function(merged_DT,
+                                           snp_filter="!is.na(SNP)",
+                                           filename=NA){
+  snp_xtab <- subset(merged_DT,  eval(parse(text = snp_filter))) %>%
+    stats::xtabs(formula = ~ SNP + Dataset,  sparse = F)
+  snp_xprod <- crossprod(snp_xtab)
+  diag(snp_xprod) <- NA
+  mode(snp_xprod) <- "integer"
+  pheatmap::pheatmap(snp_xprod,
+                     display_numbers=T,
+                     filename = filename,
+                     # number_color = "white",
+                     main = paste("SNP overlap:",snp_filter),
+                     angle_col = 45,
+                     cluster_cols = T,
+                     cluster_rows = T,
+                     na_col = "white")
+  return(snp_xprod)
+}
 

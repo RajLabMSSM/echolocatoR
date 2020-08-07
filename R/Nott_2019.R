@@ -491,12 +491,16 @@ NOTT_2019.get_epigenomic_peaks <- function(assays=c("ATAC","H3K27ac","H3K4me3"),
 
 
 NOTT_2019.prepare_placseq_overlap <- function(merged_DT,
-                                              snp_filter){
+                                              snp_filter="!is.na(SNP)"){
   finemap_dat <- subset(merged_DT, eval(parse(text=snp_filter)), .drop=F)
   interactome <- NOTT_2019.get_interactions(finemap_dat = finemap_dat)
   dat_melt <- count_and_melt(merged_annot = interactome,
                              snp_filter = snp_filter)
-  dat_melt[dat_melt$Count==0 | is.na(dat_melt$Count),"Count"] <- NA
+  if(sum(dat_melt$Count==0 | is.na(dat_melt$Count), na.rm = T)>0){
+    try({
+      dat_melt[dat_melt$Count==0 | is.na(dat_melt$Count),"Count"] <- NA
+    })
+  }
   return(dat_melt)
 }
 
@@ -505,7 +509,7 @@ NOTT_2019.prepare_placseq_overlap <- function(merged_DT,
 
 
 NOTT_2019.prepare_peak_overlap <- function(merged_DT,
-                                           snp_filter){
+                                           snp_filter="!is.na(SNP)"){
   PEAKS <- NOTT_2019.get_epigenomic_peaks()
   # Get SNP groups
   finemap_dat <- subset(merged_DT, eval(parse(text=snp_filter)), .drop=F)
@@ -519,7 +523,12 @@ NOTT_2019.prepare_peak_overlap <- function(merged_DT,
                                     grouping_vars = c("Locus","Cell_type","Assay"))
   dat_melt <- count_and_melt(merged_annot = merged_annot,
                                        snp_filter = snp_filter)
-  dat_melt[dat_melt$Count==0 | is.na(dat_melt$Count),"Count"] <- NA
+  if(sum(dat_melt$Count==0 | is.na(dat_melt$Count),na.rm = T)>0){
+    try({
+      dat_melt[dat_melt$Count==0 | is.na(dat_melt$Count),"Count"] <- NA
+    })
+  }
+
   return(dat_melt)
 }
 

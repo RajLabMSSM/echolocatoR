@@ -4,7 +4,12 @@
 \alias{get_window_limits}
 \title{Get window size limits for plot}
 \usage{
-get_window_limits(finemap_dat, plot.zoom = NULL, verbose = T)
+get_window_limits(
+  finemap_dat,
+  index_as_center = T,
+  plot.zoom = NULL,
+  verbose = T
+)
 }
 \description{
 Get window size limits for plot

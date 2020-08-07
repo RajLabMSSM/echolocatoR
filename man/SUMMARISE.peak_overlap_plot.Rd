@@ -66,6 +66,7 @@ Other summarise:
 \code{\link{SUMMARISE.get_CS_bins}()},
 \code{\link{SUMMARISE.get_CS_counts}()},
 \code{\link{SUMMARISE.get_SNPgroup_counts}()},
+\code{\link{SUMMARISE.plot_dataset_overlap}()},
 \code{\link{results_report}()},
 \code{\link{super_summary_plot}()}
 }

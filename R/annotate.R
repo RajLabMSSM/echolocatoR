@@ -42,7 +42,7 @@ merge_finemapping_results <- function(dataset="./Data/GWAS",
                                       include_leadSNPs=T,
                                       LD_reference=NULL,
                                       #="./Data/annotated_finemapping_results.xlsx",
-                                      xlsx_path=F,
+                                      save_path=F,
                                       from_storage=T,
                                       haploreg_annotation=F,
                                       regulomeDB_annotation=F,
@@ -83,17 +83,19 @@ merge_finemapping_results <- function(dataset="./Data/GWAS",
     }
     dataset_names <- dirname(dirname(dirname(multi_dirs))) %>% unique()
     # Loop through each GENE
-    finemap_results <- lapply(dataset_names, function(dn, multi_dirs.=multi_dirs){
-      # gene_dirs <- dirname(dirname(multi_dirs.))
+    finemap_results <- lapply(dataset_names, function(dn,
+                                                      multi_dirs.=multi_dirs,
+                                                      .nThread=nThread){
       # Loop through each gene folder
-      all_results <- lapply(multi_dirs., function(md){
-        gene <- basename(dirname(dirname(md)))
-        printer("+ Importing results...",gene, v=verbose)
+      all_results <- parallel::mclapply(multi_dirs., function(md,
+                                                              nThread=.nThread){
+        locus <- basename(dirname(dirname(md)))
+        printer("+ Importing results...",locus, v=verbose)
         multi_data <- data.table::fread(md, nThread = nThread)
         multi_data <- update_cols(multi_data)
-        multi_data <- cbind(data.table::data.table(Dataset=basename(dn), Gene=gene), multi_data)
+        multi_data <- cbind(data.table::data.table(Dataset=basename(dn), Locus=locus), multi_data)
         return(multi_data)
-      }) %>% data.table::rbindlist(fill=TRUE) # Bind genes
+      }, mc.cores = nThread) %>% data.table::rbindlist(fill=TRUE) # Bind loci
     }) %>% data.table::rbindlist(fill=TRUE) # Bind datasets
   }
 
@@ -107,7 +109,9 @@ merge_finemapping_results <- function(dataset="./Data/GWAS",
                                         verbose = verbose)
   merged_results <- subset(merged_results, Support>=minimum_support)
   if(!"Locus" %in% colnames(merged_results)){
-    merged_results <- merged_results %>% dplyr::rename(Locus=Gene) %>% data.table::data.table()
+    merged_results <- merged_results %>%
+      dplyr::rename(Locus=Gene) %>%
+      data.table::data.table()
   }
 
   # Loop through each DATASET
@@ -152,12 +156,52 @@ merge_finemapping_results <- function(dataset="./Data/GWAS",
                                                       all = T,
                                                       allow.cartesian=TRUE)
   }
-  if(xlsx_path!=F){
-    # data.table::fwrite(merged_results, file = csv_path, quote = F, sep = ",")
-    openxlsx::write.xlsx(merged_results, xlsx_path)
+  if(save_path!=F){
+    dir.create(dirname(save_path),showWarnings = F, recursive = T)
+    # openxlsx::write.xlsx(merged_results, xlsx_path)
+    data.table::fwrite(merged_results, save_path, nThread = nThread)
   }
-  # createDT_html(merged_results) %>% print()
   return(merged_results)
+}
+
+
+
+
+
+#' Create full cross-locus merged files for each dataset,
+#' then return a subset of those files as one super-merged table.
+#'
+#' @family annotate
+merge_finemapping_results_each <- function(study_dirs,
+                                           return_filter="Support>0 | leadSNP",
+                                           merged_path="merged_DT.csv.gz",
+                                           force_new_merge=F,
+                                           nThread=4,
+                                           verbose=T){
+
+  if(file.exists(merged_path) & force_new_merge){
+    merged_DT <- data.table::fread(merged_path, nThread = nThread)
+  } else {
+    merged_DT <- lapply(study_dirs,
+                        function(study){
+                          printer("Study:",basename(study))
+                          merged_all <- merge_finemapping_results(dataset = study,
+                                                                  LD_reference = "1KGphase3",
+                                                                  minimum_support = 1,
+                                                                  include_leadSNPs = T,
+                                                                  save_path = file.path(dataset,paste0(study,".merged.csv.gz")) )
+                          # Return subset for merged file
+                          merged_top <- subset(merged_all, eval(parse(text = return_filter)))
+                          return(merged_top)
+                        }) %>% data.table::rbindlist(fill = T)
+    # Save
+    if(merged_path!=F){
+      printer("+ SUMMARISE:: Saving merged subset after filtering criterion:",return_filter,v=verbose)
+      data.table::fwrite(merged_DT, merged_path,
+                         nThread=nThread, sep = ",")
+    }
+  }
+  return(merged_DT)
 }
 
 

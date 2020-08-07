@@ -5,7 +5,7 @@
 \title{Nominate target genes within each locus}
 \usage{
 SUMMARISE.coloc_nominated_eGenes(
-  coloc_results_path,
+  coloc_results,
   merged_DT,
   label_yaxis = T,
   y_lab = "Locus",
@@ -31,6 +31,12 @@ eQTL queries and colocalization test done with \pkg{catalogueR}.
 data("merged_DT")
 base_url <- "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019"
 coloc_results_path <- file.path(base_url,"_genome_wide/COLOC/coloc.eQTL_Catalogue_ALL.csv.gz")
-gg_egene <- SUMMARISE.coloc_nominated_eGenes(coloc_results_path, merged_DT=merged_DT, fill_var=NULL)
+gg_egene <- SUMMARISE.coloc_nominated_eGenes(coloc_results, merged_DT=merged_DT, fill_var=NULL)
+
+# QTL
+base_url <- "/sc/hydra/projects/ad-omics/microglia_omics/Fine_Mapping"
+coloc_results_path <- file.path(base_url, "Kunkle_Microglia_all_regions/QTL_merged_coloc_results.snp.tsv.gz")
+merged_DT <- data.table::fread("/pd-omics/brian/Fine_Mapping/Data/QTL/Microglia_all_regions/multiGWAS.microgliaQTL_finemapping.csv.gz")
+gg_egene <- SUMMARISE.coloc_nominated_eGenes(coloc_results, merged_DT=merged_DT, fill_var=NULL)
 }
 }

@@ -26,7 +26,8 @@ Other annotate:
 \code{\link{biomart_snps_to_geneInfo}()},
 \code{\link{epigenetics_enrichment}()},
 \code{\link{haploR.HaploReg}()},
-\code{\link{haploR.regulomeDB}()}
+\code{\link{haploR.regulomeDB}()},
+\code{\link{merge_finemapping_results_each}()}
 }
 \concept{annotate}
 \keyword{internal}

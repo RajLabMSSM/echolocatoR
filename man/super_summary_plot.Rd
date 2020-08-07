@@ -7,7 +7,8 @@
 super_summary_plot(
   merged_DT,
   snp_filter = "Consensus_SNP==T",
-  coloc_results_path = NULL,
+  coloc_results = NULL,
+  plot_missense = T,
   show_plot = T,
   save_plot = F,
   height = 15,
@@ -26,6 +27,7 @@ Other summarise:
 \code{\link{SUMMARISE.get_CS_counts}()},
 \code{\link{SUMMARISE.get_SNPgroup_counts}()},
 \code{\link{SUMMARISE.peak_overlap_plot}()},
+\code{\link{SUMMARISE.plot_dataset_overlap}()},
 \code{\link{results_report}()}
 }
 \concept{summarise}

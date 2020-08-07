@@ -9,7 +9,7 @@ merge_finemapping_results(
   minimum_support = 1,
   include_leadSNPs = T,
   LD_reference = NULL,
-  xlsx_path = F,
+  save_path = F,
   from_storage = T,
   haploreg_annotation = F,
   regulomeDB_annotation = F,
@@ -35,8 +35,6 @@ of fine-mapping tools that contained the SNP in their Credible Set.}
 \item{include_leadSNPs}{Include lead GWAS/QTL SNPs per locus
 (regardless of other filtering criterion).}
 
-\item{xlsx_path}{Save merged data.frame as excel file.}
-
 \item{from_storage}{Search for stored results files.}
 
 \item{haploreg_annotation}{Annotate SNPs with HaploReg (using \code{HaploR}).}
@@ -52,6 +50,8 @@ of fine-mapping tools that contained the SNP in their Credible Set.}
 \strong{mean.CS} and \strong{Consensus_SNP}.}
 
 \item{verbose}{Print messages.}
+
+\item{xlsx_path}{Save merged data.frame as excel file.}
 
 \item{consensus_thresh}{The minimum number of tools that have the SNPs in their Credible Set
 to classify it as a \strong{Consensus_SNP}.}

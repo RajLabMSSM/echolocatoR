@@ -42,21 +42,22 @@ CORCES_2020.get_ATAC_peak_overlap <- function(finemap_dat,
   }
 
   if(add_cicero & cell_type_specific){
-    # Pretty sure the Peak_IDs are shared between the sc-ATACseq data and cicero,
-    # because Cicero derives coaccess from sc-ATAC-seq data:
-    # http://www.cell.com/molecular-cell/retrieve/pii/S1097276518305471?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS1097276518305471%3Fshowall%3Dtrue
-    ## Also pretty sure that checking for cicero overlap only in the scATACseq gr.hits object is ok
-    # bc you can only test for coaccessibility if there's a peak to begin with.
-    cicero <- echolocatoR::CORCES_2020.cicero_coaccessibility
-    cicero_dict <- c(setNames(cicero$Coaccessibility, cicero$Peak_ID_Peak1),
-                    setNames(cicero$Coaccessibility, cicero$Peak_ID_Peak2))
-    gr.hits$Cicero <- cicero_dict[gr.hits$Peak_ID]
-    gr.cicero <- subset(gr.hits, !is.na(Cicero))
-    gr.cicero$Assay <- "Cicero"
-    printer("+ CORCES_2020:: Cicero coaccessibility scores identified for",
-            length(gr.cicero),"/",length(gr.hits),"peak hits.",v=verbose)
-    gr.hits <- c(gr.hits, gr.cicero)
-
+    try({
+      # Pretty sure the Peak_IDs are shared between the sc-ATACseq data and cicero,
+      # because Cicero derives coaccess from sc-ATAC-seq data:
+      # http://www.cell.com/molecular-cell/retrieve/pii/S1097276518305471?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS1097276518305471%3Fshowall%3Dtrue
+      ## Also pretty sure that checking for cicero overlap only in the scATACseq gr.hits object is ok
+      # bc you can only test for coaccessibility if there's a peak to begin with.
+      cicero <- echolocatoR::CORCES_2020.cicero_coaccessibility
+      cicero_dict <- c(setNames(cicero$Coaccessibility, cicero$Peak_ID_Peak1),
+                      setNames(cicero$Coaccessibility, cicero$Peak_ID_Peak2))
+      gr.hits$Cicero <- cicero_dict[gr.hits$Peak_ID]
+      gr.cicero <- subset(gr.hits, !is.na(Cicero))
+      gr.cicero$Assay <- "Cicero"
+      printer("+ CORCES_2020:: Cicero coaccessibility scores identified for",
+              length(gr.cicero),"/",length(gr.hits),"peak hits.",v=verbose)
+      gr.hits <- rbind_GRanges(gr1 = gr.hits, gr2 = gr.cicero)
+    })
   }
   if(cell_type_specific==F){
     gr.hits$brain <- 1
@@ -108,7 +109,7 @@ CORCES_2020.get_HiChIP_FitHiChIP_overlap <- function(finemap_dat,
                                       dat2 = gr.anchor2)
     gr.anchor2_hits$Anchor <- 2
     # Merge and report
-    gr.anchor <- c(gr.anchor1_hits, gr.anchor2_hits)
+    gr.anchor <- rbind_GRanges(gr.anchor1_hits, gr.anchor2_hits)
     gr.anchor$Assay <- "HiChIP_FitHiChIP"
     # Have to make a pseudo cell-type col bc (i think) this analysis was done on bulk data
     gr.anchor$brain <- 1
@@ -135,11 +136,11 @@ CORCES_2020.get_HiChIP_FitHiChIP_overlap <- function(finemap_dat,
 #' finemap_dat <- subset(merged_DT, Consensus_SNP)
 #' dat_melt <- CORCES_2020.prepare_scATAC_peak_overlap(merged_DT=merged_DT)
 CORCES_2020.prepare_scATAC_peak_overlap <- function(merged_DT,
-                                                     FDR_filter=NULL,
-                                                     snp_filter="Consensus_SNP==T",
-                                                     add_cicero=T,
-                                                     annotate_genes=T,
-                                                     verbose=T){
+                                                    FDR_filter=NULL,
+                                                    snp_filter="Consensus_SNP==T",
+                                                    add_cicero=T,
+                                                    annotate_genes=T,
+                                                    verbose=T){
   cell_dict <- c(ExcitatoryNeurons="neurons (+)",
                  InhibitoryNeurons="neurons (-)",
                  NigralNeurons="neurons (nigral)",
@@ -180,7 +181,11 @@ CORCES_2020.prepare_scATAC_peak_overlap <- function(merged_DT,
                              grouping_vars = c("Locus","Cell_type","Assay",annot_cols),
                              snp_filter = snp_filter)
   dat_melt$Cell_type <- cell_dict[dat_melt$Cell_type]
-  dat_melt[dat_melt$Count==0 | is.na(dat_melt$Count),"Count"] <- NA
+  if(sum(dat_melt$Count==0 | is.na(dat_melt$Count), na.rm = T)>0){
+    try({
+      dat_melt[dat_melt$Count==0 | is.na(dat_melt$Count),"Count"] <- NA
+    })
+  }
   dat_melt <- subset(dat_melt, !is.na(Count))
   dat_melt$background <- NA
 
@@ -206,7 +211,7 @@ CORCES_2020.prepare_bulkATAC_peak_overlap <- function(merged_DT,
                                                       FDR_filter=NULL,
                                                       snp_filter="Consensus_SNP==T",
                                                       add_HiChIP_FitHiChIP=T,
-                                                      annotate_genes=T,
+                                                      annotate_genes=F,
                                                       verbose=T){
   # Get SNP groups
   finemap_dat <- subset(merged_DT, eval(parse(text=snp_filter)), .drop=F) #finemap_dat[eval(parse(text=snp_filter))]
@@ -245,9 +250,12 @@ CORCES_2020.prepare_bulkATAC_peak_overlap <- function(merged_DT,
   dat_melt <- count_and_melt(merged_annot = cell_melt,
                              grouping_vars = c("Locus","Cell_type","Assay",annot_cols),
                              snp_filter = snp_filter)
-  try({
-    dat_melt[dat_melt$Count==0 | is.na(dat_melt$Count),"Count"] <- NA
-  })
+  if(sum(dat_melt$Count==0 | is.na(dat_melt$Count),na.rm = T)>0){
+    try({
+      dat_melt[dat_melt$Count==0 | is.na(dat_melt$Count),"Count"] <- NA
+    })
+  }
+
   dat_melt <- subset(dat_melt, !is.na(Count))
   dat_melt$background <- NA
 

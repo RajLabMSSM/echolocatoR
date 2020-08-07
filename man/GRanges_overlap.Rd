@@ -14,6 +14,7 @@ GRanges_overlap(
   start_col.2 = "start",
   end_col.2 = "end",
   return_merged = T,
+  chr_format = "NCBI",
   verbose = F
 )
 }

@@ -25,4 +25,8 @@ Lift genome across builds
 data("BST1")
 gr.lifted <- LIFTOVER(dat=BST1, build.conversion="hg19.to.hg38")
 }
+\seealso{
+Other utils: 
+\code{\link{rbind_GRanges}()}
+}
 \concept{utils}
