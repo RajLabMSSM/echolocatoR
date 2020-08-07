@@ -1160,7 +1160,7 @@ saveSparse <- function(LD_matrix,
 readSparse <- function(LD_path,
                        convert_to_df=T){
   LD_sparse <- readRDS(LD_path)
-  if(convert_to_df) LD_sparse <-data.frame(as.matrix(LD_sparse))
+  if(convert_to_df) LD_sparse <- data.frame(as.matrix(LD_sparse))
   return(LD_sparse)
 }
 
