@@ -263,6 +263,7 @@ LD.custom_panel <- function(LD_reference,
   # Calculate LD
   LD_matrix <- LD.run_snpstats_LD(LD_folder=file.path(locus_dir,"LD"),
                                   plink_prefix="plink",
+                                  select.snps=unique(subset_DT$SNP),
                                   stats=c("R"),
                                   symmetric=T,
                                   depth="max",
@@ -979,6 +980,7 @@ LD.1KG <- function(locus_dir,
   # Calculate LD
   LD_matrix <- LD.run_snpstats_LD(LD_folder=file.path(locus_dir,"LD"),
                                   plink_prefix="plink",
+                                  select.snps=unique(subset_DT$SNP),
                                   stats=c("R"),
                                   symmetric=T,
                                   depth="max",
@@ -1063,20 +1065,26 @@ LD.dprime_table <- function(SNP_list, LD_folder){
 #' @source
 #' \href{https://www.bioconductor.org/packages/release/bioc/html/snpStats.html}{snpStats Bioconductor page}
 #' \href{https://www.bioconductor.org/packages/release/bioc/vignettes/snpStats/inst/doc/ld-vignette.pdf}{LD tutorial}
+#' @examples
+#' subset_DT <- data.table::fread("/pd-omics/brian/Fine_Mapping/Data/GWAS/Kunkle_2019/ABCA7/Multi-finemap/ABCA7.Kunkle_2019.1KGphase3_LD.Multi-finemap.tsv.gz")
+#' LD_folder <- "/pd-omics/brian/Fine_Mapping/Data/GWAS/Kunkle_2019/ABCA7/LD"
+#' LD_matrix <- LD.run_snpstats_LD(LD_folder=LD_folder, select.snps=subset_DT$SNP)
 LD.run_snpstats_LD <- function(LD_folder,
                                plink_prefix="plink",
+                               select.snps=NULL,
                                stats=c("R"),
                                symmetric=T,
                                depth="max",
                                verbose=T){
   printer("LD:snpStats:: Computing LD",paste0("(stats = ",paste(stats,collapse=', '),")"),v=verbose)
   # only need to give bed path (infers bin/fam paths)
-  ss <- snpStats::read.plink(bed = file.path(LD_folder,plink_prefix))
+  ss <- snpStats::read.plink(bed = file.path(LD_folder,plink_prefix),
+                             select.snps = select.snps)
   ld_list <- snpStats::ld(x = ss$genotypes,
                           y = ss$genotypes,
                           depth = if(depth=="max") ncol(ss$genotypes) else depth,
                           stats = stats,
-                          symmetric=symmetric)
+                          symmetric = symmetric)
   if(length(stats)==1) return(ld_list) else return(ld_list$R)
 }
 
