@@ -11,6 +11,7 @@
 LD.run_snpstats_LD(
   LD_folder,
   plink_prefix = "plink",
+  select.snps = NULL,
   stats = c("R"),
   symmetric = T,
   depth = "max",
@@ -43,6 +44,11 @@ LD.run_snpstats_LD(
 }
 \description{
 Get LD using \pkg{snpStats} package
+}
+\examples{
+subset_DT <- data.table::fread("/pd-omics/brian/Fine_Mapping/Data/GWAS/Kunkle_2019/ABCA7/Multi-finemap/ABCA7.Kunkle_2019.1KGphase3_LD.Multi-finemap.tsv.gz")
+LD_folder <- "/pd-omics/brian/Fine_Mapping/Data/GWAS/Kunkle_2019/ABCA7/LD"
+LD_matrix <- LD.run_snpstats_LD(LD_folder=LD_folder, select.snps=subset_DT$SNP)
 }
 \seealso{
 Other LD: 
