@@ -340,7 +340,8 @@ LD.save_LD_matrix <- function(LD_matrix,
                               verbose=T){
   RDS_path <- LD.get_rds_path(locus_dir = locus_dir,
                               LD_reference = basename(LD_reference))
-  printer("+ LD:: Saving",dim(LD_matrix)[1],"x",dim(LD_matrix)[2],"LD_matrix ==>",RDS_path, v=verbose)
+  printer("+ LD:: Saving",dim(LD_matrix)[1],"x",dim(LD_matrix)[2],"LD_matrix",
+          if(sparse) "(sparse)"else NULL, "==>",RDS_path, v=verbose)
   if(subset_common){
     sub.out <- subset_common_snps(LD_matrix = LD_matrix,
                                   fillNA = fillNA,
@@ -350,8 +351,8 @@ LD.save_LD_matrix <- function(LD_matrix,
   }
   if(sparse){
     saveSparse(LD_matrix = LD_matrix,
-                LD_path = RDS_path,
-                verbose = verbose)
+               LD_path = RDS_path,
+               verbose = F)
   } else {
     saveRDS(LD_matrix, file = RDS_path)
   }

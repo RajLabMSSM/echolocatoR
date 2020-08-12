@@ -497,10 +497,9 @@ finemap_pipeline <- function(locus,
                           remove_correlates=remove_correlates,
                           min_r2=min_r2,
                           verbose=verbose)
-  subset_DT <- LD_list$DT
-  LD_matrix <- LD_list$LD
-
-  subset_DT <- filter_snps(subset_DT=subset_DT,
+  suLD_matrix <- LD_list$LD
+  bset_DT <- LD_list$DT
+   subset_DT <- filter_snps(subset_DT=subset_DT,
                            bp_distance=bp_distance,
                            remove_variants=remove_variants,
                            locus=locus,
