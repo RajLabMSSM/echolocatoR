@@ -149,6 +149,7 @@ LD.get_rds_path <- function(locus_dir,
 
 
 
+
 LD.filter_LD <- function(LD_list,
                          remove_correlates=F,
                          min_r2=0,
@@ -261,7 +262,7 @@ LD.custom_panel <- function(LD_reference,
                                plink_prefix = "plink",
                                verbose =  verbose)
   # Calculate LD
-  LD_matrix <- LD.run_snpstats_LD(LD_folder=file.path(locus_dir,"LD"),
+  LD_matrix <- LD.snpstats_get_LD(LD_folder=file.path(locus_dir,"LD"),
                                   plink_prefix="plink",
                                   select.snps=unique(subset_DT$SNP),
                                   stats=c("R"),
@@ -269,11 +270,11 @@ LD.custom_panel <- function(LD_reference,
                                   depth="max",
                                   verbose=verbose)
   # Get MAF (if needed)
-  subset_DT <- LD.get_plink_MAF(subset_DT=subset_DT,
-                                LD_folder=file.path(locus_dir,"LD"),
-                                plink_prefix="plink",
-                                force_new_MAF=F,
-                                verbose=verbose)
+  subset_DT <- LD.snpstats_get_MAF(subset_DT=subset_DT,
+                                   LD_folder=file.path(locus_dir,"LD"),
+                                   plink_prefix="plink",
+                                   force_new_MAF=F,
+                                   verbose=verbose)
   # Filter out SNPs not in the same LD block as the lead SNP
   # Get lead SNP rsid
   leadSNP = subset(subset_DT, leadSNP==T)$SNP
@@ -978,7 +979,7 @@ LD.1KG <- function(locus_dir,
                                locus_dir = locus_dir,
                                verbose = verbose)
   # Calculate LD
-  LD_matrix <- LD.run_snpstats_LD(LD_folder=file.path(locus_dir,"LD"),
+  LD_matrix <- LD.snpstats_get_LD(LD_folder=file.path(locus_dir,"LD"),
                                   plink_prefix="plink",
                                   select.snps=unique(subset_DT$SNP),
                                   stats=c("R"),
@@ -986,11 +987,11 @@ LD.1KG <- function(locus_dir,
                                   depth="max",
                                   verbose=verbose)
   # Get MAF (if needed)
-  subset_DT <- LD.get_plink_MAF(subset_DT=subset_DT,
-                                LD_folder=file.path(locus_dir,"LD"),
-                                plink_prefix="plink",
-                                force_new_MAF=F,
-                                verbose=verbose)
+  subset_DT <- LD.snpstats_get_MAF(subset_DT=subset_DT,
+                                   LD_folder=file.path(locus_dir,"LD"),
+                                   plink_prefix="plink",
+                                   force_new_MAF=F,
+                                   verbose=verbose)
   # Get lead SNP rsid
   leadSNP = subset(subset_DT, leadSNP==T)$SNP
   # Filter out SNPs not in the same LD block as the lead SNP
@@ -1068,8 +1069,8 @@ LD.dprime_table <- function(SNP_list, LD_folder){
 #' @examples
 #' subset_DT <- data.table::fread("/pd-omics/brian/Fine_Mapping/Data/GWAS/Kunkle_2019/ABCA7/Multi-finemap/ABCA7.Kunkle_2019.1KGphase3_LD.Multi-finemap.tsv.gz")
 #' LD_folder <- "/pd-omics/brian/Fine_Mapping/Data/GWAS/Kunkle_2019/ABCA7/LD"
-#' LD_matrix <- LD.run_snpstats_LD(LD_folder=LD_folder, select.snps=subset_DT$SNP)
-LD.run_snpstats_LD <- function(LD_folder,
+#' LD_matrix <- LD.snpstats_get_LD(LD_folder=LD_folder, select.snps=subset_DT$SNP)
+LD.snpstats_get_LD <- function(LD_folder,
                                plink_prefix="plink",
                                select.snps=NULL,
                                stats=c("R"),
@@ -1081,19 +1082,11 @@ LD.run_snpstats_LD <- function(LD_folder,
   # select.snps= arg needed bc otherwise read.plink() sometimes complains of
   ## duplicate RSID rownames. Also need to check whether these SNPs exist in the plink files.
   ## (snpStats doesn't have very good error handling for these cases).
-  if(!is.null(select.snps)){
-    bim_path <- file.path(LD_folder,paste0(plink_prefix,".bim"))
-    bim <- data.table::fread(bim_path,
-                             col.names = c("CHR","SNP","V3","POS","A1","A2"),
-                             stringsAsFactors = F,
-                             nThread=nThread)
-    printer("+ LD:snpStats::",nrow(bim),"rows in bim file.",v=verbose)
-    bim <- bim[!duplicated(bim$SNP),]
-    select.snps <- select.snps[select.snps %in% unique(bim$SNP)]
-    printer("+ LD:snpStats::",length(select.snps),"SNPs in select.snps.",v=verbose)
-    select.snps <- if(length(select.snps)==0) NULL else unique(select.snps);
-  }
-
+  select.snps <- LD.snpstats_ensure_nonduplicates(select.snps=select.snps,
+                                                  LD_folder=LD_folder,
+                                                  plink_prefix=plink_prefix,
+                                                  nThread=nThread,
+                                                  verbose=verbose)
   # Only need to give bed path (infers bin/fam paths)
   ss <- snpStats::read.plink(bed = file.path(LD_folder,plink_prefix),
                              select.snps = select.snps)
@@ -1109,6 +1102,29 @@ LD.run_snpstats_LD <- function(LD_folder,
 
 
 
+LD.snpstats_ensure_nonduplicates <- function(select.snps=NULL,
+                                             LD_folder,
+                                             plink_prefix="plink",
+                                             nThread=4,
+                                             verbose=T){
+  if(!is.null(select.snps)){
+    bim_path <- file.path(LD_folder,paste0(plink_prefix,".bim"))
+    bim <- data.table::fread(bim_path,
+                             col.names = c("CHR","SNP","V3","POS","A1","A2"),
+                             stringsAsFactors = F,
+                             nThread=nThread)
+    printer("+ LD:snpStats::",nrow(bim),"rows in bim file.",v=verbose)
+    bim <- bim[!duplicated(bim$SNP),]
+    select.snps <- select.snps[select.snps %in% unique(bim$SNP)]
+    printer("+ LD:snpStats::",length(select.snps),"SNPs in select.snps.",v=verbose)
+    select.snps <- if(length(select.snps)==0) NULL else unique(select.snps);
+  }
+  return(select.snps)
+}
+
+
+
+
 #' Get MAF using \pkg{snpStats} package
 #'
 #' @param LD_folder Locus-specific LD output folder.
@@ -1117,15 +1133,22 @@ LD.run_snpstats_LD <- function(LD_folder,
 #' @keywords internal
 #' @source
 #' \href{https://www.bioconductor.org/packages/release/bioc/html/snpStats.html}{snpStats Bioconductor page}
-#' \href{https://www.bioconductor.org/packages/release/bioc/vignettes/snpStats/inst/doc/ld-vignette.pdf}{LD tutorial}
-LD.get_plink_MAF <- function(subset_DT,
-                             LD_folder,
-                             plink_prefix="plink",
-                             force_new_MAF=F,
-                             verbose=T){
+LD.snpstats_get_MAF <- function(subset_DT,
+                                 LD_folder,
+                                 plink_prefix="plink",
+                                 force_new_MAF=F,
+                                 nThread=4,
+                                 verbose=T){
   if(!"MAF" %in% colnames(subset_DT) | force_new_MAF){
     printer("LD::snpStats:: Filling `MAF` column with MAF from LD panel.",v=verbose)
-    ss <- snpStats::read.plink(bed = file.path(LD_folder,plink_prefix))
+    select.snps <- LD.snpstats_ensure_nonduplicates(select.snps=subset_DT$SNP,
+                                                    LD_folder=LD_folder,
+                                                    plink_prefix=plink_prefix,
+                                                    nThread=nThread,
+                                                    verbose=verbose)
+    ss <- snpStats::read.plink(bed = file.path(LD_folder,plink_prefix),
+                               select.snps = select.snps)
+
     MAF_df <- data.frame(SNP=row.names(snpStats::col.summary(ss$genotypes)),
                          MAF=snpStats::col.summary(ss$genotypes)$MAF)
     if("MAF" %in% colnames(subset_DT)) subset_DT <- subset(subset_DT,select=-MAF)
