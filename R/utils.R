@@ -718,8 +718,9 @@ filter_snps <- function(subset_DT,
                         min_MAF=NULL,
                         trim_gene_limits=F,
                         verbose=T){
+  printer("FILTER:: Filtering by SNP features.",v=verbose)
   if(remove_variants!=F){
-    printer("Removing specified variants:",paste(remove_variants, collapse=','), v=verbose)
+    printer("+ FILTER:: Removing specified variants:",paste(remove_variants, collapse=','), v=verbose)
     try({subset_DT <- subset(subset_DT, !(SNP %in% remove_variants) )})
   }
   # Trim subset according to annotations of where the gene's limit are
@@ -737,7 +738,7 @@ filter_snps <- function(subset_DT,
      any(min_MAF>0, na.rm = T) &
      (!is.na(min_MAF)) &
      "MAF" %in% colnames(subset_DT)){
-    printer("echolocatoR:: Removing SNPs with MAF <",min_MAF,v=verbose)
+    printer("+ FILTER:: Removing SNPs with MAF <",min_MAF,v=verbose)
     subset_DT <- subset(subset_DT, MAF>=min_MAF)
   }
   # Limit range
@@ -751,7 +752,7 @@ filter_snps <- function(subset_DT,
   }
   if(!is.na(min_POS)){subset_DT <- subset(subset_DT, POS>=min_POS)}
   if(!is.na(max_POS)){subset_DT <- subset(subset_DT, POS<=max_POS)}
-  printer("++ Post-filtered data:",paste(dim(subset_DT), collapse=" x "),v=verbose)
+  printer("+ FILTER:: Post-filtered data:",paste(dim(subset_DT), collapse=" x "),v=verbose)
   return(subset_DT)
 }
 

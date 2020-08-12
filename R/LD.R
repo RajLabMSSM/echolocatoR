@@ -149,37 +149,51 @@ LD.get_rds_path <- function(locus_dir,
 
 
 
-
+#' Filter LD
+#'
+#' @family LD
+#' @keywords internal
+#' @examples
+#' data("BST1"); data("LD_matrix");
+#' LD_list <- list(LD=LD_matrix, DT=BST1)
+#' LD_list <- LD.filter_LD(LD_list, min_r2=.2)
 LD.filter_LD <- function(LD_list,
                          remove_correlates=F,
                          min_r2=0,
                          verbose=F){
+  printer("FILTER:: Filtering by LD features.", v=verbose)
   subset_DT <- LD_list$DT
   LD_matrix <- LD_list$LD
   if(any(remove_correlates!=F)){
     # remove_correlates <- c("rs76904798"=.2, "rs10000737"=.8)
     for(snp in names(remove_correlates)){
       thresh <- remove_correlates[[snp]]
-      printer("LD:: Removing correlates of",snp,"at r2 ≥",thresh,v=verbose)
+      printer("+ FILTER:: Removing correlates of",snp,"at r2 ≥",thresh,v=verbose)
       if(snp %in% row.names(LD_matrix)){
-        correlates <- LD_matrix[snp,][LD_matrix[snp,]>=sqrt(thresh)]
+        correlates <- colnames(LD_matrix[snp,])[LD_matrix[snp,]>=sqrt(thresh)]
         LD_matrix <- LD_matrix[(!row.names(LD_matrix) %in% correlates),
                                (!colnames(LD_matrix) %in% correlates)]
       }
     }
   }
   if(min_r2!=0 & min_r2!=F){
-    printer("LD:: Removing SNPs that don't correlate with lead SNP at r2 ≤",min_r2,v=verbose)
+    printer("+ FILTER:: Removing SNPs that don't correlate with lead SNP at r2 ≤",min_r2,v=verbose)
+    LD_list <- subset_common_snps(LD_matrix = LD_matrix,
+                                  finemap_dat = subset_DT,
+                                  verbose = F)
+    subset_DT <- LD_list$DT
+    LD_matrix <- LD_list$LD
     lead.snp <- subset(subset_DT, leadSNP)$SNP[1]
-    correlates <- LD_matrix[lead.snp,][LD_matrix[lead.snp,]>=sqrt(min_r2)]
+    correlates <- colnames(LD_matrix[lead.snp,])[LD_matrix[lead.snp,]>=sqrt(min_r2)]
     LD_matrix <- LD_matrix[(row.names(LD_matrix) %in% correlates),
                            (colnames(LD_matrix) %in% correlates)]
   }
-  LD_list <- subset_common_snps(LD_matrix=LD_matrix,
+  LD_list <- subset_common_snps(LD_matrix = LD_matrix,
                                 finemap_dat = subset_DT,
                                 verbose = F)
   return(LD_list)
 }
+
 
 
 
@@ -340,15 +354,16 @@ LD.save_LD_matrix <- function(LD_matrix,
                               verbose=T){
   RDS_path <- LD.get_rds_path(locus_dir = locus_dir,
                               LD_reference = basename(LD_reference))
-  printer("+ LD:: Saving",dim(LD_matrix)[1],"x",dim(LD_matrix)[2],"LD_matrix",
-          if(sparse) "(sparse)"else NULL, "==>",RDS_path, v=verbose)
   if(subset_common){
     sub.out <- subset_common_snps(LD_matrix = LD_matrix,
                                   fillNA = fillNA,
                                   finemap_dat = subset_DT,
-                                  verbose = verbose)
+                                  verbose = F)
     LD_matrix <- sub.out$LD
+    subset_DT <- sub.out$DT
   }
+  printer("+ LD:: Saving",dim(LD_matrix)[1],"x",dim(LD_matrix)[2],"LD_matrix",
+          if(sparse) "(sparse)"else NULL, "==>",RDS_path, v=verbose)
   if(sparse){
     saveSparse(LD_matrix = LD_matrix,
                LD_path = RDS_path,
@@ -356,7 +371,9 @@ LD.save_LD_matrix <- function(LD_matrix,
   } else {
     saveRDS(LD_matrix, file = RDS_path)
   }
-  return(RDS_path)
+  return(list(LD=LD_matrix,
+              DT=subset_DT,
+              RDS_path=RDS_path))
 }
 
 
@@ -991,7 +1008,8 @@ LD.1KG <- function(locus_dir,
   subset_DT <- LD.snpstats_get_MAF(subset_DT=subset_DT,
                                    LD_folder=file.path(locus_dir,"LD"),
                                    plink_prefix="plink",
-                                   force_new_MAF=F,
+                                   force_new_MAF=T,
+                                   nThread=nThread,
                                    verbose=verbose)
   # Get lead SNP rsid
   leadSNP = subset(subset_DT, leadSNP==T)$SNP
@@ -1010,15 +1028,15 @@ LD.1KG <- function(locus_dir,
   printer("Saving LD matrix of size:", dim(LD_matrix)[1],"rows x",dim(LD_matrix)[2],"columns.", v=verbose)
 
   # Save LD matrix
-  RDS_path <- LD.save_LD_matrix(LD_matrix=LD_matrix,
-                                subset_DT=subset_DT,
-                                locus_dir=locus_dir,
-                                fillNA=fillNA,
-                                LD_reference=LD_reference,
-                                verbose=verbose)
-  return(list(DT=subset_DT,
-              LD=LD_matrix,
-              RDS_path=RDS_path))
+  LD_list <- LD.save_LD_matrix(LD_matrix=LD_matrix,
+                               subset_DT=subset_DT,
+                               locus_dir=locus_dir,
+                               subset_common = T,
+                               sparse = T,
+                               fillNA=fillNA,
+                               LD_reference=LD_reference,
+                               verbose=verbose)
+  return(LD_list)
 }
 
 
