@@ -1088,6 +1088,7 @@ LD.run_snpstats_LD <- function(LD_folder,
                              stringsAsFactors = F,
                              nThread=nThread)
     printer("+ LD:snpStats::",nrow(bim),"rows in bim file.",v=verbose)
+    bim <- bim[!duplicated(bim$SNP),]
     select.snps <- select.snps[select.snps %in% unique(bim$SNP)]
     printer("+ LD:snpStats::",length(select.snps),"SNPs in select.snps.",v=verbose)
     select.snps <- if(length(select.snps)==0) NULL else unique(select.snps);
