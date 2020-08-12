@@ -304,16 +304,14 @@ LD.custom_panel <- function(LD_reference,
     suppressWarnings(file.remove(vcf_subset))
   }
   # Save LD matrix
-  RDS_path <- LD.save_LD_matrix(LD_matrix=LD_matrix,
+  LD_list <- LD.save_LD_matrix(LD_matrix=LD_matrix,
                                 subset_DT=subset_DT,
                                 locus_dir=locus_dir,
                                 fillNA = fillNA,
                                 LD_reference=gsub(".vcf|.gz","",LD_reference),
                                 sparse = T,
                                 verbose=verbose)
-  return(list(DT=subset_DT,
-              LD=LD_matrix,
-              RDS_path=RDS_path))
+  return(LD_list)
 }
 
 
@@ -342,8 +340,8 @@ LD.determine_chrom_type_vcf <- function(vcf_file,
 #' @keywords internal
 #' @examples
 #' data("BST1"); data("LD_matrix"); data("locus_dir");
-#' RDS_path <- LD.save_LD_matrix(LD_matrix=LD_matrix, subset_DT=BST1, locus_dir=file.path("~/Desktop",locus_dir), LD_reference="UKB")
-#' RDS_path <- LD.save_LD_matrix(LD_matrix=LD_matrix, subset_DT=BST1, locus_dir=file.path("~/Desktop",locus_dir), LD_reference="custom_vcf")
+#' LD_list <- LD.save_LD_matrix(LD_matrix=LD_matrix, subset_DT=BST1, locus_dir=file.path("~/Desktop",locus_dir), LD_reference="UKB")
+#' LD_list <- LD.save_LD_matrix(LD_matrix=LD_matrix, subset_DT=BST1, locus_dir=file.path("~/Desktop",locus_dir), LD_reference="custom_vcf")
 LD.save_LD_matrix <- function(LD_matrix,
                               subset_DT,
                               locus_dir,
@@ -1025,8 +1023,6 @@ LD.1KG <- function(locus_dir,
   if(remove_tmps){
     suppressWarnings(file.remove(vcf_subset))
   }
-  printer("Saving LD matrix of size:", dim(LD_matrix)[1],"rows x",dim(LD_matrix)[2],"columns.", v=verbose)
-
   # Save LD matrix
   LD_list <- LD.save_LD_matrix(LD_matrix=LD_matrix,
                                subset_DT=subset_DT,

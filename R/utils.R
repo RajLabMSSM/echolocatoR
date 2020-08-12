@@ -708,10 +708,12 @@ limit_SNPs <- function(max_snps=500, subset_DT){
 #'
 #' @family SNP filters
 #' @keywords internal
+#' @examples
+#' data("BST1");
+#' subset_DT <- filter_snps(subset_DT=BST1)
 filter_snps <- function(subset_DT,
-                        bp_distance,
-                        remove_variants,
-                        locus,
+                        bp_distance=500000,
+                        remove_variants=F,
                         min_POS=NA,
                         max_POS=NA,
                         max_snps=NULL,
@@ -734,12 +736,11 @@ filter_snps <- function(subset_DT,
     subset_DT <- limit_SNPs(max_snps = max_snps,
                             subset_DT = subset_DT)
   }
-  if(!is.null(min_MAF) &
-     any(min_MAF>0, na.rm = T) &
-     (!is.na(min_MAF)) &
-     "MAF" %in% colnames(subset_DT)){
-    printer("+ FILTER:: Removing SNPs with MAF <",min_MAF,v=verbose)
-    subset_DT <- subset(subset_DT, MAF>=min_MAF)
+  if(!is.null(min_MAF) & (!any(is.na(min_MAF))) ){
+    if(any(min_MAF>0, na.rm = T) & "MAF" %in% colnames(subset_DT)){
+      printer("+ FILTER:: Removing SNPs with MAF <",min_MAF,v=verbose)
+      subset_DT <- subset(subset_DT, MAF>=min_MAF)
+    }
   }
   # Limit range
   if(!is.null(bp_distance)){
