@@ -1075,6 +1075,7 @@ LD.run_snpstats_LD <- function(LD_folder,
                                stats=c("R"),
                                symmetric=T,
                                depth="max",
+                               nThread=4,
                                verbose=T){
   printer("LD:snpStats:: Computing LD",paste0("(stats = ",paste(stats,collapse=', '),")"),v=verbose)
   # select.snps= arg needed bc otherwise read.plink() sometimes complains of
@@ -1084,8 +1085,11 @@ LD.run_snpstats_LD <- function(LD_folder,
     bim_path <- file.path(LD_folder,paste0(plink_prefix,".bim"))
     bim <- data.table::fread(bim_path,
                              col.names = c("CHR","SNP","V3","POS","A1","A2"),
-                             stringsAsFactors = F)
+                             stringsAsFactors = F,
+                             nThread=nThread)
+    printer("+ LD:snpStats::",nrow(bim),"rows in bim file.",v=verbose)
     select.snps <- select.snps[select.snps %in% unique(bim$SNP)]
+    printer("+ LD:snpStats::",length(select.snps),"SNPs in select.snps.",v=verbose)
     select.snps <- if(length(select.snps)==0) NULL else unique(select.snps);
   }
 
