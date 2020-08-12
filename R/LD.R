@@ -62,10 +62,10 @@ LD.load_or_create <- function(locus_dir,
                               download_reference=T,
                               download_method="direct",
                               vcf_folder=NULL,
-                              min_r2=0,
+                              # min_r2=0,
                               LD_block=F,
                               LD_block_size=.7,
-                              min_Dprime=F,
+                              # min_Dprime=F,
                               remove_correlates=F,
                               fillNA=0,
                               verbose=T,
@@ -81,59 +81,61 @@ LD.load_or_create <- function(locus_dir,
     printer("+  LD:: Previously computed LD_matrix detected. Importing...", RDS_path, v=verbose)
     LD_matrix <- readSparse(LD_path = RDS_path,
                             convert_to_df = T)
+    LD_list <- list(DT=subset_DT,
+                    LD=LD_matrix,
+                    RDS_path=RDS_path)
   } else if(LD_reference=="UKB"){
     #### UK Biobank ####
-    LD_matrix <- LD.UKBiobank(subset_DT = subset_DT,
-                              locus_dir = locus_dir,
-                              force_new_LD = force_new_LD,
-                              chimera = server,
-                              download_method = download_method,
-                              fillNA = fillNA,
-                              nThread = nThread,
-                              return_matrix = T,
-                              conda_env = conda_env,
-                              remove_tmps = remove_tmps)
+    LD_list <- LD.UKBiobank(subset_DT = subset_DT,
+                            locus_dir = locus_dir,
+                            force_new_LD = force_new_LD,
+                            chimera = server,
+                            download_method = download_method,
+                            fillNA = fillNA,
+                            nThread = nThread,
+                            return_matrix = T,
+                            conda_env = conda_env,
+                            remove_tmps = remove_tmps)
   } else if (LD_reference == "1KGphase1" |
              LD_reference == "1KGphase3") {
     #### 1000 Genomes ####
-    LD_matrix <- LD.1KG(locus_dir = locus_dir,
-                        subset_DT = subset_DT,
-                        vcf_folder = vcf_folder,
-                        LD_reference = LD_reference,
-                        superpopulation = superpopulation,
-                        download_reference = download_reference,
+    LD_list <- LD.1KG(locus_dir = locus_dir,
+                      subset_DT = subset_DT,
+                      vcf_folder = vcf_folder,
+                      LD_reference = LD_reference,
+                      superpopulation = superpopulation,
+                      download_reference = download_reference,
 
-                        min_r2 = min_r2,
-                        LD_block = LD_block,
-                        LD_block_size = LD_block_size,
-                        min_Dprime = min_Dprime,
-                        remove_correlates = remove_correlates,
-                        fillNA = fillNA,
-                        nThread = nThread,
-                        conda_env = conda_env,
-                        download_method = download_method)
+                      LD_block = LD_block,
+                      LD_block_size = LD_block_size,
+                      # min_Dprime = min_Dprime,
+                      remove_correlates = remove_correlates,
+                      fillNA = fillNA,
+                      nThread = nThread,
+                      conda_env = conda_env,
+                      download_method = download_method)
   } else if (endsWith(tolower(LD_reference),".vcf") |
              endsWith(tolower(LD_reference),".vcf.gz")){
     #### Custom vcf ####
-    LD_matrix <- LD.custom_panel(LD_reference=LD_reference,
-                                 LD_genome_build=LD_genome_build,
-                                 subset_DT=subset_DT,
-                                 locus_dir=locus_dir,
-                                 force_new_LD=force_new_LD,
-                                 min_r2=min_r2,
-                                 min_Dprime=min_Dprime,
-                                 remove_correlates=remove_correlates,
-                                 fillNA=fillNA,
-                                 LD_block=LD_block,
-                                 LD_block_size=LD_block_size,
-                                 remove_tmps=remove_tmps,
-                                 nThread=nThread,
-                                 conda_env=conda_env,
-                                 verbose=verbose)
+    LD_list <- LD.custom_panel(LD_reference=LD_reference,
+                               LD_genome_build=LD_genome_build,
+                               subset_DT=subset_DT,
+                               locus_dir=locus_dir,
+                               force_new_LD=force_new_LD,
+                               # min_r2=min_r2,
+                               # min_Dprime=min_Dprime,
+                               # remove_correlates=remove_correlates,
+                               fillNA=fillNA,
+                               LD_block=LD_block,
+                               LD_block_size=LD_block_size,
+                               remove_tmps=remove_tmps,
+                               nThread=nThread,
+                               conda_env=conda_env,
+                               verbose=verbose)
   } else {
-    stop("LD:: LD_reference input not recognized. Please supply: '1KGphase1', '1KGphase3', 'UKB', or a custom .vcf[.gz] file.")
+    stop("LD:: LD_reference input not recognized. Please supply: '1KGphase1', '1KGphase3', 'UKB', or the path to a .vcf[.gz] file.")
   }
-  return(LD_matrix)
+  return(LD_list)
 }
 
 
@@ -145,6 +147,38 @@ LD.get_rds_path <- function(locus_dir,
   return(RDS_path)
 }
 
+
+
+LD.filter_LD <- function(LD_list,
+                         remove_correlates=F,
+                         min_r2=0,
+                         verbose=F){
+  subset_DT <- LD_list$DT
+  LD_matrix <- LD_list$LD
+  if(any(remove_correlates!=F)){
+    # remove_correlates <- c("rs76904798"=.2, "rs10000737"=.8)
+    for(snp in names(remove_correlates)){
+      thresh <- remove_correlates[[snp]]
+      printer("LD:: Removing correlates of",snp,"at r2 ≥",thresh,v=verbose)
+      if(snp %in% row.names(LD_matrix)){
+        correlates <- LD_matrix[snp,][LD_matrix[snp,]>=sqrt(thresh)]
+        LD_matrix <- LD_matrix[(!row.names(LD_matrix) %in% correlates),
+                               (!colnames(LD_matrix) %in% correlates)]
+      }
+    }
+  }
+  if(min_r2!=0 & min_r2!=F){
+    printer("LD:: Removing SNPs that don't correlate with lead SNP at r2 ≤",min_r2,v=verbose)
+    lead.snp <- subset(subset_DT, leadSNP)$SNP[1]
+    correlates <- LD_matrix[lead.snp,][LD_matrix[lead.snp,]>=sqrt(min_r2)]
+    LD_matrix <- LD_matrix[(row.names(LD_matrix) %in% correlates),
+                           (colnames(LD_matrix) %in% correlates)]
+  }
+  LD_list <- subset_common_snps(LD_matrix=LD_matrix,
+                                finemap_dat = subset_DT,
+                                verbose = F)
+  return(LD_list)
+}
 
 
 
@@ -170,7 +204,7 @@ LD.custom_panel <- function(LD_reference,
                             locus_dir,
                             force_new_LD=F,
                             min_r2=F,
-                            min_Dprime=F,
+                            # min_Dprime=F,
                             remove_correlates=F,
                             fillNA=0,
                             LD_block=F,
@@ -226,20 +260,22 @@ LD.custom_panel <- function(LD_reference,
                                locus_dir = locus_dir,
                                plink_prefix = "plink",
                                verbose =  verbose)
+  # Calculate LD
+  LD_matrix <- LD.run_snpstats_LD(LD_folder=file.path(locus_dir,"LD"),
+                                  plink_prefix="plink",
+                                  stats=c("R"),
+                                  symmetric=T,
+                                  depth="max",
+                                  verbose=verbose)
+  # Get MAF (if needed)
+  subset_DT <- LD.get_plink_MAF(subset_DT=subset_DT,
+                                LD_folder=file.path(locus_dir,"LD"),
+                                plink_prefix="plink",
+                                force_new_MAF=F,
+                                verbose=verbose)
+  # Filter out SNPs not in the same LD block as the lead SNP
   # Get lead SNP rsid
   leadSNP = subset(subset_DT, leadSNP==T)$SNP
-  # Plink LD method
-  LD_matrix <- LD.plink_LD(LD_folder = file.path(locus_dir,"LD"),
-                           subset_DT = subset_DT,
-                           bim_path = bed_bim_fam$bim,
-                           remove_excess_snps=T,
-                           merge_by_RSID = F,
-                           leadSNP = leadSNP,
-                           min_r2 = min_r2,
-                           min_Dprime = min_Dprime,
-                           remove_correlates = remove_correlates,
-                           fillNA = fillNA)
-  # Filter out SNPs not in the same LD block as the lead SNP
   if(LD_block){
     block_snps <- LD.leadSNP_block(leadSNP = leadSNP,
                                    LD_folder = "./plink_tmp",
@@ -255,9 +291,13 @@ LD.custom_panel <- function(LD_reference,
   RDS_path <- LD.save_LD_matrix(LD_matrix=LD_matrix,
                                 subset_DT=subset_DT,
                                 locus_dir=locus_dir,
+                                fillNA = fillNA,
                                 LD_reference=gsub(".vcf|.gz","",LD_reference),
+                                sparse = T,
                                 verbose=verbose)
-  return(LD_matrix)
+  return(list(DT=subset_DT,
+              LD=LD_matrix,
+              RDS_path=RDS_path))
 }
 
 
@@ -279,6 +319,7 @@ LD.determine_chrom_type_vcf <- function(vcf_file,
 
 
 
+
 #' Save LD_matrix
 #'
 #' @family LD
@@ -292,15 +333,19 @@ LD.save_LD_matrix <- function(LD_matrix,
                               locus_dir,
                               fillNA=0,
                               LD_reference,
+                              subset_common=T,
                               sparse=T,
                               verbose=T){
   RDS_path <- LD.get_rds_path(locus_dir = locus_dir,
                               LD_reference = basename(LD_reference))
   printer("+ LD:: Saving",dim(LD_matrix)[1],"x",dim(LD_matrix)[2],"LD_matrix ==>",RDS_path, v=verbose)
-  sub.out <- subset_common_snps(LD_matrix = LD_matrix,
-                                fillNA = fillNA,
-                                finemap_dat = subset_DT)
-  LD_matrix <- sub.out$LD
+  if(subset_common){
+    sub.out <- subset_common_snps(LD_matrix = LD_matrix,
+                                  fillNA = fillNA,
+                                  finemap_dat = subset_DT,
+                                  verbose = verbose)
+    LD_matrix <- sub.out$LD
+  }
   if(sparse){
     saveSparse(LD_matrix = LD_matrix,
                 LD_path = RDS_path,
@@ -895,10 +940,10 @@ LD.1KG <- function(locus_dir,
                    superpopulation="EUR",
                    vcf_folder=NULL,
                    download_reference=T,
-                   min_r2=F,
+                   # min_r2=F,
                    LD_block=F,
                    LD_block_size=.7,
-                   min_Dprime=F,
+                   # min_Dprime=F,
                    remove_correlates=F,
                    remove_tmps=T,
                    fillNA=0,
@@ -931,26 +976,21 @@ LD.1KG <- function(locus_dir,
   bed_bim_fam <- LD.vcf_to_bed(vcf.gz.subset = vcf.gz.path,
                                locus_dir = locus_dir,
                                verbose = verbose)
-  # Calculate pairwise LD for all SNP combinations
-  #### "Caution that the LD matrix has to be correlation matrix" -SuSiER documentation
-  ### https://stephenslab.github.io/susieR/articles/finemapping_summary_statistics.html
-  # Gaston LD method
-  # LD_matrix <- gaston::LD(bed, lim = c(1,ncol(bed)), measure ="r") #"D"
-  # LD_matrix[!is.finite(LD_matrix)] <- 0
-
+  # Calculate LD
+  LD_matrix <- LD.run_snpstats_LD(LD_folder=file.path(locus_dir,"LD"),
+                                  plink_prefix="plink",
+                                  stats=c("R"),
+                                  symmetric=T,
+                                  depth="max",
+                                  verbose=verbose)
+  # Get MAF (if needed)
+  subset_DT <- LD.get_plink_MAF(subset_DT=subset_DT,
+                                LD_folder=file.path(locus_dir,"LD"),
+                                plink_prefix="plink",
+                                force_new_MAF=F,
+                                verbose=verbose)
   # Get lead SNP rsid
-  leadSNP = subset(subset_DT, leadSNP==T)$SNP #rs76904798
-  # Plink LD method
-  LD_matrix <- LD.plink_LD(LD_folder = file.path(locus_dir,"LD"),
-                           subset_DT = subset_DT,
-                           merge_by_RSID = F,
-                           remove_excess_snps=T,
-                           leadSNP = leadSNP,
-                           min_r2 = min_r2,
-                           min_Dprime = min_Dprime,
-                           remove_correlates = remove_correlates,
-                           fillNA = fillNA,
-                           verbose = verbose)
+  leadSNP = subset(subset_DT, leadSNP==T)$SNP
   # Filter out SNPs not in the same LD block as the lead SNP
   if(LD_block){
     block_snps <- LD.leadSNP_block(leadSNP = leadSNP,
@@ -969,9 +1009,12 @@ LD.1KG <- function(locus_dir,
   RDS_path <- LD.save_LD_matrix(LD_matrix=LD_matrix,
                                 subset_DT=subset_DT,
                                 locus_dir=locus_dir,
+                                fillNA=fillNA,
                                 LD_reference=LD_reference,
                                 verbose=verbose)
-  return(LD_matrix)
+  return(list(DT=subset_DT,
+              LD=LD_matrix,
+              RDS_path=RDS_path))
 }
 
 
@@ -1011,6 +1054,66 @@ LD.dprime_table <- function(SNP_list, LD_folder){
 
 
 
+#' Get LD using \pkg{snpStats} package
+#'
+#' @param LD_folder Locus-specific LD output folder.
+#' @inheritParams snpStats::ld
+#' @family LD
+#' @keywords internal
+#' @source
+#' \href{https://www.bioconductor.org/packages/release/bioc/html/snpStats.html}{snpStats Bioconductor page}
+#' \href{https://www.bioconductor.org/packages/release/bioc/vignettes/snpStats/inst/doc/ld-vignette.pdf}{LD tutorial}
+LD.run_snpstats_LD <- function(LD_folder,
+                               plink_prefix="plink",
+                               stats=c("R"),
+                               symmetric=T,
+                               depth="max",
+                               verbose=T){
+  printer("LD:snpStats:: Computing LD",paste0("(stats = ",paste(stats,collapse=', '),")"),v=verbose)
+  # only need to give bed path (infers bin/fam paths)
+  ss <- snpStats::read.plink(bed = file.path(LD_folder,plink_prefix))
+  ld_list <- snpStats::ld(x = ss$genotypes,
+                          y = ss$genotypes,
+                          depth = if(depth=="max") ncol(ss$genotypes) else depth,
+                          stats = stats,
+                          symmetric=symmetric)
+  if(length(stats)==1) return(ld_list) else return(ld_list$R)
+}
+
+
+
+
+#' Get MAF using \pkg{snpStats} package
+#'
+#' @param LD_folder Locus-specific LD output folder.
+#' @inheritParams snpStats::ld
+#' @family LD
+#' @keywords internal
+#' @source
+#' \href{https://www.bioconductor.org/packages/release/bioc/html/snpStats.html}{snpStats Bioconductor page}
+#' \href{https://www.bioconductor.org/packages/release/bioc/vignettes/snpStats/inst/doc/ld-vignette.pdf}{LD tutorial}
+LD.get_plink_MAF <- function(subset_DT,
+                             LD_folder,
+                             plink_prefix="plink",
+                             force_new_MAF=F,
+                             verbose=T){
+  if(!"MAF" %in% colnames(subset_DT) | force_new_MAF){
+    printer("LD::snpStats:: Filling `MAF` column with MAF from LD panel.",v=verbose)
+    ss <- snpStats::read.plink(bed = file.path(LD_folder,plink_prefix))
+    MAF_df <- data.frame(SNP=row.names(snpStats::col.summary(ss$genotypes)),
+                         MAF=snpStats::col.summary(ss$genotypes)$MAF)
+    if("MAF" %in% colnames(subset_DT)) subset_DT <- subset(subset_DT,select=-MAF)
+    subset_merge <- data.table::merge.data.table(data.table::data.table(subset_DT),
+                                                 data.table::data.table(MAF_df),
+                                                 by="SNP")
+    return(subset_merge)
+  } else {
+      printer("LD::snpStats:: `MAF` column already present.",v=verbose);
+      return(subset_DT)
+  }
+}
+
+
 #' Calculate LD (r or r2)
 #'
 #' This appriach computes and LD matrix of r or r2 (instead of D') from a vcf.
@@ -1020,15 +1123,27 @@ LD.dprime_table <- function(SNP_list, LD_folder){
 #' @param r_format Whether to fill the matrix with \code{r} or \code{r2}.
 #' @family LD
 #' @keywords internal
+#' @examples
+#' \dontrun{
+#' data("LRRK2")
+#' LD_folder <- "/Users/schilder/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/LRRK2/plink/saved"
+#' bim_path <- file.path(LD_folder, "plink.bim");
+#' bim <- data.table::fread(bim_path, col.names = c("CHR","SNP","V3","POS","A1","A2"), stringsAsFactors = F)
+#' bim <- subset(bim, SNP %in% LRRK2$SNP)
+#' ld.bin <- file.path(LD_folder, paste0("plink",".ld.bin"))
+#' SNPs <- data.table::fread(file.path(LD_folder,"SNPs.txt"), col.names = 'RSID')
+#' bin.vector <- readBin(ld.bin, what = "numeric", n=length(SNPs$RSID)^2)
+#' }
 LD.run_plink_LD <- function(bim,
                             LD_folder,
                             plink_prefix="plink",
-                            r_format="r"){
+                            r_format="r",
+                            extract_file=NULL){
   plink <- LD.plink_file()
   # METHOD 2 (faster, but less control over parameters. Most importantly, can't get Dprime)
   system( paste(plink,
                 "--bfile",file.path(LD_folder,plink_prefix),
-                "--extract",file.path(LD_folder,"SNPs.txt"),
+                if(is.null(extract_file)) NULL else"--extract",extract_file,
                 paste0("--",r_format," square bin"),
                 "--out", file.path(LD_folder,plink_prefix)) )
   ld.bin <- file.path(LD_folder, paste0(plink_prefix,".ld.bin"))
@@ -1090,13 +1205,15 @@ LD.plink_LD <-function(leadSNP=NULL,
     bim <- subset(bim, SNP %in% bim.merged$SNP.x)
     printer("LD:PLINK:: Removing RSIDs that don't appear in locus subset:",orig_n,"==>",nrow(bim),"SNPs",v=verbose)
   }
+  extract_file <- file.path(LD_folder,"SNPs.txt")
   data.table::fwrite(subset(bim, select="SNP"),
-                     file.path(LD_folder,"SNPs.txt"), col.names = F)
+                     extract_file, col.names = F)
 
   printer("++ Calculating LD", v=verbose)
   ld.matrix <- LD.run_plink_LD(bim = bim,
                                LD_folder = LD_folder,
-                               plink_prefix = plink_prefix)
+                               plink_prefix = plink_prefix,
+                               extract_file = file.path(LD_folder,"SNPs.txt"))
 
   if((min_Dprime != F) | (min_r2 != F) | (remove_correlates != F)){
     plink.ld <- LD.dprime_table(SNP_list = row.names(ld.matrix), LD_folder)

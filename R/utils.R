@@ -608,6 +608,7 @@ subset_common_snps <- function(LD_matrix,
   finemap_dat <- finemap_dat[!base::duplicated(finemap_dat$SNP),]
   fm.snps <- finemap_dat$SNP
   common.snps <- base::intersect(ld.snps, fm.snps)
+  if(length(common.snps)==0) stop("No overlapping RSIDs between LD_matrix and subset_DT")
   printer("+ LD_matrix =",length(ld.snps),"SNPs.", v=verbose)
   printer("+ finemap_dat =",length(fm.snps),"SNPs.", v=verbose)
   printer("+",length(common.snps),"SNPs in common.", v=verbose)

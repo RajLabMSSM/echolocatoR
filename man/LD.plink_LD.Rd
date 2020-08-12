@@ -5,11 +5,11 @@
 \title{Calculate LD}
 \usage{
 LD.plink_LD(
-  leadSNP,
+  leadSNP = NULL,
   subset_DT,
   bim_path = NULL,
   remove_excess_snps = T,
-  merge_by_RSID = T,
+  merge_by_RSID = F,
   LD_folder,
   min_r2 = F,
   min_Dprime = F,
@@ -21,6 +21,11 @@ LD.plink_LD(
 }
 \description{
 Use \emph{plink} to calculate LD from a vcf.
+}
+\examples{
+locus_dir <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Kunkle_2019/ACE"
+LD_folder <- file.path(locus_dir,"LD")
+ld.matrix <- LD.plink_LD(subset_DT=BST1, LD_folder=LD_folder)
 }
 \seealso{
 Other LD: 
@@ -35,6 +40,7 @@ Other LD:
 \code{\link{LD.filter_vcf_gaston}()},
 \code{\link{LD.filter_vcf}()},
 \code{\link{LD.get_locus_vcf_folder}()},
+\code{\link{LD.get_plink_MAF}()},
 \code{\link{LD.index_vcf}()},
 \code{\link{LD.leadSNP_block}()},
 \code{\link{LD.load_or_create}()},
@@ -45,6 +51,7 @@ Other LD:
 \code{\link{LD.read_bin}()},
 \code{\link{LD.read_ld_table}()},
 \code{\link{LD.run_plink_LD}()},
+\code{\link{LD.run_snpstats_LD}()},
 \code{\link{LD.save_LD_matrix}()},
 \code{\link{LD.translate_population}()},
 \code{\link{LD.vcf_to_bed}()},

@@ -90,41 +90,26 @@ LD.UKBiobank <- function(subset_DT=NULL,
       printer("+ LD:: Importing UKB LD file directly to R from:",v=verbose)
       print(URL)
     }
-
-
-
     # RSIDs file
-    # rsids <- data.table::fread(gz.path, nThread = 4)
     printer("+ LD:: ...this could take some time...",v=verbose)
     CONDA.activate_env(conda_env = conda_env,
                        verbose = verbose)
     reticulate::source_python(system.file("tools","load_ld.py",package = "echolocatoR"))
-
-    # load_ld(ld_prefix=URL, server=F)
     ld.out <- tryFunc(input = URL, load_ld, server)
     # LD matrix
     ld_R <- ld.out[[1]]
-    # head(ld_R)[1:10,]
-    # SNP info
-    # ld_snps <- data.table::data.table( reticulate::py_to_r(ld.out[[2]]) )
     ld_snps <- data.table::data.table(ld.out[[2]])
     row.names(ld_R) <- ld_snps$rsid
     colnames(ld_R) <- ld_snps$rsid
-    # Only save SNPs shared with subset data
-    sub.out <- subset_common_snps(LD_matrix = ld_R,
-                                  finemap_dat = finemap_dat,
-                                  fillNA = fillNA)
-    finemap_dat <- sub.out$DT
-    LD_matrix <- sub.out$LD
-    # remove(ld.out)
-    # ld_snps.sub <- subset(ld_snps, position %in% finemap_dat$POS)
-    # indices <- which(ld_snps$position %in% finemap_dat$POS)
-    # ld_snps.sub <- ld_snps[indices,]
-    # LD_matrix <- ld_R[indices, indices]
-    # row.names(LD_matrix) <- ld_snps.sub$rsid
-    # colnames(LD_matrix) <- ld_snps.sub$rsid
-    # LD_matrix[is.na(LD_matrix)] <- 0
 
+    # As a last resort download UKB MAF
+    subset_DT <- get_UKB_MAF(subset_DT = subset_DT,
+                             output_path = file.path(dirname(dirname(dirname(locus_dir))),
+                                                     "Reference/UKB_MAF"),
+                             force_new_maf = F,
+                             nThread = nThread,
+                             download_method = "axel",
+                             verbose = verbose)
     # Save LD matrix as RDS
     RDS_path <- LD.save_LD_matrix(LD_matrix=LD_matrix,
                                   subset_DT=subset_DT,
@@ -138,7 +123,9 @@ LD.UKBiobank <- function(subset_DT=NULL,
     }
   }
   if(return_matrix){
-    return(LD_matrix)
+    return(list(DT=subset_DT,
+                LD=LD_matrix,
+                RDS_path=RDS_path))
   } else {
     return(RDS_path)
   }

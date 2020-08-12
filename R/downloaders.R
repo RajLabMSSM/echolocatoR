@@ -16,7 +16,8 @@ downloader <- function(input_url,
 
                        nThread=4,
                        alternate=T){
-  if(download_method=="axel"){
+  axel_avail <- startsWith(system("axel -h",intern = T)[1],"Usage: axel [options]")
+  if(download_method=="axel" & axel_avail){
     out_file <- axel(input_url=input_url,
                      output_path=output_path,
                      background=background,

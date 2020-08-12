@@ -53,7 +53,6 @@ finemap_loci(
   min_r2 = 0,
   LD_block = F,
   LD_block_size = 0.7,
-  min_Dprime = F,
   query_by = "coordinates",
   remove_variants = F,
   remove_correlates = F,
@@ -278,9 +277,6 @@ This parameter is only necessary if \code{query_by!="tabix"}.}
 
 \item{LD_block_size}{Adjust the granularity of block sizes when \code{LD_block=T}.}
 
-\item{min_Dprime}{Remove any SNPs are below the LD D' threshold with the lead SNP within their respective locus.
-This is paramter currently only works when \code{LD_reference!="UKB"}.}
-
 \item{query_by}{Choose which method you want to use to extract locus subsets from the full summary stats file.
 Methods include:
 \describe{
@@ -290,8 +286,11 @@ Methods include:
 
 \item{remove_variants}{A list of variants to remove from the locus subset file.}
 
-\item{remove_correlates}{If \code{remove_correlates} is set to a value between 0-1,
-removes any SNPs that are in LD with any of the \code{remove_variants} above the threshold provided by \code{remove_correlates}.}
+\item{remove_correlates}{A named list, where the names are the RSIDs of SNPs
+whose LD correlates you wish to remove,
+and the value is the absolute r2 threshold you wish to filter at for each RSID respectively
+(e.g. \code{ remove_correlates = c("rs76904798"=.2, "rs10000737"=.8)}).
+This will also remove the SNPs in \code{remove_correlates} themselves.}
 
 \item{probe_path}{The location of the file containing translations between probe IDs and gene symbols.
 Only used for certain eQTL datasets.}

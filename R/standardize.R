@@ -124,15 +124,7 @@ standardize_subset <- function(locus,
           printer("++ Inferring MAF from frequency column...")
           query_mod$MAF <- ifelse(abs(query$Freq<0.5), abs(query$Freq), abs(1-query$Freq))
         }
-      } else {
-        # As a last resort download UKB MAF
-        query_mod <- get_UKB_MAF(subset_DT = query_mod,
-                                 output_path = file.path(dirname(dirname(dirname(subset_path))),
-                                                         "Reference/UKB_MAF"),
-                                 force_new_maf = F,
-                                 nThread = nThread,
-                                 download_method = download_method)
-      }
+      } else {printer("++ Could not infer MAF",v=verbose)}
     }
     query_mod$MAF <- abs(query_mod$MAF)
     printer("++ Removing SNPs with MAF== 0 | NULL | NA", v=verbose)

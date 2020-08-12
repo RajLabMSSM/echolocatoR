@@ -265,7 +265,7 @@ multi_finemap_plot <- function(finemap_dat,
                                height=1000 #1000
                                  ){
   # locus <- "LRRK2"
-  # results_path <- file.path("./Data/GWAS/Nalls23andMe_2019",locus)
+  # results_path <- file.path("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019",locus)
   # finemap_dat <- data.table::fread(file.path(results_path,"Multi-finemap/Multi-finemap_results.txt"))
   # LD_matrix <- readRDS(file.path(results_path,"plink/UKB_LD.RDS"))
   # method_list=c("ABF","SUSIE","POLYFUN_SUSIE","FINEMAP")

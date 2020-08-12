@@ -277,8 +277,11 @@
 #' @param min_Dprime Remove any SNPs are below the LD D' threshold with the lead SNP within their respective locus.
 #' This is paramter currently only works when \code{LD_reference!="UKB"}.
 #' @param remove_variants A list of variants to remove from the locus subset file.
-#' @param remove_correlates If \code{remove_correlates} is set to a value between 0-1,
-#' removes any SNPs that are in LD with any of the \code{remove_variants} above the threshold provided by \code{remove_correlates}.
+#' @param remove_correlates A named list, where the names are the RSIDs of SNPs
+#' whose LD correlates you wish to remove,
+#' and the value is the absolute r2 threshold you wish to filter at for each RSID respectively
+#' (e.g. \code{ remove_correlates = c("rs76904798"=.2, "rs10000737"=.8)}).
+#' This will also remove the SNPs in \code{remove_correlates} themselves.
 #'
 #' @param LD_reference Which linkage disequilibrium reference panel do you want to use.
 #'  Options include:
@@ -384,7 +387,7 @@ finemap_pipeline <- function(locus,
                              min_r2=0,
                              LD_block=F,
                              LD_block_size=.7,
-                             min_Dprime=F,
+                             # min_Dprime=F,
                              query_by="coordinates",
                              remove_variants=F,
                              remove_correlates=F,
@@ -469,7 +472,7 @@ finemap_pipeline <- function(locus,
                                     verbose = verbose)
   #### Extract LD ####
   message("\n--- Step 2: Extract Linkage Disequilibrium ⏬---")
-  LD_matrix <- LD.load_or_create(locus_dir=locus_dir,
+  LD_list <- LD.load_or_create(locus_dir=locus_dir,
                                  subset_DT=subset_DT,
                                  force_new_LD=force_new_LD,
                                  LD_reference=LD_reference,
@@ -477,10 +480,9 @@ finemap_pipeline <- function(locus,
                                  superpopulation=superpopulation,
                                  download_reference=download_reference,
                                  download_method=download_method,
-                                 min_r2=min_r2,
                                  LD_block=LD_block,
                                  LD_block_size=LD_block_size,
-                                 min_Dprime=min_Dprime,
+                                 # min_Dprime=min_Dprime,
                                  remove_correlates=remove_correlates,
                                  server=server,
                                  remove_tmps=remove_tmps,
@@ -492,6 +494,13 @@ finemap_pipeline <- function(locus,
   # Remove pre-specified SNPs
   ## Do this step AFTER saving the LD to disk so that it's easier to re-subset in different ways later without having to redownload LD.
   message("\n-------------- Step 3: Filter SNPs 🚰-------------")
+  LD_list <- LD.filter_LD(LD_list=LD_list,
+                          remove_correlates=remove_correlates,
+                          min_r2=min_r2,
+                          verbose=verbose)
+  subset_DT <- LD_list$DT
+  LD_matrix <- LD_list$LD
+
   subset_DT <- filter_snps(subset_DT=subset_DT,
                            bp_distance=bp_distance,
                            remove_variants=remove_variants,
@@ -500,15 +509,16 @@ finemap_pipeline <- function(locus,
                            max_POS=max_POS,
                            max_snps=max_snps,
                            trim_gene_limits=trim_gene_limits,
-                           min_MAF = min_MAF,
+                           min_MAF=min_MAF,
                            verbose=verbose)
   # Subset LD and df to only overlapping SNPs
-  sub.out <- subset_common_snps(LD_matrix =LD_matrix,
+  sub.out <- subset_common_snps(LD_matrix = LD_matrix,
                                 finemap_dat = subset_DT,
                                 fillNA = fillNA)
   LD_matrix <- sub.out$LD
   subset_DT <- sub.out$DT
-  #### Fine-map ####
+  
+#### Fine-map ####
   message("\n-------- Step 4: Fine-map 🔊--------")
   finemap_dat <- finemap_handler(locus_dir = locus_dir,
                                 fullSS_path = fullSS_path,
@@ -683,7 +693,9 @@ finemap_loci <- function(loci,
                          trim_gene_limits=F,
                          max_snps=NULL,
                          file_sep="\t",
-                         min_r2=0, LD_block=F, LD_block_size=.7, min_Dprime=F,
+                         min_r2=0,
+                         LD_block=F, LD_block_size=.7,
+                         # min_Dprime=F,
                          query_by="coordinates",
                          remove_variants=F,
                          remove_correlates=F,
@@ -779,7 +791,7 @@ finemap_loci <- function(loci,
                                      min_r2=min_r2,
                                      LD_block=LD_block,
                                      LD_block_size=LD_block_size,
-                                     min_Dprime=min_Dprime,
+                                     # min_Dprime=min_Dprime,
                                      query_by=query_by,
                                      remove_variants=remove_variants,
                                      remove_correlates=remove_correlates,

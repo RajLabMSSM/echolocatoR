@@ -11,10 +11,8 @@ LD.1KG(
   superpopulation = "EUR",
   vcf_folder = NULL,
   download_reference = T,
-  min_r2 = F,
   LD_block = F,
   LD_block_size = 0.7,
-  min_Dprime = F,
   remove_correlates = F,
   remove_tmps = T,
   fillNA = 0,
@@ -49,17 +47,15 @@ Setting the superpopulation is not currently possible when \code{LD_reference="U
 the default is to delete the full vcf or npz files after \pkg{echolocatoR} has extracted the necssary subset.
 However, if you wish to keep these full files (which can be quite large) set \code{download_reference=T}.}
 
-\item{min_r2}{Remove any SNPs are below the LD r2 threshold with the lead SNP within their respective locus.}
-
 \item{LD_block}{Calculate LD blocks with \emph{plink} and only include the block to which the lead SNP belongs.}
 
 \item{LD_block_size}{Adjust the granularity of block sizes when \code{LD_block=T}.}
 
-\item{min_Dprime}{Remove any SNPs are below the LD D' threshold with the lead SNP within their respective locus.
-This is paramter currently only works when \code{LD_reference!="UKB"}.}
-
-\item{remove_correlates}{If \code{remove_correlates} is set to a value between 0-1,
-removes any SNPs that are in LD with any of the \code{remove_variants} above the threshold provided by \code{remove_correlates}.}
+\item{remove_correlates}{A named list, where the names are the RSIDs of SNPs
+whose LD correlates you wish to remove,
+and the value is the absolute r2 threshold you wish to filter at for each RSID respectively
+(e.g. \code{ remove_correlates = c("rs76904798"=.2, "rs10000737"=.8)}).
+This will also remove the SNPs in \code{remove_correlates} themselves.}
 
 \item{remove_tmps}{Whether to remove any temporary files (e.g. FINEMAP output files) after the pipeline is done running.}
 
@@ -82,6 +78,10 @@ This approach does not have this limitations, allowing you to fine-map loci more
 data("BST1"); data("locus_dir");
 BST1 <- limit_SNPs(max_snps = 500, subset_DT = BST1)
 LD_matrix <- LD.1KG(locus_dir=file.path("~/Desktop",locus_dir), subset_DT=BST1, LD_reference="1KGphase1")
+
+## Kunkle et al 2019
+locus_dir <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Kunkle_2019/ACE"
+
 }
 }
 \seealso{
@@ -96,6 +96,7 @@ Other LD:
 \code{\link{LD.filter_vcf_gaston}()},
 \code{\link{LD.filter_vcf}()},
 \code{\link{LD.get_locus_vcf_folder}()},
+\code{\link{LD.get_plink_MAF}()},
 \code{\link{LD.index_vcf}()},
 \code{\link{LD.leadSNP_block}()},
 \code{\link{LD.load_or_create}()},
@@ -107,6 +108,7 @@ Other LD:
 \code{\link{LD.read_bin}()},
 \code{\link{LD.read_ld_table}()},
 \code{\link{LD.run_plink_LD}()},
+\code{\link{LD.run_snpstats_LD}()},
 \code{\link{LD.save_LD_matrix}()},
 \code{\link{LD.translate_population}()},
 \code{\link{LD.vcf_to_bed}()},

@@ -22,6 +22,7 @@ Other LD:
 \code{\link{LD.filter_vcf_gaston}()},
 \code{\link{LD.filter_vcf}()},
 \code{\link{LD.get_locus_vcf_folder}()},
+\code{\link{LD.get_plink_MAF}()},
 \code{\link{LD.index_vcf}()},
 \code{\link{LD.leadSNP_block}()},
 \code{\link{LD.load_or_create}()},
@@ -33,6 +34,7 @@ Other LD:
 \code{\link{LD.read_bin}()},
 \code{\link{LD.read_ld_table}()},
 \code{\link{LD.run_plink_LD}()},
+\code{\link{LD.run_snpstats_LD}()},
 \code{\link{LD.save_LD_matrix}()},
 \code{\link{LD.translate_population}()},
 \code{\link{LD.vcf_to_bed}()}
