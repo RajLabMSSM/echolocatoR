@@ -1077,9 +1077,22 @@ LD.run_snpstats_LD <- function(LD_folder,
                                depth="max",
                                verbose=T){
   printer("LD:snpStats:: Computing LD",paste0("(stats = ",paste(stats,collapse=', '),")"),v=verbose)
-  # only need to give bed path (infers bin/fam paths)
+  # select.snps= arg needed bc otherwise read.plink() sometimes complains of
+  ## duplicate RSID rownames. Also need to check whether these SNPs exist in the plink files.
+  ## (snpStats doesn't have very good error handling for these cases).
+  if(!is.null(select.snps)){
+    bim_path <- file.path(LD_folder,paste0(plink_prefix,".bim"))
+    bim <- data.table::fread(bim_path,
+                             col.names = c("CHR","SNP","V3","POS","A1","A2"),
+                             stringsAsFactors = F)
+    select.snps <- select.snps[select.snps %in% unique(bim$SNP)]
+    select.snps <- if(length(select.snps)==0) NULL else unique(select.snps);
+  }
+
+  # Only need to give bed path (infers bin/fam paths)
   ss <- snpStats::read.plink(bed = file.path(LD_folder,plink_prefix),
                              select.snps = select.snps)
+  # Compute LD from snpMatrix
   ld_list <- snpStats::ld(x = ss$genotypes,
                           y = ss$genotypes,
                           depth = if(depth=="max") ncol(ss$genotypes) else depth,
