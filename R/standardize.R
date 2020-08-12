@@ -201,15 +201,17 @@ standardize_subset <- function(locus,
 
 
     # Remove any duplicate columns
-    query_mod <- query_mod[!duplicated(colnames(query_mod))]
+    query_mod <- data.frame(query_mod)[,!duplicated(colnames(query_mod))]
 
     printer("++ Ensuring Effect, StdErr, P are numeric", v=verbose)
     # Only convert to numeric AFTER removing NAs (otherwise as.numeric will turn them into 0s)
-    query_mod <- query_mod  %>%
+    query_mod <- suppressWarnings(
+      query_mod  %>%
       dplyr::mutate(CHR=as.integer(gsub("chr","",CHR)),
                     Effect=as.numeric(Effect),
                     StdErr=as.numeric(StdErr),
                     P=as.numeric(P))
+      )
 
     # Add QTL cols
     if(!is.null(QTL_prefixes)){
