@@ -376,6 +376,7 @@ LD.save_LD_matrix <- function(LD_matrix,
 
 
 
+
 #' Translate superopulation acronyms
 #'
 #' Ensures a common ontology for synonynmous superpopulation names.
@@ -1160,7 +1161,7 @@ LD.snpstats_get_MAF <- function(subset_DT,
                                                     LD_folder=LD_folder,
                                                     plink_prefix=plink_prefix,
                                                     nThread=nThread,
-                                                    verbose=verbose)
+                                                    verbose=F)
     ss <- snpStats::read.plink(bed = file.path(LD_folder,plink_prefix),
                                select.snps = select.snps)
 

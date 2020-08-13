@@ -283,7 +283,6 @@ GGBIO.plot <- function(finemap_dat,
       TRACKS_list <- append(TRACKS_list, track.Nott_histo)
       names(TRACKS_list)[length(TRACKS_list)] <- "Nott (2019)\nRead Densities"
     })
-
     # PLAC-seq
     if(Nott_show_placseq){
       try({
@@ -301,9 +300,7 @@ GGBIO.plot <- function(finemap_dat,
         names(TRACKS_list)[length(TRACKS_list)] <- "Nott (2019)\nPLAC-seq"
       })
     }
-
   }
-
 
   ##### Iterate over different window sizes #####
   plot_list <- list()

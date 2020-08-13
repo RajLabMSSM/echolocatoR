@@ -580,7 +580,7 @@ finemap_pipeline <- function(locus,
                         consensus_threshold = consensus_threshold,
                         QTL_prefixes = QTL_prefixes,
                         max_transcripts = 1,
-                        plot.zoom = p.window,
+                        plot.zoom = plot.zoom,
                         save_plot = T,
                         show_plot = T,
 
