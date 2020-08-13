@@ -424,7 +424,7 @@ finemap_pipeline <- function(locus,
    locus_dir <- get_locus_dir(subset_path = subset_path)
 
    ####  Query ####
-   message("\n------------------ Step 1: Query 🔍---------------");
+   message("\n------------------ Step 1: Query 🔍- --------------");
 
    subset_DT <- extract_SNP_subset(locus = locus,
                                    locus_dir = locus_dir,
@@ -493,7 +493,7 @@ finemap_pipeline <- function(locus,
   # Remove pre-specified SNPs
   ## Do this step AFTER saving the LD to disk so that it's easier to re-subset
   ## in different ways later without having to redownload LD.
-  message("\n-------------- Step 3: Filter SNPs 🚰-------------");
+  message("\n-------------- Step 3: Filter SNPs 🚰 -------------");
   LD_list <- LD.filter_LD(LD_list=LD_list,
                           remove_correlates=remove_correlates,
                           min_r2=min_r2,
@@ -543,8 +543,8 @@ finemap_pipeline <- function(locus,
                                 verbose = verbose)
   #### Visualize ####
   if(!is.null(plot.types)) message("\n--------------- Step 5: Visualize 📊--------------");
-  fo
-  p.window in plot.zoom){
+
+  for(p.window in plot.zoom){
     if("simple" %in% plot.types){
       try({
         mf_plot <- GGBIO.plot(finemap_dat = finemap_dat,
