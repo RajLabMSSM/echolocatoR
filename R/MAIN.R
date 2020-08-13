@@ -471,18 +471,19 @@ finemap_pipeline <- function(locus,
                                     remove_tmps = remove_tmps,
                                     verbose = verbose)
   #### Extract LD ####
-  message("\n--- Step 2: Extract Linkage Disequilibrium ⏬---")
+  message("\n--- Step 2: Extract Linkage Disequilibrium ⏬ ---")
   LD_list <- LD.load_or_create(locus_dir=locus_dir,
-                                 subset_DT=subset_DT,
+                               subset_DT=subset_DT,
+                               LD_reference=LD_reference,
+                               # Optional args (with defaults)
                                  force_new_LD=force_new_LD,
-                                 LD_reference=LD_reference,
                                  LD_genome_build=LD_genome_build,
                                  superpopulation=superpopulation,
                                  download_reference=download_reference,
                                  download_method=download_method,
                                  LD_block=LD_block,
                                  LD_block_size=LD_block_size,
-                                 #emove_correlates=remove_correlates,
+                                 remove_correlates=remove_correlates,
                                  server=server,
                                  remove_tmps=remove_tmps,
                                  conda_env=conda_env,
@@ -491,57 +492,54 @@ finemap_pipeline <- function(locus,
 
   #### Filter SNPs####
   # Remove pre-specified SNPs
-  ## Do this step AFTER saving the LD to disk so that it's easier to re-subset in different ways later without having to redownload LD.
+  ## Do this step AFTER saving the LD to disk so that it's easier to re-subset
+  ## in different ways later without having to redownload LD.
   message("\n-------------- Step 3: Filter SNPs 🚰-------------")
   LD_list <- LD.filter_LD(LD_list=LD_list,
                           remove_correlates=remove_correlates,
                           min_r2=min_r2,
                           verbose=verbose)
-  suLD_matrix <- LD_list$LD
-  bset_DT <- LD_list$DT
-   subset_DT <- filter_snps(subset_DT=subset_DT,
+  LD_matrix <- LD_list$LD
+  subset_DT <- LD_list$DT
+
+  subset_DT <- filter_snps(subset_DT=subset_DT,
+                           min_MAF=min_MAF,
                            bp_distance=bp_distance,
                            remove_variants=remove_variants,
                            min_POS=min_POS,
                            max_POS=max_POS,
                            max_snps=max_snps,
                            trim_gene_limits=trim_gene_limits,
-                           min_MAF=min_MAF,
+
                            verbose=verbose)
   # Subset LD and df to only overlapping SNPs
-  sub.out <- subset_common_snps(LD_matrix = LD_matrix,
+  LD_list <- subset_common_snps(LD_matrix = LD_matrix,
                                 finemap_dat = subset_DT,
                                 fillNA = fillNA)
-  LD_matrix <- sub.out$LD
-  subset_DT <- sub.out$DT
-  
-#### Fine-map ####
+  LD_matrix <- LD_list$LD
+  subset_DT <- LD_list$DT
+
+  #### Fine-map ####
   message("\n-------- Step 4: Fine-map 🔊--------")
   finemap_dat <- finemap_handler(locus_dir = locus_dir,
                                 fullSS_path = fullSS_path,
+                                LD_reference = LD_reference,
+                                LD_matrix = LD_matrix,
+                                subset_DT = subset_DT,
+                                sample_size = sample_size,
+                                # General args (with defaults)
                                 finemap_methods = finemap_methods,
                                 force_new_finemap = force_new_finemap,
                                 dataset_type = dataset_type,
-                                subset_DT = subset_DT,
-                                LD_reference = LD_reference,
-                                LD_matrix = LD_matrix,
-                                n_causal = n_causal,
-                                sample_size = sample_size,
-                                conditioned_snps = conditioned_snps,
-
-                                snp_col = snp_col,
-                                freq_col = freq_col,
-                                effect_col = effect_col,
-                                stderr_col = stderr_col,
-                                pval_col = pval_col,
-                                N_cases_col = N_cases_col,
-                                N_controls_col = N_controls_col,
-                                A1_col = A1_col,
-                                A2_col = A2_col,
-                                PAINTOR_QTL_datasets = PAINTOR_QTL_datasets,
                                 PP_threshold = PP_threshold,
                                 consensus_threshold = consensus_threshold,
                                 case_control = case_control,
+                                n_causal = n_causal,
+                                sample_size = sample_size,
+                                # Tool-specific args
+                                conditioned_snps = conditioned_snps,
+                                PAINTOR_QTL_datasets = PAINTOR_QTL_datasets,
+                                # Optional args
                                 conda_env = conda_env,
                                 verbose = verbose)
   #### Visualize ####

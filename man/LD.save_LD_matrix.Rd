@@ -20,8 +20,8 @@ Save LD_matrix
 }
 \examples{
 data("BST1"); data("LD_matrix"); data("locus_dir");
-RDS_path <- LD.save_LD_matrix(LD_matrix=LD_matrix, subset_DT=BST1, locus_dir=file.path("~/Desktop",locus_dir), LD_reference="UKB")
-RDS_path <- LD.save_LD_matrix(LD_matrix=LD_matrix, subset_DT=BST1, locus_dir=file.path("~/Desktop",locus_dir), LD_reference="custom_vcf")
+LD_list <- LD.save_LD_matrix(LD_matrix=LD_matrix, subset_DT=BST1, locus_dir=file.path("~/Desktop",locus_dir), LD_reference="UKB")
+LD_list <- LD.save_LD_matrix(LD_matrix=LD_matrix, subset_DT=BST1, locus_dir=file.path("~/Desktop",locus_dir), LD_reference="custom_vcf")
 }
 \seealso{
 Other LD: 
@@ -33,6 +33,7 @@ Other LD:
 \code{\link{LD.construct_subset_vcf_name}()},
 \code{\link{LD.custom_panel}()},
 \code{\link{LD.dprime_table}()},
+\code{\link{LD.filter_LD}()},
 \code{\link{LD.filter_vcf_gaston}()},
 \code{\link{LD.filter_vcf}()},
 \code{\link{LD.get_locus_vcf_folder}()},

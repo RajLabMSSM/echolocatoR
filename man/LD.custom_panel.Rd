@@ -46,6 +46,7 @@ Other LD:
 \code{\link{LD.calculate_LD}()},
 \code{\link{LD.construct_subset_vcf_name}()},
 \code{\link{LD.dprime_table}()},
+\code{\link{LD.filter_LD}()},
 \code{\link{LD.filter_vcf_gaston}()},
 \code{\link{LD.filter_vcf}()},
 \code{\link{LD.get_locus_vcf_folder}()},

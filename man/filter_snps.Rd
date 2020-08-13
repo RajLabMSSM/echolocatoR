@@ -6,9 +6,8 @@
 \usage{
 filter_snps(
   subset_DT,
-  bp_distance,
-  remove_variants,
-  locus,
+  bp_distance = 5e+05,
+  remove_variants = F,
   min_POS = NA,
   max_POS = NA,
   max_snps = NULL,
@@ -20,6 +19,10 @@ filter_snps(
 \description{
 Filter SNps by MAF, window size, min/max position, maxmimum number of SNPs, or gene coordinates.
 You can also explicitly remove certain variants.
+}
+\examples{
+data("BST1");
+subset_DT <- filter_snps(subset_DT=BST1)
 }
 \seealso{
 Other SNP filters: 

@@ -96,13 +96,13 @@ SUSIE <- function(subset_DT,
   # plot_track_fit=F;return_all_CS=T;verbose=T;
   # # subset_DT=BST1; LD_matrix <- readRDS("/Volumes/Steelix/fine_mapping_files/GWAS/Nalls23andMe_2019/BST1/plink/UKB_LD.RDS");
 
-  # if sample_size is NULL then SUSIE fails
-  if(!"N" %in% names(subset_DT) & is.null(sample_size)){
-      ss_df <- get_sample_size(subset_DT, sample_size = sample_size)
-      sample_size <- if("N" %in% colnames(ss_df)) max(ss_df$N, na.rm = T) else stop("No sample_size provided.")
+  # sample_size
+  if(is.null(sample_size)){
+    ss_df <- get_sample_size(subset_DT, sample_size = sample_size)
+    sample_size <- if("N" %in% colnames(ss_df)) max(ss_df$N, na.rm = T)
+    if(is.null(sample_size)) stop("sample_size=NULL")
   }
-
-
+  # var_y
   if(manual_var_y){
     susie_vars <- get_var_y(subset_DT, dataset_type)
     var_y <- susie_vars$var_y
