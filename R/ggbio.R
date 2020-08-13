@@ -110,8 +110,6 @@ GGBIO.plot <- function(finemap_dat,
   method_list <- unique(method_list[method_list %in% available_methods])
   if(mean.PP){method_list <- unique(c(method_list, "mean"))}
 
-  xlims <- get_window_limits(finemap_dat=finemap_dat,
-                             plot.zoom=plot.zoom)
   TRACKS_list <- NULL
 
   # Add LD into the dat
@@ -188,8 +186,7 @@ GGBIO.plot <- function(finemap_dat,
                                          # Important! Setting this to F misaligns the plots
                                          show.legend = T,
                                          point_size = point_size,
-                                         point_alpha = point_alpha) +
-      xlim(xlims)
+                                         point_alpha = point_alpha)
     TRACKS_list <- append(TRACKS_list, track.finemapping)
     names(TRACKS_list)[length(TRACKS_list)] <- m
   }
@@ -307,45 +304,54 @@ GGBIO.plot <- function(finemap_dat,
 
   }
 
-  #### Fuse all tracks ####
-  if(dot_summary){
-    # Dot summary requires a special way of merging bc it doesn't share the same x-axis
-    grob_list <- lapply(TRACKS_list, function(x){ggbio:::Grob(x)})
-    TRKS_FINAL <- patchwork::wrap_plots(grob_list, ncol = 1)
-  } else {
-    heights <- GGBIO.track_heights_dict(TRACKS_list = TRACKS_list)
-    params_list <- list(title = paste0(locus," locus [",length(GenomicRanges::seqnames(gr.snp))," SNPs]"),
-                        track.bg.color = "transparent",
-                        track.plot.color = "transparent",
-                        label.text.cex = .7,
-                        label.bg.fill = "gainsboro",
-                        label.text.color = "grey12",
-                        label.text.angle = 0,
-                        label.width = grid::unit(5.5, "lines"),
-                        xlim = xlims,
-                        heights = heights)
-    trks <- suppressMessages(do.call("tracks", append(TRACKS_list, params_list)))
-    #### Add vertical lines  ####
-    TRKS_FINAL <- GGBIO.add_lines(trks = trks,
-                                  snp_groups = snp_group_lines,
-                                  finemap_dat = finemap_dat)
-  }
 
-  #### Save plot ####
-  if(save_plot){
-    window_suffix <- get_window_suffix(finemap_dat=finemap_dat,
-                                       plot.zoom=plot.zoom)
-    plot_path <- file.path(locus_dir,paste("multiview",locus,LD_reference,window_suffix,"png",sep="."))
-    printer("+ GGBIO:: Saving plot ==>",plot_path)
-    ggbio::ggsave(filename = plot_path,
-                  plot = TRKS_FINAL,
-                  height = height,
-                  width = width,
-                  dpi = dpi,
-                  bg = "transparent")
-  }
-  if(show_plot){print(TRKS_FINAL)}
-  return(TRKS_FINAL)
+  ##### Iterate over different window sizes #####
+  plot_list <- list()
+  for(pz in plot.zoom){
+    message(">>>>> plot.zoom = ",pz," <<<<<")
+    #### Define plot.zoom limits ####
+    xlims <- get_window_limits(finemap_dat=finemap_dat,
+                               plot.zoom=pz)
+    #### Fuse all tracks ####
+    if(dot_summary){
+      # Dot summary requires a special way of merging bc it doesn't share the same x-axis
+      grob_list <- lapply(TRACKS_list, function(x){ggbio:::Grob(x)})
+      TRKS_FINAL <- patchwork::wrap_plots(grob_list, ncol = 1)
+    } else {
+      heights <- GGBIO.track_heights_dict(TRACKS_list = TRACKS_list)
+      params_list <- list(title = paste0(locus," locus [",length(GenomicRanges::seqnames(gr.snp))," SNPs]"),
+                          track.bg.color = "transparent",
+                          track.plot.color = "transparent",
+                          label.text.cex = .7,
+                          label.bg.fill = "gainsboro",
+                          label.text.color = "grey12",
+                          label.text.angle = 0,
+                          label.width = grid::unit(5.5, "lines"),
+                          xlim = xlims,
+                          heights = heights)
+      trks <- suppressMessages(do.call("tracks", append(TRACKS_list, params_list)))
+      #### Add vertical lines  ####
+      TRKS_FINAL <- GGBIO.add_lines(trks = trks,
+                                    snp_groups = snp_group_lines,
+                                    finemap_dat = finemap_dat)
+      plot_list[[pz]] <- TRKS_FINAL
+    }
+    #### Save plot ####
+    if(save_plot){
+      window_suffix <- get_window_suffix(finemap_dat=finemap_dat,
+                                         plot.zoom=pz)
+      plot_path <- file.path(locus_dir,paste("multiview",locus,LD_reference,window_suffix,"png",sep="."))
+      printer("+ GGBIO:: Saving plot ==>",plot_path)
+      ggbio::ggsave(filename = plot_path,
+                    plot = TRKS_FINAL,
+                    height = height,
+                    width = width,
+                    dpi = dpi,
+                    bg = "transparent")
+    }
+    if(show_plot){print(TRKS_FINAL)}
+  } # End plot.zoom loop
+  return(plot_list)
 }
 
 

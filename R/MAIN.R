@@ -424,7 +424,7 @@ finemap_pipeline <- function(locus,
    locus_dir <- get_locus_dir(subset_path = subset_path)
 
    ####  Query ####
-   message("\n------------------ Step 1: Query 🔍- --------------");
+   message("\n------------------ Step 1: Query 🔍 ---------------");
 
    subset_DT <- extract_SNP_subset(locus = locus,
                                    locus_dir = locus_dir,
@@ -544,60 +544,59 @@ finemap_pipeline <- function(locus,
   #### Visualize ####
   if(!is.null(plot.types)) message("\n--------------- Step 5: Visualize 📊--------------");
 
-  for(p.window in plot.zoom){
-    if("simple" %in% plot.types){
-      try({
-        mf_plot <- GGBIO.plot(finemap_dat = finemap_dat,
-                              LD_matrix = LD_matrix,
-                              LD_reference = LD_reference,
-                              locus_dir = locus_dir,
-                              dataset_type = dataset_type,
-                              method_list = finemap_methods,
-                              PP_threshold = PP_threshold,
-                              consensus_threshold = consensus_threshold,
-                              QTL_prefixes = QTL_prefixes,
-                              Nott_epigenome = F,
-                              mean.PP = T,
-                              XGR_libnames = NULL,
-                              max_transcripts = 1,
-                              plot.zoom = p.window,
-                              save_plot = T,
-                              show_plot = T,
-                              nThread = nThread,
-                              verbose = verbose)
-      })
-    }
-    if("fancy" %in% plot.types){
-      try({
-        trx <- GGBIO.plot(finemap_dat = finemap_dat,
-                          LD_matrix = LD_matrix,
-                          LD_reference = LD_reference,
-                          locus_dir = locus_dir,
-                          dataset_type = dataset_type,
-                          method_list = finemap_methods,
-                          PP_threshold = PP_threshold,
-                          consensus_threshold = consensus_threshold,
-                          QTL_prefixes = QTL_prefixes,
-                          max_transcripts = 1,
-                          plot.zoom = p.window,
-                          save_plot = T,
-                          show_plot = T,
 
-                          XGR_libnames = plot.XGR_libnames,
+  if("simple" %in% plot.types){
+    try({
+      mf_plot <- GGBIO.plot(finemap_dat = finemap_dat,
+                            LD_matrix = LD_matrix,
+                            LD_reference = LD_reference,
+                            locus_dir = locus_dir,
+                            dataset_type = dataset_type,
+                            method_list = finemap_methods,
+                            PP_threshold = PP_threshold,
+                            consensus_threshold = consensus_threshold,
+                            QTL_prefixes = QTL_prefixes,
+                            Nott_epigenome = F,
+                            mean.PP = T,
+                            XGR_libnames = NULL,
+                            max_transcripts = 1,
+                            plot.zoom = plot.zoom,
+                            save_plot = T,
+                            show_plot = T,
+                            nThread = nThread,
+                            verbose = verbose)
+    })
+  };
 
-                          Roadmap = plot.Roadmap,
-                          Roadmap_query = plot.Roadmap_query,
+  if("fancy" %in% plot.types){
+    try({
+      trx <- GGBIO.plot(finemap_dat = finemap_dat,
+                        LD_matrix = LD_matrix,
+                        LD_reference = LD_reference,
+                        locus_dir = locus_dir,
+                        dataset_type = dataset_type,
+                        method_list = finemap_methods,
+                        PP_threshold = PP_threshold,
+                        consensus_threshold = consensus_threshold,
+                        QTL_prefixes = QTL_prefixes,
+                        max_transcripts = 1,
+                        plot.zoom = p.window,
+                        save_plot = T,
+                        show_plot = T,
 
-                          Nott_epigenome = plot.Nott_epigenome,
-                          Nott_show_placseq = plot.Nott_show_placseq,
-                          Nott_binwidth = plot.Nott_binwidth,
-                          Nott_bigwig_dir = plot.Nott_bigwig_dir,
-                          nThread = nThread,
-                          verbose = verbose)
-      })
-    }
-  }
+                        XGR_libnames = plot.XGR_libnames,
 
+                        Roadmap = plot.Roadmap,
+                        Roadmap_query = plot.Roadmap_query,
+
+                        Nott_epigenome = plot.Nott_epigenome,
+                        Nott_show_placseq = plot.Nott_show_placseq,
+                        Nott_binwidth = plot.Nott_binwidth,
+                        Nott_bigwig_dir = plot.Nott_bigwig_dir,
+                        nThread = nThread,
+                        verbose = verbose)
+    })
+  };
 
   # Plot LD
   if(plot_LD){
@@ -606,7 +605,8 @@ finemap_pipeline <- function(locus,
                  subset_DT=subset_DT,
                  span=10)
     })
-  }
+  };
+
   # Cleanup:
   if(remove_tmps){
     roadmap_tbi <- list.files(locus_dir,pattern=".bgz.tbi", recursive = T, full.names = T)
