@@ -423,7 +423,6 @@ finemap_pipeline <- function(locus,
                                   locus = locus)
    locus_dir <- get_locus_dir(subset_path = subset_path)
 
-
    ####  Query ####
    message("\n------------------ Step 1: Query 🔍---------------")
 
