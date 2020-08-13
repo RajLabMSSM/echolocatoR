@@ -424,7 +424,7 @@ finemap_pipeline <- function(locus,
    locus_dir <- get_locus_dir(subset_path = subset_path)
 
    ####  Query ####
-   message("\n------------------ Step 1: Query 🔍---------------")
+   message("\n------------------ Step 1: Query 🔍---------------");
 
    subset_DT <- extract_SNP_subset(locus = locus,
                                    locus_dir = locus_dir,
@@ -470,7 +470,7 @@ finemap_pipeline <- function(locus,
                                     remove_tmps = remove_tmps,
                                     verbose = verbose)
   #### Extract LD ####
-  message("\n--- Step 2: Extract Linkage Disequilibrium ⏬ ---")
+  message("\n--- Step 2: Extract Linkage Disequilibrium ⏬ ---");
   LD_list <- LD.load_or_create(locus_dir=locus_dir,
                                subset_DT=subset_DT,
                                LD_reference=LD_reference,
@@ -493,7 +493,7 @@ finemap_pipeline <- function(locus,
   # Remove pre-specified SNPs
   ## Do this step AFTER saving the LD to disk so that it's easier to re-subset
   ## in different ways later without having to redownload LD.
-  message("\n-------------- Step 3: Filter SNPs 🚰-------------")
+  message("\n-------------- Step 3: Filter SNPs 🚰-------------");
   LD_list <- LD.filter_LD(LD_list=LD_list,
                           remove_correlates=remove_correlates,
                           min_r2=min_r2,
@@ -519,9 +519,9 @@ finemap_pipeline <- function(locus,
   subset_DT <- LD_list$DT
 
   #### Fine-map ####
-  message("\n-------- Step 4: Fine-map 🔊--------")
-  f
-inemap_dat <- finemap_handler(locus_dir = locus_dir,
+  message("\n-------- Step 4: Fine-map 🔊 --------");
+
+  finemap_dat <- finemap_handler(locus_dir = locus_dir,
                                 fullSS_path = fullSS_path,
                                 LD_reference = LD_reference,
                                 LD_matrix = LD_matrix,
@@ -542,8 +542,9 @@ inemap_dat <- finemap_handler(locus_dir = locus_dir,
                                 conda_env = conda_env,
                                 verbose = verbose)
   #### Visualize ####
-  if(!is.null(plot.types)) message("\n--------------- Step 5: Visualize 📊--------------")
-  for(p.window in plot.zoom){
+  if(!is.null(plot.types)) message("\n--------------- Step 5: Visualize 📊--------------");
+  fo
+  p.window in plot.zoom){
     if("simple" %in% plot.types){
       try({
         mf_plot <- GGBIO.plot(finemap_dat = finemap_dat,
