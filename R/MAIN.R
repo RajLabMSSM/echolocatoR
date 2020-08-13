@@ -520,7 +520,8 @@ finemap_pipeline <- function(locus,
 
   #### Fine-map ####
   message("\n-------- Step 4: Fine-map 🔊--------")
-  finemap_dat <- finemap_handler(locus_dir = locus_dir,
+  f
+inemap_dat <- finemap_handler(locus_dir = locus_dir,
                                 fullSS_path = fullSS_path,
                                 LD_reference = LD_reference,
                                 LD_matrix = LD_matrix,

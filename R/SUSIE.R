@@ -94,7 +94,7 @@ SUSIE <- function(subset_DT,
   # dataset_type="GWAS";max_causal=5;sample_size=NULL;prior_weights=NULL;PP_threshold=.95;scaled_prior_variance=0.001;
   # estimate_residual_variance=F;estimate_prior_variance=T;residual_variance=NULL;max_iter=100;manual_var_y=F;rescale_priors=T; estimate_prior_method="optim";
   # plot_track_fit=F;return_all_CS=T;verbose=T;
-  # # subset_DT=BST1; LD_matrix <- readRDS("/Volumes/Steelix/fine_mapping_files/GWAS/Nalls23andMe_2019/BST1/plink/UKB_LD.RDS");
+  # subset_DT=BST1; LD_matrix <- readRDS("/Volumes/Steelix/fine_mapping_files/GWAS/Nalls23andMe_2019/BST1/plink/UKB_LD.RDS");
 
   # sample_size
   if(is.null(sample_size)){
@@ -102,6 +102,8 @@ SUSIE <- function(subset_DT,
     sample_size <- if("N" %in% colnames(ss_df)) max(ss_df$N, na.rm = T)
     if(is.null(sample_size)) stop("sample_size=NULL")
   }
+  printer("+ SUSIE:: sample_size=",sample_size,v=verbose)
+
   # var_y
   if(manual_var_y){
     susie_vars <- get_var_y(subset_DT, dataset_type)
@@ -120,7 +122,7 @@ SUSIE <- function(subset_DT,
   sub.out <- subset_common_snps(LD_matrix=LD_matrix,
                                 finemap_dat=subset_DT,
                                 fillNA = 0,
-                                verbose = F)
+                                verbose = verbose)
   LD_matrix <- sub.out$LD
   subset_DT <- sub.out$DT
 
@@ -138,7 +140,7 @@ SUSIE <- function(subset_DT,
   fitted_bhat <-  susie_func(bhat = subset_DT$Effect,
                              shat = subset_DT$StdErr,
                              maf = if("MAF" %in% colnames(subset_DT)) subset_DT$MAF else NULL,
-                             R = base::as.matrix(LD_matrix),
+                             R = base::data.matrix(LD_matrix),
                              n = sample_size, # Number of samples/individuals in the dataset
                              L = max_causal, # maximum number of non-zero effects
                              ## NOTE: setting L == 1 has a strong tendency to simply return the SNP with the largest effect size.
