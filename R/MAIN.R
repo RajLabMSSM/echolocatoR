@@ -534,7 +534,6 @@ finemap_pipeline <- function(locus,
                                 consensus_threshold = consensus_threshold,
                                 case_control = case_control,
                                 n_causal = n_causal,
-                                sample_size = sample_size,
                                 # Tool-specific args
                                 conditioned_snps = conditioned_snps,
                                 PAINTOR_QTL_datasets = PAINTOR_QTL_datasets,
