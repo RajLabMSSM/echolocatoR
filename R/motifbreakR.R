@@ -187,6 +187,8 @@ MOTIFBREAKR.plot <- function(mb.results,
 #' @examples
 #' \dontrun{
 #' data("merged_DT")
+#' microglia_TF <- read.csv("~/Desktop/Fine_Mapping/resources/microglia_TF.csv")
+#'
 #' # root_dir <- "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/motifbreakR"
 #' root_dir <- "/pd-omics/brian/results/_genome_wide/motifbreakR"
 #' mb.results <- readRDS(file.path(root_dir, "motifbreakR_results.rds"))

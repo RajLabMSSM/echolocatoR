@@ -307,6 +307,7 @@ GGBIO.plot <- function(finemap_dat,
   for(pz in plot.zoom){
     message(">>>>> plot.zoom = ",pz," <<<<<")
     #### Define plot.zoom limits ####
+    try({ # Allows X11 errors to occur and still finish the loop
     xlims <- get_window_limits(finemap_dat=finemap_dat,
                                plot.zoom=pz)
     #### Fuse all tracks ####
@@ -347,6 +348,7 @@ GGBIO.plot <- function(finemap_dat,
                     bg = "transparent")
     }
     if(show_plot){print(TRKS_FINAL)}
+  })
   } # End plot.zoom loop
   return(plot_list)
 }

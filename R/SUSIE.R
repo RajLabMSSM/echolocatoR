@@ -130,10 +130,10 @@ SUSIE <- function(subset_DT,
   # SUSIE's authors "merge[d] susie_ss and susie_bhat to susie_suff_stat" in 11/2019.
   susie_version <- utils::packageVersion("susieR")
   if(length(find("susie_bhat"))==0){
-    printer("+ SUSIE:: Using susie_suff_stat from susieR",paste0("v",susie_version),v=verbose)
+    printer("+ SUSIE:: Using `susie_suff_stat()` from susieR",paste0("v",susie_version),v=verbose)
     susie_func <- get("susie_suff_stat", asNamespace("susieR"))
   } else {
-    printer("+ SUSIE:: Using susie_bhat from susieR",paste0("v",susie_version),v=verbose)
+    printer("+ SUSIE:: Using `susie_bhat()` from susieR",paste0("v",susie_version),v=verbose)
     susie_func <- get("susie_bhat", asNamespace("susieR"))
   }
 
