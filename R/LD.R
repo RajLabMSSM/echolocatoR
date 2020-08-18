@@ -510,7 +510,6 @@ LD.1KG_download_vcf <- function(subset_DT,
                        ".phase1_release_v3.20101123.snps_indels_svs.genotypes.vcf.gz", sep="")
     }
   }
-  printer(paste("Reading population data from", popDat_URL), v=verbose)
   phase <- gsub("1KG","",LD_reference)
   # phase 1 has no header whereas phase 3 does
   if( LD_reference == "1KGphase1" ){ use_header <- FALSE }
