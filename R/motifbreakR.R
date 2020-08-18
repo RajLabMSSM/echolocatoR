@@ -190,10 +190,12 @@ MOTIFBREAKR.plot <- function(mb.results,
 #' microglia_TF <- read.csv("~/Desktop/Fine_Mapping/resources/microglia_TF.csv")
 #'
 #' # root_dir <- "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/motifbreakR"
-#' root_dir <- "/pd-omics/brian/results/_genome_wide/motifbreakR"
+#' root_dir <- "/sc/arion/projects/pd-omics/brian/results/_genome_wide/motifbreakR"
 #' mb.results <- readRDS(file.path(root_dir, "motifbreakR_results.rds"))
 #' mb.lrrk2 <- readRDS("/pd-omics/brian/results/_genome_wide/motifbreakR/motifbreakR_results.p_values_LRRK2.rds")
 #' mb.encode <- readRDS("/pd-omics/brian/results/_genome_wide/motifbreakR/motifbreakR_results.encode.lrrk2.rds")
+#' mb.DYRK1A_FCGR2A <- readRDS(file.path("/sc/arion/projects/pd-omics/brian/Fine_Mapping","mb.results_p.DYRK1A_FCGR2A.RDS"))
+#' mb.MED12L<- readRDS(file.path("/sc/arion/projects/pd-omics/brian/Fine_Mapping","MED12L.pvalues.RDS"))
 #' }
 #' @export
 MOTIFBREAKR.summarize <- function(merged_DT,
@@ -215,6 +217,7 @@ MOTIFBREAKR.summarize <- function(merged_DT,
 
   # mb.results <- MOTIFBREAKR.filter_by_metadata(mb.results = mb.results,
   #                                              Organism = "Hsapiens")
+  library(BSgenome); library(BSgenome.Hsapiens.UCSC.hg19); library(motifbreakR);
   mb.results$SNP <- names(mb.results)
 
   # if(!is.null(no_no_loci)) {
@@ -224,7 +227,7 @@ MOTIFBREAKR.summarize <- function(merged_DT,
 
   mb.merge <- data.table::merge.data.table(x = merged_DT,
                                 y = data.table::as.data.table(mb.results),
-                                by="SNP", all = F)  %>%
+                                by="SNP", all = T)  %>%
     dplyr::mutate(risk_allele=ifelse(A1==REF,"REF",ifelse(A1==ALT,"ALT",NA))) %>%
     subset(!is.na(risk_allele)) %>%
     dplyr::mutate(risk_pct=ifelse(risk_allele=="REF", pctRef, pctAlt),

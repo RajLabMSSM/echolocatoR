@@ -28,10 +28,14 @@ and thier respective p-values.
 \examples{
 \dontrun{
 data("merged_DT")
+microglia_TF <- read.csv("~/Desktop/Fine_Mapping/resources/microglia_TF.csv")
+
 # root_dir <- "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/motifbreakR"
-root_dir <- "/pd-omics/brian/results/_genome_wide/motifbreakR"
+root_dir <- "/sc/arion/projects/pd-omics/brian/results/_genome_wide/motifbreakR"
 mb.results <- readRDS(file.path(root_dir, "motifbreakR_results.rds"))
 mb.lrrk2 <- readRDS("/pd-omics/brian/results/_genome_wide/motifbreakR/motifbreakR_results.p_values_LRRK2.rds")
 mb.encode <- readRDS("/pd-omics/brian/results/_genome_wide/motifbreakR/motifbreakR_results.encode.lrrk2.rds")
+mb.DYRK1A_FCGR2A <- readRDS(file.path("/sc/arion/projects/pd-omics/brian/Fine_Mapping","mb.results_p.DYRK1A_FCGR2A.RDS"))
+mb.MED12L<- readRDS(file.path("/sc/arion/projects/pd-omics/brian/Fine_Mapping","MED12L.pvalues.RDS"))
 }
 }

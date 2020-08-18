@@ -487,32 +487,27 @@ LD.1KG_download_vcf <- function(subset_DT,
   # PHASE 3 DATA
   if(LD_reference=="1KGphase3"){
     FTP <- "ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20130502/"
+    popDat <- echolocatoR::popDat_1KGphase3
     printer("LD Reference Panel = 1KGphase3", v=verbose)
     if(download_reference){## With internet
       vcf_URL <- paste0(FTP,"/ALL.chr",chrom,
                        ".phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz")
-      popDat_URL = paste0(FTP, "integrated_call_samples_v3.20130502.ALL.panel")
     }else{## WithOUT internet
       vcf_URL <- paste(vcf_folder, "/ALL.chr",chrom,
                        ".phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz",sep="")
-      popDat_URL = file.path(vcf_folder,"integrated_call_samples_v3.20130502.ALL.panel")
     }
 
     # PHASE 1 DATA
   } else if (LD_reference=="1KGphase1") {
     FTP <- "ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20110521/"
-
+    popDat <- echolocatoR::popDat_1KGphase1
     printer("LD Reference Panel = 1KGphase1", v=verbose)
-
     if(download_reference){## With internet
       vcf_URL <- paste(FTP,"/ALL.chr",chrom,
                        ".phase1_release_v3.20101123.snps_indels_svs.genotypes.vcf.gz", sep="")
-      # popDat_URL = "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20110521/phase1_integrated_calls.20101123.ALL.panel"
-      popDat_URL <- file.path(FTP,"phase1_integrated_calls.20101123.ALL.panel")
     }else{## WithOUT internet
       vcf_URL <- paste(vcf_folder,"/ALL.chr",chrom,
                        ".phase1_release_v3.20101123.snps_indels_svs.genotypes.vcf.gz", sep="")
-      popDat_URL = file.path(vcf_folder, "phase1_integrated_calls.20101123.ALL.panel")
     }
   }
   printer(paste("Reading population data from", popDat_URL), v=verbose)
@@ -520,10 +515,6 @@ LD.1KG_download_vcf <- function(subset_DT,
   # phase 1 has no header whereas phase 3 does
   if( LD_reference == "1KGphase1" ){ use_header <- FALSE }
   if( LD_reference == "1KGphase3" ){ use_header <- TRUE }
-  popDat <-  data.table::fread(text=trimws(gsub(",\t",",",readLines(popDat_URL))),
-                               header = use_header, sep="\t",  fill=T, stringsAsFactors = F,
-                               col.names = c("sample","population","superpop","sex"),
-                               nThread = nThread)
   # Download and subset vcf if the subset doesn't exist already
   vcf_subset <- LD.query_vcf(subset_DT=subset_DT,
                              vcf_URL=vcf_URL,

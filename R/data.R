@@ -451,3 +451,31 @@
 #' }
 "NOTT_2019.bigwig_metadata"
 
+
+
+
+
+#' Population metadata: 1KGphase1
+#'
+#' @family LD
+#' @examples
+#' \dontrun{
+#' popDat_URL <- "ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20110521/phase1_integrated_calls.20101123.ALL.panel"
+#' popDat_1KGphase1 <-  data.table::fread(text=trimws(gsub(",\t",",",readLines(popDat_URL))), sep="\t",  fill=T, stringsAsFactors = F, col.names = c("sample","population","superpop","sex"), nThread = 4)
+#' usethis::use_data(popDat_1KGphase1, overwrite = T)
+#' }
+"popDat_1KGphase1"
+
+
+
+
+#' Population metadata: 1KGphase3
+#'
+#' @family LD
+#' @examples
+#' \dontrun{
+#' popDat_URL <- "ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20130502/integrated_call_samples_v3.20130502.ALL.panel"
+#' popDat_1KGphase3 <-  data.table::fread(text=trimws(gsub(",\t",",",readLines(popDat_URL))), sep="\t",  fill=T, stringsAsFactors = F, col.names = c("sample","population","superpop","sex"), nThread = 4)
+#' usethis::use_data(popDat_1KGphase3, overwrite = T)
+#' }
+"popDat_1KGphase3"

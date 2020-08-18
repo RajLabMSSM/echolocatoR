@@ -43,6 +43,8 @@ Other LD:
 \code{\link{LD.snpstats_get_LD}()},
 \code{\link{LD.snpstats_get_MAF}()},
 \code{\link{LD.translate_population}()},
+\code{\link{popDat_1KGphase1}},
+\code{\link{popDat_1KGphase3}},
 \code{\link{saveSparse}()}
 }
 \concept{LD}

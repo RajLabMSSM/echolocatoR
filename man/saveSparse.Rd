@@ -38,7 +38,9 @@ Other LD:
 \code{\link{LD.snpstats_get_LD}()},
 \code{\link{LD.snpstats_get_MAF}()},
 \code{\link{LD.translate_population}()},
-\code{\link{LD.vcf_to_bed}()}
+\code{\link{LD.vcf_to_bed}()},
+\code{\link{popDat_1KGphase1}},
+\code{\link{popDat_1KGphase3}}
 }
 \concept{LD}
 \keyword{internal}

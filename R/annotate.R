@@ -189,7 +189,7 @@ merge_finemapping_results_each <- function(study_dirs,
                                                                   LD_reference = "1KGphase3",
                                                                   minimum_support = 1,
                                                                   include_leadSNPs = T,
-                                                                  save_path = file.path(dataset,paste0(study,".merged.csv.gz")) )
+                                                                  save_path = file.path(study,paste0(study,".merged.csv.gz")) )
                           # Return subset for merged file
                           merged_top <- subset(merged_all, eval(parse(text = return_filter)))
                           return(merged_top)

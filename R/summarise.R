@@ -1127,7 +1127,7 @@ SUMMARISE.plot_dataset_overlap <- function(merged_DT,
                                            snp_filter="!is.na(SNP)",
                                            filename=NA){
   snp_xtab <- subset(merged_DT,  eval(parse(text = snp_filter))) %>%
-    stats::xtabs(formula = ~ SNP + Dataset,  sparse = F)
+    stats::xtabs(formula = ~ SNP + Dataset,  sparse = F,drop.unused.levels = F)
   snp_xprod <- crossprod(snp_xtab)
   diag(snp_xprod) <- NA
   mode(snp_xprod) <- "integer"
