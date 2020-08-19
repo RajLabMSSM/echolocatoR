@@ -1085,7 +1085,7 @@ super_summary_plot <- function(merged_DT,
                                           include.CORCES_2020_Cicero_coaccess=F,
                                           include.CORCES_2020_bulkATACpeaks=T,
                                           include.CORCES_2020_HiChIP_FitHiChIP_coaccess=T,
-                                          include.CORCES_2020_gene_annotations=F,
+                                          include.CORCES_2020_gene_annotations=T,
                                           plot_celltype_specificity=T,
                                           facets_formula=". ~ Cell_type",
                                           show_plot=F,
@@ -1125,21 +1125,48 @@ super_summary_plot <- function(merged_DT,
 #' @family summarise
 SUMMARISE.plot_dataset_overlap <- function(merged_DT,
                                            snp_filter="!is.na(SNP)",
-                                           filename=NA){
-  snp_xtab <- subset(merged_DT,  eval(parse(text = snp_filter))) %>%
+                                           filename=NA,
+                                           triangle=T){
+  snp_xtab <- subset(merged_DT,  eval(parse(text = snp_filter)), .drop=F) %>%
     stats::xtabs(formula = ~ SNP + Dataset,  sparse = F,drop.unused.levels = F)
   snp_xprod <- crossprod(snp_xtab)
   diag(snp_xprod) <- NA
   mode(snp_xprod) <- "integer"
-  pheatmap::pheatmap(snp_xprod,
-                     display_numbers=T,
-                     filename = filename,
-                     # number_color = "white",
-                     main = paste("SNP overlap:",snp_filter),
-                     angle_col = 45,
-                     cluster_cols = T,
-                     cluster_rows = T,
-                     na_col = "white")
+
+  if(triangle){
+    max_count <- max(snp_xprod, na.rm = T)
+    printer("max_count =",max_count)
+    cl.length <- if(max_count<=10) max_count else median(DescTools::Divisors(max_count)[[1]]) + 1
+    printer("cl.length =",cl.length)
+    png(filename,height=500,width = 500,type = "cairo")
+    dat <- corrplot::corrplot(corr = snp_xprod,
+                              method = "color",
+                              type = "lower",
+                              addgrid.col = "grey",
+                              tl.col = "black",
+                              hclust.method = "ward.D2",
+                              title = paste("SNP overlap:",gsub("[|]","\nOR",snp_filter)),
+                              order = "hclust",
+                              cl.length = cl.length,
+                              mar = c(0,0,4,4),
+                              # tl.pos = "lt",
+                              diag = F,
+                              is.corr = F)
+    dev.off();
+  } else {
+    pheatmap::pheatmap(snp_xprod,
+                       display_numbers=T,
+                       # filename = filename,
+                       # number_color = "white",
+                       main = paste("SNP overlap:",snp_filter),
+                       angle_col = 45,
+                       cluster_cols = T,
+                       cluster_rows = T,
+                       drop_levels = F,
+                       na_col = "white")
+  }
   return(snp_xprod)
 }
+
+
 

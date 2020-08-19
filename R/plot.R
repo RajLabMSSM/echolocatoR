@@ -128,17 +128,7 @@ construct_SNPs_labels <- function(subset_DT,
 
 
 
-LD_with_leadSNP <- function(LD_matrix,
-                            LD_SNP){
-  # Get R2 values from LD matrix
-  printer("LD Matrix dimensions:", paste(dim(LD_matrix), collapse=" x "))
-  printer("Extracting LD subset for lead SNP:",LD_SNP)
-  LD_sub <- subset(LD_matrix, select=LD_SNP) %>%
-    data.table::as.data.table(keep.rownames = T) %>%
-    `colnames<-`(c("SNP","r")) %>%
-    dplyr::mutate(r2 = r^2)
-  return(LD_sub)
-}
+
 
 
 

@@ -93,6 +93,7 @@ merge_finemapping_results <- function(dataset="./Data/GWAS",
         printer("+ Importing results...",locus, v=verbose)
         multi_data <- data.table::fread(md, nThread = nThread)
         multi_data <- update_cols(multi_data)
+        multi_data <- assign_lead_SNP(new_DT = multi_data, verbose = verbose)
         multi_data <- cbind(data.table::data.table(Dataset=basename(dn), Locus=locus), multi_data)
         return(multi_data)
       }, mc.cores = nThread) %>% data.table::rbindlist(fill=TRUE) # Bind loci
@@ -173,7 +174,7 @@ merge_finemapping_results <- function(dataset="./Data/GWAS",
 #'
 #' @family annotate
 merge_finemapping_results_each <- function(study_dirs,
-                                           return_filter="Support>0 | leadSNP",
+                                           return_filter="!is.na(SNP)",
                                            merged_path="merged_DT.csv.gz",
                                            force_new_merge=F,
                                            nThread=4,

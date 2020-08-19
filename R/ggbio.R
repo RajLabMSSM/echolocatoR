@@ -113,19 +113,8 @@ GGBIO.plot <- function(finemap_dat,
   TRACKS_list <- NULL
 
   # Add LD into the dat
-  LD_SNP <- subset(finemap_dat, leadSNP==T)$SNP
-  if(is.null(LD_matrix)){
-    print("GGBIO:: No LD_matrix detected. Setting color_r2=F");
-    color_r2 <- F
-    dat <- finemap_dat
-  } else {
-    print("GGBIO:: LD_matrix detected. Coloring SNPs by LD with lead SNP.")
-    LD_sub <- LD_with_leadSNP(LD_matrix = LD_matrix,
-                              LD_SNP = LD_SNP)
-    dat <- data.table::merge.data.table(finemap_dat, LD_sub,
-                                        by = "SNP",
-                                        all.x = T)
-  }
+  dat <- LD.get_lead_r2(finemap_dat = finemap_dat,
+                        LD_matrix = LD_matrix)
 
   # Convert to GRange object
   gr.snp <- DT_to_GRanges(dat)

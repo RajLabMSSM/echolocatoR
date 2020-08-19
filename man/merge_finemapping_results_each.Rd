@@ -7,7 +7,7 @@ then return a subset of those files as one super-merged table.}
 \usage{
 merge_finemapping_results_each(
   study_dirs,
-  return_filter = "Support>0 | leadSNP",
+  return_filter = "!is.na(SNP)",
   merged_path = "merged_DT.csv.gz",
   force_new_merge = F,
   nThread = 4,

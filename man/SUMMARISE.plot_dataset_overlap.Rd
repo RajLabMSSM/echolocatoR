@@ -7,7 +7,8 @@
 SUMMARISE.plot_dataset_overlap(
   merged_DT,
   snp_filter = "!is.na(SNP)",
-  filename = NA
+  filename = NA,
+  triangle = T
 )
 }
 \description{

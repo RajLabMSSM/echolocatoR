@@ -1400,5 +1400,44 @@ LD.leadSNP_block <- function(leadSNP, LD_folder, LD_block_size=.7){
 
 
 
+# LD_with_leadSNP <- function(LD_matrix,
+#                             LD_SNP){
+#   printer("LD Matrix dimensions:", paste(dim(LD_matrix), collapse=" x "))
+#   printer("Extracting LD subset for lead SNP:",LD_SNP)
+#   LD_sub <- subset(LD_matrix, select=LD_SNP) %>%
+#     data.table::as.data.table(keep.rownames = T) %>%
+#     `colnames<-`(c("SNP","r")) %>%
+#     dplyr::mutate(r2 = r^2)
+#   return(LD_sub)
+# }
+#
+#
 
+
+#' Find correlate o
+LD.get_lead_r2 <- function(finemap_dat,
+                           LD_matrix=NULL,
+                           fillNA=0){
+  LD_SNP <- subset(finemap_dat, leadSNP==T)$SNP
+  if(is.null(LD_matrix)){
+    print("GGBIO:: No LD_matrix detected. Setting color_r2=F");
+    color_r2 <- F
+    dat <- finemap_dat
+  } else {
+    print("GGBIO:: LD_matrix detected. Coloring SNPs by LD with lead SNP.")
+    LD_sub <- subset(LD_matrix, select=LD_SNP) %>%
+      # subset(select = -c(r,r2)) %>%
+      data.table::as.data.table(keep.rownames = T) %>%
+      `colnames<-`(c("SNP","r")) %>%
+      dplyr::mutate(r2 = r^2)
+    dat <- data.table::merge.data.table(finemap_dat, LD_sub,
+                                        by = "SNP",
+                                        all.x = T)
+  }
+  if(fillNA!=F){
+    dat$r <- tidyr::replace_na(dat$r, fillNA)
+    dat$r2 <- tidyr::replace_na(dat$r2, fillNA)
+  }
+  return(dat)
+}
 
