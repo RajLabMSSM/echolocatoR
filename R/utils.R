@@ -1105,11 +1105,19 @@ merge_coloc_results_each <- function(coloc_rds_files,
       # Get lead SNPs
       if(.results_level=="snp"){
         # Assign lead snps
-        lead.snps <- (merged_coloc %>%
+        ## Have to do this via merging to avoid assigning lead SNP in one gene as leadSNP in all genes.
+        printer("Assigning Locus-Gene specific lead SNPs",v=.verbose)
+        lead.df <- merged_coloc %>%
                         dplyr::group_by(Dataset, Locus, Gene) %>%
                         dplyr::arrange(qtl.pvalues,desc(abs(qtl.beta))) %>%
-                        dplyr::slice(1))$snp %>% unique()
-        merged_coloc$leadSNP <- merged_coloc$snp %in% lead.snps
+                        dplyr::slice(1) %>%
+                        dplyr::mutate(leadSNP=T) %>%
+                        dplyr::select(c("Study","Dataset","Locus","Gene","snp","leadSNP"))
+        merged_coloc <- data.table::merge.data.table(merged_coloc,
+                                                     lead.df,
+                                                     by = c("Study","Dataset","Locus","Gene","snp"),
+                                                     all.x = T)
+        merged_coloc[is.na(merged_coloc$leadSNP),"leadSNP"] <- F
       }
        # Filter
       if(filter!=F) merged_coloc <- subset(merged_coloc, eval(parse(text = .filter)))
@@ -1123,6 +1131,8 @@ merge_coloc_results_each <- function(coloc_rds_files,
   }
   return(merged_COLOC)
 }
+
+
 
 
 
