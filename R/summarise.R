@@ -1126,10 +1126,12 @@ super_summary_plot <- function(merged_DT,
 SUMMARISE.plot_dataset_overlap <- function(merged_DT,
                                            snp_filter="!is.na(SNP)",
                                            filename=NA,
-                                           formula_str="~ SNP + Study",
-                                           triangle=T){
+                                           formula_str="~ SNP + Dataset",
+                                           triangle=F){
   snp_xtab <- subset(merged_DT,  eval(parse(text = snp_filter)), .drop=F) %>%
-    stats::xtabs(formula = stats::as.formula(formula_str),  sparse = F,drop.unused.levels = F)
+    stats::xtabs(formula = stats::as.formula(formula_str),
+                 sparse = F,
+                 drop.unused.levels = F)
   snp_xprod <- crossprod(snp_xtab)
   diag(snp_xprod) <- NA
   mode(snp_xprod) <- "integer"

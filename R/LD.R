@@ -1441,3 +1441,33 @@ LD.get_lead_r2 <- function(finemap_dat,
   return(dat)
 }
 
+
+
+
+#' Extract LD matrix
+#'
+#' Wrapper for \code{LDlinkR::LDproxy_batch}
+#' @source
+#' \href{https://www.rdocumentation.org/packages/LDlinkR/versions/1.0.2}{website}
+#' @examples
+#' data("merged_DT")
+#' lead.snps <- setNames(subset(merged_DT, leadSNP)$Locus, subset(merged_DT, leadSNP)$SNP)
+#' proxies <- LDlinkR.LDproxy_batch(snp=lead.snps)
+LDlinkR.LDproxy_batch <- function(snp,
+                                  pop="CEU",
+                                  r2d = "r2",
+                                  threshold=.8,
+                                  verbose=T){
+  printer("LD:LDlinkR:: Retrieving proxies of",length(snp),"SNPs",v=verbose)
+  res <- LDlinkR::LDproxy_batch(snp = snp,
+                                pop = pop,
+                                r2d = r2d,
+                                token = "df4298d58dc4")
+  printer("+ LD:LDlinkR::",length(unique(res$RS_Number)),"unique proxies returned.",v=verbose)
+  if(threshold!=F){
+    res <- subset(res, eval(parse(text = toupper(r2d)))>=threshold)
+    printer("+ LD:LDlinkR::",length(unique(res$RS_Number)),"remaining at R2 ≤",threshold,v=verbose)
+  }
+  return(res)
+}
+

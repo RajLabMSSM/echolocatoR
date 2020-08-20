@@ -8,8 +8,8 @@ SUMMARISE.plot_dataset_overlap(
   merged_DT,
   snp_filter = "!is.na(SNP)",
   filename = NA,
-  formula_str = "~ SNP + Study",
-  triangle = T
+  formula_str = "~ SNP + Dataset",
+  triangle = F
 )
 }
 \description{

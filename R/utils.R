@@ -1064,7 +1064,7 @@ merge_coloc_results <- function(all_obj,
 #' # Summary-level
 #' coloc_summary <- merge_coloc_results_each(coloc_rds_files=coloc_rds, save_path="/sc/arion/projects/pd-omics/brian/all_COLOC_results.Microglia_all_regions.summary-level.tsv.gz", results_level="summary")
 #' # SNP-level
-#' coloc_snp <- coloc_summary <- merge_coloc_results_each(coloc_rds_files=coloc_rds, save_path="/sc/arion/projects/pd-omics/brian/all_COLOC_results.Microglia_all_regions.snp-level.tsv.gz", results_level="snp", filter="leadSNP==T")
+#' coloc_snp <- merge_coloc_results_each(coloc_rds_files=coloc_rds, save_path="/sc/arion/projects/pd-omics/brian/all_COLOC_results.Microglia_all_regions.snp-level.tsv.gz", results_level="snp", filter="leadSNP==T")
 merge_coloc_results_each <- function(coloc_rds_files,
                                      save_path=F,
                                      results_level="summary",
@@ -1074,6 +1074,7 @@ merge_coloc_results_each <- function(coloc_rds_files,
                                      nThread=4,
                                      verbose=T){
   if(file.exists(save_path) & force_new==F){
+    printer("Importing pre-existing file:",save_path, v=verbose)
     merged_COLOC <- data.table::fread(save_path, nThread = nThread)
   } else {
     merged_COLOC <- lapply(coloc_rds_files, function(f,
@@ -1099,6 +1100,8 @@ merge_coloc_results_each <- function(coloc_rds_files,
       merged_coloc <- standardize_gene(merged_COLOC = merged_coloc,
                                        gene_col = "gene")
       merged_coloc <- subset(merged_coloc, !is.na(Gene))
+      # Give each Comparison-Locus-Gene combination a unique ID
+      merged_coloc <- mutate(merged_coloc, id=paste(Dataset,Locus,Gene,sep="."))
       # Get lead SNPs
       if(.results_level=="snp"){
         # Assign lead snps
