@@ -1444,9 +1444,11 @@ LD.get_lead_r2 <- function(finemap_dat,
 
 
 
-#' Extract LD matrix
+#' Extract LD proxies from 1KGphase3
 #'
-#' Wrapper for \code{LDlinkR::LDproxy_batch}
+#' Wrapper for \code{LDlinkR::LDproxy_batch}.
+#' Eeasy to use but doesn't scale up well to many SNPs (takes way too long).
+#' @family LD
 #' @source
 #' \href{https://www.rdocumentation.org/packages/LDlinkR/versions/1.0.2}{website}
 #' @examples

@@ -721,6 +721,11 @@ finemap_loci <- function(loci,
   data.table::setDTthreads(threads = nThread);
   conditioned_snps <- snps_to_condition(conditioned_snps, top_SNPs, loci);
 
+  if(detect_genes(loci = loci, verbose = F)){
+    printer("Reassigning gene-specific locus names",v=verbose)
+    loci <- setNames(paste(unname(loci),names(loci),sep="_"), names(loci))
+  }
+
   FINEMAP_DAT <- lapply(1:length(unique(loci)), function(i){
     start_gene <- Sys.time()
     finemap_dat <- NULL

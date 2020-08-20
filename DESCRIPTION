@@ -75,6 +75,7 @@ Suggests:
     SNPlocs.Hsapiens.dbSNP142.GRCh37,
     BSgenome.Hsapiens.UCSC.hg19, 
     ComplexHeatmap,
-    SummarizedExperiment
+    SummarizedExperiment,
+    LDlinkR
 RoxygenNote: 7.1.0
 VignetteBuilder: knitr
