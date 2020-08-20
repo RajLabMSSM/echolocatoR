@@ -36,9 +36,10 @@ MOTIFBREAKR.filter_by_metadata <- function(mb.results,
 #' @examples
 #' \dontrun{
 #' # data("merged_DT")
-#' # rsid_list <- unique(subset(merged_DT, Support>0 | leadSNP)$SNP)
+#' # rsid_list <- unique(subset(merged_DT, Locus %in% c("LRRK2","MED12L","DYRK1A","FCGR2A") & (Consensus_SNP | leadSNP))$SNP)
+#' # rsid_list <- unique(subset(merged_DT, Consensus_SNP | leadSNP)$SNP)
 #' rsid_list <- c("rs11175620","rs7294619","rs74324737")
-#' mb.results <- MOTIFBREAKR(rsid_list=rsid_list, calculate_all_pval=T)
+#' mb.results <- MOTIFBREAKR(rsid_list=rsid_list, calculate_all_pval=T, force_new = T)
 #' }
 #' @export
 MOTIFBREAKR <- function(rsid_list,

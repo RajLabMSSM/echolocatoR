@@ -30,17 +30,8 @@ merged_results <- merge_coloc_results(all_obj=all_obj, results_level="snp", save
 }
 }
 \seealso{
-Other general: 
-\code{\link{.rbind.file.list}()},
-\code{\link{createDT_html}()},
-\code{\link{createDT}()},
-\code{\link{dt.replace}()},
-\code{\link{example_fullSS}()},
-\code{\link{fillNA_CS_PP}()},
-\code{\link{get_os}()},
-\code{\link{get_sample_size}()},
-\code{\link{startup_image}()},
-\code{\link{tryFunc}()}
+Other coloc: 
+\code{\link{merge_coloc_results_each}()}
 }
-\concept{general}
+\concept{coloc}
 \keyword{internal}

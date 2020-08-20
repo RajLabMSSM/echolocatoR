@@ -22,7 +22,6 @@ Other general:
 \code{\link{fillNA_CS_PP}()},
 \code{\link{get_os}()},
 \code{\link{get_sample_size}()},
-\code{\link{merge_coloc_results}()},
 \code{\link{tryFunc}()}
 }
 \concept{general}
