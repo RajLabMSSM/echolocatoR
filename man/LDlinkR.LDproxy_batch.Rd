@@ -11,7 +11,8 @@ LDlinkR.LDproxy_batch(
   snp,
   pop = "CEU",
   r2d = "r2",
-  threshold = 0.8,
+  min_corr = F,
+  save_dir = NULL,
   verbose = T
 )
 }

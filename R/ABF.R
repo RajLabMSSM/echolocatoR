@@ -26,7 +26,8 @@ ABF <- function(subset_DT,
                 PP_threshold=.95,
                 sample_size=NULL,
                 sdY=NULL,
-                case_control=T){
+                case_control=T,
+                verbose=T){
   #data.table::fread("Data/GWAS/Nalls23andMe_2019/LRRK2/LRRK2_Nalls23andMe_2019_subset.txt")
   if(case_control){
    dataset <- list(beta = subset_DT$Effect,

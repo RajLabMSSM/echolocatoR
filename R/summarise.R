@@ -1127,7 +1127,8 @@ SUMMARISE.plot_dataset_overlap <- function(merged_DT,
                                            snp_filter="!is.na(SNP)",
                                            filename=NA,
                                            formula_str="~ SNP + Dataset",
-                                           triangle=F){
+                                           triangle=F,
+                                           proxies=NULL){
   snp_xtab <- subset(merged_DT,  eval(parse(text = snp_filter)), .drop=F) %>%
     stats::xtabs(formula = stats::as.formula(formula_str),
                  sparse = F,
@@ -1159,7 +1160,7 @@ SUMMARISE.plot_dataset_overlap <- function(merged_DT,
   } else {
     pheatmap::pheatmap(snp_xprod,
                        display_numbers=T,
-                       # filename = filename,
+                       filename = filename,
                        # number_color = "white",
                        main = paste("SNP overlap:",snp_filter),
                        angle_col = 45,

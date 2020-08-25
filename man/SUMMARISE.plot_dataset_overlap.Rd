@@ -9,7 +9,8 @@ SUMMARISE.plot_dataset_overlap(
   snp_filter = "!is.na(SNP)",
   filename = NA,
   formula_str = "~ SNP + Dataset",
-  triangle = F
+  triangle = F,
+  proxies = NULL
 )
 }
 \description{

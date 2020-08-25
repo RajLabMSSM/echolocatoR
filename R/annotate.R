@@ -180,7 +180,7 @@ merge_finemapping_results_each <- function(study_dirs,
                                            nThread=4,
                                            verbose=T){
 
-  if(file.exists(merged_path) & force_new_merge){
+  if(file.exists(merged_path) & force_new_merge==F){
     merged_DT <- data.table::fread(merged_path, nThread = nThread)
   } else {
     merged_DT <- lapply(study_dirs,

@@ -1458,18 +1458,31 @@ LD.get_lead_r2 <- function(finemap_dat,
 LDlinkR.LDproxy_batch <- function(snp,
                                   pop="CEU",
                                   r2d = "r2",
-                                  threshold=.8,
+                                  min_corr=F,
+                                  save_dir=NULL,
                                   verbose=T){
   printer("LD:LDlinkR:: Retrieving proxies of",length(snp),"SNPs",v=verbose)
   res <- LDlinkR::LDproxy_batch(snp = snp,
                                 pop = pop,
                                 r2d = r2d,
+                                append = T,
                                 token = "df4298d58dc4")
   printer("+ LD:LDlinkR::",length(unique(res$RS_Number)),"unique proxies returned.",v=verbose)
-  if(threshold!=F){
-    res <- subset(res, eval(parse(text = toupper(r2d)))>=threshold)
-    printer("+ LD:LDlinkR::",length(unique(res$RS_Number)),"remaining at R2 ≤",threshold,v=verbose)
+  if(min_corr!=F){
+    res <- subset(res, eval(parse(text = toupper(r2d)))>=min_corr)
+    printer("+ LD:LDlinkR::",length(unique(res$RS_Number)),"remaining at",r2d," ≥",min_corr,v=verbose)
   }
-  return(res)
+  proxy_files <- 'combined_query_snp_list.txt' # Automatically named
+  if(!is.null(save_dir)){
+    # LDproxy_batch() saves all results  as individual .txt files in the cwd by default.
+    ## It's pretty dumb that they don't let you control if and where these are saved,
+    ## so we have to do this manually afterwards.
+    # local_dir <- "~/Desktop"
+    # proxy_files <- list.files(path= "./",
+    #                           pattern = "^rs.*\\.txt$", full.names = T)
+    new_path <- file.path(save_dir,basename(proxy_files))
+    out <- file.rename(proxy_files, new_path)
+    return(new_path)
+  }else{return(proxy_files)}
 }
 
