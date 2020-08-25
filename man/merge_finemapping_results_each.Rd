@@ -7,6 +7,9 @@ then return a subset of those files as one super-merged table.}
 \usage{
 merge_finemapping_results_each(
   study_dirs,
+  LD_reference = "1KGphase3",
+  minimum_support = 1,
+  include_leadSNPs = T,
   return_filter = "!is.na(SNP)",
   merged_path = "merged_DT.csv.gz",
   force_new_merge = F,

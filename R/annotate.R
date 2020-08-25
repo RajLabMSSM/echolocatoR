@@ -174,6 +174,9 @@ merge_finemapping_results <- function(dataset="./Data/GWAS",
 #'
 #' @family annotate
 merge_finemapping_results_each <- function(study_dirs,
+                                           LD_reference="1KGphase3",
+                                           minimum_support=1,
+                                           include_leadSNPs=T,
                                            return_filter="!is.na(SNP)",
                                            merged_path="merged_DT.csv.gz",
                                            force_new_merge=F,
@@ -187,10 +190,11 @@ merge_finemapping_results_each <- function(study_dirs,
                         function(study){
                           printer("Study:",basename(study))
                           merged_all <- merge_finemapping_results(dataset = study,
-                                                                  LD_reference = "1KGphase3",
-                                                                  minimum_support = 1,
-                                                                  include_leadSNPs = T,
-                                                                  save_path = file.path(study,paste0(study,".merged.csv.gz")) )
+                                                                  LD_reference = LD_reference,
+                                                                  minimum_support = minimum_support,
+                                                                  include_leadSNPs = include_leadSNPs,
+                                                                  save_path = file.path(study,paste0(study,".merged.csv.gz")),
+                                                                  verbose = verbose)
                           # Return subset for merged file
                           merged_top <- subset(merged_all, eval(parse(text = return_filter)))
                           return(merged_top)

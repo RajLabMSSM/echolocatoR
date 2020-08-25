@@ -15,7 +15,8 @@ ABF(
   PP_threshold = 0.95,
   sample_size = NULL,
   sdY = NULL,
-  case_control = T
+  case_control = T,
+  verbose = T
 )
 }
 \description{
