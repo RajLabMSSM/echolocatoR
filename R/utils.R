@@ -553,8 +553,10 @@ reassign_leadSNPs <- function(merged_dat,
                               snp_col="SNP",
                               pval_col="P",
                               effect_col="Effect",
+                              grouping_vars=c("Dataset","Locus"),
                               verbose=T){
-  merged_dat$id <-  paste(merged_dat$Dataset,merged_dat$Locus,sep=".")
+  # dplyr::mutate(merged_dat, id=paste(eval(parse(text=)), sep="."))
+  merged_dat$id <- paste(merged_dat$Dataset,merged_dat$Locus,sep=".")
   merged_tmp <- dplyr::rename(merged_dat,
                               SNP=snp_col,
                               P=pval_col,
