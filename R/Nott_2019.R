@@ -537,8 +537,7 @@ NOTT_2019.prepare_peak_overlap <- function(merged_DT,
 
 NOTT_2019.prepare_regulatory_overlap <- function(merged_DT,
                                                   snp_filter){
-  gr.reg <- NOTT_2019.get_regulatory_regions(finemap_dat = merged_DT,
-                                             as.granges = T)
+  gr.reg <- NOTT_2019.get_regulatory_regions(as.granges = T)
   finemap_sub <- subset(merged_DT, eval(parse(text=snp_filter)), .drop=F)
   gr.hits.reg <- GRanges_overlap(dat1 = finemap_sub,
                                  chrom_col.1 = "CHR",
@@ -567,8 +566,7 @@ NOTT_2019.prepare_regulatory_overlap <- function(merged_DT,
 #' @source
 #' \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
 #' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
-NOTT_2019.get_regulatory_regions <- function(finemap_dat,
-                                             as.granges=F,
+NOTT_2019.get_regulatory_regions <- function(as.granges=F,
                                              nThread=1,
                                              verbose=T){
   selected_sheets <- grep("promoters$|enhancers$",names(echolocatoR::NOTT_2019.interactome), value = T)
@@ -679,8 +677,7 @@ NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
                                            marker_key = marker_key)
 
   # get promoter/enhancers
-  regions <- NOTT_2019.get_regulatory_regions(finemap_dat = finemap_dat,
-                                              nThread = nThread,
+  regions <- NOTT_2019.get_regulatory_regions(nThread = nThread,
                                               as.granges = T,
                                               verbose = verbose)
   # has_chr <- grepl("chr",unique(finemap_dat$CHR)[1])

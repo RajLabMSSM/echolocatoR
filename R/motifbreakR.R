@@ -136,43 +136,6 @@ MOTIFBREAK.calc_pvals <- function(mb.results,
 
 
 
-#' Plot \code{\link{motifbreakR}} results
-#'
-#' @source
-#' \strong{Publication:}
-#' \url{https://pubmed.ncbi.nlm.nih.gov/26272984/}
-#'
-#' \strong{GitHub:}
-#' \url{https://github.com/Simon-Coetzee/MotifBreakR}
-#'
-#' @examples
-#' \dontrun{
-#' # mb.results <- readRDS("/sc/arion/projects/pd-omics/brian/motifbreakR/motifbreakR_results.rds")
-#' mb.results <- readRDS("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/motifbreakR/motifbreakR_results.rds")
-#' MOTIFBREAKR.plot(mb.results=mb.results, rsid="rs114528427")
-#'
-#' # Example from motifbreakR
-#' library(motifbreakR)
-#' data("example.results")
-#' motifbreakR::plotMB(mb.results=example.results, "rs2661839", effect = "strong")
-#' }
-#' @export
-MOTIFBREAKR.plot <- function(mb.results,
-                             rsid=NULL,
-                             effect=c("strong","weak")){
-  library(BSgenome); library(BSgenome.Hsapiens.UCSC.hg19); library(motifbreakR);
-  printer("+ MOTIFBREAKR::",length(subset(mb.results, effect=="strong")),"strong effects detected.")
-  printer("+ MOTIFBREAKR::",length(subset(mb.results, effect=="weak")),"weak effects detected.")
-
-  # rsid<-"rs7294619"
-  if(is.null(rsid)){rsid <- names(mb.results)[20]}
-  motifbreakR::plotMB(results = mb.results[1:10],
-                      rsid = names(mb.results)[5],
-                      effect = c("strong")
-                      )
-}
-
-
 
 
 #' Summarise \code{\link{motifbreakR}} + \code{\link{echolocatoR}} results
@@ -190,23 +153,32 @@ MOTIFBREAKR.plot <- function(mb.results,
 #' data("merged_DT")
 #' microglia_TF <- read.csv("~/Desktop/Fine_Mapping/resources/microglia_TF.csv")
 #'
-#' # root_dir <- "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/motifbreakR"
-#' root_dir <- "/sc/arion/projects/pd-omics/brian/results/_genome_wide/motifbreakR"
-#' mb.results <- readRDS(file.path(root_dir, "motifbreakR_results.rds"))
-#' mb.lrrk2 <- readRDS("/pd-omics/brian/results/_genome_wide/motifbreakR/motifbreakR_results.p_values_LRRK2.rds")
-#' mb.encode <- readRDS("/pd-omics/brian/results/_genome_wide/motifbreakR/motifbreakR_results.encode.lrrk2.rds")
-#' mb.DYRK1A_FCGR2A <- readRDS(file.path("/sc/arion/projects/pd-omics/brian/Fine_Mapping","mb.results_p.DYRK1A_FCGR2A.RDS"))
-#' mb.MED12L<- readRDS(file.path("/sc/arion/projects/pd-omics/brian/Fine_Mapping","MED12L.pvalues.RDS"))
+#' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/motifbreakR"
+#' # mb.results <- readRDS(file.path(root, "motifbreakR_results.rds"))
+#' mb.results <- readRDS("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/motifbreakR/motifbreakR_results.rds")
+#'
+#' mb.lrrk2 <- readRDS(file.path(root, "motifbreakR_results.p_values_LRRK2.rds"))
+#' mb.encode <- readRDS(file.path(root, "motifbreakR_results.encode.lrrk2.rds"))
+#' mb.DYRK1A_FCGR2A <- readRDS(file.path(root,"mb.results_p.DYRK1A_FCGR2A.RDS"))
+#' mb.MED12L<- readRDS(file.path(root,"MED12L.pvalues.RDS"))
+#'
+#' mb.sub <- subset(mb.results, SNP_id %in% subset(merged_DT, Locus=="DNAH17" & (leadSNP | Consensus_SNP))$SNP)
+#' mb.DNAH17 <- motifbreakR::calculatePvalue(results=mb.sub); saveRDS(mb.DNAH17, file.path(root,"DNAH17.pvalues.RDS"))
+#' mb.DNAH17 <- readRDS(file.path(root,"DNAH17.pvalues.RDS"))
+#'
+#' MOTIFBREAKR.filter(merged_DT, mb.lrrk2, pct_threshold=NULL, effect_strengths=NULL)
 #' }
 #' @export
-MOTIFBREAKR.summarize <- function(merged_DT,
-                                  mb.results,
-                                  pct_threshold=.7,
-                                  pvalue_threshold=1e-4,
-                                  effect_strengths=c("strong"),
-                                  snp_filter="Consensus_SNP==T",
-                                  no_no_loci=NULL,
-                                  verbose=T){
+MOTIFBREAKR.filter <- function(merged_DT,
+                                mb.results,
+                                pct_threshold=.7,
+                                pvalue_threshold=1e-4,
+                                qvalue_threshold=.05,
+                                effect_strengths=c("strong"),
+                                snp_filter="Consensus_SNP==T",
+                                top_TF_hits=F,
+                                no_no_loci=NULL,
+                                verbose=T){
   # Quickstart
   # pct_threshold=.7; verbose=T;
   # pvalue_threshold=1e-4;
@@ -239,7 +211,8 @@ MOTIFBREAKR.summarize <- function(merged_DT,
 
                   risk_pvalue=ifelse(risk_allele=="REF", Refpvalue, Altpvalue),
                   # nonrisk_pvalue=ifelse(risk_allele=="ALT", scoreRef, scoreAlt)
-                  )
+                  ) %>%
+    dplyr::mutate(risk_qvalue = stats::p.adjust(p = risk_pvalue, method = "bonferroni"))
   printer("+ MOTIFBREAKR",nrow(mb.merge),"SNPs in results.", v=verbose)
 
   if(!is.null(snp_filter)){
@@ -258,11 +231,13 @@ MOTIFBREAKR.summarize <- function(merged_DT,
     mb.merge <- subset(mb.merge, risk_pvalue < pvalue_threshold)
     printer("+ MOTIFBREAKR",nrow(mb.merge),"SNPs in results @",
             paste0("`pvalue_threshold=",pvalue_threshold,"`"),v=verbose)
-
   }
 
-  # select_cols <- c("Locus","SNP","Consensus_SNP","geneSymbol","dataSource","seqMatch","risk_pct","risk_score","risk_pvalue")
-  data.table::fwrite(data.frame(mb.sig), "~/Downloads/motifbreakR_sig_rs6781790-rs759905.csv")
+  if(!is.null(qvalue_threshold)){
+    mb.merge <- subset(mb.merge, risk_qvalue < qvalue_threshold)
+    printer("+ MOTIFBREAKR",nrow(mb.merge),"SNPs in results @",
+            paste0("`qvalue_threshold=",qvalue_threshold,"`"),v=verbose)
+  }
 
   if(!is.null(pct_threshold)){
     # Filter where pval is sig AND it's the effect allele in the GWAS
@@ -274,8 +249,100 @@ MOTIFBREAKR.summarize <- function(merged_DT,
     printer("+ MOTIFBREAKR",nrow(mb.merge),"SNPs in results @",
             paste0("`pct_threshold=",pct_threshold,"`"),v=verbose)
   }
+  if(top_TF_hits){
+    mb.merge <- mb.merge %>%
+      dplyr::group_by(Locus, SNP, geneSymbol) %>%
+      dplyr::arrange(risk_pvalue, dplyr::desc(risk_score)) %>%
+      dplyr::slice(1) %>% data.table::data.table()
+  }
+  # select_cols <- c("Locus","SNP","Consensus_SNP","geneSymbol","dataSource","seqMatch","risk_pct","risk_score","risk_pvalue")
+  # if(!is.null(save_path)){
+  #   data.table::fwrite(data.frame(mb.merge), "~/Downloads/motifbreakR_sig_rs6781790-rs759905.csv")
+  # }
+  return(mb.merge)
+}
 
 
+
+
+
+
+
+
+#' Plot \code{\link{motifbreakR}} results
+#'
+#' @source
+#' \strong{Publication:}
+#' \url{https://pubmed.ncbi.nlm.nih.gov/26272984/}
+#'
+#' \strong{GitHub:}
+#' \url{https://github.com/Simon-Coetzee/MotifBreakR}
+#'
+#' @examples
+#' \dontrun{
+#' # Example from motifbreakR
+#' library(motifbreakR)
+#' data("example.results")
+#' library(echolocatoR)
+#' data("merged_DT")
+#' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/motifbreakR"
+#'
+#' mb.results<- readRDS(file.path(root,"DNAH17.pvalues.RDS"))
+#'
+#' # Get overlap with PEAKS
+#' # PEAKS <- NOTT_2019.get_epigenomic_peaks(convert_to_GRanges = T)
+#' REGIONS <- NOTT_2019.get_regulatory_regions(as.granges = T)
+#' gr.hits <- GRanges_overlap(dat1 = subset(merged_DT, Consensus_SNP), chrom_col.1 = "CHR", start_col.1 = "POS", end_col.1 = "POS", dat2 = REGIONS)
+#' mb.filter <- MOTIFBREAKR.filter(merged_DT = merged_DT, mb.results = mb.results, pct_threshold=NULL)
+#'
+#' subset(mb.filter, SNP_id %in% gr.hits$SNP)
+#' plot_paths <- MOTIFBREAKR.plot(mb.results=mb.results, mb.filter=mb.filter, save_dir="~/Desktop")
+#' }
+#' @export
+MOTIFBREAKR.plot <- function(mb.results,
+                             mb.filter=NULL,
+                             rsid=NULL,
+                             effect=c("strong","weak"),
+                             save_dir=NULL,
+                             height=3,
+                             width=7){
+  library(BSgenome); library(BSgenome.Hsapiens.UCSC.hg19); library(motifbreakR);
+  mb.results <- MOTIFBREAKR.make_id(mb.results = mb.results)
+  if(!is.null(mb.filter)){
+    mb.filter <- MOTIFBREAKR.make_id(mb.results = mb.filter)
+    mb.results <- subset(mb.results, id %in% mb.filter$id)
+  }
+  if(is.null(rsid)) rsid <- unique(mb.results$SNP_id)
+  plot_paths <- c()
+  # par(mfrow=c(2,2))
+  for(rs in rsid){
+    save_path <- file.path(save_dir,paste0(rs,'.png'))
+    plot_paths <- append(plot_paths, save_path)
+    if(!is.null(save_dir)) png(filename = save_path,
+                               height = height,
+                               width = width)
+    motifbreakR::plotMB(results = mb.results,
+                        rsid = rs,
+                        effect = effect)
+    dev.off();
+  }
+  return(plot_paths)
+}
+
+
+
+
+
+MOTIFBREAKR.make_id <- function(mb.results){
+  mb.results$id <- paste(mb.results$SNP_id, mb.results$dataSource, mb.results$providerId, sep='_')
+  return(mb.results)
+}
+
+
+
+
+
+MOTIFBREAKR.summarize <- function(){
 
   # Tally hits hits per
   db_tally <- mb.merge %>%
@@ -306,22 +373,18 @@ MOTIFBREAKR.summarize <- function(merged_DT,
                      # all_disrupting_SNPs=paste(unique(SNP), collapse = '; '),
                      # all_TFs=paste(unique(geneSymbol), collapse='; '),
                      # all_sequences=paste(unique(gsub(" ","",seqMatch)), collapse='; ')
-                     ) %>%
+    ) %>%
     dplyr::mutate(top_disrupting_SNP_is_lead=top_disrupting_SNP %in% unique(subset(mb.merge, leadSNP)$SNP),
                   top_disrupting_SNP_in_UCS=top_disrupting_SNP %in% unique(subset(mb.merge, Support>0)$SNP),
                   top_disrupting_SNP_in_consensus=top_disrupting_SNP %in% unique(subset(mb.merge, Consensus_SNP)$SNP)
-) %>%
+    ) %>%
     data.frame() %>% unique()
 
   # if(save_path!=F){
   #   data.table::fwrite(locus_tally, "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/motifbreakR/motifbreakR_locus_tally_ALL.csv", sep=",")
   # }
-
- return(locus_tally)
+  return(locus_tally)
 }
-
-
-
 
 
 

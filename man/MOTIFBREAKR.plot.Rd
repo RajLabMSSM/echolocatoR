@@ -11,20 +11,37 @@
 \url{https://github.com/Simon-Coetzee/MotifBreakR}
 }
 \usage{
-MOTIFBREAKR.plot(mb.results, rsid = NULL, effect = c("strong", "weak"))
+MOTIFBREAKR.plot(
+  mb.results,
+  mb.filter = NULL,
+  rsid = NULL,
+  effect = c("strong", "weak"),
+  save_dir = NULL,
+  height = 3,
+  width = 7
+)
 }
 \description{
 Plot \code{\link{motifbreakR}} results
 }
 \examples{
 \dontrun{
-# mb.results <- readRDS("/sc/arion/projects/pd-omics/brian/motifbreakR/motifbreakR_results.rds")
-mb.results <- readRDS("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/motifbreakR/motifbreakR_results.rds")
-MOTIFBREAKR.plot(mb.results=mb.results, rsid="rs114528427")
-
 # Example from motifbreakR
 library(motifbreakR)
 data("example.results")
-motifbreakR::plotMB(mb.results=example.results, "rs2661839", effect = "strong")
+library(echolocatoR)
+data("merged_DT")
+root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/motifbreakR"
+
+mb.results<- readRDS(file.path(root,"DNAH17.pvalues.RDS"))
+
+# Get overlap with PEAKS
+# PEAKS <- NOTT_2019.get_epigenomic_peaks(convert_to_GRanges = T)
+REGIONS <- NOTT_2019.get_regulatory_regions(as.granges = T)
+gr.hits <- GRanges_overlap(dat1 = subset(merged_DT, Consensus_SNP), chrom_col.1 = "CHR", start_col.1 = "POS", end_col.1 = "POS", dat2 = REGIONS)
+mb.filter <- MOTIFBREAKR.filter(merged_DT = merged_DT, mb.results = mb.results, pct_threshold=NULL)
+
+subset(mb.filter, SNP_id \%in\% gr.hits$SNP)
+plot_paths <- MOTIFBREAKR.plot(mb.results=mb.results, mb.filter=mb.filter, save_dir="~/Desktop")
 }
 }
