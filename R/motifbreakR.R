@@ -171,7 +171,7 @@ MOTIFBREAK.calc_pvals <- function(mb.results,
 #' @export
 MOTIFBREAKR.filter <- function(merged_DT,
                                 mb.results,
-                                pct_threshold=.7,
+                                pct_threshold=NULL,
                                 pvalue_threshold=1e-4,
                                 qvalue_threshold=.05,
                                 effect_strengths=c("strong"),

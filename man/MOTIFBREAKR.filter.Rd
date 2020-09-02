@@ -7,7 +7,7 @@
 MOTIFBREAKR.filter(
   merged_DT,
   mb.results,
-  pct_threshold = 0.7,
+  pct_threshold = NULL,
   pvalue_threshold = 1e-04,
   qvalue_threshold = 0.05,
   effect_strengths = c("strong"),

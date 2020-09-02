@@ -511,9 +511,10 @@ SUMMARISE.CS_bin_plot <- function(merged_DT,
 #' @examples
 #' data("merged_DT");
 #' snp_groups <- SUMMARISE.get_SNPgroup_counts(merged_DT=merged_DT)
-SUMMARISE.get_SNPgroup_counts <- function(merged_DT){
+SUMMARISE.get_SNPgroup_counts <- function(merged_DT,
+                                          grouping_vars="Locus"){
   snp_groups <- suppressMessages(merged_DT %>%
-    dplyr::group_by(Locus) %>%
+    dplyr::group_by(.dots=grouping_vars) %>%
     dplyr::summarise(Total.SNPs=n_distinct(SNP, na.rm = T),
                      nom.sig.GWAS=n_distinct(SNP[P<.05], na.rm = T),
                      sig.GWAS=n_distinct(SNP[P<5e-8], na.rm = T),
@@ -522,10 +523,10 @@ SUMMARISE.get_SNPgroup_counts <- function(merged_DT){
                      topConsensus=n_distinct(SNP[Consensus_SNP & mean.PP==max(mean.PP)], na.rm = T ),
                      topConsensus.leadGWAS=n_distinct(SNP[Consensus_SNP & leadSNP], na.rm = T )) )
   message("Report:: all loci:")
-  print(snp_groups[,-1] %>% colSums() / n_distinct(snp_groups$Locus))
+  print( snp_groups[,!colnames(snp_groups) %in% grouping_vars] %>% colSums() / n_distinct(snp_groups$Locus))
   message("Report:: loci with at least one Consensus SNP:")
   consensus_present <- subset(snp_groups, Consensus > 0)
-  print(consensus_present[,-1] %>% colSums() / n_distinct(consensus_present$Locus))
+  print(consensus_present[,!colnames(consensus_present) %in% grouping_vars] %>% colSums() / n_distinct(consensus_present$Locus))
   return(data.frame(snp_groups))
 }
 

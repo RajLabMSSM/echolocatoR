@@ -1010,7 +1010,7 @@ example_fullSS <- function(fullSS_path="./Nalls23andMe_2019.fullSS_subset.tsv",
 #' @param all_obj Nested list object created by Jack.
 #' @param results_level Return coloc results at the
 #'  "summary" (one row per Locus:eGene pair) or "snp" level (one row per SNP).
-#' @param save_path Directory where you want the merged results to be saved as a compressed .tsv file.
+#' @param save_path File where you want the merged results to be saved.
 #' @family coloc
 #' @keywords internal
 #' @examples
@@ -1064,7 +1064,8 @@ merge_coloc_results <- function(all_obj,
     merged_results$N_controls <- merged_results$gwas.N - merged_results$N_cases
 
   if(save_path!=F){
-    data.table::fwrite(merged_results, file.path(save_path,paste0("merged_coloc_results.",results_level,".tsv.gz")),
+    data.table::fwrite(merged_results,
+                       save_path,
                        sep="\t", nThread=nThread)
   }
   return(merged_results)
@@ -1093,9 +1094,10 @@ merge_coloc_results <- function(all_obj,
 #' coloc_snp <- merge_coloc_results_each(coloc_rds_files=coloc_rds, save_path="/sc/arion/projects/pd-omics/brian/all_COLOC_results.Microglia_all_regions.snp-level.tsv.gz", results_level="snp", filter="leadSNP==T")
 merge_coloc_results_each <- function(coloc_rda_files,
                                      save_path=F,
+                                     save_each=F,
                                      results_level="summary",
-                                     ppH4_thresh=.5,
-                                     filter=F,
+                                     ppH4_thresh=0,
+                                     return_filter=F,
                                      force_new=T,
                                      nThread=4,
                                      verbose=T){
@@ -1106,15 +1108,24 @@ merge_coloc_results_each <- function(coloc_rda_files,
     merged_COLOC <- lapply(coloc_rda_files, function(f,
                                                .results_level=results_level,
                                                .ppH4_thresh=ppH4_thresh,
-                                               .filter=filter,
+                                               .return_filter=return_filter,
+                                               .save_path=save_path,
+                                               .save_each=save_each,
                                                .nThread=nThread,
                                                .verbose=verbose){
       i <- grep(f,coloc_rda_files)
       message(paste0("(",i,"/",length(coloc_rda_files),") "), f)
       load(f)
+      # Save a study-specific file with the full results
+      if(save_each){
+        subset_path <- file.path(dirname(.save_path),
+                                 gsub("_COLOC.RData$",paste0("_COLOC.",.results_level,"-level.tsv.gz"), basename(f)))
+        printer("+ Saving study-specific results ==>",subset_path,v=.verbose)
+      }  else {subset_path <- F}
       merged_coloc <- merge_coloc_results(all_obj = all_obj,
                                           results_level = .results_level,
                                           nThread = .nThread,
+                                          save_path = subset_path,
                                           verbose = F)
       if(.results_level=="summary"){
         merged_coloc <- subset(merged_coloc,  PP.H4.abf > .ppH4_thresh)
@@ -1135,7 +1146,7 @@ merge_coloc_results_each <- function(coloc_rda_files,
         printer("Assigning Locus-Gene specific lead SNPs",v=.verbose)
         lead.df <- merged_coloc %>%
                         dplyr::group_by(Dataset, Locus, Gene) %>%
-                        dplyr::arrange(qtl.pvalues,desc(abs(qtl.beta))) %>%
+                        dplyr::arrange(qtl.pvalues,dplyr::desc(abs(qtl.beta))) %>%
                         dplyr::slice(1) %>%
                         dplyr::mutate(leadSNP=T) %>%
                         dplyr::select(c("Study","Dataset","Locus","Gene","snp","leadSNP"))
@@ -1146,7 +1157,7 @@ merge_coloc_results_each <- function(coloc_rda_files,
         merged_coloc[is.na(merged_coloc$leadSNP),"leadSNP"] <- F
       }
        # Filter
-      if(filter!=F) merged_coloc <- subset(merged_coloc, eval(parse(text = .filter)))
+      if(.return_filter!=F) merged_coloc <- subset(merged_coloc, eval(parse(text = .return_filter)))
       return(merged_coloc)
     }) %>% data.table::rbindlist(fill=T)
     if(save_path!=F){

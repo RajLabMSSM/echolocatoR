@@ -18,7 +18,7 @@ merge_coloc_results(
 \item{results_level}{Return coloc results at the
 "summary" (one row per Locus:eGene pair) or "snp" level (one row per SNP).}
 
-\item{save_path}{Directory where you want the merged results to be saved as a compressed .tsv file.}
+\item{save_path}{File where you want the merged results to be saved.}
 }
 \description{
 Convert Jack's coloc results to \emph{echolocatoR} format

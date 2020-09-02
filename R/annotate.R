@@ -160,6 +160,7 @@ merge_finemapping_results <- function(dataset="./Data/GWAS",
   if(save_path!=F){
     dir.create(dirname(save_path),showWarnings = F, recursive = T)
     # openxlsx::write.xlsx(merged_results, xlsx_path)
+    printer("+ Saving merged results ==>",save_path,v=verbose)
     data.table::fwrite(merged_results, save_path, nThread = nThread)
   }
   return(merged_results)
@@ -193,13 +194,13 @@ merge_finemapping_results_each <- function(study_dirs,
                                                                   LD_reference = LD_reference,
                                                                   minimum_support = minimum_support,
                                                                   include_leadSNPs = include_leadSNPs,
-                                                                  save_path = file.path(study,paste0(study,".merged.csv.gz")),
+                                                                  save_path = file.path(study,paste(study,LD_reference,"merged.csv.gz",sep=".")),
                                                                   verbose = verbose)
                           # Return subset for merged file
                           merged_top <- subset(merged_all, eval(parse(text = return_filter)))
                           return(merged_top)
                         }) %>% data.table::rbindlist(fill = T)
-    # Save
+    # Save merged multi-study file
     if(merged_path!=F){
       printer("+ SUMMARISE:: Saving merged subset after filtering criterion:",return_filter,v=verbose)
       data.table::fwrite(merged_DT, merged_path,

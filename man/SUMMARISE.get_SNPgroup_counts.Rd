@@ -4,7 +4,7 @@
 \alias{SUMMARISE.get_SNPgroup_counts}
 \title{Tally locus-specific SNP group sizes}
 \usage{
-SUMMARISE.get_SNPgroup_counts(merged_DT)
+SUMMARISE.get_SNPgroup_counts(merged_DT, grouping_vars = "Locus")
 }
 \description{
 Tally locus-specific SNP group sizes

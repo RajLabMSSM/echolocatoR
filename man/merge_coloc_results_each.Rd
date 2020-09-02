@@ -7,9 +7,10 @@
 merge_coloc_results_each(
   coloc_rda_files,
   save_path = F,
+  save_each = F,
   results_level = "summary",
-  ppH4_thresh = 0.5,
-  filter = F,
+  ppH4_thresh = 0,
+  return_filter = F,
   force_new = T,
   nThread = 4,
   verbose = T
@@ -25,9 +26,9 @@ merge_coloc_results_each(
 
 \item{ppH4_thresh}{Threshold to filter summary-level results.}
 
-\item{filter}{Flexible row filtering.}
-
 \item{force_new}{If the \code{save_path} file already exists, overwrite it.}
+
+\item{filter}{Flexible row filtering.}
 }
 \description{
 Iterate merging of coloc results across files
