@@ -189,7 +189,7 @@ merge_finemapping_results_each <- function(study_dirs,
   } else {
     merged_DT <- lapply(study_dirs,
                         function(study_dir){
-                          printer("Study:",basename(study))
+                          printer("Study:",basename(study_dir))
                           merged_all <- merge_finemapping_results(dataset = study_dir,
                                                                   LD_reference = LD_reference,
                                                                   minimum_support = minimum_support,
