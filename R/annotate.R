@@ -188,13 +188,13 @@ merge_finemapping_results_each <- function(study_dirs,
     merged_DT <- data.table::fread(merged_path, nThread = nThread)
   } else {
     merged_DT <- lapply(study_dirs,
-                        function(study){
+                        function(study_dir){
                           printer("Study:",basename(study))
-                          merged_all <- merge_finemapping_results(dataset = study,
+                          merged_all <- merge_finemapping_results(dataset = study_dir,
                                                                   LD_reference = LD_reference,
                                                                   minimum_support = minimum_support,
                                                                   include_leadSNPs = include_leadSNPs,
-                                                                  save_path = file.path(study,paste(study,LD_reference,"merged.csv.gz",sep=".")),
+                                                                  save_path = file.path(study_dir,paste(basename(study_dir),LD_reference,"merged.csv.gz",sep=".")),
                                                                   verbose = verbose)
                           # Return subset for merged file
                           merged_top <- subset(merged_all, eval(parse(text = return_filter)))
