@@ -471,10 +471,9 @@ finemap_pipeline <- function(locus,
                                     remove_tmps = remove_tmps,
                                     verbose = verbose)
   #### Extract LD ####
-  message("\n--- Step 2: Extract Linkage Disequilibrium ⏬ ---");
- 
+  message("\n--- Step 2: Extract Linkage Disequilibrium 🔺 --");
 
-   D_list <- LD.load_or_create(locus_dir=locus_dir,
+  LD_list <- LD.load_or_create(locus_dir=locus_dir,
                                subset_DT=subset_DT,
                                LD_reference=LD_reference,
                                # Optional args (with defaults)
@@ -498,7 +497,8 @@ finemap_pipeline <- function(locus,
   ## Do this step AFTER saving the LD to disk so that it's easier to re-subset
   ## in different ways later without having to redownload LD.
   message("\n-------------- Step 3: Filter SNPs 🚰 -------------");
-  LD_list <- LD.filter_LD(LD_list=LD_list,
+  L
+D_list <- LD.filter_LD(LD_list=LD_list,
                           remove_correlates=remove_correlates,
                           min_r2=min_r2,
                           verbose=verbose)
