@@ -11,7 +11,7 @@ LD.load_or_create(
   LD_reference = "1KGphase1",
   LD_genome_build = "hg19",
   superpopulation = "EUR",
-  download_reference = T,
+  remote_LD = T,
   download_method = "direct",
   vcf_folder = NULL,
   LD_block = F,
@@ -52,9 +52,9 @@ Setting the superpopulation is not currently possible when \code{LD_reference="U
 \item{"SAS"}{South Asian}
 }}
 
-\item{download_reference}{When acquiring LD matrixes,
+\item{remote_LD}{When acquiring LD matrixes,
 the default is to delete the full vcf or npz files after \pkg{echolocatoR} has extracted the necssary subset.
-However, if you wish to keep these full files (which can be quite large) set \code{download_reference=T}.}
+However, if you wish to keep these full files (which can be quite large) set \code{remote_LD=T}.}
 
 \item{LD_block}{Calculate LD blocks with \emph{plink} and only include the block to which the lead SNP belongs.}
 

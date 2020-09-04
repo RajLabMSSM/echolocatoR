@@ -301,9 +301,9 @@
 #'  \item{"EUR"}{European}
 #'  \item{"SAS"}{South Asian}
 #'  }
-#' @param download_reference When acquiring LD matrixes,
+#' @param remote_LD When acquiring LD matrixes,
 #'  the default is to delete the full vcf or npz files after \pkg{echolocatoR} has extracted the necssary subset.
-#'  However, if you wish to keep these full files (which can be quite large) set \code{download_reference=T}.
+#'  However, if you wish to keep these full files (which can be quite large) set \code{remote_LD=T}.
 #' @param plot_LD Whether to plot a subset of the LD matix.
 #'
 #'
@@ -375,7 +375,7 @@ finemap_pipeline <- function(locus,
 
                              LD_reference="1KGphase1",
                              superpopulation="EUR",
-                             download_reference=T,
+                             remote_LD=T,
                              download_method="direct",
                              min_POS=NA,
                              max_POS=NA,
@@ -387,6 +387,7 @@ finemap_pipeline <- function(locus,
                              min_r2=0,
                              LD_block=F,
                              LD_block_size=.7,
+                             vcf_folder=NULL,
                              # min_Dprime=F,
                              query_by="coordinates",
                              remove_variants=F,
@@ -475,19 +476,20 @@ finemap_pipeline <- function(locus,
                                subset_DT=subset_DT,
                                LD_reference=LD_reference,
                                # Optional args (with defaults)
-                                 force_new_LD=force_new_LD,
-                                 LD_genome_build=LD_genome_build,
-                                 superpopulation=superpopulation,
-                                 download_reference=download_reference,
-                                 download_method=download_method,
-                                 LD_block=LD_block,
-                                 LD_block_size=LD_block_size,
-                                 remove_correlates=remove_correlates,
-                                 server=server,
-                                 remove_tmps=remove_tmps,
-                                 conda_env=conda_env,
-                                 nThread=nThread,
-                                 verbose=verbose)
+                               force_new_LD=force_new_LD,
+                               LD_genome_build=LD_genome_build,
+                               superpopulation=superpopulation,
+                               remote_LD=remote_LD,
+                               download_method=download_method,
+                               LD_block=LD_block,
+                               LD_block_size=LD_block_size,
+                               remove_correlates=remove_correlates,
+                               server=server,
+                               remove_tmps=remove_tmps,
+                               vcf_folder=vcf_folder,
+                               conda_env=conda_env,
+                               nThread=nThread,
+                               verbose=verbose)
 
   #### Filter SNPs####
   # Remove pre-specified SNPs
@@ -680,8 +682,9 @@ finemap_loci <- function(loci,
                          LD_reference="1KGphase1",
                          superpopulation="EUR",
                          download_method="direct",
+                         vcf_folder=NULL,
                          topVariants=3,
-                         download_reference=T,
+                         remote_LD=T,
                          min_POS=NA,
                          max_POS=NA,
                          min_MAF=NA,
@@ -784,6 +787,7 @@ finemap_loci <- function(loci,
                                      min_POS=min_pos,
                                      max_POS=max_pos,
                                      min_MAF=min_MAF,
+                                     vcf_folder=vcf_folder,
 
                                      trim_gene_limits=gene_limits,
                                      max_snps=max_snps,

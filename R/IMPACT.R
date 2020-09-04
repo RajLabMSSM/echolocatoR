@@ -298,6 +298,12 @@ prepare_mat_meta <- function(TOP_IMPACT,
 #' @examples
 #' \dontrun{
 #' ANNOT_MELT <- data.table::fread("~/Desktop/Fine_mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/IMPACT/IMPACT_overlap.csv.gz")
+#' ANNOT_MELT <- update_cols(subset(ANNOT_MELT, select=-c(SUSIE.Probability,FINEMAP.Probability)))
+#' ## Remove POLYFUN results as this introduces circularity (Polyfun trains on data from ENCODE/Roadmap, as does IMPACT)
+#' annot_melt_tmp <- find_consensus_SNPs(ANNOT_MELT, exclude_methods = "POLYFUN_SUSIE", sort_by_support = F)
+#' ANNOT_MELT$Consensus_SNP_noPF <- annot_melt_tmp$Consensus_SNP
+#'
+#' # Remove no no loci
 #' no_no_loci =  c("HLA-DRB5","MAPT","ATG14","SP1","LMNB1","ATP6V0A1", "RETREG3","UBTF","FAM171A2","MAP3K14","CRHR1","MAPT-AS1","KANSL1","NSF","WNT3")
 #' ANNOT_MELT <- IMPACT.postprocess_annotations(ANNOT_MELT, no_no_loci = no_no_loci)
 #' }
@@ -312,11 +318,20 @@ IMPACT_heatmap <- function(ANNOT_MELT){
   #                                              all_snps_in_range=T,
   #                                              top_annotations_only=F)
   # data.table::fwrite(ANNOT_MELT,"../../data/IMPACT/IMPACT707/Annotations/IMPACT_overlap.csv.gz")
-
-  snp.groups <- c("Lead_GWAS" = "leadSNP==T",
+  # subset(ANNOT_MELT,
+  #         SNP %in% sample(ANNOT_MELT$SNP, size=3) )
+  snp.groups <- c("Random" = "SNP %in% sample(ANNOT_MELT$SNP, size=3)",
+                  "All" = "!is.na(SNP)",
+                  "GWAS_nom. sig."="P<0.05",
+                  "GWAS_sig."="P<5e-8",
+                  "GWAS_lead" = "leadSNP==T",
+                  "ABF_CS"="ABF.CS>0",
+                  "SUSIE_CS"="SUSIE.CS>0",
+                  "POLYFUN_SUSIE_CS"="POLYFUN_SUSIE.CS>0",
+                  "FINEMAP_CS"="FINEMAP.CS>0",
                   "UCS"="Support>0",
-                  "Consensus"="Consensus_SNP"
-                  # "Top_Consensus"="topConsensus"
+                  "Consensus"="Consensus_SNP==T",
+                  "Consensus_(-POLYFUN)"="Consensus_SNP_noPF==T"
                   )
   TOP_IMPACT <- lapply(names(snp.groups), function(x){
     print(x)
@@ -353,9 +368,11 @@ IMPACT_heatmap <- function(ANNOT_MELT){
   boxplot_mat <- data.table::dcast(TOP_IMPACT_all,
                                   formula ="rowID ~ SNP_group",
                                   value.var="mean_IMPACT") %>%
-   dplyr::select(Lead_GWAS, UCS, Consensus)
+   dplyr::select(GWAS_lead, UCS, Consensus)
 
-  bp <- IMPACT.snp_group_boxplot(TOP_IMPACT_all)
+  bp <- IMPACT.snp_group_boxplot(TOP_IMPACT_all,
+                                 save_path="~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/IMPACT/snp_groups.mean_topIMPACT.png",
+                                 width = 11)
   # res <- pairwise.t.test(x =  TOP_IMPACT_all$mean_IMPACT,
   #                        g =  TOP_IMPACT_all$SNP_group)
   # res
@@ -591,27 +608,39 @@ IMPACT_heatmap <- function(ANNOT_MELT){
 #' bp <- IMPACT.snp_group_boxplot(TOP_IMPACT_all, method="wilcox.test")
 #' }
 IMPACT.snp_group_boxplot <- function(TOP_IMPACT_all,
-                                      method="t.test",
-                                      show_plot=T){
+                                     method="wilcox.test",
+                                     comparisons_filter=function(x){if("Consensus" %in% x) return(x)},
+                                     show_plot=T,
+                                     save_path=F,
+                                     height=10,
+                                     width=10){
   library(ggpubr)
   # tests <- compare_means(max_IMPACT ~ SNP_group,  data = TOP_IMPACT_all, method=method)
-  snp.groups=levels(TOP_IMPACT_all$SNP_group)
-  comparisons <- list(c(snp.groups[1],snp.groups[2]),
-                      c(snp.groups[2],snp.groups[3]),
-                      c(snp.groups[1],snp.groups[3]))
+  TOP_IMPACT_all$SNP_group <- gsub("_","\n",TOP_IMPACT_all$SNP_group)
+  snp.groups=unique(TOP_IMPACT_all$SNP_group)
+  comparisons <- utils::combn(x = as.character(snp.groups),
+                              m=2,
+                              FUN = comparisons_filter,
+                              simplify = F) %>%
+    purrr::compact()
 
-  bp <- ggboxplot(TOP_IMPACT_all,
-                 x = "SNP_group", y = "max_IMPACT",
+  bp <- ggpubr::ggviolin(TOP_IMPACT_all,
+                 x = "SNP_group", y = "mean_IMPACT",
                  fill = "SNP_group",
-                 alpha=.6) +
-    stat_compare_means(method = method, comparisons = comparisons, label = "p.signif") +
-    stat_compare_means(method = method, comparisons = comparisons, label = "p.format", vjust=1.75)  +
+                 alpha=.6,
+                 add = "boxplot",
+                 add.params = list(alpha=.5, width=1)) +
+    ggpubr::stat_compare_means(method = method, comparisons = comparisons, label = "p.signif") +
+    ggpubr::stat_compare_means(method = method, comparisons = comparisons, label = "p.format", vjust=1.75)  +
     geom_jitter(alpha=.5,width = .25, show.legend = F, shape=16) +
-    scale_fill_manual(values =  c("red","green3","goldenrod3")) +
-    labs(y="max IMPACT score", x="SNP group") +
+    # scale_fill_manual(values =  c("red","green3","goldenrod3")) +
+    labs(x="SNP group",
+         title="IMPACT scores") +
     theme(legend.position = "none")
-  if(show_plot)print(bp)
-  if(save_path!=F) ggplot2::ggsave(save_path, bp)
+  if(show_plot) print(bp)
+  if(save_path!=F) ggplot2::ggsave(save_path, bp,
+                                   dpi = 300,
+                                   height=height, width=width)
   return(bp)
 }
 
@@ -1238,7 +1267,7 @@ IMPACT.get_ldscores <- function(chrom=NULL,
                                 subset_DT=NULL,
                                 nThread=4){
   warning("LDSCores do not include any SNPs with MAF<0.5%, as they are restricted to HapMap3 SNPs. \
-This may affect subsequent analyss (e.g. fine-mapping).")
+This may affect subsequent analyses (e.g. fine-mapping).")
   if(!is.null(subset_DT)){
     chrom <- subset_DT$CHR[1]
   }

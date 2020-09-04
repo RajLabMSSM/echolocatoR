@@ -42,8 +42,9 @@ finemap_loci(
   LD_reference = "1KGphase1",
   superpopulation = "EUR",
   download_method = "direct",
+  vcf_folder = NULL,
   topVariants = 3,
-  download_reference = T,
+  remote_LD = T,
   min_POS = NA,
   max_POS = NA,
   min_MAF = NA,
@@ -244,9 +245,9 @@ Setting the superpopulation is not currently possible when \code{LD_reference="U
 \item{"SAS"}{South Asian}
 }}
 
-\item{download_reference}{When acquiring LD matrixes,
+\item{remote_LD}{When acquiring LD matrixes,
 the default is to delete the full vcf or npz files after \pkg{echolocatoR} has extracted the necssary subset.
-However, if you wish to keep these full files (which can be quite large) set \code{download_reference=T}.}
+However, if you wish to keep these full files (which can be quite large) set \code{remote_LD=T}.}
 
 \item{min_POS}{Manually set the minimum genomic position for your locus subset.
 \code{min_POS} can clip the window size set by \code{bp_distance}.

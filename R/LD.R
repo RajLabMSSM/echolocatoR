@@ -59,7 +59,7 @@ LD.load_or_create <- function(locus_dir,
                               LD_reference="1KGphase1",
                               LD_genome_build="hg19",
                               superpopulation="EUR",
-                              download_reference=T,
+                              remote_LD=T,
                               download_method="direct",
                               vcf_folder=NULL,
                               # min_r2=0,
@@ -104,7 +104,7 @@ LD.load_or_create <- function(locus_dir,
                       vcf_folder = vcf_folder,
                       LD_reference = LD_reference,
                       superpopulation = superpopulation,
-                      download_reference = download_reference,
+                      remote_LD = remote_LD,
 
                       LD_block = LD_block,
                       LD_block_size = LD_block_size,
@@ -460,7 +460,7 @@ LD.1KG_download_vcf <- function(subset_DT,
                                 vcf_folder=NULL,
                                 locus_dir,
                                 locus=NULL,
-                                download_reference=T,
+                                remote_LD=T,
                                 whole_vcf=F,
                                 download_method="wget",
                                 force_new_vcf=F,
@@ -478,7 +478,7 @@ LD.1KG_download_vcf <- function(subset_DT,
   # New FTP
   ## ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20110521/
     # Download portion of vcf from 1KG website
-  vcf_folder <- LD.get_locus_vcf_folder(locus_dir=locus_dir)
+  # vcf_folder <- LD.get_locus_vcf_folder(locus_dir=locus_dir)
   # Don't use the 'chr' prefix for 1KG queries:
   ## https://www.internationalgenome.org/faq/how-do-i-get-sub-section-vcf-file/
   subset_DT$CHR <- gsub("chr","",subset_DT$CHR)
@@ -487,12 +487,16 @@ LD.1KG_download_vcf <- function(subset_DT,
   # PHASE 3 DATA
   if(LD_reference=="1KGphase3"){
     FTP <- "ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20130502/"
+    # FTP <- "/sc/arion/projects/ad-omics/data/references/1KGPp3v5/"
     popDat <- echolocatoR::popDat_1KGphase3
     printer("LD Reference Panel = 1KGphase3", v=verbose)
-    if(download_reference){## With internet
+    if(remote_LD){## With internet
+      printer("+ LD:: Querying 1KG remote server.",v=verbose)
       vcf_URL <- paste0(FTP,"/ALL.chr",chrom,
                        ".phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz")
     }else{## WithOUT internet
+      # vcf_folder <-  "/sc/arion/projects/ad-omics/data/references/1KGPp3v5/"
+      printer("+ LD:: Querying 1KG local vcf files.",v=verbose)
       vcf_URL <- paste(vcf_folder, "/ALL.chr",chrom,
                        ".phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz",sep="")
     }
@@ -502,10 +506,12 @@ LD.1KG_download_vcf <- function(subset_DT,
     FTP <- "ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20110521/"
     popDat <- echolocatoR::popDat_1KGphase1
     printer("LD Reference Panel = 1KGphase1", v=verbose)
-    if(download_reference){## With internet
+    if(remote_LD){## With internet
+      printer("+ LD:: Querying 1KG remote server.",v=verbose)
       vcf_URL <- paste(FTP,"/ALL.chr",chrom,
                        ".phase1_release_v3.20101123.snps_indels_svs.genotypes.vcf.gz", sep="")
     }else{## WithOUT internet
+      printer("+ LD:: Querying 1KG local vcf files.",v=verbose)
       vcf_URL <- paste(vcf_folder,"/ALL.chr",chrom,
                        ".phase1_release_v3.20101123.snps_indels_svs.genotypes.vcf.gz", sep="")
     }
@@ -641,10 +647,19 @@ LD.query_vcf <- function(subset_DT,
                          nThread=4,
                          conda_env="echoR",
                          verbose=T){
+  # vcf_subset <- "/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/BRIP1/LD/BRIP1.1KGphase3.vcf.gz"
   vcf_subset <- LD.construct_subset_vcf_name(subset_DT=subset_DT,
                                              locus_dir=locus_dir,
                                              LD_reference=LD_reference,
                                              whole_vcf=whole_vcf)
+  # CHECK FOR EMPTY VCF FILES!
+  ## These can be created if you stop the query early, or if the url fails.
+  if(file.exists(vcf_subset)){
+    if(file.size(vcf_subset) < 100){ # Less than 100 bytes
+      printer("+ LD:: Removing empty vcf file and its index", v=verbose)
+      file.remove(paste0(vcf_subset,"*")) # Remove both
+    }
+  }
   tabix <- CONDA.find_package(package = "tabix",
                               conda_env = conda_env,
                               verbose = verbose)
@@ -948,7 +963,7 @@ LD.1KG <- function(locus_dir,
                    LD_reference="1KGphase1",
                    superpopulation="EUR",
                    vcf_folder=NULL,
-                   download_reference=T,
+                   remote_LD=T,
                    # min_r2=F,
                    LD_block=F,
                    LD_block_size=.7,
@@ -961,7 +976,7 @@ LD.1KG <- function(locus_dir,
                    conda_env="echoR",
                    verbose=T){
   # data("BST1"); data("locus_dir"); subset_DT=BST1; LD_reference="1KGphase1"; vcf_folder=NULL; superpopulation="EUR";
-  # min_r2=F; LD_block=F; LD_block_size=.7; min_Dprime=F;  remove_correlates=F; download_reference=T; verbose=T; nThread=4; conda_env="echoR";
+  # min_r2=F; LD_block=F; LD_block_size=.7; min_Dprime=F;  remove_correlates=F; remote_LD=T; verbose=T; nThread=4; conda_env="echoR";
   printer("LD:: Using 1000Genomes as LD reference panel.", v=verbose)
   locus <- basename(locus_dir)
   vcf_folder <- LD.get_locus_vcf_folder(locus_dir = locus_dir)
@@ -970,7 +985,7 @@ LD.1KG <- function(locus_dir,
                                   LD_reference=LD_reference,
                                   vcf_folder=vcf_folder,
                                   locus=locus,
-                                  download_reference=download_reference,
+                                  remote_LD=remote_LD,
                                   download_method=download_method,
                                   nThread=nThread,
                                   conda_env=conda_env,

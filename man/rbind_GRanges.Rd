@@ -19,7 +19,8 @@ gr.bound <- rbind_GRanges(gr1, gr2)
 }
 \seealso{
 Other utils: 
-\code{\link{LIFTOVER}()}
+\code{\link{LIFTOVER}()},
+\code{\link{dataframe_2_vcf}()}
 }
 \concept{utils}
 \keyword{internal}

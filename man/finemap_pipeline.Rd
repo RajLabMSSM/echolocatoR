@@ -41,7 +41,7 @@ finemap_pipeline(
   sample_size = NULL,
   LD_reference = "1KGphase1",
   superpopulation = "EUR",
-  download_reference = T,
+  remote_LD = T,
   download_method = "direct",
   min_POS = NA,
   max_POS = NA,
@@ -52,6 +52,7 @@ finemap_pipeline(
   min_r2 = 0,
   LD_block = F,
   LD_block_size = 0.7,
+  vcf_folder = NULL,
   query_by = "coordinates",
   remove_variants = F,
   remove_correlates = F,
@@ -240,9 +241,9 @@ Setting the superpopulation is not currently possible when \code{LD_reference="U
 \item{"SAS"}{South Asian}
 }}
 
-\item{download_reference}{When acquiring LD matrixes,
+\item{remote_LD}{When acquiring LD matrixes,
 the default is to delete the full vcf or npz files after \pkg{echolocatoR} has extracted the necssary subset.
-However, if you wish to keep these full files (which can be quite large) set \code{download_reference=T}.}
+However, if you wish to keep these full files (which can be quite large) set \code{remote_LD=T}.}
 
 \item{min_POS}{Manually set the minimum genomic position for your locus subset.
 \code{min_POS} can clip the window size set by \code{bp_distance}.

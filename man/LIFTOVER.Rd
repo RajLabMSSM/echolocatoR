@@ -27,6 +27,7 @@ gr.lifted <- LIFTOVER(dat=BST1, build.conversion="hg19.to.hg38")
 }
 \seealso{
 Other utils: 
+\code{\link{dataframe_2_vcf}()},
 \code{\link{rbind_GRanges}()}
 }
 \concept{utils}

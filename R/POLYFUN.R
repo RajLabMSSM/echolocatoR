@@ -3,7 +3,7 @@
 # $$$$$$$$$$$$$$$$ $$$$$$$ $$$$$$$$$$$$$$$$
 # https://github.com/omerwe/polyfun
 
-#####-------------------------------------------------------------
+##-------------------------------------------------------------
 # There are three ways to run PolyFun:
 
 # 1. Using precomputed prior causal probabilities of 19 million imputed UK Biobank SNPs with MAF>0.1%, based on a meta-analysis of 15 UK Biobank traits. This is the simplest approach, but it may not include all your SNPs of interest (especially when analyzing non-European populations) and the prior causal probabilities may not be optimal for some traits.
@@ -11,7 +11,7 @@
 # 2. Computing prior causal probabilities via an L2-regularized extension of stratified LD-score regression (S-LDSC). This is a relatively simple approach, but the prior causal probabilities may not be robust to modeling misspecification.
 
 # 3. Computing prior causal probabilities non-parametrically. This is the most robust approach, but it is computationally intensive and requires access to individual-level genotypic data from a large reference panel (optimally >10,000 population-matched individuals).
-#####-------------------------------------------------------------
+##-------------------------------------------------------------
 
 
 # GitHub Notes:
@@ -841,14 +841,15 @@ POLYFUN.plot <- function(subset_DT,
 
 
 
-###############################################
+## ------------------------------------------ ##
 ########## POLYFUN H2 ENRICHMENT ##############
-###############################################
+## ------------------------------------------ ##
 
 
 
 
 #' Run and plot heritability enrichment tests
+#'
 #' @source
 #' https://www.biorxiv.org/content/10.1101/807792v3
 #' @keywords internal
@@ -951,6 +952,9 @@ POLYFUN.gather_annot_proportions <- function(base_url="/sc/arion/projects/pd-omi
 #' https://www.biorxiv.org/content/10.1101/807792v3
 #' @keywords internal
 #' @family polyfun
+#' @examples
+#' data("BST1")
+#' finemap_dat <- BST1
 POLYFUN.functional_enrichment <- function(finemap_dat,
                                           PP_thresh=.95,
                                           save_plot="./Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/annot_enrichment.png"){
@@ -962,9 +966,11 @@ POLYFUN.functional_enrichment <- function(finemap_dat,
   annot.file <- list.files(base_url, pattern = paste0(".UKB.",chrom,".annot.parquet"), full.names = T)
 
   library(reticulate)
-  reticulate::use_condaenv(condaenv = "polyfun_venv")
-  pd <- reticulate::import("pandas")
-  annot <- POLYFUN.read_parquet(parquet_path = annot.file)
+  CONDA.activate_env(conda_env = "echoR")
+  # pd <- reticulate::import("pandas")
+  annot <- POLYFUN.read_parquet(parquet_path = annot.file,
+                                conda_env = "echoR",
+                                method = "pandas")
   annot_names <- annot %>% dplyr::select(-c(SNP,CHR,BP,A1,A2)) %>% colnames()
   annot_DT <- data.table:::merge.data.table(finemap_dat,
                                             data.table::data.table(annot) %>%
@@ -1026,9 +1032,11 @@ POLYFUN.functional_enrichment <- function(finemap_dat,
 #' @keywords internal
 #' @family polyfun
 POLYFUN.h2_enrichment <- function(h2_df,
-                                  target_SNPs=NULL){
+                                  target_SNPs=NULL,
+                                  fillNA=T){
   # Only consider SNPs that overlap between LDCS and GWAS results to make things fair
   # target_SNPs <- intersect(target_SNPs, h2_df$SNP)
+  if(fillNA) h2_df[is.na(h2_df$SNPVAR),"SNPVAR"] <- 0
   h2.target <- subset(h2_df, SNP %in% target_SNPs)
   if(nrow(h2.target)>0){
     # Calculate enrichment
@@ -1058,13 +1066,18 @@ POLYFUN.h2_enrichment <- function(h2_df,
 #' https://www.biorxiv.org/content/10.1101/807792v3
 #' @keywords internal
 #' @family polyfun
-POLYFUN.h2_enrichment_SNPgroups <- function(finemap_dat,
+#' @examples
+#' # IMPORTANT! For this to make sense, you need to merge the full data ("merged_DT" only includes Support>0 and leadSNPs)
+#' merged_dat_full <- merge_finemapping_results(dataset = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019", minimum_support = 0)
+#' res <- POLYFUN.h2_enrichment_SNPgroups(merged_dat=merged_DT, out.path="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/output")
+POLYFUN.h2_enrichment_SNPgroups <- function(merged_dat,
                                             chrom="*",
                                             ldsc_suffix="*.snpvar_constrained.gz",
                                             subtitle="",
                                             show_plot=T,
                                             save_plot="./h2_enrichment.png",
-                                            out.path="./Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/output"){
+                                            out.path="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/output",
+                                            nThread=4){
   # Quickstart
   # finemap_dat=quick_finemap(); chrom="*"; ldsc_suffix="*.snpvar_constrained.gz"; subtitle="";show_plot=T; save_plot="./h2_enrichment.png"; out.path="./Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/output"; conda_path="/hpc/packages/minerva-centos7/anaconda3/2018.12"; polyfun_annots="/sc/arion/projects/pd-omics/tools/polyfun/annotations/baselineLF2.2.UKB"
   # merged_dat <- merge_finemapping_results(dataset = "Data/GWAS/Nalls23andMe_2019/",
@@ -1072,20 +1085,24 @@ POLYFUN.h2_enrichment_SNPgroups <- function(finemap_dat,
   # Gather your heritability
   ldsc.files <- list.files(out.path, pattern = ldsc_suffix, full.names = T) %>%
     grep(pattern = paste0(".",chrom,"."), value = T)
-  h2_DF <- .rbind.file.list(ldsc.files)
+  h2_DF <- echolocatoR:::.rbind.file.list(ldsc.files)
   # Subset to only common snps: h2 vs. finemap files
   # common.snps <- intersect(h2_df$SNP, finemap_dat$SNP)
   # h2_sub <- subset(h2_df, SNP %in% common.snps)
   # finemap_dat <- subset(finemap_dat, SNP %in% common.snps)
-  RES <-parallel::mclapply(unique(merged_dat$Gene), function(gene){
-    print(gene)
-    finemap_dat <- subset(merged_dat, Gene==gene)
+  RES <-parallel::mclapply(unique(merged_dat$Locus), function(locus){
+    print(locus)
+    finemap_dat <- subset(merged_dat, Locus==locus)
     h2_df <- subset(h2_DF, SNP %in% unique(finemap_dat$SNP))
     # h2_df <- subset(h2_DF, CHR==finemap_dat$CHR[1] &
     #                   BP >= min(finemap_dat$POS) &
     #                   BP <= max(finemap_dat$POS))
 
-
+    # Random subset  of the same size as the Consenus SNPs
+    size <- dplyr::n_distinct(subset(finemap_dat, Consensus_SNP)$SNP)
+    random <- POLYFUN.h2_enrichment(h2_df=h2_df,
+                                    target_SNPs= sample(finemap_dat$SNP, size = size) )
+    # All SNPs
     GWAS.all <- POLYFUN.h2_enrichment(h2_df=h2_df,
                                       target_SNPs=finemap_dat$SNP )
     # GWAS nominally sig hits
@@ -1094,6 +1111,9 @@ POLYFUN.h2_enrichment_SNPgroups <- function(finemap_dat,
     # GWAS sig hits
     GWAS.sig <- POLYFUN.h2_enrichment(h2_df=h2_df,
                                       target_SNPs=subset(finemap_dat, P<5e-8)$SNP)
+    # Lead GWAS
+    GWAS.lead <- POLYFUN.h2_enrichment(h2_df=h2_df,
+                                       target_SNPs=subset(finemap_dat, leadSNP)$SNP)
     # Credible Set
     UCS <- POLYFUN.h2_enrichment(h2_df=h2_df,
                                              target_SNPs = subset(finemap_dat, Support>0)$SNP)
@@ -1116,46 +1136,99 @@ POLYFUN.h2_enrichment_SNPgroups <- function(finemap_dat,
     Finemap.consensus <- POLYFUN.h2_enrichment(h2_df=h2_df,
                                                target_SNPs = subset(finemap_dat, Consensus_SNP)$SNP)
 
-    res <- data.frame(SNP.Group=c("All",
+    # Consensus SNP (no PolyFun)
+    fm_tmp <- find_consensus_SNPs(finemap_dat,
+                                  exclude_methods = "POLYFUN_SUSIE",
+                                  sort_by_support = F)
+    finemap_dat$Consensus_SNP_noPF <- fm_tmp$Consensus_SNP
+    Finemap.consensus_noPF <- POLYFUN.h2_enrichment(h2_df=h2_df,
+                                                    target_SNPs = subset(finemap_dat, Consensus_SNP_noPF)$SNP)
+
+
+    res <- data.frame(SNP.Group=c("Random",
+                                  "All",
                                   "GWAS_nom. sig.",
                                   "GWAS_sig.",
-                                  "ABF_Credible Set",
-                                  "SUSIE_Credible Set",
-                                  "POLYFUN_SUSIE_Credible Set",
-                                  "FINEMAP_Credible Set",
-                                  "Union Credible Set",
-                                  "Consensus SNPs"),
-                      h2.enrichment=c(GWAS.all,
+                                  "GWAS_lead",
+                                  "ABF_CS",
+                                  "SUSIE_CS",
+                                  "POLYFUN_SUSIE_CS",
+                                  "FINEMAP_CS",
+                                  "UCS",
+                                  "Consensus",
+                                  "Consensus_(-POLYFUN)"),
+                      h2.enrichment=c(random,
+                                      GWAS.all,
                                       GWAS.nom.sig,
                                       GWAS.sig,
+                                      GWAS.lead,
                                       ABF.credset,
                                       SUSIE.credset,
                                       POLYFUN_SUSIE.credset,
                                       FINEMAP.credset,
                                       UCS,
-                                      Finemap.consensus))
-    res <- cbind(Locus=gene, res)
+                                      Finemap.consensus,
+                                      Finemap.consensus_noPF))
+    res <- cbind(Locus=locus, res)
     return(res)
-  }, mc.cores = 4) %>% data.table::rbindlist(fill = T)
+  }, mc.cores = nThread) %>% data.table::rbindlist(fill = T)
+  data.table::fwrite(RES, "Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/enrich.csv")
 
+  RES <- data.table::fread("/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/enrich.csv")
 
-
+  # if(show_plot){
+  #   RES$SNP.Group <- factor(gsub("_","\n",RES$SNP.Group),
+  #                           levels = unique(gsub("_","\n",RES$SNP.Group)))
+  #   gp <- ggplot(data = subset(RES, h2.enrichment<Inf),
+  #                aes(x=SNP.Group, y=log(h2.enrichment), fill= SNP.Group)) +
+  #     # geom_col(show.legend = F) +
+  #     geom_boxplot(show.legend = F) +
+  #     geom_violin(show.legend = F) +
+  #     geom_point(show.legend = F, alpha=.2) +
+  #     labs(title="S-LDSC heritability enrichment",
+  #          subtitle=subtitle,
+  #          x="SNP Group") + theme_bw()
+  #   print(gp)
+  #   if(save_plot!=F){
+  #     ggsave(plot = gp, filename = save_plot, width = 7, height=7)
+  #   }
+  # }
   if(show_plot){
+    library(ggpubr)
     RES$SNP.Group <- factor(gsub("_","\n",RES$SNP.Group),
                             levels = unique(gsub("_","\n",RES$SNP.Group)))
-    gp <- ggplot(data = subset(RES, h2.enrichment<20),
-                 aes(x=SNP.Group, y=h2.enrichment, fill= SNP.Group)) +
-      # geom_col(show.legend = F) +
-      geom_boxplot(show.legend = F) +
-      geom_violin(show.legend = F) +
-      geom_point(show.legend = F, alpha=.2) +
-      labs(title="PolyFun Heritability Enrichment",
-           subtitle=subtitle,
-           x="SNP Group") + theme_bw()
-    print(gp)
-    if(save_plot!=F){
-      ggsave(plot = gp, filename = save_plot, width = 7, height=7)
-    }
+    # tests <- compare_means(max_IMPACT ~ SNP_group,  data = TOP_IMPACT_all, method=method)
+    RES$log.h2.enrichment <- log(RES$h2.enrichment)
+    snp.groups=unique(RES$SNP.Group)
+    comparisons <- utils::combn(x = as.character(snp.groups),
+                                m=2,
+                                FUN = function(x){if("Consensus" %in% x) return(x)},
+                                simplify = F) %>%
+      purrr::compact()
+
+    method="t.test"
+    bp <- ggpubr::ggviolin(RES,
+                           merge = T,
+                    x = "SNP.Group", y = "log.h2.enrichment",
+                    fill = "SNP.Group",
+                    alpha=.6,
+                    add = "boxplot",
+                    add.params = list(alpha=.5, width=1)) +
+      ggpubr::stat_compare_means(method = method,
+                                 comparisons = comparisons,
+                                 label = "p.signif") +
+      ggpubr::stat_compare_means(method = method,
+                                 comparisons = comparisons,
+                                 label = "p.format", vjust=2)  +
+      geom_jitter(alpha=.5,width = .25, show.legend = F, shape=16) +
+      geom_hline(yintercept = log10(1), linetype=2, alpha=.5) +
+      # scale_fill_manual(values =  c("red","green3","goldenrod3")) +
+      labs(y="log(h2 enrichment)", x="SNP group",
+           title="S-LDSC heritability enrichment") +
+      theme(legend.position = "none")
+    print(bp)
+    ggsave('~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/snp_group.h2_enrichment.png',
+            plot = bp, dpi = 300, height=9, width=11)
   }
   return(res)
 }

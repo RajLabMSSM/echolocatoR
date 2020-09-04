@@ -12,6 +12,12 @@ Plot \pkg{ComplexHeatmap} of \emph{IMPACT} scores
 \examples{
 \dontrun{
 ANNOT_MELT <- data.table::fread("~/Desktop/Fine_mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/IMPACT/IMPACT_overlap.csv.gz")
+ANNOT_MELT <- update_cols(subset(ANNOT_MELT, select=-c(SUSIE.Probability,FINEMAP.Probability)))
+## Remove POLYFUN results as this introduces circularity (Polyfun trains on data from ENCODE/Roadmap, as does IMPACT)
+annot_melt_tmp <- find_consensus_SNPs(ANNOT_MELT, exclude_methods = "POLYFUN_SUSIE", sort_by_support = F)
+ANNOT_MELT$Consensus_SNP_noPF <- annot_melt_tmp$Consensus_SNP
+
+# Remove no no loci
 no_no_loci =  c("HLA-DRB5","MAPT","ATG14","SP1","LMNB1","ATP6V0A1", "RETREG3","UBTF","FAM171A2","MAP3K14","CRHR1","MAPT-AS1","KANSL1","NSF","WNT3")
 ANNOT_MELT <- IMPACT.postprocess_annotations(ANNOT_MELT, no_no_loci = no_no_loci)
 }
