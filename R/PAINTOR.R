@@ -180,7 +180,7 @@ PAINTOR.prepare_LD.transethnic <- function(subset_path,
     printer("+ PAINTOR::",pop)
     LD_matrix <- LD.load_or_create(locus_dir=locus_dir,
                                    subset_DT=subset_DT,
-                                   download_reference = T,
+                                   remote_LD = T,
                                    LD_reference=LD_reference,
                                    superpopulation=translate_population(superpopulation = pop),
                                    force_new_LD=force_new_LD,
@@ -251,7 +251,7 @@ PAINTOR.prepare_LD <- function(subset_path,
   if(is.null(LD_matrix)){
     LD_matrix <- LD.load_or_create(locus_dir=locus_dir,
                                    subset_DT=finemap_dat,
-                                   download_reference = T,
+                                   remote_LD  = T,
                                    force_new_LD = F,
                                    LD_reference="1KG_Phase1",
                                    superpopulation="EUR")

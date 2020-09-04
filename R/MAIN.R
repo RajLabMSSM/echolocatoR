@@ -1,7 +1,7 @@
 #  ((((((((((((((((()))))))))))))))))  #
- # ((((((((((((((((())))))))))))))))) #
- #    ------- echolocatoR -------    #
- # ((((((((((((((((())))))))))))))))) #
+# ((((((((((((((((())))))))))))))))) #
+#    ------- echolocatoR -------    #
+# ((((((((((((((((())))))))))))))))) #
 #              ((((()))))              #
 
 # Author: Brian M. Schilder
@@ -10,11 +10,11 @@
 # New York City, New York, USA
 # https://bschilder.github.io/BMSchilder
 
-     # =/\                  /\=
-    #  / \'._   (\_/)   _.'/ \
-   #  / .''._'--(o.o)--'_.''. \
-  #  /.' _/ |`'=/ " \='`| \_ `.\
- #  /` .' `\;-,'\___/',-;/` '. '\
+# =/\                  /\=
+#  / \'._   (\_/)   _.'/ \
+#  / .''._'--(o.o)--'_.''. \
+#  /.' _/ |`'=/ " \='`| \_ `.\
+#  /` .' `\;-,'\___/',-;/` '. '\
 #  /.-'       `\(-V-)/`       `-.\
 # `              v  v           `
 #
@@ -417,62 +417,58 @@ finemap_pipeline <- function(locus,
                              conda_env="echoR",
                              nThread=4,
                              verbose=T){
-   #### Create paths ####
-   subset_path <- get_subset_path(results_dir = results_dir,
-                                  dataset_type = dataset_type,
-                                  dataset_name = dataset_name,
-                                  locus = locus)
-   locus_dir <- get_locus_dir(subset_path = subset_path)
+  #### Create paths ####
+  subset_path <- get_subset_path(results_dir = results_dir,
+                                 dataset_type = dataset_type,
+                                 dataset_name = dataset_name,
+                                 locus = locus)
+  locus_dir <- get_locus_dir(subset_path = subset_path)
 
-   ####  Query ####
-   message("\n------------------ Step 1: Query 🔍 ---------------");
+  ####  Query ####
+  subset_DT <- extract_SNP_subset(locus = locus,
+                                  locus_dir = locus_dir,
+                                  top_SNPs = top_SNPs,
+                                  fullSS_path = fullSS_path,
+                                  fullSS_genome_build = fullSS_genome_build,
+                                  subset_path  =  subset_path,
+                                  LD_reference = LD_reference,
+                                  force_new_subset = force_new_subset,
 
-   subset_DT <- extract_SNP_subset(locus = locus,
-                                   locus_dir = locus_dir,
-                                   top_SNPs = top_SNPs,
-                                   fullSS_path = fullSS_path,
-                                   fullSS_genome_build = fullSS_genome_build,
-                                   subset_path  =  subset_path,
-                                   LD_reference = LD_reference,
-                                   force_new_subset = force_new_subset,
+                                  chrom_col = chrom_col,
+                                  chrom_type = chrom_type,
+                                  position_col = position_col,
+                                  snp_col = snp_col,
+                                  pval_col = pval_col,
+                                  effect_col = effect_col,
+                                  stderr_col = stderr_col,
+                                  locus_col = locus_col,
+                                  tstat_col = tstat_col,
+                                  MAF_col = MAF_col,
+                                  freq_col = freq_col,
+                                  A1_col = A1_col,
+                                  A2_col = A2_col,
+                                  gene_col = gene_col,
 
-                                   chrom_col = chrom_col,
-                                   chrom_type = chrom_type,
-                                   position_col = position_col,
-                                   snp_col = snp_col,
-                                   pval_col = pval_col,
-                                   effect_col = effect_col,
-                                   stderr_col = stderr_col,
-                                   locus_col = locus_col,
-                                   tstat_col = tstat_col,
-                                   MAF_col = MAF_col,
-                                   freq_col = freq_col,
-                                   A1_col = A1_col,
-                                   A2_col = A2_col,
-                                   gene_col = gene_col,
+                                  N_cases_col = N_cases_col,
+                                  N_controls_col = N_controls_col,
+                                  N_cases = N_cases,
+                                  N_controls = N_controls,
+                                  proportion_cases = proportion_cases,
+                                  sample_size = sample_size,
 
-                                    N_cases_col = N_cases_col,
-                                    N_controls_col = N_controls_col,
-                                    N_cases = N_cases,
-                                    N_controls = N_controls,
-                                    proportion_cases = proportion_cases,
-                                    sample_size = sample_size,
+                                  bp_distance = bp_distance,
+                                  superpopulation = superpopulation,
+                                  min_POS = min_POS,
+                                  max_POS = max_POS,
 
-                                    bp_distance = bp_distance,
-                                    superpopulation = superpopulation,
-                                    min_POS = min_POS,
-                                    max_POS = max_POS,
+                                  file_sep = file_sep,
+                                  query_by = query_by,
+                                  probe_path = probe_path,
+                                  QTL_prefixes=QTL_prefixes,
 
-                                    file_sep = file_sep,
-                                    query_by = query_by,
-                                    probe_path = probe_path,
-                                    QTL_prefixes=QTL_prefixes,
-
-                                    remove_tmps = remove_tmps,
-                                    verbose = verbose)
+                                  remove_tmps = remove_tmps,
+                                  verbose = verbose)
   #### Extract LD ####
-  message("\n--- Step 2: Extract Linkage Disequilibrium 🔺 --");
-
   LD_list <- LD.load_or_create(locus_dir=locus_dir,
                                subset_DT=subset_DT,
                                LD_reference=LD_reference,
@@ -496,9 +492,9 @@ finemap_pipeline <- function(locus,
   # Remove pre-specified SNPs
   ## Do this step AFTER saving the LD to disk so that it's easier to re-subset
   ## in different ways later without having to redownload LD.
-  message("\n-------------- Step 3: Filter SNPs 🚰 -------------");
-  L
-D_list <- LD.filter_LD(LD_list=LD_list,
+
+
+  LD_list <- LD.filter_LD(LD_list=LD_list,
                           remove_correlates=remove_correlates,
                           min_r2=min_r2,
                           verbose=verbose)
@@ -523,32 +519,28 @@ D_list <- LD.filter_LD(LD_list=LD_list,
   subset_DT <- LD_list$DT
 
   #### Fine-map ####
-  message("\n-------- Step 4: Fine-map 🔊 --------");
-
   finemap_dat <- finemap_handler(locus_dir = locus_dir,
-                                fullSS_path = fullSS_path,
-                                LD_reference = LD_reference,
-                                LD_matrix = LD_matrix,
-                                subset_DT = subset_DT,
-                                sample_size = sample_size,
-                                # General args (with defaults)
-                                finemap_methods = finemap_methods,
-                                force_new_finemap = force_new_finemap,
-                                dataset_type = dataset_type,
-                                PP_threshold = PP_threshold,
-                                consensus_threshold = consensus_threshold,
-                                case_control = case_control,
-                                n_causal = n_causal,
-                                # Tool-specific args
-                                conditioned_snps = conditioned_snps,
-                                PAINTOR_QTL_datasets = PAINTOR_QTL_datasets,
-                                # Optional args
-                                conda_env = conda_env,
-                                verbose = verbose)
+                                 fullSS_path = fullSS_path,
+                                 LD_reference = LD_reference,
+                                 LD_matrix = LD_matrix,
+                                 subset_DT = subset_DT,
+                                 sample_size = sample_size,
+                                 # General args (with defaults)
+                                 finemap_methods = finemap_methods,
+                                 force_new_finemap = force_new_finemap,
+                                 dataset_type = dataset_type,
+                                 PP_threshold = PP_threshold,
+                                 consensus_threshold = consensus_threshold,
+                                 case_control = case_control,
+                                 n_causal = n_causal,
+                                 # Tool-specific args
+                                 conditioned_snps = conditioned_snps,
+                                 PAINTOR_QTL_datasets = PAINTOR_QTL_datasets,
+                                 # Optional args
+                                 conda_env = conda_env,
+                                 verbose = verbose)
   #### Visualize ####
-  if(!is.null(plot.types)) message("\n--------------- Step 5: Visualize 📊--------------");
-
-
+  # if(!is.null(plot.types))
   if("simple" %in% plot.types){
     try({
       mf_plot <- GGBIO.plot(finemap_dat = finemap_dat,
@@ -737,9 +729,9 @@ finemap_loci <- function(loci,
     finemap_dat <- NULL
     try({
       locus <- loci[i]
-      message("\n)   )  ) ))))))}}}}}}}} {{{{{{{{{(((((( (  (   (")
-      message("🦇 🦇 🦇 ",locus," (",i ," / ",length(loci),")"," 🦇 🦇 🦇 ")
-      message(")   )  ) ))))))}}}}}}}} {{{{{{{{{(((((( (  (   (")
+      message("\n)   )  ) ))))))}}}}}}}} {{{{{{{{{(((((( (  (   (");
+      message(locus," (",i ," / ",length(loci),")");
+      message(")   )  ) ))))))}}}}}}}} {{{{{{{{{(((((( (  (   (");
 
       # lead_SNP <- .arg_list_handler(conditioned_snps, i)
       gene_limits <- .arg_list_handler(trim_gene_limits, i)
@@ -749,91 +741,91 @@ finemap_loci <- function(loci,
       LD_ref <- .arg_list_handler(LD_reference, i)
 
       finemap_dat <- finemap_pipeline(locus=locus,
-                                     top_SNPs=top_SNPs,
-                                     fullSS_path=fullSS_path,
-                                     fullSS_genome_build=fullSS_genome_build,
-                                     LD_genome_build=LD_genome_build,
-                                     results_dir=results_dir,
-                                     finemap_methods=finemap_methods,
-                                     force_new_subset=force_new_subset,
-                                     force_new_LD=force_new_LD,
-                                     force_new_finemap=force_new_finemap,
-                                     dataset_name=dataset_name,
-                                     dataset_type=dataset_type,
-                                     n_causal=n_causal,
-                                     bp_distance=bp_distance,
+                                      top_SNPs=top_SNPs,
+                                      fullSS_path=fullSS_path,
+                                      fullSS_genome_build=fullSS_genome_build,
+                                      LD_genome_build=LD_genome_build,
+                                      results_dir=results_dir,
+                                      finemap_methods=finemap_methods,
+                                      force_new_subset=force_new_subset,
+                                      force_new_LD=force_new_LD,
+                                      force_new_finemap=force_new_finemap,
+                                      dataset_name=dataset_name,
+                                      dataset_type=dataset_type,
+                                      n_causal=n_causal,
+                                      bp_distance=bp_distance,
 
-                                     chrom_col=chrom_col,
-                                     chrom_type=chrom_type,
-                                     position_col=position_col,
-                                     snp_col=snp_col,
-                                     pval_col=pval_col,
-                                     effect_col=effect_col,
-                                     stderr_col=stderr_col,
-                                     tstat_col=tstat_col,
-                                     locus_col=locus_col,
-                                     MAF_col=MAF_col,
-                                     freq_col=freq_col,
-                                     A1_col=A1_col,
-                                     A2_col=A2_col,
-                                     gene_col=gene_col,
-                                     N_cases_col=N_cases_col,
-                                     N_controls_col=N_controls_col,
-                                     N_cases=N_cases,
-                                     N_controls=N_controls,
-                                     proportion_cases=proportion_cases,
-                                     sample_size=sample_size,
+                                      chrom_col=chrom_col,
+                                      chrom_type=chrom_type,
+                                      position_col=position_col,
+                                      snp_col=snp_col,
+                                      pval_col=pval_col,
+                                      effect_col=effect_col,
+                                      stderr_col=stderr_col,
+                                      tstat_col=tstat_col,
+                                      locus_col=locus_col,
+                                      MAF_col=MAF_col,
+                                      freq_col=freq_col,
+                                      A1_col=A1_col,
+                                      A2_col=A2_col,
+                                      gene_col=gene_col,
+                                      N_cases_col=N_cases_col,
+                                      N_controls_col=N_controls_col,
+                                      N_cases=N_cases,
+                                      N_controls=N_controls,
+                                      proportion_cases=proportion_cases,
+                                      sample_size=sample_size,
 
-                                     LD_reference=LD_ref,
-                                     superpopulation=superpopulation,
-                                     download_method=download_method,
-                                     min_POS=min_pos,
-                                     max_POS=max_pos,
-                                     min_MAF=min_MAF,
-                                     vcf_folder=vcf_folder,
-                                     remote_LD=remote_LD,
+                                      LD_reference=LD_ref,
+                                      superpopulation=superpopulation,
+                                      download_method=download_method,
+                                      min_POS=min_pos,
+                                      max_POS=max_pos,
+                                      min_MAF=min_MAF,
+                                      vcf_folder=vcf_folder,
+                                      remote_LD=remote_LD,
 
-                                     trim_gene_limits=gene_limits,
-                                     max_snps=max_snps,
-                                     file_sep=file_sep,
-                                     min_r2=min_r2,
-                                     LD_block=LD_block,
-                                     LD_block_size=LD_block_size,
-                                     # min_Dprime=min_Dprime,
-                                     query_by=query_by,
-                                     remove_variants=remove_variants,
-                                     remove_correlates=remove_correlates,
-                                     probe_path=probe_path,
-                                     conditioned_snps=conditioned_snps,
-                                     plot_LD=plot_LD,
-                                     remove_tmps=remove_tmps,
-                                     plot.types=plot.types,
-                                     PAINTOR_QTL_datasets=PAINTOR_QTL_datasets,
-                                     server=server,
-                                     PP_threshold=PP_threshold,
-                                     consensus_threshold=consensus_threshold,
-                                     case_control=case_control,
-                                     QTL_prefixes=QTL_prefixes,
+                                      trim_gene_limits=gene_limits,
+                                      max_snps=max_snps,
+                                      file_sep=file_sep,
+                                      min_r2=min_r2,
+                                      LD_block=LD_block,
+                                      LD_block_size=LD_block_size,
+                                      # min_Dprime=min_Dprime,
+                                      query_by=query_by,
+                                      remove_variants=remove_variants,
+                                      remove_correlates=remove_correlates,
+                                      probe_path=probe_path,
+                                      conditioned_snps=conditioned_snps,
+                                      plot_LD=plot_LD,
+                                      remove_tmps=remove_tmps,
+                                      plot.types=plot.types,
+                                      PAINTOR_QTL_datasets=PAINTOR_QTL_datasets,
+                                      server=server,
+                                      PP_threshold=PP_threshold,
+                                      consensus_threshold=consensus_threshold,
+                                      case_control=case_control,
+                                      QTL_prefixes=QTL_prefixes,
 
-                                     plot.zoom=plot.zoom,
-                                     plot.Nott_epigenome=plot.Nott_epigenome,
-                                     plot.Nott_show_placseq=plot.Nott_show_placseq,
-                                     plot.Nott_binwidth=plot.Nott_binwidth,
-                                     plot.Nott_bigwig_dir=plot.Nott_bigwig_dir,
-                                     plot.XGR_libnames=plot.XGR_libnames,
-                                     plot.Roadmap=plot.Roadmap,
-                                     plot.Roadmap_query=plot.Roadmap_query,
+                                      plot.zoom=plot.zoom,
+                                      plot.Nott_epigenome=plot.Nott_epigenome,
+                                      plot.Nott_show_placseq=plot.Nott_show_placseq,
+                                      plot.Nott_binwidth=plot.Nott_binwidth,
+                                      plot.Nott_bigwig_dir=plot.Nott_bigwig_dir,
+                                      plot.XGR_libnames=plot.XGR_libnames,
+                                      plot.Roadmap=plot.Roadmap,
+                                      plot.Roadmap_query=plot.Roadmap_query,
 
-                                     conda_env=conda_env,
-                                     nThread=nThread,
-                                     verbose=verbose)
+                                      conda_env=conda_env,
+                                      nThread=nThread,
+                                      verbose=verbose)
       finemap_dat <- data.table::data.table(Locus=locus, finemap_dat)
       cat('  \n')
     }) ## end try()
     end_gene <- Sys.time()
     message("Fine-mapping complete in:")
     print(round(end_gene-start_gene,1))
-  return(finemap_dat)
+    return(finemap_dat)
   }) # end for loop
   FINEMAP_DAT <- data.table::rbindlist(FINEMAP_DAT, fill = T)
   FINEMAP_DAT <- find_consensus_SNPs(finemap_dat = FINEMAP_DAT,
