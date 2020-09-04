@@ -472,7 +472,9 @@ finemap_pipeline <- function(locus,
                                     verbose = verbose)
   #### Extract LD ####
   message("\n--- Step 2: Extract Linkage Disequilibrium ⏬ ---");
-  LD_list <- LD.load_or_create(locus_dir=locus_dir,
+ 
+
+   D_list <- LD.load_or_create(locus_dir=locus_dir,
                                subset_DT=subset_DT,
                                LD_reference=LD_reference,
                                # Optional args (with defaults)
