@@ -979,7 +979,6 @@ LD.1KG <- function(locus_dir,
   # min_r2=F; LD_block=F; LD_block_size=.7; min_Dprime=F;  remove_correlates=F; remote_LD=T; verbose=T; nThread=4; conda_env="echoR";
   printer("LD:: Using 1000Genomes as LD reference panel.", v=verbose)
   locus <- basename(locus_dir)
-  vcf_folder <- LD.get_locus_vcf_folder(locus_dir = locus_dir)
   vcf_info <- LD.1KG_download_vcf(subset_DT=subset_DT,
                                   locus_dir=locus_dir,
                                   LD_reference=LD_reference,
