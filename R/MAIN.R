@@ -684,6 +684,7 @@ finemap_loci <- function(loci,
                          download_method="direct",
                          vcf_folder=NULL,
                          topVremote_LD=T,
+
                          ariants=3,
                          remomin_POS=NA,
                          max_POS=NA,
