@@ -33,6 +33,7 @@ Other polyfun:
 \code{\link{POLYFUN.functional_enrichment}()},
 \code{\link{POLYFUN.gather_annotations}()},
 \code{\link{POLYFUN.gather_ldscores}()},
+\code{\link{POLYFUN.h2_enrichment_SNPgroups_plot}()},
 \code{\link{POLYFUN.h2_enrichment_SNPgroups}()},
 \code{\link{POLYFUN.h2_enrichment}()},
 \code{\link{POLYFUN.help}()},

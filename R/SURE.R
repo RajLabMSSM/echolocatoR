@@ -9,177 +9,172 @@
 
 #' Download \emph{SuRE} annotations
 #'
-#'
-SURE.import_annotations <- function(base_url="https://osf.io/vxfk3/download",
-                                    nThread=4){
-  sure <- data.table::fread(base_url, nThread = nThread)
-}
-
-
-#' Preprocess \emph{SuRE} MPRA results
-#'
 #' @source
 #' \href{https://www.nature.com/articles/s41588-019-0455-2}{Publication}
 #' \href{https://github.com/vansteensellab/SuRE-SNV-code}{GitHub}
 #' \href{https://osf.io/w5bzq/wiki/home/?view}{Full SuRE data}
 #' \href{https://sure.nki.nl}{SNP-SuRE data browse}
+SURE.download_annotations <- function(URL="https://osf.io/vxfk3/download",
+                                      output_dir=".",
+                                      nThread=4,
+                                      v=verbose){
+  echolocatoR::downloader(input_url = URL,
+                          output_path = output_dir,
+                          nThread = nThread)
+  out_file <- file.path(output_dir, "SuRE_SNP_table_LP190708.txt.gz")
+  printer("SURE:: Data downloaded ==>",out_file,v=verbose)
+  return(output_path)
+}
+
+
+
+
+#' Merge with fine-mapping and \emph{SuRE} results
 #'
-SURE.preprocess_data <- function(results_path="./Data/GWAS/Nalls23andMe_2019/LRRK2", cor.plot=F){
-  FM_gene <- data.table::fread(file.path(results_path,"Multi-finemap","Multi-finemap_results.txt"), nThread = 4)
-  FM_gene <- cbind(Locus=basename(results_path), FM_gene)
-  sure.path <- file.path(results_path,"SURE")
-
-  sure <- data.table::fread(list.files(sure.path, pattern = "snp_browser_selected",full.names = T), nThread = 4)
-  sure <- data.table:::merge.data.table(FM_gene, sure,
-                                            by.x = "SNP", by.y = "id",
-                                            all.x = T)
-
-
-  # sure.dat %>% arrange(desc(mean.PP))
-  prob.cols <- grep(".PP",colnames(sure), value = T)
-  sure.cols <- grep("_mean",colnames(sure), value = T)
-  # Corrplot
-  if(cor.plot){
-    cor.dat <- (sure %>% dplyr::mutate(GWAS.neg.log.P=-log10(P)))[,c("GWAS.neg.log.P",prob.cols, sure.cols)]
-    cor.dat[is.na(cor.dat)] <-0
-    corrplot::corrplot(cor(cor.dat),
-                       tl.cex = .5,
-                       method = "ellipse",
-                       type = "upper",
-                       diag = F,
-                       addCoef.col = "black",
-                       cl.cex = .8, )
-  }
-
-  # Melt
-  suppressWarnings(sure.dat <- sure %>%
-                       data.table::melt.data.table(id.vars = c("Locus","SNP","CHR","POS","leadSNP","Support","Consensus_SNP","mean.PP","P"),
-                                                   measure.vars = c(prob.cols, sure.cols),
-                                                   variable.name = "Metric",
-                                                   value.name = "Value"))
-
-
-  sure.dat$Allele <- as.character(NA)
-  sure.dat[grep(pattern = "_ref_", sure.dat$Metric),"Allele"] <- "Ref"
-  sure.dat[grep(pattern = "_alt_", sure.dat$Metric),"Allele"] <- "Alt"
-  sure.dat$cell_line <- as.character(NA)
-  sure.dat[grep(pattern = "k562_", sure.dat$Metric),"cell_line"] <- "k562"
-  sure.dat[grep(pattern = "hepg2_", sure.dat$Metric),"cell_line"] <- "hepg2"
-
-  sure.dat$Mb <- sure.dat$POS/1000000
-  return(sure.dat)
-}
-
-SURE.report <- function(sure.dat, locus=NA){
-  # CredSet
-  CS <- subset(sure.dat, Support>0 & !is.na(Allele) ) %>% arrange(desc(mean.PP))
-  notNA <- CS %>% dplyr::group_by(SNP) %>% dplyr::summarise(notNA =! any(is.na(Value)) )
-  printer("SURE::",sum(notNA$notNA),"/",nrow(notNA),
-          paste0("(",(sum(notNA$notNA)/nrow(notNA)*100),"%)"),
-          "of Credible Set SNPs were tested by the SURE assay.")
-  CS.df <- data.frame(n.CredSet=nrow(notNA),
-                      n.CredSet.SURE=sum(notNA$notNA),
-                      perc.CredSet.SURE=(sum(notNA$notNA)/nrow(notNA)*100))
-  # Consensus
-  consensus <- subset(sure.dat, Consensus_SNP==T & !is.na(Allele) ) %>% arrange(desc(mean.PP))
-  notNA <- consensus %>% dplyr::group_by(SNP) %>% dplyr::summarise(notNA =! any(is.na(Value)) )
-  printer("SURE::",sum(notNA$notNA),"/",nrow(notNA),
-          paste0("(",(sum(notNA$notNA)/nrow(notNA)*100),"%)"),
-          "of Consensus SNPs were tested by the SURE assay.")
-  Consensus.df <- data.frame(n.Consensus=nrow(notNA),
-                             n.Consensus.SURE=sum(notNA$notNA),
-                             perc.Consensus.SURE=(sum(notNA$notNA)/nrow(notNA)*100))
-  report.df <- cbind(Locus=locus, CS.df, Consensus.df) %>% data.table::data.table()
-  return(report.df)
+#' @family SURE
+#' @source
+#' \href{https://www.nature.com/articles/s41588-019-0455-2}{Publication}
+#' \href{https://github.com/vansteensellab/SuRE-SNV-code}{GitHub}
+#' \href{https://osf.io/w5bzq/wiki/home/?view}{Full SuRE data}
+#' \href{https://sure.nki.nl}{SNP-SuRE data browse}
+#' @examples
+#' sure <- data.table::fread("/sc/arion/projects/pd-omics/data/MPRA/SURE/SuRE_SNP_table_LP190708.txt.gz", nThread=4)
+SURE.merge <- function(merged_DT,
+                       sure){
+  sure <- dplyr::mutate(sure,
+                        chr = as.integer(gsub("chr","",chr)),
+                        SNPabspos = as.integer(SNPabspos)
+                        )
+  sure_DT <- data.table::merge.data.table(merged_DT,
+                                           sure,
+                                           all.x = T,
+                                           by.x = "SNP",
+                                           by.y = "SNP_ID"
+                                           # by.x = c("CHR","POS"),
+                                           # by.y = c("chr","SNPabspos")
+                                           )
+  return(sure_DT)
 }
 
 
 
-SURE.track_plot <- function(sure.dat=NULL,
-                            results_path="./Data/GWAS/Nalls23andMe_2019/LRRK2"){
-  if(is.null(sure.dat)){
-    sure.dat <- SURE.preprocess_data(results_path=results_path)
-  }
-  prob.cols <- grep(".PP",unique(sure.dat$Metric), value = T)
-  snp.labels <- construct_SNPs_labels(sure.dat) %>%
-    dplyr::group_by(SNP) %>%
-    remove_missing(vars = c("Value")) %>%
-    slice(tail(row_number(), 1)) #%>% dplyr::select(SNP,CHR,POS,P,Value,Mb,type,color)
 
-  library(patchwork)
-  # GWAS
-  sp <- ggplot(sure.dat) +
-    geom_point(aes(x=Mb, y=-log10(P), color=-log10(P))) +
-    geom_point(data=snp.labels, pch=21, fill=NA, size=4, color=snp.labels$color, stroke=1, alpha=0.8,
-               aes(x=Mb, y=-log10(P))) +
-    scale_color_gradient(low="blue", high="red") +
-    labs(y="-log(P-value)", color="GWAS\n-log(P-value)") +
-    theme_dark() +
-    theme(rect = element_rect(fill = "transparent"),
-          panel.background = element_rect(fill = "transparent"),
-          panel.grid.minor = element_blank(),
-          strip.text.y = element_text(angle = 0),
-          strip.text = element_text(size=9 )) +
-    facet_grid("Nalls et al. (2019)\nGWAS"~., scales = "free_y") +
-    geom_label_repel(data = snp.labels, aes(x=Mb, y=-log10(P), label=SNP),
-                     segment.alpha = .5,
-                     color=snp.labels$color,
-                     size=3,
-                     # nudge_x = .5,
-                     # box.padding = .5,
-                     fill = "white",
-                     alpha=.8,
-                     seed = 1) +
-    # Fine-mapping
-    ggplot(subset(sure.dat, Metric %in% prob.cols)) +
-    geom_point(aes(x=Mb, y=Value, color=Value)) +
-    scale_color_gradient(low="grey", high="green", breaks=c(0,.5,1)) +
-    scale_y_continuous(breaks = c(0,.5,1)) +
-    labs(y="Probability", color="Fine-mapping\nProbability") +
-    theme_dark() +
-    theme(rect = element_rect(fill = "transparent"),
-          panel.background = element_rect(fill = "transparent"),
-          panel.grid.minor = element_blank(),
-          strip.text.y = element_text(angle = 0),
-          strip.text = element_text(size=9 )) +
-    facet_grid(gsub("\\.","\n",Metric)~.) +
-    # SuRE assay
-    ggplot(subset(sure.dat, Metric %in% c("k562_ref_mean","k562_alt_mean","hepg2_ref_mean","hepg2_alt_mean"))) +
-    geom_point(aes(x=Mb, y=Value, color=Value)) +
-    scale_color_viridis_c() +
-    labs(y="Mean Effect", color="SuRE\nMean Effect") +
-    theme_dark() +
-    theme(rect = element_rect(fill = "transparent"),
-          panel.background = element_rect(fill = "transparent"),
-          panel.grid.minor = element_blank(),
-          strip.text.y = element_text(angle = 0),
-          strip.text = element_text(size=9 )) +
-    facet_grid(gsub("\\.","\n",Metric)~.) +
-    # Overall
-    plot_layout(ncol = 1, heights = c(.3,1,1)) +
-    plot_annotation(title = paste(unique(sure.dat$Locus), collapse=","),
-                    theme = theme(plot.title = element_text(hjust = 0.5),
-                                  panel.border = element_rect(fill = "transparent"),
-                                  panel.background = element_rect(fill = "transparent"),
-                                  rect = element_rect(fill = "transparent")))
-  print(sp)
-  if(save_plot){
-    ggsave(file.path(results_path,"SURE","SURE.png"), height = 13, width = 10, bg="transparent")
-  }
-  return(sp)
+
+#' Aggregate \emph{SuRE} p-values for each SNP group
+#'
+#' @family SURE
+#' @source
+#' \href{https://www.nature.com/articles/s41588-019-0455-2}{Publication}
+#' \href{https://github.com/vansteensellab/SuRE-SNV-code}{GitHub}
+#' \href{https://osf.io/w5bzq/wiki/home/?view}{Full SuRE data}
+#' \href{https://sure.nki.nl}{SNP-SuRE data browse}
+#' @examples
+#' sure_DT <- data.table::fread("/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/SURE/Nalls23andMe_2019.SURE.csv.gz", nThread=4)
+SURE.melt_snp_groups <- function(sure_DT,
+                                 grouping_vars=c("Locus"),
+                                 metric_str="mean",
+                                 replace_NA=NA){
+  measure.vars <- c("k562.wilcox.p.value","hepg2.wilcox.p.value"
+                    # "k562.wilcox.p.value.random","hepg2.wilcox.p.value.random",
+                    # "ref.element.count","alt.element.count","k562.ref.mean", "k562.alt.mean",
+                    #  "hepg2.ref.mean","hepg2.alt.mean"
+                    )
+  column_substr <- paste(measure.vars, collapse="|")
+  metric <- get(metric_str)
+  sure.melt <- sure_DT %>%
+    dplyr::group_by(.dots=grouping_vars) %>%
+    dplyr::summarise_at(.vars = vars(measure.vars),
+                        .funs = list("Random"= ~ metric(tidyr::replace_na(sample(.x, size=3),replace_NA), na.rm = T),
+                                     "All"= ~ metric(tidyr::replace_na(.x,replace_NA), na.rm = T),
+                                     "GWAS nom. sig."= ~ metric(tidyr::replace_na(.x[P<.05],replace_NA), na.rm = T),
+                                     "GWAS sig."= ~ metric(tidyr::replace_na(.x[P<5e-8],replace_NA), na.rm = T),
+                                     "GWAS lead"= ~ metric(tidyr::replace_na(.x[leadSNP],replace_NA), na.rm = T),
+                                     "ABF CS"= ~ metric(tidyr::replace_na(.x[ABF.CS>0],replace_NA), na.rm = T),
+                                     "SUSIE CS"= ~ metric(tidyr::replace_na(.x[SUSIE.CS>0],replace_NA), na.rm = T),
+                                     "POLYFUN-SUSIE CS"= ~ metric(tidyr::replace_na(.x[POLYFUN_SUSIE.CS>0],replace_NA), na.rm = T),
+                                     "FINEMAP CS"= ~ metric(tidyr::replace_na(.x[FINEMAP.CS>0],replace_NA), na.rm = T),
+                                     "UCS"= ~ metric(tidyr::replace_na(.x[Support>0],replace_NA), na.rm = T),
+                                     "Consensus"= ~ metric(tidyr::replace_na(.x[Consensus_SNP],replace_NA), na.rm = T)
+                        ),
+    ) %>%
+    data.table::data.table() %>%
+    data.table::melt.data.table(id.vars = grouping_vars, variable.name = "Annotation") %>%
+    dplyr::mutate(Annotation =gsub("p\\.value","pval",Annotation)) %>%
+    dplyr::mutate(Annotation =gsub("\\.","_",Annotation)) %>%
+    tidyr::separate(col = "Annotation", sep="_", into=c("Cell_type","Test","Metric","SNP_Group"), remove=F) %>%
+    dplyr::mutate(Annotation = DescTools::StrTrim(Annotation, "_"),
+                  SNP_Group = factor(SNP_Group, levels = c("Random","All","GWAS nom. sig.","GWAS sig.","GWAS lead",
+                                                "ABF CS","SUSIE CS","POLYFUN-SUSIE CS","FINEMAP CS",
+                                                "UCS","Consensus"), ordered = T),
+                  neg.log.value = log1p(value))
+  return(sure.melt)
 }
 
-# need to first figure out how to programmatically gather all data...
-# SURE.report_all_loci <- function(dataset.path="./Data/GWAS/Nalls23andMe_2019"){
-#   locus.paths <- list.dirs(dataset.path, recursive = F)
-#   locus.paths <- locus.paths[locus.paths!=file.path(dataset.path,"_genome_wide")]
-#
-#   report.DF <- lapply(locus.paths, function(locus.path){
-#     locus <- basename(locus.path)
-#     sure.dat <-  SURE.preprocess_data(results_path = locus.path)
-#     report.df <- SURE.report(sure.dat, locus = locus)
-#     return(report.df)
-#   })
-# }
+
+
+
+
+#' Plot \emph{SuRE} results across SNP groups
+#'
+#' @family SURE
+#' @source
+#' \href{https://www.nature.com/articles/s41588-019-0455-2}{Publication}
+#' \href{https://github.com/vansteensellab/SuRE-SNV-code}{GitHub}
+#' \href{https://osf.io/w5bzq/wiki/home/?view}{Full SuRE data}
+#' \href{https://sure.nki.nl}{SNP-SuRE data browse}
+#' @examples
+#' sure.melt <- data.table::fread("/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/SURE/Nalls23andMe_2019.SURE.snp_groups.mean.csv.gz")
+SURE.plot <- function(sure.melt,
+                      snp_groups=c("GWAS lead","UCS","Consensus"),
+                      comparisons_filter=function(x){if("Consensus" %in% x) return(x)},
+                      title="SuRE MPRA",
+                      xlabel="SNP Group",
+                      ylabel="mean -log10(p-value)",
+                      show_plot=T,
+                      save_path=F){
+  # PLOT
+  dat_plot <-  subset(sure.melt,
+                        SNP_Group %in% snp_groups)
+  snp.groups <- unique(dat_plot$SNP_Group)
+  comparisons <- utils::combn(x = as.character(snp.groups),
+                              m=2,
+                              FUN = comparisons_filter,
+                              simplify = F) %>% purrr::compact()
+  method="wilcox.test"
+  pb <- ggpubr::ggviolin(data = dat_plot,
+                         x = "SNP_Group", y="neg.log.value", fill = "SNP_Group",
+                         alpha = .6, trim = T,
+                         add = "boxplot",
+                         add.params = list(alpha=.1) )  +
+    ggpubr::stat_compare_means(method = method,
+                               comparisons = comparisons,
+                               label = "p.signif", size=3, vjust = 1.5) +
+    # ggpubr::stat_compare_means(method = method,
+    #                            comparisons = comparisons,
+    #                            label = "p.adj", hjust=5, size=3) +
+    geom_jitter(alpha=.1, width = .3) + #aes(color=SNP.Group)) +
+    facet_grid(facets = . ~ Cell_type ,
+               scales = "free") +
+    labs(title=title, y=ylabel, x=xlabel) +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 45, hjust=1),
+          legend.position = "none",
+          strip.background = element_rect(fill = "grey20"),
+          strip.text= element_text(color = "white"))
+  if(length(dplyr::union(snp.groups, c("GWAS lead","UCS","Consensus")))==3){
+    pb <- pb + scale_fill_manual(values =  c("red","green2","goldenrod2"))
+  }
+  if(show_plot) print(pb)
+  # save_path <- file.path("/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/SURE/",
+  #                        paste("Nalls23andMe_2019","SURE","png",sep="."))
+  if(save_path!=F){
+    ggsave(save_path,
+           pb, dpi = 300, height=5, width=5)
+  }
+  return(pb)
+}
+
+
+
 
 

@@ -10,12 +10,10 @@ https://www.biorxiv.org/content/10.1101/807792v3
 POLYFUN.h2_enrichment_SNPgroups(
   merged_dat,
   chrom = "*",
-  ldsc_suffix = "*.snpvar_constrained.gz",
-  subtitle = "",
-  show_plot = T,
-  save_plot = "./h2_enrichment.png",
  
-    out.path = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/output",
+    ldsc_dir = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/output",
+  ldsc_suffix = "*.snpvar_constrained.gz",
+  save_enrich = F,
   nThread = 4
 )
 }
@@ -23,9 +21,11 @@ POLYFUN.h2_enrichment_SNPgroups(
 Run heritability enrichment tests across SNP groups
 }
 \examples{
+root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 # IMPORTANT! For this to make sense, you need to merge the full data ("merged_DT" only includes Support>0 and leadSNPs)
 merged_dat_full <- merge_finemapping_results(dataset = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019", minimum_support = 0)
-res <- POLYFUN.h2_enrichment_SNPgroups(merged_dat=merged_DT, out.path="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/output")
+
+RES <- POLYFUN.h2_enrichment_SNPgroups(merged_dat=merged_DT, ldsc_dir=file.path(root,"PolyFun/output"),  save_enrich=file.path(root,"PolyFun/Nalls23andMe_2019.h2_enrich.snp_groups.csv.gz"))
 }
 \seealso{
 Other polyfun: 
@@ -37,6 +37,7 @@ Other polyfun:
 \code{\link{POLYFUN.gather_annotations}()},
 \code{\link{POLYFUN.gather_ldscores}()},
 \code{\link{POLYFUN.get_precomputed_priors}()},
+\code{\link{POLYFUN.h2_enrichment_SNPgroups_plot}()},
 \code{\link{POLYFUN.h2_enrichment}()},
 \code{\link{POLYFUN.help}()},
 \code{\link{POLYFUN.initialize}()},

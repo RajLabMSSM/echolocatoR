@@ -4,23 +4,29 @@
 \alias{IMPACT_heatmap}
 \title{Plot \pkg{ComplexHeatmap} of \emph{IMPACT} scores}
 \usage{
-IMPACT_heatmap(ANNOT_MELT)
+IMPACT_heatmap(ANNOT_MELT, snp_groups = c("GWAS lead", "UCS", "Consensus"))
 }
 \description{
 Plot \pkg{ComplexHeatmap} of \emph{IMPACT} scores
 }
 \examples{
 \dontrun{
+# merged_DT <- merge_finemapping_results(minimum_support = 1, include_leadSNPs = T,xlsx_path = F,dataset = "Data/GWAS/Nalls23andMe_2019")
+ #merged_DT$Locus <- merged_DT$Gene
+# ANNOT_MELT <- IMPACT.iterate_get_annotations(merged_DT = merged_DT,
+#                                              IMPACT_score_thresh=0,
+#                                              baseURL="../../data/IMPACT/IMPACT707/Annotations",
+#                                              all_snps_in_range=T,
+#                                              top_annotations_only=F)
+# data.table::fwrite(ANNOT_MELT,"../../data/IMPACT/IMPACT707/Annotations/IMPACT_overlap.csv.gz")
 ANNOT_MELT <- data.table::fread("~/Desktop/Fine_mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/IMPACT/IMPACT_overlap.csv.gz")
 ANNOT_MELT <- update_cols(subset(ANNOT_MELT, select=-c(SUSIE.Probability,FINEMAP.Probability)))
-## Remove POLYFUN results as this introduces circularity (Polyfun trains on data from ENCODE/Roadmap, as does IMPACT)
-annot_melt_tmp <- find_consensus_SNPs(ANNOT_MELT, exclude_methods = "POLYFUN_SUSIE", sort_by_support = F)
-ANNOT_MELT$Consensus_SNP_noPF <- annot_melt_tmp$Consensus_SNP
 
-# Remove no no loci
+## Remove no no loci
 no_no_loci =  c("HLA-DRB5","MAPT","ATG14","SP1","LMNB1","ATP6V0A1", "RETREG3","UBTF","FAM171A2","MAP3K14","CRHR1","MAPT-AS1","KANSL1","NSF","WNT3")
 ANNOT_MELT <- IMPACT.postprocess_annotations(ANNOT_MELT, no_no_loci = no_no_loci)
 }
+ANNOT_MELT$Consensus_SNP_noPF <- find_consensus_SNPs(ANNOT_MELT, exclude_methods = "POLYFUN_SUSIE", sort_by_support = F)$Consensus_SNP
 }
 \seealso{
 Other IMPACT: 

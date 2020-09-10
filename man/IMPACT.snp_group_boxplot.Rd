@@ -9,10 +9,14 @@
 \usage{
 IMPACT.snp_group_boxplot(
   TOP_IMPACT_all,
+  snp_groups = c("GWAS lead", "UCS", "Consensus"),
   method = "wilcox.test",
   comparisons_filter = function(x) {     if ("Consensus" \%in\% x)          return(x) },
   show_plot = T,
   save_path = F,
+  title = "IMPACT scores",
+  xlabel = NULL,
+  ylabel = NULL,
   height = 10,
   width = 10
 )

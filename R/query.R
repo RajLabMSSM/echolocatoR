@@ -90,6 +90,7 @@ import_topSNPs <- function(topSS,
     dplyr::mutate(CHR=gsub("chr","",CHR))
 
   # Add Locus/Gene columns
+  bad_chars <- "/|[:]|[,]"
   if((is.null(gene_col) & is.null(locus_col))){
     printer("+ Constructing locus names from CHR and index SNP")
     # locus_chr1_rs10737496
@@ -106,18 +107,18 @@ import_topSNPs <- function(topSS,
     locus_col <- gene_col <- "Locus";
   } else if(gene_col %in% colnames(top_SNPs) & locus_col %in% colnames(top_SNPs)){
     print("+ Assigning gene_col and locus_col independently",v=verbose)
-    top_SNPs$Gene <- gsub("/","_", orig_top_SNPs[[gene_col]])
-    top_SNPs$Locus <- gsub("/","_",orig_top_SNPs[[locus_col]]) # Get rid of problematic characters
+    top_SNPs$Gene <- gsub(bad_chars,"_", orig_top_SNPs[[gene_col]])
+    top_SNPs$Locus <- gsub(bad_chars,"_",orig_top_SNPs[[locus_col]]) # Get rid of problematic characters
 
   } else {
     if(gene_col %in% colnames(top_SNPs) & all(!is.na(top_SNPs[[gene_col]])) ){
       print("+ Assigning gene_col to locus_col",v=verbose)
-      top_SNPs$Gene <- gsub("/","_", orig_top_SNPs[[gene_col]])
-      top_SNPs$Locus <- gsub("/","_",top_SNPs$Gene) # Get rid of problematic characters
+      top_SNPs$Gene <- gsub(bad_chars,"_", orig_top_SNPs[[gene_col]])
+      top_SNPs$Locus <- gsub(bad_chars,"_",top_SNPs$Gene) # Get rid of problematic characters
     } else {
       print("+ Assigning locus_col to gene_col",v=verbose)
-      top_SNPs$Locus <- gsub("/","_",orig_top_SNPs[[locus_col]])
-      top_SNPs$Gene <- gsub("/","_",top_SNPs$Locus) # Get rid of problematic characters
+      top_SNPs$Locus <- gsub(bad_chars,"_",orig_top_SNPs[[locus_col]])
+      top_SNPs$Gene <- gsub(bad_chars,"_",top_SNPs$Locus) # Get rid of problematic characters
     }
   }
 
@@ -155,7 +156,7 @@ import_topSNPs <- function(topSS,
 
   # Make sure cols are numeric
   top_SNPs <- top_SNPs %>% dplyr::mutate_at(.vars = vars(POS,P,Effect),
-                                            .funs = as.numeric)
+                                            .funs = function(x){as.numeric(gsub(",| ","",x))})
   if(show_table){
     createDT(top_SNPs, caption = "Top SNP per locus")
   }

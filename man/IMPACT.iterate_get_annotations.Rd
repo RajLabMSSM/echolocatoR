@@ -29,7 +29,7 @@ Unfortunately, you have to download the entire chromosome file at once,
 }
 \examples{
 data("merged_DT")
-ANNOT_MELT <- IMPACT.iterate_get_annotations(merged_DT=subset(merged_DT, Locus=="BST1"))
+ANNOT_MELT <- IMPACT.iterate_get_annotations(merged_DT=merged_DT)
 }
 \seealso{
 Other IMPACT: 
