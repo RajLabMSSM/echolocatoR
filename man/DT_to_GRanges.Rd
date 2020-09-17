@@ -13,6 +13,8 @@ Convert data.table to GRanges object
 Other XGR: 
 \code{\link{GRanges_to_BED}()},
 \code{\link{XGR.download_and_standardize}()},
+\code{\link{XGR.enrichment_plot}()},
+\code{\link{XGR.enrichment}()},
 \code{\link{XGR.filter_assays}()},
 \code{\link{XGR.filter_sources}()},
 \code{\link{XGR.import_annotations}()},

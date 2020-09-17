@@ -88,17 +88,19 @@ DT_to_GRanges <- function(subset_DT){
 #' Write filter as a string (or \code{NULL} to include all SNPs).
 #' @param background_filter Specify background by filtering SNPs in \code{subset_DT}.
 #' Write filter as a string (or \code{NULL} to include all SNPs).
-#' @examples
-#' data("merged_DT")
-#' fg_bg <- XGR.prepare_foreground_background(subset_DT=merged_DT, foreground_filter="Consensus_SNP==T", background_filter="leadSNP==T")
 #' @family XGR
 #' @keywords internal
+#' @examples
+#' data("merged_DT")
+#' merged_DT <- data.table::fread("/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/merged_UKB.csv.gz", nThread=4)
+#' fg_bg <- XGR.prepare_foreground_background(subset_DT=merged_DT, foreground_filter="Consensus_SNP==T", background_filter="leadSNP==T")
 XGR.prepare_foreground_background  <- function(subset_DT,
                                                foreground_filter="Support>0",
-                                               background_filter=NULL){
+                                               background_filter=NULL,
+                                               sample_background=T){
   # Foreground
   fg <- subset(subset_DT, eval(parse(text=foreground_filter))) %>%
-    dplyr::mutate(chrom = paste0("chr",CHR),
+    dplyr::mutate(chrom = paste0(gsub("chr","",CHR)),
                   chromStart = POS,
                   chromEnd = POS,
                   name = SNP) %>%
@@ -106,9 +108,12 @@ XGR.prepare_foreground_background  <- function(subset_DT,
   # Background
   if(!is.null(background_filter)){
     bg_DT <- subset(subset_DT, eval(parse(text=background_filter)))
+    if(sample_background){
+      bg_DT <- bg_DT %>% dplyr::sample_n(size=nrow(fg))
+    }
   } else { bg_DT <- subset_DT  }
 
-  bg <- bg_DT %>% dplyr::mutate(chrom = paste0("chr",CHR),
+  bg <- bg_DT %>% dplyr::mutate(chrom = paste0(gsub("chr","",CHR)),
                                 chromStart = POS,
                                 chromEnd = POS,
                                 name = SNP) %>%
@@ -118,6 +123,153 @@ XGR.prepare_foreground_background  <- function(subset_DT,
   return(list("foreground"=fg,
               "background"=bg))
 }
+
+
+
+
+#' XGR enrichment
+#'
+#' @family XGR
+#' @examples
+#' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
+#'
+#' merged_dat <- merge_finemapping_results(dataset = dirname(root), LD_reference = "UKB", minimum_support = 0)
+#' gr <- peaks <- NOTT_2019.get_epigenomic_peaks(convert_to_GRanges = T, nThread = 1) %>% subset(select = -c(start,end))
+#' gr <- regions <- NOTT_2019.get_regulatory_regions(as.granges = T)
+#' grouping_vars <- c("Cell_type","Assay")
+#' enrich.lead <- XGR.enrichment(gr=gr, merged_dat=merged_dat, foreground_filter="leadSNP==T",  grouping_vars=grouping_vars)
+#' enrich.UCS <- XGR.enrichment(gr=gr, merged_dat=merged_dat, foreground_filter="Support>0", grouping_vars=grouping_vars)
+#' enrich.consensus <- XGR.enrichment(gr=gr, merged_dat=merged_dat, foreground_filter="Consensus_SNP==T", grouping_vars=grouping_vars)
+#' enrich_res <- rbind(enrich.lead, enrich.UCS, enrich.consensus)
+#'
+#' data.table::fwrite(enrich_res, file.path(root,"XGR/Nott2019.enrich_celltype_peaks.csv.gz"))
+XGR.enrichment <- function(gr,
+                           merged_dat,
+                           foreground_filter="Consensus_SNP==T",
+                           background_filter="!is.na(SNP)",
+                           grouping_vars=c("Cell_type") ){
+  fg_bg <- XGR.prepare_foreground_background(subset_DT=merged_dat,
+                                             foreground_filter=foreground_filter,
+                                             background_filter=background_filter,
+                                             sample_background = F)
+  # Create all combinations
+  if(!is.null(grouping_vars)){
+    combos <- expand.grid(sapply( subset(data.frame(gr), select=grouping_vars), unique)) %>%
+      `colnames<-`(grouping_vars)
+    if(length(grouping_vars)<2) {combos$dummy1 <- 1; gr$dummy1 <- 1; }
+  }else {
+    combos <- data.frame(dummy1=1, dummy2=2);
+    gr$dummy1 <- 1;  gr$dummy2 <- 2;
+  }
+
+  RES <- lapply(1:nrow(combos), function(i){
+    ROW <- combos[i,]
+    gr.sub <- gr
+    for(column in colnames(combos)){
+      gr.sub <- subset(gr.sub, eval(parse(text=column))==ROW[[column]])
+    }
+
+    res <-XGR::xGRviaGenomicAnno(data.file = fg_bg$foreground,
+                                background.file = fg_bg$background,
+                                format.file="data.frame",
+                                GR.annotation = gr.sub,
+                                background.annotatable.only = F)
+    for(column in colnames(combos)){
+      res[[column]] <- ROW[[column]]
+    }
+    return(res)
+  }) %>% data.table::rbindlist()
+  RES$fg_filter <- foreground_filter
+  RES$bg_filter <- background_filter
+  return(RES)
+}
+
+
+
+
+
+#' Plot enrichment results
+#'
+#' @family XGR
+#' @examples
+#' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
+#'
+#' # Epigenomic peaks
+#' enrich.peak <- data.table::fread(file.path(root,"XGR/Nott2019.enrich_celltype_peaks.csv.gz"))
+#' gp <- XGR.enrichment_plot(enrich_res=enrich.peak, title="Enrichment: Nott et al. (2019)", subtitle="Cell-type-specfic peaks", facet_formula="Assay ~ Cell_type", save_plot=file.path(root,"XGR/Nott2019.enrich_celltype_peaks.png"))
+#'
+#' # Regulatory elements
+#' enrich.element <- data.table::fread(file.path(root,"XGR/Nott2019.enrich_celltype_elements.csv.gz"))
+#' gp <- XGR.enrichment_plot(enrich_res=enrich.element, title="Enrichment: Nott et al. (2019)", subtitle="Cell-type-specfic elements", facet_formula="Element ~ Cell_type", save_plot=file.path(root,"XGR/Nott2019.enrich_celltype_elements.png"))
+#'
+#' # Merged volcano plot
+#' enrich <- rbind(enrich.peak, enrich.element, fill=T)
+#' gp <- XGR.enrichment_plot(enrich_res=enrich, title="Enrichment: Cell-type-specific peaks and elements", plot_type="point",save_plot=file.path(root,"XGR/Nott2019.enrich_volcano.png"), height=5, width=8)
+XGR.enrichment_plot <- function(enrich_res,
+                                title=NULL,
+                                subtitle=NULL,
+                                facet_formula=NULL,
+                                FDR_thresh=0.05,
+                                plot_type="bar",
+                                shape_var="Cell_type",
+                                save_plot=F,
+                                height=5,
+                                width=5){
+  snp_filters <- snp_group_filters(invert = T)
+  enrich_res <- dplyr::mutate(enrich_res,
+                              SNP_Group=factor(snp_filters[fg_filter], levels=c("GWAS lead","UCS","Consensus"), ordered = T),
+                              FDR=stats::p.adjust(p = pvalue, method = "fdr")) %>%
+    dplyr::mutate(neg_log_FDR  = -log1p(pvalue))
+  colorDict <- setNames(c("red","green2","goldenrod2"),levels(enrich_res$SNP_Group))
+
+  # ggplot(data=enrich_res, aes(x=SNP_Group, y=-log10(adjp), fill=SNP_Group))
+  # comparisons <- utils::combn(x = as.character(unique(enrich_res$SNP_Group)),
+  #                             m=2,
+  #                             # FUN = comparisons_filter,
+  #                             simplify = F) %>% purrr::compact()
+  # method="wilcox.test"
+
+  if(plot_type=="bar"){
+    gp <- ggplot(data=subset(enrich_res, FDR<FDR_thresh),
+                 aes(x=SNP_Group, y= fc, fill=SNP_Group)) +
+      geom_col(stat="identity", alpha=.5, show.legend = F) +
+      geom_jitter(height=0, width = 0, alpha=.1, show.legend = F) +
+      scale_fill_manual(values = colorDict) +
+      # ggpubr::stat_compare_means(method = method,
+      #                            comparisons = comparisons,
+      #                            label = "p.signif", size=3, vjust = 1.5) +
+      facet_grid(facets = if(is.null(facet_formula)) facet_formula else as.formula(facet_formula),
+                 scales="free_y") +
+      labs(x="SNP Group", title=title, subtitle=subtitle) +
+      theme_bw() +
+      theme(strip.background = element_rect(fill="grey20"),
+            strip.text = element_text(color="white"),
+            axis.text.x = element_text(angle=45, hjust=1))
+  }
+
+  if(plot_type=="point"){
+    gp <- ggplot(data=enrich_res, aes(x= log(fc), y= -log(FDR), size=nOverlap,
+                                      color=SNP_Group, shape=eval(parse(text=shape_var))))+
+      stat_smooth(geom='line', alpha=0.5, se=T, aes(group=SNP_Group), method = "lm") +
+      geom_point(alpha=.75) +
+      scale_color_manual(values = colorDict) +
+      geom_hline(yintercept = -log10(0.05), linetype=2, alpha=.5) +
+      facet_grid(facets = if(is.null(facet_formula)) facet_formula else as.formula(facet_formula))  +
+      labs(title=title, subtitle=subtitle, shape=shape_var) +
+
+      theme_bw() +
+      theme(strip.background = element_rect(fill="grey20"),
+            strip.text = element_text(color="white"))
+  }
+
+  if(show_plot) print(gp)
+
+  if(save_plot!=F){
+    ggsave(save_plot, gp, dpi=300, height=height, width=width)
+  }
+  return(gp)
+}
+
 
 
 
@@ -169,8 +321,7 @@ XGR.parse_metadata <- function(gr.lib,
 #' @family XGR
 #' @examples
 #' data("BST1")
-#' finemap_DT <- BST1
-#' gr.lib <- XGR.download_and_standardize(lib.selections=c("ENCODE_DNaseI_ClusteredV3_CellTypes"), finemap_DT=finemap_DT, nCores=1)
+#' gr.lib <- XGR.download_and_standardize(lib.selections=c("ENCODE_DNaseI_ClusteredV3_CellTypes"), finemap_dat=BST1, nCores=1)
 #' @keywords internal
 XGR.download_and_standardize <- function(lib.selections=c("ENCODE_TFBS_ClusteredV3_CellTypes",
                                                           "TFBS_Conserved",
@@ -380,7 +531,7 @@ XGR.iterate_enrichment <- function(subset_DT,
 #' enrich_res <- XGR.iterate_enrichment(subset_DT=merged_DT, foreground_filter = "Consensus_SNP", background_filter = "leadSNP", lib.selections = c("ENCODE_TFBS_ClusteredV3_CellTypes"), nCores=1)
 #' XGR.plot_enrichment(enrich_res)
 XGR.plot_enrichment <- function(enrich_res,
-                                FDR_thresh=0.05,
+                                adjp_thresh=0.05,
                                 top_annotations=NULL,
                                 show_plot=T){
   # enrich_res$annotation <- factor(gsub(".*[$]","",enrich_res$name), levels = rev(unique(gsub(".*[$]","",enrich_res$name))), ordered = T)
@@ -389,13 +540,13 @@ XGR.plot_enrichment <- function(enrich_res,
   enrich_res$assay <- factor(enrich_res$assay, unique(enrich_res$assay), ordered = T)
   if(is.null(top_annotations)){top_annotations <- nrow(enrich_res)}
 
-  gp <- ggplot(data = subset(enrich_res, FDR<FDR_thresh)[1:top_annotations,],
+  gp <- ggplot(data = subset(enrich_res, adjp<adjp_thresh)[1:top_annotations,],
                aes(y=fc, x=assay, fill=fc)) +
     geom_col() +
     labs(title=paste0("Epigenomic annotation enrichment (FDR < ",FDR_thresh,")"),
          subtitle="Foreground = Consensus SNPs\nBackground = Lead GWAS SNPs",
          y="Fold-change") +
-    facet_grid(facets = lib ~  source,
+    facet_grid(facets = Cell_type ~  Assay,
                scales = "free",
                space = "free") +
     theme_bw() +

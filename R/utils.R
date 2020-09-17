@@ -1415,8 +1415,9 @@ vcf_cleaning <- function(root,
 
 
 
-snp_group_filters <- function(){
-  c("Random" = "SNP %in% sample(ANNOT_MELT$SNP, size=3)",
+snp_group_filters <- function(invert=F){
+  snp_filters <-
+    c("Random" = "SNP %in% sample(sampling_df$SNP, size=3)",
     "All" = "!is.na(SNP)",
     "GWAS nom. sig."="P<0.05",
     "GWAS sig."="P<5e-8",
@@ -1426,8 +1427,29 @@ snp_group_filters <- function(){
     "POLYFUN-SUSIE CS"="POLYFUN_SUSIE.CS>0",
     "FINEMAP CS"="FINEMAP.CS>0",
     "UCS"="Support>0",
+    "Support==0"="Support==0",
+    "Support==1"="Support==1",
+    "Support==2"="Support==2",
+    "Support==3"="Support==3",
+    "Support==4"="Support==4",
     "Consensus"="Consensus_SNP==T",
     "Consensus (-POLYFUN)"="Consensus_SNP_noPF==T"
   )
+  if(invert)  snp_filters <- setNames(names(snp_filters), unname(snp_filters))
+  return(snp_filters)
+}
+
+
+
+
+
+
+pvalues_to_symbols <- function(pval_vector){
+  symnum.args <- list(cutpoints = c(0,0.00001, 0.0001, 0.001, 0.01, 0.05, 1),
+                      symbols = c("*****","****", "***", "**", "*", "ns"))
+  symnum.args$x <- as.numeric(pval_vector)
+  pvalue.signif <- do.call(stats::symnum, symnum.args) %>%
+    as.character()
+  return(pvalue.signif)
 }
 

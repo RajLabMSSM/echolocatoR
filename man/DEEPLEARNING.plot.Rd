@@ -9,6 +9,7 @@ DEEPLEARNING.plot(
   snp_groups = c("GWAS lead", "UCS", "Consensus"),
   comparisons_filter = function(x) {     if ("Consensus" \%in\% x)          return(x) },
   model.metric = c("MEAN"),
+  facet_formula = "Assay ~ Model + Tissue",
   show_plot = T,
   save_path = F,
   height = 9,

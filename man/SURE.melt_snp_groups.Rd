@@ -21,7 +21,11 @@ SURE.melt_snp_groups(
 Aggregate \emph{SuRE} p-values for each SNP group
 }
 \examples{
+base_url="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
+
 sure_DT <- data.table::fread("/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/SURE/Nalls23andMe_2019.SURE.csv.gz", nThread=4)
+sure.melt <- SURE.melt_snp_groups(sure_DT)
+data.table::fwrite(sure.melt, file.path(base_url,"SURE/Nalls23andMe_2019.SURE.snp_groups.mean.csv.gz"))
 }
 \seealso{
 Other SURE: 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/Dey_DeepLearning.R
 \name{DEEPLEARNING.melt}
 \alias{DEEPLEARNING.melt}
-\title{Melt deep learning anntations into long-format}
+\title{Melt deep learning annotations into long-format}
 \usage{
 DEEPLEARNING.melt(
   ANNOT,
@@ -13,10 +13,11 @@ DEEPLEARNING.melt(
 )
 }
 \description{
-Melt deep learning anntations into long-format
+Melt deep learning annotations into long-format
 }
 \examples{
-ANNOT <- DEEPLEARNING.query (merged_dat=merged_DT, level="Allelic_Effect", type="annot")
+merged_dat <- merge_finemapping_results(dataset = "Data/GWAS/Nalls23andMe_2019", minimum_support = 0, LD_reference = "UKB")
+ANNOT <- DEEPLEARNING.query(merged_dat=merged_dat, level="Allelic_Effect", type="annot")
 
 annot.melt <- DEEPLEARNING.melt(ANNOT=ANNOT, metric_str="mean")
 base_url = "/sc/arion/projects/pd-omics/brian/Fine_Mapping"

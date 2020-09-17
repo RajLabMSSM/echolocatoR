@@ -17,6 +17,11 @@ VALIDATION.super_plot(
 Merge validation assays into a single plot
 }
 \examples{
-
+plt.ALL <- VALIDATION.super_plot(base_url="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide")
+}
+\seealso{
+Other VALIDATION: 
+\code{\link{VALIDATION.compare_distributions}()},
+\code{\link{VALIDATION.permute_plot}()}
 }
 \concept{VALIDATION}

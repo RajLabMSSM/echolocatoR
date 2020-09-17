@@ -425,7 +425,7 @@ fGWAS.boxplot <- function(results.DF,
   bp <- ggplot(DF, aes(x=SNP.Group, y=estimate, fill=SNP.Group,
                        text = paste("Annotation:",Annot))) +
     geom_point(show.legend = F, aes(alpha=0.7)) +
-    geom_jitter(width = .2, show.legend = F) +
+    geom_jitter(width = .2, show.legend = F, height=0) +
     geom_boxplot(show.legend = F, aes(alpha=0.7)) +
     facet_grid("~Enrichment") +
     # stat_summary(

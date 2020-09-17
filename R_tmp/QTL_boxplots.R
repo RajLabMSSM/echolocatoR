@@ -304,7 +304,7 @@ eQTL_boxplots <- function(snp_list,
 
     bp <- ggplot(data = DAT, aes(x = genotype, y = Expression, fill=Risk.level)) +
       geom_boxplot(show.legend = T) +
-      geom_jitter(alpha=.5, width =.2,  show.legend = F) +
+      geom_jitter(alpha=.5, width =.2,  show.legend = F, height=0) +
       facet_grid(facets = Condition~SNP+MAF, scales = "free_x", drop = T) +
       theme_bw() +
       theme(strip.text.y = element_text(angle = 0),

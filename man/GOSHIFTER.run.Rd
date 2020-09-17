@@ -9,8 +9,9 @@
 }
 \usage{
 GOSHIFTER.run(
+  finemap_dat,
   locus_dir,
-  grl.ap,
+  GRlist,
   permutations = 1000,
   goshifter_path = NULL,
   chromatin_state = "TssA",
@@ -22,4 +23,10 @@ GOSHIFTER.run(
 }
 \description{
 \code{GoShifter}: Locus-specific enrichment tool.
+}
+\examples{
+data("BST1"); data("locus_dir")
+peaks <- NOTT_2019.get_epigenomic_peaks(convert_to_GRanges = T)
+grl.peaks <- GenomicRanges::makeGRangesListFromDataFrame(data.frame(peaks), split.field ="Cell_type", names.field ="seqnames" )
+GS_results <- GOSHIFTER.run(finemap_dat=subset(BST1, P<5e-8), locus_dir=locus_dir, GRlist=grl.peaks)
 }

@@ -278,7 +278,7 @@ prepare_mat_meta <- function(TOP_IMPACT,
     # Get the annotations from here
     merge(subset(TOP_IMPACT, SNP_group==snp.group), sort = F) %>%
     # REPLACE NA with 0!: in actuality, these are just snps with IMPACT score <.01 during query
-    dplyr::mutate_at(.vars = names(snp.groups),
+    dplyr::mutate_at(.vars = names(snp.group),
                      .funs = function(.){as.numeric(ifelse(is.na(.),fill_na,.))}) %>%
     dplyr::mutate(Tissue=gsub("STEMCELL","STEM CELL",Tissue)) %>%
     dplyr::mutate(Tissue = ifelse(Tissue=="GI","GI",
@@ -305,7 +305,7 @@ prepare_mat_meta <- function(TOP_IMPACT,
 #' #                                              baseURL="../../data/IMPACT/IMPACT707/Annotations",
 #' #                                              all_snps_in_range=T,
 #' #                                              top_annotations_only=F)
-#' # data.table::fwrite(ANNOT_MELT,"../../data/IMPACT/IMPACT707/Annotations/IMPACT_overlap.csv.gz")
+#' data.table::fwrite(ANNOT_MELT,"/sc/arion/projects/pd-omics/data/IMPACT/IMPACT707/Annotations/IMPACT_overlap.csv.gz")
 #' ANNOT_MELT <- data.table::fread("~/Desktop/Fine_mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/IMPACT/IMPACT_overlap.csv.gz")
 #' ANNOT_MELT <- update_cols(subset(ANNOT_MELT, select=-c(SUSIE.Probability,FINEMAP.Probability)))
 #'
@@ -317,8 +317,9 @@ IMPACT_heatmap <- function(ANNOT_MELT,
                            snp_groups=c("GWAS lead","UCS","Consensus")){
   library(dplyr)
   library(ComplexHeatmap);# devtools::install_github("jokergoo/ComplexHeatmap")
+
   ## Remove POLYFUN results as this introduces circularity (Polyfun trains on data from ENCODE/Roadmap, as does IMPACT)
-  #' ANNOT_MELT$Consensus_SNP_noPF <- find_consensus_SNPs(ANNOT_MELT, exclude_methods = "POLYFUN_SUSIE", sort_by_support = F)$Consensus_SNP
+  ANNOT_MELT$Consensus_SNP_noPF <- find_consensus_SNPs(ANNOT_MELT, exclude_methods = "POLYFUN_SUSIE", sort_by_support = F)$Consensus_SNP
   snp.groups_list <- snp_group_filters()
   snp.groups_list <- snp.groups_list[names(snp.groups_list) %in% snp_groups]
   TOP_IMPACT <- lapply(names(snp.groups_list), function(x){
@@ -354,7 +355,7 @@ IMPACT_heatmap <- function(ANNOT_MELT,
   # Use a less averaged version of the data to gain power
   TOP_IMPACT_all$rowID <- 1:nrow(TOP_IMPACT_all)
   # Depending on if and at what stage you fill na with 0, you get very different boxplot and tstats
-  TOP_IMPACT_all[is.na(TOP_IMPACT_all)] <- 0
+  # TOP_IMPACT_all[is.na(TOP_IMPACT_all)] <- 0
 
   # ggpubr boxplot
   bp <- IMPACT.snp_group_boxplot(TOP_IMPACT_all,
@@ -608,6 +609,7 @@ IMPACT.snp_group_boxplot <- function(TOP_IMPACT_all,
                                      title="IMPACT scores",
                                      xlabel=NULL,
                                      ylabel=NULL,
+                                     shift_points=T,
                                      height=10,
                                      width=10){
   library(ggpubr)
@@ -620,17 +622,19 @@ IMPACT.snp_group_boxplot <- function(TOP_IMPACT_all,
                               simplify = F) %>% purrr::compact()
   # plot_dat$SNP_group <- gsub("_","\n",plot_dat$SNP_group)
 
+  plot_dat$mean_IMPACT
+
   pb <- ggpubr::ggviolin(plot_dat,
                  x = "SNP_group", y = "mean_IMPACT",
                  fill = "SNP_group",
                  alpha=.6,
                  add = "boxplot",
-                 add.params = list(alpha=.1)) +
+                 add.params = list(alpha=.1, color="white")) +
     ggpubr::stat_compare_means(method = method, comparisons = comparisons,
                                label = "p.signif", size=3) +
     ggpubr::stat_compare_means(method = method, comparisons = comparisons,
                                label = "p.adj", vjust=1.75, size=3)  +
-    geom_jitter(alpha=.5,width = .25, show.legend = F, shape=16) +
+    geom_jitter(alpha=.5,width = .25, show.legend = F, shape=16, height = 0) +
     geom_hline(yintercept =.5, linetype=2, alpha=.5) +
     labs(x=xlabel,
          y=ylabel,
@@ -640,6 +644,10 @@ IMPACT.snp_group_boxplot <- function(TOP_IMPACT_all,
   if(length(dplyr::union(snp.groups, c("GWAS lead","UCS","Consensus")))==3){
     pb <- pb + scale_fill_manual(values =  c("red","green2","goldenrod2")) +
       theme( axis.text.x = element_text(angle=0, hjust=.5))
+  }
+
+  if(shift_points){
+    pb <- gginnards::shift_layers(pb, "GeomPoint", shift = -5)
   }
   if(show_plot) print(pb)
   if(save_path!=F) ggplot2::ggsave(save_path, pb,
@@ -940,7 +948,7 @@ IMPACT.plot_enrichment <- function(ENRICH){
     # geom_boxplot(data=enrich_dat, aes(x=SNP.group, y=enrichment)) +
     geom_col(data=mean_dat, aes(x=SNP.group, y=mean.enrichment, fill=SNP.group), position = "dodge") +
     geom_jitter(data=enrich_dat, aes(x=SNP.group, y=enrichment),
-                size=1, alpha=.25, color="cyan") +
+                size=1, alpha=.25, color="cyan", height=0) +
     geom_hline(yintercept = 1, linetype="dashed", alpha=.8) +
     theme_bw() +
     theme(strip.text = element_text(angle=0),
@@ -951,7 +959,7 @@ IMPACT.plot_enrichment <- function(ENRICH){
 
   ep <- ggplot(ENRICH, aes(x=Tissue, y=enrichment, fill=SNP.group)) +
     geom_violin(position = "dodge") +
-    geom_jitter(size=1, alpha=.25, color="cyan") +
+    geom_jitter(size=1, alpha=.25, color="cyan", height=0) +
     geom_hline(yintercept = 1, linetype="dashed", alpha=.8) +
     facet_grid(facets = SNP.group ~ .,#Tissue + CellDeriv,
                switch = "y", space = "free_x",

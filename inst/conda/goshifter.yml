@@ -1,8 +1,13 @@
 name: goshifter
 channels:
   - defaults
+  - anaconda
+  - conda-forge
   - bioconda
 dependencies:
   - python<=2.7.9
-  - bx-python
   - tabix
+  - pip
+  - pip:
+    - bx-python
+    - numpy

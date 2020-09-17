@@ -27,13 +27,14 @@ Merges a list of XGR annotations into a single GRanges object
 }
 \examples{
 data("BST1")
-finemap_DT <- BST1
-gr.lib <- XGR.download_and_standardize(lib.selections=c("ENCODE_DNaseI_ClusteredV3_CellTypes"), finemap_DT=finemap_DT, nCores=1)
+gr.lib <- XGR.download_and_standardize(lib.selections=c("ENCODE_DNaseI_ClusteredV3_CellTypes"), finemap_dat=BST1, nCores=1)
 }
 \seealso{
 Other XGR: 
 \code{\link{DT_to_GRanges}()},
 \code{\link{GRanges_to_BED}()},
+\code{\link{XGR.enrichment_plot}()},
+\code{\link{XGR.enrichment}()},
 \code{\link{XGR.filter_assays}()},
 \code{\link{XGR.filter_sources}()},
 \code{\link{XGR.import_annotations}()},

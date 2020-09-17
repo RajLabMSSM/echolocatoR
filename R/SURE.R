@@ -69,7 +69,11 @@ SURE.merge <- function(merged_DT,
 #' \href{https://osf.io/w5bzq/wiki/home/?view}{Full SuRE data}
 #' \href{https://sure.nki.nl}{SNP-SuRE data browse}
 #' @examples
+#' base_url="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
+#'
 #' sure_DT <- data.table::fread("/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/SURE/Nalls23andMe_2019.SURE.csv.gz", nThread=4)
+#' sure.melt <- SURE.melt_snp_groups(sure_DT)
+#' data.table::fwrite(sure.melt, file.path(base_url,"SURE/Nalls23andMe_2019.SURE.snp_groups.mean.csv.gz"))
 SURE.melt_snp_groups <- function(sure_DT,
                                  grouping_vars=c("Locus"),
                                  metric_str="mean",
@@ -79,12 +83,14 @@ SURE.melt_snp_groups <- function(sure_DT,
                     # "ref.element.count","alt.element.count","k562.ref.mean", "k562.alt.mean",
                     #  "hepg2.ref.mean","hepg2.alt.mean"
                     )
+  snp.groups_list <- snp_group_filters()
   column_substr <- paste(measure.vars, collapse="|")
   metric <- get(metric_str)
+  sampling_df <- sure_DT
   sure.melt <- sure_DT %>%
     dplyr::group_by(.dots=grouping_vars) %>%
     dplyr::summarise_at(.vars = vars(measure.vars),
-                        .funs = list("Random"= ~ metric(tidyr::replace_na(sample(.x, size=3),replace_NA), na.rm = T),
+                        .funs = list("Random"= ~ metric(tidyr::replace_na(sample(.x, size=3, replace = T),replace_NA), na.rm = T),
                                      "All"= ~ metric(tidyr::replace_na(.x,replace_NA), na.rm = T),
                                      "GWAS nom. sig."= ~ metric(tidyr::replace_na(.x[P<.05],replace_NA), na.rm = T),
                                      "GWAS sig."= ~ metric(tidyr::replace_na(.x[P<5e-8],replace_NA), na.rm = T),
@@ -94,6 +100,11 @@ SURE.melt_snp_groups <- function(sure_DT,
                                      "POLYFUN-SUSIE CS"= ~ metric(tidyr::replace_na(.x[POLYFUN_SUSIE.CS>0],replace_NA), na.rm = T),
                                      "FINEMAP CS"= ~ metric(tidyr::replace_na(.x[FINEMAP.CS>0],replace_NA), na.rm = T),
                                      "UCS"= ~ metric(tidyr::replace_na(.x[Support>0],replace_NA), na.rm = T),
+                                     "Support==0"= ~ metric(tidyr::replace_na(.x[Support==0],replace_NA), na.rm = T),
+                                     "Support==1"= ~ metric(tidyr::replace_na(.x[Support==1],replace_NA), na.rm = T),
+                                     "Support==2"= ~ metric(tidyr::replace_na(.x[Support==2],replace_NA), na.rm = T),
+                                     "Support==3"= ~ metric(tidyr::replace_na(.x[Support==3],replace_NA), na.rm = T),
+                                     "Support==4"= ~ metric(tidyr::replace_na(.x[Support==4],replace_NA), na.rm = T),
                                      "Consensus"= ~ metric(tidyr::replace_na(.x[Consensus_SNP],replace_NA), na.rm = T)
                         ),
     ) %>%
@@ -103,9 +114,7 @@ SURE.melt_snp_groups <- function(sure_DT,
     dplyr::mutate(Annotation =gsub("\\.","_",Annotation)) %>%
     tidyr::separate(col = "Annotation", sep="_", into=c("Cell_type","Test","Metric","SNP_Group"), remove=F) %>%
     dplyr::mutate(Annotation = DescTools::StrTrim(Annotation, "_"),
-                  SNP_Group = factor(SNP_Group, levels = c("Random","All","GWAS nom. sig.","GWAS sig.","GWAS lead",
-                                                "ABF CS","SUSIE CS","POLYFUN-SUSIE CS","FINEMAP CS",
-                                                "UCS","Consensus"), ordered = T),
+                  SNP_Group = factor(SNP_Group, levels = names(snp.groups_list), ordered = T),
                   neg.log.value = log1p(value))
   return(sure.melt)
 }
@@ -131,7 +140,9 @@ SURE.plot <- function(sure.melt,
                       xlabel="SNP Group",
                       ylabel="mean -log10(p-value)",
                       show_plot=T,
-                      save_path=F){
+                      save_path=F,
+                      height=5,
+                      width=5){
   # PLOT
   dat_plot <-  subset(sure.melt,
                         SNP_Group %in% snp_groups)
@@ -152,7 +163,7 @@ SURE.plot <- function(sure.melt,
     # ggpubr::stat_compare_means(method = method,
     #                            comparisons = comparisons,
     #                            label = "p.adj", hjust=5, size=3) +
-    geom_jitter(alpha=.1, width = .3) + #aes(color=SNP.Group)) +
+    geom_jitter(alpha=.1, width = .3, height=0) + #aes(color=SNP.Group)) +
     facet_grid(facets = . ~ Cell_type ,
                scales = "free") +
     labs(title=title, y=ylabel, x=xlabel) +
@@ -169,7 +180,7 @@ SURE.plot <- function(sure.melt,
   #                        paste("Nalls23andMe_2019","SURE","png",sep="."))
   if(save_path!=F){
     ggsave(save_path,
-           pb, dpi = 300, height=5, width=5)
+           pb, dpi = 400, height=height, width=width)
   }
   return(pb)
 }

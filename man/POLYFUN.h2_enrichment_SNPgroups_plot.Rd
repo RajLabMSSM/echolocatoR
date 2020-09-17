@@ -2,7 +2,7 @@
 % Please edit documentation in R/POLYFUN.R
 \name{POLYFUN.h2_enrichment_SNPgroups_plot}
 \alias{POLYFUN.h2_enrichment_SNPgroups_plot}
-\title{Plot h2 enrichment}
+\title{Plot heritability (h2) enrichment}
 \usage{
 POLYFUN.h2_enrichment_SNPgroups_plot(
   RES,
@@ -17,7 +17,7 @@ POLYFUN.h2_enrichment_SNPgroups_plot(
 )
 }
 \description{
-Plot h2 enrichment
+Plot heritability (h2) enrichment
 }
 \examples{
 merged_dat_full <- merge_finemapping_results(dataset = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019", minimum_support = 0)

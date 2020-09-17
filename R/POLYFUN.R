@@ -1069,9 +1069,9 @@ POLYFUN.h2_enrichment <- function(h2_df,
 #' @examples
 #' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 #' # IMPORTANT! For this to make sense, you need to merge the full data ("merged_DT" only includes Support>0 and leadSNPs)
-#' merged_dat_full <- merge_finemapping_results(dataset = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019", minimum_support = 0)
+#' merged_dat <- merge_finemapping_results(dataset = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019", minimum_support = 0)
 #'
-#' RES <- POLYFUN.h2_enrichment_SNPgroups(merged_dat=merged_DT, ldsc_dir=file.path(root,"PolyFun/output"),  save_enrich=file.path(root,"PolyFun/Nalls23andMe_2019.h2_enrich.snp_groups.csv.gz"))
+#' RES <- POLYFUN.h2_enrichment_SNPgroups(merged_dat=merged_dat, ldsc_dir=file.path(root,"PolyFun/output"),  save_enrich=file.path(root,"PolyFun/Nalls23andMe_2019.h2_enrich.snp_groups.csv.gz"))
 POLYFUN.h2_enrichment_SNPgroups <- function(merged_dat,
                                             chrom="*",
                                             ldsc_dir="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/output",
@@ -1082,6 +1082,10 @@ POLYFUN.h2_enrichment_SNPgroups <- function(merged_dat,
   ldsc.files <- list.files(ldsc_dir, pattern = ldsc_suffix, full.names = T) %>%
     grep(pattern = paste0(".",chrom,"."), value = T)
   h2_DF <- echolocatoR:::.rbind.file.list(ldsc.files)
+
+  h2_merged <- data.table::merge.data.table(merged_dat,
+                                            subset(h2_DF, select=c(SNP,SNPVAR)),
+                                            by=c("SNP"))
 
   # Iterate over loci
   RES <-parallel::mclapply(unique(merged_dat$Locus), function(locus){
@@ -1122,6 +1126,18 @@ POLYFUN.h2_enrichment_SNPgroups <- function(merged_dat,
 
     POLYFUN_SUSIE.credset <- POLYFUN.h2_enrichment(h2_df=h2_df,
                                                    target_SNPs = subset(finemap_dat, POLYFUN_SUSIE.CS>0)$SNP)
+    # Support levels
+    ## Support==0
+    support0 <- POLYFUN.h2_enrichment(h2_df=h2_df,
+                                      target_SNPs = subset(finemap_dat, Support==0)$SNP)
+    support1 <- POLYFUN.h2_enrichment(h2_df=h2_df,
+                                      target_SNPs = subset(finemap_dat, Support==1)$SNP)
+    support2 <- POLYFUN.h2_enrichment(h2_df=h2_df,
+                                      target_SNPs = subset(finemap_dat, Support==2)$SNP)
+    support3 <- POLYFUN.h2_enrichment(h2_df=h2_df,
+                                      target_SNPs = subset(finemap_dat, Support==3)$SNP)
+    support4 <- POLYFUN.h2_enrichment(h2_df=h2_df,
+                                      target_SNPs = subset(finemap_dat, Support==4)$SNP)
 
     # Consenus SNP
     Finemap.consensus <- POLYFUN.h2_enrichment(h2_df=h2_df,
@@ -1145,6 +1161,11 @@ POLYFUN.h2_enrichment_SNPgroups <- function(merged_dat,
                                   "POLYFUN-SUSIE CS",
                                   "FINEMAP CS",
                                   "UCS",
+                                  "Support==0",
+                                  "Support==1",
+                                  "Support==2",
+                                  "Support==3",
+                                  "Support==4",
                                   "Consensus",
                                   "Consensus (-POLYFUN)"),
                       h2.enrichment=c(random,
@@ -1157,6 +1178,11 @@ POLYFUN.h2_enrichment_SNPgroups <- function(merged_dat,
                                       POLYFUN_SUSIE.credset,
                                       FINEMAP.credset,
                                       UCS,
+                                      support0,
+                                      support1,
+                                      support2,
+                                      support3,
+                                      support4,
                                       Finemap.consensus,
                                       Finemap.consensus_noPF))
     res <- cbind(Locus=locus, res)
@@ -1170,7 +1196,7 @@ POLYFUN.h2_enrichment_SNPgroups <- function(merged_dat,
 
 
 
-#' Plot h2 enrichment
+#' Plot heritability (h2) enrichment
 #'
 #' @family polyfun
 #' @examples
@@ -1185,6 +1211,7 @@ POLYFUN.h2_enrichment_SNPgroups_plot <- function(RES,
                                                  title="h2 enrichment",
                                                  xlabel="SNP group",
                                                  ylabel="log10(h2 enrichment)",
+                                                 shift_points=T,
                                                  show_plot=T,
                                                  save_path=F){
   plot_dat <- subset(RES, SNP.Group %in% snp_groups)
@@ -1202,14 +1229,14 @@ POLYFUN.h2_enrichment_SNPgroups_plot <- function(RES,
                          fill = "SNP.Group",
                          alpha=.6,
                          add = "boxplot",
-                         add.params = list(alpha=.1)) +
+                         add.params = list(alpha=.1, color="black")) +
     ggpubr::stat_compare_means(method = method,
                                comparisons = comparisons,
                                label = "p.signif", size=3) +
     ggpubr::stat_compare_means(method = method,
                                comparisons = comparisons,
                                label = "p.adj", vjust=2, size=3)  +
-    geom_jitter(alpha=.5,width = .25, show.legend = F, shape=16) +
+    geom_jitter(alpha=.5,width = .25, show.legend = F, shape=16, height=0) +
     geom_hline(yintercept = log10(1), linetype=2, alpha=.5) +
     # scale_fill_manual(values =  c("red","green3","goldenrod3")) +
     labs(y=ylabel, x=xlabel,
@@ -1217,6 +1244,11 @@ POLYFUN.h2_enrichment_SNPgroups_plot <- function(RES,
     theme(legend.position = "none")
   if(length(dplyr::union(snp.groups, c("GWAS lead","UCS","Consensus")))==3){
     pb <- pb + scale_fill_manual(values =  c("red","green2","goldenrod2"))
+  } else {
+    pb <- pb + theme(axis.text.x = element_text(angle=45, hjust=1))
+  }
+  if(shift_points){
+    pb <- gginnards::shift_layers(pb, "GeomPoint", shift = -5)
   }
   if(show_plot) print(pb)
   if(save_path!=F){

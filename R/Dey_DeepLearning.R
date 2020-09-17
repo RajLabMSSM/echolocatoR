@@ -155,10 +155,12 @@ DEEPLEARNING.query <- function(merged_dat,
 
 
 
-#' Melt deep learning anntations into long-format
+
+#' Melt deep learning annotations into long-format
 #'
 #' @examples
-#' ANNOT <- DEEPLEARNING.query (merged_dat=merged_DT, level="Allelic_Effect", type="annot")
+#' merged_dat <- merge_finemapping_results(dataset = "Data/GWAS/Nalls23andMe_2019", minimum_support = 0, LD_reference = "UKB")
+#' ANNOT <- DEEPLEARNING.query(merged_dat=merged_dat, level="Allelic_Effect", type="annot")
 #'
 #' annot.melt <- DEEPLEARNING.melt(ANNOT=ANNOT, metric_str="mean")
 #' base_url = "/sc/arion/projects/pd-omics/brian/Fine_Mapping"
@@ -168,11 +170,13 @@ DEEPLEARNING.melt <- function(ANNOT,
                               metric_str="max",
                               replace_NA=NA,
                               replace_negInf=NA){
+  snp.groups_list <- snp_group_filters()
   metric <- get(metric_str)
+  sampling_df <- ANNOT
   annot.melt <- ANNOT %>%
     dplyr::group_by(Locus) %>%
     dplyr::summarise_at(.vars = vars(grep(paste(model, collapse="|"),colnames(.), value = T)),
-                        .funs = list("Random"= ~ metric(tidyr::replace_na(sample(.x, size=3),replace_NA), na.rm = T),
+                        .funs = list("Random"= ~ metric(tidyr::replace_na(sample(.x, size=3, replace = T),replace_NA), na.rm = T),
                                      "All"= ~ metric(tidyr::replace_na(.x,replace_NA), na.rm = T),
                                      "GWAS nom. sig."= ~ metric(tidyr::replace_na(.x[P<.05],replace_NA), na.rm = T),
                                      "GWAS sig."= ~ metric(tidyr::replace_na(.x[P<5e-8],replace_NA), na.rm = T),
@@ -182,6 +186,11 @@ DEEPLEARNING.melt <- function(ANNOT,
                                      "POLYFUN-SUSIE CS"= ~ metric(tidyr::replace_na(.x[POLYFUN_SUSIE.CS>0],replace_NA), na.rm = T),
                                      "FINEMAP CS"= ~ metric(tidyr::replace_na(.x[FINEMAP.CS>0],replace_NA), na.rm = T),
                                      "UCS"= ~ metric(tidyr::replace_na(.x[Support>0],replace_NA), na.rm = T),
+                                     "Support==0"= ~ metric(tidyr::replace_na(.x[Support==0],replace_NA), na.rm = T),
+                                     "Support==1"= ~ metric(tidyr::replace_na(.x[Support==1],replace_NA), na.rm = T),
+                                     "Support==2"= ~ metric(tidyr::replace_na(.x[Support==2],replace_NA), na.rm = T),
+                                     "Support==3"= ~ metric(tidyr::replace_na(.x[Support==3],replace_NA), na.rm = T),
+                                     "Support==4"= ~ metric(tidyr::replace_na(.x[Support==4],replace_NA), na.rm = T),
                                      "Consensus"= ~ metric(tidyr::replace_na(.x[Consensus_SNP],replace_NA), na.rm = T)
                         ),
     ) %>%
@@ -191,9 +200,7 @@ DEEPLEARNING.melt <- function(ANNOT,
     tidyr::separate(col = "Annotation", sep="_", into=c("Model","Tissue","Assay","Type","Metric","SNP.Group"), remove=F) %>%
     dplyr::mutate(Annotation = DescTools::StrTrim(Annotation, "_"),
                   SNP.Group = factor(`SNP.Group`,
-                                     levels = c("Random","All","GWAS nom. sig.","GWAS sig.","GWAS lead",
-                                                "ABF CS","SUSIE CS","POLYFUN-SUSIE CS","FINEMAP CS",
-                                                "UCS","Consensus"), ordered = T),
+                                     levels = names(snp.groups_list), ordered = T),
                   log.value = log1p(value))
   return(annot.melt)
 }
@@ -211,6 +218,8 @@ DEEPLEARNING.plot <- function(annot.melt,
                               snp_groups=c("GWAS lead","UCS","Consensus"),
                               comparisons_filter=function(x){if("Consensus" %in% x) return(x)},
                               model.metric=c("MEAN"),
+                              facet_formula="Assay ~ Model + Tissue",
+                              shift_points=T,
                               show_plot=T,
                               save_path=F,
                               height=9,
@@ -218,27 +227,27 @@ DEEPLEARNING.plot <- function(annot.melt,
   dat_plot <-  subset(annot.melt,
                       Metric %in% model.metric &
                         SNP.Group %in%  snp_groups)
-  snp.groups <- unique( dat_plot$SNP.Group)
+  snp.groups <- unique(dat_plot$SNP.Group)
   comparisons <- utils::combn(x = as.character(snp.groups),
                               m=2,
                               FUN = comparisons_filter,
                               simplify = F) %>% purrr::compact()
   method="wilcox.test"
   pb <- ggpubr::ggviolin(data = dat_plot,
-                   x = "SNP.Group", y="log.value", fill = "SNP.Group",
+                   x = "SNP.Group", y="value", fill = "SNP.Group",
                    add = "boxplot", alpha = .6, trim = T,
-                   add.params = list(alpha=.1) )  +
+                   add.params = list(alpha=.1, color="white") )  +
     ggpubr::stat_compare_means(method = method,
                                comparisons = comparisons,
                                label = "p.signif", size=3, vjust = 1.5) +
     # ggpubr::stat_compare_means(method = method,
     #                            comparisons = comparisons,
     #                            label = "p.adj", hjust=5, size=3) +
-    geom_jitter(alpha=.1, width = .3) + #aes(color=SNP.Group)) +
-    facet_grid(facets =   Assay ~ Model + Tissue ,
+    geom_jitter(alpha=.1, width = .3, height=0) + #aes(color=SNP.Group)) +
+    facet_grid(facets = as.formula(facet_formula),
                scales = "free") +
     labs(title=paste0("Deep learning annotations (",tolower(model.metric),")"),
-         y='log10(value)', x="SNP Group") +
+         y='value', x="SNP Group") +
     theme_bw() +
     theme(axis.text.x = element_text(angle = 45, hjust=1),
           legend.position = "none",
@@ -246,6 +255,9 @@ DEEPLEARNING.plot <- function(annot.melt,
           strip.text= element_text(color = "white"))
   if(length(dplyr::union(snp.groups, c("GWAS lead","UCS","Consensus")))==3){
     pb <- pb + scale_fill_manual(values =  c("red","green2","goldenrod2"))
+  }
+  if(shift_points){
+    pb <- gginnards::shift_layers(pb, "GeomPoint", shift = -5)
   }
   if(show_plot) print(pb)
   if(save_path!=F){

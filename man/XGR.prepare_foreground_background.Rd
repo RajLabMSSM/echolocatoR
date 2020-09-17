@@ -7,7 +7,8 @@
 XGR.prepare_foreground_background(
   subset_DT,
   foreground_filter = "Support>0",
-  background_filter = NULL
+  background_filter = NULL,
+  sample_background = T
 )
 }
 \arguments{
@@ -29,6 +30,7 @@ Prepare custom foreground and background SNPs sets for enrichment tests with XGR
 }
 \examples{
 data("merged_DT")
+merged_DT <- data.table::fread("/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/merged_UKB.csv.gz", nThread=4)
 fg_bg <- XGR.prepare_foreground_background(subset_DT=merged_DT, foreground_filter="Consensus_SNP==T", background_filter="leadSNP==T")
 }
 \seealso{
@@ -36,6 +38,8 @@ Other XGR:
 \code{\link{DT_to_GRanges}()},
 \code{\link{GRanges_to_BED}()},
 \code{\link{XGR.download_and_standardize}()},
+\code{\link{XGR.enrichment_plot}()},
+\code{\link{XGR.enrichment}()},
 \code{\link{XGR.filter_assays}()},
 \code{\link{XGR.filter_sources}()},
 \code{\link{XGR.import_annotations}()},
