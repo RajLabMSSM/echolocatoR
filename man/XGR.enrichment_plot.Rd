@@ -9,7 +9,7 @@ XGR.enrichment_plot(
   title = NULL,
   subtitle = NULL,
   facet_formula = NULL,
-  FDR_thresh = 0.05,
+  FDR_thresh = 1,
   plot_type = "bar",
   shape_var = "Cell_type",
   save_plot = F,
@@ -23,23 +23,35 @@ Plot enrichment results
 \examples{
 root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 
-# Epigenomic peaks
+# NOTT 2019: Epigenomic peaks
 enrich.peak <- data.table::fread(file.path(root,"XGR/Nott2019.enrich_celltype_peaks.csv.gz"))
 gp <- XGR.enrichment_plot(enrich_res=enrich.peak, title="Enrichment: Nott et al. (2019)", subtitle="Cell-type-specfic peaks", facet_formula="Assay ~ Cell_type", save_plot=file.path(root,"XGR/Nott2019.enrich_celltype_peaks.png"))
 
-# Regulatory elements
+# NOTT 2019: Regulatory elements
 enrich.element <- data.table::fread(file.path(root,"XGR/Nott2019.enrich_celltype_elements.csv.gz"))
 gp <- XGR.enrichment_plot(enrich_res=enrich.element, title="Enrichment: Nott et al. (2019)", subtitle="Cell-type-specfic elements", facet_formula="Element ~ Cell_type", save_plot=file.path(root,"XGR/Nott2019.enrich_celltype_elements.png"))
 
+CORCES 2020: scATAC peaks
+enrich.scATAC <- data.table::fread(file.path(root,"XGR/corces_scATAC.enrichment.csv.gz"))
+enrich.scATAC$Cell_type <- standardize_celltypes(celltype_vector = enrich.scATAC$Cell_type)
+gp <- XGR.enrichment_plot(enrich_res=enrich.scATAC, title="Enrichment: Corces et al. (2020)", subtitle="Cell-type-specfic scATAC peaks", facet_formula="Assay ~ Cell_type", save_plot=file.path(root,"XGR/Corces2019.enrich_celltype_scATACpeaks.png"))
+## CORCES 2020: scATAC paeks -- permuted
+enrich.scATAC.permute <- data.table::fread(file.path(root,"XGR/Corces2020.peaks.snp_groups.permute.fg20bg10k.csv.gz"))
+
+
 # Merged volcano plot
-enrich <- rbind(enrich.peak, enrich.element, fill=T)
-gp <- XGR.enrichment_plot(enrich_res=enrich, title="Enrichment: Cell-type-specific peaks and elements", plot_type="point",save_plot=file.path(root,"XGR/Nott2019.enrich_volcano.png"), height=5, width=8)
+enrich <- rbind(enrich.peak, enrich.element,enrich.scATAC, fill=T)
+gp <- XGR.enrichment_plot(enrich_res=enrich, title="Enrichment: Cell-type-specific peaks and elements", plot_type="point",save_plot=file.path(root,"XGR/Nott2019.enrich_volcano.png"), height=5, width=6)
+
+# Merged volcano plot (permuted)
+gp <- XGR.enrichment_plot(enrich_res=enrich.scATAC.permute, title="Permuted enrichment: Cell-type-specific peaks and elements", plot_type="point")
 }
 \seealso{
 Other XGR: 
 \code{\link{DT_to_GRanges}()},
 \code{\link{GRanges_to_BED}()},
 \code{\link{XGR.download_and_standardize}()},
+\code{\link{XGR.enrichment_bootstrap}()},
 \code{\link{XGR.enrichment}()},
 \code{\link{XGR.filter_assays}()},
 \code{\link{XGR.filter_sources}()},

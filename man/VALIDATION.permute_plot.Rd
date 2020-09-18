@@ -6,8 +6,12 @@
 \usage{
 VALIDATION.permute_plot(
   permute_res,
-  validation_method = "Dey_DeepLearning",
-  show_plot = T
+  validation_method = NULL,
+  facet_formula = ". ~ .",
+  show_plot = T,
+  save_plot = F,
+  height = 5,
+  width = 7
 )
 }
 \description{
@@ -16,11 +20,32 @@ Plot permutation test results
 \examples{
 root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 
- ## IMPACT
-#permute_res <-  data.table::fread(file.path(root,"IMPACT/Nalls23andMe_2019.IMPACT.permutations.csv.gz"))
+
+## h2
+path <- file.path(root,"PolyFun/Nalls23andMe_2019.h2.bootstrap_20samples.csv.gz")
+permute_res <- data.table::fread(path)
+## IMPACT
+path <- file.path(root,"IMPACT/Nalls23andMe_2019.mean_IMPACT.permutations.csv.gz")
 ## Dey_DeepLearning
-permute_res <-  data.table::fread(file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.permutations.csv.gz"))
-gp <- VALIDATION.permute_plot(permute_res=permute_res)
+path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.permutations.csv.gz")
+## SURE MPRA
+path <- file.path(root,"SURE/Nalls23andMe_2019.SURE.permutations.csv.gz")
+
+permute_res <-  data.table::fread(path)
+
+ # Plot
+gp <- VALIDATION.permute_plot(permute_res=permute_res, validation_method="Dey Deep Learning", facet_formula="Tissue ~ Model",, save_plot=gsub("\\\\.csv\\\\.gz",".png",path))
+
+# Multiplot
+gp1 <- VALIDATION.permute_plot(permute_res=subset(permute_res, .y.==unique(permute_res$.y.)[1]), validation_method="SuRE MPRA")
+gp2 <- VALIDATION.permute_plot(permute_res=subset(permute_res, .y.==unique(permute_res$.y.)[2]), validation_method="SuRE MPRA")
+library(patchwork)
+gp12 <- gp1 / gp2
+ggsave(gsub("\\\\.csv\\\\.gz",".png",path), gp12, dpi=400, width=9, height=7)
+
+## Aggregated plot
+
+gp <- VALIDATION.permute_plot(permute_res=permute_agg, facet_formula="Tissue ~ Model", validation_method="Dey Deep Learning")
 }
 \seealso{
 Other VALIDATION: 

@@ -162,89 +162,93 @@ VALIDATION.permute <- function(){
 
 
 VALIDATION.bootstrap <- function(metric_df,
-                               metric,
-                               validation_method=NULL,
-                               synthesize_random=F,
-                               snp_groups=c("Random","GWAS lead","UCS","Consensus"),
-                               save_path=F,
-                               nThread=4){
+                                 metric,
+                                 validation_method=NULL,
+                                 synthesize_random=F,
+                                 snp_groups=c("Random","GWAS lead","UCS","Consensus (-POLYFUN)","Consensus"),
+                                 save_path=F,
+                                 nThread=4){
+  # save_path <- base_url <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
   # ANNOT_MELT <- data.table::fread("/sc/arion/projects/pd-omics/data/IMPACT/IMPACT707/Annotations/IMPACT_overlap.csv.gz", nThread=4)
   # res.IMPACT <- data.table::fread(file.path(base_url,"IMPACT/TOP_IMPACT_all.csv.gz"))
 
   # metric_df <- sampling_df <- ANNOT
   # metric <- grep("Basenji|DeepSEA", colnames(metric_df), value = T)[1] # "mean_IMPACT"
   sampling_df <- metric_df
+  if(!"Consensus_SNP_noPF" %in% colnames(metric_df)){
+    try({
+      metric_df$Consensus_SNP_noPF <- find_consensus_SNPs(metric_df,
+                                                          exclude_methods = "POLYFUN_SUSIE",
+                                                          sort_by_support = F)$Consensus_SNP
+    })
+  }
+
   snp_filters <- snp_group_filters()
   # snp_filters <- setNames(paste0("SNP_group=='",snp_groups,"'"), snp_groups)
 
-  # Bootstrap with replacement
+  # Bootstrap without replacement (in a given iteration)
   RES_GROUPS <- lapply(snp_groups, function(snp_group){
     message(snp_group)
     parallel::mclapply(1:1000, function(i,
                                        .snp_group=snp_group,
                                        .synthesize_random=synthesize_random){
+      res <- NULL
+      try({
         message(i)
-        snp_filt <- snp_filters[[.snp_group]]
-        bg_size = 3
-        #### Random sample ####
-        random_snps <-  metric_df %>%
-          dplyr::sample_n(size=bg_size)%>%
-          dplyr::mutate(SNP_Group="Random")
-        #### optional: use random noise if you dont have the fulll sample
-        if(.synthesize_random){
-          # Synthesize a uniform distribution
-          random_snps[[metric]] <- runif(n = bg_size,
-                                         min=min(metric_df[[metric]], na.rm = T),
-                                         max=max(metric_df[[metric]], na.rm = T))
-        } else {
-          # Sample from the real distribution
-          random_snps[[metric]] <- sample(metric_df[[metric]],
-                                          size = bg_size)
-        }
-
-        #### Target sample ####
-        fg_size=3
-        if(.snp_group=="Random"){
-          .snp_group <- "Random_target"
-          target_snps <-  metric_df %>%
-            dplyr::sample_n(size=fg_size)%>%
-            dplyr::mutate(SNP_Group=.snp_group)
+          snp_filt <- snp_filters[[.snp_group]]
+          bg_size = 20
+          #### Random sample ####
+          random_snps <-  metric_df %>%
+            dplyr::sample_n(size=bg_size)%>%
+            dplyr::mutate(SNP_Group="Random")
+          #### optional: use random noise if you dont have the fulll sample
           if(.synthesize_random){
-            target_snps[[metric]] <- runif(n = fg_size,
+            # Synthesize a uniform distribution
+            random_snps[[metric]] <- runif(n = bg_size,
                                            min=min(metric_df[[metric]], na.rm = T),
                                            max=max(metric_df[[metric]], na.rm = T))
-          } else {
-            target_snps[[metric]] <- sample(metric_df[[metric]],
-                                            size = fg_size)
           }
 
-        } else {
-          target_snps <- subset(metric_df, eval(parse(text=snp_filt))) %>%
-            dplyr::sample_n(size = fg_size) %>%
-            dplyr::mutate(SNP_Group=.snp_group)
-        }
-        # Merge
-        dat <- rbind(random_snps, target_snps) %>%
-          dplyr::mutate(SNP_Group=as.factor(SNP_Group),
-                        Locus=as.factor(Locus))
-        # res <- coin::wilcox_test(data=dat,
-        #                          IMPACT_score ~ SNP_Group|Locus)
-        # data.frame(Z= coin::statistic(res),
-        #            p= coin::pvalue(res))
-        res <- ggpubr::compare_means(data = dat,
-                                     formula = as.formula(paste(metric,"~ SNP_Group")),
-                                     # group.by = "Locus",
-                                     method="wilcox.test")
+          #### Target sample ####
+          fg_size=20
+          if(.snp_group=="Random"){
+            .snp_group <- "Random_target"
+            target_snps <-  metric_df %>%
+              dplyr::sample_n(size=fg_size)%>%
+              dplyr::mutate(SNP_Group=.snp_group)
+            if(.synthesize_random){
+              target_snps[[metric]] <- runif(n = fg_size,
+                                             min=min(metric_df[[metric]], na.rm = T),
+                                             max=max(metric_df[[metric]], na.rm = T))
+            }
+          } else {
+            target_snps <- subset(metric_df, eval(parse(text=snp_filt))) %>%
+              dplyr::sample_n(size = fg_size) %>%
+              dplyr::mutate(SNP_Group=.snp_group)
+          }
+          # Merge
+          dat <- rbind(random_snps, target_snps) %>%
+            dplyr::mutate(SNP_Group=as.factor(SNP_Group),
+                          Locus=as.factor(Locus))
+          # res <- coin::wilcox_test(data=dat,
+          #                          IMPACT_score ~ SNP_Group|Locus)
+          # data.frame(Z= coin::statistic(res),
+          #            p= coin::pvalue(res))
+          res <- ggpubr::compare_means(data = dat,
+                                       formula = as.formula(paste(metric,"~ SNP_Group")),
+                                       # group.by = "Locus",
+                                       method="wilcox.test")
+        })
         return(res)
-    }, mc.cores = nThread) %>%  data.table::rbindlist() %>%
+    }, mc.cores = nThread) %>%  data.table::rbindlist(fill=T) %>%
         dplyr::mutate(SNP_Group=snp_group)
-  })  %>% data.table::rbindlist()
+  })  %>% data.table::rbindlist(fill=T)
 
   if(save_path!=F){
     # validation_method = "Dey_DeepLearning"
     data.table::fwrite(RES_GROUPS, file.path(save_path,
                                              validation_method,
-                                             paste("Nalls23andMe_2019",validation_method,"permutations.csv.gz",sep=".")))
+                                             paste("Nalls23andMe_2019",metric,"permutations.csv.gz",sep=".")))
   }
   return(RES_GROUPS)
 }
@@ -259,7 +263,10 @@ VALIDATION.bootstrap_multimetric <- function(metric_df,
   # metric_names <- grep("Basenji.*_MEAN|DeepSEA.*_MEAN", colnames(metric_df), value = T)
   RES_GROUPS <- lapply(metric_names, function(metric){
     message(metric)
-    VALIDATION.bootstrap(metric_df, metric=metric, save_path=F)
+    VALIDATION.bootstrap(metric_df,
+                         metric=metric,
+                         synthesize_random=F,
+                         save_path=F)
   }) %>% data.table::rbindlist(fill=T)
 
   if(save_path!=F){
@@ -324,30 +331,69 @@ VALIDATION.compare_distributions <- function(permute_res){
 
 
 
+VALIDATION.aggregate_permute_res <- function(permute_res){
+  permute_agg <- permute_res %>%
+    dplyr::mutate(SNP_Group = factor(SNP_Group, levels = unique(permute_res$SNP_Group), ordered = T),
+                  Metric=.y.) %>%
+    tidyr::separate(Metric, sep="_", into=c("Model","Tissue","Assay"), extra="drop", remove=F) %>%
+    dplyr::mutate(.y.=gsub(paste(unique(Assay),collapse="|"),"",.y.),
+                  SNP_Group=as.character(SNP_Group)) %>%
+    dplyr::select(-c(Metric,Model,Tissue,Assay))
+  return(permute_agg)
+}
+
+
+
 #' Plot permutation test results
 #'
 #' @family VALIDATION
 #' @examples
 #' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 #'
-#'  ## IMPACT
-#' permute_res <-  data.table::fread(file.path(root,"IMPACT/Nalls23andMe_2019.IMPACT.permutations.csv.gz"))
+#'
+#' ## h2
+#' path <- file.path(root,"PolyFun/Nalls23andMe_2019.h2.bootstrap_20samples.csv.gz")
+#' permute_res <- data.table::fread(path)
+#' ## IMPACT
+#' path <- file.path(root,"IMPACT/Nalls23andMe_2019.mean_IMPACT.permutations.csv.gz")
 #' ## Dey_DeepLearning
-#' permute_res <-  data.table::fread(file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.permutations.csv.gz"))
-#' gp <- VALIDATION.permute_plot(permute_res=permute_res)
+#' path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.permutations.csv.gz")
+#' ## SURE MPRA
+#' path <- file.path(root,"SURE/Nalls23andMe_2019.SURE.permutations.csv.gz")
+#'
+#' permute_res <-  data.table::fread(path)
+#'
+#'  # Plot
+#' gp <- VALIDATION.permute_plot(permute_res=permute_res, validation_method="Dey Deep Learning", facet_formula="Tissue ~ Model",, save_plot=gsub("\\.csv\\.gz",".png",path))
+#'
+#' # Multiplot
+#' gp1 <- VALIDATION.permute_plot(permute_res=subset(permute_res, .y.==unique(permute_res$.y.)[1]), validation_method="SuRE MPRA")
+#' gp2 <- VALIDATION.permute_plot(permute_res=subset(permute_res, .y.==unique(permute_res$.y.)[2]), validation_method="SuRE MPRA")
+#' library(patchwork)
+#' gp12 <- gp1 / gp2
+#' ggsave(gsub("\\.csv\\.gz",".png",path), gp12, dpi=400, width=9, height=7)
+#'
+#' ## Aggregated plot
+#'
+#' gp <- VALIDATION.permute_plot(permute_res=permute_agg, facet_formula="Tissue ~ Model", validation_method="Dey Deep Learning")
 VALIDATION.permute_plot <- function(permute_res,
-                                    validation_method="Dey_DeepLearning",
+                                    validation_method=NULL,
+                                    facet_formula=". ~ .",
+                                    show_plot=T,
                                     save_plot=F,
-                                    show_plot=T){
+                                    height=5,
+                                    width=7){
   library(ggplot2)
   plot_dat <- permute_res %>%
-    dplyr::mutate(SNP_Group = factor(SNP_Group, levels = c("Random","GWAS lead","UCS","Consensus"), ordered = T),
-                  Metric=.y.)
-  colorDict <- setNames(c("grey","red","green2","goldenrod2"),levels(plot_dat$SNP_Group))
+    dplyr::mutate(SNP_Group = factor(SNP_Group, levels = unique(permute_res$SNP_Group), ordered = T),
+                  Metric=.y.) %>%
+    tidyr::separate(Metric, sep="_", into=c("Model","Tissue","Assay"), extra="drop", remove=F)
+  colorDict <- setNames(c("grey","red","green2","goldenrod4","goldenrod2"),levels(plot_dat$SNP_Group))
 
   # Conduct GLM on pval distributions
-  permute_res$SNP_Group <- factor(permute_res$SNP_Group, levels = c("Random","GWAS lead","UCS","Consensus"))
-  if(validation_method=="Dey_DeepLearning"){
+  permute_res$SNP_Group <- factor(permute_res$SNP_Group, levels = unique(permute_res$SNP_Group))
+
+  if(length(unique(permute_res$.y.))>1){
     glm_res <- lapply(unique(permute_res$.y.), function(metric){
       print(metric)
       VALIDATION.compare_distributions(permute_res=subset(permute_res, .y.==metric)) %>%
@@ -357,7 +403,7 @@ VALIDATION.permute_plot <- function(permute_res,
     glm_res <- glm_res %>%
       subset(SNP_Group!="(Intercept)") %>%
       tidyr::separate(Metric, sep="_", into=c("Model","Tissue","Assay"), extra="drop", remove=F) %>%
-      dplyr::mutate(SNP_Group = factor(SNP_Group, levels = c("Random","GWAS lead","UCS","Consensus"), ordered = T))
+      dplyr::mutate(SNP_Group = factor(SNP_Group, levels = unique(SNP_Group), ordered = T))
     plot_dat <- plot_dat %>% tidyr::separate(Metric, sep="_", into=c("Model","Tissue","Assay"), extra="drop", remove=F)
 
     # ggplot(data = glm_res, aes(x=SNP_Group, y=-log10(p), fill=SNP_Group)) +
@@ -379,34 +425,43 @@ VALIDATION.permute_plot <- function(permute_res,
     glm_res <- VALIDATION.compare_distributions(permute_res=permute_res)
   }
 
+
   # Plot
+  plot_dat$SNP_Group <- forcats::fct_rev( plot_dat$SNP_Group )
   gp <- ggplot(data = plot_dat, aes(x= p, fill=SNP_Group, color=SNP_Group,
                                     linetype=SNP_Group)) +
     # geom_histogram(alpha=.5,  position="identity", bins=100) +
-    geom_density(position = "identity", adjust=1, alpha=.5,  ) +
+    geom_density(position = "identity", adjust=1, alpha=.1) +
     scale_fill_manual(values = colorDict) +
     scale_color_manual(values = colorDict) +
     labs(title=paste("Bootstrapped tests:",validation_method,"score"), x="bootstrapped p-values") +
-    theme_bw()
+    theme_bw() +
+    facet_grid(facets = as.formula(facet_formula))
+  # gp + scale_fill_manual(values = rep("transparent",dplyr::n_distinct(plot_dat$SNP_Group)))
 
   # Get density peaks
   b <- ggplot_build(gp)
   density_peaks <- b$data[[1]] %>% dplyr::group_by(fill) %>% dplyr::top_n(n = 1, wt = y) %>%
     dplyr::mutate(SNP_Group =  setNames(names(colorDict), unname(colorDict))[[fill]]) %>%
     data.table::data.table() %>%
-    data.table::merge.data.table(glm_res, by="SNP_Group")
+    data.table::merge.data.table(glm_res, by="SNP_Group") %>%
+    dplyr::mutate(p=ifelse(p*dplyr::n_distinct(PANEL)>1, 1,p*dplyr::n_distinct(PANEL))) %>%
+    dplyr::mutate(signif = pvalues_to_symbols(p))
   # Annotate plot
   gp_lab <- gp  +
     ggrepel::geom_label_repel(data=density_peaks,
                               aes(x=x, y=y, label=paste("p =",format(as.numeric(p), digits = 3), signif)),
                               show.legend = F, point.padding = 1,
                               alpha=.75, segment.alpha = .5,
-                              color="black")
-  # facet_wrap(facets = Tissue ~ .)
+                              color="black") +
+
+  theme(strip.background = element_rect(fill="grey20"),
+        strip.text = element_text(color='white'))
 
   if(show_plot) print(gp_lab)
+
   if(save_plot!=F){
-    ggsave(save_plot, gp_lab, dpi=400, width=6)
+    ggsave(save_plot, gp_lab, dpi=400, height=height, width=width)
   }
   return(gp_lab)
 }

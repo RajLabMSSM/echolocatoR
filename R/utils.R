@@ -1415,9 +1415,10 @@ vcf_cleaning <- function(root,
 
 
 
-snp_group_filters <- function(invert=F){
+snp_group_filters <- function(invert=F,
+                              random_sample_size=20){
   snp_filters <-
-    c("Random" = "SNP %in% sample(sampling_df$SNP, size=3)",
+    c("Random" = paste0("SNP %in% sample(sampling_df$SNP, size=",random_sample_size,")"),
     "All" = "!is.na(SNP)",
     "GWAS nom. sig."="P<0.05",
     "GWAS sig."="P<5e-8",

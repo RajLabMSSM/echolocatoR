@@ -33,6 +33,7 @@ gr.lib <- XGR.download_and_standardize(lib.selections=c("ENCODE_DNaseI_Clustered
 Other XGR: 
 \code{\link{DT_to_GRanges}()},
 \code{\link{GRanges_to_BED}()},
+\code{\link{XGR.enrichment_bootstrap}()},
 \code{\link{XGR.enrichment_plot}()},
 \code{\link{XGR.enrichment}()},
 \code{\link{XGR.filter_assays}()},

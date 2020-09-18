@@ -12,6 +12,7 @@ POLYFUN.h2_enrichment_SNPgroups_plot(
   title = "h2 enrichment",
   xlabel = "SNP group",
   ylabel = "log10(h2 enrichment)",
+  shift_points = T,
   show_plot = T,
   save_path = F
 )

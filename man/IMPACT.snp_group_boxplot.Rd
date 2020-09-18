@@ -17,6 +17,7 @@ IMPACT.snp_group_boxplot(
   title = "IMPACT scores",
   xlabel = NULL,
   ylabel = NULL,
+  shift_points = T,
   height = 10,
   width = 10
 )

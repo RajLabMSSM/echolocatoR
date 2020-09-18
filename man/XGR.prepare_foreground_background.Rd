@@ -8,7 +8,9 @@ XGR.prepare_foreground_background(
   subset_DT,
   foreground_filter = "Support>0",
   background_filter = NULL,
-  sample_background = T
+  fg_sample_size = NULL,
+  bg_sample_size = NULL,
+  verbose = T
 )
 }
 \arguments{
@@ -38,6 +40,7 @@ Other XGR:
 \code{\link{DT_to_GRanges}()},
 \code{\link{GRanges_to_BED}()},
 \code{\link{XGR.download_and_standardize}()},
+\code{\link{XGR.enrichment_bootstrap}()},
 \code{\link{XGR.enrichment_plot}()},
 \code{\link{XGR.enrichment}()},
 \code{\link{XGR.filter_assays}()},

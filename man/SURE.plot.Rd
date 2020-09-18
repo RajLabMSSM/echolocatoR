@@ -18,7 +18,9 @@ SURE.plot(
   xlabel = "SNP Group",
   ylabel = "mean -log10(p-value)",
   show_plot = T,
-  save_path = F
+  save_path = F,
+  height = 5,
+  width = 5
 )
 }
 \description{

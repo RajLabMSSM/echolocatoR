@@ -10,6 +10,7 @@ DEEPLEARNING.plot(
   comparisons_filter = function(x) {     if ("Consensus" \%in\% x)          return(x) },
   model.metric = c("MEAN"),
   facet_formula = "Assay ~ Model + Tissue",
+  shift_points = T,
   show_plot = T,
   save_path = F,
   height = 9,

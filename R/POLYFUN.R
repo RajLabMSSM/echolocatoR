@@ -1069,7 +1069,7 @@ POLYFUN.h2_enrichment <- function(h2_df,
 #' @examples
 #' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 #' # IMPORTANT! For this to make sense, you need to merge the full data ("merged_DT" only includes Support>0 and leadSNPs)
-#' merged_dat <- merge_finemapping_results(dataset = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019", minimum_support = 0)
+#' merged_dat <- merge_finemapping_results(dataset = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019", LD_reference = "UKB", minimum_support = 0)
 #'
 #' RES <- POLYFUN.h2_enrichment_SNPgroups(merged_dat=merged_dat, ldsc_dir=file.path(root,"PolyFun/output"),  save_enrich=file.path(root,"PolyFun/Nalls23andMe_2019.h2_enrich.snp_groups.csv.gz"))
 POLYFUN.h2_enrichment_SNPgroups <- function(merged_dat,
@@ -1085,6 +1085,7 @@ POLYFUN.h2_enrichment_SNPgroups <- function(merged_dat,
 
   h2_merged <- data.table::merge.data.table(merged_dat,
                                             subset(h2_DF, select=c(SNP,SNPVAR)),
+                                            all.x = T,
                                             by=c("SNP"))
 
   # Iterate over loci
