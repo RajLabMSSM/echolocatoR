@@ -152,15 +152,21 @@ VALIDATION.compare_singleton_results <- function(singleton_url="/pd-omics/data/S
 # Alternaitvely, could use a uniform distribution (but this is an assumption)
 ## But for IMPACT, unif dist may atually be higher impact than reality
 
-VALIDATION.permute <- function(){
-  # permut
-  coin::independence_test(Length ~ SNP_Group,
-                          data = data)
 
-
-}
-
-
+#' Perform validation bootstrap procedure
+#'
+#' @family VALIDATION
+#' @examples
+#' \dontrun{
+#' save_path <- root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
+#' ANNOT_MELT <- data.table::fread("/sc/arion/projects/pd-omics/data/IMPACT/IMPACT707/Annotations/IMPACT_overlap.csv.gz", nThread=4)
+#' res.IMPACT <- data.table::fread(file.path(root,"IMPACT/TOP_IMPACT_all.csv.gz"))
+#'
+#' boot.h2 <- VALIDATION.bootstrap()
+#' boot.IMPACT
+#' boot.DL
+#' boot.
+#' }
 VALIDATION.bootstrap <- function(metric_df,
                                  metric,
                                  validation_method=NULL,
@@ -168,12 +174,6 @@ VALIDATION.bootstrap <- function(metric_df,
                                  snp_groups=c("Random","GWAS lead","UCS","Consensus (-POLYFUN)","Consensus"),
                                  save_path=F,
                                  nThread=4){
-  # save_path <- base_url <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
-  # ANNOT_MELT <- data.table::fread("/sc/arion/projects/pd-omics/data/IMPACT/IMPACT707/Annotations/IMPACT_overlap.csv.gz", nThread=4)
-  # res.IMPACT <- data.table::fread(file.path(base_url,"IMPACT/TOP_IMPACT_all.csv.gz"))
-
-  # metric_df <- sampling_df <- ANNOT
-  # metric <- grep("Basenji|DeepSEA", colnames(metric_df), value = T)[1] # "mean_IMPACT"
   sampling_df <- metric_df
   if(!"Consensus_SNP_noPF" %in% colnames(metric_df)){
     try({
@@ -230,14 +230,41 @@ VALIDATION.bootstrap <- function(metric_df,
           dat <- rbind(random_snps, target_snps) %>%
             dplyr::mutate(SNP_Group=as.factor(SNP_Group),
                           Locus=as.factor(Locus))
-          # res <- coin::wilcox_test(data=dat,
-          #                          IMPACT_score ~ SNP_Group|Locus)
-          # data.frame(Z= coin::statistic(res),
-          #            p= coin::pvalue(res))
-          res <- ggpubr::compare_means(data = dat,
-                                       formula = as.formula(paste(metric,"~ SNP_Group")),
-                                       # group.by = "Locus",
-                                       method="wilcox.test")
+
+          #### Permutation testing ####
+          # coin_res <- coin::independence_test(data=dat,
+          #                          as.formula(paste(metric,"~ SNP_Group") ) )
+          # res <- data.frame(stat= coin::statistic(coin_res),
+          #                   p= coin::pvalue(coin_res))
+
+          #### Technically you're only supposed to use this function after doing a regular independence test,
+          ### but the way I'm using it here is different (only comparing two groups at once).
+          ### The output is just convenient.
+          #### Builds upon `coin::independence_test`
+
+          package <- "rcompanion";
+
+          if(package=="rcompanion"){
+            correction_method <- "fdr"
+            res <- rcompanion::pairwisePermutationTest(data = dat,
+                                                       formula=as.formula(paste(metric,"~ SNP_Group")),
+                                                       method = correction_method) %>%
+              dplyr::mutate(Comparison = gsub(" = 0","",Comparison),
+                            signif=pvalues_to_symbols(p.adjust),
+                            method="pairwisePermutationTest",
+                            adjust.method=correction_method) %>%
+              tidyr::separate(col = "Comparison", sep=" - ", into=c("group1","group2"))
+          }
+          if(package=="ggpubr"){
+            res <- ggpubr::compare_means(data = dat,
+                                         formula = as.formula(paste(metric,"~ SNP_Group")),
+                                         # group.by = "Locus",
+                                         method="wilcox.test")
+          }
+          if(package=="stats"){
+            res <- stats::pairwise.wilcox.test(x=dat[[metric]],
+                                        g = dat[["SNP_Group"]])
+          }
         })
         return(res)
     }, mc.cores = nThread) %>%  data.table::rbindlist(fill=T) %>%

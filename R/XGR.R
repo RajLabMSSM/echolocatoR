@@ -100,6 +100,7 @@ XGR.prepare_foreground_background  <- function(subset_DT,
                                                fg_sample_size=NULL,
                                                bg_sample_size=NULL,
                                                verbose=T){
+  if(!exists("sampling_df")) sampling_df <- subset_DT
   printer("XGR:: Preparing foreground/background for enrichment test",v=verbose)
   #### Foreground ####
   fg <- subset(subset_DT, eval(parse(text=foreground_filter))) %>%
@@ -110,14 +111,20 @@ XGR.prepare_foreground_background  <- function(subset_DT,
     dplyr::select(chrom, chromStart, chromEnd, name)
 
   #### Background ####
-  if(!is.null(background_filter)){
-    bg_DT <- subset(subset_DT, eval(parse(text=background_filter)))
-  } else { bg_DT <- subset_DT  }
-  bg <- bg_DT %>% dplyr::mutate(chrom = paste0(gsub("chr","",CHR)),
-                                chromStart = POS,
-                                chromEnd = POS,
-                                name = SNP) %>%
-    dplyr::select(chrom, chromStart, chromEnd, name)
+  if(any(is.na(background_filter))){
+    ## Optionally, can supply no background at all to XGR
+    bg <- NULL
+  }else {
+    if(!is.null(background_filter)){
+      bg_DT <- subset(subset_DT, eval(parse(text=background_filter)))
+    } else { bg_DT <- subset_DT  }
+    bg <- bg_DT %>% dplyr::mutate(chrom = paste0(gsub("chr","",CHR)),
+                                  chromStart = POS,
+                                  chromEnd = POS,
+                                  name = SNP) %>%
+      dplyr::select(chrom, chromStart, chromEnd, name)
+  }
+
 
   #### Sample fg/bg (for bootstrapping) ####
   if(!is.null(fg_sample_size)){
@@ -146,46 +153,43 @@ XGR.prepare_foreground_background  <- function(subset_DT,
 #'
 #' merged_dat <- merge_finemapping_results(dataset = dirname(root), LD_reference = "UKB", minimum_support = 0)
 #' merged_dat$Consensus_SNP_noPF <- find_consensus_SNPs(merged_dat, exclude_methods = "POLYFUN_SUSIE", sort_by_support = F)$Consensus_SNP
-#' ## NOTT 2019
-#' gr <- peaks <- NOTT_2019.get_epigenomic_peaks(convert_to_GRanges = T, nThread = 1) %>% subset(select = -c(start,end))
-#' gr <- regions <- NOTT_2019.get_regulatory_regions(as.granges = T)
-#' ## CORCES 2020
-#' corces.scATAC <- data.table::melt.data.table(echolocatoR::CORCES_2020.scATACseq_celltype_peaks, measure.vars = c("ExcitatoryNeurons","InhibitoryNeurons","NigralNeurons","Microglia","Oligodendrocytes","Astrocytes","OPCs"), variable.name = "Cell_type") %>% subset(value==1)
-#' corces.scATAC$Assay <- "scATAC"
-#' gr <- LIFTOVER(dat = corces.scATAC, build.conversion = "hg38.to.hg19", chrom_col = "hg38_Chromosome", start_col = "hg38_Start", end_col = "hg38_Stop")
-#' grouping_vars <- c("Cell_type","Assay")
 #'
-#'enrich.lead <- XGR.enrichment(gr=gr, merged_dat=merged_dat, foreground_filter="leadSNP==T",  grouping_vars=grouping_vars)
-#'enrich.UCS <- XGR.enrichment(gr=gr, merged_dat=merged_dat, foreground_filter="Support>0", grouping_vars=grouping_vars)
-#'enrich.consensus <- XGR.enrichment(gr=gr, merged_dat=merged_dat, foreground_filter="Consensus_SNP==T", grouping_vars=grouping_vars)
-#'enrich.consensus_noPF <- XGR.enrichment(gr=gr, merged_dat=merged_dat, foreground_filter="Consensus_SNP_noPF==T", grouping_vars=grouping_vars)
-#'enrich_res <- rbind(enrich.lead, enrich.UCS, enrich.consensus, enrich.consensus_noPF)
+#' gr.merged <- merge_celltype_specific_epigenomics()
+#' grouping_vars <- c("Study","Cell_type","Assay")
 #'
-#' data.table::fwrite(enrich_res, file.path(root,"XGR/Nott2019.enrich_celltype_peaks.csv.gz"))
+#' enrich.lead <- XGR.enrichment(gr=gr, merged_dat=merged_dat, foreground_filter="leadSNP==T",  grouping_vars=grouping_vars)
 XGR.enrichment <- function(gr,
                            merged_dat,
                            foreground_filter="Consensus_SNP==T",
                            background_filter=NULL,
-                           grouping_vars=c("Cell_type"),
+                           grouping_vars=c("Study","Assay","Cell_type"),
                            fg_sample_size=NULL,
-                           bg_sample_size=NULL){
+                           bg_sample_size=NULL,
+                           background.annotatable.only=F,
+                           verbose=T){
   fg_bg <- XGR.prepare_foreground_background(subset_DT=merged_dat,
                                              foreground_filter=foreground_filter,
                                              background_filter=background_filter,
                                              fg_sample_size = fg_sample_size,
                                              bg_sample_size = bg_sample_size)
   # Create all combinations
-  if(!is.null(grouping_vars)){
-    combos <- expand.grid(sapply( subset(data.frame(gr), select=grouping_vars), unique)) %>%
-      `colnames<-`(grouping_vars)
-    if(length(grouping_vars)<2) {combos$dummy1 <- 1; gr$dummy1 <- 1; }
-  }else {
-    combos <- data.frame(dummy1=1, dummy2=2);
-    gr$dummy1 <- 1;  gr$dummy2 <- 2;
-  }
+  # if(!is.null(grouping_vars)){
+  #   combos <- expand.grid(sapply( subset(data.frame(gr), select=grouping_vars), unique)) %>%
+  #     `colnames<-`(grouping_vars)
+  #   if(length(grouping_vars)<2) {combos$dummy1 <- 1; gr$dummy1 <- 1; }
+  # }else {
+  #   combos <- data.frame(dummy1=1, dummy2=2);
+  #   gr$dummy1 <- 1;  gr$dummy2 <- 2;
+  # }
 
-  RES <- lapply(1:nrow(combos), function(i){
+  combos <- unique(data.frame(gr)[,grouping_vars])
+  combos[is.na(combos)] <- "NA"
+
+  printer("+ XGR:: Conducting enrichment tests for",nrow(combos),"combinations of `grouping_vars`.",v=verbose)
+  RES <- lapply(1:nrow(combos), function(i,
+                                         .background.annotatable.only=background.annotatable.only){
     ROW <- combos[i,]
+    # printer("+ XGR::",ROW)
     gr.sub <- gr
     for(column in colnames(combos)){
       gr.sub <- subset(gr.sub, eval(parse(text=column))==ROW[[column]])
@@ -195,16 +199,16 @@ XGR.enrichment <- function(gr,
                                 background.file = fg_bg$background,
                                 format.file="data.frame",
                                 GR.annotation = gr.sub,
-                                background.annotatable.only = F,
+                                background.annotatable.only = .background.annotatable.only,
                                 verbose=F))
     for(column in colnames(combos)){
       res[[column]] <- ROW[[column]]
     }
     return(res)
   }) %>% data.table::rbindlist()
-  RES$fg_filter <- foreground_filter
-  RES$bg_filter <- background_filter
-  RES$fg_sample_size <- if(is.null(fg_sample_size)) nrow(merged_dat) else fg_sample_size
+  RES$fg_filter <- if(is.null(foreground_filter)) NA else foreground_filter
+  RES$bg_filter <- if(is.null(background_filter)) NA else background_filter
+  RES$fg_sample_size <- if(is.null(fg_sample_size)) nrow(fg_bg$foreground) else fg_sample_size
   RES$bg_sample_size <- if(is.null(bg_sample_size)) nrow(merged_dat) else bg_sample_size
   return(RES)
 }
@@ -221,53 +225,76 @@ XGR.enrichment <- function(gr,
 #'
 #' merged_dat <- merge_finemapping_results(dataset = dirname(root), LD_reference = "UKB", minimum_support = 0)
 #' merged_dat$Consensus_SNP_noPF <- find_consensus_SNPs(merged_dat, exclude_methods = "POLYFUN_SUSIE", sort_by_support = F)$Consensus_SNP
+#' no_no_loci<- c("HLA-DRB5","MAPT","ATG14","SP1","LMNB1","ATP6V0A1", "RETREG3","UBTF","FAM171A2","MAP3K14","CRHR1","MAPT-AS1","KANSL1","NSF","WNT3");
+#' merged_dat <- subset(merged_dat, !Locus %in% no_no_loci)
 #'
-#' ## NOTT 2019
-#' gr <- peaks <- NOTT_2019.get_epigenomic_peaks(convert_to_GRanges = T, nThread = 1) %>% subset(select = -c(start,end))
-#' gr <- regions <- NOTT_2019.get_regulatory_regions(as.granges = T)
-#' ## CORCES 2020
-#' corces.scATAC <- data.table::melt.data.table(echolocatoR::CORCES_2020.scATACseq_celltype_peaks, measure.vars = c("ExcitatoryNeurons","InhibitoryNeurons","NigralNeurons","Microglia","Oligodendrocytes","Astrocytes","OPCs"), variable.name = "Cell_type") %>% subset(value==1)
-#' corces.scATAC$Assay <- "scATAC"
-#' gr <- LIFTOVER(dat = corces.scATAC, build.conversion = "hg38.to.hg19", chrom_col = "hg38_Chromosome", start_col = "hg38_Start", end_col = "hg38_Stop")
-#' grouping_vars <- c("Cell_type","Assay")
+#' gr.merged <- merge_celltype_specific_epigenomics()
+#' grouping_vars <- c("Study","Cell_type","Assay")
 #'
+#' enrich_res <- XGR.enrichment_bootstrap(gr=gr.merged, merged_dat=merged_dat, grouping_vars=grouping_vars,  bootstrap=F)
 #'
-#'enrich.lead <- XGR.enrichment_bootstrap(gr=gr, merged_dat=merged_dat, foreground_filter="leadSNP==T",  grouping_vars=grouping_vars)
+#' enrich_boot <- XGR.enrichment_bootstrap(gr=gr.merged, merged_dat=merged_dat, grouping_vars=grouping_vars,  bootstrap=T, fg_sample_size=NULL, bg_sample_size=100, iterations=100)
 XGR.enrichment_bootstrap <- function(gr,
                                      merged_dat,
                                      snp_groups=c("Random","GWAS lead","UCS","Consensus (-POLYFUN)","Consensus"),
                                      background_filter=NULL,
-                                     grouping_vars=c("Cell_type"),
+                                     grouping_vars=c("Study","Assay","Cell_type"),
                                      iterations=1000,
                                      fg_sample_size=20,
-                                     bg_sample_size=10000,
+                                     bg_sample_size=NULL,
+                                     bootstrap=T,
                                      save_path=F,
                                      nThread=4,
                                      verbose=T){
+  if(bootstrap){
+    printer("XGR:: Initiating bootstrap enrichment procedure",v=verbose)
+  } else {
+    iterations <-1; bg_sample_size <- fg_sample_size <- NULL
+  }
   sampling_df <- merged_dat;
-  RES_GROUPS <- lapply(snp_groups, function(snp_group){
-    snp_filters <- snp_group_filters(random_sample_size=fg_sample_size)
-    foreground_filter <- snp_filters[snp_group]
-    message(snp_group," :: ",foreground_filter)
-    parallel::mclapply(1:iterations, function(i,
-                                              .foreground_filter=foreground_filter){
+
+  RES_GROUPS <- lapply(snp_groups, function(snp_group,
+                                            .merged_dat=merged_dat,
+                                            .grouping_vars=grouping_vars,
+                                            .background_filter=background_filter,
+                                            .fg_sample_size=fg_sample_size,
+                                            .bg_sample_size=bg_sample_size){
+    snp_filters <- snp_group_filters(random_sample_size=.fg_sample_size)
+    .foreground_filter <- snp_filters[snp_group]
+    message(snp_group," :: ",.foreground_filter)
+    RES <- parallel::mclapply(1:iterations, function(i,
+                                                     merged_dat=.merged_dat,
+                                                     grouping_vars=.grouping_vars,
+                                                    foreground_filter=.foreground_filter,
+                                                    background_filter=.background_filter,
+                                                    fg_sample_size=.fg_sample_size,
+                                                    bg_sample_size=.bg_sample_size){
       try({
         XGR.enrichment(gr=gr,
                        merged_dat=merged_dat,
-                       foreground_filter=.foreground_filter,
+                       foreground_filter=foreground_filter,
                        background_filter=background_filter,
                        grouping_vars=grouping_vars,
                        fg_sample_size = fg_sample_size,
                        bg_sample_size = bg_sample_size)
       })
     }, mc.cores = nThread) %>% data.table::rbindlist(fill=T)
+    RES$SNP_Group <- snp_group
+    return(RES)
   }) %>% data.table::rbindlist(fill=T)
 
+  # Post-process
+  RES_GROUPS <- RES_GROUPS %>%
+    dplyr::mutate( SNP_Group=factor(SNP_Group, levels=unique(SNP_Group), ordered = T),
+                   FDR=stats::p.adjust(p = pvalue, method = "fdr"))
   if(save_path!=F){
     printer("XGR:: Saving enrichment results ==>",save_path,v=verbose)
     data.table::fwrite(RES_GROUPS,save_path)
   }
+  return( RES_GROUPS  )
 }
+
+
 
 
 
@@ -276,26 +303,17 @@ XGR.enrichment_bootstrap <- function(gr,
 #' @family XGR
 #' @examples
 #' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
-#'
-#' # NOTT 2019: Epigenomic peaks
-#' enrich.peak <- data.table::fread(file.path(root,"XGR/Nott2019.enrich_celltype_peaks.csv.gz"))
-#' gp <- XGR.enrichment_plot(enrich_res=enrich.peak, title="Enrichment: Nott et al. (2019)", subtitle="Cell-type-specfic peaks", facet_formula="Assay ~ Cell_type", save_plot=file.path(root,"XGR/Nott2019.enrich_celltype_peaks.png"))
-#'
-#' # NOTT 2019: Regulatory elements
-#' enrich.element <- data.table::fread(file.path(root,"XGR/Nott2019.enrich_celltype_elements.csv.gz"))
-#' gp <- XGR.enrichment_plot(enrich_res=enrich.element, title="Enrichment: Nott et al. (2019)", subtitle="Cell-type-specfic elements", facet_formula="Element ~ Cell_type", save_plot=file.path(root,"XGR/Nott2019.enrich_celltype_elements.png"))
-#'
-#' CORCES 2020: scATAC peaks
-#' enrich.scATAC <- data.table::fread(file.path(root,"XGR/corces_scATAC.enrichment.csv.gz"))
-#' enrich.scATAC$Cell_type <- standardize_celltypes(celltype_vector = enrich.scATAC$Cell_type)
-#' gp <- XGR.enrichment_plot(enrich_res=enrich.scATAC, title="Enrichment: Corces et al. (2020)", subtitle="Cell-type-specfic scATAC peaks", facet_formula="Assay ~ Cell_type", save_plot=file.path(root,"XGR/Corces2019.enrich_celltype_scATACpeaks.png"))
-#' ## CORCES 2020: scATAC paeks -- permuted
-#' enrich.scATAC.permute <- data.table::fread(file.path(root,"XGR/Corces2020.peaks.snp_groups.permute.fg20bg10k.csv.gz"))
-#'
+#' ### merged enrichment results
+#' enrich_res <- data.table::fread( file.path(root,"XGR/celltypespecific_epigenomics.snp_groups.csv.gz"))
+#' enrich_boot <- data.table::fread(file.path(root,"XGR/celltypespecific_epigenomics.snp_groups.permute.csv.gz"))
+#' enrich_assay <- data.table::fread(file.path(root,"XGR/celltypespecific_epigenomics.snp_groups.assay.csv.gz"))
 #'
 #' # Merged volcano plot
-#' enrich <- rbind(enrich.peak, enrich.element,enrich.scATAC, fill=T)
-#' gp <- XGR.enrichment_plot(enrich_res=enrich, title="Enrichment: Cell-type-specific peaks and elements", plot_type="point",save_plot=file.path(root,"XGR/Nott2019.enrich_volcano.png"), height=5, width=6)
+#' gp <- XGR.enrichment_plot(enrich_res=subset(enrich_res , !Assay %in%  c("HiChIP_FitHiChIP","PLAC")) , title="Enrichment: Cell-type-specific epigenomics", plot_type="point",save_plot=file.path(root,"XGR/celltypespecific_epigenomics.enrich_volcano.png"), height=6, width=8, shape_var="Assay", line_formula="y~x")
+#'
+#' ## Merged bar plot
+#' gp <- XGR.enrichment_plot(enrich_res=enrich_res,  plot_type="bar", facet_formula=".~Assay",FDR_thresh=.05)
+#'
 #'
 #' # Merged volcano plot (permuted)
 #' gp <- XGR.enrichment_plot(enrich_res=enrich.scATAC.permute, title="Permuted enrichment: Cell-type-specific peaks and elements", plot_type="point")
@@ -303,34 +321,31 @@ XGR.enrichment_plot <- function(enrich_res,
                                 title=NULL,
                                 subtitle=NULL,
                                 facet_formula=NULL,
+                                line_formula = "y ~ exp(x)",
                                 FDR_thresh=1,
                                 plot_type="bar",
                                 shape_var="Cell_type",
+                                facet_scales="free",
+                                show_plot=T,
                                 save_plot=F,
                                 height=5,
                                 width=5){
-  snp_filters <- snp_group_filters(invert = T)
   enrich_res <- dplyr::mutate(enrich_res,
-                              SNP_Group=factor(snp_filters[fg_filter], levels=snp_filters[unique(enrich_res$fg_filter)], ordered = T),
-                              FDR=stats::p.adjust(p = pvalue, method = "fdr")) %>%
-    dplyr::mutate(neg_log_FDR  = -log1p(pvalue))
+                              SNP_Group=factor(SNP_Group, levels = unique(SNP_Group), ordered = T),
+                              ## Make Random size smaller (otherwise will make everything else relatively tiny)
+                              nOverlap=ifelse(SNP_Group=="Random",10,nOverlap)
+                              )
+ sum(enrich_res$fc==-Inf)
   colorDict <- c("Random"="grey",
                  "GWAS lead"="red",
                  "UCS"="green2",
                  "Consensus (-POLYFUN)"="goldenrod4",
                  "Consensus"="goldenrod2")
-
-  # ggplot(data=enrich_res, aes(x=SNP_Group, y=-log10(adjp), fill=SNP_Group))
-  # comparisons <- utils::combn(x = as.character(unique(enrich_res$SNP_Group)),
-  #                             m=2,
-  #                             # FUN = comparisons_filter,
-  #                             simplify = F) %>% purrr::compact()
-  # method="wilcox.test"
-
   if(plot_type=="bar"){
     gp <- ggplot(data=subset(enrich_res, FDR<=FDR_thresh),
                  aes(x=SNP_Group, y= fc, fill=SNP_Group)) +
-      geom_col(stat="identity", alpha=.5, show.legend = F) +
+      # geom_col(stat="identity", alpha=.5, show.legend = F) +
+      geom_boxplot()+
       geom_jitter(height=0, width = 0, alpha=.1, show.legend = F) +
       scale_fill_manual(values = colorDict) +
       # ggpubr::stat_compare_means(method = method,
@@ -346,15 +361,25 @@ XGR.enrichment_plot <- function(enrich_res,
   }
 
   if(plot_type=="point"){
-    gp <- ggplot(data=enrich_res, aes(x= log(fc), y= -log(FDR), size=nOverlap,
-                                      color=SNP_Group, shape=eval(parse(text=shape_var))))+
-      stat_smooth(geom='line', alpha=0.5, se=T, aes(group=SNP_Group), method = "lm") +
-      geom_point(alpha=.75) +
-      scale_color_manual(values = colorDict) +
-      geom_hline(yintercept = -log10(0.05), linetype=2, alpha=.5) +
-      facet_grid(facets = if(is.null(facet_formula)) facet_formula else as.formula(facet_formula))  +
-      labs(title=title, subtitle=subtitle, shape=shape_var) +
+    gp <- ggplot(data=subset(enrich_res, FDR<=FDR_thresh),
+                 aes(x= log1p(fc), y= -log10(FDR),
+                                      size=nOverlap, color=SNP_Group, group=SNP_Group,
+                                      fill=SNP_Group,
+                                      shape=eval(parse(text=shape_var)))
+                 ) +
+      geom_smooth (alpha=0.1, size=0, span=1,
+                   method = "lm", formula = line_formula) +
+      stat_smooth (geom="line", alpha=0.3, size=1, #span=0.5,
+                   method = "lm", formula = line_formula) +
 
+      geom_point(alpha=.5) +
+      scale_color_manual(values = colorDict) +
+      scale_fill_manual(values = colorDict) +
+      scale_shape_manual(values=12:(12+dplyr::n_distinct(enrich_res[[shape_var]]))) +
+      geom_hline(yintercept = -log10(0.05), linetype=2, alpha=.5) +
+      facet_grid(facets = if(is.null(facet_formula)) facet_formula else as.formula(facet_formula),
+                 scales = facet_scales)  +
+      labs(title=title, subtitle=subtitle, shape=shape_var) +
       theme_bw() +
       theme(strip.background = element_rect(fill="grey20"),
             strip.text = element_text(color="white"))
@@ -363,10 +388,11 @@ XGR.enrichment_plot <- function(enrich_res,
   if(show_plot) print(gp)
 
   if(save_plot!=F){
-    ggsave(save_plot, gp, dpi=300, height=height, width=width)
+    ggsave(save_plot, gp, dpi=400, height=height, width=width)
   }
   return(gp)
 }
+
 
 
 

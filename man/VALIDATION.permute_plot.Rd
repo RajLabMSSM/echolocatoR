@@ -49,6 +49,7 @@ gp <- VALIDATION.permute_plot(permute_res=permute_agg, facet_formula="Tissue ~ M
 }
 \seealso{
 Other VALIDATION: 
+\code{\link{VALIDATION.bootstrap}()},
 \code{\link{VALIDATION.compare_distributions}()},
 \code{\link{VALIDATION.super_plot}()}
 }

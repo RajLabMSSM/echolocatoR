@@ -9,10 +9,11 @@ XGR.enrichment_bootstrap(
   merged_dat,
   snp_groups = c("Random", "GWAS lead", "UCS", "Consensus (-POLYFUN)", "Consensus"),
   background_filter = NULL,
-  grouping_vars = c("Cell_type"),
+  grouping_vars = c("Study", "Assay", "Cell_type"),
   iterations = 1000,
   fg_sample_size = 20,
-  bg_sample_size = 10000,
+  bg_sample_size = NULL,
+  bootstrap = T,
   save_path = F,
   nThread = 4,
   verbose = T
@@ -26,18 +27,15 @@ root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2
 
 merged_dat <- merge_finemapping_results(dataset = dirname(root), LD_reference = "UKB", minimum_support = 0)
 merged_dat$Consensus_SNP_noPF <- find_consensus_SNPs(merged_dat, exclude_methods = "POLYFUN_SUSIE", sort_by_support = F)$Consensus_SNP
+no_no_loci<- c("HLA-DRB5","MAPT","ATG14","SP1","LMNB1","ATP6V0A1", "RETREG3","UBTF","FAM171A2","MAP3K14","CRHR1","MAPT-AS1","KANSL1","NSF","WNT3");
+merged_dat <- subset(merged_dat, !Locus \%in\% no_no_loci)
 
-## NOTT 2019
-gr <- peaks <- NOTT_2019.get_epigenomic_peaks(convert_to_GRanges = T, nThread = 1) \%>\% subset(select = -c(start,end))
-gr <- regions <- NOTT_2019.get_regulatory_regions(as.granges = T)
-## CORCES 2020
-corces.scATAC <- data.table::melt.data.table(echolocatoR::CORCES_2020.scATACseq_celltype_peaks, measure.vars = c("ExcitatoryNeurons","InhibitoryNeurons","NigralNeurons","Microglia","Oligodendrocytes","Astrocytes","OPCs"), variable.name = "Cell_type") \%>\% subset(value==1)
-corces.scATAC$Assay <- "scATAC"
-gr <- LIFTOVER(dat = corces.scATAC, build.conversion = "hg38.to.hg19", chrom_col = "hg38_Chromosome", start_col = "hg38_Start", end_col = "hg38_Stop")
-grouping_vars <- c("Cell_type","Assay")
+gr.merged <- merge_celltype_specific_epigenomics()
+grouping_vars <- c("Study","Cell_type","Assay")
 
+enrich_res <- XGR.enrichment_bootstrap(gr=gr.merged, merged_dat=merged_dat, grouping_vars=grouping_vars,  bootstrap=F)
 
-enrich.lead <- XGR.enrichment_bootstrap(gr=gr, merged_dat=merged_dat, foreground_filter="leadSNP==T",  grouping_vars=grouping_vars)
+enrich_boot <- XGR.enrichment_bootstrap(gr=gr.merged, merged_dat=merged_dat, grouping_vars=grouping_vars,  bootstrap=T, fg_sample_size=NULL, bg_sample_size=100, iterations=100)
 }
 \seealso{
 Other XGR: 

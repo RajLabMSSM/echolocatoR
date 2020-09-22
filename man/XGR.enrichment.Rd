@@ -9,9 +9,11 @@ XGR.enrichment(
   merged_dat,
   foreground_filter = "Consensus_SNP==T",
   background_filter = NULL,
-  grouping_vars = c("Cell_type"),
+  grouping_vars = c("Study", "Assay", "Cell_type"),
   fg_sample_size = NULL,
-  bg_sample_size = NULL
+  bg_sample_size = NULL,
+  background.annotatable.only = F,
+  verbose = T
 )
 }
 \description{
@@ -22,22 +24,11 @@ root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2
 
 merged_dat <- merge_finemapping_results(dataset = dirname(root), LD_reference = "UKB", minimum_support = 0)
 merged_dat$Consensus_SNP_noPF <- find_consensus_SNPs(merged_dat, exclude_methods = "POLYFUN_SUSIE", sort_by_support = F)$Consensus_SNP
-## NOTT 2019
-gr <- peaks <- NOTT_2019.get_epigenomic_peaks(convert_to_GRanges = T, nThread = 1) \%>\% subset(select = -c(start,end))
-gr <- regions <- NOTT_2019.get_regulatory_regions(as.granges = T)
-## CORCES 2020
-corces.scATAC <- data.table::melt.data.table(echolocatoR::CORCES_2020.scATACseq_celltype_peaks, measure.vars = c("ExcitatoryNeurons","InhibitoryNeurons","NigralNeurons","Microglia","Oligodendrocytes","Astrocytes","OPCs"), variable.name = "Cell_type") \%>\% subset(value==1)
-corces.scATAC$Assay <- "scATAC"
-gr <- LIFTOVER(dat = corces.scATAC, build.conversion = "hg38.to.hg19", chrom_col = "hg38_Chromosome", start_col = "hg38_Start", end_col = "hg38_Stop")
-grouping_vars <- c("Cell_type","Assay")
+
+gr.merged <- merge_celltype_specific_epigenomics()
+grouping_vars <- c("Study","Cell_type","Assay")
 
 enrich.lead <- XGR.enrichment(gr=gr, merged_dat=merged_dat, foreground_filter="leadSNP==T",  grouping_vars=grouping_vars)
-enrich.UCS <- XGR.enrichment(gr=gr, merged_dat=merged_dat, foreground_filter="Support>0", grouping_vars=grouping_vars)
-enrich.consensus <- XGR.enrichment(gr=gr, merged_dat=merged_dat, foreground_filter="Consensus_SNP==T", grouping_vars=grouping_vars)
-enrich.consensus_noPF <- XGR.enrichment(gr=gr, merged_dat=merged_dat, foreground_filter="Consensus_SNP_noPF==T", grouping_vars=grouping_vars)
-enrich_res <- rbind(enrich.lead, enrich.UCS, enrich.consensus, enrich.consensus_noPF)
-
-data.table::fwrite(enrich_res, file.path(root,"XGR/Nott2019.enrich_celltype_peaks.csv.gz"))
 }
 \seealso{
 Other XGR: 

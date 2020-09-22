@@ -267,3 +267,23 @@ CORCES_2020.prepare_bulkATAC_peak_overlap <- function(merged_DT,
 
 
 
+CORCES_2020.scATAC_to_GRanges <- function(standardize_cellTypes=F){
+  scATAC <- data.table::melt.data.table(echolocatoR::CORCES_2020.scATACseq_celltype_peaks,
+                                        measure.vars = c("ExcitatoryNeurons","InhibitoryNeurons","NigralNeurons","Microglia","Oligodendrocytes","Astrocytes","OPCs"),
+                                        variable.name = "Cell_type") %>% subset(value==1)
+  scATAC$Assay <- "scATAC"
+  scATAC$Study <- "Corces2020.peaks"
+  gr.Corces2020.peaks <- LIFTOVER(dat = scATAC,
+                                  build.conversion = "hg38.to.hg19",
+                                  chrom_col = "hg38_Chromosome",
+                                  start_col = "hg38_Start",
+                                  end_col = "hg38_Stop")
+  if(standardize_cellTypes){
+    gr.Corces2020.peaks$Cell_type <- standardize_celltypes(gr.Corces2020.peaks$Cell_type)
+  }
+  return(gr.Corces2020.peaks)
+}
+
+
+
+

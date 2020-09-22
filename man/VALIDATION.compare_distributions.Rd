@@ -16,6 +16,7 @@ res <- VALIDATION.permute_compare_results(permute_res=permute.IMPACT)
 }
 \seealso{
 Other VALIDATION: 
+\code{\link{VALIDATION.bootstrap}()},
 \code{\link{VALIDATION.permute_plot}()},
 \code{\link{VALIDATION.super_plot}()}
 }

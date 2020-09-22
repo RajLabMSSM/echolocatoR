@@ -9,9 +9,12 @@ XGR.enrichment_plot(
   title = NULL,
   subtitle = NULL,
   facet_formula = NULL,
+  line_formula = "y ~ exp(x)",
   FDR_thresh = 1,
   plot_type = "bar",
   shape_var = "Cell_type",
+  facet_scales = "free",
+  show_plot = T,
   save_plot = F,
   height = 5,
   width = 5
@@ -22,26 +25,17 @@ Plot enrichment results
 }
 \examples{
 root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
-
-# NOTT 2019: Epigenomic peaks
-enrich.peak <- data.table::fread(file.path(root,"XGR/Nott2019.enrich_celltype_peaks.csv.gz"))
-gp <- XGR.enrichment_plot(enrich_res=enrich.peak, title="Enrichment: Nott et al. (2019)", subtitle="Cell-type-specfic peaks", facet_formula="Assay ~ Cell_type", save_plot=file.path(root,"XGR/Nott2019.enrich_celltype_peaks.png"))
-
-# NOTT 2019: Regulatory elements
-enrich.element <- data.table::fread(file.path(root,"XGR/Nott2019.enrich_celltype_elements.csv.gz"))
-gp <- XGR.enrichment_plot(enrich_res=enrich.element, title="Enrichment: Nott et al. (2019)", subtitle="Cell-type-specfic elements", facet_formula="Element ~ Cell_type", save_plot=file.path(root,"XGR/Nott2019.enrich_celltype_elements.png"))
-
-CORCES 2020: scATAC peaks
-enrich.scATAC <- data.table::fread(file.path(root,"XGR/corces_scATAC.enrichment.csv.gz"))
-enrich.scATAC$Cell_type <- standardize_celltypes(celltype_vector = enrich.scATAC$Cell_type)
-gp <- XGR.enrichment_plot(enrich_res=enrich.scATAC, title="Enrichment: Corces et al. (2020)", subtitle="Cell-type-specfic scATAC peaks", facet_formula="Assay ~ Cell_type", save_plot=file.path(root,"XGR/Corces2019.enrich_celltype_scATACpeaks.png"))
-## CORCES 2020: scATAC paeks -- permuted
-enrich.scATAC.permute <- data.table::fread(file.path(root,"XGR/Corces2020.peaks.snp_groups.permute.fg20bg10k.csv.gz"))
-
+### merged enrichment results
+enrich_res <- data.table::fread( file.path(root,"XGR/celltypespecific_epigenomics.snp_groups.csv.gz"))
+enrich_boot <- data.table::fread(file.path(root,"XGR/celltypespecific_epigenomics.snp_groups.permute.csv.gz"))
+enrich_assay <- data.table::fread(file.path(root,"XGR/celltypespecific_epigenomics.snp_groups.assay.csv.gz"))
 
 # Merged volcano plot
-enrich <- rbind(enrich.peak, enrich.element,enrich.scATAC, fill=T)
-gp <- XGR.enrichment_plot(enrich_res=enrich, title="Enrichment: Cell-type-specific peaks and elements", plot_type="point",save_plot=file.path(root,"XGR/Nott2019.enrich_volcano.png"), height=5, width=6)
+gp <- XGR.enrichment_plot(enrich_res=subset(enrich_res , !Assay \%in\%  c("HiChIP_FitHiChIP","PLAC")) , title="Enrichment: Cell-type-specific epigenomics", plot_type="point",save_plot=file.path(root,"XGR/celltypespecific_epigenomics.enrich_volcano.png"), height=6, width=8, shape_var="Assay", line_formula="y~x")
+
+## Merged bar plot
+gp <- XGR.enrichment_plot(enrich_res=enrich_res,  plot_type="bar", facet_formula=".~Assay",FDR_thresh=.05)
+
 
 # Merged volcano plot (permuted)
 gp <- XGR.enrichment_plot(enrich_res=enrich.scATAC.permute, title="Permuted enrichment: Cell-type-specific peaks and elements", plot_type="point")
