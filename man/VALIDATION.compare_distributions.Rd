@@ -4,7 +4,7 @@
 \alias{VALIDATION.compare_distributions}
 \title{Test whether permutation p-value distributions are different}
 \usage{
-VALIDATION.compare_distributions(permute_res)
+VALIDATION.compare_distributions(permute_res, formula_str = "stat ~ SNP_Group")
 }
 \description{
 Test whether permutation p-value distributions are different
@@ -16,6 +16,7 @@ res <- VALIDATION.permute_compare_results(permute_res=permute.IMPACT)
 }
 \seealso{
 Other VALIDATION: 
+\code{\link{VALIDATION.bootstrap_multimetric}()},
 \code{\link{VALIDATION.bootstrap}()},
 \code{\link{VALIDATION.permute_plot}()},
 \code{\link{VALIDATION.super_plot}()}

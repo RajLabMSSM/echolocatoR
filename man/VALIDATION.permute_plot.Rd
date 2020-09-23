@@ -8,10 +8,12 @@ VALIDATION.permute_plot(
   permute_res,
   validation_method = NULL,
   facet_formula = ". ~ .",
+  y_var = "stat",
   show_plot = T,
   save_plot = F,
   height = 5,
-  width = 7
+  width = 7,
+  verbose = T
 )
 }
 \description{
@@ -20,35 +22,38 @@ Plot permutation test results
 \examples{
 root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 
-
 ## h2
-path <- file.path(root,"PolyFun/Nalls23andMe_2019.h2.bootstrap_20samples.csv.gz")
-permute_res <- data.table::fread(path)
+path <-  file.path(root,"PolyFun/Nalls23andMe_2019.h2.bootstrap.coin_wilcox_test.csv.gz")
+validation_method <- "h2_score"
+
 ## IMPACT
-path <- file.path(root,"IMPACT/Nalls23andMe_2019.mean_IMPACT.permutations.csv.gz")
-## Dey_DeepLearning
-path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.permutations.csv.gz")
+path <- file.path(root,"IMPACT//Nalls23andMe_2019.IMPACT_score.bootstrap.coin_wilcox_test.csv.gz")
+validation_method <- "IMPACT"
+
+ ## Dey_DeepLearning
+path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.bootstrap.stats_wilcox.test.csv.gz")
+validation_method <- "Dey_DeepLearning"
+
 ## SURE MPRA
 path <- file.path(root,"SURE/Nalls23andMe_2019.SURE.permutations.csv.gz")
+validation_method <- "SuRE MPRA"
 
+# ------  Import
 permute_res <-  data.table::fread(path)
+## permute_res <- dplyr::rename(permute_res, stat=Stat, p=p.value)
 
- # Plot
-gp <- VALIDATION.permute_plot(permute_res=permute_res, validation_method="Dey Deep Learning", facet_formula="Tissue ~ Model",, save_plot=gsub("\\\\.csv\\\\.gz",".png",path))
-
-# Multiplot
-gp1 <- VALIDATION.permute_plot(permute_res=subset(permute_res, .y.==unique(permute_res$.y.)[1]), validation_method="SuRE MPRA")
-gp2 <- VALIDATION.permute_plot(permute_res=subset(permute_res, .y.==unique(permute_res$.y.)[2]), validation_method="SuRE MPRA")
+# ---Plot ---
 library(patchwork)
-gp12 <- gp1 / gp2
-ggsave(gsub("\\\\.csv\\\\.gz",".png",path), gp12, dpi=400, width=9, height=7)
+permute_sub <- subset(permute_res, endsWith(Metric,"MAX"))
+gp1 <- VALIDATION.permute_plot(permute_res=permute_sub, validation_method=validation_method, y_var="stat", save_plot=gsub("\\\\.csv\\\\.gz",".stat_values.png",path), width=9, facet_formula = "Assay ~ Model + Tissue")
+gp2 <- VALIDATION.permute_plot(permute_res=subset(permute_sub, stat>0), validation_method=validation_method, y_var="p", save_plot=gsub("\\\\.csv\\\\.gz",".p_values.png",path), width=9,facet_formula = "Assay ~ Model + Tissue")
+gp12 <- (gp1 / gp2) + patchwork::plot_annotation(tag_levels = "a")
+ggsave(gsub("\\\\.csv\\\\.gz",".png",path),gp12, dpi=400, height=10, width=9)
 
-## Aggregated plot
-
-gp <- VALIDATION.permute_plot(permute_res=permute_agg, facet_formula="Tissue ~ Model", validation_method="Dey Deep Learning")
 }
 \seealso{
 Other VALIDATION: 
+\code{\link{VALIDATION.bootstrap_multimetric}()},
 \code{\link{VALIDATION.bootstrap}()},
 \code{\link{VALIDATION.compare_distributions}()},
 \code{\link{VALIDATION.super_plot}()}

@@ -3,6 +3,9 @@
 \name{VALIDATION.bootstrap}
 \alias{VALIDATION.bootstrap}
 \title{Perform validation bootstrap procedure}
+\source{
+\href{https://www.datanovia.com/en/lessons/wilcoxon-test-in-r/}{Wilcox test tutorial}
+}
 \usage{
 VALIDATION.bootstrap(
   metric_df,
@@ -10,8 +13,10 @@ VALIDATION.bootstrap(
   validation_method = NULL,
   synthesize_random = F,
   snp_groups = c("Random", "GWAS lead", "UCS", "Consensus (-POLYFUN)", "Consensus"),
+  test_method = "stats_wilcox.test",
   save_path = F,
-  nThread = 4
+  nThread = 4,
+  verbose = T
 )
 }
 \description{
@@ -20,17 +25,35 @@ Perform validation bootstrap procedure
 \examples{
 \dontrun{
 save_path <- root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
-ANNOT_MELT <- data.table::fread("/sc/arion/projects/pd-omics/data/IMPACT/IMPACT707/Annotations/IMPACT_overlap.csv.gz", nThread=4)
-res.IMPACT <- data.table::fread(file.path(root,"IMPACT/TOP_IMPACT_all.csv.gz"))
 
-boot.h2 <- VALIDATION.bootstrap()
-boot.IMPACT
-boot.DL
-boot.
+#### h2 ####
+path <- file.path(root,"PolyFun/h2_merged.csv.gz")
+metric <- "SNPVAR"
+
+#### IMPACT ####
+## mean_IMPACT
+# res.IMPACT <- data.table::fread(file.path(root,"IMPACT/TOP_IMPACT_all.csv.gz"))
+## IMPACT_score (raw)
+path <- "/sc/arion/projects/pd-omics/data/IMPACT/IMPACT707/Annotations/IMPACT_overlap.csv.gz"
+metric <- "IMPACT_score"
+
+#### Dey_DeepLearning ####
+###  (see VALIDATION.bootstrap_multimetric()) ####
+
+## Import and Process ##
+metric_df <- data.table::fread(path, nThread=8)
+# metric_df <- subset(metric_df, select=c(SNP,leadSNP,ABF.Credible_Set,ABF.PP,SUSIE.Credible_Set,SUSIE.PP,POLYFUN_SUSIE.Credible_Set,POLYFUN_SUSIE.PP,FINEMAP.Credible_Set,FINEMAP.PP,Consensus_SNP,Support,Locus,IMPACT_score))
+metric_df$Consensus_SNP_noPF <- find_consensus_SNPs(metric_df, exclude_methods = "POLYFUN_SUSIE", sort_by_support = F)$Consensus_SNP
+
+#### run bootstrap ####
+boot_res <- VALIDATION.bootstrap(metric_df=metric_df, metric=metric,   nThread=8)
+data.table::fwrite(boot_res, file.path(root,"PolyFun/Nalls23andMe_2019.h2.bootstrap.coin_wilcox_test.csv.gz"))
+## data.table::fwrite(boot_res, file.path(root,"IMPACT/Nalls23andMe_2019.IMPACT_score.bootstrap.coin_wilcox_test.csv.gz"))
 }
 }
 \seealso{
 Other VALIDATION: 
+\code{\link{VALIDATION.bootstrap_multimetric}()},
 \code{\link{VALIDATION.compare_distributions}()},
 \code{\link{VALIDATION.permute_plot}()},
 \code{\link{VALIDATION.super_plot}()}

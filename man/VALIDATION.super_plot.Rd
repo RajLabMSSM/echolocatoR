@@ -21,6 +21,7 @@ plt.ALL <- VALIDATION.super_plot(base_url="/sc/arion/projects/pd-omics/brian/Fin
 }
 \seealso{
 Other VALIDATION: 
+\code{\link{VALIDATION.bootstrap_multimetric}()},
 \code{\link{VALIDATION.bootstrap}()},
 \code{\link{VALIDATION.compare_distributions}()},
 \code{\link{VALIDATION.permute_plot}()}

@@ -44,7 +44,7 @@ DEEPLEARNING.query_one_chr <- function(subset_DT,
   # search_files <- search_files[grepl(assay, basename(search_files))]
   # Filter mean/max
   mean_max_pattern <- if(mean_max=="MEAN") paste(c("MEAN","AVG"), collapse="|") else mean_max
-  search_files <- search_files[grepl(mean_max_pattern, basename(search_files))]
+  search_files <- search_files[grepl(mean_max_pattern, toupper(basename(search_files)))]
 
   if(length(search_files)==0)stop("DEEPLEARNING:: No files meeting criterion were found.");
   printer("DEEPLEARNING:: Importing file <<=",search_files,v=verbose)
@@ -57,8 +57,9 @@ DEEPLEARNING.query_one_chr <- function(subset_DT,
     # print(x)
     # print(new_col_name)
     annot <- data.table::fread(x, nThread = 1)
+    if("L2" %in% colnames(annot)) annot <- dplyr::rename(AN=L2)
     merged <- data.table::merge.data.table(subset_DT,
-                                              subset(annot, select=c(SNP,AN)),
+                                              subset(annot, select=-c(SNP,AN)),
                                               all.x = T,
                                               by="SNP") %>% data.frame()
     annot.dat[ new_col_name ] <-  merged$AN
@@ -107,16 +108,23 @@ DEEPLEARNING.query_multi_chr <- function(merged_dat,
 
 
 
+
 #' Iteratively collect deep learning annotations
 #'
 #' @family DEEPLEARNING
 #' @example
-#' data("merged_DT")
+#' root = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
+#' merged_dat <- merge_finemapping_results(dataset = "Data/GWAS/Nalls23andMe_2019", LD_reference = "UKB", minimum_support = 0)
 #'
-#' ANNOT <- DEEPLEARNING.query (merged_dat=merged_DT, level="Allelic_Effect", type="annot")
+#' #### Allelic_Effect ####
+#' ANNOT.ae <- DEEPLEARNING.query (merged_dat=merged_dat, level="Allelic_Effect", type="annot")
+#' data.table::fwrite(ANNOT.ae, file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Allelic_Effect.csv.gz"))
 #'
-#' base_url = "/sc/arion/projects/pd-omics/brian/Fine_Mapping"
-#' data.table::fwrite(ANNOT , file.path(base_url,"Data/GWAS/Nalls23andMe_2019/_genome_wide/Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.csv.gz"))
+#'
+#' #### Variant_Level ####
+#' ANNOT.vl <- DEEPLEARNING.query (merged_dat=merged_dat, level="Variant_Level", type="annot")
+#' data.table::fwrite(ANNOT.vl, file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Variant_Level.csv.gz"))
+#'
 DEEPLEARNING.query <- function(merged_dat,
                                base_url="/sc/arion/projects/pd-omics/data/Dey_DeepLearning",
                                level=c("Variant_Level","Allelic_Effect"),
