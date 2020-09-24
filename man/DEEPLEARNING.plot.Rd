@@ -6,14 +6,14 @@
 \usage{
 DEEPLEARNING.plot(
   annot.melt,
-  snp_groups = c("GWAS lead", "UCS", "Consensus"),
+  snp_groups = c("GWAS lead", "UCS", "Consensus (-POLYFUN)", "Consensus"),
   comparisons_filter = function(x) {     if ("Consensus" \%in\% x)          return(x) },
-  model.metric = c("MEAN"),
-  facet_formula = "Assay ~ Model + Tissue",
-  shift_points = T,
+  model_metric = c("MAX"),
+  facet_formula = ". ~ Model",
+  remove_outliers = T,
   show_plot = T,
   save_path = F,
-  height = 9,
+  height = 6,
   width = 8
 )
 }
@@ -21,6 +21,15 @@ DEEPLEARNING.plot(
 Plot deep learning predictions
 }
 \examples{
-base_url = "/sc/arion/projects/pd-omics/brian/Fine_Mapping"
-annot.melt <- data.table::fread(file.path(base_url,"Data/GWAS/Nalls23andMe_2019/_genome_wide/Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.snp_groups.mean.csv.gz"))
+root = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
+
+#### Allelic_Effect ####
+path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Allelic_Effect.snp_groups_mean.csv.gz")
+
+#### Variant_Level ####
+path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Variant_Level.snp_groups_mean.csv.gz")
+
+annot.melt <-  data.table::fread(path, nThread=8)
+
+gp <- DEEPLEARNING.plot(annot.melt=annot.melt, facet_formula="Tissue ~ Model", comparisons_filter=NULL, save_path=gsub("\\\\.csv\\\\.gz",".png",path))
 }

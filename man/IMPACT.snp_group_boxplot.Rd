@@ -9,7 +9,7 @@
 \usage{
 IMPACT.snp_group_boxplot(
   TOP_IMPACT_all,
-  snp_groups = c("GWAS lead", "UCS", "Consensus"),
+  snp_groups = c("GWAS lead", "UCS", "Consensus (-POLYFUN)", "Consensus"),
   method = "wilcox.test",
   comparisons_filter = function(x) {     if ("Consensus" \%in\% x)          return(x) },
   show_plot = T,
@@ -17,6 +17,7 @@ IMPACT.snp_group_boxplot(
   title = "IMPACT scores",
   xlabel = NULL,
   ylabel = NULL,
+  show_xtext = T,
   shift_points = T,
   height = 10,
   width = 10

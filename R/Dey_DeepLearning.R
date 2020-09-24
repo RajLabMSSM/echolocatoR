@@ -115,6 +115,7 @@ DEEPLEARNING.query_multi_chr <- function(merged_dat,
 #' @example
 #' root = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 #' merged_dat <- merge_finemapping_results(dataset = "Data/GWAS/Nalls23andMe_2019", LD_reference = "UKB", minimum_support = 0)
+#' merged_dat <- find_consensus_SNPs_no_PolyFun(merged_dat)
 #'
 #' #### Allelic_Effect ####
 #' ANNOT.ae <- DEEPLEARNING.query (merged_dat=merged_dat, level="Allelic_Effect", type="annot")
@@ -167,49 +168,64 @@ DEEPLEARNING.query <- function(merged_dat,
 #' Melt deep learning annotations into long-format
 #'
 #' @examples
-#' merged_dat <- merge_finemapping_results(dataset = "Data/GWAS/Nalls23andMe_2019", minimum_support = 0, LD_reference = "UKB")
-#' ANNOT <- DEEPLEARNING.query(merged_dat=merged_dat, level="Allelic_Effect", type="annot")
+#' base_url <- root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
+#' ## merged_dat <- merge_finemapping_results(dataset = "Data/GWAS/Nalls23andMe_2019", minimum_support = 0, LD_reference = "UKB")
+#' ## ANNOT <- DEEPLEARNING.query(merged_dat=merged_dat, level="Allelic_Effect", type="annot")
 #'
-#' annot.melt <- DEEPLEARNING.melt(ANNOT=ANNOT, metric_str="mean")
-#' base_url = "/sc/arion/projects/pd-omics/brian/Fine_Mapping"
-#' data.table::fwrite(annot.melt, file.path(base_url,"Data/GWAS/Nalls23andMe_2019/_genome_wide/Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.snp_groups.mean.csv.gz"))
+#' #### Allelic_Effect ####
+#' path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Allelic_Effect.csv.gz")
+#'
+#' #### Variant_Level ####
+#' path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Variant_Level.csv.gz")
+#'
+#' ANNOT <- data.table::fread(path, nThread=8)
+#' ANNOT <- find_consensus_SNPs_no_PolyFun(ANNOT)
+#' annot.melt <- DEEPLEARNING.melt(ANNOT=ANNOT, aggregate_func="mean", save_path=gsub("\\.csv\\.gz",".snp_groups_mean.csv.gz",path))
 DEEPLEARNING.melt <- function(ANNOT,
                               model=c("Basenji","BiClassCNN","DeepSEA","ChromHMM","Roadmap","Others"),
-                              metric_str="max",
+                              aggregate_func="mean",
                               replace_NA=NA,
-                              replace_negInf=NA){
+                              replace_negInf=NA,
+                              save_path=F){
   snp.groups_list <- snp_group_filters()
-  metric <- get(metric_str)
+  agg_func <- get(aggregate_func)
   sampling_df <- ANNOT
   annot.melt <- ANNOT %>%
     dplyr::group_by(Locus) %>%
     dplyr::summarise_at(.vars = vars(grep(paste(model, collapse="|"),colnames(.), value = T)),
-                        .funs = list("Random"= ~ metric(tidyr::replace_na(sample(.x, size=3, replace = T),replace_NA), na.rm = T),
-                                     "All"= ~ metric(tidyr::replace_na(.x,replace_NA), na.rm = T),
-                                     "GWAS nom. sig."= ~ metric(tidyr::replace_na(.x[P<.05],replace_NA), na.rm = T),
-                                     "GWAS sig."= ~ metric(tidyr::replace_na(.x[P<5e-8],replace_NA), na.rm = T),
-                                     "GWAS lead"= ~ metric(tidyr::replace_na(.x[leadSNP],replace_NA), na.rm = T),
-                                     "ABF CS"= ~ metric(tidyr::replace_na(.x[ABF.CS>0],replace_NA), na.rm = T),
-                                     "SUSIE CS"= ~ metric(tidyr::replace_na(.x[SUSIE.CS>0],replace_NA), na.rm = T),
-                                     "POLYFUN-SUSIE CS"= ~ metric(tidyr::replace_na(.x[POLYFUN_SUSIE.CS>0],replace_NA), na.rm = T),
-                                     "FINEMAP CS"= ~ metric(tidyr::replace_na(.x[FINEMAP.CS>0],replace_NA), na.rm = T),
-                                     "UCS"= ~ metric(tidyr::replace_na(.x[Support>0],replace_NA), na.rm = T),
-                                     "Support==0"= ~ metric(tidyr::replace_na(.x[Support==0],replace_NA), na.rm = T),
-                                     "Support==1"= ~ metric(tidyr::replace_na(.x[Support==1],replace_NA), na.rm = T),
-                                     "Support==2"= ~ metric(tidyr::replace_na(.x[Support==2],replace_NA), na.rm = T),
-                                     "Support==3"= ~ metric(tidyr::replace_na(.x[Support==3],replace_NA), na.rm = T),
-                                     "Support==4"= ~ metric(tidyr::replace_na(.x[Support==4],replace_NA), na.rm = T),
-                                     "Consensus"= ~ metric(tidyr::replace_na(.x[Consensus_SNP],replace_NA), na.rm = T)
+                        .funs = list("Random"= ~ agg_func(tidyr::replace_na(sample(.x, size=3, replace = T),replace_NA), na.rm = T),
+                                     "All"= ~ agg_func(tidyr::replace_na(.x,replace_NA), na.rm = T),
+                                     "GWAS nom. sig."= ~ agg_func(tidyr::replace_na(.x[P<.05],replace_NA), na.rm = T),
+                                     "GWAS sig."= ~ agg_func(tidyr::replace_na(.x[P<5e-8],replace_NA), na.rm = T),
+                                     "GWAS lead"= ~ agg_func(tidyr::replace_na(.x[leadSNP],replace_NA), na.rm = T),
+                                     "ABF CS"= ~ agg_func(tidyr::replace_na(.x[ABF.CS>0],replace_NA), na.rm = T),
+                                     "SUSIE CS"= ~ agg_func(tidyr::replace_na(.x[SUSIE.CS>0],replace_NA), na.rm = T),
+                                     "POLYFUN-SUSIE CS"= ~ agg_func(tidyr::replace_na(.x[POLYFUN_SUSIE.CS>0],replace_NA), na.rm = T),
+                                     "FINEMAP CS"= ~ agg_func(tidyr::replace_na(.x[FINEMAP.CS>0],replace_NA), na.rm = T),
+                                     "UCS"= ~ agg_func(tidyr::replace_na(.x[Support>0],replace_NA), na.rm = T),
+                                     "UCS_noPF"= ~ agg_func(tidyr::replace_na(.x[Support_noPF>0],replace_NA), na.rm = T),
+                                     "Support==0"= ~ agg_func(tidyr::replace_na(.x[Support==0],replace_NA), na.rm = T),
+                                     "Support==1"= ~ agg_func(tidyr::replace_na(.x[Support==1],replace_NA), na.rm = T),
+                                     "Support==2"= ~ agg_func(tidyr::replace_na(.x[Support==2],replace_NA), na.rm = T),
+                                     "Support==3"= ~ agg_func(tidyr::replace_na(.x[Support==3],replace_NA), na.rm = T),
+                                     "Support==4"= ~ agg_func(tidyr::replace_na(.x[Support==4],replace_NA), na.rm = T),
+                                     "Consensus (-POLYFUN)"= ~ agg_func(tidyr::replace_na(.x[Consensus_SNP_noPF],replace_NA), na.rm = T),
+                                     "Consensus"= ~ agg_func(tidyr::replace_na(.x[Consensus_SNP],replace_NA), na.rm = T)
                         ),
     ) %>%
     data.table::data.table() %>%
     data.table::melt.data.table(id.vars = "Locus", variable.name = "Annotation") %>%
     # dplyr::mutate(value = as.numeric(gsub(-Inf,replace_negInf,value))) %>%
-    tidyr::separate(col = "Annotation", sep="_", into=c("Model","Tissue","Assay","Type","Metric","SNP.Group"), remove=F) %>%
+    tidyr::separate(col = "Annotation", sep="_", into=c("Model","Tissue","Assay","Type","Metric","SNP_Group"), remove=F) %>%
     dplyr::mutate(Annotation = DescTools::StrTrim(Annotation, "_"),
-                  SNP.Group = factor(`SNP.Group`,
+                  SNP_Group = factor(SNP_Group,
                                      levels = names(snp.groups_list), ordered = T),
                   log.value = log1p(value))
+  if(save_path!=F){
+    printer("DEEPLEARNING:: Saving aggregated SNP_Group values",aggregate_func,"==>",save_path)
+    dir.create(dirname(save_path), showWarnings = F, recursive = T)
+    data.table::fwrite(annot.melt, save_path)
+  }
   return(annot.melt)
 }
 
@@ -220,61 +236,82 @@ DEEPLEARNING.melt <- function(ANNOT,
 #' Plot deep learning predictions
 #'
 #' @examples
-#' base_url = "/sc/arion/projects/pd-omics/brian/Fine_Mapping"
-#' annot.melt <- data.table::fread(file.path(base_url,"Data/GWAS/Nalls23andMe_2019/_genome_wide/Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.snp_groups.mean.csv.gz"))
+#' root = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
+#'
+#' #### Allelic_Effect ####
+#' path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Allelic_Effect.snp_groups_mean.csv.gz")
+#'
+#' #### Variant_Level ####
+#' path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Variant_Level.snp_groups_mean.csv.gz")
+#'
+#' annot.melt <-  data.table::fread(path, nThread=8)
+#'
+#' gp <- DEEPLEARNING.plot(annot.melt=annot.melt, facet_formula="Tissue ~ Model", comparisons_filter=NULL, save_path=gsub("\\.csv\\.gz",".png",path))
 DEEPLEARNING.plot <- function(annot.melt,
-                              snp_groups=c("GWAS lead","UCS","Consensus"),
+                              snp_groups=c("GWAS lead","UCS","Consensus (-POLYFUN)","Consensus"),
                               comparisons_filter=function(x){if("Consensus" %in% x) return(x)},
-                              model.metric=c("MEAN"),
-                              facet_formula="Assay ~ Model + Tissue",
-                              shift_points=T,
+                              model_metric=c("MAX"),
+                              facet_formula=". ~ Model",
+                              remove_outliers=T,
                               show_plot=T,
                               save_path=F,
-                              height=9,
+                              height=6,
                               width=8){
+
+  if(remove_outliers){
+    # https://www.r-bloggers.com/2020/01/how-to-remove-outliers-in-r/
+    outliers <- boxplot(annot.melt$value, plot=F)$out
+    annot.melt <- annot.melt[-which(annot.melt$value %in% outliers),]
+  }
+  colorDict <- snp_group_colorDict()
   dat_plot <-  subset(annot.melt,
-                      Metric %in% model.metric &
-                        SNP.Group %in%  snp_groups)
-  snp.groups <- unique(dat_plot$SNP.Group)
+                      Metric %in% model_metric &
+                        SNP_Group %in%  snp_groups) %>%
+    dplyr::mutate(SNP_Group=factor(SNP_Group, levels = unique(SNP_Group), ordered = T))
+    # dplyr::group_by(SNP_Group, Locus, Model, Tissue) %>%
+    # dplyr::summarise(value=mean(value,na.rm = T))
+  snp.groups <- unique(dat_plot$SNP_Group)
   comparisons <- utils::combn(x = as.character(snp.groups),
                               m=2,
                               FUN = comparisons_filter,
                               simplify = F) %>% purrr::compact()
   method="wilcox.test"
-  pb <- ggpubr::ggviolin(data = dat_plot,
-                   x = "SNP.Group", y="value", fill = "SNP.Group",
-                   add = "boxplot", alpha = .6, trim = T,
-                   add.params = list(alpha=.1, color="white") )  +
+  gp <- ggplot(data = dat_plot, aes(x=SNP_Group, y=value, fill=SNP_Group)) +
+    geom_jitter(alpha=.1, width = .3, height=0) +
+    # geom_bar(stat = "identity",alpha=.6) +
+    geom_violin(alpha = .6) +
+    geom_boxplot(alpha=.6) +
     ggpubr::stat_compare_means(method = method,
                                comparisons = comparisons,
-                               label = "p.signif", size=3, vjust = 1.5) +
+                               label = "p.signif", size=3, vjust = 1.6) +
     # ggpubr::stat_compare_means(method = method,
     #                            comparisons = comparisons,
     #                            label = "p.adj", hjust=5, size=3) +
-    geom_jitter(alpha=.1, width = .3, height=0) + #aes(color=SNP.Group)) +
     facet_grid(facets = as.formula(facet_formula),
                scales = "free") +
-    labs(title=paste0("Deep learning annotations (",tolower(model.metric),")"),
+    labs(title=paste0("Deep learning annotations (",tolower(model_metric),")"),
          y='value', x="SNP Group") +
+    scale_fill_manual(values = colorDict) +
     theme_bw() +
     theme(axis.text.x = element_text(angle = 45, hjust=1),
           legend.position = "none",
           strip.background = element_rect(fill = "grey20"),
           strip.text= element_text(color = "white"))
-  if(length(dplyr::union(snp.groups, c("GWAS lead","UCS","Consensus")))==3){
-    pb <- pb + scale_fill_manual(values =  c("red","green2","goldenrod2"))
-  }
-  if(shift_points){
-    pb <- gginnards::shift_layers(pb, "GeomPoint", shift = -5)
-  }
-  if(show_plot) print(pb)
+    # coord_cartesian(ylim = quantile(dat_plot$value, c(0.1, 0.9), na.rm = T))
+
+  if(show_plot) print(gp)
+  # ggplot(data =dat_plot, aes(x=value, fill=SNP_Group)) +
+  #   geom_density(position="identity", alpha=.5) +
+  #   theme_bw() +
+  #   scale_fill_manual(values = colorDict) +
+  #   xlim(c(0,.05))
   if(save_path!=F){
     # save_path <- file.path("/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/Dey_DeepLearning",
     #                        paste("Nalls23andMe_2019","Dey_DeepLearning",model.metric,"png",sep="."))
     ggsave(save_path,
-           pb, dpi = 300, height=height, width=width)
+           gp, dpi = 300, height=height, width=width)
   }
-  return(pb)
+  return(gp)
 }
 
 
@@ -282,9 +319,9 @@ DEEPLEARNING.plot <- function(annot.melt,
 
 
 DEEPLEARNING.permut_test <- function(ANNOT){
-  metric_str = "max"
+  aggregate_func = "max"
   annot.melt <- DEEPLEARNING.melt(ANNOT = ANNOT,
-                                  metric_str = metric_str)
+                                  aggregate_func = aggregate_func)
   # coin::independence_test(data = as.data.frame(annot.melt),
   #                         formula = value ~ SNP.Group)
   # oneway_test(data= as.data.frame(annot.melt),

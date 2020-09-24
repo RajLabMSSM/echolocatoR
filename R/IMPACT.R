@@ -319,7 +319,7 @@ IMPACT_heatmap <- function(ANNOT_MELT,
   library(ComplexHeatmap);# devtools::install_github("jokergoo/ComplexHeatmap")
 
   ## Remove POLYFUN results as this introduces circularity (Polyfun trains on data from ENCODE/Roadmap, as does IMPACT)
-  ANNOT_MELT$Consensus_SNP_noPF <- find_consensus_SNPs(ANNOT_MELT, exclude_methods = "POLYFUN_SUSIE", sort_by_support = F)$Consensus_SNP
+  ANNOT_MELT <- find_consensus_SNPs_no_PolyFun(ANNOT_MELT)
   snp.groups_list <- snp_group_filters()
   snp.groups_list <- snp.groups_list[names(snp.groups_list) %in% snp_groups]
   TOP_IMPACT <- lapply(names(snp.groups_list), function(x){
@@ -601,7 +601,7 @@ IMPACT_heatmap <- function(ANNOT_MELT,
 #' bp <- IMPACT.snp_group_boxplot(TOP_IMPACT_all, method="wilcox.test")
 #' }
 IMPACT.snp_group_boxplot <- function(TOP_IMPACT_all,
-                                     snp_groups=c("GWAS lead","UCS","Consensus"),
+                                     snp_groups=c("GWAS lead","UCS","Consensus (-POLYFUN)","Consensus"),
                                      method="wilcox.test",
                                      comparisons_filter=function(x){if("Consensus" %in% x) return(x)},
                                      show_plot=T,
@@ -609,27 +609,23 @@ IMPACT.snp_group_boxplot <- function(TOP_IMPACT_all,
                                      title="IMPACT scores",
                                      xlabel=NULL,
                                      ylabel=NULL,
+                                     show_xtext=T,
                                      shift_points=T,
                                      height=10,
                                      width=10){
-  library(ggpubr)
-  # tests <- compare_means(max_IMPACT ~ SNP_group,  data = TOP_IMPACT_all, method=method)
-  plot_dat <- subset(TOP_IMPACT_all, SNP_group %in% snp_groups)
+  colorDict <- snp_group_colorDict()
+  plot_dat <- subset(TOP_IMPACT_all, SNP_group %in% snp_groups) %>%
+    dplyr::mutate(SNP_group=factor(SNP_group, levels=names(colorDict), ordered = T))
   snp.groups <- unique(plot_dat$SNP_group)
   comparisons <- utils::combn(x = as.character(snp.groups),
                               m=2,
                               FUN = comparisons_filter,
                               simplify = F) %>% purrr::compact()
-  # plot_dat$SNP_group <- gsub("_","\n",plot_dat$SNP_group)
 
-  plot_dat$mean_IMPACT
-
-  pb <- ggpubr::ggviolin(plot_dat,
-                 x = "SNP_group", y = "mean_IMPACT",
-                 fill = "SNP_group",
-                 alpha=.6,
-                 add = "boxplot",
-                 add.params = list(alpha=.1, color="white")) +
+  pb <-  ggplot(data = plot_dat, aes(x=SNP_group, y=mean_IMPACT, fill=SNP_group)) +
+    geom_jitter(alpha=.1,width = .25, show.legend = F, shape=16, height=0) +
+    geom_violin(alpha=.6, show.legend = F) +
+    geom_boxplot(alpha=.6, color="grey", show.legend = F) +
     ggpubr::stat_compare_means(method = method, comparisons = comparisons,
                                label = "p.signif", size=3) +
     ggpubr::stat_compare_means(method = method, comparisons = comparisons,
@@ -639,15 +635,13 @@ IMPACT.snp_group_boxplot <- function(TOP_IMPACT_all,
     labs(x=xlabel,
          y=ylabel,
          title=title) +
+    scale_fill_manual(values =  colorDict) +
+    theme_bw() +
     theme(legend.position = "none",
           axis.text.x = element_text(angle=45, hjust=1))
-  if(length(dplyr::union(snp.groups, c("GWAS lead","UCS","Consensus")))==3){
-    pb <- pb + scale_fill_manual(values =  c("red","green2","goldenrod2")) +
-      theme( axis.text.x = element_text(angle=0, hjust=.5))
-  }
-
-  if(shift_points){
-    pb <- gginnards::shift_layers(pb, "GeomPoint", shift = -5)
+  if(!show_xtext){
+    pb <- pb + theme(axis.text.x = element_blank(),
+          axis.title.x = element_blank())
   }
   if(show_plot) print(pb)
   if(save_path!=F) ggplot2::ggsave(save_path, pb,

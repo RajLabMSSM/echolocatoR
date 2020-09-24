@@ -31,7 +31,8 @@ path <- file.path(root,"IMPACT//Nalls23andMe_2019.IMPACT_score.bootstrap.coin_wi
 validation_method <- "IMPACT"
 
  ## Dey_DeepLearning
-path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.bootstrap.stats_wilcox.test.csv.gz")
+path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Variant_Level.bootstrap.stats_wilcox.test.csv.gz")
+path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Allelic_Effect.bootstrap.stats_wilcox.test.csv.gz")
 validation_method <- "Dey_DeepLearning"
 
 ## SURE MPRA
@@ -44,9 +45,9 @@ permute_res <-  data.table::fread(path)
 
 # ---Plot ---
 library(patchwork)
-permute_sub <- subset(permute_res, endsWith(Metric,"MAX"))
-gp1 <- VALIDATION.permute_plot(permute_res=permute_sub, validation_method=validation_method, y_var="stat", save_plot=gsub("\\\\.csv\\\\.gz",".stat_values.png",path), width=9, facet_formula = "Assay ~ Model + Tissue")
-gp2 <- VALIDATION.permute_plot(permute_res=subset(permute_sub, stat>0), validation_method=validation_method, y_var="p", save_plot=gsub("\\\\.csv\\\\.gz",".p_values.png",path), width=9,facet_formula = "Assay ~ Model + Tissue")
+##permute_sub <- subset(permute_res, endsWith(Metric,"MAX"))
+gp1 <- VALIDATION.permute_plot(permute_res=permute_res, validation_method=validation_method, y_var="stat", save_plot=gsub("\\\\.csv\\\\.gz",".stat_values.png",path), width=9, facet_formula = "Tissue ~ Model + Assay")
+gp2 <- VALIDATION.permute_plot(permute_res=subset(permute_res, stat>0), validation_method=validation_method, y_var="p", save_plot=gsub("\\\\.csv\\\\.gz",".p_values.png",path), width=9,facet_formula = "Assay ~ Model + Tissue")
 gp12 <- (gp1 / gp2) + patchwork::plot_annotation(tag_levels = "a")
 ggsave(gsub("\\\\.csv\\\\.gz",".png",path),gp12, dpi=400, height=10, width=9)
 

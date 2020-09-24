@@ -23,7 +23,7 @@ XGR enrichment
 root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 
 merged_dat <- merge_finemapping_results(dataset = dirname(root), LD_reference = "UKB", minimum_support = 0)
-merged_dat$Consensus_SNP_noPF <- find_consensus_SNPs(merged_dat, exclude_methods = "POLYFUN_SUSIE", sort_by_support = F)$Consensus_SNP
+merged_dat <- find_consensus_SNPs_no_PolyFun(merged_dat)
 
 gr.merged <- merge_celltype_specific_epigenomics()
 grouping_vars <- c("Study","Cell_type","Assay")

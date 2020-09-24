@@ -18,12 +18,13 @@ Conduct bootstrap procedure on multiple columns
 }
 \examples{
 save_path <- root <-  "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
-path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.csv.gz")
+path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Allelic_Effect.csv.gz")
+path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Variant_Level.csv.gz")
 
 # Import and process
 metric_df <- data.table::fread(path, nThread=8)
-metric_df$Consensus_SNP_noPF <- find_consensus_SNPs(metric_df, exclude_methods = "POLYFUN_SUSIE", sort_by_support = F)$Consensus_SNP
-metric_names <- grep("Basenji.*_MEAN|DeepSEA.*_MEAN", colnames(metric_df), value = T)
+metric_df <- find_consensus_SNPs_no_PolyFun(metric_df)
+metric_names <- grep("Basenji.*MAX|DeepSEA.*MAX|Roadmap.*MAX", colnames(metric_df), value = T)
 validation_method = "Dey_DeepLearning"
 
 enrich.boot <- VALIDATION.bootstrap_multimetric(metric_df=metric_df, metric_names=metric_names, validation_method=validation_method, save_path=gsub("\\\\.csv\\\\.gz",".bootstrap.stats_wilcox.test.csv.gz",path))

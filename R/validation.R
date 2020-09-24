@@ -6,8 +6,8 @@
 #'
 #' @family VALIDATION
 #' @examples
-#' plt.ALL <- VALIDATION.super_plot(base_url="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide")
-VALIDATION.super_plot <- function(base_url="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide",
+#' plt.ALL <- VALIDATION.super_plot(root="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide")
+VALIDATION.super_plot <- function(root="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide",
                                   height=10, width=12,
                                   show_plot=T,
                                   save_plot=F){
@@ -15,15 +15,15 @@ VALIDATION.super_plot <- function(base_url="/sc/arion/projects/pd-omics/brian/Fi
   expanded_groups <-  grep("Support",names(snp_group_filters()),value = T, invert = T)
 
   #### S-LDSC h2 ####
-  res.h2 <- data.table::fread(file.path(base_url,"PolyFun/Nalls23andMe_2019.h2_enrich.snp_groups.csv.gz"))
+  res.h2 <- data.table::fread(file.path(root,"PolyFun/Nalls23andMe_2019.h2_enrich.snp_groups.csv.gz"))
   plt.h2 <- POLYFUN.h2_enrichment_SNPgroups_plot(RES = res.h2,
                                                  # snp_groups = c("GWAS lead","UCS","Consensus"),
-                                                 # comparisons_filter = NULL,
-                                                 snp_groups = expanded_groups,
+                                                 comparisons_filter = NULL,
+                                                 # snp_groups = expanded_groups,
                                                  save_path = file.path(base_url,"PolyFun/Nalls23andMe_2019.h2_enrich.snp_groups_expanded.png"),
-                                                 show_plot = T)# +
-    theme(axis.text.x = element_blank(),
-          axis.title.x = element_blank())
+                                                 show_xtext = F,
+                                                 show_plot = T)
+
 
   # coin::independence_test(h2.enrichment ~ SNP.Group,
   #                         data = subset(res.h2, SNP.Group %in% c("GWAS lead","UCS"))%>%
@@ -32,43 +32,39 @@ VALIDATION.super_plot <- function(base_url="/sc/arion/projects/pd-omics/brian/Fi
 
 
   #### IMPACT ####
-  res.IMPACT <- data.table::fread(file.path(base_url,"IMPACT/TOP_IMPACT_all.csv.gz"))
+  res.IMPACT <- data.table::fread(file.path(root,"IMPACT/TOP_IMPACT_all.csv.gz"))
   ## binarize
   # res.IMPACT <- dplyr::mutate(res.IMPACT, mean_IMPACT=ifelse(mean_IMPACT>=.95,1,0))
   plt.IMPACT <- IMPACT.snp_group_boxplot(TOP_IMPACT_all = res.IMPACT,
                                          # snp_groups = c("GWAS lead","UCS","Consensus",paste0("Support==",0:4)),
-                                         snp_groups = expanded_groups,
+                                         # snp_groups = expanded_groups,
                                          title = "IMPACT",
                                          ylabel = "mean IMPACT score",
-                                         save_path = file.path(base_url,"IMPACT/Nalls23andMe_2019.IMPACT.snp_groups_expanded.png"),
-                                         # comparisons_filter = NULL,
-                                         show_plot = T) #+
+                                         save_path = file.path(root,"IMPACT/Nalls23andMe_2019.IMPACT.snp_groups_expanded.png"),
+                                         comparisons_filter = NULL,
+                                         show_xtext = T,
+                                         show_plot = T)
 
-    theme(axis.text.x = element_blank(),
-          axis.title.x = element_blank())
+
 
 
   #### Deep learning ####
-  res.DL <- data.table::fread(file.path(base_url,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.snp_groups.mean.csv.gz"))
-  plt.DL <- DEEPLEARNING.plot(annot.melt = res.DL,
-                              # snp_groups = c("GWAS lead", "UCS","Consensus"),
-                              snp_groups = expanded_groups,
-                              facet_formula = "Assay ~ Model + Tissue",
-                              # comparisons_filter = NULL,
-                              model.metric = "MEAN",
-                              save_path = file.path(base_url,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.MEAN_expanded.png"),
+  res.DL <- data.table::fread(file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Allelic_Effect.snp_groups_mean.csv.gz"))
+  plt.DL <- DEEPLEARNING.plot(annot.melt=res.DL,
+                              facet_formula="Tissue ~ Model",
+                              comparisons_filter=NULL,
+                              model_metric = "MAX",
+                              remove_outliers = T,
+                              save_path=gsub("\\.csv\\.gz",".png",file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Allelic_Effect.snp_groups_mean.csv.gz")),
                               show_plot = T)
-  plt.DL_zoom <- plt.DL + ylim(c(0,0.006))
-  ggsave(file.path(base_url,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.MEAN_expanded.png"),
-         plt.DL_zoom, dpi=400)
 
   #### SURE ####
-  res.SURE <- data.table::fread(file.path(base_url,"SURE/Nalls23andMe_2019.SURE.snp_groups.mean.csv.gz"))
+  res.SURE <- data.table::fread(file.path(root,"SURE/Nalls23andMe_2019.SURE.snp_groups.mean.csv.gz"))
   plt.SURE <- SURE.plot(sure.melt = res.SURE,
                         # snp_groups = c("GWAS lead","UCS","Consensus"),
-                        snp_groups = expanded_groups,
-                        # comparisons_filter = NULL,
-                        save_path = file.path(base_url,"SURE/Nalls23andMe_2019.SURE.snp_groups_expanded.mean.png"),
+                        # snp_groups = expanded_groups,
+                        comparisons_filter = NULL,
+                        save_path = file.path(root,"SURE/Nalls23andMe_2019.SURE.snp_groups_expanded.mean.png"),
                         show_plot = T,
                         width=8)
    # MERGE PLOTS
@@ -120,7 +116,7 @@ VALIDATION.super_plot <- function(base_url="/sc/arion/projects/pd-omics/brian/Fi
 #' ## Import and Process ##
 #' metric_df <- data.table::fread(path, nThread=8)
 #' # metric_df <- subset(metric_df, select=c(SNP,leadSNP,ABF.Credible_Set,ABF.PP,SUSIE.Credible_Set,SUSIE.PP,POLYFUN_SUSIE.Credible_Set,POLYFUN_SUSIE.PP,FINEMAP.Credible_Set,FINEMAP.PP,Consensus_SNP,Support,Locus,IMPACT_score))
-#' metric_df$Consensus_SNP_noPF <- find_consensus_SNPs(metric_df, exclude_methods = "POLYFUN_SUSIE", sort_by_support = F)$Consensus_SNP
+#' metric_df <- find_consensus_SNPs_no_PolyFun(metric_df)
 #'
 #' #### run bootstrap ####
 #' boot_res <- VALIDATION.bootstrap(metric_df=metric_df, metric=metric,   nThread=8)
@@ -139,9 +135,7 @@ VALIDATION.bootstrap <- function(metric_df,
   sampling_df <- metric_df
   if(!"Consensus_SNP_noPF" %in% colnames(metric_df)){
     try({
-      metric_df$Consensus_SNP_noPF <- find_consensus_SNPs(metric_df,
-                                                          exclude_methods = "POLYFUN_SUSIE",
-                                                          sort_by_support = F)$Consensus_SNP
+      metric_df <- find_consensus_SNPs_no_PolyFun(metric_df)
     })
   }
 
@@ -275,12 +269,13 @@ VALIDATION.bootstrap <- function(metric_df,
 #' @family VALIDATION
 #' @examples
 #' save_path <- root <-  "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
-#' path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.csv.gz")
+#' path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Allelic_Effect.csv.gz")
+#' path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Variant_Level.csv.gz")
 #'
 #' # Import and process
 #' metric_df <- data.table::fread(path, nThread=8)
-#' metric_df$Consensus_SNP_noPF <- find_consensus_SNPs(metric_df, exclude_methods = "POLYFUN_SUSIE", sort_by_support = F)$Consensus_SNP
-#' metric_names <- grep("Basenji.*_MEAN|DeepSEA.*_MEAN", colnames(metric_df), value = T)
+#' metric_df <- find_consensus_SNPs_no_PolyFun(metric_df)
+#' metric_names <- grep("Basenji.*MAX|DeepSEA.*MAX|Roadmap.*MAX", colnames(metric_df), value = T)
 #' validation_method = "Dey_DeepLearning"
 #'
 #' enrich.boot <- VALIDATION.bootstrap_multimetric(metric_df=metric_df, metric_names=metric_names, validation_method=validation_method, save_path=gsub("\\.csv\\.gz",".bootstrap.stats_wilcox.test.csv.gz",path))
@@ -393,7 +388,8 @@ VALIDATION.aggregate_permute_res <- function(permute_res){
 #' validation_method <- "IMPACT"
 #'
 #'  ## Dey_DeepLearning
-#' path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.bootstrap.stats_wilcox.test.csv.gz")
+#' path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Variant_Level.bootstrap.stats_wilcox.test.csv.gz")
+#' path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Allelic_Effect.bootstrap.stats_wilcox.test.csv.gz")
 #' validation_method <- "Dey_DeepLearning"
 #'
 #' ## SURE MPRA
@@ -406,9 +402,9 @@ VALIDATION.aggregate_permute_res <- function(permute_res){
 #'
 #' # ---Plot ---
 #' library(patchwork)
-#' permute_sub <- subset(permute_res, endsWith(Metric,"MAX"))
-#' gp1 <- VALIDATION.permute_plot(permute_res=permute_sub, validation_method=validation_method, y_var="stat", save_plot=gsub("\\.csv\\.gz",".stat_values.png",path), width=9, facet_formula = "Assay ~ Model + Tissue")
-#' gp2 <- VALIDATION.permute_plot(permute_res=subset(permute_sub, stat>0), validation_method=validation_method, y_var="p", save_plot=gsub("\\.csv\\.gz",".p_values.png",path), width=9,facet_formula = "Assay ~ Model + Tissue")
+#' ##permute_sub <- subset(permute_res, endsWith(Metric,"MAX"))
+#' gp1 <- VALIDATION.permute_plot(permute_res=permute_res, validation_method=validation_method, y_var="stat", save_plot=gsub("\\.csv\\.gz",".stat_values.png",path), width=9, facet_formula = "Tissue ~ Model + Assay")
+#' gp2 <- VALIDATION.permute_plot(permute_res=subset(permute_res, stat>0), validation_method=validation_method, y_var="p", save_plot=gsub("\\.csv\\.gz",".p_values.png",path), width=9,facet_formula = "Assay ~ Model + Tissue")
 #' gp12 <- (gp1 / gp2) + patchwork::plot_annotation(tag_levels = "a")
 #' ggsave(gsub("\\.csv\\.gz",".png",path),gp12, dpi=400, height=10, width=9)
 #'
@@ -424,11 +420,7 @@ VALIDATION.permute_plot <- function(permute_res,
   library(ggplot2)
   plot_dat <- permute_res %>%
     dplyr::mutate(SNP_Group = factor(SNP_Group, levels = unique(permute_res$SNP_Group), ordered = T))
-  colorDict <-  colorDict <- c("Random"="grey",
-                               "GWAS lead"="red",
-                               "UCS"="green2",
-                               "Consensus (-POLYFUN)"="goldenrod4",
-                               "Consensus"="goldenrod2")
+  colorDict <- snp_group_colorDict()
 
   # Conduct GLM on pval distributions
   permute_res$SNP_Group <- factor(permute_res$SNP_Group, levels = unique(permute_res$SNP_Group))

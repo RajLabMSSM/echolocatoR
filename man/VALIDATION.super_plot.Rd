@@ -6,7 +6,7 @@
 \usage{
 VALIDATION.super_plot(
  
-    base_url = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide",
+    root = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide",
   height = 10,
   width = 12,
   show_plot = T,
@@ -17,7 +17,7 @@ VALIDATION.super_plot(
 Merge validation assays into a single plot
 }
 \examples{
-plt.ALL <- VALIDATION.super_plot(base_url="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide")
+plt.ALL <- VALIDATION.super_plot(root="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide")
 }
 \seealso{
 Other VALIDATION: 

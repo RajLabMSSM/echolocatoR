@@ -7,19 +7,27 @@
 DEEPLEARNING.melt(
   ANNOT,
   model = c("Basenji", "BiClassCNN", "DeepSEA", "ChromHMM", "Roadmap", "Others"),
-  metric_str = "max",
+  aggregate_func = "mean",
   replace_NA = NA,
-  replace_negInf = NA
+  replace_negInf = NA,
+  save_path = F
 )
 }
 \description{
 Melt deep learning annotations into long-format
 }
 \examples{
-merged_dat <- merge_finemapping_results(dataset = "Data/GWAS/Nalls23andMe_2019", minimum_support = 0, LD_reference = "UKB")
-ANNOT <- DEEPLEARNING.query(merged_dat=merged_dat, level="Allelic_Effect", type="annot")
+base_url <- root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
+## merged_dat <- merge_finemapping_results(dataset = "Data/GWAS/Nalls23andMe_2019", minimum_support = 0, LD_reference = "UKB")
+## ANNOT <- DEEPLEARNING.query(merged_dat=merged_dat, level="Allelic_Effect", type="annot")
 
-annot.melt <- DEEPLEARNING.melt(ANNOT=ANNOT, metric_str="mean")
-base_url = "/sc/arion/projects/pd-omics/brian/Fine_Mapping"
-data.table::fwrite(annot.melt, file.path(base_url,"Data/GWAS/Nalls23andMe_2019/_genome_wide/Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.snp_groups.mean.csv.gz"))
+#### Allelic_Effect ####
+path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Allelic_Effect.csv.gz")
+
+#### Variant_Level ####
+path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Variant_Level.csv.gz")
+
+ANNOT <- data.table::fread(path, nThread=8)
+ANNOT <- find_consensus_SNPs_no_PolyFun(ANNOT)
+annot.melt <- DEEPLEARNING.melt(ANNOT=ANNOT, aggregate_func="mean", save_path=gsub("\\\\.csv\\\\.gz",".snp_groups_mean.csv.gz",path))
 }

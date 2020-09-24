@@ -6,13 +6,13 @@
 \usage{
 POLYFUN.h2_enrichment_SNPgroups_plot(
   RES,
-  snp_groups = c("GWAS lead", "UCS", "Consensus"),
+  snp_groups = c("GWAS lead", "UCS", "Consensus (-POLYFUN)", "Consensus"),
   comparisons_filter = function(x) {     if ("Consensus" \%in\% x)          return(x) },
   method = "wilcox.test",
-  title = "h2 enrichment",
+  title = bquote(~h^2 ~ "enrichment"),
   xlabel = "SNP group",
-  ylabel = "log10(h2 enrichment)",
-  shift_points = T,
+  ylabel = bquote("log"[10] ~ "(h"^2 ~ "enrichment)"),
+  show_xtext = T,
   show_plot = T,
   save_path = F
 )

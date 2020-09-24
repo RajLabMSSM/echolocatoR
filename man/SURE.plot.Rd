@@ -12,7 +12,7 @@
 \usage{
 SURE.plot(
   sure.melt,
-  snp_groups = c("GWAS lead", "UCS", "Consensus"),
+  snp_groups = c("GWAS lead", "UCS", "Consensus (-POLYFUN)", "Consensus"),
   comparisons_filter = function(x) {     if ("Consensus" \%in\% x)          return(x) },
   title = "SuRE MPRA",
   xlabel = "SNP Group",

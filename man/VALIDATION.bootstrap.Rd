@@ -43,7 +43,7 @@ metric <- "IMPACT_score"
 ## Import and Process ##
 metric_df <- data.table::fread(path, nThread=8)
 # metric_df <- subset(metric_df, select=c(SNP,leadSNP,ABF.Credible_Set,ABF.PP,SUSIE.Credible_Set,SUSIE.PP,POLYFUN_SUSIE.Credible_Set,POLYFUN_SUSIE.PP,FINEMAP.Credible_Set,FINEMAP.PP,Consensus_SNP,Support,Locus,IMPACT_score))
-metric_df$Consensus_SNP_noPF <- find_consensus_SNPs(metric_df, exclude_methods = "POLYFUN_SUSIE", sort_by_support = F)$Consensus_SNP
+metric_df <- find_consensus_SNPs_no_PolyFun(metric_df)
 
 #### run bootstrap ####
 boot_res <- VALIDATION.bootstrap(metric_df=metric_df, metric=metric,   nThread=8)

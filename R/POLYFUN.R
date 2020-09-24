@@ -1140,17 +1140,18 @@ POLYFUN.h2_enrichment_SNPgroups <- function(merged_dat,
     support4 <- POLYFUN.h2_enrichment(h2_df=h2_df,
                                       target_SNPs = subset(finemap_dat, Support==4)$SNP)
 
-    # Consenus SNP
+    # Consenus SNPs
     Finemap.consensus <- POLYFUN.h2_enrichment(h2_df=h2_df,
                                                target_SNPs = subset(finemap_dat, Consensus_SNP)$SNP)
 
-    # Consensus SNP (no PolyFun)
-    finemap_dat$Consensus_SNP_noPF <- find_consensus_SNPs(finemap_dat,
-                                                          exclude_methods = "POLYFUN_SUSIE",
-                                                          sort_by_support = F)$Consensus_SNP
+
+    finemap_dat <- find_consensus_SNPs_no_PolyFun(finemap_dat)
+    # Consensus SNPs (no PolyFun)
     Finemap.consensus_noPF <- POLYFUN.h2_enrichment(h2_df=h2_df,
                                                     target_SNPs = subset(finemap_dat, Consensus_SNP_noPF)$SNP)
-
+    # UCS SNPs (no PolyFun)
+    UCS_noPF <- POLYFUN.h2_enrichment(h2_df=h2_df,
+                                      target_SNPs = subset(finemap_dat, Support_noPF>0)$SNP)
 
     res <- data.frame(SNP.Group=c("Random",
                                   "All",
@@ -1161,14 +1162,15 @@ POLYFUN.h2_enrichment_SNPgroups <- function(merged_dat,
                                   "SUSIE CS",
                                   "POLYFUN-SUSIE CS",
                                   "FINEMAP CS",
+                                  "UCS_noPF",
                                   "UCS",
                                   "Support==0",
                                   "Support==1",
                                   "Support==2",
                                   "Support==3",
                                   "Support==4",
-                                  "Consensus",
-                                  "Consensus (-POLYFUN)"),
+                                  "Consensus (-POLYFUN)",
+                                  "Consensus"),
                       h2.enrichment=c(random,
                                       GWAS.all,
                                       GWAS.nom.sig,
@@ -1178,14 +1180,15 @@ POLYFUN.h2_enrichment_SNPgroups <- function(merged_dat,
                                       SUSIE.credset,
                                       POLYFUN_SUSIE.credset,
                                       FINEMAP.credset,
+                                      UCS_noPF,
                                       UCS,
                                       support0,
                                       support1,
                                       support2,
                                       support3,
                                       support4,
-                                      Finemap.consensus,
-                                      Finemap.consensus_noPF))
+                                      Finemap.consensus_noPF,
+                                      Finemap.consensus))
     res <- cbind(Locus=locus, res)
     return(res)
   }, mc.cores = nThread) %>% data.table::rbindlist(fill = T)
@@ -1206,51 +1209,46 @@ POLYFUN.h2_enrichment_SNPgroups <- function(merged_dat,
 #'
 #' plot.h2 <- POLYFUN.h2_enrichment_SNPgroups_plot(RES = RES, show_plot = T)
 POLYFUN.h2_enrichment_SNPgroups_plot <- function(RES,
-                                                 snp_groups=c("GWAS lead","UCS","Consensus"),
+                                                 snp_groups=c("GWAS lead","UCS","Consensus (-POLYFUN)","Consensus"),
                                                  comparisons_filter=function(x){if("Consensus" %in% x) return(x)},
                                                  method="wilcox.test",
-                                                 title="h2 enrichment",
+                                                 title= bquote(~h^2~"enrichment"),
                                                  xlabel="SNP group",
-                                                 ylabel="log10(h2 enrichment)",
-                                                 shift_points=T,
+                                                 ylabel=bquote('log'[10] ~'(h'^2~'enrichment)'),
+                                                 show_xtext=T,
                                                  show_plot=T,
                                                  save_path=F){
-  plot_dat <- subset(RES, SNP.Group %in% snp_groups)
-  plot_dat$log.h2.enrichment <- log1p(plot_dat$h2.enrichment)
-  # plot_dat$SNP.Group <- factor(gsub("_","\n",plot_dat$SNP.Group),
-  #                         levels = unique(gsub("_","\n",plot_dat$SNP.Group)))
+  colorDict <- snp_group_colorDict()
+  plot_dat <- subset(RES, SNP.Group %in% snp_groups) %>%
+    dplyr::mutate(SNP.Group=factor(SNP.Group, levels=names(colorDict), ordered = T))
   snp.groups <- unique(plot_dat$SNP.Group)
   comparisons <- utils::combn(x = as.character(snp.groups),
                               m=2,
                               FUN = comparisons_filter,
                               simplify = F) %>% purrr::compact()
-  pb <- ggpubr::ggviolin(data = plot_dat,
-                         merge = T,
-                         x = "SNP.Group", y = "log.h2.enrichment",
-                         fill = "SNP.Group",
-                         alpha=.6,
-                         add = "boxplot",
-                         add.params = list(alpha=.1, color="black")) +
+  pb <- ggplot(data = plot_dat, aes(x=SNP.Group, y=log(h2.enrichment), fill=SNP.Group)) +
+    geom_jitter(alpha=.1,width = .25, show.legend = F, shape=16, height=0) +
+    geom_violin(alpha=.6, show.legend = F) +
+    geom_boxplot(alpha=.6, color="grey", show.legend = F) +
     ggpubr::stat_compare_means(method = method,
                                comparisons = comparisons,
                                label = "p.signif", size=3) +
     ggpubr::stat_compare_means(method = method,
                                comparisons = comparisons,
                                label = "p.adj", vjust=2, size=3)  +
-    geom_jitter(alpha=.5,width = .25, show.legend = F, shape=16, height=0) +
     geom_hline(yintercept = log10(1), linetype=2, alpha=.5) +
     # scale_fill_manual(values =  c("red","green3","goldenrod3")) +
     labs(y=ylabel, x=xlabel,
          title=title) +
-    theme(legend.position = "none")
-  if(length(dplyr::union(snp.groups, c("GWAS lead","UCS","Consensus")))==3){
-    pb <- pb + scale_fill_manual(values =  c("red","green2","goldenrod2"))
-  } else {
-    pb <- pb + theme(axis.text.x = element_text(angle=45, hjust=1))
+    theme(legend.position = "none")  +
+    scale_fill_manual(values = colorDict) +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle=45, hjust=1))
+  if(!show_xtext){
+    pb <- pb + theme(axis.text.x = element_blank(),
+                      axis.title.x = element_blank())
   }
-  if(shift_points){
-    pb <- gginnards::shift_layers(pb, "GeomPoint", shift = -5)
-  }
+
   if(show_plot) print(pb)
   if(save_path!=F){
     # save_path <- '~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/snp_group.h2_enrichment.png'

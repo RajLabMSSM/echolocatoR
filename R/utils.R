@@ -1425,22 +1425,57 @@ snp_group_filters <- function(invert=F,
     "GWAS nom. sig."="P<0.05",
     "GWAS sig."="P<5e-8",
     "GWAS lead" = "leadSNP==T",
+
     "ABF CS"="ABF.CS>0",
     "SUSIE CS"="SUSIE.CS>0",
     "POLYFUN-SUSIE CS"="POLYFUN_SUSIE.CS>0",
     "FINEMAP CS"="FINEMAP.CS>0",
-    "UCS"="Support>0",
+
     "Support==0"="Support==0",
     "Support==1"="Support==1",
     "Support==2"="Support==2",
     "Support==3"="Support==3",
     "Support==4"="Support==4",
-    "Consensus"="Consensus_SNP==T",
-    "Consensus (-POLYFUN)"="Consensus_SNP_noPF==T"
+    "UCS_noPF"="Support_noPF>0",
+    "UCS"="Support>0",
+
+    "Consensus (-POLYFUN)"="Consensus_SNP_noPF==T",
+    "Consensus"="Consensus_SNP==T"
   )
   if(invert)  snp_filters <- setNames(names(snp_filters), unname(snp_filters))
   return(snp_filters)
 }
+
+
+
+snp_group_colorDict <- function(invert=F){
+  colorDict <- c(
+    "Random"="grey",
+    "All"="red4",
+    "GWAS nom. sig."="red3",
+    "GWAS sig."="red2",
+    "GWAS lead"="red",
+
+    "ABF CS"="springgreen4",
+    "SUSIE CS"="springgreen3",
+    "POLYFUN-SUSIE CS"="springgreen2",
+    "FINEMAP CS"="springgreen",
+    "UCS_noPF"="green4",
+    "UCS"="green2",
+
+    "Support==0"="darkorchid4",
+    "Support==1"="darkorchid3",
+    "Support==2"="darkorchid2",
+    "Support==3"="darkorchid1",
+    "Support==4"="darkorchid",
+
+    "Consensus (-POLYFUN)"="goldenrod4",
+    "Consensus"="goldenrod2")
+  if(invert) colorDict <- setNames(names(colorDict), unname(colorDict))
+  return(colorDict)
+}
+
+
 
 
 
@@ -1490,5 +1525,17 @@ pvalues_to_symbols <- function(pval_vector){
   pvalue.signif <- do.call(stats::symnum, symnum.args) %>%
     as.character()
   return(pvalue.signif)
+}
+
+
+find_consensus_SNPs_no_PolyFun <- function(finemap_dat,
+                                           verbose=T){
+  printer("Identifying UCS and Consensus SNPs without PolyFun",v=verbose)
+  newDF <- find_consensus_SNPs(finemap_dat,
+                                exclude_methods = "POLYFUN_SUSIE",
+                                sort_by_support = F)
+  finemap_dat$Consensus_SNP_noPF <- newDF$Consensus_SNP
+  finemap_dat$Support_noPF <- newDF$Support
+  return(finemap_dat)
 }
 

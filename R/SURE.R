@@ -99,12 +99,14 @@ SURE.melt_snp_groups <- function(sure_DT,
                                      "SUSIE CS"= ~ metric(tidyr::replace_na(.x[SUSIE.CS>0],replace_NA), na.rm = T),
                                      "POLYFUN-SUSIE CS"= ~ metric(tidyr::replace_na(.x[POLYFUN_SUSIE.CS>0],replace_NA), na.rm = T),
                                      "FINEMAP CS"= ~ metric(tidyr::replace_na(.x[FINEMAP.CS>0],replace_NA), na.rm = T),
+                                     "UCS_noPF"= ~ metric(tidyr::replace_na(.x[Support_noPF>0],replace_NA), na.rm = T),
                                      "UCS"= ~ metric(tidyr::replace_na(.x[Support>0],replace_NA), na.rm = T),
                                      "Support==0"= ~ metric(tidyr::replace_na(.x[Support==0],replace_NA), na.rm = T),
                                      "Support==1"= ~ metric(tidyr::replace_na(.x[Support==1],replace_NA), na.rm = T),
                                      "Support==2"= ~ metric(tidyr::replace_na(.x[Support==2],replace_NA), na.rm = T),
                                      "Support==3"= ~ metric(tidyr::replace_na(.x[Support==3],replace_NA), na.rm = T),
                                      "Support==4"= ~ metric(tidyr::replace_na(.x[Support==4],replace_NA), na.rm = T),
+                                     "Consensus_noPF"= ~ metric(tidyr::replace_na(.x[Consensus_SNP_noPF],replace_NA), na.rm = T),
                                      "Consensus"= ~ metric(tidyr::replace_na(.x[Consensus_SNP],replace_NA), na.rm = T)
                         ),
     ) %>%
@@ -134,7 +136,7 @@ SURE.melt_snp_groups <- function(sure_DT,
 #' @examples
 #' sure.melt <- data.table::fread("/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/SURE/Nalls23andMe_2019.SURE.snp_groups.mean.csv.gz")
 SURE.plot <- function(sure.melt,
-                      snp_groups=c("GWAS lead","UCS","Consensus"),
+                      snp_groups=c("GWAS lead","UCS","Consensus (-POLYFUN)","Consensus"),
                       comparisons_filter=function(x){if("Consensus" %in% x) return(x)},
                       title="SuRE MPRA",
                       xlabel="SNP Group",
@@ -143,20 +145,24 @@ SURE.plot <- function(sure.melt,
                       save_path=F,
                       height=5,
                       width=5){
-  # PLOT
-  dat_plot <-  subset(sure.melt,
-                        SNP_Group %in% snp_groups)
-  snp.groups <- unique(dat_plot$SNP_Group)
+  colorDict <- snp_group_colorDict()
+  plot_dat <-  subset(sure.melt, SNP_Group %in% snp_groups) %>%
+    dplyr::mutate(SNP_group=factor(SNP_group, levels=names(colorDict), ordered = T))
+  snp.groups <- unique(plot_dat$SNP_Group)
   comparisons <- utils::combn(x = as.character(snp.groups),
                               m=2,
                               FUN = comparisons_filter,
                               simplify = F) %>% purrr::compact()
   method="wilcox.test"
-  pb <- ggpubr::ggviolin(data = dat_plot,
+  pb <- ggpubr::ggviolin(data = plot_dat,
                          x = "SNP_Group", y="neg.log.value", fill = "SNP_Group",
                          alpha = .6, trim = T,
                          add = "boxplot",
                          add.params = list(alpha=.1) )  +
+    ggplot(data = plot_dat, aes(x=SNP_group, y=mean_IMPACT, fill=SNP_group)) +
+    geom_jitter(alpha=.1,width = .25, show.legend = F, shape=16, height=0) +
+    geom_violin(alpha=.6, show.legend = F) +
+    geom_boxplot(alpha=.6, color="grey", show.legend = F) +
     ggpubr::stat_compare_means(method = method,
                                comparisons = comparisons,
                                label = "p.signif", size=3, vjust = 1.5) +
