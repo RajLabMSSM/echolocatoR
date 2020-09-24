@@ -168,7 +168,7 @@ DEEPLEARNING.query <- function(merged_dat,
 #' Melt deep learning annotations into long-format
 #'
 #' @examples
-#' base_url <- root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
+#' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 #' ## merged_dat <- merge_finemapping_results(dataset = "Data/GWAS/Nalls23andMe_2019", minimum_support = 0, LD_reference = "UKB")
 #' ## ANNOT <- DEEPLEARNING.query(merged_dat=merged_dat, level="Allelic_Effect", type="annot")
 #'
@@ -203,26 +203,26 @@ DEEPLEARNING.melt <- function(ANNOT,
                                      "POLYFUN-SUSIE CS"= ~ agg_func(tidyr::replace_na(.x[POLYFUN_SUSIE.CS>0],replace_NA), na.rm = T),
                                      "FINEMAP CS"= ~ agg_func(tidyr::replace_na(.x[FINEMAP.CS>0],replace_NA), na.rm = T),
                                      "UCS"= ~ agg_func(tidyr::replace_na(.x[Support>0],replace_NA), na.rm = T),
-                                     "UCS_noPF"= ~ agg_func(tidyr::replace_na(.x[Support_noPF>0],replace_NA), na.rm = T),
+                                     "UCS (-PolyFun)"= ~ agg_func(tidyr::replace_na(.x[Support_noPF>0],replace_NA), na.rm = T),
                                      "Support==0"= ~ agg_func(tidyr::replace_na(.x[Support==0],replace_NA), na.rm = T),
                                      "Support==1"= ~ agg_func(tidyr::replace_na(.x[Support==1],replace_NA), na.rm = T),
                                      "Support==2"= ~ agg_func(tidyr::replace_na(.x[Support==2],replace_NA), na.rm = T),
                                      "Support==3"= ~ agg_func(tidyr::replace_na(.x[Support==3],replace_NA), na.rm = T),
                                      "Support==4"= ~ agg_func(tidyr::replace_na(.x[Support==4],replace_NA), na.rm = T),
-                                     "Consensus (-POLYFUN)"= ~ agg_func(tidyr::replace_na(.x[Consensus_SNP_noPF],replace_NA), na.rm = T),
+                                     "Consensus (-PolyFun)"= ~ agg_func(tidyr::replace_na(.x[Consensus_SNP_noPF],replace_NA), na.rm = T),
                                      "Consensus"= ~ agg_func(tidyr::replace_na(.x[Consensus_SNP],replace_NA), na.rm = T)
                         ),
     ) %>%
     data.table::data.table() %>%
     data.table::melt.data.table(id.vars = "Locus", variable.name = "Annotation") %>%
     # dplyr::mutate(value = as.numeric(gsub(-Inf,replace_negInf,value))) %>%
-    tidyr::separate(col = "Annotation", sep="_", into=c("Model","Tissue","Assay","Type","Metric","SNP_Group"), remove=F) %>%
+    tidyr::separate(col = "Annotation", sep="_", into=c("Model","Tissue","Assay","Type","Metric","SNP_group"), remove=F) %>%
     dplyr::mutate(Annotation = DescTools::StrTrim(Annotation, "_"),
-                  SNP_Group = factor(SNP_Group,
+                  SNP_group = factor(SNP_group,
                                      levels = names(snp.groups_list), ordered = T),
                   log.value = log1p(value))
   if(save_path!=F){
-    printer("DEEPLEARNING:: Saving aggregated SNP_Group values",aggregate_func,"==>",save_path)
+    printer("DEEPLEARNING:: Saving aggregated SNP_group values",aggregate_func,"==>",save_path)
     dir.create(dirname(save_path), showWarnings = F, recursive = T)
     data.table::fwrite(annot.melt, save_path)
   }
@@ -253,6 +253,9 @@ DEEPLEARNING.plot <- function(annot.melt,
                               model_metric=c("MAX"),
                               facet_formula=". ~ Model",
                               remove_outliers=T,
+                              show_padj=T,
+                              show_signif=T,
+                              vjust_signif=0,
                               show_plot=T,
                               save_path=F,
                               height=6,
@@ -266,27 +269,21 @@ DEEPLEARNING.plot <- function(annot.melt,
   colorDict <- snp_group_colorDict()
   dat_plot <-  subset(annot.melt,
                       Metric %in% model_metric &
-                        SNP_Group %in%  snp_groups) %>%
-    dplyr::mutate(SNP_Group=factor(SNP_Group, levels = unique(SNP_Group), ordered = T))
-    # dplyr::group_by(SNP_Group, Locus, Model, Tissue) %>%
+                        SNP_group %in%  snp_groups) %>%
+    dplyr::mutate(SNP_group=factor(SNP_group, levels = names(colorDict), ordered = T))
+    # dplyr::group_by(SNP_group, Locus, Model, Tissue) %>%
     # dplyr::summarise(value=mean(value,na.rm = T))
-  snp.groups <- unique(dat_plot$SNP_Group)
+  snp.groups <- unique(dat_plot$SNP_group)
   comparisons <- utils::combn(x = as.character(snp.groups),
                               m=2,
                               FUN = comparisons_filter,
                               simplify = F) %>% purrr::compact()
   method="wilcox.test"
-  gp <- ggplot(data = dat_plot, aes(x=SNP_Group, y=value, fill=SNP_Group)) +
+  gp <- ggplot(data = dat_plot, aes(x=SNP_group, y=value, fill=SNP_group)) +
     geom_jitter(alpha=.1, width = .3, height=0) +
     # geom_bar(stat = "identity",alpha=.6) +
     geom_violin(alpha = .6) +
-    geom_boxplot(alpha=.6) +
-    ggpubr::stat_compare_means(method = method,
-                               comparisons = comparisons,
-                               label = "p.signif", size=3, vjust = 1.6) +
-    # ggpubr::stat_compare_means(method = method,
-    #                            comparisons = comparisons,
-    #                            label = "p.adj", hjust=5, size=3) +
+    geom_boxplot(alpha=.6, color="black") +
     facet_grid(facets = as.formula(facet_formula),
                scales = "free") +
     labs(title=paste0("Deep learning annotations (",tolower(model_metric),")"),
@@ -298,9 +295,18 @@ DEEPLEARNING.plot <- function(annot.melt,
           strip.background = element_rect(fill = "grey20"),
           strip.text= element_text(color = "white"))
     # coord_cartesian(ylim = quantile(dat_plot$value, c(0.1, 0.9), na.rm = T))
-
+  if(show_padj){
+    gp <- gp + ggpubr::stat_compare_means(method = method,
+                                          comparisons = comparisons,
+                                          label = "p.adj", size=3,  vjust=2)
+  }
+  if(show_signif){
+    gp <- gp + ggpubr::stat_compare_means(method = method,
+                                          comparisons = comparisons,
+                                          label = "p.signif", size=3, vjust=vjust_signif)
+  }
   if(show_plot) print(gp)
-  # ggplot(data =dat_plot, aes(x=value, fill=SNP_Group)) +
+  # ggplot(data =dat_plot, aes(x=value, fill=SNP_group)) +
   #   geom_density(position="identity", alpha=.5) +
   #   theme_bw() +
   #   scale_fill_manual(values = colorDict) +

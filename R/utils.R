@@ -1430,16 +1430,16 @@ snp_group_filters <- function(invert=F,
     "SUSIE CS"="SUSIE.CS>0",
     "POLYFUN-SUSIE CS"="POLYFUN_SUSIE.CS>0",
     "FINEMAP CS"="FINEMAP.CS>0",
+    "UCS (-PolyFun)"="Support_noPF>0",
+    "UCS"="Support>0",
 
     "Support==0"="Support==0",
     "Support==1"="Support==1",
     "Support==2"="Support==2",
     "Support==3"="Support==3",
     "Support==4"="Support==4",
-    "UCS_noPF"="Support_noPF>0",
-    "UCS"="Support>0",
 
-    "Consensus (-POLYFUN)"="Consensus_SNP_noPF==T",
+    "Consensus (-PolyFun)"="Consensus_SNP_noPF==T",
     "Consensus"="Consensus_SNP==T"
   )
   if(invert)  snp_filters <- setNames(names(snp_filters), unname(snp_filters))
@@ -1460,7 +1460,7 @@ snp_group_colorDict <- function(invert=F){
     "SUSIE CS"="springgreen3",
     "POLYFUN-SUSIE CS"="springgreen2",
     "FINEMAP CS"="springgreen",
-    "UCS_noPF"="green4",
+    "UCS (-PolyFun)"="green4",
     "UCS"="green2",
 
     "Support==0"="darkorchid4",
@@ -1469,7 +1469,7 @@ snp_group_colorDict <- function(invert=F){
     "Support==3"="darkorchid1",
     "Support==4"="darkorchid",
 
-    "Consensus (-POLYFUN)"="goldenrod4",
+    "Consensus (-PolyFun)"="goldenrod4",
     "Consensus"="goldenrod2")
   if(invert) colorDict <- setNames(names(colorDict), unname(colorDict))
   return(colorDict)

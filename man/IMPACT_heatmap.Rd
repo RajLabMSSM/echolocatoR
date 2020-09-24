@@ -4,7 +4,11 @@
 \alias{IMPACT_heatmap}
 \title{Plot \pkg{ComplexHeatmap} of \emph{IMPACT} scores}
 \usage{
-IMPACT_heatmap(ANNOT_MELT, snp_groups = c("GWAS lead", "UCS", "Consensus"))
+IMPACT_heatmap(
+  ANNOT_MELT,
+  snp_groups = c("GWAS lead", "UCS (-PolyFun)", "UCS", "Consensus (-PolyFun)",
+    "Consensus")
+)
 }
 \description{
 Plot \pkg{ComplexHeatmap} of \emph{IMPACT} scores

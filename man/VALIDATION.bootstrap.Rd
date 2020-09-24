@@ -12,7 +12,8 @@ VALIDATION.bootstrap(
   metric,
   validation_method = NULL,
   synthesize_random = F,
-  snp_groups = c("Random", "GWAS lead", "UCS", "Consensus (-POLYFUN)", "Consensus"),
+  snp_groups = c("Random", "GWAS lead", "UCS (-PolyFun)", "UCS",
+    "Consensus (-PolyFun)", "Consensus"),
   test_method = "stats_wilcox.test",
   save_path = F,
   nThread = 4,
@@ -34,7 +35,7 @@ metric <- "SNPVAR"
 ## mean_IMPACT
 # res.IMPACT <- data.table::fread(file.path(root,"IMPACT/TOP_IMPACT_all.csv.gz"))
 ## IMPACT_score (raw)
-path <- "/sc/arion/projects/pd-omics/data/IMPACT/IMPACT707/Annotations/IMPACT_overlap.csv.gz"
+path <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/IMPACT/IMPACT_overlap.csv.gz"
 metric <- "IMPACT_score"
 
 #### Dey_DeepLearning ####
@@ -46,8 +47,7 @@ metric_df <- data.table::fread(path, nThread=8)
 metric_df <- find_consensus_SNPs_no_PolyFun(metric_df)
 
 #### run bootstrap ####
-boot_res <- VALIDATION.bootstrap(metric_df=metric_df, metric=metric,   nThread=8)
-data.table::fwrite(boot_res, file.path(root,"PolyFun/Nalls23andMe_2019.h2.bootstrap.coin_wilcox_test.csv.gz"))
+boot_res <- VALIDATION.bootstrap(metric_df=metric_df, metric=metric, nThread=8, save_path=gsub("\\\\.csv\\\\.gz",".bootstrap.stats_wilcox.test.csv.gz",path) )
 ## data.table::fwrite(boot_res, file.path(root,"IMPACT/Nalls23andMe_2019.IMPACT_score.bootstrap.coin_wilcox_test.csv.gz"))
 }
 }

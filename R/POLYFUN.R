@@ -1008,12 +1008,12 @@ POLYFUN.functional_enrichment <- function(finemap_dat,
   annot_SUMS_DF <- POLYFUN.gather_annot_proportions(base_url)
   SNP_groups <- cbind(nom.sig.GWAS, sig.GWAS, lead.GWAS, UCS, CS)
   enrich <- (SNP_groups / rowMeans(annot_SUMS_DF)) %>% melt() %>%
-    `colnames<-`(c("Annot","SNP.Group","Enrichment"))
+    `colnames<-`(c("Annot","SNP_group","Enrichment"))
 
   # Plot
-  gp <- ggplot(enrich, aes(x=Annot, y=Enrichment, fill=SNP.Group)) +
+  gp <- ggplot(enrich, aes(x=Annot, y=Enrichment, fill=SNP_group)) +
     geom_col(position="dodge", show.legend = F) + coord_flip() +
-    facet_grid(facets = . ~ SNP.Group) + #scales = "free_x"
+    facet_grid(facets = . ~ SNP_group) + #scales = "free_x"
     theme_bw()+ theme(axis.text.y = element_text(size = 7))
   print(gp)
   if(save_plot!=F){
@@ -1070,6 +1070,7 @@ POLYFUN.h2_enrichment <- function(h2_df,
 #' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 #' # IMPORTANT! For this to make sense, you need to merge the full data ("merged_DT" only includes Support>0 and leadSNPs)
 #' merged_dat <- merge_finemapping_results(dataset = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019", LD_reference = "UKB", minimum_support = 0)
+#' merged_dat <- find_consensus_SNPs_no_PolyFun(merged_dat)
 #'
 #' RES <- POLYFUN.h2_enrichment_SNPgroups(merged_dat=merged_dat, ldsc_dir=file.path(root,"PolyFun/output"),  save_enrich=file.path(root,"PolyFun/Nalls23andMe_2019.h2_enrich.snp_groups.csv.gz"))
 POLYFUN.h2_enrichment_SNPgroups <- function(merged_dat,
@@ -1087,6 +1088,9 @@ POLYFUN.h2_enrichment_SNPgroups <- function(merged_dat,
                                             subset(h2_DF, select=c(SNP,SNPVAR)),
                                             all.x = T,
                                             by=c("SNP"))
+  if(!"Support_noPF" %in% colnames(merged_dat)){
+    merged_dat <- find_consensus_SNPs_no_PolyFun(merged_dat)
+  }
 
   # Iterate over loci
   RES <-parallel::mclapply(unique(merged_dat$Locus), function(locus){
@@ -1144,8 +1148,6 @@ POLYFUN.h2_enrichment_SNPgroups <- function(merged_dat,
     Finemap.consensus <- POLYFUN.h2_enrichment(h2_df=h2_df,
                                                target_SNPs = subset(finemap_dat, Consensus_SNP)$SNP)
 
-
-    finemap_dat <- find_consensus_SNPs_no_PolyFun(finemap_dat)
     # Consensus SNPs (no PolyFun)
     Finemap.consensus_noPF <- POLYFUN.h2_enrichment(h2_df=h2_df,
                                                     target_SNPs = subset(finemap_dat, Consensus_SNP_noPF)$SNP)
@@ -1153,7 +1155,7 @@ POLYFUN.h2_enrichment_SNPgroups <- function(merged_dat,
     UCS_noPF <- POLYFUN.h2_enrichment(h2_df=h2_df,
                                       target_SNPs = subset(finemap_dat, Support_noPF>0)$SNP)
 
-    res <- data.frame(SNP.Group=c("Random",
+    res <- data.frame(SNP_group=c("Random",
                                   "All",
                                   "GWAS nom. sig.",
                                   "GWAS sig.",
@@ -1162,14 +1164,14 @@ POLYFUN.h2_enrichment_SNPgroups <- function(merged_dat,
                                   "SUSIE CS",
                                   "POLYFUN-SUSIE CS",
                                   "FINEMAP CS",
-                                  "UCS_noPF",
+                                  "UCS (-PolyFun)",
                                   "UCS",
                                   "Support==0",
                                   "Support==1",
                                   "Support==2",
                                   "Support==3",
                                   "Support==4",
-                                  "Consensus (-POLYFUN)",
+                                  "Consensus (-PolyFun)",
                                   "Consensus"),
                       h2.enrichment=c(random,
                                       GWAS.all,
@@ -1193,7 +1195,11 @@ POLYFUN.h2_enrichment_SNPgroups <- function(merged_dat,
     return(res)
   }, mc.cores = nThread) %>% data.table::rbindlist(fill = T)
 
-  if(save_enrich!=F) data.table::fwrite(RES, save_enrich, nThread=nThread)
+  if(save_enrich!=F){
+    printer("POLFUN:: Saving enrichment results ==>",save_enrich)
+    dir.create(dirname(save_enrich), showWarnings = F, recursive = T)
+    data.table::fwrite(RES, save_enrich, nThread=nThread)
+  }
   return(RES)
 }
 
@@ -1212,30 +1218,33 @@ POLYFUN.h2_enrichment_SNPgroups_plot <- function(RES,
                                                  snp_groups=c("GWAS lead","UCS","Consensus (-POLYFUN)","Consensus"),
                                                  comparisons_filter=function(x){if("Consensus" %in% x) return(x)},
                                                  method="wilcox.test",
-                                                 title= bquote(~h^2~"enrichment"),
+                                                 remove_outliers=T,
+                                                 title= "S-LDSC heritability enrichment",
                                                  xlabel="SNP group",
-                                                 ylabel=bquote('log'[10] ~'(h'^2~'enrichment)'),
+                                                 ylabel=bquote(~'h'^2~'enrichment'),
                                                  show_xtext=T,
+                                                 show_padj=T,
+                                                 show_signif=T,
+                                                 vjust_signif=0.5,
                                                  show_plot=T,
                                                  save_path=F){
   colorDict <- snp_group_colorDict()
-  plot_dat <- subset(RES, SNP.Group %in% snp_groups) %>%
-    dplyr::mutate(SNP.Group=factor(SNP.Group, levels=names(colorDict), ordered = T))
-  snp.groups <- unique(plot_dat$SNP.Group)
+  if(remove_outliers){
+    # https://www.r-bloggers.com/2020/01/how-to-remove-outliers-in-r/
+    outliers <- boxplot(RES$h2.enrichment, plot=F)$out
+    RES <- RES[-which(RES$h2.enrichment %in% outliers),]
+  }
+  plot_dat <- subset(RES, SNP_group %in% snp_groups) %>%
+    dplyr::mutate(SNP_group=factor(SNP_group, levels=names(colorDict), ordered = T))
+  snp.groups <- unique(plot_dat$SNP_group)
   comparisons <- utils::combn(x = as.character(snp.groups),
                               m=2,
                               FUN = comparisons_filter,
                               simplify = F) %>% purrr::compact()
-  pb <- ggplot(data = plot_dat, aes(x=SNP.Group, y=log(h2.enrichment), fill=SNP.Group)) +
+  pb <- ggplot(data = plot_dat, aes(x=SNP_group, y=h2.enrichment, fill=SNP_group)) +
     geom_jitter(alpha=.1,width = .25, show.legend = F, shape=16, height=0) +
     geom_violin(alpha=.6, show.legend = F) +
-    geom_boxplot(alpha=.6, color="grey", show.legend = F) +
-    ggpubr::stat_compare_means(method = method,
-                               comparisons = comparisons,
-                               label = "p.signif", size=3) +
-    ggpubr::stat_compare_means(method = method,
-                               comparisons = comparisons,
-                               label = "p.adj", vjust=2, size=3)  +
+    geom_boxplot(alpha=.6, color="black", show.legend = F) +
     geom_hline(yintercept = log10(1), linetype=2, alpha=.5) +
     # scale_fill_manual(values =  c("red","green3","goldenrod3")) +
     labs(y=ylabel, x=xlabel,
@@ -1244,6 +1253,17 @@ POLYFUN.h2_enrichment_SNPgroups_plot <- function(RES,
     scale_fill_manual(values = colorDict) +
     theme_bw() +
     theme(axis.text.x = element_text(angle=45, hjust=1))
+  if(show_padj){
+    pb <- pb + ggpubr::stat_compare_means(method = method,
+                                 comparisons = comparisons,
+                                 label = "p.adj", vjust=2, size=3)
+  }
+  if(show_signif){
+    pb <- pb + ggpubr::stat_compare_means(method = method,
+                               comparisons = comparisons,
+                               label = "p.signif", size=3, vjust =  vjust_signif)
+  }
+
   if(!show_xtext){
     pb <- pb + theme(axis.text.x = element_blank(),
                       axis.title.x = element_blank())
