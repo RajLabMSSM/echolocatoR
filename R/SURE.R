@@ -39,13 +39,18 @@ SURE.download_annotations <- function(URL="https://osf.io/vxfk3/download",
 #' \href{https://sure.nki.nl}{SNP-SuRE data browse}
 #' @examples
 #' sure <- data.table::fread("/sc/arion/projects/pd-omics/data/MPRA/SURE/SuRE_SNP_table_LP190708.txt.gz", nThread=4)
-SURE.merge <- function(merged_DT,
-                       sure){
+#' merged_dat <- merge_finemapping_results("Data/GWAS/Nalls23andMe_2019",LD_reference = "UKB", minimum_support = 0)
+#'
+#' sure_DT <- SURE.merge(merged_dat=merged_dat, sure=sure, save_path="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/SURE/Nalls23andMe_2019.SURE.csv.gz")
+SURE.merge <- function(merged_dat,
+                       sure,
+                       save_path=F,
+                       verbose=T){
   sure <- dplyr::mutate(sure,
                         chr = as.integer(gsub("chr","",chr)),
                         SNPabspos = as.integer(SNPabspos)
                         )
-  sure_DT <- data.table::merge.data.table(merged_DT,
+  sure_DT <- data.table::merge.data.table(merged_dat,
                                            sure,
                                            all.x = T,
                                            by.x = "SNP",
@@ -53,6 +58,11 @@ SURE.merge <- function(merged_DT,
                                            # by.x = c("CHR","POS"),
                                            # by.y = c("chr","SNPabspos")
                                            )
+  if(save_path!=F){
+    printer("SURE:: Saving merged results ==>",save_path,v=verbose)
+    dir.create(dirname(save_path), showWarnings = F, recursive = T)
+    data.table::fwrite(sure_DT, save_path)
+  }
   return(sure_DT)
 }
 
@@ -71,14 +81,16 @@ SURE.merge <- function(merged_DT,
 #' @examples
 #' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 #'
-#' sure_DT <- data.table::fread("/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/SURE/Nalls23andMe_2019.SURE.csv.gz", nThread=4)
+#' sure_DT <- data.table::fread(file.path(root,"SURE/Nalls23andMe_2019.SURE.csv.gz"), nThread=4)
 #' sure_DT <- find_consensus_SNPs_no_PolyFun(sure_DT)
-#' sure.melt <- SURE.melt_snp_groups(sure_DT)
-#' data.table::fwrite(sure.melt, file.path(root,"SURE/Nalls23andMe_2019.SURE.snp_groups.mean.csv.gz"))
+#'
+#' sure.melt <- SURE.melt_snp_groups(sure_DT, save_path=file.path(root,"SURE/Nalls23andMe_2019.SURE.snp_groups.mean.csv.gz"))
 SURE.melt_snp_groups <- function(sure_DT,
                                  grouping_vars=c("Locus"),
                                  metric_str="mean",
-                                 replace_NA=NA){
+                                 replace_NA=NA,
+                                 save_path=F,
+                                 verbose=T){
   measure.vars <- c("k562.wilcox.p.value","hepg2.wilcox.p.value"
                     # "k562.wilcox.p.value.random","hepg2.wilcox.p.value.random",
                     # "ref.element.count","alt.element.count","k562.ref.mean", "k562.alt.mean",
@@ -112,13 +124,19 @@ SURE.melt_snp_groups <- function(sure_DT,
                         ),
     ) %>%
     data.table::data.table() %>%
-    data.table::melt.data.table(id.vars = grouping_vars, variable.name = "Annotation") %>%
+    data.table::melt.data.table(id.vars = grouping_vars,
+                                variable.name = "Annotation",
+                                value.name = "p") %>%
     dplyr::mutate(Annotation =gsub("p\\.value","pval",Annotation)) %>%
     dplyr::mutate(Annotation =gsub("\\.","_",Annotation)) %>%
     tidyr::separate(col = "Annotation", sep="_", into=c("Cell_type","Test","Metric","SNP_group"), remove=F) %>%
     dplyr::mutate(Annotation = DescTools::StrTrim(Annotation, "_"),
-                  SNP_group = factor(SNP_group, levels = names(snp.groups_list), ordered = T),
-                  neg.log.value = log1p(value))
+                  SNP_group = factor(SNP_group, levels = names(snp.groups_list), ordered = T))
+  if(save_path!=F){
+    printer("SURE:: Saving results ==>",save_path,v=verbose)
+    dir.create(dirname(save_path), showWarnings = F, recursive = T)
+    data.table::fwrite(sure.melt, save_path)
+  }
   return(sure.melt)
 }
 
@@ -136,8 +154,9 @@ SURE.melt_snp_groups <- function(sure_DT,
 #' \href{https://sure.nki.nl}{SNP-SuRE data browse}
 #' @examples
 #' sure.melt <- data.table::fread("/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/SURE/Nalls23andMe_2019.SURE.snp_groups.mean.csv.gz")
+#' pb <- SURE.plot(sure.melt=sure.melt)
 SURE.plot <- function(sure.melt,
-                      snp_groups=c("GWAS lead","UCS","Consensus (-POLYFUN)","Consensus"),
+                      snp_groups=c("GWAS lead","UCS","Consensus"),
                       comparisons_filter=function(x){if("Consensus" %in% x) return(x)},
                       title="SuRE MPRA",
                       xlabel="SNP Group",

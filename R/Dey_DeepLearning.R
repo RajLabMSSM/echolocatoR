@@ -202,8 +202,8 @@ DEEPLEARNING.melt <- function(ANNOT,
                                      "SUSIE CS"= ~ agg_func(tidyr::replace_na(.x[SUSIE.CS>0],replace_NA), na.rm = T),
                                      "POLYFUN-SUSIE CS"= ~ agg_func(tidyr::replace_na(.x[POLYFUN_SUSIE.CS>0],replace_NA), na.rm = T),
                                      "FINEMAP CS"= ~ agg_func(tidyr::replace_na(.x[FINEMAP.CS>0],replace_NA), na.rm = T),
-                                     "UCS"= ~ agg_func(tidyr::replace_na(.x[Support>0],replace_NA), na.rm = T),
                                      "UCS (-PolyFun)"= ~ agg_func(tidyr::replace_na(.x[Support_noPF>0],replace_NA), na.rm = T),
+                                     "UCS"= ~ agg_func(tidyr::replace_na(.x[Support>0],replace_NA), na.rm = T),
                                      "Support==0"= ~ agg_func(tidyr::replace_na(.x[Support==0],replace_NA), na.rm = T),
                                      "Support==1"= ~ agg_func(tidyr::replace_na(.x[Support==1],replace_NA), na.rm = T),
                                      "Support==2"= ~ agg_func(tidyr::replace_na(.x[Support==2],replace_NA), na.rm = T),
@@ -219,8 +219,7 @@ DEEPLEARNING.melt <- function(ANNOT,
     tidyr::separate(col = "Annotation", sep="_", into=c("Model","Tissue","Assay","Type","Metric","SNP_group"), remove=F) %>%
     dplyr::mutate(Annotation = DescTools::StrTrim(Annotation, "_"),
                   SNP_group = factor(SNP_group,
-                                     levels = names(snp.groups_list), ordered = T),
-                  log.value = log1p(value))
+                                     levels = names(snp.groups_list), ordered = T))
   if(save_path!=F){
     printer("DEEPLEARNING:: Saving aggregated SNP_group values",aggregate_func,"==>",save_path)
     dir.create(dirname(save_path), showWarnings = F, recursive = T)
@@ -323,17 +322,3 @@ DEEPLEARNING.plot <- function(annot.melt,
 
 
 
-
-DEEPLEARNING.permut_test <- function(ANNOT){
-  aggregate_func = "max"
-  annot.melt <- DEEPLEARNING.melt(ANNOT = ANNOT,
-                                  aggregate_func = aggregate_func)
-  # coin::independence_test(data = as.data.frame(annot.melt),
-  #                         formula = value ~ SNP.Group)
-  # oneway_test(data= as.data.frame(annot.melt),
-  #             formula = value ~ SNP.Group + Tissue + Model)
-  #
-  # independence_test(colonies~place,
-  #             data=ants, )
-
-}

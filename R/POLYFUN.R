@@ -1069,7 +1069,7 @@ POLYFUN.h2_enrichment <- function(h2_df,
 #' @examples
 #' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 #' # IMPORTANT! For this to make sense, you need to merge the full data ("merged_DT" only includes Support>0 and leadSNPs)
-#' merged_dat <- merge_finemapping_results(dataset = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019", LD_reference = "UKB", minimum_support = 0)
+#' merged_dat <- merge_finemapping_results(dataset = dirname(root), LD_reference = "UKB", minimum_support = 0)
 #' merged_dat <- find_consensus_SNPs_no_PolyFun(merged_dat)
 #'
 #' RES <- POLYFUN.h2_enrichment_SNPgroups(merged_dat=merged_dat, ldsc_dir=file.path(root,"PolyFun/output"),  save_enrich=file.path(root,"PolyFun/Nalls23andMe_2019.h2_enrich.snp_groups.csv.gz"))
@@ -1116,7 +1116,7 @@ POLYFUN.h2_enrichment_SNPgroups <- function(merged_dat,
                                        target_SNPs=subset(finemap_dat, leadSNP)$SNP)
     # Credible Set
     UCS <- POLYFUN.h2_enrichment(h2_df=h2_df,
-                                             target_SNPs = subset(finemap_dat, Support>0)$SNP)
+                                 target_SNPs = subset(finemap_dat, Support>0)$SNP)
     # # PAINTOR CS
     # PAINTOR.credset <- POLYFUN.h2_enrichment(h2_df=h2_df,
     #                                          target_SNPs = subset(finemap_dat, PAINTOR.CS>0)$SNP)
@@ -1210,12 +1210,13 @@ POLYFUN.h2_enrichment_SNPgroups <- function(merged_dat,
 #'
 #' @family polyfun
 #' @examples
-#' merged_dat_full <- merge_finemapping_results(dataset = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019", minimum_support = 0)
-#' RES <- POLYFUN.h2_enrichment_SNPgroups(merged_dat=merged_DT, out.path="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/output")
+#' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping"
+#' merged_dat <- merge_finemapping_results(dataset = file.path("Data/GWAS/Nalls23andMe_2019"), LD_reference = "UKB", minimum_support = 0)
+#' RES <- POLYFUN.h2_enrichment_SNPgroups(merged_dat=merged_dat, out.path="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/output")
 #'
 #' plot.h2 <- POLYFUN.h2_enrichment_SNPgroups_plot(RES = RES, show_plot = T)
 POLYFUN.h2_enrichment_SNPgroups_plot <- function(RES,
-                                                 snp_groups=c("GWAS lead","UCS","Consensus (-POLYFUN)","Consensus"),
+                                                 snp_groups=c("GWAS lead","UCS","Consensus (-PolyFun)","Consensus"),
                                                  comparisons_filter=function(x){if("Consensus" %in% x) return(x)},
                                                  method="wilcox.test",
                                                  remove_outliers=T,
@@ -1229,6 +1230,7 @@ POLYFUN.h2_enrichment_SNPgroups_plot <- function(RES,
                                                  show_plot=T,
                                                  save_path=F){
   colorDict <- snp_group_colorDict()
+  if(is.null(snp_groups)) snp_groups <- names(colorDict)
   if(remove_outliers){
     # https://www.r-bloggers.com/2020/01/how-to-remove-outliers-in-r/
     outliers <- boxplot(RES$h2.enrichment, plot=F)$out
