@@ -9,7 +9,9 @@ XGR.enrichment_plot(
   title = NULL,
   subtitle = NULL,
   facet_formula = NULL,
-  line_formula = "y ~ exp(x)",
+  line_formula = "y ~ x",
+  line_method = "lm",
+  line_span = 1,
   FDR_thresh = 1,
   plot_type = "bar",
   shape_var = "Cell_type",
@@ -26,13 +28,14 @@ Plot enrichment results
 \examples{
 root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 ### merged enrichment results
+enrich_res <- data.table::fread( file.path(root,"XGR/celltypespecific_epigenomics.SNP_groups.csv.gz"))
 enrich_res <- data.table::fread( file.path(root,"XGR/celltypespecific_epigenomics.snp_groups.csv.gz"))
 enrich_boot <- data.table::fread(file.path(root,"XGR/celltypespecific_epigenomics.snp_groups.permute.csv.gz"))
 enrich_assay <- data.table::fread(file.path(root,"XGR/celltypespecific_epigenomics.snp_groups.assay.csv.gz"))
 
 # Merged volcano plot
-gp <- XGR.enrichment_plot(enrich_res=subset(enrich_res , !Assay \%in\%  c("HiChIP_FitHiChIP","PLAC")) , title="Enrichment: Cell-type-specific epigenomics", plot_type="point",save_plot=file.path(root,"XGR/celltypespecific_epigenomics.enrich_volcano.png"), height=6, width=8, shape_var="Assay", line_formula="y~x")
-
+enrich_res <- subset(enrich_res, SNP_Group != "Consensus (-PolyFun)") \%>\% dplyr::rename(SNP_group=SNP_Group)
+gp <- XGR.enrichment_plot(enrich_res=subset(enrich_res , !Assay \%in\%  c("HiChIP_FitHiChIP","PLAC")) , title="Enrichment: Cell-type-specific epigenomics", plot_type="point",save_plot=file.path(root,"XGR/celltypespecific_epigenomics.enrich_volcano.png"), height=6, width=8, shape_var="Assay")
 ## Merged bar plot
 gp <- XGR.enrichment_plot(enrich_res=enrich_res,  plot_type="bar", facet_formula=".~Assay",FDR_thresh=.05)
 

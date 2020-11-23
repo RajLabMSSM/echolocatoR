@@ -4,7 +4,7 @@
 \alias{LD.get_lead_r2}
 \title{Find correlate o}
 \usage{
-LD.get_lead_r2(finemap_dat, LD_matrix = NULL, fillNA = 0)
+LD.get_lead_r2(finemap_dat, LD_matrix = NULL, fillNA = 0, LD_format = "matrix")
 }
 \description{
 Find correlate o

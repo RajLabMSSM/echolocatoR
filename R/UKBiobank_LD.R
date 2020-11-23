@@ -94,7 +94,7 @@ LD.UKBiobank <- function(subset_DT=NULL,
     printer("+ LD:: ...this could take some time...",v=verbose)
     CONDA.activate_env(conda_env = conda_env,
                        verbose = verbose)
-    reticulate::source_python(system.file("tools","load_ld.py",package = "echolocatoR"))
+    reticulate::source_python(system.file("tools","load_ld.py",package = "echoR"))
     ld.out <- tryFunc(input = URL, load_ld, server)
     # LD matrix
     ld_R <- ld.out[[1]]

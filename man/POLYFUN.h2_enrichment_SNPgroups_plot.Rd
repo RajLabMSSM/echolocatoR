@@ -6,7 +6,7 @@
 \usage{
 POLYFUN.h2_enrichment_SNPgroups_plot(
   RES,
-  snp_groups = c("GWAS lead", "UCS", "Consensus (-POLYFUN)", "Consensus"),
+  snp_groups = c("GWAS lead", "UCS", "Consensus (-PolyFun)", "Consensus"),
   comparisons_filter = function(x) {     if ("Consensus" \%in\% x)          return(x) },
   method = "wilcox.test",
   remove_outliers = T,
@@ -25,8 +25,9 @@ POLYFUN.h2_enrichment_SNPgroups_plot(
 Plot heritability (h2) enrichment
 }
 \examples{
-merged_dat_full <- merge_finemapping_results(dataset = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019", minimum_support = 0)
-RES <- POLYFUN.h2_enrichment_SNPgroups(merged_dat=merged_DT, out.path="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/output")
+root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping"
+merged_dat <- merge_finemapping_results(dataset = file.path("Data/GWAS/Nalls23andMe_2019"), LD_reference = "UKB", minimum_support = 0)
+RES <- POLYFUN.h2_enrichment_SNPgroups(merged_dat=merged_dat, out.path="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/output")
 
 plot.h2 <- POLYFUN.h2_enrichment_SNPgroups_plot(RES = RES, show_plot = T)
 }

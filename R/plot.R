@@ -80,7 +80,7 @@ construct_SNPs_labels <- function(subset_DT,
   ## BEFORE fine-mapping
   if(lead){
     before <- subset( subset_DT %>% arrange(P), leadSNP == T)
-    before$type <- "Lead SNP"
+    before$type <- "Lead"
     before$color <- "red"
     before$shape <- 18
     before$size <- 3
@@ -90,7 +90,7 @@ construct_SNPs_labels <- function(subset_DT,
     # AFTER fine-mapping
     after = subset(subset_DT, Support>0)
     if(dim(after)[1]>0){
-      after$type <- "Credible Set"
+      after$type <- "UCS"
       after$color<- "green3"
       after$shape <- 1
       after$size=3
@@ -101,7 +101,7 @@ construct_SNPs_labels <- function(subset_DT,
     # Conensus across all fine-mapping tools
     cons_SNPs <- subset(subset_DT, Consensus_SNP==T)
     if(dim(cons_SNPs)[1]>0){
-      cons_SNPs$type <- "Consensus SNP"
+      cons_SNPs$type <- "Consensus"
       cons_SNPs$color <- "darkgoldenrod1"
       cons_SNPs$shape <- 1
       cons_SNPs$size=4

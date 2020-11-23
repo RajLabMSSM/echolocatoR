@@ -7,7 +7,8 @@
 XGR.enrichment_bootstrap(
   gr,
   merged_dat,
-  snp_groups = c("Random", "GWAS lead", "UCS", "Consensus (-POLYFUN)", "Consensus"),
+  snp_groups = c("Random", "GWAS lead", "UCS (-PolyFun)", "UCS",
+    "Consensus (-PolyFun)", "Consensus"),
   background_filter = NULL,
   grouping_vars = c("Study", "Assay", "Cell_type"),
   iterations = 1000,
@@ -33,7 +34,7 @@ merged_dat <- subset(merged_dat, !Locus \%in\% no_no_loci)
 gr.merged <- merge_celltype_specific_epigenomics()
 grouping_vars <- c("Study","Cell_type","Assay")
 
-enrich_res <- XGR.enrichment_bootstrap(gr=gr.merged, merged_dat=merged_dat, grouping_vars=grouping_vars,  bootstrap=F)
+enrich_res <- XGR.enrichment_bootstrap(gr=gr.merged, merged_dat=merged_dat, grouping_vars=grouping_vars,  bootstrap=F, snp_groups=c("Random","GWAS lead","UCS (-PolyFun)","UCS","Consensus (-PolyFun)","Consensus"), nThread=12, save_path=file.path(root,"XGR/celltypespecific_epigenomics.SNP_groups.csv.gz"))
 
 enrich_boot <- XGR.enrichment_bootstrap(gr=gr.merged, merged_dat=merged_dat, grouping_vars=grouping_vars,  bootstrap=T, fg_sample_size=NULL, bg_sample_size=100, iterations=100)
 }

@@ -32,7 +32,8 @@ TABIX.convert_file <- function(fullSS_path,
                paste0("-k",cDict[[position_col]],",",cDict[[position_col]],"n"),
                ")",
                # Compress with bgzip
-               "| bgzip >",
+               "|",CONDA.find_package(package="bgzip", conda_env=conda_env),
+               ">",
                fullSS.gz)
   printer(cmd, v=verbose)
   system(cmd)

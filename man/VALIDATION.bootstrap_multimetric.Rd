@@ -8,7 +8,11 @@ VALIDATION.bootstrap_multimetric(
   metric_df,
   metric_names,
   validation_method = NULL,
-  test_method = "stats_wilcox.test",
+  locus_means = T,
+  grouping_var = NULL,
+  test_method = "coin_wilcox_test",
+  iterations = 1000,
+  nThread = 4,
   save_path = F,
   verbose = T
 )
@@ -18,22 +22,39 @@ Conduct bootstrap procedure on multiple columns
 }
 \examples{
 save_path <- root <-  "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
-path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Allelic_Effect.csv.gz")
-path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Variant_Level.csv.gz")
 
-# Import and process
-metric_df <- data.table::fread(path, nThread=8)
-metric_df <- find_consensus_SNPs_no_PolyFun(metric_df)
-metric_names <- grep("Basenji.*MAX|DeepSEA.*MAX|Roadmap.*MAX", colnames(metric_df), value = T)
+
+#### SURE MPRA #####
+## mean
+path <- file.path(root,"SURE/Nalls23andMe_2019.SURE.snp_groups.mean.csv.gz")
+metric_names <- "p"
+## raw
+path <- file.path(root,"SURE/Nalls23andMe_2019.SURE.csv.gz")
+metric_names <- c("k562.wilcox.p.value","hepg2.wilcox.p.value")
+validation_method <- "SuRE MPRA"
+
+#### Dey_DeepLearning ####
+## mean
+path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Allelic_Effect.snp_groups_mean.csv.gz")
+metric_names <- "value"; grouping_var="annot"
+## raw
+path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Allelic_Effect.csv.gz")
+## path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Variant_Level.csv.gz")
 validation_method = "Dey_DeepLearning"
 
-enrich.boot <- VALIDATION.bootstrap_multimetric(metric_df=metric_df, metric_names=metric_names, validation_method=validation_method, save_path=gsub("\\\\.csv\\\\.gz",".bootstrap.stats_wilcox.test.csv.gz",path))
+
+# -----Import and process ------
+metric_df <- data.table::fread(path, nThread=8)
+## metric_names <- grep("Basenji.*MAX|DeepSEA.*MAX|Roadmap.*MAX", colnames(metric_df), value = T)
+## metric_df <- metric_df \%>\% dplyr::mutate(annot=paste(Model,Tissue,Assay,Type,Metric,sep="_"))
+boot_res <- VALIDATION.bootstrap_multimetric(metric_df=metric_df, metric_names=metric_names, validation_method=validation_method, save_path=gsub("\\\\.csv\\\\.gz",".bootstrap.coin_wilcox_test.csv.gz",path), grouping_var=grouping_var, iterations=10000, nThread=12)
 }
 \seealso{
 Other VALIDATION: 
+\code{\link{VALIDATION.bootstrap_plot}()},
 \code{\link{VALIDATION.bootstrap}()},
-\code{\link{VALIDATION.compare_distributions}()},
-\code{\link{VALIDATION.permute_plot}()},
+\code{\link{VALIDATION.compare_bootstrap_distributions}()},
+\code{\link{VALIDATION.permute}()},
 \code{\link{VALIDATION.super_plot}()}
 }
 \concept{VALIDATION}

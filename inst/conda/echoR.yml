@@ -9,8 +9,8 @@ dependencies:
   - python>=3.6.1
   - pandas>=0.25.0
   - pandas-plink
-  - pyarrow
   - fastparquet
+  - pyarrow
   - scipy
   - scikit-learn
   - tqdm
@@ -22,7 +22,7 @@ dependencies:
   - plink
   - macs2
   - bcftools
-  - r-base>=3.6.0
+  - r>=3.6.0
   - r-devtools
   - r-reticulate
   - r-rlang

@@ -4,7 +4,7 @@
 \alias{VALIDATION.compare_support}
 \title{Check whether Support level correlates with some variable}
 \usage{
-VALIDATION.compare_support()
+VALIDATION.compare_support(plot_dat)
 }
 \description{
 Check whether Support level correlates with some variable

@@ -45,6 +45,8 @@ mb.sub <- subset(mb.results, SNP_id \%in\% subset(merged_DT, Locus=="DNAH17" & (
 mb.DNAH17 <- motifbreakR::calculatePvalue(results=mb.sub); saveRDS(mb.DNAH17, file.path(root,"DNAH17.pvalues.RDS"))
 mb.DNAH17 <- readRDS(file.path(root,"DNAH17.pvalues.RDS"))
 
+mb.MBNL2 <- readRDS(file.path(root, "motifbreakR_results.p_values_MBNL2.rds"))
+
 MOTIFBREAKR.filter(merged_DT, mb.lrrk2, pct_threshold=NULL, effect_strengths=NULL)
 }
 }

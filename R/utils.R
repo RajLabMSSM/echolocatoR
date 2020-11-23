@@ -1419,6 +1419,7 @@ vcf_cleaning <- function(root,
 
 snp_group_filters <- function(invert=F,
                               random_sample_size=20){
+  if(is.null(random_sample_size)) random_sample_size <- 100
   snp_filters <-
     c("Random" = paste0("SNP %in% sample(sampling_df$SNP, size=",random_sample_size,")"),
     "All" = "!is.na(SNP)",

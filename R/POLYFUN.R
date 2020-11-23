@@ -27,7 +27,7 @@
 #' @keywords internal
 #' @family polyfun
 #' @examples
-#' parquet_path <- system.file("tools/polyfun/gold","polyloc_test.22.bins.parquet",package = "echolocatoR")
+#' parquet_path <- system.file("tools/polyfun/example_data/weights.10.l2.ldscore.parquet", package = "echolocatoR")
 #'  # Using python (pandas) - default
 #' dat <- POLYFUN.read_parquet(parquet_path=parquet_path, method="pandas")
 #' # Using R (SparkR)
@@ -44,9 +44,13 @@ POLYFUN.read_parquet <- function(parquet_path,
   } else {
     printer("+ Importing parquet file with `pandas (Python)`")
     python <- CONDA.find_python_path(conda_env = conda_env)
+    Sys.setenv(RETICULATE_PYTHON=python)
     reticulate::use_python(python = python)
+    CONDA.activate_env(conda_env = conda_env)
+    # pandas <- CONDA.find_package(package = "pandas", conda_env = conda_env)
     pd <- reticulate::import("pandas")
     parquor <- pd$read_parquet(parquet_path)
+    system(paste(python))
   }
   return(parquor)
 }
@@ -188,7 +192,7 @@ POLYFUN.prepare_snp_input <- function(PF.output.path,
 POLYFUN.get_precomputed_priors <- function(polyfun=NULL,
                                            locus_dir,
                                            finemap_dat=NULL,
-                                           force_new_priors=F,
+                                           force_new_priors=T,
                                            remove_tmps=F,
                                            conda_env="echoR"){
   python <- CONDA.find_python_path(conda_env = conda_env)
@@ -231,10 +235,12 @@ POLYFUN.get_precomputed_priors <- function(polyfun=NULL,
       if(remove_tmps){file.remove(miss.file)}
       priors <- POLYFUN.get_precomputed_priors(locus_dir=locus_dir,
                                                finemap_dat=filt_DT,
-                                               force_new_priors=F)
+                                               force_new_priors=force_new_priors,
+                                               conda_env = conda_env)
     }
     # Import results
-    priors <- data.table::fread(snp_w_priors.file, nThread = 4) %>%
+    priors <- data.table::fread(snp_w_priors.file,
+                                nThread = nThread) %>%
       dplyr::rename(SNP=SNP_x) %>% dplyr::select(-SNP_y)
     return(priors)
   }
@@ -462,7 +468,7 @@ POLYFUN.compute_priors <- function(polyfun=NULL,
   ## If compute_ldscores == F:
   # This will create 2 output files for each chromosome: output/testrun.<CHR>.snpvar_ridge.gz and output/testrun.<CHR>.snpvar_ridge_constrained.gz. The first contains estimated per-SNP heritabilities for all SNPs (which can be used for downstream analysis with PolyFun; see below), and the second contains truncated per-SNP heritabilities, which can be used directly as prior causal probabilities in fine-mapping.
   # library(reticulate)
-  # reticulate::use_virtualenv("polyfun_conda")
+  # reticulate::use_virtualenv("echoR")
   # pd <- reticulate::import("pandas")
   # pd$read_csv("./Data/directories_table.csv")
   # reticulate::

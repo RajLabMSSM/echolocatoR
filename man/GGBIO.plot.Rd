@@ -100,7 +100,7 @@ data("BST1"); data("BST1_LD_matrix"); data("locus_dir");
 locus_dir <- file.path("~/Desktop",locus_dir)
 
 # Using NO annotations
-trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, save_plot=F, color_r2=T)
+trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, Nott_regulatory_rects=F, Nott_show_placseq = F,save_plot=F, color_r2=T)
 
 Using NO annotations (dot plot summary instead of Manhattan plots for each fine-mapping tool)
 ### WARNING: Currently doesn't align as well due to the summary plot having a differnt x-axis.

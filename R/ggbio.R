@@ -32,7 +32,7 @@
 #' locus_dir <- file.path("~/Desktop",locus_dir)
 #'
 #' # Using NO annotations
-#' trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, save_plot=F, color_r2=T)
+#' trk_plot <- GGBIO.plot(finemap_dat=BST1, LD_matrix=BST1_LD_matrix, locus_dir=locus_dir, XGR_libnames=NULL, Nott_regulatory_rects=F, Nott_show_placseq = F,save_plot=F, color_r2=T)
 #'
 #' Using NO annotations (dot plot summary instead of Manhattan plots for each fine-mapping tool)
 #' ### WARNING: Currently doesn't align as well due to the summary plot having a differnt x-axis.
@@ -186,10 +186,11 @@ GGBIO.plot <- function(finemap_dat,
   if(gene_track){
     printer("++ GGBIO:: Adding Gene model track.",v=verbose)
     try({
+      gr.snp_CHR <- biovizBase::transformDfToGr(finemap_dat, seqnames = "CHR",
+                                                start = "POS", end = "POS")
+      suppressWarnings(GenomeInfoDb::seqlevelsStyle(gr.snp_CHR) <- "NCBI")
       track.genes <- GGBIO.transcript_model_track(gr.snp_CHR = gr.snp_CHR,
                                                   max_transcripts = max_transcripts)
-      TRACKS_list <- append(TRACKS_list, track.genes)
-      names(TRACKS_list)[length(TRACKS_list)] <- "Gene Track"
     })
   }
 
@@ -343,6 +344,388 @@ GGBIO.plot <- function(finemap_dat,
 }
 
 
+
+
+
+PLOT.SNP_track <- function(finemap_dat,
+                           yvar="-log10(P)",
+                           labels_subset = c("Lead","UCS","Consensus"),
+                           absolute_labels=F,
+                           sig_cutoff=5e-8,
+                           cutoff_lab=paste("P <",sig_cutoff),
+                           point_alpha=.5,
+                           show.legend=T,
+                           xtext=T){
+
+  labelSNPs <- construct_SNPs_labels(subset_DT = finemap_dat,
+                                     # lead="Lead" %in% labels_subset,
+                                     # consensus="Consensus" %in% labels_subset,
+                                     method=T,
+                                     remove_duplicates = F)
+  # Create labels
+  # emojifont::search_emoji("star")
+  # emojifont::emoji(c("small_red_triangle","star"))
+
+  labelSNPs_noDupes <-suppressWarnings(
+    construct_SNPs_labels(subset_DT = finemap_dat,
+                          lead="Lead" %in% labels_subset,
+                          consensus="Consensus" %in% labels_subset,
+                          method=T,
+                          remove_duplicates = T) %>%
+      dplyr::mutate(multi_label=paste0(SNP,"\n",
+                                       "CS95%: ",
+                                       ifelse(ABF.CS>0,"ABF ",""),
+                                       ifelse(SUSIE.CS>0,"SUSIE ",""),
+                                       ifelse(POLYFUN_SUSIE.CS>0,"POLYFUN ",""),
+                                       ifelse(FINEMAP.CS>0,"FINEMAP",""),
+                                       "\n",
+                                       "Groups: ",
+                                       paste(
+                                         ifelse(leadSNP,"Lead ",""),
+                                         ifelse(Support>0,"UCS ",""),
+                                         ifelse(Consensus_SNP,"Consensus",""),
+                                         sep=""
+                                       )
+      ) )
+  )
+  # labelSNPs_noDupes
+  if(startsWith(yvar,"-log")){
+     cutoff_lab <- paste("P <",sig_cutoff)
+     sig_cutoff <- -log10(sig_cutoff)
+  }
+  if(endsWith(yvar,"\\.PP")){
+    cutoff_lab <- paste("PP ≥",sig_cutoff)
+  }
+
+  # Plot
+  snp_plot <- ggplot(data = finemap_dat,
+                     aes_string(x="Mb", y=yvar, color="r2")) +
+    geom_point(alpha=point_alpha, show.legend = show.legend) +
+    scale_color_gradient(low="blue",high ="red", breaks=c(0,.5,1), limits=c(0,1)) +
+    # geom_point(data = labelSNPs, aes_string(x="Mb",y=yvar, shape="shape", size="size")) +
+    geom_point(data=labelSNPs,
+               pch=labelSNPs$shape,
+               # fill=NA,
+               size=labelSNPs$size,
+               color=labelSNPs$color,
+               show.legend=F) +
+    # geom_hline(yintercept=0,alpha=.5, linetype=1, size=.5) +
+    geom_hline(yintercept=sig_cutoff, alpha=.5, linetype=2, size=.5, color="black") +
+    geom_text(aes(x=min(Mb), y=sig_cutoff*1.1),
+              label=cutoff_lab,
+              size=3,color="grey", hjust = 0) +
+    labs(color=bquote(r^2),
+         y=if(startsWith(yvar,"-log10")) bquote("-log"[10]~"(p)") else yvar ) +
+    ylim(if(startsWith(yvar,"-log10")){
+      c(0,-log10(min(finemap_dat$P))*1.1)
+    }else {c(0,1.1)}) +
+    theme_classic()
+  if(xtext==F){
+    snp_plot <- snp_plot +
+      theme(axis.text.x = element_blank(),
+            axis.title.x = element_blank())
+  }
+
+    if(!is.null(labels_subset)){
+      snp_plot <- snp_plot +
+          ### Background color label
+          ggrepel::geom_label_repel(data=labelSNPs_noDupes,
+                                    aes(label=multi_label),
+                                    color=NA,
+                                    # nudge_x = .5,
+                                    fill="black",
+                                    box.padding = .25,
+                                    label.padding = .25,
+                                    # nudge_x = if(absolute_labels).5 else 0,
+                                    # nudge_y= if(absolute_labels).5 else 0,
+                                    label.size=NA,
+                                    alpha=.75,
+                                    seed = 1,
+                                    size = 3,
+                                    min.segment.length = 1) +
+          ### Foreground color label
+          ggrepel::geom_label_repel(data=labelSNPs_noDupes,
+                                    aes(label=multi_label),
+                                    color=labelSNPs_noDupes$color,
+                                    segment.alpha = .5,
+                                    # nudge_x = .5,
+                                    box.padding = .25,
+                                    label.padding = .25,
+                                    # nudge_x = if(absolute_labels).5 else NULL,
+                                    # nudge_y= if(absolute_labels).5 else NULL,
+                                    segment.size = 1,
+                                    fill = NA,
+                                    alpha=1,
+                                    seed = 1,
+                                    size = 3,
+                                    min.segment.length = 1)
+    }
+  return(snp_plot)
+}
+
+
+
+#' Remake of multitrack plot
+#'
+#' 0. Remove labels from zoomed out GWAS
+#' 1. Remove tool PP and use labels/symbols in mean PP
+#' 2. Add multiple transcripts
+#' 3. Zoom out/reduce alpha of PLAC-seq
+#' @examples
+#' data("LRRK2")
+#'
+#' locus_dir <- "/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/LRRK2"
+#' finemap_dat <- LRRK2
+#' LD_mat <- data.table::fread(file.path(locus_dir,"LD/LRRK2.leadSNP_LD.csv.gz"))
+#'
+PLOT.multitrack <- function(finemap_dat,
+                       locus_dir,
+                       LD_matrix=NULL,
+                       LD_reference=NULL,
+                       dataset_type="GWAS",
+                       color_r2=T,
+                       method_list=c("ABF","FINEMAP","SUSIE","POLYFUN_SUSIE"),
+                       dot_summary=F,
+                       QTL_prefixes=NULL,
+                       mean.PP=T,
+                       PP_threshold=.95,
+                       consensus_threshold=2,
+                       sig_cutoff=5e-8,
+                       gene_track=T,
+                       point_size=1,
+                       point_alpha=.6,
+                       snp_group_lines=c("Lead","UCS","Consensus"),
+
+                       XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes",
+                                      "ENCODE_DNaseI_ClusteredV3_CellTypes",
+                                      "Broad_Histone"),
+                       n_top_xgr=5,
+
+                       Roadmap=F,
+                       Roadmap_query=NULL,
+                       n_top_roadmap=7,
+                       annot_overlap_threshold=5,
+
+                       Nott_epigenome=F,
+                       Nott_regulatory_rects=T,
+                       Nott_show_placseq=T,
+                       Nott_binwidth=200,
+                       Nott_bigwig_dir=NULL,
+
+                       save_plot=T,
+                       show_plot=T,
+                       max_transcripts=1,
+                       plot.zoom="1x",
+                       dpi=300,
+                       height=12,
+                       width=10,
+                       nThread=4,
+                       verbose=T){
+  # consensus_threshold=2; XGR_libnames="ENCODE_TFBS_ClusteredV3_CellTypes";n_top_xgr=5; mean.PP=T; Roadmap=T; PP_threshold=.95;  Nott_epigenome=T;  save_plot=T; show_plot=T; method_list=c("ABF","SUSIE","POLYFUN_SUSIE","FINEMAP","mean"); full_data=T;  max_transcripts=3; plot.zoom=100000;
+  # Nott_epigenome=T; Nott_regulatory_rects=T; Nott_show_placseq=T; Nott_binwidth=200; max_transcripts=1; dpi=400; height=12; width=10; results_path=NULL;  n_top_roadmap=7; annot_overlap_threshold=5; Nott_bigwig_dir=NULL; locus="BST1"; Roadmap_query=NULL; sig_cutoff=5e-8; verbose=T; QTL_prefixes=NULL;
+  library(patchwork)
+  locus <- basename(locus_dir)
+  dir.create(locus_dir, showWarnings = F, recursive = T)
+  # Set up data
+  finemap_dat <- find_consensus_SNPs(finemap_dat = finemap_dat,
+                                     credset_thresh = PP_threshold,
+                                     consensus_thresh = consensus_threshold,
+                                     verbose = F)
+  finemap_dat <- fillNA_CS_PP(finemap_dat = finemap_dat)
+  finemap_dat$Mb <- finemap_dat$POS/1000000
+
+  available_methods <- gsub("\\.PP$","",grep("*\\.PP$",colnames(finemap_dat),
+                                             value = T)) %>% unique()
+  method_list <- unique(method_list[method_list %in% available_methods])
+  if(mean.PP){method_list <- unique(c(method_list, "mean"))}
+
+  TRKS <- NULL
+
+  # Add LD into the dat
+  finemap_dat <- LD.get_lead_r2(finemap_dat = finemap_dat,
+                                LD_matrix = LD_matrix,
+                                LD_format = "df")
+  # Treack 0: Summary
+  if(dot_summary){
+    printer("++ GGBIO:: Creating dot plot summary of fine-mapping results.")
+    TRKS[["Summary"]] <- GGBIO.dot_summary(finemap_dat = finemap_dat,
+                                           PP_threshold = PP_threshold,
+                                           show_plot = F)
+  }
+
+
+  ####  Track 1: Main (GWAS) ####
+  printer("++ GGBIO::",dataset_type,"track", v=verbose)
+  TRKS[["GWAS"]] <- PLOT.SNP_track(finemap_dat = finemap_dat,
+                               yvar = "-log10(P)",
+                               sig_cutoff = 5e-8,
+                               labels_subset = NULL,
+                               xtext = F)
+
+  #### Track 2x: QTL ####
+  for (qtl in QTL_prefixes){
+    printer("++ GGBIO::",qtl,"track", v=verbose)
+    TRKS[[qtl]]  <- PLOT.SNP_track(finemap_dat = finemap_dat,
+                                     yvar = paste0("-log10(",qtl,"P)"),
+                                     sig_cutoff = sig_cutoff,
+                                     labels_subset = NULL)
+  }
+
+
+  #### Tracks 2n: Fine-mapping ####
+  for(m in method_list){
+    printer("++ GGBIO::",m,"track", v=verbose)
+    TRKS[[m]] <- PLOT.SNP_track(finemap_dat = finemap_dat,
+                                yvar = paste0(m,".PP"),
+                                sig_cutoff = sig_cutoff,
+                                absolute_labels = F,
+                                labels_subset = c("UCS","Consensus"),
+                                show.legend = F )
+  }
+
+
+  # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  ##### Track 3: Gene Model Track ####
+  # DB tutorial: https://rdrr.io/bioc/ensembldb/f/vignettes/ensembldb.Rmd
+  if(gene_track){
+    printer("++ GGBIO:: Adding Gene model track.",v=verbose)
+    try({
+      TRKS[["Gene Model"]] <- PLOT.transcript_model_track(finemap_dat = finemap_dat) %>%
+        ggbio:::Grob()
+    })
+  }
+
+
+  #### Track 3: Annotation - XGR ####
+  palettes <- c("Spectral","BrBG","PiYG", "PuOr")
+  if(any(!is.null(XGR_libnames))){printer("++ GGBIO:: XGR Tracks")}
+  i=1
+  for(lib in XGR_libnames){
+    annot_file <- annotation_file_name(locus_dir = locus_dir,
+                                       lib_name = paste0("XGR.",lib))
+    gr.lib <- XGR.download_and_standardize(lib.selections = lib,
+                                           finemap_dat = finemap_dat,
+                                           nCores = nThread)
+    gr.filt <- XGR.filter_sources(gr.lib=gr.lib, n_top_sources=n_top_xgr)
+    gr.filt <- XGR.filter_assays(gr.lib=gr.filt, n_top_assays=n_top_xgr)
+    saveRDS(gr.filt, annot_file)
+    xgr.track <- XGR.plot_peaks(gr.lib=gr.filt,
+                                subset_DT=finemap_dat,
+                                fill_var = "Assay",
+                                facet_var = "Source",
+                                geom = "density",
+                                show_plot = F)
+    colourCount <- length(unique(gr.filt$assay))
+    xgr.track <- xgr.track +
+      theme_classic() +
+      theme(strip.text.y = element_text(angle = 0),
+            strip.text = element_text(size=9)) +
+      scale_fill_manual(values = grDevices::colorRampPalette(RColorBrewer::brewer.pal(8, palettes[i]))(colourCount) ) +
+      scale_y_continuous(n.breaks = 3) +
+      guides(fill = guide_legend(ncol = 2, keyheight = .5, keywidth = .5))
+    TRKS[[gsub("_|[.]","\n",lib)]] <- xgr.track
+    i = i+1
+  }
+
+  #### Track 4: Roadmap Chromatin Marks ####
+  ## Download
+  if(Roadmap){
+    printer("+ GGBIO:: Creating Roadmap track")
+    lib <- "Roadmap.ChromatinMarks_CellTypes"
+    annot_file <- annotation_file_name(locus_dir = locus_dir,
+                                       lib_name = lib)
+    if(file.exists(annot_file)){
+      printer("+ Saved annotation file detected. Loading...")
+      grl.roadmap <- readRDS(annot_file)
+    } else {
+      grl.roadmap <- ROADMAP.query(results_path = dirname(annot_file),
+                                   gr.snp = gr.snp,
+                                   keyword_query = Roadmap_query,
+                                   limit_files=F,
+                                   nThread = nThread)
+      saveRDS(grl.roadmap, annot_file)
+    }
+    grl.roadmap.filt <- ROADMAP.merge_and_process_grl(grl.roadmap = grl.roadmap,
+                                                      gr.snp = gr.snp,
+                                                      n_top_tissues=n_top_roadmap,
+                                                      sep = "\n")
+    track.roadmap <- ROADMAP.track_plot(grl.roadmap.filt=grl.roadmap.filt,
+                                        gr.snp=gr.snp,
+                                        show_plot = F)
+    TRKS[["Roadmap\nChromatinMarks\nCellTypes"]] <- track.roadmap
+  }
+
+  #### NOTT_2019 ####
+  if(Nott_epigenome){
+    try({
+      track.Nott_histo <- NOTT_2019.epigenomic_histograms(finemap_dat = finemap_dat,
+                                                          locus_dir = locus_dir,
+                                                          show_plot=F,
+                                                          save_plot=F,
+                                                          full_data=T,
+                                                          return_assay_track=T,
+                                                          binwidth=Nott_binwidth,
+                                                          bigwig_dir=Nott_bigwig_dir,
+                                                          save_annot=T,
+                                                          nThread=nThread,
+                                                          verbose=verbose)
+      TRKS[["Nott (2019)\nRead Densities"]] <- track.Nott_histo
+    })
+    # PLAC-seq
+    if(Nott_show_placseq){
+      try({
+        track.Nott_plac <- NOTT_2019.plac_seq_plot(finemap_dat = finemap_dat,
+                                                   locus_dir=locus_dir,
+                                                   title=locus,
+                                                   show_regulatory_rects=Nott_regulatory_rects,
+                                                   return_interaction_track=T,
+                                                   show_arches=T,
+                                                   save_annot=T,
+                                                   # xlims = xlims,
+                                                   nThread=nThread,
+                                                   verbose=verbose)
+        TRKS[["Nott (2019)\nPLAC-seq"]] <- track.Nott_plac
+      })
+    }
+  }
+
+  ##### Iterate over different window sizes #####
+  plot_list <- list()
+  for(pz in plot.zoom){
+    message(">>>>> plot.zoom = ",pz," <<<<<")
+    #### Define plot.zoom limits ####
+    try({ # Allows X11 errors to occur and still finish the loop
+      xlims <- get_window_limits(finemap_dat=finemap_dat,
+                                 plot.zoom=pz)
+      #### Fuse all tracks ####
+      TRKS_FINAL <- patchwork::wrap_plots(TRKS, ncol = 1)
+
+      #### Add vertical lines  ####
+      TRKS_FINAL <- GGBIO.add_lines(trks = trks,
+                                    snp_groups = snp_group_lines,
+                                    finemap_dat = finemap_dat)
+      plot_list[[pz]] <- TRKS_FINAL
+
+
+
+      #### Save plot ####
+      if(save_plot){
+        window_suffix <- get_window_suffix(finemap_dat=finemap_dat,
+                                           plot.zoom=pz)
+        plot_path <- file.path(locus_dir,paste("multiview",locus,LD_reference,window_suffix,"png",sep="."))
+        printer("+ GGBIO:: Saving plot ==>",plot_path)
+        ggbio::ggsave(filename = plot_path,
+                      plot = TRKS_FINAL,
+                      height = height,
+                      width = width,
+                      dpi = dpi,
+                      bg = "transparent")
+      }
+      if(show_plot){print(TRKS_FINAL)}
+    })
+  } # End plot.zoom loop
+  return(plot_list)
+}
 
 
 
@@ -844,6 +1227,75 @@ GGBIO.transcript_model_track <- function(gr.snp_CHR,
   if(show_plot){ print(track.genes)}
   return(track.genes)
 }
+
+
+
+
+#' Plot gene/transcript models
+#'
+#' @source
+#' \href{https://bioconductor.org/packages/release/bioc/vignettes/ensembldb/inst/doc/ensembldb.html}{ensembld tutorial}
+#' \href{https://bioconductor.org/packages/devel/bioc/vignettes/Gviz/inst/doc/Gviz.html#45_GeneRegionTrack}{Gvix tutorial}
+#' \href{http://bioconductor.org/packages/devel/bioc/vignettes/ggbio/inst/doc/ggbio.pdf}{ggbio tutorial}
+#'
+PLOT.transcript_model_track <- function(finemap_dat,
+                                        max_transcripts=1,
+                                        remove_RP11=T,
+                                        show.legend=T,
+                                        show_plot=F,
+                                        fill="skyblue",
+                                        shape=c( "arrow", "box", "ellipse","smallArrow"),
+                                        transcriptAnnotation = c("symbol","transcript"),
+                                        collapseTranscripts=c(F,T,"longest"),
+                                        stacking=c("squish","hide", "dense", "pack","full"),
+                                        method="ggbio",
+                                        verbose=T){
+  gr.snp_CHR <- biovizBase::transformDfToGr(data = finemap_dat,
+                                            seqnames = "CHR",
+                                            start = "POS", end = "POS")
+  #### Gviz ####
+  if(method=="gviz"){
+    library(Gviz)
+    library(EnsDb.Hsapiens.v75)
+    suppressWarnings(GenomeInfoDb::seqlevelsStyle(gr.snp_CHR) <- "NCBI")
+    printer("+ PLOT:: Gene Model Track",v=verbose)
+    edb <-  EnsDb.Hsapiens.v75::EnsDb.Hsapiens.v75
+    tx <- ensembldb::getGeneRegionTrackForGviz(edb,
+                                               filter = GRangesFilter(value = gr.snp_CHR, feature = "tx"))
+    tx_lengths <- transcriptLengths(edb,
+                                    filter = GRangesFilter(value = gr.snp_CHR, feature = "tx"))
+    tx$tx_len <- setNames(tx_lengths$tx_len,tx_lengths$tx_id)[tx$transcript]
+    tx <- subset(tx, !startsWith(as.character(symbol),"RP11"))
+    # gtrack <- GenomeAxisTrack()
+    tx.models <- Gviz::GeneRegionTrack(tx,
+                                       name = "Gene Model",
+                                       fill=fill,
+                                       stacking = stacking[1])
+    Gviz::plotTracks(list(tx.models),
+                     transcriptAnnotation = transcriptAnnotation[1],
+                     background.title = "grey20",
+                     collapseTranscripts=collapseTranscripts[1],
+                     shape = shape[1]  )
+  } else {
+    #### ggbio #####
+    library(Homo.sapiens)
+    # columns(Homo.sapiens)
+    library(ggbio)
+    suppressWarnings(GenomeInfoDb::seqlevelsStyle(gr.snp_CHR) <- "UCSC")
+    tx.models <- ggbio::autoplot(Homo.sapiens,
+                    which=gr.snp_CHR,
+                    aes(fill=SYMBOL, color=SYMBOL),
+                    columns = c( "SYMBOL","TXNAME"),
+                    names.expr = "SYMBOL (TXNAME)",
+                    stat = if(collapseTranscripts)"reduce"else "identity") +
+      theme_classic() +
+      theme(axis.text.x = element_blank())
+  }
+  if(show_plot) print(tx.models)
+  return(tx.models)
+}
+
+
 
 
 

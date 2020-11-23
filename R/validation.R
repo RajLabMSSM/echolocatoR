@@ -9,20 +9,22 @@
 #' plt.ALL <- VALIDATION.super_plot(root="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide")
 VALIDATION.super_plot <- function(root="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide",
                                   height=10, width=12,
+                                  layout="horiz",
                                   show_plot=T,
                                   save_plot=F){
   snp.groups_list <- snp_group_filters()
-  snp_groups <- c("GWAS lead","UCS (-PolyFun)","UCS","Consensus")
+  snp_groups <- names(snp.groups_list) #c("GWAS lead","UCS (-PolyFun)","UCS","Consensus")
   expanded_groups <-  grep("Support",names(snp_group_filters()),value = T, invert = T)
 
   #### S-LDSC h2 ####
   res.h2 <- data.table::fread(file.path(root,"PolyFun/Nalls23andMe_2019.h2_enrich.snp_groups.csv.gz"))
   plt.h2 <- POLYFUN.h2_enrichment_SNPgroups_plot(RES = res.h2,
                                                  snp_groups = snp_groups,
-                                                 comparisons_filter = NULL,
-                                                 save_path = file.path(base_url,"PolyFun/Nalls23andMe_2019.h2_enrich.snp_groups_expanded.png"),
+                                                 # comparisons_filter = NULL,
+                                                 save_path = file.path(root,"PolyFun/Nalls23andMe_2019.h2_enrich.snp_groups_expanded.png"),
                                                  remove_outliers = T,
                                                  show_padj = F,
+                                                 show_signif = F,
                                                  vjust_signif=0.5,
                                                  show_xtext = F,
                                                  show_plot = T)
@@ -35,10 +37,11 @@ VALIDATION.super_plot <- function(root="/sc/arion/projects/pd-omics/brian/Fine_M
                                          snp_groups = snp_groups,
                                          # snp_groups = expanded_groups,
                                          title = "IMPACT",
-                                         ylabel = "mean IMPACT score",
+                                         ylabel = "IMPACT score",
                                          save_path = file.path(root,"IMPACT/Nalls23andMe_2019.IMPACT.snp_groups_expanded.png"),
-                                         comparisons_filter = NULL,
+                                         # comparisons_filter = NULL,
                                          show_padj = F,
+                                         show_signif = F,
                                          vjust_signif=0.5,
                                          show_xtext = F,
                                          show_plot = T)
@@ -48,10 +51,11 @@ VALIDATION.super_plot <- function(root="/sc/arion/projects/pd-omics/brian/Fine_M
   plt.SURE <- SURE.plot(sure.melt = res.SURE,
                         snp_groups = snp_groups,
                         facet_formula = ".~ Cell_type",
-                        comparisons_filter = NULL,
+                        # comparisons_filter = NULL,
                         save_path = file.path(root,"SURE/Nalls23andMe_2019.SURE.snp_groups_expanded.mean.png"),
                         show_plot = T,
                         show_padj = F,
+                        show_signif = F,
                         vjust_signif=0.5,
                         width=8)
 
@@ -59,29 +63,45 @@ VALIDATION.super_plot <- function(root="/sc/arion/projects/pd-omics/brian/Fine_M
   res.DL <- data.table::fread(file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Allelic_Effect.snp_groups_mean.csv.gz"))
   plt.DL <- DEEPLEARNING.plot(annot.melt=res.DL,
                               snp_groups = snp_groups,
-                              facet_formula="Tissue ~ Model",
-                              comparisons_filter=NULL,
+                              facet_formula="Assay ~ Model +Tissue",
+                              # comparisons_filter=NULL,
                               model_metric = "MAX",
                               remove_outliers = T,
                               show_padj = F,
+                              show_signif = F,
                               vjust_signif=0.5,
-                              save_path=gsub("\\.csv\\.gz",".png",file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Allelic_Effect.snp_groups_mean.csv.gz")),
+                              save_path=gsub("\\.csv\\.gz",".png",file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Allelic_Effect.snp_groups_mean_expanded.ALL.csv.gz")),
                               show_plot = T)
 
 
    # MERGE PLOTS
   library(patchwork)
-  plt.ALL <-  (  (
-    (plt.h2 + theme(plot.margin = unit(rep(0,4),"cm")) ) /
-      (plt.IMPACT + theme(plot.margin = unit(rep(0,4),"cm"))) /
-      (plt.SURE + theme(plot.margin = unit(rep(0,4),"cm")))
-    )  |  (plt.DL) ) +
-    patchwork::plot_layout(widths = c(.5,1)) +
-    patchwork::plot_annotation(tag_levels = letters)
+  if(layout=="horiz"){
+    plt.ALL <-  (  (
+      (plt.h2 + theme(plot.margin = unit(rep(0,4),"cm")) ) /
+        (plt.IMPACT + theme(plot.margin = unit(rep(0,4),"cm"))) /
+        (plt.SURE + theme(plot.margin = unit(rep(0,4),"cm")))
+    ) |  (plt.DL) ) +
+      patchwork::plot_layout(widths = c(.25,1)) +
+      patchwork::plot_annotation(tag_levels = letters)
+  }
+  if(layout=="vert"){
+    plt.ALL <-  (  (
+      (plt.h2 + theme(plot.margin = unit(rep(0,4),"cm")) ) |
+        (plt.IMPACT + theme(plot.margin = unit(rep(0,4),"cm"))) |
+        (plt.SURE + theme(plot.margin = unit(rep(0,4),"cm"),
+                          axis.text.x = element_blank(),
+                          axis.title.x = element_blank()))
+    ) /  (plt.DL) ) +
+      patchwork::plot_layout(heights = c(.25,1)) +
+      patchwork::plot_annotation(tag_levels = letters)
+    height=15; width=20;
+  }
+
 
   if(show_plot) print(plt.ALL)
   if(save_plot!=F){
-    # save_plot <- file.path(root,"VALIDATION.super_plot.png");  height=10; width=12;
+    # save_plot <- file.path("~/Desktop/Fine_Mapping/Manuscripts/PD/Figures/FigS2","VALIDATION.super_plot.extended.png");  height=10; width=10;
     ggsave(save_plot, plt.ALL, dpi=400,
            height=height, width=width)
   }
@@ -94,6 +114,126 @@ VALIDATION.super_plot <- function(root="/sc/arion/projects/pd-omics/brian/Fine_M
 #### MUST USE FULL DATASET (all loci merged) to get proper null distribution
 # Alternaitvely, could use a uniform distribution (but this is an assumption)
 ## But for IMPACT, unif dist may atually be higher impact than reality
+
+
+#' Validation permutation tests
+#'
+#' @family VALIDATION
+#' @source
+#' \href{https://www.datanovia.com/en/lessons/wilcoxon-test-in-r/}{Wilcox test tutorial}
+#' @examples
+#' \dontrun{
+#' save_path <- root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
+#'
+#' #### h2 ####
+#' ## mean
+#' path <- file.path(root,"PolyFun/Nalls23andMe_2019.h2_enrich.snp_groups.csv.gz")
+#' metric <- "h2.enrichment"
+#'
+#' #### IMPACT ####
+#' ## mean
+#' path <- file.path(root,"IMPACT/TOP_IMPACT_all.csv.gz");
+#' metric <- "mean_IMPACT"
+#' ## raw
+#' path <- file.path(root,"IMPACT/IMPACT_overlap.csv.gz")
+#' metric <- "IMPACT_score"
+#'
+#'
+#' ## Import and Process ##
+#' metric_df <- data.table::fread(path, nThread=8)
+#' if(metric=="IMPACT_score") metric_df <- subset(metric_df, select=c(SNP,leadSNP,ABF.Credible_Set,ABF.PP,SUSIE.Credible_Set,SUSIE.PP,POLYFUN_SUSIE.Credible_Set,POLYFUN_SUSIE.PP,FINEMAP.Credible_Set,FINEMAP.PP,Consensus_SNP,Support,Locus,IMPACT_score))
+#' if(metric=="mean_IMPACT") metric_df <- find_consensus_SNPs_no_PolyFun(metric_df)
+#'
+#' #### run bootstrap ####
+#' permute_res <- VALIDATION.permute(metric_df=metric_df, metric=metric )
+#' }
+VALIDATION.permute <- function(metric_df,
+                               metric,
+                               locus_means=F,
+                               snp_groups=c("Random","GWAS lead","UCS (-PolyFun)","UCS","Consensus (-PolyFun)","Consensus")){
+  snp_filters <- snp_group_filters(random_sample_size = 1000)
+  if(locus_means){
+    snp_filters <- setNames(paste0("SNP_group=='",snp_groups,"'"), snp_groups)
+  } else {
+    if(!"Consensus_SNP_noPF" %in% colnames(metric_df)){
+      try({
+        metric_df <- find_consensus_SNPs_no_PolyFun(metric_df)
+      })
+    }
+  }
+  sampling_df <- metric_df
+
+  # Prepare data
+  message("VALIDATION:: Preparing data...")
+  dat <- lapply(snp_groups, function(snp_group,
+                                     .metric_df=metric_df,
+                                     .locus_means=locus_means,
+                                     .metric=metric){
+    printer(snp_group)
+    snp_filt <- snp_filters[[snp_group]]
+    d <- subset(.metric_df, eval(parse(text=snp_filt)),
+                select=c("Locus",if(.locus_means) NULL else "SNP",.metric))
+    d$SNP_group <- snp_group
+    return(d)
+  }) %>% data.table::rbindlist() %>%
+    dplyr::mutate(SNP_group=as.factor(SNP_group),
+                  Locus=as.factor(Locus))
+
+
+  printer("VALIDATION:: Beginning permutation testing.")
+  ref_group <- "Random"
+  target_groups <- snp_groups[!snp_groups %in% ref_group]
+  RES <- lapply(target_groups, function(target,
+                                        .ref_group=ref_group){
+    print(target)
+    ## NOTE: "exact" requires LOTS of memory.
+    ## Use approximate()
+    distribution= coin::approximate(nresample=10000)
+    coin_res <- coin::independence_test(data=subset(dat, SNP_group %in% c(ref_group,target)),
+                                        as.formula(paste(metric,"~ SNP_group") ),
+                                        distribution = distribution)
+    res <- data.frame(stat = coin::statistic(coin_res, type="standardized")[[1]],
+                      z = coin::statistic(coin_res, type="standardized")[[1]],
+                      stat_linear = coin::statistic(coin_res, type="linear")[[1]],
+                      stat_centered =  coin::statistic(coin_res, type="centered")[[1]],
+                      p = coin::pvalue(coin_res),
+                      p_int_lower=coin::pvalue_interval(coin_res)[[1]],
+                      p_int_upper=coin::pvalue_interval(coin_res)[[2]],
+                      group1=ref_group,
+                      group2=target,
+                      metric=metric,
+                      method="coin::independence_test")
+    return(res)
+  }) %>% data.table::rbindlist()
+  return(RES)
+
+  if(show_plot){
+    printer("VALIDATION:: Plotting permutation results.")
+    library(ggplot2)
+    colorDict <- snp_group_colorDict()
+    ggplot(data = RES, aes(x=group2, y= z, fill=group2, label=paste("p =",p))) +
+      geom_bar(stat = "identity", alpha=.5) +
+      # geom_errorbar(aes(ymin=z-p_int_lower,ymax=z+p_int_upper)) +
+      geom_text(aes(y=ifelse(z<0, z-.25, z+.25))) +
+      scale_fill_manual(values = colorDict ) +
+      labs(title=paste("Permuted independence tests"),
+           subtitle = paste0("Metric: ",metric,", ","Reference: ",unique(ref_group))) +
+      theme_bw() +
+      theme(axis.text.x = element_text(angle=45, hjust=1))
+
+    #
+    #   ggplot(data = RES, aes(x= -log1p(p), y= z,  fill=group2, color=group2)) +
+    #     geom_point() +
+    #     scale_color_manual(values = colorDict ) +
+    #     theme_bw()
+  }
+
+
+}
+
+
+
+
 
 
 #' Perform validation bootstrap procedure
@@ -220,17 +360,6 @@ VALIDATION.bootstrap <- function(metric_df,
             res <- data.frame(stat= coin::statistic(coin_res),
                               p= coin::pvalue(coin_res))
           }
-          if(test_method=="coin_wilcox_test"){
-            coin_res <- coin::wilcox_test(data=dat,
-                                          as.formula(paste(metric,"~",predictor) ),
-                                          method="exact")
-            res <- data.frame(stat = coin::statistic(coin_res, type="standardized")[[1]],
-                              z = coin::statistic(coin_res, type="standardized")[[1]],
-                              stat_linear = coin::statistic(coin_res, type="linear")[[1]],
-                              stat_centered =  coin::statistic(coin_res, type="centered")[[1]],
-                              p = coin::pvalue(coin_res))
-          }
-
           #### rcompanion ####
           if(test_method=="rcompanion"){
             correction_method <- "fdr"
@@ -240,6 +369,16 @@ VALIDATION.bootstrap <- function(metric_df,
               dplyr::mutate(Comparison = gsub(" = 0","",Comparison),
                             adjust.method=correction_method) %>%
               tidyr::separate(col = "Comparison", sep=" - ", into=c("group1","group2"))
+          }
+          if(test_method=="coin_wilcox_test"){
+            coin_res <- coin::wilcox_test(data=dat,
+                                          as.formula(paste(metric,"~",predictor) ),
+                                          method="exact")
+            res <- data.frame(stat = coin::statistic(coin_res, type="standardized")[[1]],
+                              z = coin::statistic(coin_res, type="standardized")[[1]],
+                              stat_linear = coin::statistic(coin_res, type="linear")[[1]],
+                              stat_centered =  coin::statistic(coin_res, type="centered")[[1]],
+                              p = coin::pvalue(coin_res))
           }
           #### ggpubr ####
           if(test_method=="ggpubr_wilcox"){
@@ -381,12 +520,15 @@ VALIDATION.bootstrap_multimetric <- function(metric_df,
 #' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019"
 #' permute.IMPACT <-  data.table::fread(file.path(root,"_genome_wide/IMPACT/Nalls23andMe_2019.IMPACT.permutations.csv.gz"))
 #' res <- VALIDATION.permute_compare_results(permute_res=permute.IMPACT)
-VALIDATION.compare_distributions <- function(boot_res,
+VALIDATION.compare_bootstrap_distributions <- function(boot_res,
                                              formula_str="stat ~ SNP_group"){
   # GLM
   fit <- stats::glm(data = boot_res,
                     # family = stats::poisson # This would actually remove the signfiicance from the signal
                     formula = as.formula(formula_str))
+  # fit <- stats::pairwise.t.test(data=boot_res,
+  #                        x=boot_res$stat,
+  #                        g=boot_res$SNP_group)
   print(summary(fit))
   ## Extract p-value
   coefs <-  data.frame(coef(summary(fit))) %>%
@@ -481,8 +623,9 @@ VALIDATION.aggregate_permute_res <- function(permute_res){
 #'
 #' # ---Plot ---
 #' library(patchwork)
-#' ## boot_res <- data.frame(boot_res)[grepl("H3K4ME3", boot_res$Metric, fixed=T) & grepl("Basenji", boot_res$Metric, fixed=T) & grepl("_MAX_", boot_res$Metric, fixed=T),]
-#' facet_formula <- "Tissue ~ Model + Assay"
+#' if(validation_method=="Dey_DeepLearning") boot_res <- data.frame(boot_res)[grepl("H3K4ME3", boot_res$Metric, fixed=T) & grepl("Basenji", boot_res$Metric, fixed=T) & grepl("_MAX_", boot_res$Metric, fixed=T),]
+#' facet_formula <- if(validation_method=="Dey_DeepLearning") "Assay  ~ Model" else ".~."
+#' facet_formula <- if(validation_method=="SuRE MPRA") ".  ~ Cell_type" else ".~."
 #' gp1 <- VALIDATION.bootstrap_plot(boot_res=boot_res, validation_method=validation_method, y_var="z", save_plot=gsub("\\.csv\\.gz",".stat_values.png",path), width=9, facet_formula=facet_formula, override_metric_count = T)
 #' gp2 <- VALIDATION.bootstrap_plot(boot_res=subset(boot_res, stat>0), validation_method=validation_method, y_var="p", save_plot=gsub("\\.csv\\.gz",".p_values.png",path), width=9,facet_formula = facet_formula, override_metric_count = T)
 #' gp12 <- (gp1 / gp2) + patchwork::plot_annotation(tag_levels = "a")
@@ -516,7 +659,7 @@ VALIDATION.bootstrap_plot <- function(boot_res,
     printer("VALIDATION:: Facetting plots by metric.",v=verbose)
     glm_res <- lapply(unique(boot_res$Metric), function(metric){
       print(metric)
-      VALIDATION.compare_distributions(boot_res=subset(boot_res, Metric==metric),
+      VALIDATION.compare_bootstrap_distributions(boot_res=subset(boot_res, Metric==metric),
                                        formula_str = paste(y_var,"~ SNP_group")) %>%
         dplyr::mutate(Metric=metric)
     }) %>% data.table::rbindlist()
@@ -541,7 +684,7 @@ VALIDATION.bootstrap_plot <- function(boot_res,
         ggplot(data=glm_res, aes(x=SNP_group,y=p, fill=SNP_group)) +
       geom_violin(alpha=.5) +
       geom_boxplot(alpha=.5) +
-      yscale("-log1p", .format = T) +
+      ggpubr::yscale("-log1p", .format = T) +
       geom_jitter(height = 0, alpha=.1) +
       scale_fill_manual(values = colorDict) +
       # geom_hline(yintercept = -log10(0.05), alpha=.5, linetype=2) +
@@ -551,8 +694,8 @@ VALIDATION.bootstrap_plot <- function(boot_res,
       theme(axis.text.x = element_text(angle=45, hjust=1))
       print(glm_violin)
   } else {
-    glm_res <- VALIDATION.compare_distributions(boot_res=boot_res,
-                                                formula_str = paste(y_var,"~ SNP_group"))
+    glm_res <- VALIDATION.compare_bootstrap_distributions(boot_res=boot_res,
+                                                          formula_str = paste(y_var,"~ SNP_group"))
   }
 
 
@@ -576,17 +719,22 @@ VALIDATION.bootstrap_plot <- function(boot_res,
   # Get density peaks
   if(metric_count==1|override_metric_count){
     b <- ggplot_build(gp)
-    density_peaks <- b$data[[1]] %>% dplyr::group_by(fill) %>% dplyr::top_n(n = 1, wt = y) %>%
+    density_peaks <- b$data[[1]] %>%
+      dplyr::group_by(fill) %>%
+      dplyr::top_n(n = 1, wt = y) %>%
       dplyr::mutate(SNP_group =  setNames(names(colorDict), unname(colorDict))[[fill]]) %>%
       data.table::data.table() %>%
       data.table::merge.data.table(glm_res, by="SNP_group") %>%
-      dplyr::mutate(p=ifelse(p*dplyr::n_distinct(PANEL)>1, 1,p*dplyr::n_distinct(PANEL))) %>%
-      dplyr::mutate(signif = pvalues_to_symbols(p))
+      dplyr::mutate(p=ifelse(p==0, .Machine$double.xmin, p)) %>%
+      dplyr::mutate(#p_adj=ifelse(p*dplyr::n_distinct(PANEL)>1, 1,p*dplyr::n_distinct(PANEL)),
+                    p_adj= stats::p.adjust(p = p, method="fdr"),
+                    p_norm= ifelse(p*10000*nrow(.)>1, 1, p*10000*nrow(.))) %>%
+      dplyr::mutate(signif = pvalues_to_symbols(p_norm))
     # Annotate plot
     gp_lab <- gp  +
       ggrepel::geom_label_repel(data=density_peaks,
                                 aes(x=x, y=y, label=paste(SNP_group,"\n",
-                                                          "p =",format(as.numeric(p), digits = 2), signif,"\n",
+                                                          "p =",format(as.numeric(p_norm), digits = 2), signif,"\n",
                                                           "z =",format(as.numeric(z), digits = 2),paste0("(se = ",format(as.numeric(StdErr), digits = 2),")")
                                                           )
                                     ),
@@ -610,32 +758,6 @@ VALIDATION.bootstrap_plot <- function(boot_res,
 
 
 
-VALIDATION.compare_singleton_results <- function(singleton_url="/pd-omics/data/Singleton_FINEMAP_PD/pd_meta5_sum_stats_fm_results.csv.gz"){
-  # Originally from: https://storage.googleapis.com/nihnialng-share-f23bef932184/pd_meta5_sum_stats_fm_results.csv.gz
-  singleton <- data.table::fread(singleton_url)
-  # Merging by SNP yields waaaaaay more hits than CHR/POS, even after liftover.
-  merged_PD <- data.table::merge.data.table(merged_dat,
-                                            singleton,
-                                            by="SNP" )
-  # single <- singleton %>%
-  #   tidyr::separate(col = "rsid", into=c("CHR","POS"), sep=":", remove=F) %>%
-  #   dplyr::mutate(CHR=as.integer(gsub("chr","",CHR)),
-  #                 POS=as.integer(POS)) %>%
-  #   LIFTOVER(dat=singleton, return_as_granges=F) %>%
-  #   data.table::data.table()
-  # merged_PD <- data.table::merge.data.table(merged_dat,
-  #                                           single,
-  #                                           by.x=c("CHR","POS"),
-  #                                           by.y =c("CHR","POS"))
-  # merged_PD[is.na(merged_PD)] <- 0
-
-
-  cor.test(merged_PD$FINEMAP.PP, merged_PD$prob, method="pearson")
-  cor.test(merged_PD$FINEMAP.PP, merged_PD$prob, method="spearman")
-}
-
-
-
 
 
 
@@ -644,7 +766,7 @@ VALIDATION.compare_singleton_results <- function(singleton_url="/pd-omics/data/S
 #' @examples
 #' # S-LDSC h2
 #' h2_stats <- data.table::fread("/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/Nalls23andMe_2019.grouped_snpvar_stats.csv.gz")
-VALIDATION.compare_support <- function(){
+VALIDATION.compare_support <- function(plot_dat){
   plot_dat <- h2_stats
   variable <- "SNPVAR_min"
 
@@ -661,5 +783,4 @@ VALIDATION.compare_support <- function(){
                                label = "p.signif") +
     geom_jitter(alpha=.1, height=0)
 }
-
 

@@ -14,7 +14,9 @@ SURE.melt_snp_groups(
   sure_DT,
   grouping_vars = c("Locus"),
   metric_str = "mean",
-  replace_NA = NA
+  replace_NA = NA,
+  save_path = F,
+  verbose = T
 )
 }
 \description{
@@ -23,10 +25,10 @@ Aggregate \emph{SuRE} p-values for each SNP group
 \examples{
 root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 
-sure_DT <- data.table::fread("/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/SURE/Nalls23andMe_2019.SURE.csv.gz", nThread=4)
+sure_DT <- data.table::fread(file.path(root,"SURE/Nalls23andMe_2019.SURE.csv.gz"), nThread=4)
 sure_DT <- find_consensus_SNPs_no_PolyFun(sure_DT)
-sure.melt <- SURE.melt_snp_groups(sure_DT)
-data.table::fwrite(sure.melt, file.path(root,"SURE/Nalls23andMe_2019.SURE.snp_groups.mean.csv.gz"))
+
+sure.melt <- SURE.melt_snp_groups(sure_DT, save_path=file.path(root,"SURE/Nalls23andMe_2019.SURE.snp_groups.mean.csv.gz"))
 }
 \seealso{
 Other SURE: 

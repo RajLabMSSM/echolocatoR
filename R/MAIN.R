@@ -716,6 +716,7 @@ finemap_loci <- function(loci,
                          conda_env="echoR",
                          nThread=4,
                          verbose=T){
+  CONDA.activate_env(conda_env = conda_env)
   data.table::setDTthreads(threads = nThread);
   conditioned_snps <- snps_to_condition(conditioned_snps, top_SNPs, loci);
 

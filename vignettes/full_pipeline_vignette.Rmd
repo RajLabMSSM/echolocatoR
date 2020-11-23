@@ -93,6 +93,7 @@ Here are some key arguments:
 You can adjust this separately from `bp_distance` so that you don't have rerun the whole pipeline each time (locus subsets, LD matrices, and fine-mapping results are all automatically saved in locus-specific folders).  
 
 ```{r Run fine-mapping pipeline}
+
 Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS 
                                           top_SNPs = top_SNPs,  
                                           results_dir = "~/Desktop/results",
