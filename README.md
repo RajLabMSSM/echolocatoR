@@ -5,8 +5,7 @@
 <hr>  
 
 ### When using __*echolocatoR*__, please cite:  
-[*echolocatoR: an automated end-to-end statistical and functional genomic fine-mapping pipeline*
-Brian M. Schilder, Jack Humphrey, Towfique Raj
+[Brian M. Schilder, Jack Humphrey, Towfique Raj (2020) *echolocatoR: an automated end-to-end statistical and functional genomic fine-mapping pipeline*
 bioRxiv 2020.10.22.351221; doi: https://doi.org/10.1101/2020.10.22.351221](https://www.biorxiv.org/content/10.1101/2020.10.22.351221v1)  
 
 <hr>
