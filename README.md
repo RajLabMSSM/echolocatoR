@@ -1,6 +1,13 @@
 <center><h1> )    )   )  ) ))) 🦇 echolocatoR  🦇 ((( (  (   (    ( </h1></center>  
 
 ### Automated statistical and functional fine-mapping with extensive access to genome-wide datasets.   
+<hr>  
+When using __*echolocatoR*__, please cite:  
+> [*echolocatoR: an automated end-to-end statistical and functional genomic fine-mapping pipeline*
+Brian M. Schilder, Jack Humphrey, Towfique Raj
+bioRxiv 2020.10.22.351221; doi: https://doi.org/10.1101/2020.10.22.351221](https://www.biorxiv.org/content/10.1101/2020.10.22.351221v1)  
+
+<hr>
 
 Fine-mapping methods are a powerful means of identifying causal variants underlying a given phenotype, but are underutilized due to the technical challenges of implementation. __*echolocatoR*__ is an R package that automates end-to-end genomics fine-mapping, annotation, and plotting in order to identify the most probable causal variants associated with a given phenotype.
 
