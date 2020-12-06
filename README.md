@@ -43,10 +43,7 @@ In R:
 ```R
 if(!"devtools" %in% installed.packages()){install.packages("devtools")}
 devtools::install_github("RajLabMSSM/echolocatoR")
-```  
-*NOTE*: While this GitHub repo is still private, you need to use a token to install __*echolocatoR*__  using the `auth_token` argument (see [here for details](http://devtools.r-lib.org/reference/install_github)).  
-
-
+```   
 
 ## Robust installation (*conda*)
 
@@ -68,7 +65,10 @@ conda env create -f <path_to_file>/echoR.yml
 conda activate echoR
 ```
 
-5. In R, install __*echolocatoR*__:  
+5. Open Rstudio from the command line interface (not by clicking the Rstudio icon). 
+This helps to ensure Rstudio can find the paths to the packages in the conda env.
+
+6. In R, install __*echolocatoR*__:  
 ```R
 if(!"devtools" %in% installed.packages()){install.packages("devtools")}
 devtools::install_github("RajLabMSSM/echolocatoR")
@@ -142,6 +142,12 @@ For a full list of suggested packages, see [DESCRIPTION](https://github.com/RajL
 #### [Axel](https://github.com/axel-download-accelerator/axel)  *    
   + Rapid multi-core downloading of large files (e.g. LD matrices from UK Biobank).  
   + To use it, specify `download_method="axel"` in `finemap_loci()`.  
+  + **NOTE**: *axel* does not currently have a conda release. So you will need to install it as a separate step. For more info on installing/using *axel* in general, also see this [tutorial](https://www.tecmint.com/axel-commandline-download-accelerator-for-linux/). Depending on what kind of computer you're using, this process will look a bit different:  
+    - **Mac**: Install [brew](https://brew.sh/), then: `brew install axel`  
+    - **CentOS/RHEL 7**: `yum install epel-release; yum install axel`  
+    - **Fedora**: `yum install axel; dnf install axel`  
+    - **Debian Jessie (e.g. Ubuntu, Linux Mint)**: `aptitude install axel`  
+   
  
  
 <br>

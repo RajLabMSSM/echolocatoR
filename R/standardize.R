@@ -311,6 +311,10 @@ get_UKB_MAF <- function(subset_DT,
   chrom <- unique(subset_DT$CHR)
   input_url <- paste0("biobank.ctsu.ox.ac.uk/showcase/showcase/auxdata/ukb_mfi_chr",chrom,"_v3.txt")
   out_file <- file.path(output_path, basename(input_url))
+  if(file.size(out_file)==0){
+    printer("+ UKB MAF:: Removing empty UKB MAF ref file.");
+    file.remove(out_file)
+  }
   if(file.exists(out_file) & force_new_maf==F){
     printer("+ UKB MAF:: Importing pre-existing file",v=verbose)
   } else{
