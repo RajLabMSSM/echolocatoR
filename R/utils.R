@@ -961,7 +961,7 @@ GRanges_overlap <- function(dat1,
   #                         mcols(gr.consensus[S4Vectors::queryHits(hits),]) )
   message("",nrow(GenomicRanges::mcols(gr.hits))," query SNP(s) detected with reference overlap." )
   # print(data.frame(mcols(gr.hits[,c("Name","SNP")])) )
-  GenomeInfoDb::seqlevelsStyle(gr.hits) <- chr_format
+  suppressWarnings(GenomeInfoDb::seqlevelsStyle(gr.hits) <- chr_format)
   return(gr.hits)
 }
 
@@ -1419,6 +1419,7 @@ vcf_cleaning <- function(root,
 
 snp_group_filters <- function(invert=F,
                               random_sample_size=20){
+  if(is.null(random_sample_size)) random_sample_size <- 100
   snp_filters <-
     c("Random" = paste0("SNP %in% sample(sampling_df$SNP, size=",random_sample_size,")"),
     "All" = "!is.na(SNP)",
@@ -1537,5 +1538,26 @@ find_consensus_SNPs_no_PolyFun <- function(finemap_dat,
   finemap_dat$Consensus_SNP_noPF <- newDF$Consensus_SNP
   finemap_dat$Support_noPF <- newDF$Support
   return(finemap_dat)
+}
+
+
+
+
+melt_finemapping_results <- function(finemap_dat,
+                                     verbose=T){
+  PP_cols <- grep("\\.PP$",colnames(finemap_dat), value = T)
+  CS_cols <- grep("\\.CS$",colnames(finemap_dat), value = T)
+  printer("Melting PP and CS from",length(CS_cols),"fine-mapping methods",v=verbose)
+  finemap_melt <- suppressWarnings(
+    data.table::melt.data.table(data.table::data.table(finemap_dat),
+                                measure.vars =list(PP_cols, CS_cols),
+                                variable.name = "Method",
+                                variable.factor = T,
+                                value.name = c("PP","CS"))
+  )
+  methods_key <- setNames(gsub("\\.PP","",PP_cols),
+                          unique(finemap_melt$Method))
+  finemap_melt$Method <- factor(methods_key[finemap_melt$Method], levels = unname(methods_key), ordered = T)
+  return(finemap_melt)
 }
 

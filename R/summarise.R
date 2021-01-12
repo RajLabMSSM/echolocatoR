@@ -1111,7 +1111,8 @@ super_summary_plot <- function(merged_DT,
                     dpi = dpi,
                     height=height, width=width)
   }
- return(gg_merged)
+ return(list(data=gg_peaks$data,
+             plot=gg_merged))
 }
 
 

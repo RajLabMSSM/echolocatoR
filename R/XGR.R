@@ -231,12 +231,12 @@ XGR.enrichment <- function(gr,
 #' gr.merged <- merge_celltype_specific_epigenomics()
 #' grouping_vars <- c("Study","Cell_type","Assay")
 #'
-#' enrich_res <- XGR.enrichment_bootstrap(gr=gr.merged, merged_dat=merged_dat, grouping_vars=grouping_vars,  bootstrap=F)
+#' enrich_res <- XGR.enrichment_bootstrap(gr=gr.merged, merged_dat=merged_dat, grouping_vars=grouping_vars,  bootstrap=F, snp_groups=c("Random","GWAS lead","UCS (-PolyFun)","UCS","Consensus (-PolyFun)","Consensus"), nThread=12, save_path=file.path(root,"XGR/celltypespecific_epigenomics.SNP_groups.csv.gz"))
 #'
 #' enrich_boot <- XGR.enrichment_bootstrap(gr=gr.merged, merged_dat=merged_dat, grouping_vars=grouping_vars,  bootstrap=T, fg_sample_size=NULL, bg_sample_size=100, iterations=100)
 XGR.enrichment_bootstrap <- function(gr,
                                      merged_dat,
-                                     snp_groups=c("Random","GWAS lead","UCS","Consensus (-POLYFUN)","Consensus"),
+                                     snp_groups=c("Random","GWAS lead","UCS (-PolyFun)","UCS","Consensus (-PolyFun)","Consensus"),
                                      background_filter=NULL,
                                      grouping_vars=c("Study","Assay","Cell_type"),
                                      iterations=1000,
@@ -249,7 +249,7 @@ XGR.enrichment_bootstrap <- function(gr,
   if(bootstrap){
     printer("XGR:: Initiating bootstrap enrichment procedure",v=verbose)
   } else {
-    iterations <-1; bg_sample_size <- fg_sample_size <- NULL
+    iterations <-1; bg_sample_size <- NULL; fg_sample_size <- NULL
   }
   sampling_df <- merged_dat;
 
@@ -279,13 +279,13 @@ XGR.enrichment_bootstrap <- function(gr,
                        bg_sample_size = bg_sample_size)
       })
     }, mc.cores = nThread) %>% data.table::rbindlist(fill=T)
-    RES$SNP_Group <- snp_group
+    RES$SNP_group <- snp_group
     return(RES)
   }) %>% data.table::rbindlist(fill=T)
 
   # Post-process
   RES_GROUPS <- RES_GROUPS %>%
-    dplyr::mutate( SNP_Group=factor(SNP_Group, levels=unique(SNP_Group), ordered = T),
+    dplyr::mutate( SNP_group=factor(SNP_group, levels=unique(SNP_group), ordered = T),
                    FDR=stats::p.adjust(p = pvalue, method = "fdr"))
   if(save_path!=F){
     printer("XGR:: Saving enrichment results ==>",save_path,v=verbose)
@@ -304,13 +304,14 @@ XGR.enrichment_bootstrap <- function(gr,
 #' @examples
 #' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 #' ### merged enrichment results
+#' enrich_res <- data.table::fread( file.path(root,"XGR/celltypespecific_epigenomics.SNP_groups.csv.gz"))
 #' enrich_res <- data.table::fread( file.path(root,"XGR/celltypespecific_epigenomics.snp_groups.csv.gz"))
 #' enrich_boot <- data.table::fread(file.path(root,"XGR/celltypespecific_epigenomics.snp_groups.permute.csv.gz"))
 #' enrich_assay <- data.table::fread(file.path(root,"XGR/celltypespecific_epigenomics.snp_groups.assay.csv.gz"))
 #'
 #' # Merged volcano plot
-#' gp <- XGR.enrichment_plot(enrich_res=subset(enrich_res , !Assay %in%  c("HiChIP_FitHiChIP","PLAC")) , title="Enrichment: Cell-type-specific epigenomics", plot_type="point",save_plot=file.path(root,"XGR/celltypespecific_epigenomics.enrich_volcano.png"), height=6, width=8, shape_var="Assay", line_formula="y~x")
-#'
+#' enrich_res <- subset(enrich_res, SNP_Group != "Consensus (-PolyFun)") %>% dplyr::rename(SNP_group=SNP_Group)
+#' gp <- XGR.enrichment_plot(enrich_res=subset(enrich_res , !Assay %in%  c("HiChIP_FitHiChIP","PLAC")) , title="Enrichment: Cell-type-specific epigenomics", plot_type="point",save_plot=file.path(root,"XGR/celltypespecific_epigenomics.enrich_volcano.png"), height=6, width=8, shape_var="Assay")
 #' ## Merged bar plot
 #' gp <- XGR.enrichment_plot(enrich_res=enrich_res,  plot_type="bar", facet_formula=".~Assay",FDR_thresh=.05)
 #'
@@ -321,7 +322,9 @@ XGR.enrichment_plot <- function(enrich_res,
                                 title=NULL,
                                 subtitle=NULL,
                                 facet_formula=NULL,
-                                line_formula = "y ~ exp(x)",
+                                line_formula = "y ~ x",
+                                line_method="lm",
+                                line_span=1,
                                 FDR_thresh=1,
                                 plot_type="bar",
                                 shape_var="Cell_type",
@@ -331,19 +334,15 @@ XGR.enrichment_plot <- function(enrich_res,
                                 height=5,
                                 width=5){
   enrich_res <- dplyr::mutate(enrich_res,
-                              SNP_Group=factor(SNP_Group, levels = unique(SNP_Group), ordered = T),
+                              SNP_group=factor(SNP_group, levels = unique(SNP_group), ordered = T),
                               ## Make Random size smaller (otherwise will make everything else relatively tiny)
-                              nOverlap=ifelse(SNP_Group=="Random",10,nOverlap)
+                              nOverlap=ifelse(SNP_group=="Random",10,nOverlap)
                               )
  sum(enrich_res$fc==-Inf)
-  colorDict <- c("Random"="grey",
-                 "GWAS lead"="red",
-                 "UCS"="green2",
-                 "Consensus (-POLYFUN)"="goldenrod4",
-                 "Consensus"="goldenrod2")
+  colorDict <- snp_group_colorDict()
   if(plot_type=="bar"){
     gp <- ggplot(data=subset(enrich_res, FDR<=FDR_thresh),
-                 aes(x=SNP_Group, y= fc, fill=SNP_Group)) +
+                 aes(x=SNP_group, y= fc, fill=SNP_group)) +
       # geom_col(stat="identity", alpha=.5, show.legend = F) +
       geom_boxplot()+
       geom_jitter(height=0, width = 0, alpha=.1, show.legend = F) +
@@ -362,15 +361,15 @@ XGR.enrichment_plot <- function(enrich_res,
 
   if(plot_type=="point"){
     gp <- ggplot(data=subset(enrich_res, FDR<=FDR_thresh),
-                 aes(x= log1p(fc), y= -log10(FDR),
-                                      size=nOverlap, color=SNP_Group, group=SNP_Group,
-                                      fill=SNP_Group,
+                 aes(x= log1p(fc), y= -log10(pvalue),
+                                      size=nOverlap, color=SNP_group, group=SNP_group,
+                                      fill=SNP_group,
                                       shape=eval(parse(text=shape_var)))
                  ) +
-      geom_smooth (alpha=0.1, size=0, span=1,
-                   method = "lm", formula = line_formula) +
-      stat_smooth (geom="line", alpha=0.3, size=1, #span=0.5,
-                   method = "lm", formula = line_formula) +
+      geom_smooth (alpha=0.1, size=0, span=line_span,
+                   method = line_method, formula = line_formula) +
+      stat_smooth (geom="line", alpha=0.3, size=1, span=line_span,
+                   method = line_method, formula = line_formula) +
 
       geom_point(alpha=.5) +
       scale_color_manual(values = colorDict) +

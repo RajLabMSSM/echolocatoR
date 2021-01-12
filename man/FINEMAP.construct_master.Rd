@@ -7,7 +7,13 @@
 \url{http://www.christianbenner.com}
 }
 \usage{
-FINEMAP.construct_master(locus_dir, n_samples, dataset_number = 1, file.k = NA)
+FINEMAP.construct_master(
+  locus_dir,
+  n_samples,
+  dataset_number = 1,
+  file.k = NA,
+  verbose = T
+)
 }
 \description{
 Creates and saves the master file

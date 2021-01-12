@@ -1015,7 +1015,7 @@ IMPACT.plot_impact_score <- function(annot_melt,
   finemap_cols <- grep("*.PP$|*.CS$",colnames(annot_melt),value=T)
   annot_snp <- subset(annot_melt, select=c("SNP","CHR","POS","Mb","P","Consensus_SNP","leadSNP","Support",finemap_cols)) %>% unique()
   annot_snp <- dplyr::mutate(annot_snp, SNP.Group = ifelse(Consensus_SNP,"Consensus SNP",ifelse(leadSNP,"Lead GWAS SNP",ifelse(Support>0,"Credible Set SNP",NA))))
-  labelSNPs <- construct_SNPs_labels(subset_DT = annot_snp, lead=T, method=T, consensus=T)
+  labelSNPs <- construct_SNPs_labels(subset_DT = annot_snp, labels_subset = c("Lead","UCS","Consensus"))
   leader_SNP <- subset(labelSNPs, type=="Lead SNP")
   CS_set <- subset(labelSNPs, type=="Credible Set")
   # ggb <- GGBIO.plot(finemap_dat = annot_snp, LD_matrix = LD_matrix,
@@ -1181,9 +1181,9 @@ IMPACT.plot_impact_score_compare <- function(loci=c("CD19","TRIM40","NUCKS1","LR
   #          color=guide_legend(override.aes = list(size=1), ncol=4),
   #          size=.5)
   add_snp_labels <- function(p, annot_sub, y_var="-log10(P)"){
-    label_tags <- construct_SNPs_labels(subset_DT = annot_sub, lead=T, method=T, consensus=T,
+    label_tags <- construct_SNPs_labels(subset_DT = annot_sub, labels_subset = c("Lead","UCS","Consensus"),
                                         remove_duplicates = F)
-    label_tags_unique <- construct_SNPs_labels(subset_DT = annot_sub, lead=T, method=T, consensus=T,
+    label_tags_unique <- construct_SNPs_labels(subset_DT = annot_sub, labels_subset = c("Lead","UCS","Consensus"),
                                         remove_duplicates = T)
     p <- p +
       # Circles

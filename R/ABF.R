@@ -53,7 +53,9 @@ ABF <- function(subset_DT,
     if(!is.null(ss_df)) dataset$N <-  max(ss_df$N, na.rm = T);
   } else {dataset$N <- sample_size}
 
+  #### Run ABF ####
   finemap_dat <- coloc::finemap.abf(dataset = dataset)
+
   finemap_dat <- subset(finemap_dat, snp!="null") %>%
     dplyr::rename(SNP=snp, PP=SNP.PP) %>%
     dplyr::arrange(desc(PP))

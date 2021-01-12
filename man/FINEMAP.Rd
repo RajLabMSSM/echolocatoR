@@ -17,8 +17,9 @@ FINEMAP(
   model = "cond",
   remove_tmps = T,
   credset_thresh = 0.95,
-  finemap_version = "1.3.1",
-  server = F
+  finemap_version = "1.4",
+  server = F,
+  verbose = T
 )
 }
 \description{
@@ -31,10 +32,11 @@ a higher posterior model probability.
 data("locus_dir"); data("BST1"); data("BST1_LD_matrix");
 finemap_DT <- BST1
 dir.create(file.path(locus_dir,"FINEMAP"), showWarnings = FALSE, recursive = TRUE)
-out <- subset_common_snps(LD_matrix=LD_matrix, finemap_DT=finemap_DT)
+out <- subset_common_snps(BST1_LD_matrix, finemap_DT)
 LD_matrix <- out$LD
-finemap_DT <- out$DT
-finemap_DT <- FINEMAP(subset_DT=finemap_DT, locus_dir=locus_dir, LD_matrix=LD_matrix)
+subset_DT <- out$DT
+subset_DT $N<- subset_DT$N_cases+subset_DT$N_controls
+finemap_DT <- FINEMAP(subset_DT=subset_DT, locus_dir=locus_dir, LD_matrix=LD_matrix, n_samples=)
 }
 \seealso{
 Other FINEMAP: 

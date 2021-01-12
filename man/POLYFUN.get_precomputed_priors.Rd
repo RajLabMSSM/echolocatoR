@@ -11,7 +11,7 @@ POLYFUN.get_precomputed_priors(
   polyfun = NULL,
   locus_dir,
   finemap_dat = NULL,
-  force_new_priors = F,
+  force_new_priors = T,
   remove_tmps = F,
   conda_env = "echoR"
 )

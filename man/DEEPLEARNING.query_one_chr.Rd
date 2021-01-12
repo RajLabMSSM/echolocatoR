@@ -20,6 +20,10 @@ DEEPLEARNING.query_one_chr(
 Query deep learning annotations and LDscores, and
 then merge with \code{subset_DT} by \emph{SNP}.
 }
+\examples{
+data("BST1")
+annot.dat <- DEEPLEARNING.query_one_chr(subset_DT=BST1, tissue="NTS", model="Basenji", type="annot")
+}
 \seealso{
 Other DEEPLEARNING: 
 \code{\link{DEEPLEARNING.query_multi_chr}()},

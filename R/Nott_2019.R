@@ -13,7 +13,6 @@
 
 
 
-
 #' Plot brain cell-specific epigenomic data
 #'
 #' Brain cell-specific epigenomic data from Nott et al. (2019).
@@ -33,10 +32,16 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
                                             full_data=T,
                                             return_assay_track=F,
                                             binwidth=200,
+                                            density_adjust=.2,
                                             plot.zoom="1x",
-                                            geom="histogram",
-                                            plot_formula="Assay + Cell_type ~.",
+                                            strip.text.y.angle=90,
+                                            xtext=T,
+                                            geom="density",
+                                            plot_formula="Cell_type ~.",
+                                            fill_var="Assay",
                                             bigwig_dir=NULL,
+                                            genomic_units="Mb",
+                                            as_ggplot=T,
                                             nThread=4,
                                             save_annot=F,
                                             verbose=T){
@@ -44,7 +49,8 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
   # library(BiocGenerics)
   # library(GenomicRanges)
   # library(ggbio)
-  # show_plot=T;save_plot=T;full_data=T;return_assay_track=F;binwidth=2500; geom="histogram";plot_formula="Assay + Cell_type ~.";show_regulatory_rects=T;  bigwig_dir=NULL; verbose=T; nThread=4; finemap_dat=BST1; plot.zoom=500000;
+  # show_plot=T;save_plot=T;full_data=T;return_assay_track=F;binwidth=2500; geom="histogram"; plot_formula="Cell_type ~."; show_regulatory_rects=T;  bigwig_dir=NULL; verbose=T; nThread=4;
+  # finemap_dat=echolocatoR::LRRK2; plot.zoom=500000; fill_var="Assay"; density_adjust=.2; strip.text.y.angle=0;
 
   # UCSC Tracks
   import.bw.filt <- function(bw.file,
@@ -106,8 +112,9 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
   bw.gr$Assay <- gsub("atac","ATAC",bw.gr$Assay)
   bw.gr$Cell_type <- gsub("oligodendrocytes","oligo",bw.gr$Cell_type)
 
-  xlims <- get_window_limits(finemap_dat = finemap_dat,
-                             plot.zoom = plot.zoom)
+  xlims <- PLOT.get_window_limits(finemap_dat = finemap_dat,
+                                   plot.zoom = plot.zoom,
+                                   genomic_units = "POS")
   bw.gr <- subset(bw.gr,
                   GenomicRanges::seqnames(bw.gr)==paste0("chr",gsub("chr","",finemap_dat$CHR[1])) &
                   GenomicRanges::start(bw.gr)>=xlims[1] &
@@ -115,8 +122,7 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
   # merge into a single granges object
   # gr.snp <- Reduce(function(x, y) GenomicRanges::merge(x, y, all.x=T),
   #                  append(bw.grlist, gr.dat))
-
-  # GenomicRanges::findOverlaps(query = subset(gr.dat, Support>1),
+  # GenomicRanges::findOverlaps(query = gr.dat,
   #                             subject = bw.gr)
 
   if(save_annot){
@@ -131,45 +137,71 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
                               dat2 = PEAKS)
   GenomicRanges::mcols(gr.peaks)[,c("chr","start","end","score")] <- NULL
   gr.peaks <- unique(gr.peaks)
-  # Make plot
-  nott_tracks <-  ggbio::autoplot(object=bw.gr,
-                                  geom=geom,
-                                  # facets= Experiment~.,
-                                  # facets=Cell_type ~ .,
-                                  # scales="free_y",
-                                  # bins=300,
-                                  binwidth=binwidth,
-                                  alpha=.7,
-                                  position="identity",
-                                  aes(fill=Cell_type), show.legend=T) +
-    xlim(xlims)
+  # Adjust line width to make sure bars aren't just all white
+  line_width <- 0#binwidth/1000 * .25
+
+  #### Density/Histogram plot ####
+  color_dict <- assay_color_dict()
+  nott_tracks <-  suppressWarnings(
+    ggbio::autoplot(object=bw.gr,
+                    geom=geom,
+                    binwidth=binwidth,
+                    alpha=.7,
+                    position="stack",
+                    adjust=density_adjust,
+                    color="white",
+                    size=line_width,
+                    aes_string(fill=fill_var), show.legend=T)
+  )
   # Pause and calculate max histo height
-  max_height <- GGBIO.get_max_histogram_height(gg=nott_tracks)
-  rect_height <- as.integer(max_height/8)
-  gr.peaks$y <- max_height - rect_height
+  max_height <- PLOT.get_max_histogram_height(gg=nott_tracks)
+  rect_height <- max_height / if(geom=="density") 8 else 10
+  gr.peaks$y <- 0 - rect_height
+  if(gsub(" ","",plot_formula)=="Cell_type~."){
+    gr.peaks$Assay <- "peaks"
+  }
   nott_tracks <- nott_tracks +
     ggbio::geom_rect(gr.peaks,
                      stat="identity",
+                     # position="stack",
                      rect.height= rect_height,
-                     aes(y=y),
-                     alpha=.7,
+                     aes_string(y="y", fill=fill_var),
+                     alpha=.25,
+                     hjust=1,
                      color="transparent") +
     facet_grid(facets = formula(plot_formula)) +
     theme_classic() +
-    theme(legend.position="right", strip.text.y = element_text(angle = 0))
+    theme(legend.position="right",
+          strip.text.y = element_text(angle = strip.text.y.angle)) +
+    scale_y_continuous(n.breaks = 3) +
+    scale_fill_manual(values = color_dict)
 
-  if(return_assay_track){ return(nott_tracks)}
+  #### Make adjustments ####
+  if(genomic_units=="Mb"){
+    printer("+ Converting label units to Mb...",v=verbose)
+    nott_tracks <- suppressMessages(
+      nott_tracks +
+        ggbio::scale_x_sequnit(unit = "Mb")
+    )
+  }
+  if(xtext==F){
+    nott_tracks <- nott_tracks +
+      theme(axis.text.x = element_blank(),
+            axis.title.x = element_blank())
+  }
+  if(return_assay_track){
+    if(as_ggplot) return(nott_tracks@ggplot) else return(nott_tracks)
+  }
 
 
-  # Fine-mapping tracks
+
+  #### (optional) Fine-mapping tracks ####
   TRACKS_list <- list(
     "GWAS"=ggbio::plotGrandLinear(obj = gr.dat, aes(y=-log10(P), color=-log10(P))),
     "Fine_mapping"=ggbio::plotGrandLinear(obj = gr.dat, aes(y=mean.PP, color=mean.PP)) +
       scale_color_viridis_c(),
     "Nott_etal_2019" = nott_tracks
   )
-
-  # gr.snp[start(gr.snp)!=Inf]
   # Fuse all tracks
   params_list <- list(title = paste0(gene," [",length(GenomicRanges::seqnames(gr.dat))," SNPs]"),
                       track.bg.color = "transparent",
@@ -195,8 +227,7 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
           strip.text = element_text(size = 9),
           panel.background = element_rect(fill = "white", colour = "black", linetype = "solid")) +
     geom_vline(xintercept = consensus.pos, color="goldenrod2", alpha=1, size=.1, linetype='solid') +
-    geom_vline(xintercept = lead.pos, color="red", alpha=1, size=.1, linetype='solid') +
-    scale_x_continuous( labels=function(x)x/1000000)
+    geom_vline(xintercept = lead.pos, color="red", alpha=1, size=.1, linetype='solid')
 
   if(show_plot){ print(trks_plus_lines) }
   if(save_plot){
@@ -207,24 +238,21 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
                    plot = trks_plus_lines, dpi=400, height = 15, width = 8,
                    bg = "transparent")
   }
-  return(trks_plus_lines)
+  if(as_ggplot) return(trks_plus_lines@ggplot) else return(trks_plus_lines)
 }
 
 
 
 
-GGBIO.get_max_histogram_height <- function(gg,
-                                           round_to=NULL,
-                                           verbose=T){
-  printer("+ GGBIO:: Calculating max histogram height",v=verbose)
-  dat <- ggplot_build(gg@ggplot)$data[[1]]
-  max_height <- max(dat$ymax)
-  if(!is.null(round_to)){
-    max_height <- DescTools::RoundTo(max_height, round_to)
-  }
-  return(max_height)
-}
 
+
+assay_color_dict <- function(){
+  color_dict <- c("ATAC"="magenta",
+                  "H3K27ac"="blue",
+                  "H3K4me3"="turquoise",
+                  "peaks"="black")
+  return(color_dict)
+}
 
 
 
@@ -348,7 +376,8 @@ NOTT_2019.get_interactome <- function(annot_sub,
 #' @source
 #' \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
 #' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
-NOTT_2019.get_interactions <- function(finemap_dat){
+NOTT_2019.get_interactions <- function(finemap_dat,
+                                       as.granges=F){
   NOTT_2019.interactome <- echolocatoR::NOTT_2019.interactome
   selected_sheets <- grep("interactome$",names(NOTT_2019.interactome), value = T)
   interactomes <- lapply(selected_sheets, function(s){
@@ -389,6 +418,10 @@ NOTT_2019.get_interactions <- function(finemap_dat){
                  "Neuronal"="neurons",
                  "Oligo"="oligo")
   interactomes.anchor$Cell_type <- cell_dict[interactomes.anchor$Cell_type]
+
+  if(as.granges){
+    interactomes.anchor <- GenomicRanges::makeGRangesFromDataFrame(interactomes.anchor, keep.extra.columns = T)
+  }
   return(interactomes.anchor)
 }
 
@@ -586,7 +619,6 @@ NOTT_2019.get_regulatory_regions <- function(as.granges=F,
     tidyr::separate(Name, into=c("Cell_type","Element"), remove=F) %>%
     dplyr::mutate(middle = as.integer( end-abs(end-start)/2),
                   Cell_type = cell_dict[Cell_type])
-
   if(as.granges){
     printer("+ Converting to GRanges.",v=verbose)
     regions_sub <- GenomicRanges::makeGRangesFromDataFrame(df = regions_sub,#dplyr::mutate(regions_sub, chr = as.numeric(gsub("chr","",chr))),
@@ -630,39 +662,49 @@ NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
                                     xlims=NULL,
                                     zoom_window=NULL,
                                     index_SNP=NULL,
+                                    genomic_units="Mb",
+                                    color_dict=c("enhancers"="springgreen2","promoters"="purple","anchors"="black"),
                                     return_consensus_overlap=T,
                                     show_arches=T,
                                     highlight_plac=F,
                                     show_regulatory_rects=T,
+                                    show_anchors=T,
+                                    strip.text.y.angle=0,
+                                    xtext=T,
                                     save_annot=F,
                                     point_size=2,
                                     height=7,
                                     width=7,
                                     dpi=300,
+                                    as_ggplot=T,
                                     nThread=4,
                                     verbose=T){
+  # finemap_dat=echolocatoR::LRRK2; print_plot=T; save_plot=T; title=NULL; index_SNP=NULL; xlims=NULL; zoom_window=NULL; return_consensus_overlap =T; nThread=1; highlight_plac=F; point_size=2;   color_dict=c("enhancers"="springgreen","promoters"="purple","anchors"="black"); genomic_units="Mb"; verbose=T; save_annot=F;
+  if(!"Mb" %in% colnames(finemap_dat)){
+    finemap_dat$Mb <- finemap_dat$POS/1000000
+  }
+  xvar <- genomic_units
   printer("NOTT_2019:: Creating PLAC-seq interactome plot",v=verbose)
-  # data("BST1"); finemap_dat=BST1; print_plot=T; save_plot=T; title=NULL; index_SNP=NULL; xlims=NULL; zoom_window=NULL; return_consensus_overlap =T; nThread=1;
   if(!"Consensus_SNP" %in% colnames(finemap_dat)){finemap_dat <- find_consensus_SNPs(finemap_dat, verbose = F)}
   marker_key <- list(PU1 = "microglia", Olig2 = "oligo",
                      NeuN = "neurons", LHX2 = "astrocytes")
   if(is.null(index_SNP)) {
-    lead.pos <- subset(finemap_dat, leadSNP)$POS
+    lead.pos <- subset(finemap_dat, leadSNP)[[xvar]]
   } else {
-    lead.pos <- subset(finemap_dat, SNP == index_SNP)$POS
+    lead.pos <- subset(finemap_dat, SNP == index_SNP)[[xvar]]
   }
-  consensus.pos <- subset(finemap_dat, Consensus_SNP == T)$POS
+  consensus.pos <- subset(finemap_dat, Consensus_SNP == T)[[xvar]]
 
   if(length(consensus.pos) > 0) {
     top.consensus.pos <- (dplyr::top_n(subset(finemap_dat, Consensus_SNP == T), n = 1, wt = mean.PP) %>%
-                            dplyr::top_n(1, wt = Effect))$POS[1]
+                            dplyr::top_n(1, wt = Effect))[[xvar]][1]
   } else {
     top.consensus.pos <- (dplyr::top_n(subset(finemap_dat, Support > 0), n = 1, wt = mean.PP) %>%
-                            dplyr::top_n(1, wt = Effect))$POS[1]
+                            dplyr::top_n(1, wt = Effect))[[xvar]][1]
   }
   if (is.null(xlims)) {
-    xlims = c(min(finemap_dat$POS, na.rm = T),
-              max(finemap_dat$POS, na.rm = T))
+    xlims = c(min(finemap_dat[[xvar]], na.rm = T),
+              max(finemap_dat[[xvar]], na.rm = T))
   }
   if (!is.null(zoom_window)) {
     xlims = c(lead.pos - as.integer(zoom_window/2), lead.pos +
@@ -671,21 +713,28 @@ NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
   annot_sub <- NOTT_2019.get_promoter_interactome_data(finemap_dat = finemap_dat)
   promoter_celltypes <- NOTT_2019.get_promoter_celltypes(annot_sub = annot_sub,
                                                          marker_key = marker_key)
-  # get PLAC-seq junctions
+  #### get PLAC-seq junctions ####
   interact.DT <- NOTT_2019.get_interactome(annot_sub = annot_sub,
                                            top.consensus.pos = top.consensus.pos,
                                            marker_key = marker_key)
-
-  # get promoter/enhancers
+  #### get promoter/enhancers ####
   regions <- NOTT_2019.get_regulatory_regions(nThread = nThread,
                                               as.granges = T,
                                               verbose = verbose)
-  # has_chr <- grepl("chr",unique(finemap_dat$CHR)[1])
+  #### regions needs to be in ####
   regions <- subset(regions,
                     as.character(GenomicRanges::seqnames(regions)) == gsub("chr","",unique(finemap_dat$CHR)[1]) &
                       GenomicRanges::start(regions) >=
-                      min(finemap_dat$POS, na.rm = T) & GenomicRanges::end(regions) <=
-                      max(finemap_dat$POS, na.rm = T))
+                      min(finemap_dat[["POS"]], na.rm = T) & GenomicRanges::end(regions) <=
+                      max(finemap_dat[["POS"]], na.rm = T))
+  #### Plot PLAC-seq anchors ####
+  if(show_anchors){
+    interact.anchors <- NOTT_2019.get_interactions(finemap_dat = finemap_dat,
+                                                   as.granges = T)
+    interact.anchors$Element <- "anchors"
+    regions <- c(regions, interact.anchors)
+  }
+
 
   if(highlight_plac){
     # JH - which PLAC-Seq junctions overlap (5kb) the consensus SNPs?
@@ -707,8 +756,8 @@ NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
     interact.DT$consensus_snp_overlap <- FALSE
     interact.DT$consensus_snp_overlap[all_overlaps] <- TRUE
   }
-  # save annotation if you want
-  if (save_annot) {
+  #### save annotations ####
+  if(save_annot) {
     annot_file <- annotation_file_name(locus_dir = locus_dir,
                                        lib_name = "Nott_2019.interactome")
     saveRDS(interact.DT, annot_file)
@@ -717,15 +766,9 @@ NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
     saveRDS(regions, annot_file)
   }
 
-  # make the ggplots
-  GWAS_trk <- ggplot(data = finemap_dat, aes(x = POS, y = -log10(P), color = -log10(P))) +
-    geom_point(alpha=.5, shape=16, size=point_size)
-
-  FM_trk <- ggplot(data = finemap_dat, aes(x = POS, y = mean.PP, color = mean.PP)) +
-    geom_point(alpha=.5, shape=16, size=point_size) +
-    scale_color_viridis_c(breaks = c(0,0.5, 1), limits = c(0, 1)) + ylim(0, 1)
-
   max.height=10;
+  interact_y=(1.25*3) # Start after rects
+
 
   if(highlight_plac){
     NOTT.interact_trk <-
@@ -736,41 +779,79 @@ NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
   }else{
     NOTT.interact_trk <-
       ggbio::ggbio() +
-      ggbio::geom_arch(data = interact.DT, alpha = 0.6, color = "gray60",
-                       max.height = max.height, aes(x = Start, xend = End))
+      ggbio::geom_arch(data = interact.DT, alpha = 0.25, color = "black",
+                       max.height = max.height,
+                       aes(x = Start, xend = End, y=interact_y)) +
+      labs(y=NULL)
   }
 
-  NOTT.interact_trk <- NOTT.interact_trk +
-    facet_grid(facets = Cell_type ~ .) +
-    scale_y_reverse() + theme_classic() +
-    theme(legend.key.width = unit(1.5, "line"),
-          legend.key.height = unit(1.5, "line"),
-          axis.text.y = element_blank())
+  NOTT.interact_trk <- suppressMessages(
+    NOTT.interact_trk +
+      facet_grid(facets = Cell_type ~ .) +
+      scale_y_reverse() +
+      theme_classic() +
+      theme(legend.key.width = unit(1.5, "line"),
+            legend.key.height = unit(1.5, "line"),
+            axis.text.y = element_blank(),
+            strip.text.y = element_text(angle = strip.text.y.angle)
+      )
+  )
+
+
 
   # Show enhancers/promoters as rectangles
   if (show_regulatory_rects) {
     printer("++ NOTT_2019:: Adding enhancer/promoter rectangles",v=verbose)
-    rect_height <- as.integer(max.height/8)
-    regions$y <- rect_height
-    NOTT.interact_trk <- NOTT.interact_trk +
+    rect_height <- max.height/10
+    # regions$y <- ifelse(regions$Element=="promoters",  0+(rect_height*2), 0)
+    regions$y <- ifelse(regions$Element=="promoters", 0+(rect_height*2),
+                        ifelse(regions$Element=="enhancers", 0,
+                               interact_y+rect_height))
+    regions$Element <- factor(regions$Element, levels=c("enhancers","promoters","anchors"), ordered = T)
+
+    NOTT.interact_trk <- suppressMessages(
+      NOTT.interact_trk +
       ggbio::geom_rect(data = regions,
                        stat="identity",
                        rect.height= rect_height,
                        aes(y=y, fill = Element),
                        alpha = .7, inherit.aes = F,
-                       color = "transparent") +
-      scale_fill_manual(values = c("turquoise2", "purple2")) +
-      geom_point(data = data.frame(regions),
-                 aes(x = middle, y = 0, color = Element), size = 0.5,
-                 inherit.aes = F, alpha = 0.7) +
-      scale_color_manual(values = c("turquoise",
-                                    "purple")) + geom_hline(yintercept = Inf, alpha = 0.2,
-                                                            show.legend = F) + scale_y_reverse()
+                       color="transparent",
+                       hjust=0) +
+      scale_fill_manual(values = color_dict) +
+      # geom_point(data = data.frame(regions),
+      #            aes(x = middle, y = 0, color = Element), size = 0.5,
+      #            inherit.aes = F, alpha = 0.7) +
+      scale_color_manual(values = color_dict) +
+      geom_hline(yintercept = Inf, alpha = 0.2,
+                 show.legend = F) +
+      scale_y_reverse()
+    )
+
+    if(genomic_units=="Mb"){
+      printer("+ Converting genomic units to Mb...",v=verbose)
+      NOTT.interact_trk <- NOTT.interact_trk +
+        ggbio::scale_x_sequnit(unit = "Mb")
+    }
   }
+  if(xtext==F){
+    NOTT.interact_trk <- NOTT.interact_trk +
+      theme(axis.text.x = element_blank(),
+            axis.title.x = element_blank())
+  }
+
   if (return_interaction_track) {
     printer("++ Nott sn-epigenomics:: Returning PLAC-seq track.")
-    return(NOTT.interact_trk)
+    if(as_ggplot)return(NOTT.interact_trk@ggplot) else return(NOTT.interact_trk)
   } else {
+    # make the ggplots
+    GWAS_trk <- ggplot(data = finemap_dat, aes(x = POS, y = -log10(P), color = -log10(P))) +
+      geom_point(alpha=.5, shape=16, size=point_size)
+
+    FM_trk <- ggplot(data = finemap_dat, aes(x = POS, y = mean.PP, color = mean.PP)) +
+      geom_point(alpha=.5, shape=16, size=point_size) +
+      scale_color_viridis_c(breaks = c(0,0.5, 1), limits = c(0, 1)) + ylim(0, 1)
+
     TRACKS_list <- list(GWAS = GWAS_trk + theme_classic(),
                         `Fine-mapping` = FM_trk + theme_classic(), `Nott (2019)\nInteractome` = NOTT.interact_trk)
     params_list <- list(title = paste0(title), track.bg.color = "transparent",
@@ -794,7 +875,8 @@ NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
       ggbio::ggsave(filename = plot.path, plot = trks_plus_lines,
              height = height, width = width, dpi = dpi, bg = "transparent")
     }
-    return(trks_plus_lines)
+    # Return
+    if(as_ggplot)return(trks_plus_lines@ggplot) else return(trks_plus_lines)
   }
 }
 

@@ -417,6 +417,7 @@ finemap_pipeline <- function(locus,
                              conda_env="echoR",
                              nThread=4,
                              verbose=T){
+
   #### Create paths ####
   subset_path <- get_subset_path(results_dir = results_dir,
                                  dataset_type = dataset_type,
@@ -540,10 +541,10 @@ finemap_pipeline <- function(locus,
                                  conda_env = conda_env,
                                  verbose = verbose)
   #### Visualize ####
-  # if(!is.null(plot.types))
+  locus_plots <- list()
   if("simple" %in% plot.types){
     try({
-      mf_plot <- GGBIO.plot(finemap_dat = finemap_dat,
+      TRKS_simple <- PLOT.locus(finemap_dat = finemap_dat,
                             LD_matrix = LD_matrix,
                             LD_reference = LD_reference,
                             locus_dir = locus_dir,
@@ -553,20 +554,21 @@ finemap_pipeline <- function(locus,
                             consensus_threshold = consensus_threshold,
                             QTL_prefixes = QTL_prefixes,
                             Nott_epigenome = F,
+                            plot_full_window = F,
                             mean.PP = T,
                             XGR_libnames = NULL,
-                            max_transcripts = 1,
                             plot.zoom = plot.zoom,
                             save_plot = T,
                             show_plot = T,
                             nThread = nThread,
                             verbose = verbose)
+      locus_plots <- append(locus_plots, c("simple"=TRKS_simple))
     })
   };
 
   if("fancy" %in% plot.types){
     try({
-      trx <- GGBIO.plot(finemap_dat = finemap_dat,
+      TRKS_fancy <- PLOT.locus(finemap_dat = finemap_dat,
                         LD_matrix = LD_matrix,
                         LD_reference = LD_reference,
                         locus_dir = locus_dir,
@@ -575,7 +577,6 @@ finemap_pipeline <- function(locus,
                         PP_threshold = PP_threshold,
                         consensus_threshold = consensus_threshold,
                         QTL_prefixes = QTL_prefixes,
-                        max_transcripts = 1,
                         plot.zoom = plot.zoom,
                         save_plot = T,
                         show_plot = T,
@@ -591,17 +592,17 @@ finemap_pipeline <- function(locus,
                         Nott_bigwig_dir = plot.Nott_bigwig_dir,
                         nThread = nThread,
                         verbose = verbose)
+      locus_plots <- append(locus_plots, c("fancy"=TRKS_fancy))
     })
   };
 
   # Plot LD
-  if(plot_LD){
-    try({
-      LD.plot_LD(LD_matrix=LD_matrix,
-                 subset_DT=subset_DT,
-                 span=10)
+  ld_plot <- if(plot_LD){
+    try({LD.plot_LD(LD_matrix=LD_matrix,
+                            subset_DT=finemap_dat,
+                            span=10)
     })
-  };
+  } else {NULL};
 
   # Cleanup:
   if(remove_tmps){
@@ -617,7 +618,13 @@ finemap_pipeline <- function(locus,
                              "SNPs.txt") )
     out <- suppressWarnings(file.remove(tmp_files, roadmap_tbi))
   }
-  return(finemap_dat)
+  return(list(finemap_dat=finemap_dat,
+              locus_plot=locus_plots,
+              LD_matrix=LD_matrix,
+              LD_plot=ld_plot,
+              locus_dir=locus_dir,
+              arguments=as.list(match.call(expand.dots=F))
+              ))
 }
 
 
@@ -716,6 +723,7 @@ finemap_loci <- function(loci,
                          conda_env="echoR",
                          nThread=4,
                          verbose=T){
+  CONDA.activate_env(conda_env = conda_env)
   data.table::setDTthreads(threads = nThread);
   conditioned_snps <- snps_to_condition(conditioned_snps, top_SNPs, loci);
 

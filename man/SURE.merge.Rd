@@ -10,13 +10,16 @@
 \href{https://sure.nki.nl}{SNP-SuRE data browse}
 }
 \usage{
-SURE.merge(merged_DT, sure)
+SURE.merge(merged_dat, sure, save_path = F, verbose = T)
 }
 \description{
 Merge with fine-mapping and \emph{SuRE} results
 }
 \examples{
 sure <- data.table::fread("/sc/arion/projects/pd-omics/data/MPRA/SURE/SuRE_SNP_table_LP190708.txt.gz", nThread=4)
+merged_dat <- merge_finemapping_results("Data/GWAS/Nalls23andMe_2019",LD_reference = "UKB", minimum_support = 0)
+
+sure_DT <- SURE.merge(merged_dat=merged_dat, sure=sure, save_path="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/SURE/Nalls23andMe_2019.SURE.csv.gz")
 }
 \seealso{
 Other SURE: 

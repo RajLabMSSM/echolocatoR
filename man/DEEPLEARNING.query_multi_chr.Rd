@@ -21,6 +21,10 @@ Query deep learning annotations and LDscores, and
 then merge with \code{subset_DT} by \emph{SNP}.
  Repeat for each locus,
 }
+\examples{
+data("merged_DT")
+ANNOT.DAT <- DEEPLEARNING.query_multi_chr(merged_dat=merged_DT, tissue="NTS", model="Basenji", type="annot")
+}
 \seealso{
 Other DEEPLEARNING: 
 \code{\link{DEEPLEARNING.query_one_chr}()},

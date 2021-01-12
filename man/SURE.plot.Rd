@@ -12,7 +12,7 @@
 \usage{
 SURE.plot(
   sure.melt,
-  snp_groups = c("GWAS lead", "UCS", "Consensus (-POLYFUN)", "Consensus"),
+  snp_groups = c("GWAS lead", "UCS", "Consensus"),
   comparisons_filter = function(x) {     if ("Consensus" \%in\% x)          return(x) },
   title = "SuRE MPRA",
   xlabel = "SNP Group",
@@ -31,6 +31,7 @@ Plot \emph{SuRE} results across SNP groups
 }
 \examples{
 sure.melt <- data.table::fread("/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/SURE/Nalls23andMe_2019.SURE.snp_groups.mean.csv.gz")
+pb <- SURE.plot(sure.melt=sure.melt)
 }
 \seealso{
 Other SURE: 

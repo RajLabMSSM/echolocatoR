@@ -67,10 +67,10 @@ MACS2.call_peaks <- function(bedGraph.paths,
                              broad_peaks=F,
                              out.dir=NULL){
   # Activate conda env
-  # reticulate::conda_install(envname = "echolocatoR",
+  # reticulate::conda_install(envname = "echoR",
   #                           conda =  "/opt/anaconda3/bin/conda",
   #                           packages = c("MACS2"))
-  # reticulate::use_condaenv(condaenv = "echolocatoR",
+  # reticulate::use_condaenv(condaenv = "echoR",
   #                          conda =  "/opt/anaconda3/bin/conda")
 
   # Set up output dir

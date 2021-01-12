@@ -7,7 +7,12 @@
 \url{http://www.christianbenner.com}
 }
 \usage{
-FINEMAP.find_executable(FINEMAP_path = NULL, OS = NULL)
+FINEMAP.find_executable(
+  FINEMAP_path = NULL,
+  OS = NULL,
+  version = "1.4",
+  verbose = T
+)
 }
 \description{
 Retrieve location of \code{FINEMAP} executable

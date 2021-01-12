@@ -11,7 +11,7 @@
 #' then merge with \code{subset_DT} by \emph{SNP}.
 #'
 #' @family DEEPLEARNING
-#' @example
+#' @examples
 #' data("BST1")
 #' annot.dat <- DEEPLEARNING.query_one_chr(subset_DT=BST1, tissue="NTS", model="Basenji", type="annot")
 DEEPLEARNING.query_one_chr <- function(subset_DT,
@@ -78,7 +78,7 @@ DEEPLEARNING.query_one_chr <- function(subset_DT,
 #'  Repeat for each locus,
 #'
 #' @family DEEPLEARNING
-#' @example
+#' @examples
 #' data("merged_DT")
 #' ANNOT.DAT <- DEEPLEARNING.query_multi_chr(merged_dat=merged_DT, tissue="NTS", model="Basenji", type="annot")
 DEEPLEARNING.query_multi_chr <- function(merged_dat,
@@ -112,7 +112,7 @@ DEEPLEARNING.query_multi_chr <- function(merged_dat,
 #' Iteratively collect deep learning annotations
 #'
 #' @family DEEPLEARNING
-#' @example
+#' @examples
 #' root = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 #' merged_dat <- merge_finemapping_results(dataset = "Data/GWAS/Nalls23andMe_2019", LD_reference = "UKB", minimum_support = 0)
 #' merged_dat <- find_consensus_SNPs_no_PolyFun(merged_dat)

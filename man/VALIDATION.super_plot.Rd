@@ -9,6 +9,7 @@ VALIDATION.super_plot(
     root = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide",
   height = 10,
   width = 12,
+  layout = "horiz",
   show_plot = T,
   save_plot = F
 )
@@ -22,8 +23,9 @@ plt.ALL <- VALIDATION.super_plot(root="/sc/arion/projects/pd-omics/brian/Fine_Ma
 \seealso{
 Other VALIDATION: 
 \code{\link{VALIDATION.bootstrap_multimetric}()},
+\code{\link{VALIDATION.bootstrap_plot}()},
 \code{\link{VALIDATION.bootstrap}()},
-\code{\link{VALIDATION.compare_distributions}()},
-\code{\link{VALIDATION.permute_plot}()}
+\code{\link{VALIDATION.compare_bootstrap_distributions}()},
+\code{\link{VALIDATION.permute}()}
 }
 \concept{VALIDATION}

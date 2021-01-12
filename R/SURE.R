@@ -177,7 +177,7 @@ SURE.plot <- function(sure.melt,
                               FUN = comparisons_filter,
                               simplify = F) %>% purrr::compact()
   method="wilcox.test"
-  pb <-  ggplot(data = plot_dat, aes(x=SNP_group, y=-log1p(value), fill=SNP_group)) +
+  pb <-  ggplot(data = plot_dat, aes(x=SNP_group, y=-log1p(p), fill=SNP_group)) +
     geom_jitter(alpha=.1,width = .25, show.legend = F, shape=16, height=0) +
     geom_violin(alpha=.6, show.legend = F) +
     geom_boxplot(alpha=.6, color="black", show.legend = F) +
