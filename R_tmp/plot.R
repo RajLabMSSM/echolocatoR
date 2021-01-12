@@ -62,12 +62,6 @@ construct_SNPs_labels <- function(subset_DT,
 }
 
 
-
-
-
-
-
-
 # # cojo_DT = data.table::fread(file.path("Data/GWAS/Nalls23andMe_2019/LRRK2/COJO/COJO_results.txt"), sep="\t")
 #
 # # SNP_list = c("rs76904798","rs34637584","rs117073808")
