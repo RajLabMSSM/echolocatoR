@@ -19,8 +19,7 @@ downloader <- function(input_url,
                        check_certificates=F,
                        verbose=T){
   if(download_method=="axel"){
-    axel_out <- system("axel -h",intern = T)[1]
-    axel_avail <- startsWith(axel_out,"Usage: axel [options]") | startsWith(axel_out,"Axel")
+    axel_avail <- length(system("which axel",intern = T))!=0
     if(axel_avail){
       out_file <- axel(input_url=input_url,
                        output_path=output_path,
@@ -37,8 +36,7 @@ downloader <- function(input_url,
 
   }
   if(download_method=="wget"){
-    wget_out <- system("wget -h",intern = T)[1]
-    wget_avail <- startsWith(tolower(wget_out),"gnu wget")
+    wget_avail <- length(system("which wget",intern = T))!=0
     if(wget_avail){
       out_file <- wget(input_url,
                        output_path,

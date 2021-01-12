@@ -116,7 +116,7 @@ LD.UKBiobank <- function(subset_DT=NULL,
     RDS_path <- LD.save_LD_matrix(LD_matrix=LD_matrix,
                                   subset_DT=subset_DT,
                                   locus_dir=locus_dir,
-                                  LD_reference=LD_reference,
+                                  LD_reference="UKB",
                                   verbose=verbose)
     if(remove_tmps){
       printer("+ Removing .gz/.npz files.")
