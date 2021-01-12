@@ -26,19 +26,6 @@ MOTIFBREAKR(
   force_new = F
 )
 }
-\arguments{
-\item{pwmList}{An object of class \code{MotifList} containing the motifs that
-you wish to interrogate}
-
-\item{threshold}{Numeric; the maximum p-value for a match to be called or a minimum score threshold}
-
-\item{show.neutral}{Logical; include neutral changes in the output}
-
-\item{method}{Character; one of \code{default}, \code{log}, \code{ic}, or \code{notrans}; see
-details.}
-
-\item{verbose}{Logical; if running serially, show verbose messages}
-}
 \value{
 motifbreakr results
 }

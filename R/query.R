@@ -203,6 +203,7 @@ detect_genes <- function(loci,
 #' @keywords internal
 extract_SNP_subset <- function(locus=NULL,
                                locus_dir,
+                               results_dir=NULL,
                                fullSS_path,
                                fullSS_genome_build="hg19",
                                subset_path,
@@ -262,7 +263,7 @@ extract_SNP_subset <- function(locus=NULL,
     printer("+ Extracting relevant variants from fullSS...", v=verbose)
     start_query <- Sys.time()
     # Function selects different methods of querying your SNPs
-    query_handler(locus=locus,
+    query_handler(locus_dir=locus_dir,
                   fullSS_path=fullSS_path,
                   subset_path=subset_path,
                   top_SNPs=top_SNPs,
@@ -488,8 +489,8 @@ query_fullSS <- function(fullSS_path,
 #' @inheritParams finemap_pipeline
 #' @inheritParams finemap_loci
 #' @keywords internal
-query_handler <- function(locus,
-                          fullSS_path,
+query_handler <- function(fullSS_path,
+                          locus_dir=NULL,
                           top_SNPs=NULL,
                           subset_path,
                           min_POS=NA,
@@ -505,6 +506,7 @@ query_handler <- function(locus,
                           conda_env="echoR",
                           verbose=T){
   printer("+ Query Method:",query_by,v=verbose)
+  locus <- basename(locus_dir)
 
   if(query_by=="tabix"){
     topSNP_sub <- top_SNPs[top_SNPs$Locus==locus & !is.na(top_SNPs$Locus),]
@@ -516,9 +518,11 @@ query_handler <- function(locus,
     printer("+ QUERY: Chromosome =",topSNP_sub$CHR[1],
             "; Min position =", min_POS,
             "; Max position =", max_POS, v=verbose)
+    study_dir <- get_study_dir(locus_dir)
+
     query <- TABIX(fullSS_path=fullSS_path,
                    subset_path=subset_path,
-                   # is_tabix=F,
+                   study_dir=study_dir,
                    chrom_col=chrom_col,
                    chrom_type=chrom_type,
                    position_col=position_col,

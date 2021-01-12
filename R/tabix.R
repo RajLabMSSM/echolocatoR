@@ -15,20 +15,21 @@
 #' fullSS.gz <- TABIX.convert_file(fullSS_path=fullSS_path, results_path=results_path_genome_wide, chrom_col="CHR", position_col="POS")
 #' }
 TABIX.convert_file <- function(fullSS_path,
-                               results_path=NULL,
+                               study_dir=NULL,
                                chrom_col="CHR",
                                position_col="POS",
                                conda_env="echoR",
                                verbose=T){
-  results_path <- ifelse(is.null(results_path),dirname(fullSS_path),results_path)
-  fullSS.gz <- ifelse(endsWith(fullSS_path,".gz"), file.path(results_path, basename(fullSS_path)), paste0(file.path(results_path, basename(fullSS_path)),".gz"))
-  z_grep <- ifelse(endsWith(fullSS_path,".gz"),"zgrep","grep")
+  study_dir <- if(is.null(study_dir)) dirname(fullSS_path) else study_dir
+  fullSS.gz <- if(endsWith(fullSS_path,".gz")) fullSS_path else  paste0(fullSS_path,".gz")
+  z_grep <- if(endsWith(fullSS_path,".gz")) "zgrep" else "grep"
   cDict <-  column_dictionary(file_path = fullSS_path) # header.path
+  tabix_output <- file.path(study_dir,basename(fullSS.gz))
 
-  # Make sure file isn't empty
-  if(file.size(fullSS.gz)==0){
-    printer("TABIX:: Removing empty file =",fullSS.gz);
-    file.remove(fullSS.gz)
+  # Make sure input file isn't empty
+  if(file.size(fullSS_path)==0){
+    printer("TABIX:: Removing empty file =",fullSS_path);
+    file.remove(fullSS_path)
   }
 
   printer("TABIX:: Converting full summary stats file to tabix format for fast querying...",v=verbose)
@@ -41,12 +42,12 @@ TABIX.convert_file <- function(fullSS_path,
                # Compress with bgzip
                "|",CONDA.find_package(package="bgzip", conda_env=conda_env),"-f",
                ">",
-               fullSS.gz)
+               tabix_output)
   printer(cmd, v=verbose)
   system(cmd)
 
   # Index
-  TABIX.index <- function(fullSS.gz,
+  TABIX.index <- function(tabix_output,
                           chrom_i=1,
                           pos_i=2,
                           skip_lines=1,
@@ -62,17 +63,17 @@ TABIX.convert_file <- function(fullSS_path,
                   "-s",chrom_i,
                   "-b",pos_i,
                   "-e",pos_i,
-                  fullSS.gz)
+                  tabix_output)
     printer(cmd2, v=verbose)
     system(cmd2)
   }
-  TABIX.index(fullSS.gz=fullSS.gz,
+  TABIX.index(tabix_output=tabix_output,
               chrom_i=cDict[[chrom_col]],
               pos_i=cDict[[position_col]],
               skip_lines=1,
               conda_env=conda_env,
               verbose=verbose)
-  return(fullSS.gz)
+  return(tabix_output)
 }
 
 
@@ -97,7 +98,7 @@ TABIX.query <- function(fullSS.gz,
   printer("TABIX:: Extracting subset of sum stats", v=verbose)
   tabix_cmd <- paste(tabix,"-h",fullSS.gz,coords)
   printer("+ TABIX::",tabix_cmd, v=verbose)
-  dat <- data.table::fread(cmd=tabix_cmd)
+  dat <- data.table::fread(cmd=tabix_cmd, nThread = 1)
   printer("+ TABIX:: Returning",paste(dim(dat),collapse=" x "),"data.table", v=verbose)
   return(dat)
 }
@@ -129,28 +130,33 @@ TABIX.query <- function(fullSS.gz,
 #' dat <- TABIX(fullSS_path=fullSS_path, subset_path="auto", min_POS=min_POS, max_POS=max_POS, chrom=top_SNPs_BST1$CHR)
 #' }
 TABIX <- function(fullSS_path,
+                  study_dir=NULL,
                   subset_path=NULL,
                   is_tabix=F,
                   chrom_col="CHR",
                   chrom_type=NULL,
                   position_col="POS",
-                  min_POS=NA,
-                  max_POS=NA,
-                  chrom=NULL,
+                  min_POS,
+                  max_POS,
+                  chrom,
                   save_subset=T,
                   nThread=1,
                   conda_env="echoR",
                   verbose=T){
   # Check if it's already an indexed tabix file
-  fullSS.gz <- ifelse(endsWith(fullSS_path,".gz"), fullSS_path, paste0(fullSS_path,".gz"))
-  is_tabix <- file.exists(fullSS.gz) & file.exists(paste0(fullSS.gz,".tbi"))
+  # fullSS.gz <- ifelse(endsWith(fullSS_path,".gz"), fullSS_path, paste0(fullSS_path,".gz"))
+  is_tabix <- infer_if_tabix(fullSS_path)
   if(!is_tabix){
     fullSS.gz <- TABIX.convert_file(fullSS_path = fullSS_path,
+                                    study_dir = study_dir,
                                     chrom_col = chrom_col,
                                     position_col = position_col,
                                     conda_env=conda_env,
                                     verbose=verbose)
-  } else { printer("TABIX:: Existing indexed tabix file detected",v=verbose) }
+  } else {
+    printer("TABIX:: Existing indexed tabix file detected",v=verbose)
+    fullSS.gz <- fullSS_path
+  }
   # Query
   cDict <- column_dictionary(file_path = fullSS.gz)
   # Determine chromosome format

@@ -427,6 +427,7 @@ finemap_pipeline <- function(locus,
 
   ####  Query ####
   subset_DT <- extract_SNP_subset(locus = locus,
+                                  results_dir = results_dir,
                                   locus_dir = locus_dir,
                                   top_SNPs = top_SNPs,
                                   fullSS_path = fullSS_path,

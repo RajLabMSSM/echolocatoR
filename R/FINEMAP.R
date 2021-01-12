@@ -10,6 +10,15 @@
 #' the SNP given the highest posterior model probability until no further SNP yields
 #' a higher posterior model probability.
 #'
+#' @inheritParams finemap_loci
+#' @param model "cond" for stepwise conditional search, "sss" for stochastic shotgun search.
+#' @param finemap_version Which FINEMAP version to use (specify as a string).
+#' @param args_list A named list of additional arguments to pass to FINEMAP
+#' (e.g.: args_list = list("--n-iterations"=5000,"--sss"="")).
+#' Alternatively, can supply a string instead (e.g.: args_list = "--n-iterations 5000 --sss").
+#' @param FINEMAP_path Path to a custom FINEMAP executable to use
+#' instead of the ones included in \pkg{echolocatoR}.
+#' Users can also simply supply "finemap" if this command is linked to the executable.
 #' @source
 #' \url{http://www.christianbenner.com}
 #' @family FINEMAP
@@ -17,26 +26,28 @@
 #' @examples
 #' data("locus_dir"); data("BST1"); data("BST1_LD_matrix");
 #' finemap_DT <- BST1
+#' locus_dir <- here::here(locus_dir)
 #' dir.create(file.path(locus_dir,"FINEMAP"), showWarnings = FALSE, recursive = TRUE)
 #' out <- subset_common_snps(BST1_LD_matrix, finemap_DT)
 #' LD_matrix <- out$LD
 #' subset_DT <- out$DT
 #' subset_DT $N<- subset_DT$N_cases+subset_DT$N_controls
-#' finemap_DT <- FINEMAP(subset_DT=subset_DT, locus_dir=locus_dir, LD_matrix=LD_matrix, n_samples=)
+#' finemap_DT <- FINEMAP(subset_DT=subset_DT, locus_dir=locus_dir, LD_matrix=LD_matrix, finemap_version="1.3")
 FINEMAP <- function(subset_DT,
                     locus_dir,
                     LD_matrix,
                     FINEMAP_path=NULL,
                     n_samples=NULL,
                     n_causal=5,# Max number of allowed causal SNPs
-                    model="cond", # cond (stepwise conditional search) vs. sss (stochastic shotgun search)
-                    remove_tmps=T,
+                    model="cond",
+                    remove_tmps=F,
                     credset_thresh=.95,
                     finemap_version="1.4",
                     server=F,
+                    args_list=list(),
                     verbose=T){
   # n_causal=5; model="cond"; credset_thresh=.95; verbose=T; finemap_version="1.4"; n_samples=NULL;
-
+  # args_list <- list("--n-iterations"=5000,"--sss"="")
   n_samples <- if(is.null(n_samples)) max(subset_DT$N) else n_samples
   dir.create(locus_dir, showWarnings = F, recursive = T)
   # Setup files
@@ -48,9 +59,18 @@ FINEMAP <- function(subset_DT,
   # Command line
   ## Example:
   ## cmd <- paste(FINEMAP_path," --sss --in-files",file.path(dirname(FINEMAP_path),"example","master"), "--dataset 1 --n-causal-snps 5")
-  FINEMAP_path <- FINEMAP.find_executable(version = finemap_version,
-                                          verbose = verbose)
+  if(is.null(FINEMAP_path)){
+    FINEMAP_path <- FINEMAP.find_executable(version = finemap_version,
+                                            verbose = verbose)
+  }else {
+    printer("+ FINEMAP:: User-defined FINEMAP path:",FINEMAP_path, v=verbose)
+    finemap_version <- FINEMAP.check_version(FINEMAP_path,
+                                             verbose = verbose)
+  }
 
+  #### Run FINEMAP ####
+  # NOTE: Must cd into the directory first,
+  # or else FINEMAP won't be able to find the input files.
   cmd <- paste("cd",locus_dir,"&&",
                FINEMAP_path,
                paste0("--",model),
@@ -58,13 +78,24 @@ FINEMAP <- function(subset_DT,
                "--log",
                # Option to set the maximum number of allowed causal SNPs
                # (Default is 5)
-               "--n-causal-snps",n_causal)
+               "--n-causal-snps",n_causal,
+               collapse_args(args_list)
+               )
   printer(cmd)
-  system(cmd)
+  msg <- system(cmd, intern =  T)
+  if(verbose) try({cat(paste(msg, collapse = "\n"))})
+
+  #### Check if FINEMAP is giving an error due to `zstd` not being installed ####
+  if(any(attr(msg,"status")==134)){
+    stop("\n **** 'dyld: Library not loaded: /usr/local/lib/libzstd.1.dylib' error message detected.
+         If you are using a Mac OSX, please install Zstandard (https://facebook.github.io/zstd/).
+         e.g. via Brew: `brew install zstd` **** \n\n")
+  }
   # Process results
   finemap_dat <- FINEMAP.process_results(locus_dir = locus_dir,
                                          subset_DT = subset_DT,
                                          credset_thresh = credset_thresh,
+                                         results_file = ".cred",
                                          finemap_version = finemap_version)
   # Remove tmp files
   if(remove_tmps){
@@ -83,6 +114,18 @@ FINEMAP <- function(subset_DT,
     tmp_bool <- suppressWarnings(file.remove(file.path(locus_dir,"FINEMAP")))
   }
   return(finemap_dat)
+}
+
+
+FINEMAP.check_version <- function(FINEMAP_path,
+                                  verbose=T){
+  ### FINEMAP does not have a -v or --version flag.
+  # FINEMAP_path <- "/Library/Frameworks/R.framework/Versions/3.6/Resources/library/echolocatoR/tools/FINEMAP/finemap_v1.3.1_MacOSX"
+  out <- system(paste(FINEMAP_path,"-h"), intern = T)
+  out_split <- strsplit(grep("Welcome to FINEMAP",out, value = T)[1]," ")[[1]]
+  finemap_version <- gsub("v","",out_split[grepl("v",out_split)])
+  printer("+ FINEMAP:: Inferred FINEMAP version =",finemap_version,v=verbose)
+  return(finemap_version)
 }
 
 
@@ -236,16 +279,31 @@ FINEMAP.process_results <- function(locus_dir,
   # locus_dir="~/Desktop/Fine_Mapping/Data/GWAS/Marioni_2018/ACE"
   # subset_DT <- data.table::fread(file.path(locus_dir, "Multi-finemap/ACE.Marioni_2018.1KGphase3.multi_finemap.csv.gz"))
 
+  #### Handling FINEMAP version differences  ####
+  if((!finemap_version %in% c("1.3.1","1.4")) & (results_file==".cred")){
+    warning("+ FINEMAP:: FINEMAP <1.3.1 does not produce .cred results files.\n",
+                        "Using marginal probabilties from .snp results file instead.")
+    results_file <- ".snp"
+  }
+
+
   FINEMAP.import_data.snp <- function(locus_dir,
                                       credset_thresh=.95,
+                                      prob_col="prob",
                                       verbose=T){
     # NOTES:
     ## .snp files: Posterior probabilities in this file are the marginal posterior probability
     ## that a given variant is causal.
-    printer(" + FINEMAP:: Importing marginal probabilties...", v=verbose)
+
+    # Prob column descriptions:
+    ## prob: column the marginal Posterior Inclusion Probabilities (PIP). The PIP for the l-th SNP is the posterior probability that this SNP is causal.
+    ## prob_group: the posterior probability that there is at least one causal signal among SNPs in the same group with this SNP.
+    ##
+    printer(" + FINEMAP:: Importing",prob_col,"(.snp)...", v=verbose)
     data.snp <- data.table::fread(file.path(locus_dir,"FINEMAP/data.snp"), nThread = 1)
-    data.snp <- subset(data.snp, prob>credset_thresh & prob_group>credset_thresh) %>%
-      dplyr::mutate(CS=1)
+    data.snp <- data.snp[data.snp[[prob_col]] > credset_thresh,] %>%
+      plyr::mutate(CS=1)%>%
+      dplyr::rename(PP=dplyr::all_of(prob_col))
     return(data.snp)
   }
 
@@ -254,7 +312,7 @@ FINEMAP.process_results <- function(locus_dir,
     # NOTES:
     ## .cred files: Conditional posterior probabilities that a given variant is causal
     ## conditional on the other causal variants in the region.
-    printer(" + FINEMAP:: Importing conditional probabilties...", v=verbose)
+    printer(" + FINEMAP:: Importing conditional probabilties (.cred)...", v=verbose)
     cred_path <- file.path(locus_dir,"FINEMAP/data.cred")
     data.cred <- data.table::fread(cred_path,
                                    na.strings = c("<NA>","NA"),
@@ -282,7 +340,7 @@ FINEMAP.process_results <- function(locus_dir,
     # NOTES
     ## .config files: Gives all model results for all the configurations tested
     ## (regardless of whether they're over the 95% probability threshold)
-    printer(" + FINEMAP:: Importing config file...", v=verbose)
+    printer(" + FINEMAP:: Importing top configuration probability (.config)...", v=verbose)
     config_path <- file.path(locus_dir,"FINEMAP/data.config")
     data.config <- data.table::fread(config_path, nThread=1)
 
@@ -319,8 +377,7 @@ FINEMAP.process_results <- function(locus_dir,
   }
   if (results_file==".snp"){
     dat <- FINEMAP.import_data.snp(locus_dir = locus_dir,
-                                   verbose = verbose) %>%
-      dplyr::rename(PP=prob)
+                                   verbose = verbose)
     # Merge with original dataframe
     subset_DT <- data.table::merge.data.table(data.table::data.table(subset_DT),
                                               data.table::data.table(subset(dat, select=c("rsid","prob","CS")) ),
@@ -366,10 +423,11 @@ FINEMAP.find_executable <- function(FINEMAP_path=NULL,
     } else{
       exec <- "finemap_v1.4_x86_64"
     }
-  } else {
-    printer("+ Using FINEMAP v1.3",v=verbose)
+  }
+  if(version=="1.3.1") {
+    printer("+ Using FINEMAP v1.3.1",v=verbose)
     if(OS=="osx"){
-      exec <- "finemap_v1.3_MacOSX"
+      exec <- "finemap_v1.3.1_MacOSX"
     } else{
       exec <- "finemap_v1.3.1_x86_64"
     }

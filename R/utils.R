@@ -897,12 +897,32 @@ get_locus_dir <- function(subset_path){
 }
 
 
+#' Extract the study dir
+#'
+#' @family directory functions
+#' @keywords internal
+get_study_dir <- function(locus_dir){
+  study_dir <- dirname(locus_dir)
+  return(study_dir)
+}
+
+
+
 #' Create multi-finemap path
 #'
 #' @family directory functions
 #' @keywords internal
 get_multifinemap_path <- function(){
   old_file_path <- file.path(dirname(file_path),"Multi-finemap_results.txt")
+}
+
+
+infer_if_tabix <- function(file_path){
+  # must meet all of these conditions in order to use a pre-existing tabix files
+  file.exists(file_path) &
+    endsWith(file_path,".gz") &
+    file.exists(paste0(file_path,".tbi")) &
+    file.size(file_path)>0
 }
 
 
@@ -1559,5 +1579,26 @@ melt_finemapping_results <- function(finemap_dat,
                           unique(finemap_melt$Method))
   finemap_melt$Method <- factor(methods_key[finemap_melt$Method], levels = unname(methods_key), ordered = T)
   return(finemap_melt)
+}
+
+
+
+
+collapse_args <- function(args_list){
+  # args_list <- list("--n-iterations"=5000,"--sss"=NULL)
+  # OR
+  # args_list <- "--n-iterations 5000 --sss"
+  if(length(args_list)==0){
+    return(NULL)
+  }else {
+    if(class(args_list)=="character"){
+      return(args_list)
+    } else {
+      args_str <- lapply(names(args_list), function(x){
+        paste(x, args_list[[x]])
+      }) %>% paste(collapse=" ")
+      return(args_str)
+    }
+  }
 }
 

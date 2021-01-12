@@ -15,12 +15,36 @@ FINEMAP(
   n_samples = NULL,
   n_causal = 5,
   model = "cond",
-  remove_tmps = T,
+  remove_tmps = F,
   credset_thresh = 0.95,
   finemap_version = "1.4",
   server = F,
+  args_list = list(),
   verbose = T
 )
+}
+\arguments{
+\item{FINEMAP_path}{Path to a custom FINEMAP executable to use
+instead of the ones included in \pkg{echolocatoR}.
+Users can also simply supply "finemap" if this command is linked to the executable.}
+
+\item{n_causal}{The maximum number of potential causal SNPs per locus.
+This parameter is used somewhat differntly by different fine-mapping tools.
+See tool-specific functions for details.}
+
+\item{model}{"cond" for stepwise conditional search, "sss" for stochastic shotgun search.}
+
+\item{remove_tmps}{Whether to remove any temporary files (e.g. FINEMAP output files) after the pipeline is done running.}
+
+\item{finemap_version}{Which FINEMAP version to use (specify as a string).}
+
+\item{server}{Whether \pkg{echolocatoR} is being run on a computing cluster/server or on a local machine.}
+
+\item{args_list}{A named list of additional arguments to pass to FINEMAP
+(e.g.: args_list = list("--n-iterations"=5000,"--sss"="")).
+Alternatively, can supply a string instead (e.g.: args_list = "--n-iterations 5000 --sss").}
+
+\item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
 }
 \description{
 The stepwise conditional search starts with a causal configuration containing the
@@ -31,12 +55,13 @@ a higher posterior model probability.
 \examples{
 data("locus_dir"); data("BST1"); data("BST1_LD_matrix");
 finemap_DT <- BST1
+locus_dir <- here::here(locus_dir)
 dir.create(file.path(locus_dir,"FINEMAP"), showWarnings = FALSE, recursive = TRUE)
 out <- subset_common_snps(BST1_LD_matrix, finemap_DT)
 LD_matrix <- out$LD
 subset_DT <- out$DT
 subset_DT $N<- subset_DT$N_cases+subset_DT$N_controls
-finemap_DT <- FINEMAP(subset_DT=subset_DT, locus_dir=locus_dir, LD_matrix=LD_matrix, n_samples=)
+finemap_DT <- FINEMAP(subset_DT=subset_DT, locus_dir=locus_dir, LD_matrix=LD_matrix, finemap_version="1.3")
 }
 \seealso{
 Other FINEMAP: 
