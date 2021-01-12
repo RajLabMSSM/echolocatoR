@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
   fig.width = 10
 )  
 knitr::opts_knit$set(root.dir = root.dir)
-# knitr::opts_chunk$get("root.dir")
+# knitr::opts_chunk$get("root.dir") 
 
 ## Build vignettes
 ## This will generate a /doc folder with the documentation html files.
