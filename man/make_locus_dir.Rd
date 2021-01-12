@@ -21,6 +21,7 @@ locus_dir <- make_locus_dir(results_dir="./results", dataset_type="GWAS", datase
 Other directory functions: 
 \code{\link{get_locus_dir}()},
 \code{\link{get_multifinemap_path}()},
+\code{\link{get_study_dir}()},
 \code{\link{get_subset_path}()}
 }
 \concept{directory functions}

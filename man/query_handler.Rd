@@ -5,8 +5,8 @@
 \title{Handles which query method to use}
 \usage{
 query_handler(
-  locus,
   fullSS_path,
+  locus_dir = NULL,
   top_SNPs = NULL,
   subset_path,
   min_POS = NA,

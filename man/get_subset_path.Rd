@@ -23,6 +23,7 @@ subset_path <- get_subset_path(results_dir="./Data/GWAS/Nalls23andMe_2019/BST1",
 Other directory functions: 
 \code{\link{get_locus_dir}()},
 \code{\link{get_multifinemap_path}()},
+\code{\link{get_study_dir}()},
 \code{\link{make_locus_dir}()}
 }
 \concept{directory functions}

@@ -57,7 +57,7 @@ LD.UKBiobank <- function(subset_DT=NULL,
   locus <- basename(locus_dir)
   # RDS_path <- file.path(LD_dir, paste0(locus,".UKB_LD.RDS"))
   RDS_path <- LD.get_rds_path(locus_dir=locus_dir,
-                                 LD_reference="UKB")
+                              LD_reference="UKB")
 
   if(file.exists(RDS_path) & force_new_LD==F){
     printer("+ LD:: Pre-existing UKB_LD.RDS file detected. Importing",RDS_path,v=verbose)
@@ -91,10 +91,10 @@ LD.UKBiobank <- function(subset_DT=NULL,
       print(URL)
     }
     # RSIDs file
-    printer("+ LD:: ...this could take some time...",v=verbose)
+    printer("+ LD:: Reading LD matrix into memory. This could take some time...",v=verbose)
     CONDA.activate_env(conda_env = conda_env,
                        verbose = verbose)
-    reticulate::source_python(system.file("tools","load_ld.py",package = "echoR"))
+    reticulate::source_python(system.file("tools","load_ld.py",package = "echolocatoR"))
     ld.out <- tryFunc(input = URL, load_ld, server)
     # LD matrix
     ld_R <- ld.out[[1]]
@@ -103,13 +103,15 @@ LD.UKBiobank <- function(subset_DT=NULL,
     colnames(ld_R) <- ld_snps$rsid
 
     # As a last resort download UKB MAF
-    subset_DT <- get_UKB_MAF(subset_DT = subset_DT,
-                             output_path = file.path(dirname(dirname(dirname(locus_dir))),
-                                                     "Reference/UKB_MAF"),
-                             force_new_maf = F,
-                             nThread = nThread,
-                             download_method = "axel",
-                             verbose = verbose)
+   if(!"MAF" %in% colnames(subset_DT)){
+     subset_DT <- get_UKB_MAF(subset_DT = subset_DT,
+                              output_path = file.path(dirname(dirname(dirname(locus_dir))),
+                                                      "Reference/UKB_MAF"),
+                              force_new_maf = F,
+                              nThread = nThread,
+                              download_method = "axel",
+                              verbose = verbose)
+   }
     # Save LD matrix as RDS
     RDS_path <- LD.save_LD_matrix(LD_matrix=LD_matrix,
                                   subset_DT=subset_DT,

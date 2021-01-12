@@ -16,27 +16,41 @@ downloader <- function(input_url,
 
                        nThread=4,
                        alternate=T,
-                       check_certificates=F){
-  axel_avail <- startsWith(system("axel -h",intern = T)[1],"Usage: axel [options]")
-  if(download_method=="axel" & axel_avail){
-    out_file <- axel(input_url=input_url,
-                     output_path=output_path,
-                     background=background,
-                     nThread=nThread,
-                     force_overwrite=force_overwrite,
-                     quiet=quiet,
-                     alternate=alternate,
-                     check_certificates=check_certificates)
+                       check_certificates=F,
+                       verbose=T){
+  if(download_method=="axel"){
+    axel_out <- system("axel -h",intern = T)[1]
+    axel_avail <- startsWith(axel_out,"Usage: axel [options]") | startsWith(axel_out,"Axel")
+    if(axel_avail){
+      out_file <- axel(input_url=input_url,
+                       output_path=output_path,
+                       background=background,
+                       nThread=nThread,
+                       force_overwrite=force_overwrite,
+                       quiet=quiet,
+                       alternate=alternate,
+                       check_certificates=check_certificates)
+    } else {
+      printer("+ DOWNLOADER:: Axel not available. Defaulting to wget.",v=verbose);
+      download_method <- "wget"
+    }
+
   }
   if(download_method=="wget"){
-    out_file <- wget(input_url,
-                     output_path,
-                     background=background,
-                     force_overwrite=force_overwrite,
-                     quiet=quiet,
-                     show_progress=show_progress,
-                     continue=continue,
-                     check_certificates=check_certificates)
+    wget_out <- system("wget -h",intern = T)[1]
+    wget_avail <- startsWith(tolower(wget_out),"gnu wget")
+    if(wget_avail){
+      out_file <- wget(input_url,
+                       output_path,
+                       background=background,
+                       force_overwrite=force_overwrite,
+                       quiet=quiet,
+                       show_progress=show_progress,
+                       continue=continue,
+                       check_certificates=check_certificates)
+    } else {
+      stop("+ DOWNLOADER:: Please install wget or axel first.");
+    }
   }
   return(out_file)
 }

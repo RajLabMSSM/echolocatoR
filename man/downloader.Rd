@@ -15,7 +15,8 @@ downloader(
   continue = T,
   nThread = 4,
   alternate = T,
-  check_certificates = F
+  check_certificates = F,
+  verbose = T
 )
 }
 \description{

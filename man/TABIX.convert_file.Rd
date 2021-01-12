@@ -6,7 +6,7 @@
 \usage{
 TABIX.convert_file(
   fullSS_path,
-  results_path = NULL,
+  study_dir = NULL,
   chrom_col = "CHR",
   position_col = "POS",
   conda_env = "echoR",

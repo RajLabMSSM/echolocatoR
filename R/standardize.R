@@ -311,9 +311,11 @@ get_UKB_MAF <- function(subset_DT,
   chrom <- unique(subset_DT$CHR)
   input_url <- paste0("biobank.ctsu.ox.ac.uk/showcase/showcase/auxdata/ukb_mfi_chr",chrom,"_v3.txt")
   out_file <- file.path(output_path, basename(input_url))
-  if(file.size(out_file)==0){
-    printer("+ UKB MAF:: Removing empty UKB MAF ref file.");
-    file.remove(out_file)
+  if(file.exists(out_file)){
+    if(file.size(out_file)==0){
+      printer("+ UKB MAF:: Removing empty UKB MAF ref file.");
+      file.remove(out_file)
+    }
   }
   if(file.exists(out_file) & force_new_maf==F){
     printer("+ UKB MAF:: Importing pre-existing file",v=verbose)
@@ -321,6 +323,7 @@ get_UKB_MAF <- function(subset_DT,
     out_file <- downloader(input_url = input_url,
                            output_path = output_path,
                            background = F,
+                           force_overwrite = force_new_maf,
                            download_method = download_method,
                            nThread = nThread)
   }
@@ -328,11 +331,16 @@ get_UKB_MAF <- function(subset_DT,
                            select = c(3,6),
                            col.names = c("POS","MAF"))
   maf <- subset(maf, POS %in% subset_DT$POS)
+  if("MAF" %in% colnames(subset_DT)){
+    printer(" UKB MAF:: Existing 'MAF' col detected. Naming UKB MAF col 'MAF_UKB'",v=verbose)
+    maf <- dplyr::rename(maf, MAF_UKB=MAF)
+  }
   merged_dat <- data.table::merge.data.table(subset_DT, maf,
                                              by = "POS") %>%
     # Make sure each SNP just appears once
     dplyr::group_by(SNP) %>%
-    dplyr::slice(1)
+    dplyr::slice(1) %>%
+    data.table::data.table()
   return(merged_dat)
 }
 

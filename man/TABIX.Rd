@@ -6,14 +6,15 @@
 \usage{
 TABIX(
   fullSS_path,
+  study_dir = NULL,
   subset_path = NULL,
   is_tabix = F,
   chrom_col = "CHR",
   chrom_type = NULL,
   position_col = "POS",
-  min_POS = NA,
-  max_POS = NA,
-  chrom = NULL,
+  min_POS,
+  max_POS,
+  chrom,
   save_subset = T,
   nThread = 1,
   conda_env = "echoR",

@@ -12,6 +12,7 @@ Create multi-finemap path
 \seealso{
 Other directory functions: 
 \code{\link{get_locus_dir}()},
+\code{\link{get_study_dir}()},
 \code{\link{get_subset_path}()},
 \code{\link{make_locus_dir}()}
 }

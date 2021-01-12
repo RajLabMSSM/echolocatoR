@@ -1,7 +1,8 @@
 
 library(echolocatoR)
 
-
+subset_DT <- finemap_DT <- echolocatoR::BST1
+LD_matrix <- echolocatoR::LD_matrix
 results_dir="~/Desktop/results";
 fullSS_genome_build="hg19";
 LD_genome_build="hg19";
@@ -153,6 +154,13 @@ verbose=T;
 
 start_pos=min_POS;
 end_pos=max_POS;
-chrom=topSNP_sub$CHR[1];
+chrom="4";
+
+subset_path <- get_subset_path(results_dir = results_dir,
+                               dataset_type = dataset_type,
+                               dataset_name = dataset_name,
+                               locus = locus)
+locus_dir <- get_locus_dir(subset_path = subset_path)
+
 
 

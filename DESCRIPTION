@@ -38,11 +38,9 @@ Imports:
     stringr,  
     openxlsx,
     EnsDb.Hsapiens.v75,  
-    ensembldb, 
-    ggbio,
+    ensembldb,  
     BSgenome,
-    Ckmeans.1d.dp,
-    coin
+    Ckmeans.1d.dp
 Remotes:
   github::stephenslab/susieR@0.9.0,  
   bioc::3.10/remotes,  
@@ -77,6 +75,7 @@ Suggests:
     BSgenome.Hsapiens.UCSC.hg19, 
     ComplexHeatmap,
     SummarizedExperiment,
-    LDlinkR
+    LDlinkR, 
+    coin
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr

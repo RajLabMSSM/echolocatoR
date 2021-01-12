@@ -7,6 +7,7 @@
 extract_SNP_subset(
   locus = NULL,
   locus_dir,
+  results_dir = NULL,
   fullSS_path,
   fullSS_genome_build = "hg19",
   subset_path,
