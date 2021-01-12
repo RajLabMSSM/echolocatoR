@@ -24,6 +24,13 @@ TABIX.convert_file <- function(fullSS_path,
   fullSS.gz <- ifelse(endsWith(fullSS_path,".gz"), file.path(results_path, basename(fullSS_path)), paste0(file.path(results_path, basename(fullSS_path)),".gz"))
   z_grep <- ifelse(endsWith(fullSS_path,".gz"),"zgrep","grep")
   cDict <-  column_dictionary(file_path = fullSS_path) # header.path
+
+  # Make sure file isn't empty
+  if(file.size(fullSS.gz)==0){
+    printer("TABIX:: Removing empty file =",fullSS.gz);
+    file.remove(fullSS.gz)
+  }
+
   printer("TABIX:: Converting full summary stats file to tabix format for fast querying...",v=verbose)
   cmd <- paste("(",
                # Extract the header col and sort everything else
@@ -32,7 +39,8 @@ TABIX.convert_file <- function(fullSS_path,
                paste0("-k",cDict[[position_col]],",",cDict[[position_col]],"n"),
                ")",
                # Compress with bgzip
-               "| bgzip >",
+               "|",CONDA.find_package(package="bgzip", conda_env=conda_env),"-f",
+               ">",
                fullSS.gz)
   printer(cmd, v=verbose)
   system(cmd)

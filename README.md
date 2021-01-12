@@ -2,6 +2,14 @@
 
 ### Automated statistical and functional fine-mapping with extensive access to genome-wide datasets.   
 
+<hr>  
+
+### When using __*echolocatoR*__, please cite:  
+[Brian M. Schilder, Jack Humphrey, Towfique Raj (2020) *echolocatoR: an automated end-to-end statistical and functional genomic fine-mapping pipeline*
+bioRxiv 2020.10.22.351221; doi: https://doi.org/10.1101/2020.10.22.351221](https://www.biorxiv.org/content/10.1101/2020.10.22.351221v1)  
+
+<hr>
+
 Fine-mapping methods are a powerful means of identifying causal variants underlying a given phenotype, but are underutilized due to the technical challenges of implementation. __*echolocatoR*__ is an R package that automates end-to-end genomics fine-mapping, annotation, and plotting in order to identify the most probable causal variants associated with a given phenotype.
 
 It requires minimal input from users (a GWAS or QTL summary statistics file), and includes a suite of statistical and functional fine-mapping tools. It also includes extensive access to datasets (linkage disequilibrium panels, epigenomic and genome-wide annotations, QTL).
@@ -35,10 +43,7 @@ In R:
 ```R
 if(!"devtools" %in% installed.packages()){install.packages("devtools")}
 devtools::install_github("RajLabMSSM/echolocatoR")
-```  
-*NOTE*: While this GitHub repo is still private, you need to use a token to install __*echolocatoR*__  using the `auth_token` argument (see [here for details](http://devtools.r-lib.org/reference/install_github)).  
-
-
+```   
 
 ## Robust installation (*conda*)
 
@@ -60,7 +65,10 @@ conda env create -f <path_to_file>/echoR.yml
 conda activate echoR
 ```
 
-5. In R, install __*echolocatoR*__:  
+5. Open Rstudio from the command line interface (not by clicking the Rstudio icon). 
+This helps to ensure Rstudio can find the paths to the packages in the conda env.
+
+6. In R, install __*echolocatoR*__:  
 ```R
 if(!"devtools" %in% installed.packages()){install.packages("devtools")}
 devtools::install_github("RajLabMSSM/echolocatoR")
@@ -134,6 +142,12 @@ For a full list of suggested packages, see [DESCRIPTION](https://github.com/RajL
 #### [Axel](https://github.com/axel-download-accelerator/axel)  *    
   + Rapid multi-core downloading of large files (e.g. LD matrices from UK Biobank).  
   + To use it, specify `download_method="axel"` in `finemap_loci()`.  
+  + **NOTE**: *axel* does not currently have a conda release. So you will need to install it as a separate step. For more info on installing/using *axel* in general, also see this [tutorial](https://www.tecmint.com/axel-commandline-download-accelerator-for-linux/). Depending on what kind of computer you're using, this process will look a bit different:  
+    - **Mac**: Install [brew](https://brew.sh/), then: `brew install axel`  
+    - **CentOS/RHEL 7**: `yum install epel-release; yum install axel`  
+    - **Fedora**: `yum install axel; dnf install axel`  
+    - **Debian Jessie (e.g. Ubuntu, Linux Mint)**: `aptitude install axel`  
+   
  
  
 <br>

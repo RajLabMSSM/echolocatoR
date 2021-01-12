@@ -6,9 +6,9 @@ channels:
   - conda-forge
   - anaconda
 dependencies:
+  # Python
   - python>=3.6.1
-  - pandas>=0.25.0
-  - pandas-plink 
+  - pandas>=0.25.0 
   - fastparquet
   - pyarrow
   - scipy
@@ -18,11 +18,14 @@ dependencies:
   - networkx
   - rpy2
   - requests
+  # Command line
   - tabix
   - plink
   - macs2
   - bcftools
-  - r-base>=3.6.0
+  - wget
+  # R
+  - r>=3.6.0
   - r-devtools
   - r-reticulate
   - r-rlang

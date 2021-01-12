@@ -15,7 +15,8 @@ downloader <- function(input_url,
                        continue=T,
 
                        nThread=4,
-                       alternate=T){
+                       alternate=T,
+                       check_certificates=F){
   axel_avail <- startsWith(system("axel -h",intern = T)[1],"Usage: axel [options]")
   if(download_method=="axel" & axel_avail){
     out_file <- axel(input_url=input_url,
@@ -24,7 +25,8 @@ downloader <- function(input_url,
                      nThread=nThread,
                      force_overwrite=force_overwrite,
                      quiet=quiet,
-                     alternate=alternate)
+                     alternate=alternate,
+                     check_certificates=check_certificates)
   }
   if(download_method=="wget"){
     out_file <- wget(input_url,
@@ -33,7 +35,8 @@ downloader <- function(input_url,
                      force_overwrite=force_overwrite,
                      quiet=quiet,
                      show_progress=show_progress,
-                     continue=continue)
+                     continue=continue,
+                     check_certificates=check_certificates)
   }
   return(out_file)
 }
@@ -52,19 +55,23 @@ wget <- function(input_url,
                  force_overwrite=F,
                  quiet=F,
                  show_progress=T,
-                 continue=T){
+                 continue=T,
+                 check_certificates=F){
   # https://stackoverflow.com/questions/21365251/how-to-run-wget-in-background-for-an-unattended-download-of-files
   ## -bqc makes wget run in the background quietly
   dir.create(output_path, showWarnings = F, recursive = T)
   out_file <- file.path(output_path,basename(input_url))
   cmd <- paste("wget",input_url,
                "-np",
-               ifelse(background,"-b",""),
-               ifelse(continue,"-c",""),
-               ifelse(quiet,"-q",""),
-               ifelse(show_progress,"--show-progress",""),
+               ## Checking certificates can sometimes cause issues
+               if(check_certificates) "" else "--no-check-certificate",
+               if(background) "-b" else "",
+               if(continue) "-c" else "",
+               if(quiet) "-q" else "",
+               if(show_progress) "--show-progress" else "",
                "-P",output_path,
-               ifelse(force_overwrite,"","--no-clobber"))
+               if(force_overwrite) "" else "--no-clobber"
+  )
   # print(cmd)
   system(paste(cmd,"&& echo '+ wget download complete.'"))
   return(out_file)
@@ -84,7 +91,8 @@ axel <- function(input_url,
                  nThread=4,
                  force_overwrite=F,
                  quiet=F,
-                 alternate=T){
+                 alternate=T,
+                 check_certificates=F){
   dir.create(output_path, showWarnings = F, recursive = T)
   out_file <- file.path(output_path,basename(input_url))
   if(force_overwrite){
@@ -93,11 +101,13 @@ axel <- function(input_url,
   }
   cmd <- paste("axel",input_url,
                "-n",nThread,
-               ifelse(force_overwrite,"","--no-clobber"),
+               ## Checking certificates can sometimes cause issues
+               if(check_certificates) "" else "--insecure",
+               if(force_overwrite) "" else "--no-clobber",
                "-o",out_file,
-               ifelse(quiet,"-q",""),
+               if(quiet) "-q" else "",
                # ifelse(alternate,"-a",""),
-               ifelse(background,"& bg","")
+               if(background) "& bg" else ""
   )
   # print(cmd)
   system(cmd)

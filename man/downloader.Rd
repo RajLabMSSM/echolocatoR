@@ -14,7 +14,8 @@ downloader(
   show_progress = T,
   continue = T,
   nThread = 4,
-  alternate = T
+  alternate = T,
+  check_certificates = F
 )
 }
 \description{

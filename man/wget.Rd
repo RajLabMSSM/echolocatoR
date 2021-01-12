@@ -11,7 +11,8 @@ wget(
   force_overwrite = F,
   quiet = F,
   show_progress = T,
-  continue = T
+  continue = T,
+  check_certificates = F
 )
 }
 \description{

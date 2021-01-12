@@ -1444,13 +1444,19 @@ LD.get_lead_r2 <- function(finemap_dat,
       dat <- finemap_dat
     } else {
       print("GGBIO:: LD_matrix detected. Coloring SNPs by LD with lead SNP.")
-      LD_sub <- data.frame(SNP = row.names(LD_matrix),
-                           LD_matrix[,LD_SNP]) %>%
-        `colnames<-`(c(LD_SNP,"SNP")) %>%
+
+#       LD_sub <- data.frame(SNP = row.names(LD_matrix),
+#                            LD_matrix[,LD_SNP]) %>%
+#         `colnames<-`(c(LD_SNP,"SNP")) %>%
+#         # subset(select = -c(r,r2))  %>%  data.table::as.data.table()
+
+      LD_sub <- subset(LD_matrix, select=LD_SNP) %>%
         # subset(select = -c(r,r2)) %>%
-        data.table::as.data.table() %>%
+        data.table::as.data.table(keep.rownames = T) %>%
         `colnames<-`(c("SNP","r")) %>%
-        dplyr::mutate(r2 = r^2)
+        dplyr::mutate(r2 = r^2) %>%
+        data.table::as.data.table()
+
       dat <- data.table::merge.data.table(finemap_dat, LD_sub,
                                           by = "SNP",
                                           all.x = T)

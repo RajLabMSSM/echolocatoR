@@ -11,7 +11,8 @@ axel(
   nThread = 4,
   force_overwrite = F,
   quiet = F,
-  alternate = T
+  alternate = T,
+  check_certificates = F
 )
 }
 \description{

@@ -1,9 +1,73 @@
-# # %%%%%%%%%%%%%%%%% #
-# #-----PLOT ---------#
-# # %%%%%%%%%%%%%%%%% #
-#
-#
-#
+# %%%%%%%%%%%%%%%%% #
+####### PLOT #######
+# %%%%%%%%%%%%%%%%% #
+
+
+construct_SNPs_labels <- function(subset_DT,
+                                  lead=T,
+                                  method=T,
+                                  consensus=T,
+                                  remove_duplicates=T,
+                                  verbose=F){
+  printer("+ PLOT:: Constructing SNP labels...", v=verbose)
+  labelSNPs <- data.table::data.table()
+  subset_DT <- data.table::as.data.table(subset_DT)
+
+  ## BEFORE fine-mapping
+  if(lead){
+    before <- subset( subset_DT %>% arrange(P), leadSNP == T)
+    before$type <- "Lead"
+    before$color <- "red"
+    before$shape <- 18
+    before$size <- 3
+    labelSNPs <- rbind(labelSNPs, before, fill=T)
+  }
+  if(method){
+    # AFTER fine-mapping
+    after = subset(subset_DT, Support>0)
+    if(dim(after)[1]>0){
+      after$type <- "UCS"
+      after$color<- "green3"
+      after$shape <- 1
+      after$size=3
+      labelSNPs <- rbind(labelSNPs, after, fill=T)
+    }
+  }
+  if(consensus & "Consensus_SNP" %in% colnames(subset_DT)){
+    # Conensus across all fine-mapping tools
+    cons_SNPs <- subset(subset_DT, Consensus_SNP==T)
+    if(dim(cons_SNPs)[1]>0){
+      cons_SNPs$type <- "Consensus"
+      cons_SNPs$color <- "darkgoldenrod1"
+      cons_SNPs$shape <- 1
+      cons_SNPs$size=4
+      labelSNPs <- rbind(labelSNPs, cons_SNPs, fill=T)
+    }
+  }
+  # If there's duplicates only show the last one
+  if(remove_duplicates){
+    labelSNPs$rowID <- 1:nrow(labelSNPs)
+    labelSNPs <- labelSNPs %>%
+      dplyr::group_by(SNP) %>%
+      dplyr::arrange(rowID) %>%
+      dplyr::slice(n())
+  } else {
+    labelSNPs$rowID <- 1:nrow(labelSNPs)
+    labelSNPs <- labelSNPs %>%
+      dplyr::group_by(SNP, type) %>%
+      dplyr::arrange(rowID) %>%
+      dplyr::slice(n())
+  }
+  return(as.data.frame(labelSNPs))
+}
+
+
+
+
+
+
+
+
 # # cojo_DT = data.table::fread(file.path("Data/GWAS/Nalls23andMe_2019/LRRK2/COJO/COJO_results.txt"), sep="\t")
 #
 # # SNP_list = c("rs76904798","rs34637584","rs117073808")
@@ -50,7 +114,7 @@
 #                           "Blue = Residual effects conditioned on:",conditioned_snps),
 #          y="-log10(p-value)", x="Position", color="-log10(p-value)") +
 #     theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5) )
-#     # scale_x_continuous(breaks = roundBreaks)
+#   # scale_x_continuous(breaks = roundBreaks)
 #
 #   if(save_plot){
 #     png(filename=file.path(results_path,"COJO/COJO_plot.png"), width = 1000, 800)
@@ -59,9 +123,6 @@
 #   }
 #   if(show_plot){print(cp)}else{return(cp)}
 # }
-#
-#
-#
 #
 #
 #
@@ -102,7 +163,7 @@
 #       geom_hline(yintercept=0,alpha=.5, linetype=1, size=.5) +
 #       geom_hline(yintercept= -log10(5e-8), alpha=.5, linetype=2, size=.5, color="black")
 #     title <- "GWAS"#paste0(locus," : Before fine-mapping")
-#     tag_SNPs <- labelSNPs <- construct_SNPs_labels(DT, labels_subset = c("Lead","UCS","Consensus"))
+#     tag_SNPs <- labelSNPs <- construct_SNPs_labels(DT, lead=T, method = F, consensus = T)
 #     subtitle <- if(is.na(subtitle)){paste0(length(DT$SNP)," SNPs")}else{subtitle}
 #   } else {
 #
@@ -127,7 +188,7 @@
 #       p <- ggplot(data = DT, aes(x=POS, y=Probability,  color= r2 )) +
 #         ylim(c(0,1.2))
 #     }
-#     labelSNPs <- construct_SNPs_labels(DT,labels_subset = c("Lead","UCS","Consensus"))
+#     labelSNPs <- construct_SNPs_labels(DT, lead=T, method = T, consensus = F)
 #     tag_SNPs <- subset(labelSNPs, CS>0)
 #   }
 #
@@ -331,97 +392,18 @@
 # }
 #
 #
+
+# remotes::install_github("tylermorganwall/rayshader")
+# library(rayshader)
+# library(ggplot2)
+# gg = ggplot(diamonds, aes(x, depth)) +
+#   stat_density_2d(aes(fill = stat(nlevel)),
+#                   geom = "polygon",
+#                   n = 100,bins = 10,contour = TRUE) +
+#   facet_wrap(clarity~.) +
+#   scale_fill_viridis_c(option = "A")
+# plot_gg(gg,multicore=TRUE,width=5,height=5,scale=250)
 #
-# # remotes::install_github("tylermorganwall/rayshader")
-# # library(rayshader)
-# # library(ggplot2)
-# # gg = ggplot(diamonds, aes(x, depth)) +
-# #   stat_density_2d(aes(fill = stat(nlevel)),
-# #                   geom = "polygon",
-# #                   n = 100,bins = 10,contour = TRUE) +
-# #   facet_wrap(clarity~.) +
-# #   scale_fill_viridis_c(option = "A")
-# # plot_gg(gg,multicore=TRUE,width=5,height=5,scale=250)
-# #
-#
-#
-#
-# #
-# # # MESA
-# # eQTL_barplots(subset_path_list = c("Data/eQTL/MESA/LRRK2_AFA_MESA.txt",
-# #                                  "Data/eQTL/MESA/LRRK2_CAU_MESA.txt",
-# #                                  "Data/eQTL/MESA/LRRK2_HIS_MESA.txt"),
-# #               group_list = c("AFA","CAU","HIS"),
-# #               SNP_list = c("rs76904798","rs34637584","rs117073808","rs140722239"),
-# #               title = "MESA eQTL Effect Sizes:\nNominated Variants",
-# #               writeCSV = "Data/eQTL/MESA/eQTL_effect_sizes.csv")
-# # # Fairfax
-# # eQTL_barplots(subset_path_list = c("Data/eQTL/Fairfax/LRRK2_Fairfax_CD14.txt",
-# #                                    "Data/eQTL/Fairfax/LRRK2_Fairfax_IFN.txt",
-# #                                    "Data/eQTL/Fairfax/LRRK2_Fairfax_LPS2.txt",
-# #                                    "Data/eQTL/Fairfax/LRRK2_Fairfax_LPS24.txt"),
-# #               group_list = c("CD14","IFN","LPS2","LP24"),
-# #               snp_col="Coord",
-# #               SNP_list = c("12:40614434","12:40734202","12:40922572") ,
-# #               x_lab = "Stimulation Condition",
-# #               title = "Fairfax eQTL Effect Sizes:\nNominated Variants",
-# #               writeCSV = "Data/eQTL/Fairfax/eQTL_effect_sizes.csv")
-#
-# #
-# # ## Before-After Plots
-# # before_after_plots <- function(results_path,
-# #                                locus,
-# #                                finemap_dat,
-# #                                before_var="P",
-# #                                finemap_method="",
-# #                                plot_COJO=F){
-# #   score_dict <- setNames(c("Posterior Inclusion Probability","Posterior Probability",
-# #                            "Posterior Probability", "Conditional Probability","Probability"),
-# #                          c("SUSIE", "ABF", "FINEMAP", "COJO"))
-# #   roundBreaks <- seq(plyr::round_any(min(finemap_dat$POS),10000), max(finemap_dat$POS),250000)
-# #   labelSNPs <- label_SNPS(finemap_dat)
-# #
-# #   # -log10(eval(parse(text=before_var)))
-# #   before_plot <- ggplot(finemap_dat, aes(x=POS, y=-log10(eval(parse(text=before_var))), label=SNP, color= -log10(P) )) +
-# #     # ylim(yLimits1) +
-# #     geom_hline(yintercept=0, alpha=.5, linetype=1, size=.5) +
-# #     geom_point(alpha=.5) +
-# #     geom_segment(aes(xend=POS, yend=yLimits1[1], color= -log10(P) ), alpha=.5) +
-# #     geom_point(data=labelSNPs[labelSNPs$type=="before",], pch=21, fill=NA, size=4, colour=labelSNPs[labelSNPs$type=="before","color"], stroke=1) +
-# #     geom_point(data=labelSNPs[labelSNPs$type=="after",][1,], pch=21, fill=NA, size=4, colour=labelSNPs[labelSNPs$type=="after","color"][1], stroke=1) +
-# #     geom_text_repel(data=labelSNPs, aes(label=SNP), color=labelSNPs$color, segment.alpha = .5, nudge_x = .5, box.padding = .5) +
-# #     labs(title="Before Fine-mapping",
-# #          subtitle = paste(locus," (",length(finemap_dat$Probability)," variants)",sep=""),
-# #          y=y_var, x="Position", color="-log10(p-value)") +
-# #     theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5)) +
-# #     scale_x_continuous(breaks = roundBreaks)
-# #
-# #   ## After fine-mapping
-# #   yLimits2 <- c(0, max(finemap_dat$Probability)*1.1)
-# #
-# #   after_plot <- ggplot(finemap_dat, aes(x=POS, y=Probability, label=SNP, color= -log10(P) )) +
-# #     # ylim(yLimits) +
-# #     geom_hline(yintercept=0,alpha=.5, linetype=1, size=.5) +
-# #     geom_point(alpha=.5) +
-# #     geom_segment(aes(xend=POS, yend=yLimits2[1], color= -log10(P)), alpha=.5) +
-# #     geom_point(data=labelSNPs[labelSNPs$type=="before",], pch=21, fill=NA, size=4, colour=labelSNPs[labelSNPs$type=="before","color"], stroke=1) +
-# #     geom_point(data=labelSNPs[labelSNPs$type=="after",][1,], pch=21, fill=NA, size=4, colour=labelSNPs[labelSNPs$type=="after","color"][1], stroke=1) +
-# #     geom_text_repel(data=labelSNPs, aes(label=SNP), color=labelSNPs$color, segment.alpha = .5, nudge_x = .5, box.padding = .5) +
-# #     labs(title=paste("After Fine-mapping: ",finemap_method,sep=""),
-# #          subtitle=paste(locus," (",length(finemap_dat$Probability)," variants)", sep=""),
-# #          y=score_dict[finemap_method][[1]], x="Position",
-# #          color="-log10(p-value)") +
-# #     theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5)) +
-# #     scale_x_continuous(breaks = roundBreaks)
-# #
-# #   # Combine plots
-# #   # Add COJO plot
-# #   if (plot_COJO){
-# #     cojo_plot <- COJO_plot(results_path, locus)
-# #     plot_grid(before_plot,cojo_plot, after_plot, ncol = 1) %>% print()
-# #     # print(cojo_plot)
-# #   } else {
-# #     plot_grid(before_plot, after_plot, ncol = 1) %>% print()
-# #   }
-# #   createDT_html(finemap_dat, paste("SUSIE Results: ", locus), scrollY = 200)
-# # }
+
+
+
