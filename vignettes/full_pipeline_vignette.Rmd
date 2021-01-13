@@ -100,9 +100,9 @@ Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS
                                           loci = c("BST1","MEX3C"),# top_SNPs$Locus,
                                           dataset_name = "Nalls23andMe_2019",
                                           dataset_type = "GWAS",  
-                                          force_new_subset = T,
+                                          force_new_subset = F,
                                           force_new_LD = F,
-                                          force_new_finemap = T,
+                                          force_new_finemap = F,
                                           remove_tmps = F,
                                           
                  # SUMMARY STATS ARGUMENTS
@@ -131,10 +131,10 @@ Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS
                  
                  # PLOT ARGUMENTS 
                  ## general   
-                 plot.types=c("fancy"),
+                 plot.types=NULL,#c("fancy"),
                  ## Generate multiple plots of different window sizes; 
                  ### all SNPs, 4x zoomed-in, and a 50000bp window
-                 plot.zoom = c("all","4x",50000),
+                 plot.zoom = c("all","4x","10x"),
                  ## XGR
                  # plot.XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes"), 
                  ## Roadmap

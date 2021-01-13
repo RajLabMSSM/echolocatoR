@@ -736,12 +736,11 @@ finemap_loci <- function(loci,
   FINEMAP_DAT <- lapply(1:length(unique(loci)), function(i){
     start_gene <- Sys.time()
     finemap_dat <- NULL
+    locus <- loci[i]
+    message("\n)   )  ) ))))))}}}}}}}} {{{{{{{{{(((((( (  (   (");
+    message(locus," (",i ," / ",length(loci),")");
+    message(")   )  ) ))))))}}}}}}}} {{{{{{{{{(((((( (  (   (");
     try({
-      locus <- loci[i]
-      message("\n)   )  ) ))))))}}}}}}}} {{{{{{{{{(((((( (  (   (");
-      message(locus," (",i ," / ",length(loci),")");
-      message(")   )  ) ))))))}}}}}}}} {{{{{{{{{(((((( (  (   (");
-
       # lead_SNP <- .arg_list_handler(conditioned_snps, i)
       gene_limits <- .arg_list_handler(trim_gene_limits, i)
       conditioned_snp <- .arg_list_handler(conditioned_snps, i)
@@ -749,7 +748,7 @@ finemap_loci <- function(loci,
       max_pos <- .arg_list_handler(max_POS, i)
       LD_ref <- .arg_list_handler(LD_reference, i)
 
-      finemap_dat <- finemap_pipeline(locus=locus,
+      out_list <- finemap_pipeline(locus=locus,
                                       top_SNPs=top_SNPs,
                                       fullSS_path=fullSS_path,
                                       fullSS_genome_build=fullSS_genome_build,
@@ -828,7 +827,18 @@ finemap_loci <- function(loci,
                                       conda_env=conda_env,
                                       nThread=nThread,
                                       verbose=verbose)
-      finemap_dat <- data.table::data.table(Locus=locus, finemap_dat)
+      # Output reminder
+      # list(finemap_dat
+      #     locus_plot
+      #     LD_matrix
+      #     LD_plot
+      #     locus_dir
+      #     arguments)
+      finemap_dat <- out_list$finemap_dat
+      if(!"Locus" %in% colnames(finemap_dat)){
+        finemap_dat <- data.table::data.table(Locus=locus,
+                                              finemap_dat)
+      }
       cat('  \n')
     }) ## end try()
     end_gene <- Sys.time()
@@ -837,10 +847,12 @@ finemap_loci <- function(loci,
     return(finemap_dat)
   }) # end for loop
   FINEMAP_DAT <- data.table::rbindlist(FINEMAP_DAT, fill = T)
-  FINEMAP_DAT <- find_consensus_SNPs(finemap_dat = FINEMAP_DAT,
-                                     credset_thresh = PP_threshold,
-                                     consensus_thresh = consensus_threshold,
-                                     verbose = verbose)
+  try({
+    FINEMAP_DAT <- find_consensus_SNPs(finemap_dat = FINEMAP_DAT,
+                                       credset_thresh = PP_threshold,
+                                       consensus_thresh = consensus_threshold,
+                                       verbose = verbose)
+  })
   # print(createDT_html( subset(FINEMAP_DAT, Support >0) ))
   return(FINEMAP_DAT)
 }

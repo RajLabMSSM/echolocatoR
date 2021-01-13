@@ -77,7 +77,7 @@ PLOT.locus <- function(finemap_dat,
   # Nott_epigenome=T; Nott_regulatory_rects=T; Nott_show_placseq=T; Nott_binwidth=200; max_transcripts=1; dpi=400; height=12; width=10; results_path=NULL;  n_top_roadmap=7; annot_overlap_threshold=5; Nott_bigwig_dir=NULL;
   #  Roadmap_query=NULL; sig_cutoff=5e-8; verbose=T; QTL_prefixes=NULL; gene_track=T; genomic_units="Mb";strip.text.y.angle=0; xtext=F; plot_format="jpg"; return_list=F;
   # track_order= c("Genes","GWAS full window","zoom_polygon","GWAS","Fine-mapping", "Roadmap\nchromatin marks\ncell-types", "Nott (2019)\nread densities", "Nott (2019)\nPLAC-seq"); track_heights=NULL; plot_full_window=T;
-
+  message("+-------- Locus Plots --------+")
   locus <- basename(locus_dir)
   dir.create(locus_dir, showWarnings = F, recursive = T)
   # Set up data
@@ -313,10 +313,10 @@ PLOT.locus <- function(finemap_dat,
   ##### Iterate over different window sizes #####
   plot_list <- list()
   for(pz in plot.zoom){
-    message("+>+>+>+>+ plot.zoom = ",pz," +<+<+<+<+")
     # try() Allows (X11) errors to occur and still finish the loop
-    TRKS_zoom <- TRKS
     try({
+      message("+>+>+>+>+ plot.zoom = ",pz," +<+<+<+<+")
+      TRKS_zoom <- TRKS
       window_suffix <- PLOT.get_window_suffix(finemap_dat=finemap_dat,
                                               plot.zoom=pz)
       if((plot_full_window) & (!window_suffix %in% c("1x","all"))){
@@ -331,7 +331,6 @@ PLOT.locus <- function(finemap_dat,
       #### Reorder tracks ####
       TRKS_zoom <- PLOT.reorder_tracks(TRKS = TRKS_zoom,
                                        track_order = track_order,
-                                       window_suffix = window_suffix,
                                        verbose = verbose)
 
       if(window_suffix=="1x"){
@@ -585,8 +584,10 @@ PLOT.guess_genomic_units <- function(gg,
 PLOT.heights_dict <- function(){
   c("Genes"=.33,
     "GWAS full window"=.33,
+    "QTL full window"=.33,
     "zoom_polygon"=.15,
     "GWAS"=.33,
+    "QTL"=.33,
     "Fine-mapping"=1,
     "Roadmap\nchromatin marks\ncell-types"=1,
     "Nott (2019)\nread densities"=.5,
@@ -641,52 +642,69 @@ PLOT.reorder_tracks <- function(TRKS,
 #' xlims <- PLOT.get_window_limits(finemap_dat=BST1, plot.zoom="all")
 #' xlims <- PLOT.get_window_limits(finemap_dat=BST1, plot.zoom="5x")
 PLOT.get_window_limits <- function(finemap_dat,
-                                    index_as_center=T,
-                                    plot.zoom=NULL,
-                                    genomic_units="Mb",
-                                    verbose=T){
+                                   index_as_center=T,
+                                   plot.zoom=NULL,
+                                   genomic_units="Mb",
+                                   verbose=T){
+  # plot.zoom <- c("all","1x","4x",5000);
+  # plot.zoom <- c("5000");
+  # finemap_dat=echolocatoR::BST1;
+  # index_as_center=T; genomic_units="Mb"; verbose=T;
+  #
   plot.zoom <- if(is.null(plot.zoom)) "1x" else plot.zoom
-  # Zoom #x as  input
-  if(index_as_center) {
-    middle_pos <- subset(finemap_dat, leadSNP)$POS[1]
-  } else {
-    # Lead Pos isn't always dead middle if manual xlims were used during querying
-    middle_pos <- finemap_dat[round(nrow(finemap_dat)/2),]$POS
-  }
-
-  if(grepl("x$",tolower(plot.zoom))){
-    printer("++ PLOT:: Inferring plot limits from zoom =",plot.zoom, v=verbose)
-    if(tolower(plot.zoom)=="1x") {
-      min_limit <- min(finemap_dat$POS, na.rm = T)
-      max_limit <- max(finemap_dat$POS, na.rm = T)
+  plot.zoom[!is.na(plot.zoom)] <- plot.zoom;
+  plot.zoom[!is.null(plot.zoom)] <- plot.zoom;
+  # Iterate over list of zooms
+  xlims_list <- lapply(plot.zoom, function(pz,
+                                           .finemap_dat=finemap_dat,
+                                           .index_as_center=index_as_center,
+                                           .genomic_units=genomic_units,
+                                           .verbose=verbose){
+    printer("+ Inferring genomic limits for window:",pz,v=.verbose)
+    # Zoom #x as  input
+    if(.index_as_center) {
+      middle_pos <- subset(.finemap_dat, leadSNP)$POS[1]
     } else {
-      total_bp_span <- (max(finemap_dat$POS, na.rm = T) - min(finemap_dat$POS, na.rm = T))
-      new_window <- total_bp_span / as.numeric(gsub("x","",plot.zoom))
-      # Prevent extending beyond the borders of the data (producing blank space)
-      min_limit <- middle_pos - as.integer(new_window/2)
-      max_limit <- middle_pos + as.integer(new_window/2)
+      # Lead Pos isn't always dead middle if manual xlims were used during querying
+      middle_pos <- .finemap_dat[as.numeric(round(nrow(.finemap_dat))/2),]$POS
     }
-  } else {
-    # Basepairs as input
-    printer("+ PLOT:: Inferring plot limits from bp =",plot.zoom, v=verbose)
-    if(is.null(plot.zoom)){
-      min_limit <- min(finemap_dat$POS, na.rm = T)
-      max_limit <- max(finemap_dat$POS, na.rm = T)
-    } else {
-      if(plot.zoom=="all"){
-        min_limit <- min(finemap_dat$POS, na.rm = T)
-        max_limit <- max(finemap_dat$POS, na.rm = T)
+
+    if(grepl("x$",tolower(pz))){
+      if(tolower(pz)=="1x") {
+        min_limit <- min(.finemap_dat$POS, na.rm = T)
+        max_limit <- max(.finemap_dat$POS, na.rm = T)
       } else {
-        min_limit <- middle_pos - as.integer(plot.zoom/2)
-        max_limit <- middle_pos + as.integer(plot.zoom/2)
+        total_bp_span <- (max(.finemap_dat$POS, na.rm = T) - min(.finemap_dat$POS, na.rm = T))
+        new_window <- total_bp_span / as.numeric(gsub("x","",pz))
+        # Prevent extending beyond the borders of the data (producing blank space)
+        min_limit <- middle_pos - as.integer(new_window/2)
+        max_limit <- middle_pos + as.integer(new_window/2)
+      }
+    } else {
+      # Basepairs as input
+      if(is.null(pz)){
+        min_limit <- min(.finemap_dat$POS, na.rm = T)
+        max_limit <- max(.finemap_dat$POS, na.rm = T)
+      } else {
+        # 'all' as input
+        if(pz=="all"){
+          min_limit <- min(.finemap_dat$POS, na.rm = T)
+          max_limit <- max(.finemap_dat$POS, na.rm = T)
+        } else {
+          min_limit <- middle_pos - as.integer(as.numeric(pz)/2)
+          max_limit <- middle_pos + as.integer(as.numeric(pz)/2)
+        }
       }
     }
-  }
-  xlims <- c(min_limit, max_limit)
-  if(genomic_units=="Mb"){
-    xlims <- xlims/1000000
-  }
-  return(xlims)
+    xlims <- c(min_limit, max_limit)
+    if(.genomic_units=="Mb"){
+      xlims <- xlims/1000000
+    }
+    return(xlims)
+  }) %>% `names<-`(plot.zoom)
+
+  # For backwards compatibility
+  if(length(xlims_list)==1) return(xlims_list[[1]]) else return(xlims_list)
 }
 
 

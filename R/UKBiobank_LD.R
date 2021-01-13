@@ -87,12 +87,15 @@ LD.UKBiobank <- function(subset_DT=NULL,
     reticulate::source_python(system.file("tools","load_ld.py",package = "echolocatoR"))
     printer("+ LD:: load_ld() python function input:",URL, v=verbose)
     printer("+ LD:: Reading LD matrix into memory. This could take some time...",v=verbose)
+    server=F
     ld.out <- tryFunc(input = URL, load_ld, server)
     # LD matrix
     ld_R <- ld.out[[1]]
+    printer("+ Full UKB LD matrix:",paste(dim(ld_R),collapse = " x "),v=verbose)
     ld_snps <- data.table::data.table(ld.out[[2]])
-    row.names(ld_R) <- ld_snps$rsid
-    colnames(ld_R) <- ld_snps$rsid
+    printer("+ Full UKB LD SNP data.table:",paste(dim(ld_snps),collapse = " x "),v=verbose)
+    if(is.null(row.names(ld_R))) row.names(ld_R) <- ld_snps$rsid
+    if(is.null(colnames(ld_R))) colnames(ld_R) <- ld_snps$rsid
 
     # As a last resort download UKB MAF
    if(!"MAF" %in% colnames(subset_DT)){
@@ -105,10 +108,11 @@ LD.UKBiobank <- function(subset_DT=NULL,
                               verbose = verbose)
    }
     # Save LD matrix as RDS
-    RDS_path <- LD.save_LD_matrix(LD_matrix=LD_matrix,
+    RDS_path <- LD.save_LD_matrix(LD_matrix=ld_R,
                                   subset_DT=subset_DT,
                                   locus_dir=locus_dir,
                                   LD_reference="UKB",
+                                  sparse = T,
                                   verbose=verbose)
     if(remove_tmps){
       printer("+ Removing .gz/.npz files.")
@@ -118,7 +122,7 @@ LD.UKBiobank <- function(subset_DT=NULL,
   }
   if(return_matrix){
     return(list(DT=subset_DT,
-                LD=LD_matrix,
+                LD=ld_R,
                 RDS_path=RDS_path))
   } else {
     return(RDS_path)
