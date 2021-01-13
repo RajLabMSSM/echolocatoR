@@ -178,7 +178,7 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
 
   #### Make adjustments ####
   if(genomic_units=="Mb"){
-    printer("+ Converting label units to Mb...",v=verbose)
+    printer("++ Converting label units to Mb...",v=verbose)
     nott_tracks <- suppressMessages(
       nott_tracks +
         ggbio::scale_x_sequnit(unit = "Mb")
@@ -620,7 +620,7 @@ NOTT_2019.get_regulatory_regions <- function(as.granges=F,
     dplyr::mutate(middle = as.integer( end-abs(end-start)/2),
                   Cell_type = cell_dict[Cell_type])
   if(as.granges){
-    printer("+ Converting to GRanges.",v=verbose)
+    printer("++ Converting to GRanges.",v=verbose)
     regions_sub <- GenomicRanges::makeGRangesFromDataFrame(df = regions_sub,#dplyr::mutate(regions_sub, chr = as.numeric(gsub("chr","",chr))),
                                                            seqnames.field = "chr",
                                                            start.field = "start",
@@ -680,11 +680,11 @@ NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
                                     nThread=4,
                                     verbose=T){
   # finemap_dat=echolocatoR::LRRK2; print_plot=T; save_plot=T; title=NULL; index_SNP=NULL; xlims=NULL; zoom_window=NULL; return_consensus_overlap =T; nThread=1; highlight_plac=F; point_size=2;   color_dict=c("enhancers"="springgreen","promoters"="purple","anchors"="black"); genomic_units="Mb"; verbose=T; save_annot=F;
+  printer("NOTT_2019:: Creating PLAC-seq interactome plot",v=verbose)
   if(!"Mb" %in% colnames(finemap_dat)){
     finemap_dat$Mb <- finemap_dat$POS/1000000
   }
   xvar <- genomic_units
-  printer("NOTT_2019:: Creating PLAC-seq interactome plot",v=verbose)
   if(!"Consensus_SNP" %in% colnames(finemap_dat)){finemap_dat <- find_consensus_SNPs(finemap_dat, verbose = F)}
   marker_key <- list(PU1 = "microglia", Olig2 = "oligo",
                      NeuN = "neurons", LHX2 = "astrocytes")
@@ -829,7 +829,7 @@ NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
     )
 
     if(genomic_units=="Mb"){
-      printer("+ Converting genomic units to Mb...",v=verbose)
+      printer("++ Converting genomic units to Mb...",v=verbose)
       NOTT.interact_trk <- NOTT.interact_trk +
         ggbio::scale_x_sequnit(unit = "Mb")
     }
@@ -841,7 +841,7 @@ NOTT_2019.plac_seq_plot <- function(finemap_dat=NULL,
   }
 
   if (return_interaction_track) {
-    printer("++ Nott sn-epigenomics:: Returning PLAC-seq track.")
+    printer("++ NOTT_2019:: Returning PLAC-seq track.")
     if(as_ggplot)return(NOTT.interact_trk@ggplot) else return(NOTT.interact_trk)
   } else {
     # make the ggplots

@@ -14,13 +14,10 @@
 #'
 #' @examples
 #' library(echolocatoR)
-#' data("LRRK2")
+#' finemap_dat<-echolocatoR::BST1; LD_matrix <- echolocatoR::BST1_LD_matrix;
+#' locus_dir <- file.path("~/Desktop","results/GWAS/Nalls23andMe_2019/BST1")
 #'
-#' locus_dir <- "/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/LRRK2"
-#' finemap_dat <- LRRK2
-#' LD_matrix <- readRDS(file.path(locus_dir,"LD/LRRK2.consensus_SNPs.LD.RDS"))
-#'
-#' LRRK2.locus_plot <- PLOT.locus(finemap_dat, locus_dir=locus_dir, LD_matrix=LD_matrix, Nott_epigenome=T, xtext=F, plot.zoom=c("5x"))
+#' locus_plot <- PLOT.locus(finemap_dat, locus_dir=locus_dir, LD_matrix=LD_matrix, Nott_epigenome=T, xtext=F, plot.zoom=c("5x"))
 PLOT.locus <- function(finemap_dat,
                        locus_dir,
                        LD_matrix=NULL,
@@ -66,15 +63,19 @@ PLOT.locus <- function(finemap_dat,
                        genomic_units="Mb",
                        strip.text.y.angle=0,
                        max_transcripts=1,
-                       plot.zoom="1x",
+                       plot.zoom=c("1x"),
                        dpi=300,
                        height=12,
                        width=10,
+                       plot_format="jpg",
                        nThread=4,
                        return_list=F,
                        verbose=T){
+  # library(dplyr); library(ggplot2); LD_reference="UKB";
+  # finemap_dat<-echolocatoR::BST1; LD_matrix <- echolocatoR::BST1_LD_matrix; locus="BST1";
   # consensus_threshold=2; XGR_libnames=NULL; n_top_xgr=5; mean.PP=T; Roadmap=F; PP_threshold=.95;  Nott_epigenome=T;  save_plot=T; show_plot=T; method_list=c("ABF","SUSIE","POLYFUN_SUSIE","FINEMAP","mean"); full_data=T;  max_transcripts=3; pz=plot.zoom="1x"; dataset_type="GWAS"; dot_summary=F; snp_group_lines=c("UCS","Consensus","Lead"); nThread=4;
-  # Nott_epigenome=T; Nott_regulatory_rects=T; Nott_show_placseq=T; Nott_binwidth=200; max_transcripts=1; dpi=400; height=12; width=10; results_path=NULL;  n_top_roadmap=7; annot_overlap_threshold=5; Nott_bigwig_dir=NULL; locus="BST1"; Roadmap_query=NULL; sig_cutoff=5e-8; verbose=T; QTL_prefixes=NULL; gene_track=T; genomic_units="Mb";strip.text.y.angle=0; xtext=F;
+  # Nott_epigenome=T; Nott_regulatory_rects=T; Nott_show_placseq=T; Nott_binwidth=200; max_transcripts=1; dpi=400; height=12; width=10; results_path=NULL;  n_top_roadmap=7; annot_overlap_threshold=5; Nott_bigwig_dir=NULL;
+  #  Roadmap_query=NULL; sig_cutoff=5e-8; verbose=T; QTL_prefixes=NULL; gene_track=T; genomic_units="Mb";strip.text.y.angle=0; xtext=F; plot_format="jpg"; return_list=F;
   # track_order= c("Genes","GWAS full window","zoom_polygon","GWAS","Fine-mapping", "Roadmap\nchromatin marks\ncell-types", "Nott (2019)\nread densities", "Nott (2019)\nPLAC-seq"); track_heights=NULL; plot_full_window=T;
 
   locus <- basename(locus_dir)
@@ -173,6 +174,8 @@ PLOT.locus <- function(finemap_dat,
                                                      show.legend = show.legend_genes,
                                                      xtext = xtext,
                                                      method = "ggplot",
+                                                     max_transcripts = 1,
+                                                     collapseTranscripts = F,
                                                      verbose=T)
     })
   }
@@ -312,49 +315,57 @@ PLOT.locus <- function(finemap_dat,
   for(pz in plot.zoom){
     message("+>+>+>+>+ plot.zoom = ",pz," +<+<+<+<+")
     # try() Allows (X11) errors to occur and still finish the loop
+    TRKS_zoom <- TRKS
     try({
-      if(plot_full_window & pz!="1x"){
+      window_suffix <- PLOT.get_window_suffix(finemap_dat=finemap_dat,
+                                              plot.zoom=pz)
+      if((plot_full_window) & (!window_suffix %in% c("1x","all"))){
         #### Add zoom polygon ####
-        TRKS[["zoom_polygon"]] <- PLOT.zoom_polygon(finemap_dat = finemap_dat,
-                                                    genomic_units = genomic_units,
-                                                    plot.zoom = pz)
-        TRKS[[full_window_name]] <- PLOT.zoom_highlight(gg = TRKS[[full_window_name]],
-                                                        finemap_dat = finemap_dat,
-                                                        plot.zoom = pz)
+        TRKS_zoom[["zoom_polygon"]] <- PLOT.zoom_polygon(finemap_dat = finemap_dat,
+                                                         genomic_units = genomic_units,
+                                                         plot.zoom = pz)
+        TRKS_zoom[[full_window_name]] <- PLOT.zoom_highlight(gg = TRKS_zoom[[full_window_name]],
+                                                             finemap_dat = finemap_dat,
+                                                             plot.zoom = pz)
       }
       #### Reorder tracks ####
-      TRKS <- PLOT.reorder_tracks(TRKS = TRKS,
-                                  track_order = track_order,
-                                  verbose = verbose)
+      TRKS_zoom <- PLOT.reorder_tracks(TRKS = TRKS_zoom,
+                                       track_order = track_order,
+                                       window_suffix = window_suffix,
+                                       verbose = verbose)
+
+      if(window_suffix=="1x"){
+        # This track becomes redundant when you don't zoom in at all.
+        printer("+ PLOT:: Removing",full_window_name,"track @ zoom=1x",v=verbose)
+        TRKS_zoom[[full_window_name]] <- NULL
+      }
       #### Check track heights ####
-      track_heights <- PLOT.check_track_heights(TRKS = TRKS,
+      track_heights <- PLOT.check_track_heights(TRKS = TRKS_zoom,
                                                 track_heights = track_heights,
                                                 default_height = 1,
                                                 verbose = verbose)
       #### Define plot.zoom limits ####
-      TRKS <- PLOT.set_window_limits(TRKS = TRKS,
-                                     finemap_dat = finemap_dat,
-                                     plot.zoom = pz,
-                                     verbose = verbose)
+      TRKS_zoom <- PLOT.set_window_limits(TRKS = TRKS_zoom,
+                                          finemap_dat = finemap_dat,
+                                          plot.zoom = pz,
+                                          verbose = verbose)
       #### Construct title ####
-      n_snps <- if("GWAS" %in% names(TRKS)){
-        paste0("n SNPs: ", nrow(ggplot2::ggplot_build(TRKS[["GWAS"]])$data[[2]]),", ")
+      n_snps <- if(dataset_type %in% names(TRKS_zoom)){
+        paste0("n SNPs: ", nrow(ggplot2::ggplot_build(TRKS_zoom[[dataset_type]])$data[[2]]),", ")
       } else {NULL}
-      window_suffix <- PLOT.get_window_suffix(finemap_dat=finemap_dat,
-                                              plot.zoom=pz)
       title_text <- paste0(basename(locus_dir),"   (",n_snps,"zoom: ",window_suffix,")")
 
       #### Fuse all tracks ####
-      TRKS_FINAL <- patchwork::wrap_plots(TRKS, ncol = 1) +
+      TRKS_FINAL <- patchwork::wrap_plots(TRKS_zoom, ncol = 1) +
         patchwork::plot_layout(heights = track_heights) +
         patchwork::plot_annotation(title = title_text)
 
       #### Add plot to list of zoomed plots ####
-      plot_list[[pz]] <- if(return_list) TRKS else TRKS_FINAL
+      plot_list[[pz]] <- if(return_list) TRKS_zoom else TRKS_FINAL
 
       #### Save plot ####
       if(save_plot){
-        plot_path <- file.path(locus_dir,paste("multiview",locus,LD_reference,window_suffix,"png",sep="."))
+        plot_path <- file.path(locus_dir,paste("multiview",locus,LD_reference,window_suffix,plot_format,sep="."))
         printer("+ PLOT:: Saving plot ==>",plot_path)
         ggplot2::ggsave(filename = plot_path,
                         plot = TRKS_FINAL,
@@ -374,13 +385,12 @@ PLOT.locus <- function(finemap_dat,
 PLOT.remove_margins <- function(TRKS,
                                 finemap_dat,
                                 verbose=T){
-  printer("+ Standardizing xlims of genomic coordinates...", v=verbose)
+  printer("+ Removing subplot margins...", v=verbose)
   TRKS_std <- list()
   for(x in names(TRKS)){
     # print(x)
     # Some plots only had the labels tranformed, not the actual values.
     ## Check which ones are which and set the limits accordingly.
-    genomic_units <- PLOT.guess_genomic_units(gg = TRKS[[x]])
     TRKS_std[[x]] <-  suppressMessages(suppressWarnings(
       TRKS[[x]] +
         theme(plot.margin = unit(rep(0,4),"cm") )
@@ -409,7 +419,7 @@ PLOT.SNP_track_merged <- function(finemap_dat,
                                   strip.text.y.angle=0,
                                   show_plot=F,
                                   verbose=T){
-  # labels_subset = c("Lead","UCS","Consensus"); yvar="PP"; absolute_labels=F; label_type="rsid_only";  sig_cutoff=5e-8;
+  # labels_subset = c("Lead","UCS","Consensus"); yvar="-log10(P)"; absolute_labels=F; label_type="rsid_only";  sig_cutoff=5e-8;
   # cutoff_lab=paste("P <",sig_cutoff); point_alpha=.5; show.legend=T; xtext=T;  facet_formula="Method~."; track_heights=NULL;
   if(endsWith(yvar,"PP")) {
     finemap_melt <- melt_finemapping_results(finemap_dat = finemap_dat,
@@ -691,13 +701,16 @@ PLOT.get_window_limits <- function(finemap_dat,
 #' window_suffix <- get_window_suffix(finemap_dat=BST1, plot.zoom="all")
 #' window_suffix <- get_window_suffix(finemap_dat=BST1, plot.zoom="2x")
 PLOT.get_window_suffix <- function(finemap_dat,
-                                   plot.zoom){
+                                   plot.zoom,
+                                   verbose=T){
+  printer("+ PLOT:: Get window suffix...",v=verbose)
   window_suffix <- if(is.null(plot.zoom)){
     return(paste0(DescTools::RoundTo((max(finemap_dat$POS) - min(finemap_dat$POS))/1000, 100),"kb"))
   } else {
     if(is.character(plot.zoom)){
       if(plot.zoom=="all"){
-        return(paste0(DescTools::RoundTo((max(finemap_dat$POS) - min(finemap_dat$POS))/1000, 100),"kb"))
+        return("1x")
+        # return(paste0(DescTools::RoundTo((max(finemap_dat$POS) - min(finemap_dat$POS))/1000, 100),"kb"))
       } else {
         return(plot.zoom)
       }
@@ -900,22 +913,34 @@ PLOT.transcript_model_track <- function(finemap_dat,
                      collapseTranscripts=collapseTranscripts[1],
                      shape = shape[1]  )
   } else {
-    #### ggbio #####
+    #### ggbio ####
+    # Warning:: MUST load the full package bc
+    # it loads other necessary packages into the namespace.
     library(Homo.sapiens)
     # columns(Homo.sapiens)
-    library(ggbio)
+    # library(ggbio)
     suppressWarnings(GenomeInfoDb::seqlevelsStyle(gr.snp_CHR) <- "UCSC")
     if("pals" %in% row.names(installed.packages())){
       palette <- unname(pals::alphabet())
     }
-    tx.models <- ggbio::autoplot(Homo.sapiens,
+    if(collapseTranscripts[1]==T){
+      fill_var <- NULL
+      stat_opt <- "reduce"
+      names.expr <- "SYMBOL"
+    } else {
+      fill_var <- "SYMBOL"
+      stat_opt <- "identity"
+      names.expr <- "SYMBOL (TXNAME)"
+    }
+    tx.models <- ggbio::autoplot( Homo.sapiens::Homo.sapiens,
                                  which=gr.snp_CHR,
-                                 aes(fill=SYMBOL, color=SYMBOL),
-                                 columns = c( "SYMBOL","TXNAME"),
-                                 names.expr = "SYMBOL (TXNAME)",
-                                 stat = if(collapseTranscripts[1])"reduce"else "identity") +
+                                 aes_string(fill=fill_var, color=fill_var),
+                                 columns = c("SYMBOL","TXNAME"),
+                                 names.expr = names.expr,
+                                 stat = stat_opt) +
       theme_classic() +
       labs(y="Transcript")
+
     if(xtext==F){
       tx.models <- tx.models +
         theme(axis.text.x = element_blank(),

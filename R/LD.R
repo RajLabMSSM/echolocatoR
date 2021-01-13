@@ -161,7 +161,7 @@ LD.filter_LD <- function(LD_list,
                          remove_correlates=F,
                          min_r2=0,
                          verbose=F){
-  printer("FILTER:: Filtering by LD features.", v=verbose)
+  printer("+ FILTER:: Filtering by LD features.", v=verbose)
   subset_DT <- LD_list$DT
   LD_matrix <- LD_list$LD
   if(any(remove_correlates!=F)){
@@ -1432,18 +1432,19 @@ LD.leadSNP_block <- function(leadSNP, LD_folder, LD_block_size=.7){
 LD.get_lead_r2 <- function(finemap_dat,
                            LD_matrix=NULL,
                            fillNA=0,
-                           LD_format="matrix"){
+                           LD_format="matrix",
+                           verbose=T){
   if(any(c("r","r2") %in% colnames(finemap_dat)) ){
     finemap_dat <- dplyr::select(finemap_dat, -c(r,r2))
   }
   if(LD_format=="matrix"){
     LD_SNP <- subset(finemap_dat, leadSNP==T)$SNP
     if(is.null(LD_matrix)){
-      print("GGBIO:: No LD_matrix detected. Setting color_r2=F");
-      color_r2 <- F
+      printer("+ LD:: No LD_matrix detected. Setting r2=NA",v=verbose);
       dat <- finemap_dat
+      dat$r2 <- NA
     } else {
-      print("GGBIO:: LD_matrix detected. Coloring SNPs by LD with lead SNP.")
+      printer("+ LD:: LD_matrix detected. Coloring SNPs by LD with lead SNP.", v=verbose)
 
 #       LD_sub <- data.frame(SNP = row.names(LD_matrix),
 #                            LD_matrix[,LD_SNP]) %>%

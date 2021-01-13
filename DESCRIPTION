@@ -37,6 +37,7 @@ Imports:
     htmltools,
     stringr,  
     openxlsx,
+    Homo.sapiens,
     EnsDb.Hsapiens.v75,  
     ensembldb,  
     BSgenome,

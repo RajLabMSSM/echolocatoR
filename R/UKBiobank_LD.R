@@ -24,18 +24,7 @@ LD.UKBiobank <- function(subset_DT=NULL,
                          remove_tmps=T,
                          verbose=T){
   printer("LD:: Using UK Biobank LD reference panel.", v=verbose)
-
-  LD.UKB_find_ld_prefix <- function(chrom, min_pos){
-    bp_starts <- seq(1,252000001, by = 1000000)
-    bp_ends <- bp_starts+3000000
-    i <- max(which(bp_starts<=min_pos))
-    file.name <- paste0("chr",chrom,"_", bp_starts[i],"_", bp_ends[i])
-    return(file.name)
-  }
-
-  #### Support functions
-
-  # Begin download
+  #### Prepare finemap_dat ####
   if(!is.null(subset_DT)){
     finemap_dat <- subset_DT
   } else if(!is.null(sumstats_path)){
@@ -46,12 +35,13 @@ LD.UKBiobank <- function(subset_DT=NULL,
   }
   chrom <- unique(finemap_dat$CHR)
   min_pos <- min(finemap_dat$POS)
-  LD.prefixes <- LD.UKB_find_ld_prefix(chrom=chrom, min_pos=min_pos)
+  LD.prefixes <- LD.UKB_find_ld_prefix(chrom=chrom,
+                                       min_pos=min_pos)
   chimera.path <- "/sc/orga/projects/pd-omics/tools/polyfun/UKBB_LD"
   alkes_url <- "https://data.broadinstitute.org/alkesgroup/UKBB_LD"
   URL <- alkes_url
 
-  printer("+ UKB LD file name:",LD.prefixes)
+  #### Create LD locus dir ####
   LD_dir <- file.path(locus_dir, "LD")
   dir.create(LD_dir, showWarnings = F, recursive = T)
   locus <- basename(locus_dir)
@@ -82,19 +72,21 @@ LD.UKBiobank <- function(subset_DT=NULL,
         } else {
           URL <- file.path(URL, LD.prefixes)
           printer("+ LD:: Importing UKB LD file directly to R from:",v=verbose)
-          print(URL)
+
         }
       }
     } else {
       URL <- file.path(URL, LD.prefixes)
       printer("+ LD:: Importing UKB LD file directly to R from:",v=verbose)
-      print(URL)
+
     }
-    # RSIDs file
-    printer("+ LD:: Reading LD matrix into memory. This could take some time...",v=verbose)
-    CONDA.activate_env(conda_env = conda_env,
-                       verbose = verbose)
+
+    #### Import LD via python function ####
+    # CONDA.activate_env(conda_env = conda_env,
+    #                    verbose = verbose)
     reticulate::source_python(system.file("tools","load_ld.py",package = "echolocatoR"))
+    printer("+ LD:: load_ld() python function input:",URL, v=verbose)
+    printer("+ LD:: Reading LD matrix into memory. This could take some time...",v=verbose)
     ld.out <- tryFunc(input = URL, load_ld, server)
     # LD matrix
     ld_R <- ld.out[[1]]
@@ -133,7 +125,16 @@ LD.UKBiobank <- function(subset_DT=NULL,
   }
 }
 
-
+LD.UKB_find_ld_prefix <- function(chrom,
+                                  min_pos,
+                                  verbose=T){
+  bp_starts <- seq(1,252000001, by = 1000000)
+  bp_ends <- bp_starts+3000000
+  i <- max(which(bp_starts<=min_pos))
+  file.name <- paste0("chr",chrom,"_", bp_starts[i],"_", bp_ends[i])
+  printer("+ UKB LD file name:",file.name,v=verbose)
+  return(file.name)
+}
 
 
 LD.download_UKB_LD <- function(LD.prefixes,

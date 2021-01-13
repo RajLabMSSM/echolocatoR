@@ -26,7 +26,7 @@ downloader <- function(input_url,
                        background=background,
                        nThread=nThread,
                        force_overwrite=force_overwrite,
-                       quiet=quiet,
+                       quiet=T, # output hella long otherwise...
                        alternate=alternate,
                        check_certificates=check_certificates)
     } else {
@@ -102,7 +102,7 @@ axel <- function(input_url,
                  background=F,
                  nThread=4,
                  force_overwrite=F,
-                 quiet=F,
+                 quiet=T,
                  alternate=T,
                  check_certificates=F){
   dir.create(output_path, showWarnings = F, recursive = T)

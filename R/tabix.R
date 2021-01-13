@@ -1,6 +1,13 @@
 
 
 
+construct_tabix_path <- function(fullSS_path,
+                                 study_dir=NULL){
+  study_dir <- if(is.null(study_dir)) dirname(fullSS_path) else study_dir
+  fullSS.gz <- if(endsWith(fullSS_path,".gz")) fullSS_path else  paste0(fullSS_path,".gz")
+  tabix_out <- file.path(study_dir, basename(fullSS.gz))
+  return(tabix_out)
+}
 
 
 
@@ -20,19 +27,16 @@ TABIX.convert_file <- function(fullSS_path,
                                position_col="POS",
                                conda_env="echoR",
                                verbose=T){
-  study_dir <- if(is.null(study_dir)) dirname(fullSS_path) else study_dir
-  fullSS.gz <- if(endsWith(fullSS_path,".gz")) fullSS_path else  paste0(fullSS_path,".gz")
+  printer("TABIX:: Converting full summary stats file to tabix format for fast querying...",v=verbose)
   z_grep <- if(endsWith(fullSS_path,".gz")) "zgrep" else "grep"
   cDict <-  column_dictionary(file_path = fullSS_path) # header.path
-  tabix_output <- file.path(study_dir,basename(fullSS.gz))
-
+  tabix_out <- construct_tabix_path(fullSS_path = fullSS_path,
+                                       study_dir = study_dir)
   # Make sure input file isn't empty
   if(file.size(fullSS_path)==0){
     printer("TABIX:: Removing empty file =",fullSS_path);
     file.remove(fullSS_path)
   }
-
-  printer("TABIX:: Converting full summary stats file to tabix format for fast querying...",v=verbose)
   cmd <- paste("(",
                # Extract the header col and sort everything else
                paste0(z_grep," '",chrom_col,"' ",fullSS_path,"; ",z_grep," -v ^'",chrom_col,"' ",fullSS_path),
@@ -42,12 +46,12 @@ TABIX.convert_file <- function(fullSS_path,
                # Compress with bgzip
                "|",CONDA.find_package(package="bgzip", conda_env=conda_env),"-f",
                ">",
-               tabix_output)
+               tabix_out)
   printer(cmd, v=verbose)
   system(cmd)
 
   # Index
-  TABIX.index <- function(tabix_output,
+  TABIX.index <- function(tabix_out,
                           chrom_i=1,
                           pos_i=2,
                           skip_lines=1,
@@ -63,17 +67,17 @@ TABIX.convert_file <- function(fullSS_path,
                   "-s",chrom_i,
                   "-b",pos_i,
                   "-e",pos_i,
-                  tabix_output)
+                  tabix_out)
     printer(cmd2, v=verbose)
     system(cmd2)
   }
-  TABIX.index(tabix_output=tabix_output,
+  TABIX.index(tabix_out=tabix_out,
               chrom_i=cDict[[chrom_col]],
               pos_i=cDict[[position_col]],
               skip_lines=1,
               conda_env=conda_env,
               verbose=verbose)
-  return(tabix_output)
+  return(tabix_out)
 }
 
 
@@ -145,29 +149,38 @@ TABIX <- function(fullSS_path,
                   verbose=T){
   # Check if it's already an indexed tabix file
   # fullSS.gz <- ifelse(endsWith(fullSS_path,".gz"), fullSS_path, paste0(fullSS_path,".gz"))
-  is_tabix <- infer_if_tabix(fullSS_path)
-  if(!is_tabix){
-    fullSS.gz <- TABIX.convert_file(fullSS_path = fullSS_path,
-                                    study_dir = study_dir,
-                                    chrom_col = chrom_col,
-                                    position_col = position_col,
-                                    conda_env=conda_env,
-                                    verbose=verbose)
+  tabix_out <- construct_tabix_path(fullSS_path = fullSS_path,
+                                    study_dir = study_dir)
+  if(infer_if_tabix(tabix_out)){
+    # Checks if the file (in the study dir) already exists,
+    # and whether it is a tabix-indexed file.
+    printer("TABIX:: Using existing tabix file:",tabix_out,v=verbose)
+    # Jump ahead and query tabix_out file
   } else {
-    printer("TABIX:: Existing indexed tabix file detected",v=verbose)
-    fullSS.gz <- fullSS_path
+    if(infer_if_tabix(fullSS_path)){
+      printer("TABIX:: Copying existing tabix file ==>",fullSS_path,v=verbose)
+      file.copy(fullSS_path, tabix_out, overwrite = T)
+      tabix_out <- fullSS_path
+    } else {
+      tabix_out <- TABIX.convert_file(fullSS_path = fullSS_path,
+                                      study_dir = study_dir,
+                                      chrom_col = chrom_col,
+                                      position_col = position_col,
+                                      conda_env=conda_env,
+                                      verbose=verbose)
+    }
   }
   # Query
-  cDict <- column_dictionary(file_path = fullSS.gz)
+  cDict <- column_dictionary(file_path = tabix_out)
   # Determine chromosome format
   has_chr <- determine_chrom_type(chrom_type=chrom_type,
-                                  file_path=fullSS.gz,
+                                  file_path=tabix_out,
                                   chrom_col=chrom_col,
                                   nThread=nThread,
                                   verbose=verbose)
   chrom <- if(has_chr) paste0("chr",gsub("chr","",chrom)) else gsub("chr","",chrom)
 
-  dat <- TABIX.query(fullSS.gz=fullSS.gz,
+  dat <- TABIX.query(fullSS.gz=tabix_out,
                      chrom=chrom,
                      start_pos=min_POS,
                      end_pos=max_POS,

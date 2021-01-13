@@ -105,7 +105,8 @@ POLYFUN.find_polyfun_folder <- function(polyfun_path=NULL){
 #' finemap_DT <- BST1
 #' finemap_DT <- POLYFUN.initialize(locus_dir=locus_dir, finemap_DT=finemap_DT)
 POLYFUN.initialize <- function(locus_dir,
-                               finemap_dat=NULL){
+                               finemap_dat=NULL,
+                               nThread=4){
   dataset <- basename(dirname(locus_dir))
   locus <- basename(locus_dir)
   # Create path
@@ -119,7 +120,7 @@ POLYFUN.initialize <- function(locus_dir,
     }
     printer("POLYFUN:: Importing summary stats from disk:",locus)
     finemap_dat <- data.table::fread(file.path(dirname(Directory_info(dataset, "fullSS.local")),locus,
-                                              paste(locus,dataset,"subset.tsv.gz",sep="_")), nThread = 4)
+                                              paste(locus,dataset,"subset.tsv.gz",sep="_")), nThread = nThread)
   }
   return(finemap_dat)
 }
@@ -194,6 +195,7 @@ POLYFUN.get_precomputed_priors <- function(polyfun=NULL,
                                            finemap_dat=NULL,
                                            force_new_priors=T,
                                            remove_tmps=F,
+                                           nThread=4,
                                            conda_env="echoR"){
   python <- CONDA.find_python_path(conda_env = conda_env)
   polyfun <- POLYFUN.find_polyfun_folder(polyfun_path = polyfun)
@@ -204,7 +206,7 @@ POLYFUN.get_precomputed_priors <- function(polyfun=NULL,
 
   if((file.exists(snp_w_priors.file)) & force_new_priors==F){
     print("++ Importing pre-existing priors.")
-    priors <- data.table::fread(snp_w_priors.file, nThread = 4) %>%
+    priors <- data.table::fread(snp_w_priors.file, nThread = nThread) %>%
       dplyr::rename(SNP=SNP_x) %>% dplyr::select(-SNP_y)
     return(priors)
   } else {

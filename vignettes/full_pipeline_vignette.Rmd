@@ -100,10 +100,10 @@ Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS
                                           loci = c("BST1","MEX3C"),# top_SNPs$Locus,
                                           dataset_name = "Nalls23andMe_2019",
                                           dataset_type = "GWAS",  
-                                          force_new_subset = F,
+                                          force_new_subset = T,
                                           force_new_LD = F,
-                                          force_new_finemap = F,
-                                          remove_tmps = T,
+                                          force_new_finemap = T,
+                                          remove_tmps = F,
                                           
                  # SUMMARY STATS ARGUMENTS
                  fullSS_path = fullSS_path,
@@ -142,7 +142,7 @@ Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS
                  plot.Roadmap_query = NULL,
                  # Nott et al. (2019)
                  plot.Nott_epigenome = T, 
-                 plot.Nott_binwidth = 100
+                 plot.Nott_show_placseq = T
                  )
 ```
 

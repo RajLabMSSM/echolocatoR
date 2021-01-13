@@ -47,7 +47,7 @@ FINEMAP <- function(subset_DT,
                     args_list=list(),
                     verbose=T){
   # n_causal=5; model="cond"; credset_thresh=.95; verbose=T; finemap_version="1.4"; n_samples=NULL;
-  # args_list <- list("--n-iterations"=5000,"--sss"="")
+  # args_list=list()
   n_samples <- if(is.null(n_samples)) max(subset_DT$N) else n_samples
   dir.create(locus_dir, showWarnings = F, recursive = T)
   # Setup files
@@ -71,25 +71,37 @@ FINEMAP <- function(subset_DT,
   #### Run FINEMAP ####
   # NOTE: Must cd into the directory first,
   # or else FINEMAP won't be able to find the input files.
-  cmd <- paste("cd",locus_dir,"&&",
-               FINEMAP_path,
-               paste0("--",model),
-               "--in-files", master_path,
-               "--log",
-               # Option to set the maximum number of allowed causal SNPs
-               # (Default is 5)
-               "--n-causal-snps",n_causal,
-               collapse_args(args_list)
-               )
-  printer(cmd)
-  msg <- system(cmd, intern =  T)
-  if(verbose) try({cat(paste(msg, collapse = "\n"))})
+  msg <- FINEMAP.run(locus_dir=locus_dir,
+                     FINEMAP_path=FINEMAP_path,
+                     model=model,
+                     master_path=master_path,
+                     n_causal=n_causal,
+                     args_list=args_list,
+                     verbose=F)
 
   #### Check if FINEMAP is giving an error due to `zstd` not being installed ####
   if(any(attr(msg,"status")==134)){
-    stop("\n **** 'dyld: Library not loaded: /usr/local/lib/libzstd.1.dylib' error message detected.
+    warning("\n*********\n
+    'dyld: Library not loaded: /usr/local/lib/libzstd.1.dylib' error message detected.
          If you are using a Mac OSX, please install Zstandard (https://facebook.github.io/zstd/).
-         e.g. via Brew: `brew install zstd` **** \n\n")
+         e.g. via Brew: `brew install zstd`\n\n
+
+         If Zstandard is already installed and this error persists,
+         please see the main FINEMAP website for additional support (http://www.christianbenner.com).
+            *********\n\n")
+    message("+ FINEMAP:: Rerunning with FINEMAP v1.3.1.")
+    FINEMAP_path <- FINEMAP.find_executable(version = "1.3.1",
+                                            verbose = F)
+    msg <- FINEMAP.run(locus_dir=locus_dir,
+                       FINEMAP_path=FINEMAP_path,
+                       model=model,
+                       master_path=master_path,
+                       n_causal=n_causal,
+                       args_list=args_list,
+                       verbose=F)
+    if(verbose) try({cat(paste(msg, collapse = "\n"))})
+  } else {
+    if(verbose) try({cat(paste(msg, collapse = "\n"))})
   }
   # Process results
   finemap_dat <- FINEMAP.process_results(locus_dir = locus_dir,
@@ -114,6 +126,31 @@ FINEMAP <- function(subset_DT,
     tmp_bool <- suppressWarnings(file.remove(file.path(locus_dir,"FINEMAP")))
   }
   return(finemap_dat)
+}
+
+
+
+
+FINEMAP.run <- function(locus_dir,
+                        FINEMAP_path,
+                        model,
+                        master_path,
+                        n_causal=5,
+                        args_list=list(),
+                        verbose=T){
+  cmd <- paste("cd",locus_dir,"&&",
+               FINEMAP_path,
+               paste0("--",model),
+               "--in-files", master_path,
+               "--log",
+               # Option to set the maximum number of allowed causal SNPs
+               # (Default is 5)
+               "--n-causal-snps",n_causal,
+               collapse_args(args_list)
+  )
+  printer(cmd, v=verbose)
+  msg <- system(cmd, intern =  T)
+  return(msg)
 }
 
 
@@ -158,7 +195,7 @@ FINEMAP.construct_data <- function(locus_dir,
   if(!"A1" %in% colnames(subset_DT)) {subset_DT$A1 <- "A"; printer("+ FINEMAP:: Optional A1 col missing. Replacing with all 'A's.")};
   if(!"A2" %in% colnames(subset_DT)) {subset_DT$A2 <- "T";  printer("+ FINEMAP:: Optional A2 col missing. Replacing with all 'T's.")};
   if(!"MAF" %in% colnames(subset_DT)) {subset_DT$MAF <- .1; printer(" + FINEMAP:: Optional MAF col missing. Replacing with all '.1's")};
-  printer("++ Preparing data.z file for FINEMAP",v=verbose)
+  printer("++ FINEMAP:: Constructing data.z file.",v=verbose)
   data.z <- subset_DT %>% dplyr::select(rsid=SNP,
                                         chromosome=CHR,
                                         position=POS,
@@ -179,7 +216,7 @@ FINEMAP.construct_data <- function(locus_dir,
                                  .funs = trimws )
 
   ####### data.ld #######
-  printer("++ FINEMAP:: Formatting LD Matrix",v=verbose)
+  printer("++ FINEMAP:: Constructing data.ld file.",v=verbose)
   ## The order of the SNPs in the dataset.ld must correspond to the order of variants in dataset.z.
   # load(file.path(locus_dir,"plink","LD_matrix.RData"))
 
@@ -190,7 +227,7 @@ FINEMAP.construct_data <- function(locus_dir,
 
   # Write files
   ## MUST be space-delimited
-  printer("++ FINEMAP:: Writing z and ld files...",v=verbose)
+  # printer("++ FINEMAP:: Writing z and ld files...",v=verbose)
   if( dim(data.z)[1]==dim(LD_filt)[1] ){
     # data.z
     data.z_path <- file.path(locus_dir,"FINEMAP","data.z")
