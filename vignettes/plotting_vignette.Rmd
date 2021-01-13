@@ -78,14 +78,12 @@ show_plot <- T
 ## Using NO annotations  
 
 ```{r trk_plot}
-trk_plot <- GGBIO.plot(finemap_dat=finemap_DT, 
+trk_plot <- PLOT.locus(finemap_dat=finemap_DT, 
                        LD_matrix=LD_matrix, 
                        locus_dir=locus_dir, 
                        XGR_libnames=NULL, 
                        save_plot=F,
-                       show_plot=show_plot)
-trk_plot <- trk_plot + theme(strip.background = element_rect(fill="gray"),
-                             text = element_text(size=3, color="blue"))
+                       show_plot=show_plot) 
 ```
 
 ## Using only XGR annotations   
@@ -96,7 +94,7 @@ in a locus-specific subdirectory:
 *results/<dataset_type>/<dataset_name>/<locus>/annotation* 
 
 ```{r trk_plot.xgr}
-trk_plot.xgr <- GGBIO.plot(finemap_dat=finemap_DT, 
+trk_plot.xgr <- PLOT.locus(finemap_dat=finemap_DT, 
                            LD_matrix=LD_matrix, 
                            locus_dir=locus_dir, 
                            XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes"), 
@@ -104,10 +102,10 @@ trk_plot.xgr <- GGBIO.plot(finemap_dat=finemap_DT,
                            show_plot=show_plot)
 ```
 
-## Using only Roadmap annotations
+## Using only [Roadmap](http://www.roadmapepigenomics.org/data/tables/brain) annotations
 
 ```{r trk_plot.roadmap} 
-trk_plot.roadmap <- GGBIO.plot(finemap_dat=finemap_DT, 
+trk_plot.roadmap <- PLOT.locus(finemap_dat=finemap_DT, 
                                LD_matrix=LD_matrix, 
                                locus_dir=locus_dir, 
                                XGR_libnames=NULL, 
@@ -118,13 +116,14 @@ trk_plot.roadmap <- GGBIO.plot(finemap_dat=finemap_DT,
 ```
 
 
-## Using only Nott_2019 annotations   
+## Using only [Nott_2019](https://science.sciencemag.org/content/366/6469/1134.abstract)   annotations   
 
-* Query and plot brain cell type-specific epigenomic assays from Nott et al. (2019)  
+* Query and plot brain cell type-specific epigenomic assays from 
+[Nott et al. (Science, 2019)](https://science.sciencemag.org/content/366/6469/1134.abstract)  
 (see `?NOTT_2019.bigwig_metadata` for details).
 
 ```{r trk_plot.nott_2019} 
-trk_plot.nott_2019 <- GGBIO.plot(finemap_dat=finemap_DT,  
+trk_plot.nott_2019 <- PLOT>locus(finemap_dat=finemap_DT,  
                                  LD_matrix=LD_matrix, 
                                  locus_dir=locus_dir,
                                  label_snps=F,

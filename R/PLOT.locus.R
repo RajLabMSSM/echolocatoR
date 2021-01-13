@@ -208,10 +208,7 @@ PLOT.locus <- function(finemap_dat,
       scale_fill_manual(values = grDevices::colorRampPalette(RColorBrewer::brewer.pal(8, palettes[i]))(colourCount) ) +
       scale_y_continuous(n.breaks = 3) +
       guides(fill = guide_legend(ncol = 2, keyheight = .5, keywidth = .5))
-    if(genomic_units=="Mb"){
-      NOTT.interact_trk <- NOTT.interact_trk +
-        scale_x_continuous(labels=function(x)x/1000000)
-    }
+
     TRKS[[gsub("_|[.]","\n",lib)]] <- xgr.track
     i = i+1
   }
@@ -228,7 +225,8 @@ PLOT.locus <- function(finemap_dat,
       grl.roadmap <- readRDS(annot_file)
     } else {
       grl.roadmap <- ROADMAP.query(results_path = dirname(annot_file),
-                                   gr.snp = gr.snp,
+                                   # Will convert data.table automatically
+                                   gr.snp = finemap_dat,
                                    keyword_query = Roadmap_query,
                                    limit_files=F,
                                    nThread = nThread)

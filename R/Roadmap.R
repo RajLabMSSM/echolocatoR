@@ -174,7 +174,8 @@ ROADMAP.track_plot <- function(grl.roadmap.filt,
                                gr.snp=NULL,
                                geom="density",
                                adjust=.2,
-                               show_plot=T){
+                               show_plot=T,
+                               as.ggplot=T){
   track.roadmap <-  ggbio::autoplot(grl.roadmap.filt,
                                     which = gr.snp,
                             aes(fill=ChromState),
@@ -192,7 +193,7 @@ ROADMAP.track_plot <- function(grl.roadmap.filt,
     guides(fill = guide_legend(ncol = 2, keyheight = .5, keywidth = .5)) +
     scale_y_continuous(n.breaks = 3)
   if(show_plot){print(track.roadmap)}
-  return(track.roadmap)
+  if(as.ggplot) return(track.roadmap@ggplot) else return(track.roadmap)
 }
 
 

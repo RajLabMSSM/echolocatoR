@@ -748,7 +748,8 @@ XGR.plot_peaks <- function(gr.lib,
                            locus=NULL,
                            adjust=.2,
                            show_plot=T,
-                           show.legend=T){
+                           show.legend=T,
+                           as.ggplot=T){
   # data("BST1"); subset_DT <- BST1; show.legend=T;  fill_var="Assay"; facet_var="Source"; geom="density"; adjust=.2;
   gr.lib$facet_label <- gsub("_","\n",GenomicRanges::mcols(gr.lib)[,facet_var])
   xgr.track <- ggbio::autoplot(gr.lib,
@@ -770,7 +771,7 @@ XGR.plot_peaks <- function(gr.lib,
   # ggbio::tracks(list("XGR"=xgr.track))
 
   if(show_plot) print(xgr.track)
-  return(xgr.track)
+  if(as.ggplot) return(xgr.track@ggplot) else return(xgr.track)
 }
 
 
