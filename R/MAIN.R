@@ -350,6 +350,7 @@ finemap_pipeline <- function(locus,
                              force_new_LD=F,
                              force_new_finemap=T,
                              finemap_methods=c("ABF","FINEMAP","SUSIE","POLYFUN_SUSIE"),
+                             finemap_args=NULL,
                              bp_distance=500000,
                              n_causal=5,
                              chrom_col="CHR",
@@ -529,6 +530,7 @@ finemap_pipeline <- function(locus,
                                  sample_size = sample_size,
                                  # General args (with defaults)
                                  finemap_methods = finemap_methods,
+                                 finemap_args = finemap_args,
                                  force_new_finemap = force_new_finemap,
                                  dataset_type = dataset_type,
                                  PP_threshold = PP_threshold,
@@ -563,7 +565,7 @@ finemap_pipeline <- function(locus,
                             show_plot = T,
                             nThread = nThread,
                             verbose = verbose)
-      locus_plots <- append(locus_plots, c("simple"=TRKS_simple))
+      locus_plots[["simple"]] <- TRKS_simple
     })
   };
 
@@ -593,7 +595,7 @@ finemap_pipeline <- function(locus,
                         Nott_bigwig_dir = plot.Nott_bigwig_dir,
                         nThread = nThread,
                         verbose = verbose)
-      locus_plots <- append(locus_plots, c("fancy"=TRKS_fancy))
+      locus_plots[["fancy"]] <- TRKS_fancy
     })
   };
 
@@ -657,6 +659,7 @@ finemap_loci <- function(loci,
                          results_dir="./results",
                          top_SNPs="auto",
                          finemap_methods=c("ABF","FINEMAP","SUSIE","POLYFUN_SUSIE"),
+                         finemap_args=NULL,
                          bp_distance=500000,
                          n_causal=5,
                          chrom_col="CHR",
@@ -755,6 +758,7 @@ finemap_loci <- function(loci,
                                       LD_genome_build=LD_genome_build,
                                       results_dir=results_dir,
                                       finemap_methods=finemap_methods,
+                                      finemap_args=finemap_args,
                                       force_new_subset=force_new_subset,
                                       force_new_LD=force_new_LD,
                                       force_new_finemap=force_new_finemap,

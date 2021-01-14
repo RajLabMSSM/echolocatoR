@@ -102,7 +102,7 @@ Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS
                                           dataset_type = "GWAS",  
                                           force_new_subset = F,
                                           force_new_LD = F,
-                                          force_new_finemap = F,
+                                          force_new_finemap = T,
                                           remove_tmps = F,
                                           
                  # SUMMARY STATS ARGUMENTS
@@ -120,9 +120,14 @@ Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS
                  trim_gene_limits = F,
                  
                  # FINE-MAPPING ARGUMENTS
-                 finemap_methods = c("ABF","FINEMAP","SUSIE","POLYFUN_SUSIE"),
+                 ## General
+                 finemap_methods = c("ABF","FINEMAP","SUSIE","POLYFUN_SUSIE"), 
                  n_causal = 5,
                  PP_threshold = .95,
+                 ## tool-specific
+                 finemap_args=list("FINEMAP"=list("--n-threads"=4),
+                                   "SUSIE"=list("scaled_prior_variance"=.001, 
+                                                "max_iter"=100)),
                  
                  # LD ARGUMENTS 
                  LD_reference = "UKB",#"1KGphase1",
@@ -131,7 +136,7 @@ Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS
                  
                  # PLOT ARGUMENTS 
                  ## general   
-                 plot.types=NULL,#c("fancy"),
+                 plot.types=c("fancy"),
                  ## Generate multiple plots of different window sizes; 
                  ### all SNPs, 4x zoomed-in, and a 50000bp window
                  plot.zoom = c("all","4x","10x"),
@@ -142,7 +147,9 @@ Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS
                  plot.Roadmap_query = NULL,
                  # Nott et al. (2019)
                  plot.Nott_epigenome = T, 
-                 plot.Nott_show_placseq = T
+                 plot.Nott_show_placseq = T, 
+                 
+                 verbose = F
                  )
 ```
 

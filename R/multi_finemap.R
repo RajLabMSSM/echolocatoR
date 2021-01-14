@@ -154,6 +154,7 @@ find_consensus_SNPs <- function(finemap_dat,
 multi_finemap <- function(locus_dir,
                           fullSS_path,
                           finemap_method_list,
+                          finemap_args=NULL,
                           subset_DT,
                           dataset_type,
                           LD_matrix=NULL,
@@ -199,6 +200,7 @@ multi_finemap <- function(locus_dir,
        finemap_dat <- finemap_method_handler(fullSS_path = fullSS_path,
                                              locus_dir = locus_dir,
                                              finemap_method = m,
+                                             finemap_args=finemap_args,
                                              subset_DT = data.table::as.data.table(subset_DT),
                                              dataset_type = dataset_type,
                                              LD_matrix = LD_matrix,
@@ -294,6 +296,32 @@ save_finemap_results <- function(finemap_dat,
 }
 
 
+finemap_args_interpreter <- function(finemap_args,
+                                     method="FINEMAP"){
+  # method <- "SUSIE"
+  # finemap_args=list("FINEMAP"=list("--n-threads"=4),
+  #                   "SUSIE"=list("scaled_prior_variance"=.001,
+  #                                "max_iter"=100,
+  #                                "doofus"=42))
+  if(method %in% names(finemap_args)){
+    args_list <- finemap_args[[method]]
+    if(method=="FINEMAP") return(args_list)
+
+  } else {return(NULL)}
+}
+
+SUSIE.args_intrepreter <- function(args_list,
+                                   arg_name){
+    valid_args <- names(args_list)[names(args_list) %in% names(formals(SUSIE))]
+    # if(length(args_list)>length(valid_args)){
+    #   invalid_args <- names(args_list)[!names(args_list) %in% valid_args]
+    #   warning(paste0(method,":: Ignoring unrecognized arguments: ",
+    #                  paste(invalid_args,collapse=", ")))
+    # }
+    if(length(valid_args)>0) return(args_list)
+}
+
+
 
 
 #' @family finemapping functions
@@ -302,6 +330,7 @@ save_finemap_results <- function(finemap_dat,
 finemap_method_handler <- function(locus_dir,
                                    fullSS_path,
                                    finemap_method="SUSIE",
+                                   finemap_args=NULL,
                                    subset_DT,
                                    dataset_type="GWAS",
                                    force_new_finemap=T,
@@ -332,7 +361,7 @@ finemap_method_handler <- function(locus_dir,
   subset_DT <- sub.out$DT
   # INITIATE FINE-MAPPING
   if(finemap_method=="SUSIE"){
-    # SUSIE
+    #### SUSIE ####
     finemap_dat <- SUSIE(subset_DT = subset_DT,
                         dataset_type = dataset_type,
                         LD_matrix = LD_matrix,
@@ -342,7 +371,7 @@ finemap_method_handler <- function(locus_dir,
                         verbose = verbose)
 
   } else if(finemap_method=="POLYFUN_SUSIE"){
-    # PolyFun+SUSIE
+    #### PolyFun+SUSIE ####
     finemap_dat <- POLYFUN_SUSIE(locus_dir = locus_dir,
                                 finemap_dat = subset_DT,
                                 LD_matrix = LD_matrix,
@@ -354,7 +383,7 @@ finemap_method_handler <- function(locus_dir,
                                 conda_env = conda_env)
 
   }else if(finemap_method=="ABF"){
-    # coloc - finemap.abf
+    #### ABF ####
     finemap_dat <- ABF(subset_DT = subset_DT,
                        PP_threshold = PP_threshold,
                        sample_size = sample_size,
@@ -362,17 +391,18 @@ finemap_method_handler <- function(locus_dir,
 
 
   } else if(finemap_method=="FINEMAP"){
-    # FINEMAP
+    #### FINEMAP ####
     finemap_dat <- FINEMAP(subset_DT = subset_DT,
                            locus_dir = locus_dir,
                            LD_matrix = LD_matrix,
                            n_samples = sample_size,
                            n_causal = n_causal,
-                           credset_thresh = PP_threshold)
+                           credset_thresh = PP_threshold,
+                           args_list = if("FINEMAP" %in% names(finemap_args)) finemap_args[["FINEMAP"]] else NULL)
 
 
   } else if("COJO" %in% finemap_method){
-    #COJO
+    #### COJO ####
     conditioned_snps <- subset(subset_DT, leadSNP==T)$SNP
     finemap_dat <- COJO(subset_DT = subset_DT,
                        locus_dir = locus_dir,
@@ -416,6 +446,7 @@ finemap_method_handler <- function(locus_dir,
 finemap_handler <- function(locus_dir,
                             fullSS_path,
                             finemap_methods=c("SUSIE","FINEMAP"),
+                            finemap_args=NULL,
                             subset_DT,
                             dataset_type="GWAS",
                             force_new_finemap=T,
@@ -463,6 +494,7 @@ finemap_handler <- function(locus_dir,
       finemap_dat <- multi_finemap(locus_dir = locus_dir,
                                    fullSS_path = fullSS_path,
                                    finemap_method_list = finemap_methods,
+                                   finemap_args = finemap_args,
                                    subset_DT = subset_DT,
                                    dataset_type = dataset_type,
                                    LD_matrix = LD_matrix,

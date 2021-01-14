@@ -89,16 +89,22 @@ FINEMAP <- function(subset_DT,
          If Zstandard is already installed and this error persists,
          please see the main FINEMAP website for additional support (http://www.christianbenner.com).
             *********\n\n")
-    message("+ FINEMAP:: Rerunning with FINEMAP v1.3.1.")
+    #### Rerun if preferred version of FINEMAP fails ####
     FINEMAP_path <- FINEMAP.find_executable(version = "1.3.1",
                                             verbose = F)
+    message("+ FINEMAP:: Rerunning with FINEMAP v1.3.1.")
     msg <- FINEMAP.run(locus_dir=locus_dir,
                        FINEMAP_path=FINEMAP_path,
                        model=model,
                        master_path=master_path,
                        n_causal=n_causal,
-                       args_list=args_list,
+                       ## May not have the args that the user
+                       ## was expecting due to version differences.
+                       ## Better to shut this arg off.
+                       # args_list=args_list,
                        verbose=F)
+    ## Note!: concatenating this output in rmarkdown
+    ## can accidentally print many many lines.
     if(verbose) try({cat(paste(msg, collapse = "\n"))})
   } else {
     if(verbose) try({cat(paste(msg, collapse = "\n"))})
@@ -336,7 +342,7 @@ FINEMAP.process_results <- function(locus_dir,
     ## prob: column the marginal Posterior Inclusion Probabilities (PIP). The PIP for the l-th SNP is the posterior probability that this SNP is causal.
     ## prob_group: the posterior probability that there is at least one causal signal among SNPs in the same group with this SNP.
     ##
-    printer(" + FINEMAP:: Importing",prob_col,"(.snp)...", v=verbose)
+    printer("+ FINEMAP:: Importing",prob_col,"(.snp)...", v=verbose)
     data.snp <- data.table::fread(file.path(locus_dir,"FINEMAP/data.snp"), nThread = 1)
     data.snp <- data.snp[data.snp[[prob_col]] > credset_thresh,] %>%
       plyr::mutate(CS=1)%>%
@@ -349,7 +355,7 @@ FINEMAP.process_results <- function(locus_dir,
     # NOTES:
     ## .cred files: Conditional posterior probabilities that a given variant is causal
     ## conditional on the other causal variants in the region.
-    printer(" + FINEMAP:: Importing conditional probabilties (.cred)...", v=verbose)
+    printer("+ FINEMAP:: Importing conditional probabilties (.cred)...", v=verbose)
     cred_path <- file.path(locus_dir,"FINEMAP/data.cred")
     data.cred <- data.table::fread(cred_path,
                                    na.strings = c("<NA>","NA"),
@@ -377,7 +383,7 @@ FINEMAP.process_results <- function(locus_dir,
     # NOTES
     ## .config files: Gives all model results for all the configurations tested
     ## (regardless of whether they're over the 95% probability threshold)
-    printer(" + FINEMAP:: Importing top configuration probability (.config)...", v=verbose)
+    printer("+ FINEMAP:: Importing top configuration probability (.config)...", v=verbose)
     config_path <- file.path(locus_dir,"FINEMAP/data.config")
     data.config <- data.table::fread(config_path, nThread=1)
 

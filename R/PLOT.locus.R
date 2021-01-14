@@ -68,6 +68,7 @@ PLOT.locus <- function(finemap_dat,
                        height=12,
                        width=10,
                        plot_format="jpg",
+                       save_ggplots=T,
                        nThread=4,
                        return_list=F,
                        verbose=T){
@@ -173,24 +174,27 @@ PLOT.locus <- function(finemap_dat,
       TRKS[["Genes"]] <- PLOT.transcript_model_track(finemap_dat = finemap_dat,
                                                      show.legend = show.legend_genes,
                                                      xtext = xtext,
-                                                     method = "ggplot",
                                                      max_transcripts = 1,
-                                                     collapseTranscripts = F,
                                                      verbose=T)
     })
   }
 
 
-  #### Track: Annotation - XGR ####
+  #### Track: XGR ####
   palettes <- c("Spectral","BrBG","PiYG", "PuOr")
   if(any(!is.null(XGR_libnames))){printer("++ PLOT:: XGR Tracks")}
   i=1
   for(lib in XGR_libnames){
     annot_file <- annotation_file_name(locus_dir = locus_dir,
                                        lib_name = paste0("XGR.",lib))
-    gr.lib <- XGR.download_and_standardize(lib.selections = lib,
-                                           finemap_dat = finemap_dat,
-                                           nCores = nThread)
+    if(file.exists(annot_file)){
+      gr.lib <- readRDS(annot_file)
+    } else {
+      gr.lib <- XGR.download_and_standardize(lib.selections = lib,
+                                             finemap_dat = finemap_dat,
+                                             nCores = nThread)
+    }
+
     gr.filt <- XGR.filter_sources(gr.lib=gr.lib, n_top_sources=n_top_xgr)
     gr.filt <- XGR.filter_assays(gr.lib=gr.filt, n_top_assays=n_top_xgr)
     saveRDS(gr.filt, annot_file)
@@ -200,24 +204,28 @@ PLOT.locus <- function(finemap_dat,
                                 facet_var = "Source",
                                 geom = "density",
                                 show_plot = F)
-    colourCount <- length(unique(gr.filt$assay))
-    xgr.track <- xgr.track +
-      theme_classic() +
-      theme(strip.text.y = element_text(angle = 0),
-            strip.text = element_text(size=9)) +
-      scale_fill_manual(values = grDevices::colorRampPalette(RColorBrewer::brewer.pal(8, palettes[i]))(colourCount) ) +
-      scale_y_continuous(n.breaks = 3) +
-      guides(fill = guide_legend(ncol = 2, keyheight = .5, keywidth = .5))
-
-    TRKS[[gsub("_|[.]","\n",lib)]] <- xgr.track
+    colourCount <- length(unique(gr.filt$Assay))
+    trk_name <- paste("XGR:",lib)
+    xgr.track <- suppressMessages(
+      xgr.track +
+        theme_classic() +
+        theme(strip.text.y = element_text(angle = 0),
+              strip.text = element_text(size=9)) +
+        scale_fill_manual(values = grDevices::colorRampPalette(RColorBrewer::brewer.pal(8, palettes[i]))(colourCount) ) +
+        scale_y_continuous(n.breaks = 3) +
+        guides(fill = guide_legend(ncol = 2, keyheight = .5, keywidth = .5)) +
+        labs(y = paste(gsub("_"," ",trk_name),"\n","density"))
+    )
+    TRKS[[trk_name]] <- xgr.track
     i = i+1
   }
 
-  #### Track: Roadmap Chromatin Marks ####
+  #### Track: Roadmap ####
   ## Download
   if(Roadmap){
     printer("+ PLOT:: Creating Roadmap track")
     lib <- "Roadmap.ChromatinMarks_CellTypes"
+    gr.snp <- DT_to_GRanges(subset_DT = finemap_dat)
     annot_file <- annotation_file_name(locus_dir = locus_dir,
                                        lib_name = lib)
     if(file.exists(annot_file)){
@@ -226,7 +234,7 @@ PLOT.locus <- function(finemap_dat,
     } else {
       grl.roadmap <- ROADMAP.query(results_path = dirname(annot_file),
                                    # Will convert data.table automatically
-                                   gr.snp = finemap_dat,
+                                   gr.snp = gr.snp,
                                    keyword_query = Roadmap_query,
                                    limit_files=F,
                                    nThread = nThread)
@@ -287,16 +295,7 @@ PLOT.locus <- function(finemap_dat,
     }
   }
 
-  # WARNING:: The order of these adjustment functions matters!
-  ## Some of them reset the parameters of others
 
-  #### Remove plots margins to save space ####
-  TRKS <- PLOT.remove_margins(TRKS = TRKS,
-                              finemap_dat = finemap_dat,
-                              verbose = verbose)
-  #### Make sure last plot has xtext ####
-  TRKS <- PLOT.add_back_xtext(TRKS = TRKS,
-                              verbose = verbose)
   #### Add vertical lines  ####
   if(!is.null(snp_group_lines)){
     TRKS <- PLOT.add_multitrack_lines(TRKS = TRKS,
@@ -306,7 +305,6 @@ PLOT.locus <- function(finemap_dat,
                                       remove_duplicated_UCS_Consensus = T,
                                       verbose = verbose)
   }
-
 
   ##### Iterate over different window sizes #####
   plot_list <- list()
@@ -326,21 +324,28 @@ PLOT.locus <- function(finemap_dat,
                                                              finemap_dat = finemap_dat,
                                                              plot.zoom = pz)
       }
-      #### Reorder tracks ####
-      TRKS_zoom <- PLOT.reorder_tracks(TRKS = TRKS_zoom,
-                                       track_order = track_order,
-                                       verbose = verbose)
-
+      #### Remove extra full_window plot #####
+      # The steps MUST come before PLOT.reorder_tracks
       if(window_suffix=="1x"){
         # This track becomes redundant when you don't zoom in at all.
         printer("+ PLOT:: Removing",full_window_name,"track @ zoom=1x",v=verbose)
         TRKS_zoom[[full_window_name]] <- NULL
       }
-      #### Check track heights ####
-      track_heights <- PLOT.check_track_heights(TRKS = TRKS_zoom,
-                                                track_heights = track_heights,
-                                                default_height = 1,
-                                                verbose = verbose)
+
+      # WARNING:: The order of these adjustment functions matters!
+      ## Some of them reset the parameters of others
+
+      #### Remove plots margins to save space ####
+      TRKS_zoom <- PLOT.remove_margins(TRKS = TRKS_zoom,
+                                  finemap_dat = finemap_dat,
+                                  verbose = verbose)
+      #### Make sure last plot has xtext ####
+      TRKS_zoom <- PLOT.add_back_xtext(TRKS = TRKS_zoom,
+                                  verbose = verbose)
+      #### Reorder tracks ####
+      TRKS_zoom <- PLOT.reorder_tracks(TRKS = TRKS_zoom,
+                                       track_order = track_order,
+                                       verbose = verbose)
       #### Define plot.zoom limits ####
       TRKS_zoom <- PLOT.set_window_limits(TRKS = TRKS_zoom,
                                           finemap_dat = finemap_dat,
@@ -352,17 +357,23 @@ PLOT.locus <- function(finemap_dat,
       } else {NULL}
       title_text <- paste0(basename(locus_dir),"   (",n_snps,"zoom: ",window_suffix,")")
 
+      #### Check track heights ####
+      track_heights <- PLOT.check_track_heights(TRKS = TRKS_zoom,
+                                                track_heights = track_heights,
+                                                default_height = 1,
+                                                verbose = verbose)
       #### Fuse all tracks ####
-      TRKS_FINAL <- patchwork::wrap_plots(TRKS_zoom, ncol = 1) +
-        patchwork::plot_layout(heights = track_heights) +
+      TRKS_FINAL <- patchwork::wrap_plots(TRKS_zoom,
+                                          heights = track_heights,
+                                          ncol = 1) +
         patchwork::plot_annotation(title = title_text)
 
       #### Add plot to list of zoomed plots ####
       plot_list[[pz]] <- if(return_list) TRKS_zoom else TRKS_FINAL
 
       #### Save plot ####
+      plot_path <- file.path(locus_dir,paste("multiview",locus,LD_reference,window_suffix,plot_format,sep="."))
       if(save_plot){
-        plot_path <- file.path(locus_dir,paste("multiview",locus,LD_reference,window_suffix,plot_format,sep="."))
         printer("+ PLOT:: Saving plot ==>",plot_path)
         ggplot2::ggsave(filename = plot_path,
                         plot = TRKS_FINAL,
@@ -371,6 +382,15 @@ PLOT.locus <- function(finemap_dat,
                         dpi = dpi,
                         bg = "transparent")
       }
+
+      #### Save ggplot ####
+      # Only save one zoom of these since these files are very large
+      if(save_ggplots & (pz==plot.zoom[1])){
+        trk_paths <- save_plot_tracks(locus_dir=locus_dir,
+                                      TRKS_zoom=TRKS_zoom,
+                                      verbose=verbose)
+      }
+      #### Show the plot ####
       if(show_plot){print(TRKS_FINAL)}
     })
   } # End plot.zoom loop
@@ -379,6 +399,35 @@ PLOT.locus <- function(finemap_dat,
 
 
 #### + SUPPORT FUNCTIONS + ####
+
+save_plot_tracks <- function(locus_dir,
+                             TRKS_zoom,
+                             split_tracks=F,
+                             verbose=T){
+  tracks_folder <- file.path(locus_dir,"plot_tracks")
+  dir.create(tracks_folder, showWarnings = F, recursive = T)
+  if(split_tracks){
+    trk_paths <- lapply(names(TRKS_zoom), function(x){
+      rds_path <-  file.path(tracks_folder,paste(paste(gsub("[:]|[\n]|[/]|[ ]","-",x),"trk",sep="_"),locus,LD_reference,window_suffix,"RDS",sep="."))
+      printer("+ PLOT:: Saving ggplots track:",x,"==>",rds_path, v=verbose)
+      saveRDS(TRKS_zoom[[x]], rds_path)
+      return(x)
+    }) %>% unlist()
+  }else {
+    ## NOTE: Saving as one list object somehow takes up about
+    ## the same storage space as each track saved individually.
+    trk_paths <- rds_path <- file.path(tracks_folder,paste("multiview",locus,LD_reference,window_suffix,"RDS",sep="."))
+    printer("+ PLOT:: Saving ggplots tracks list ==>",rds_path, v=verbose)
+    saveRDS(TRKS_zoom, rds_path)
+  }
+  return(trk_paths)
+}
+
+
+
+
+
+
 PLOT.remove_margins <- function(TRKS,
                                 finemap_dat,
                                 verbose=T){
@@ -566,7 +615,8 @@ PLOT.add_snp_labels <- function(snp_plot,
 
 
 PLOT.guess_genomic_units <- function(gg,
-                                     decimals_default="Mb"){
+                                     decimals_default="Mb",
+                                     verbose=F){
   gp <- ggplot2::ggplot_build(gg)
   data_dims <- lapply(gp$data, nrow) %>% unlist()
   i <- which(data_dims==max(data_dims))[1]
@@ -574,7 +624,11 @@ PLOT.guess_genomic_units <- function(gg,
   x_var <- c("xend","x")[c("xend","x") %in% colnames(plot_dat)][1]
   ### Guess based on  the presence of decimals (which implies non-POS units)
   ### Currently cannot distinguish between different non-POS units (Gb,Mb,Kb) so we just assume Mb.
-  genomic_units <- if(max(plot_dat[[x_var]], na.rm = T)%%1==0) "POS" else decimals_default
+  # max(plot_dat[[x_var]], na.rm = T)%%1==0 ### Doesn't actually work
+  max_val <- max(plot_dat[[x_var]], na.rm = T)
+
+  genomic_units <- if(isTRUE(all.equal(round(max_val,1), max_val))) "POS" else decimals_default
+  printer("+ Guessing genomic units:",genomic_units,v=verbose)
   return(genomic_units)
 }
 
@@ -889,7 +943,7 @@ PLOT.zoom_highlight <- function(gg,
 #' gene_track <- PLOT.transcript_model_track(finemap_dat=LRRK2)
 PLOT.transcript_model_track <- function(finemap_dat,
                                         max_transcripts=1,
-                                        remove_RP11=T,
+                                        remove_pseudogenes=T,
                                         show.legend=T,
                                         show_plot=F,
                                         fill="skyblue",
@@ -900,21 +954,22 @@ PLOT.transcript_model_track <- function(finemap_dat,
                                         method="ggplot",
                                         xtext=T,
                                         verbose=T){
+  # finemap_dat <-echolocatoR::BST1
   # method="ggbio"; verbose=T; stacking="squish";  fill="blue"; transcriptAnnotation = c("symbol","transcript");  collapseTranscripts=c(F,T,"longest"); shape="arrow";
-  gr.snp_CHR <- biovizBase::transformDfToGr(data = finemap_dat,
-                                            seqnames = "CHR",
-                                            start = "POS", end = "POS")
+  gr.snp <- biovizBase::transformDfToGr(data = finemap_dat,
+                                        seqnames = "CHR",
+                                        start = "POS", end = "POS")
+  suppressWarnings(GenomeInfoDb::seqlevelsStyle(gr.snp) <- "NCBI")
   #### Gviz ####
   if(method=="gviz"){
     library(Gviz)
     library(EnsDb.Hsapiens.v75)
-    suppressWarnings(GenomeInfoDb::seqlevelsStyle(gr.snp_CHR) <- "NCBI")
     printer("+ PLOT:: Gene Model Track",v=verbose)
-    edb <-  EnsDb.Hsapiens.v75::EnsDb.Hsapiens.v75
-    tx <- ensembldb::getGeneRegionTrackForGviz(edb,
-                                               filter = GRangesFilter(value = gr.snp_CHR, feature = "tx"))
-    tx_lengths <- transcriptLengths(edb,
-                                    filter = GRangesFilter(value = gr.snp_CHR, feature = "tx"))
+    txdb <-  EnsDb.Hsapiens.v75::EnsDb.Hsapiens.v75
+    tx <- ensembldb::getGeneRegionTrackForGviz(txdb,
+                                               filter = GRangesFilter(value = gr.snp, feature = "tx"))
+    tx_lengths <- transcriptLengths(txdb,
+                                    filter = GRangesFilter(value = gr.snp, feature = "tx"))
     tx$tx_len <- setNames(tx_lengths$tx_len,tx_lengths$tx_id)[tx$transcript]
     tx <- subset(tx, !startsWith(as.character(symbol),"RP11"))
     # gtrack <- GenomeAxisTrack()
@@ -923,37 +978,30 @@ PLOT.transcript_model_track <- function(finemap_dat,
                                        fill=fill,
                                        stacking = stacking[1])
     # ggplotify::as.ggplot(tx.models)
-    Gviz::plotTracks(list(tx.models),
+    ## Problem!: Gviz::plotTracks does not return an actual plot object,
+    # no way to convrt this to ggplot
+    out <- Gviz::plotTracks(list(tx.models),
                      transcriptAnnotation = transcriptAnnotation[1],
                      background.title = "grey20",
                      collapseTranscripts=collapseTranscripts[1],
-                     shape = shape[1]  )
+                     shape = shape[1],  )
+
   } else {
     #### ggbio ####
-    # Warning:: MUST load the full package bc
-    # it loads other necessary packages into the namespace.
-    library(Homo.sapiens)
-    # columns(Homo.sapiens)
-    # library(ggbio)
-    suppressWarnings(GenomeInfoDb::seqlevelsStyle(gr.snp_CHR) <- "UCSC")
+    tx <- get_transcripts(gr.snp = gr.snp,
+                          max_transcripts = max_transcripts,
+                          remove_pseudogenes = remove_pseudogenes)
     if("pals" %in% row.names(installed.packages())){
       palette <- unname(pals::alphabet())
     }
-    if(collapseTranscripts[1]==T){
-      fill_var <- NULL
-      stat_opt <- "reduce"
-      names.expr <- "SYMBOL"
-    } else {
-      fill_var <- "SYMBOL"
-      stat_opt <- "identity"
-      names.expr <- "SYMBOL (TXNAME)"
-    }
-    tx.models <- ggbio::autoplot( Homo.sapiens::Homo.sapiens,
-                                 which=gr.snp_CHR,
-                                 aes_string(fill=fill_var, color=fill_var),
-                                 columns = c("SYMBOL","TXNAME"),
+    names.expr <-if(max_transcripts==1)  "symbol" else  "symbol (tx_id)"
+    tx.models <- ggbio::autoplot(tx$txdb_filt,
+                                 which=tx$tx.gr,
+                                 aes_string(fill="symbol", color="symbol"),
+                                 columns =  c("symbol","tx_id"),
                                  names.expr = names.expr,
-                                 stat = stat_opt) +
+                                 stat = "identity",
+                                 show.legend = F) +
       theme_classic() +
       labs(y="Transcript")
 
@@ -979,6 +1027,68 @@ PLOT.transcript_model_track <- function(finemap_dat,
   }
   if(show_plot) print(tx.models)
   return(tx.models)
+}
+
+
+
+
+get_transcripts <- function(gr.snp,
+                            max_transcripts=1,
+                            remove_pseudogenes=T){
+  # Warning:: MUST load the full package bc
+  # it loads other necessary packages into the namespace.
+
+  # BiocManager::install("Homo.sapiens")
+  # library(Homo.sapiens)
+  # txdb <- Homo.sapiens::Homo.sapiens
+  # GenomicFeatures::genes(txdb)
+
+  # BiocManager::install("TxDb.Hsapiens.UCSC.hg19.knownGene")
+  # library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+  # txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene::TxDb.Hsapiens.UCSC.hg19.knownGene
+  # GenomicFeatures::genes(txdb)
+
+  # BiocManager::install("EnsDb.Hsapiens.v75")
+  library(EnsDb.Hsapiens.v75)
+  txdb <- EnsDb.Hsapiens.v75::EnsDb.Hsapiens.v75
+  #### Query genome db with finemap_DT coordinates ####
+  txdb_transcripts <- ensembldb::transcripts(txdb,
+                                             columns = c(listColumns(txdb , "tx"), "symbol"),
+                                             filter = AnnotationFilter::AnnotationFilterList(
+                                               # GRangesFilter(gr.snp)
+                                               SeqNameFilter(value = unique(seqnames(gr.snp)) )
+                                             ))
+  #### Find exact overlap between transcripts and finemap_DT ####
+  hits <- GenomicRanges::findOverlaps(query = gr.snp,
+                                      subject = txdb_transcripts)
+  #### limit the number of transcript per gene ####
+  tx.filt <- data.frame(txdb_transcripts[S4Vectors::subjectHits(hits),]) %>%
+    data.table::as.data.table() %>%
+    dplyr::mutate(tx_length=abs(start-end)) %>%
+    dplyr::group_by(symbol) %>%
+    dplyr::arrange(dplyr::desc(tx_length)) %>%
+    dplyr::slice(max_transcripts) %>%
+    subset((!is.na(symbol)) & (!is.na(tx_name))) %>%
+    data.table::as.data.table()
+  #### remove_pseudogenes ####
+  if(remove_pseudogenes){
+    tx.filt <- subset(tx.filt,
+                        (!tx_biotype %in% c("processed_pseudogene","pseudogene") ) &
+                        (!startsWith(symbol,"RP11")))
+  }
+  #### Convert back to granges ####
+  tx.gr <- GenomicRanges::makeGRangesFromDataFrame(tx.filt,
+                                                   start.field = "start",
+                                                   end.field = "end",
+                                                   seqnames.field = "seqnames",
+                                                   keep.extra.columns = T)
+  txdb_filt <- ensembldb::filter(txdb,
+                                 filter = AnnotationFilter::AnnotationFilterList(
+                                   TxIdFilter(tx.gr$tx_id)
+                                   # SeqNameFilter(value = unique(seqnames(gr.snp_CHR)) )
+                                 ))
+  return(list(txdb_filt=txdb_filt,
+              tx.gr=tx.gr))
 }
 
 
