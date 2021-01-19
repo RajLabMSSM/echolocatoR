@@ -10,6 +10,8 @@ VALIDATION.compare_support(plot_dat)
 Check whether Support level correlates with some variable
 }
 \examples{
+\dontrun{
 # S-LDSC h2
 h2_stats <- data.table::fread("/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/Nalls23andMe_2019.grouped_snpvar_stats.csv.gz")
+}
 }

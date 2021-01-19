@@ -36,9 +36,11 @@ that overlap with the SNPs in \code{subset_DT}.
 The \code{GRanges} merges hits from \code{subset_DT}.
 }
 \examples{
+\dontrun{
 data("BST1")
 finemap_DT <- BST1
 gr.hits <- XGR.iterate_overlap(lib.selections=c("ENCODE_TFBS_ClusteredV3_CellTypes"), subset_DT=finemap_DT, nCores=1)
+}
 }
 \seealso{
 Other XGR: 

@@ -15,9 +15,11 @@ XGR.plot_enrichment(
 Plot XGR enrichment
 }
 \examples{
+\dontrun{
 data("merged_DT")
 enrich_res <- XGR.iterate_enrichment(subset_DT=merged_DT, foreground_filter = "Consensus_SNP", background_filter = "leadSNP", lib.selections = c("ENCODE_TFBS_ClusteredV3_CellTypes"), nCores=1)
 XGR.plot_enrichment(enrich_res)
+}
 }
 \seealso{
 Other XGR: 

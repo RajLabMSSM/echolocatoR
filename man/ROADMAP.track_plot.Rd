@@ -9,7 +9,8 @@ ROADMAP.track_plot(
   gr.snp = NULL,
   geom = "density",
   adjust = 0.2,
-  show_plot = T
+  show_plot = T,
+  as.ggplot = T
 )
 }
 \arguments{
@@ -29,10 +30,12 @@ Options include "density" and "histogram".}
 Plot Roadmap query
 }
 \examples{
+\dontrun{
 data("BST1")
 finemap_DT <- BST1
 gr.snp <- DT_to_GRanges(finemap_DT)
 grl.roadmap <- ROADMAP.query(results_path="./Roadmap", gr.snp=gr.snp, keyword_query="monocyte")
 grl.roadmap.filt <- ROADMAP.merge_and_process_grl(grl.roadmap=grl.roadmap, gr.snp=gr.snp, n_top_tissues=5)
 track.roadmap <- ROADMAP.track_plot(grl.roadmap.filt, gr.snp=gr.snp)
+}
 }

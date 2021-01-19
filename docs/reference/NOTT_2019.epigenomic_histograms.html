@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -94,6 +94,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -112,7 +115,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -138,31 +141,41 @@
     <p>Brain cell-specific epigenomic data from Nott et al. (2019).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>NOTT_2019.epigenomic_histograms</span>(
-  <span class='no'>finemap_dat</span>,
-  <span class='no'>locus_dir</span>,
-  <span class='kw'>show_plot</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>save_plot</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>full_data</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>return_assay_track</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>binwidth</span> <span class='kw'>=</span> <span class='fl'>2500</span>,
-  <span class='kw'>plot.window</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>,
-  <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"histogram"</span>,
-  <span class='kw'>plot_formula</span> <span class='kw'>=</span> <span class='st'>"Assay + Cell_type ~."</span>,
-  <span class='kw'>bigwig_dir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>nThread</span> <span class='kw'>=</span> <span class='fl'>4</span>,
-  <span class='kw'>save_annot</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>
-)</pre>
+    <pre class="usage"><span class='fu'>NOTT_2019.epigenomic_histograms</span><span class='op'>(</span>
+  <span class='va'>finemap_dat</span>,
+  <span class='va'>locus_dir</span>,
+  show_plot <span class='op'>=</span> <span class='cn'>T</span>,
+  save_plot <span class='op'>=</span> <span class='cn'>T</span>,
+  full_data <span class='op'>=</span> <span class='cn'>T</span>,
+  return_assay_track <span class='op'>=</span> <span class='cn'>F</span>,
+  binwidth <span class='op'>=</span> <span class='fl'>200</span>,
+  density_adjust <span class='op'>=</span> <span class='fl'>0.2</span>,
+  plot.zoom <span class='op'>=</span> <span class='st'>"1x"</span>,
+  strip.text.y.angle <span class='op'>=</span> <span class='fl'>90</span>,
+  xtext <span class='op'>=</span> <span class='cn'>T</span>,
+  geom <span class='op'>=</span> <span class='st'>"density"</span>,
+  plot_formula <span class='op'>=</span> <span class='st'>"Cell_type ~."</span>,
+  fill_var <span class='op'>=</span> <span class='st'>"Assay"</span>,
+  bigwig_dir <span class='op'>=</span> <span class='cn'>NULL</span>,
+  genomic_units <span class='op'>=</span> <span class='st'>"Mb"</span>,
+  as_ggplot <span class='op'>=</span> <span class='cn'>T</span>,
+  nThread <span class='op'>=</span> <span class='fl'>4</span>,
+  save_annot <span class='op'>=</span> <span class='cn'>F</span>,
+  verbose <span class='op'>=</span> <span class='cn'>T</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>plot.window</th>
+      <th>plot.zoom</th>
       <td><p>Zoom into the center of the locus when plotting (without editing the fine-mapping results file).
-You can also pass a list of window sizes (e.g. <code><a href='https://rdrr.io/r/base/c.html'>c(50000,100000,500000)</a></code>) to automatically generate
-multiple views of each locus.</p></td>
+You can provide either:</p><ul>
+<li><p>The size of your plot window in terms of basepairs (e.g. <code>plot.zoom=50000</code> for a 50kb window).</p></li>
+<li><p>How much you want to zoom in (e.g. <code>plot.zoom="1x"</code> for the full locus, <code>plot.zoom="2x"</code> for 2x zoom into the center of the locus, etc.).</p></li>
+</ul><p>You can pass a list of window sizes (e.g. <code><a href='https://rdrr.io/r/base/c.html'>c(50000,100000,500000)</a></code>) to automatically generate
+multiple views of each locus.
+This can even be a mix of different style inputs: e.g. <code><a href='https://rdrr.io/r/base/c.html'>c("1x","4.5x",25000)</a></code>.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -190,12 +203,12 @@ multiple views of each locus.</p></td>
 <code><a href='NOTT_2019.superenhancers.html'>NOTT_2019.superenhancers</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"BST1"</span>); <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"locus_dir"</span>);
- <span class='no'>track.Nott_histo</span> <span class='kw'>&lt;-</span> <span class='fu'>NOTT_2019.epigenomic_histograms</span>(<span class='kw'>finemap_dat</span> <span class='kw'>=</span> <span class='no'>BST1</span>, <span class='kw'>locus_dir</span> <span class='kw'>=</span> <span class='no'>locus_dir</span>, <span class='kw'>save_plot</span><span class='kw'>=</span><span class='no'>F</span>, <span class='kw'>return_assay_track</span><span class='kw'>=</span><span class='no'>T</span>, <span class='kw'>save_annot</span><span class='kw'>=</span><span class='no'>F</span>)</div><div class='output co'>#&gt; [1] "NOTT_2019:: Importing bigWig subsets from UCSC..."
-#&gt; [1] "++ Nott_2019:: Downloading and merging 12 BED files."
-#&gt; [1] "++ NOTT_2019:: Converting merged BED files to GRanges."
-#&gt; [1] "++ Nott_2019:: 634540 ranges retrieved."</div><div class='output co'>#&gt; <span class='message'>503961 query SNP(s) detected with reference overlap.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: no non-missing arguments to max; returning -Inf</span></div><div class='output co'>#&gt; <span class='message'>Scale for 'x' is already present. Adding another scale for 'x', which will</span>
-#&gt; <span class='message'>replace the existing scale.</span></div><div class='output co'>#&gt; [1] "+ GGBIO:: Calculating max histogram height"</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"BST1"</span><span class='op'>)</span>; <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"locus_dir"</span><span class='op'>)</span>;
+<span class='va'>track.Nott_histo</span> <span class='op'>&lt;-</span> <span class='fu'>NOTT_2019.epigenomic_histograms</span><span class='op'>(</span>finemap_dat <span class='op'>=</span> <span class='va'>BST1</span>, locus_dir <span class='op'>=</span> <span class='va'>locus_dir</span>, save_plot<span class='op'>=</span><span class='cn'>F</span>, return_assay_track<span class='op'>=</span><span class='cn'>T</span>, save_annot<span class='op'>=</span><span class='cn'>F</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "NOTT_2019:: Creating epigenomic histograms plot"
+#&gt; [1] "NOTT_2019:: Importing bigWig subsets from UCSC..."
+#&gt; [1] "+ Inferring genomic limits for window: 1x"
+#&gt; [1] "++ NOTT_2019:: Downloading and merging 12 peaks BED files."</div><div class='output co'>#&gt; <span class='warning'>Warning: scheduled cores 3 encountered errors in user code, all values of the jobs will be affected</span></div><div class='output co'>#&gt; <span class='error'>Error in data.table::rbindlist(.): Item 3 of input is not a data.frame, data.table or list</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -211,7 +224,7 @@ multiple views of each locus.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

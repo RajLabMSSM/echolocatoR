@@ -56,21 +56,14 @@ merge_finemapping_results <- function(dataset="./Data/GWAS",
   if(from_storage){
     printer("+ Gathering all fine-mapping results from storage...", v=verbose)
     # Find all multi-finemap_results files
-    multifinemap_pattern <- create_method_path(locus_dir = file.path(dataset,"*"),
-                                               finemap_method = "Multi-finemap",
-                                               LD_reference = LD_reference,
-                                               compress = F,
-                                               create_dir = F)
-    multifinemap_pattern_gz <- create_method_path(locus_dir = file.path(dataset,"*"),
-                                                  finemap_method = "Multi-finemap",
-                                                  LD_reference = LD_reference,
-                                                  compress = T,
-                                                  create_dir = F)
+    multifinemap_pattern <-  multifinemap_pattern <- file.path(dataset, paste0("*.*Multi-finemap.tsv*"))
+    multifinemap_pattern2 <-  multifinemap_pattern <- file.path(dataset, paste0("*.*multi_finemap.csv*"))
+
     multi_dirs <- list.files(path = dataset,
                              pattern = paste0( c(basename(multifinemap_pattern),
-                                                 basename(multifinemap_pattern_gz)), collapse="|"),
+                                                 basename(multifinemap_pattern2)), collapse="|"),
                              recursive = T,
-                             full.names = T)
+                             full.names = T) %>% unique()
     if(length(multi_dirs)==0){
       stop("+ No multi-finemap files found.")
     } else {
@@ -94,7 +87,8 @@ merge_finemapping_results <- function(dataset="./Data/GWAS",
         multi_data <- data.table::fread(md, nThread = nThread)
         multi_data <- update_cols(multi_data)
         multi_data <- assign_lead_SNP(new_DT = multi_data, verbose = verbose)
-        multi_data <- cbind(data.table::data.table(Dataset=basename(dn), Locus=locus), multi_data)
+        if(!"Locus" %in% colnames(multi_data)) multi_data <-cbind(Locus=locus, multi_data)
+        if(!"Dataset" %in% colnames(multi_data)) multi_data <-cbind(Dataset=basename(dn), multi_data)
         return(multi_data)
       }, mc.cores = nThread) %>% data.table::rbindlist(fill=TRUE) # Bind loci
     }) %>% data.table::rbindlist(fill=TRUE) # Bind datasets
@@ -350,32 +344,47 @@ haploR.regulomeDB <- function(snp_list, verbose=T, chunk_size=NA){
 #' \href{https://bioconductor.org/packages/release/bioc/html/biomaRt.html}{biomaRt}
 biomart_snp_info <- function(snp_list,
                              reference_genome="grch37",
+                             attributes =  c('refsnp_id',
+                                             'allele',
+                                             'chr_name',
+                                             'chrom_start',
+                                             'chrom_end',
+                                             'chrom_strand',
+                                             'ensembl_gene_stable_id',
+                                             'consequence_type_tv',
+                                             'polyphen_prediction',
+                                             'polyphen_score',
+                                             'sift_prediction',
+                                             'sift_score',
+                                             'reg_consequence_types',
+                                             'validated'
+                             ),
                              verbose=T){
+  library(biomaRt)
   printer("+ Gathering annotation data from Biomart...", v=verbose)
   mart = biomaRt::useMart(biomart="ENSEMBL_MART_SNP",
                            host=paste0(reference_genome,".ensembl.org"),
                            path="/biomart/martservice",
-                           dataset="hsapiens_snp",)
+                           dataset="hsapiens_snp")
   # View(biomaRt::listFilters(mart))
   # View(biomaRt::listAttributes(mart))
-  biomart_query = biomaRt::getBM(attributes =  c('refsnp_id',
-                                 'allele',
-                                 'chr_name',
-                                 'chrom_start',
-                                 'chrom_end',
-                                 'chrom_strand',
-                                 'ensembl_gene_stable_id',
-                                 'consequence_type_tv',
-                                 'polyphen_prediction',
-                                 'polyphen_score',
-                                 'sift_prediction',
-                                 'sift_score',
-                                 'reg_consequence_types',
-                                 'validated'
-                                 ),
-                  filters = c('snp_filter'),
-                  values = unique(snp_list),
-                  mart = mart)
+  biomart_query <- tryCatch({
+    biomaRt::getBM(attributes = attributes,
+                   filters = c('snp_filter'),
+                   values = unique(snp_list),
+                   mart = mart)
+  },
+  error=function(e){
+    message(e)
+    message("Retrying with `useCache=FALSE`")
+    biomaRt::getBM(attributes = attributes,
+                   filters = c('snp_filter'),
+                   values = unique(snp_list),
+                   mart = mart,
+                   # Important! sometimes biomart will use an old cache
+                   ## that doesn't work with the current version of biomart.
+                   useCache = FALSE)
+  })
   biomart_query <- data.table::as.data.table(biomart_query)
   biomart_query[biomart_query$consequence_type_tv=="",]$consequence_type_tv <- NA
   # Only take the first annotation per variant
@@ -547,11 +556,13 @@ epigenetics_enrichment <- function(snp_list1,
 #'
 #' @family annotate
 #' @examples
+#' \dontrun{
 #' data("merged_DT");
 #' annotated_DT <- ANNOTATE.annotate_missense(merged_DT=merged_DT, snp_filter="Support>0")
+#' }
 ANNOTATE.annotate_missense <- function(merged_DT,
                                        snp_filter="Support>0"){
-  snp_info <- biomart_snp_info(unique(subset(merged_DT, eval(parse(text=snp_filter)))$SNP))
+  snp_info <- biomart_snp_info(snp_list = unique(subset(merged_DT, eval(parse(text=snp_filter)))$SNP))
   # unique(snp_info$consequence_type_tv)
   missense <- suppressMessages(snp_info %>%
                                  dplyr::group_by(refsnp_id) %>%
@@ -574,9 +585,11 @@ ANNOTATE.annotate_missense <- function(merged_DT,
 #'
 #' @family annotate
 #' @examples
+#' \dontrun{
 #' data("merged_DT");
 #' gg_missense <- ANNOTATE.plot_missense(merged_DT=merged_DT, snp_filter="Support>0")
 #' gg_missense <- ANNOTATE.plot_missense(merged_DT=merged_DT, snp_filter="Consensus_SNP==T")
+#' }
 ANNOTATE.plot_missense <- function(merged_DT,
                                    snp_filter="Support>0",
                                    label_yaxis=F,

@@ -26,11 +26,12 @@ LD.custom_panel(
 Compute LD from user-supplied vcf file
 }
 \examples{
+\dontrun{
+if(!"gaston" \%in\% row.names(installed.packages())){install.packages("gaston")}
 data("BST1"); data("locus_dir")
 LD_reference="~/Desktop/results/Reference/custom_panel_chr4.vcf"
 LD_matrix <- LD.custom_panel(LD_reference=LD_reference, subset_DT=BST1, locus_dir=locus_dir)
 
-\dontrun{
 locus_dir <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/QTL/Microglia_all_regions/BIN1"
 subset_DT <- data.table::fread(file.path(locus_dir,"Multi-finemap/BIN1.Microglia_all_regions.1KGphase3_LD.Multi-finemap.tsv.gz"))
 LD_reference = "/sc/hydra/projects/pd-omics/glia_omics/eQTL/post_imputation_filtering/eur/filtered_variants/AllChr.hg38.sort.filt.dbsnp.snpeff.vcf.gz"

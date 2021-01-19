@@ -27,11 +27,13 @@
 #' @keywords internal
 #' @family polyfun
 #' @examples
+#' \dontrun{
 #' parquet_path <- system.file("tools/polyfun/example_data/weights.10.l2.ldscore.parquet", package = "echolocatoR")
-#'  # Using python (pandas) - default
+#' # Using python (pandas) - default
 #' dat <- POLYFUN.read_parquet(parquet_path=parquet_path, method="pandas")
 #' # Using R (SparkR)
 #' dat <- POLYFUN.read_parquet(parquet_path=parquet_path, method="sparkR")
+#' }
 POLYFUN.read_parquet <- function(parquet_path,
                                  conda_env="echoR",
                                  method="pandas"){
@@ -102,8 +104,7 @@ POLYFUN.find_polyfun_folder <- function(polyfun_path=NULL){
 #' @family polyfun
 #' @examples
 #' data("BST1"); data("locus_dir");
-#' finemap_DT <- BST1
-#' finemap_DT <- POLYFUN.initialize(locus_dir=locus_dir, finemap_DT=finemap_DT)
+#' finemap_DT <- POLYFUN.initialize(locus_dir=locus_dir, finemap_dat=BST1)
 POLYFUN.initialize <- function(locus_dir,
                                finemap_dat=NULL,
                                nThread=4){
@@ -187,9 +188,11 @@ POLYFUN.prepare_snp_input <- function(PF.output.path,
 #' @keywords internal
 #' @family polyfun
 #' @examples
+#' \dontrun{
+#'
 #' data("BST1"); data("locus_dir");
-#' finemap_DT <- BST1
-#' priors <- POLYFUN.get_precomputed_priors(locus_dir=locus_dir, finemap_dat=finemap_DT)
+#' priors <- POLYFUN.get_precomputed_priors(locus_dir=locus_dir, finemap_dat=BST1)
+#' }
 POLYFUN.get_precomputed_priors <- function(polyfun=NULL,
                                            locus_dir,
                                            finemap_dat=NULL,
@@ -313,8 +316,10 @@ POLYFUN.munge_summ_stats <- function(polyfun=NULL,
 #' @keywords internal
 #' @family polyfun
 #' @examples
+#' \dontrun{
 #' output_prefix <- file.path(system.file("tools/polyfun/gold","",package = "echolocatoR"),"testrun.22")
 #' ldscore <- POLYFUN.gather_ldscores(output_prefix=output_prefix)
+#' }
 POLYFUN.gather_ldscores <- function(output_prefix){
   ldscore.files <-  list.files(dirname(output_prefix),
                                pattern = ".l2.ldscore.parquet", full.names = T)
@@ -706,9 +711,6 @@ POLYFUN_SUSIE <- function(locus_dir,
 #' https://www.biorxiv.org/content/10.1101/807792v3
 #' @keywords internal
 #' @family polyfun
-#' @examples
-#' data("BST1")
-#' finemap_dat=BST1
 POLYFUN.finemapper <- function(polyfun=NULL,
                                finemap_dat=NULL,
                                npz_gz_LD=NULL,
@@ -960,9 +962,6 @@ POLYFUN.gather_annot_proportions <- function(base_url="/sc/arion/projects/pd-omi
 #' https://www.biorxiv.org/content/10.1101/807792v3
 #' @keywords internal
 #' @family polyfun
-#' @examples
-#' data("BST1")
-#' finemap_dat <- BST1
 POLYFUN.functional_enrichment <- function(finemap_dat,
                                           PP_thresh=.95,
                                           save_plot="./Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/annot_enrichment.png"){
@@ -1075,12 +1074,14 @@ POLYFUN.h2_enrichment <- function(h2_df,
 #' @keywords internal
 #' @family polyfun
 #' @examples
+#' \dontrun{
 #' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 #' # IMPORTANT! For this to make sense, you need to merge the full data ("merged_DT" only includes Support>0 and leadSNPs)
 #' merged_dat <- merge_finemapping_results(dataset = dirname(root), LD_reference = "UKB", minimum_support = 0)
 #' merged_dat <- find_consensus_SNPs_no_PolyFun(merged_dat)
 #'
 #' RES <- POLYFUN.h2_enrichment_SNPgroups(merged_dat=merged_dat, ldsc_dir=file.path(root,"PolyFun/output"),  save_enrich=file.path(root,"PolyFun/Nalls23andMe_2019.h2_enrich.snp_groups.csv.gz"))
+#' }
 POLYFUN.h2_enrichment_SNPgroups <- function(merged_dat,
                                             chrom="*",
                                             ldsc_dir="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/output",
@@ -1218,11 +1219,13 @@ POLYFUN.h2_enrichment_SNPgroups <- function(merged_dat,
 #'
 #' @family polyfun
 #' @examples
+#' \dontrun{
 #' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping"
 #' merged_dat <- merge_finemapping_results(dataset = file.path("Data/GWAS/Nalls23andMe_2019"), LD_reference = "UKB", minimum_support = 0)
 #' RES <- POLYFUN.h2_enrichment_SNPgroups(merged_dat=merged_dat, out.path="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/output")
 #'
 #' plot.h2 <- POLYFUN.h2_enrichment_SNPgroups_plot(RES = RES, show_plot = T)
+#' }
 POLYFUN.h2_enrichment_SNPgroups_plot <- function(RES,
                                                  snp_groups=c("GWAS lead","UCS","Consensus (-PolyFun)","Consensus"),
                                                  comparisons_filter=function(x){if("Consensus" %in% x) return(x)},

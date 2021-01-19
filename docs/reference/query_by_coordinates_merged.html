@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Use <em>awk</em> to query locus subsets. — query_by_coordinates_merged • echolocatoR</title>
+<title>Use awk to query locus subsets. — query_by_coordinates_merged • echolocatoR</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Use <em>awk</em> to query locus subsets. — query_by_coordinates_merged" />
+<meta property="og:title" content="Use awk to query locus subsets. — query_by_coordinates_merged" />
 <meta property="og:description" content="Search full summary stats file by genomics coordinates.
 To be used when CHR and POS are merged into one column (e.g. chr12:12209944)." />
 
@@ -73,7 +73,7 @@ To be used when CHR and POS are merged into one column (e.g. chr12:12209944)." /
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ To be used when CHR and POS are merged into one column (e.g. chr12:12209944)." /
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -95,6 +95,9 @@ To be used when CHR and POS are merged into one column (e.g. chr12:12209944)." /
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -113,7 +116,7 @@ To be used when CHR and POS are merged into one column (e.g. chr12:12209944)." /
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,18 +143,18 @@ To be used when CHR and POS are merged into one column (e.g. chr12:12209944)." /
 To be used when <strong>CHR</strong> and <strong>POS</strong> are merged into one column (e.g. chr12:12209944).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>query_by_coordinates_merged</span>(
-  <span class='no'>top_SNPs</span>,
-  <span class='no'>fullSS_path</span>,
-  <span class='no'>subset_path</span>,
-  <span class='no'>locus</span>,
-  <span class='no'>chrom_col</span>,
-  <span class='kw'>file_sep</span> <span class='kw'>=</span> <span class='st'>" "</span>,
-  <span class='kw'>location_sep</span> <span class='kw'>=</span> <span class='st'>":"</span>,
-  <span class='no'>min_POS</span>,
-  <span class='no'>max_POS</span>,
-  <span class='no'>bp_distance</span>
-)</pre>
+    <pre class="usage"><span class='fu'>query_by_coordinates_merged</span><span class='op'>(</span>
+  <span class='va'>top_SNPs</span>,
+  <span class='va'>fullSS_path</span>,
+  <span class='va'>subset_path</span>,
+  <span class='va'>locus</span>,
+  <span class='va'>chrom_col</span>,
+  file_sep <span class='op'>=</span> <span class='st'>" "</span>,
+  location_sep <span class='op'>=</span> <span class='st'>":"</span>,
+  <span class='va'>min_POS</span>,
+  <span class='va'>max_POS</span>,
+  <span class='va'>bp_distance</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -161,7 +164,7 @@ To be used when <strong>CHR</strong> and <strong>POS</strong> are merged into on
       <td><p>A data.frame with the genomic coordinates of the lead SNP for each locus.
 The lead SNP will be used as the center of the window when extracting subset from the full GWAS/QTL summary statistics file.
 Only one SNP per <strong>Locus</strong> should be included.
-At minimum, <code>top_SNPs</code> should include the following columns:</p><dl'>
+At minimum, <code>top_SNPs</code> should include the following columns:</p><dl>
 <dt><em>Locus</em></dt><dd><p>A unique name for each locus. Often, loci are named after a relevant gene (e.g. LRRK2) or based on the name/coordinates of the lead SNP (e.g. locus_chr12_40734202)</p></dd>
 <dt><em>CHR</em></dt><dd><p>The chromosome that the SNP is on. Can be "chr12" or "12" format.</p></dd>
 <dt><em>POS</em></dt><dd><p>The genomic position of the SNP (in basepairs)</p></dd>
@@ -170,7 +173,8 @@ At minimum, <code>top_SNPs</code> should include the following columns:</p><dl'>
     </tr>
     <tr>
       <th>fullSS_path</th>
-      <td><p>Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.</p></td>
+      <td><p>Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.
+It is usually best to provide the absolute path rather than the relative path.</p></td>
     </tr>
     <tr>
       <th>chrom_col</th>
@@ -191,13 +195,13 @@ This parameter is only necessary if <code>query_by!="tabix"</code>.</p></td>
       <th>min_POS</th>
       <td><p>Manually set the minimum genomic position for your locus subset.
 <code>min_POS</code> can clip the window size set by <code>bp_distance</code>.
-Only use this parameter when fine-mapping one locus at a time.</p></td>
+Can also be a list of positions (one for each locus) (e.g. <code>min_POS=top_SNPs$min_POS</code>).</p></td>
     </tr>
     <tr>
       <th>max_POS</th>
       <td><p>Manually set the maximum genomic position for your locus subset.
 <code>max_POS</code> can clip the window size set by <code>bp_distance</code>.
-Only use this parameter when fine-mapping one locus at a time.</p></td>
+Can also be a list of positions (one for each locus) (e.g. <code>max_POS=top_SNPs$max_POS</code>).</p></td>
     </tr>
     <tr>
       <th>bp_distance</th>
@@ -236,7 +240,7 @@ resulting in a locus that is ~1Mb long (depending on the dataset).</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

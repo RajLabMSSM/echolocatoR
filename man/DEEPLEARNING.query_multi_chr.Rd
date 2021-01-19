@@ -22,8 +22,10 @@ then merge with \code{subset_DT} by \emph{SNP}.
  Repeat for each locus,
 }
 \examples{
+\dontrun{
 data("merged_DT")
 ANNOT.DAT <- DEEPLEARNING.query_multi_chr(merged_dat=merged_DT, tissue="NTS", model="Basenji", type="annot")
+}
 }
 \seealso{
 Other DEEPLEARNING: 

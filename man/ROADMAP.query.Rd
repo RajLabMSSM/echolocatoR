@@ -9,6 +9,7 @@ ROADMAP.query(
   gr.snp,
   keyword_query = NULL,
   limit_files = NULL,
+  conda_env = "echoR",
   nThread = 4,
   verbose = T
 )
@@ -24,8 +25,10 @@ ROADMAP.query(
 Query Roadmap by genomic coordinates
 }
 \examples{
+\dontrun{
 data("BST1")
 grl.roadmap <- ROADMAP.query(results_path="./Roadmap", gr.snp=BST1, keyword_query="placenta")
+}
 }
 \seealso{
 Other ROADMAP: 

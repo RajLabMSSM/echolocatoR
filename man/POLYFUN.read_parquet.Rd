@@ -14,11 +14,13 @@ or \code{pandas} (Python + \code{reticulate}).}
 Read parquet file as data.frame
 }
 \examples{
+\dontrun{
 parquet_path <- system.file("tools/polyfun/example_data/weights.10.l2.ldscore.parquet", package = "echolocatoR")
- # Using python (pandas) - default
+# Using python (pandas) - default
 dat <- POLYFUN.read_parquet(parquet_path=parquet_path, method="pandas")
 # Using R (SparkR)
 dat <- POLYFUN.read_parquet(parquet_path=parquet_path, method="sparkR")
+}
 }
 \seealso{
 Other polyfun: 

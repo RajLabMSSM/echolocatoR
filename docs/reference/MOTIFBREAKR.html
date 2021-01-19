@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Run <code>motifbreakR</code> — MOTIFBREAKR • echolocatoR</title>
+<title>Run motifbreakR — MOTIFBREAKR • echolocatoR</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Run <code>motifbreakR</code> — MOTIFBREAKR" />
+<meta property="og:title" content="Run motifbreakR — MOTIFBREAKR" />
 <meta property="og:description" content="motifbreakR is a package to predict how much a SNP will disrupt
 a transcription factor binding motif (if it falls witihn one)." />
 
@@ -73,7 +73,7 @@ a transcription factor binding motif (if it falls witihn one)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ a transcription factor binding motif (if it falls witihn one)." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -95,6 +95,9 @@ a transcription factor binding motif (if it falls witihn one)." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -113,7 +116,7 @@ a transcription factor binding motif (if it falls witihn one)." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,19 +143,19 @@ a transcription factor binding motif (if it falls witihn one)." />
 a transcription factor binding motif (if it falls witihn one).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>MOTIFBREAKR</span>(
-  <span class='no'>rsid_list</span>,
-  <span class='kw'>save_rds</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>dataset_dir</span> <span class='kw'>=</span> <span class='st'>"./results"</span>,
-  <span class='kw'>pwmList</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>organism</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>threshold</span> <span class='kw'>=</span> <span class='fl'>0.85</span>,
-  <span class='kw'>show.neutral</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"default"</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>calculate_all_pval</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>force_new</span> <span class='kw'>=</span> <span class='no'>F</span>
-)</pre>
+    <pre class="usage"><span class='fu'>MOTIFBREAKR</span><span class='op'>(</span>
+  <span class='va'>rsid_list</span>,
+  save_rds <span class='op'>=</span> <span class='cn'>T</span>,
+  dataset_dir <span class='op'>=</span> <span class='st'>"./results"</span>,
+  pwmList <span class='op'>=</span> <span class='cn'>NULL</span>,
+  organism <span class='op'>=</span> <span class='cn'>NULL</span>,
+  threshold <span class='op'>=</span> <span class='fl'>0.85</span>,
+  show.neutral <span class='op'>=</span> <span class='cn'>F</span>,
+  method <span class='op'>=</span> <span class='st'>"default"</span>,
+  verbose <span class='op'>=</span> <span class='cn'>T</span>,
+  calculate_all_pval <span class='op'>=</span> <span class='cn'>T</span>,
+  force_new <span class='op'>=</span> <span class='cn'>F</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -198,12 +201,14 @@ details.</p></td>
 <code><a href='MOTIFBREAKR.filter_by_metadata.html'>MOTIFBREAKR.filter_by_metadata</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># data("merged_DT")</span>
-<span class='co'># rsid_list &lt;- unique(subset(merged_DT, Support&gt;0 | leadSNP)$SNP)</span>
-<span class='no'>rsid_list</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"rs11175620"</span>,<span class='st'>"rs7294619"</span>,<span class='st'>"rs74324737"</span>)
-<span class='no'>mb.results</span> <span class='kw'>&lt;-</span> <span class='fu'>MOTIFBREAKR</span>(<span class='kw'>rsid_list</span><span class='kw'>=</span><span class='no'>rsid_list</span>, <span class='kw'>calculate_all_pval</span><span class='kw'>=</span><span class='no'>T</span>)
-}</div></pre>
+<span class='co'># rsid_list &lt;- unique(subset(merged_DT, Locus %in% c("LRRK2","MED12L","DYRK1A","FCGR2A") &amp; (Consensus_SNP | leadSNP))$SNP)</span>
+<span class='co'># rsid_list &lt;- unique(subset(merged_DT, Consensus_SNP | leadSNP)$SNP)</span>
+<span class='va'>rsid_list</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"rs11175620"</span>,<span class='st'>"rs7294619"</span>,<span class='st'>"rs74324737"</span><span class='op'>)</span>
+<span class='va'>mb.results</span> <span class='op'>&lt;-</span> <span class='fu'>MOTIFBREAKR</span><span class='op'>(</span>rsid_list<span class='op'>=</span><span class='va'>rsid_list</span>, calculate_all_pval<span class='op'>=</span><span class='cn'>T</span>, force_new <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -219,7 +224,7 @@ details.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -73,7 +73,7 @@ the finemap_loci in querying and fine-mapping loci." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ the finemap_loci in querying and fine-mapping loci." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -95,6 +95,9 @@ the finemap_loci in querying and fine-mapping loci." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -113,7 +116,7 @@ the finemap_loci in querying and fine-mapping loci." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,21 +143,24 @@ the finemap_loci in querying and fine-mapping loci." />
 the <code><a href='finemap_loci.html'>finemap_loci</a></code> in querying and fine-mapping loci.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>import_topSNPs</span>(
-  <span class='no'>topSS</span>,
-  <span class='kw'>show_table</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>sheet</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>chrom_col</span> <span class='kw'>=</span> <span class='st'>"CHR"</span>,
-  <span class='kw'>position_col</span> <span class='kw'>=</span> <span class='st'>"POS"</span>,
-  <span class='kw'>snp_col</span> <span class='kw'>=</span> <span class='st'>"SNP"</span>,
-  <span class='kw'>pval_col</span> <span class='kw'>=</span> <span class='st'>"P"</span>,
-  <span class='kw'>effect_col</span> <span class='kw'>=</span> <span class='st'>"Effect"</span>,
-  <span class='kw'>locus_col</span> <span class='kw'>=</span> <span class='st'>"Locus"</span>,
-  <span class='kw'>grouping_vars</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Locus"</span>),
-  <span class='kw'>gene_col</span> <span class='kw'>=</span> <span class='st'>"Gene"</span>,
-  <span class='kw'>remove_variants</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>nThread</span> <span class='kw'>=</span> <span class='fl'>4</span>
-)</pre>
+    <pre class="usage"><span class='fu'>import_topSNPs</span><span class='op'>(</span>
+  <span class='va'>topSS</span>,
+  show_table <span class='op'>=</span> <span class='cn'>T</span>,
+  sheet <span class='op'>=</span> <span class='fl'>1</span>,
+  chrom_col <span class='op'>=</span> <span class='st'>"CHR"</span>,
+  position_col <span class='op'>=</span> <span class='st'>"POS"</span>,
+  min_POS_col <span class='op'>=</span> <span class='cn'>NULL</span>,
+  max_POS_col <span class='op'>=</span> <span class='cn'>NULL</span>,
+  snp_col <span class='op'>=</span> <span class='st'>"SNP"</span>,
+  pval_col <span class='op'>=</span> <span class='st'>"P"</span>,
+  effect_col <span class='op'>=</span> <span class='st'>"Effect"</span>,
+  locus_col <span class='op'>=</span> <span class='st'>"Locus"</span>,
+  grouping_vars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Locus"</span><span class='op'>)</span>,
+  gene_col <span class='op'>=</span> <span class='st'>"Gene"</span>,
+  remove_variants <span class='op'>=</span> <span class='cn'>NULL</span>,
+  nThread <span class='op'>=</span> <span class='fl'>4</span>,
+  verbose <span class='op'>=</span> <span class='cn'>T</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -219,6 +225,10 @@ For example, if you want one index SNP per QTL eGene - GWAS locus pair, you coul
       <td><p>A list of variants to remove from the locus subset file.</p></td>
     </tr>
     <tr>
+      <th>verbose</th>
+      <td><p>Whether <span class="pkg">echolocatoR</span> should be verbose or silent.</p></td>
+    </tr>
+    <tr>
       <th>top_SNPs</th>
       <td><p>Can be a data.frame with the top sumary stats per locus.
 Alternatively, you can provide a path to the stored top summary stats file.
@@ -258,7 +268,7 @@ The lead SNP will be used as the center of the locus when constructing the locus
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -10,8 +10,10 @@ LD.index_vcf(vcf_file, force_new_index = F, conda_env = "echoR", verbose = T)
 Index vcf file if it hasn't been already
 }
 \examples{
+\dontrun{
 LD_reference <- "~/Desktop/results/Reference/custom_panel_chr4.vcf.gz"
 vcf_file <- LD.index_vcf(vcf_file=LD_reference)
+}
 }
 \seealso{
 Other LD: 

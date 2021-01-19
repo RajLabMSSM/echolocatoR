@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -94,6 +94,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -112,7 +115,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -138,15 +141,15 @@
     <p>Run heritability enrichment tests across SNP groups</p>
     </div>
 
-    <pre class="usage"><span class='fu'>POLYFUN.h2_enrichment_SNPgroups</span>(
-  <span class='no'>finemap_dat</span>,
-  <span class='kw'>chrom</span> <span class='kw'>=</span> <span class='st'>"*"</span>,
-  <span class='kw'>ldsc_suffix</span> <span class='kw'>=</span> <span class='st'>"*.snpvar_constrained.gz"</span>,
-  <span class='kw'>subtitle</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>show_plot</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>save_plot</span> <span class='kw'>=</span> <span class='st'>"./h2_enrichment.png"</span>,
-  <span class='kw'>out.path</span> <span class='kw'>=</span> <span class='st'>"./Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/output"</span>
-)</pre>
+    <pre class="usage"><span class='fu'>POLYFUN.h2_enrichment_SNPgroups</span><span class='op'>(</span>
+  <span class='va'>merged_dat</span>,
+  chrom <span class='op'>=</span> <span class='st'>"*"</span>,
+ 
+    ldsc_dir <span class='op'>=</span> <span class='st'>"/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/output"</span>,
+  ldsc_suffix <span class='op'>=</span> <span class='st'>"*.snpvar_constrained.gz"</span>,
+  save_enrich <span class='op'>=</span> <span class='cn'>F</span>,
+  nThread <span class='op'>=</span> <span class='fl'>4</span>
+<span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
@@ -163,6 +166,7 @@
 <code><a href='POLYFUN.gather_annotations.html'>POLYFUN.gather_annotations</a>()</code>,
 <code><a href='POLYFUN.gather_ldscores.html'>POLYFUN.gather_ldscores</a>()</code>,
 <code><a href='POLYFUN.get_precomputed_priors.html'>POLYFUN.get_precomputed_priors</a>()</code>,
+<code><a href='POLYFUN.h2_enrichment_SNPgroups_plot.html'>POLYFUN.h2_enrichment_SNPgroups_plot</a>()</code>,
 <code><a href='POLYFUN.h2_enrichment.html'>POLYFUN.h2_enrichment</a>()</code>,
 <code><a href='POLYFUN.help.html'>POLYFUN.help</a>()</code>,
 <code><a href='POLYFUN.initialize.html'>POLYFUN.initialize</a>()</code>,
@@ -174,6 +178,16 @@
 <code><a href='POLYFUN.run_ldsc.html'>POLYFUN.run_ldsc</a>()</code>,
 <code><a href='POLYFUN_SUSIE.html'>POLYFUN_SUSIE</a>()</code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>root</span> <span class='op'>&lt;-</span> <span class='st'>"/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"</span>
+<span class='co'># IMPORTANT! For this to make sense, you need to merge the full data ("merged_DT" only includes Support&gt;0 and leadSNPs)</span>
+<span class='va'>merged_dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='merge_finemapping_results.html'>merge_finemapping_results</a></span><span class='op'>(</span>dataset <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>dirname</a></span><span class='op'>(</span><span class='va'>root</span><span class='op'>)</span>, LD_reference <span class='op'>=</span> <span class='st'>"UKB"</span>, minimum_support <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span>
+<span class='va'>merged_dat</span> <span class='op'>&lt;-</span> <span class='fu'>find_consensus_SNPs_no_PolyFun</span><span class='op'>(</span><span class='va'>merged_dat</span><span class='op'>)</span>
+
+<span class='va'>RES</span> <span class='op'>&lt;-</span> <span class='fu'>POLYFUN.h2_enrichment_SNPgroups</span><span class='op'>(</span>merged_dat<span class='op'>=</span><span class='va'>merged_dat</span>, ldsc_dir<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>root</span>,<span class='st'>"PolyFun/output"</span><span class='op'>)</span>,  save_enrich<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>root</span>,<span class='st'>"PolyFun/Nalls23andMe_2019.h2_enrich.snp_groups.csv.gz"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -189,7 +203,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

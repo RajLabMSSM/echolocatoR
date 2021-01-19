@@ -74,7 +74,7 @@ GenomicRangesList" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -82,7 +82,7 @@ GenomicRangesList" />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -96,6 +96,9 @@ GenomicRangesList" />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -114,7 +117,7 @@ GenomicRangesList" />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -142,7 +145,7 @@ and then merges the results into a single
 <code><a href='https://rdrr.io/pkg/GenomicRanges/man/GenomicRangesList-class.html'>GenomicRangesList</a></code></p>
     </div>
 
-    <pre class="usage"><span class='fu'>XGR.merge_and_process</span>(<span class='no'>grl.xgr</span>, <span class='no'>lib</span>, <span class='kw'>n_top_sources</span> <span class='kw'>=</span> <span class='fl'>10</span>)</pre>
+    <pre class="usage"><span class='fu'>XGR.merge_and_process</span><span class='op'>(</span><span class='va'>grl.xgr</span>, <span class='va'>lib</span>, n_top_sources <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -159,6 +162,9 @@ and then merges the results into a single
 <code><a href='DT_to_GRanges.html'>DT_to_GRanges</a>()</code>,
 <code><a href='GRanges_to_BED.html'>GRanges_to_BED</a>()</code>,
 <code><a href='XGR.download_and_standardize.html'>XGR.download_and_standardize</a>()</code>,
+<code><a href='XGR.enrichment_bootstrap.html'>XGR.enrichment_bootstrap</a>()</code>,
+<code><a href='XGR.enrichment_plot.html'>XGR.enrichment_plot</a>()</code>,
+<code><a href='XGR.enrichment.html'>XGR.enrichment</a>()</code>,
 <code><a href='XGR.filter_assays.html'>XGR.filter_assays</a>()</code>,
 <code><a href='XGR.filter_sources.html'>XGR.filter_sources</a>()</code>,
 <code><a href='XGR.import_annotations.html'>XGR.import_annotations</a>()</code>,
@@ -183,7 +189,7 @@ and then merges the results into a single
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

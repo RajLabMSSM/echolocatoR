@@ -14,8 +14,10 @@ SPLICEAI.snp_probs(DAT, save_path = F)
 Postprocess \emph{SpliceAI} results after querying
 }
 \examples{
+\dontrun{
 root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping"
 DAT <- data.table::fread(file.path(root, "Data/GWAS/Nalls23andMe_2019/_genome_wide/SpliceAI/spliceAI_Nalls23andMe_2019.hits.csv.gz"))
+}
 }
 \seealso{
 Other SpliceAI: 

@@ -26,8 +26,10 @@ GRangesList
 Merges a list of XGR annotations into a single GRanges object
 }
 \examples{
+\dontrun{
 data("BST1")
 gr.lib <- XGR.download_and_standardize(lib.selections=c("ENCODE_DNaseI_ClusteredV3_CellTypes"), finemap_dat=BST1, nCores=1)
+}
 }
 \seealso{
 Other XGR: 

@@ -153,10 +153,12 @@ SPLICEAI.subset_precomputed_tsv <- function(subset_DT,
 #' \href{https://github.com/Illumina/SpliceAI}{GitHub}
 #' \href{https://www.sciencedirect.com/science/article/pii/S0092867418316295}{Publication}
 #' @examples
+#' \dontrun{
 #' root.pd <- "/sc/arion/projects/pd-omics"
 #' precomputed_path <- file.path(root.pd,"data/spliceAI/spliceai_scores.raw.snv.hg19.tsv.gz")
 #' sumstats_paths <- list.files(file.path(root.pd, "/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019"), pattern = "*.UKB_LD.Multi-finemap.tsv.gz", recursive = T, full.names = T)
 #' DAT <- SPLICEAI.subset_precomputed_tsv_iterate(sumstats_paths=sumstats_paths)
+#' }
 SPLICEAI.subset_precomputed_tsv_iterate <- function(sumstats_paths,
                                                     # precomputed_path="/pd-omics/data/spliceAI/whole_genome_filtered_spliceai_scores.tsv.gz",
                                                     precomputed_path="/pd-omics/data/spliceAI/spliceai_scores.raw.snv.hg19.tsv.gz",
@@ -200,8 +202,10 @@ SPLICEAI.subset_precomputed_tsv_iterate <- function(sumstats_paths,
 #' \href{https://github.com/Illumina/SpliceAI}{GitHub}
 #' \href{https://www.sciencedirect.com/science/article/pii/S0092867418316295}{Publication}
 #' @examples
+#' \dontrun{
 #' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping"
 #' DAT <- data.table::fread(file.path(root, "Data/GWAS/Nalls23andMe_2019/_genome_wide/SpliceAI/spliceAI_Nalls23andMe_2019.hits.csv.gz"))
+#' }
 SPLICEAI.snp_probs <- function(DAT,
                                save_path=F){
   # merged_DT <- merge_finemapping_results(dataset = "./Data/GWAS/Nalls23andMe_2019",minimum_support = 0)

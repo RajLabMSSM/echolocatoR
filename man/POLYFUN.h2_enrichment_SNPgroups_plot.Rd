@@ -25,11 +25,13 @@ POLYFUN.h2_enrichment_SNPgroups_plot(
 Plot heritability (h2) enrichment
 }
 \examples{
+\dontrun{
 root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping"
 merged_dat <- merge_finemapping_results(dataset = file.path("Data/GWAS/Nalls23andMe_2019"), LD_reference = "UKB", minimum_support = 0)
 RES <- POLYFUN.h2_enrichment_SNPgroups(merged_dat=merged_dat, out.path="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/output")
 
 plot.h2 <- POLYFUN.h2_enrichment_SNPgroups_plot(RES = RES, show_plot = T)
+}
 }
 \seealso{
 Other polyfun: 

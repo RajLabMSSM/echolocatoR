@@ -10,8 +10,10 @@ POLYFUN.gather_ldscores(output_prefix)
 Find and import LD score files
 }
 \examples{
+\dontrun{
 output_prefix <- file.path(system.file("tools/polyfun/gold","",package = "echolocatoR"),"testrun.22")
 ldscore <- POLYFUN.gather_ldscores(output_prefix=output_prefix)
+}
 }
 \seealso{
 Other polyfun: 

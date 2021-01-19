@@ -73,7 +73,7 @@ using a range of genomic coordinates." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ using a range of genomic coordinates." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -95,6 +95,9 @@ using a range of genomic coordinates." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -113,7 +116,7 @@ using a range of genomic coordinates." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,14 +143,15 @@ using a range of genomic coordinates." />
 using a range of genomic coordinates.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ROADMAP.tabix</span>(
-  <span class='no'>results_path</span>,
-  <span class='no'>chrom</span>,
-  <span class='no'>min_pos</span>,
-  <span class='no'>max_pos</span>,
-  <span class='no'>eid</span>,
-  <span class='kw'>convert_to_GRanges</span> <span class='kw'>=</span> <span class='no'>T</span>
-)</pre>
+    <pre class="usage"><span class='fu'>ROADMAP.tabix</span><span class='op'>(</span>
+  <span class='va'>results_path</span>,
+  <span class='va'>chrom</span>,
+  <span class='va'>min_pos</span>,
+  <span class='va'>max_pos</span>,
+  <span class='va'>eid</span>,
+  convert_to_GRanges <span class='op'>=</span> <span class='cn'>T</span>,
+  conda_env <span class='op'>=</span> <span class='st'>"echoR"</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -202,7 +206,7 @@ as a <code>data.frame</code> or <code><a href='https://rdrr.io/pkg/GenomicRanges
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

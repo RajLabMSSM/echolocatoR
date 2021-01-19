@@ -7,7 +7,15 @@
 \href{https://bioconductor.org/packages/release/bioc/html/biomaRt.html}{biomaRt}
 }
 \usage{
-biomart_snp_info(snp_list, reference_genome = "grch37", verbose = T)
+biomart_snp_info(
+  snp_list,
+  reference_genome = "grch37",
+  attributes = c("refsnp_id", "allele", "chr_name", "chrom_start", "chrom_end",
+    "chrom_strand", "ensembl_gene_stable_id", "consequence_type_tv",
+    "polyphen_prediction", "polyphen_score", "sift_prediction", "sift_score",
+    "reg_consequence_types", "validated"),
+  verbose = T
+)
 }
 \description{
 Download SNP-wise annotations from Biomart

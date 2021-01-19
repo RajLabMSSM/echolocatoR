@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title><em>IMPACT</em> box plot with <span class="pkg">ggpubr</span> — IMPACT.snp_group_boxplot • echolocatoR</title>
+<title>IMPACT box plot with ggpubr — IMPACT.snp_group_boxplot • echolocatoR</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="<em>IMPACT</em> box plot with <span class="pkg">ggpubr</span> — IMPACT.snp_group_boxplot" />
+<meta property="og:title" content="IMPACT box plot with ggpubr — IMPACT.snp_group_boxplot" />
 <meta property="og:description" content="Box plot of IMPACT scores from each SNP group." />
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -94,6 +94,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -112,7 +115,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -138,7 +141,24 @@
     <p>Box plot of <em>IMPACT</em> scores from each SNP group.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>IMPACT.snp_group_boxplot</span>(<span class='no'>TOP_IMPACT_all</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"t.test"</span>, <span class='kw'>show_plot</span> <span class='kw'>=</span> <span class='no'>T</span>)</pre>
+    <pre class="usage"><span class='fu'>IMPACT.snp_group_boxplot</span><span class='op'>(</span>
+  <span class='va'>TOP_IMPACT_all</span>,
+  snp_groups <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"GWAS lead"</span>, <span class='st'>"UCS"</span>, <span class='st'>"Consensus"</span><span class='op'>)</span>,
+  method <span class='op'>=</span> <span class='st'>"wilcox.test"</span>,
+  comparisons_filter <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>{</span>     <span class='kw'>if</span> <span class='op'>(</span><span class='st'>"Consensus"</span> <span class='op'>%in%</span> <span class='va'>x</span><span class='op'>)</span>          <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>}</span>,
+  show_plot <span class='op'>=</span> <span class='cn'>T</span>,
+  save_path <span class='op'>=</span> <span class='cn'>F</span>,
+  title <span class='op'>=</span> <span class='st'>"IMPACT scores"</span>,
+  xlabel <span class='op'>=</span> <span class='cn'>NULL</span>,
+  ylabel <span class='op'>=</span> <span class='cn'>NULL</span>,
+  show_padj <span class='op'>=</span> <span class='cn'>T</span>,
+  show_signif <span class='op'>=</span> <span class='cn'>T</span>,
+  vjust_signif <span class='op'>=</span> <span class='fl'>0.5</span>,
+  show_xtext <span class='op'>=</span> <span class='cn'>T</span>,
+  shift_points <span class='op'>=</span> <span class='cn'>T</span>,
+  height <span class='op'>=</span> <span class='fl'>10</span>,
+  width <span class='op'>=</span> <span class='fl'>10</span>
+<span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
@@ -157,11 +177,12 @@
 <code><a href='prepare_mat_meta.html'>prepare_mat_meta</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>TOP_IMPACT_all</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>reshape2</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/reshape2/man/melt.html'>melt</a></span>(<span class='no'>boxplot_mat</span>) <span class='kw'>%&gt;%</span> <span class='fu'>`colnames&lt;-`</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SNP_group"</span>,<span class='st'>"max_IMPACT"</span>))
-<span class='no'>bp</span> <span class='kw'>&lt;-</span> <span class='fu'>IMPACT.snp_group_boxplot</span>(<span class='no'>TOP_IMPACT_all</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='st'>"t.test"</span>)
-<span class='no'>bp</span> <span class='kw'>&lt;-</span> <span class='fu'>IMPACT.snp_group_boxplot</span>(<span class='no'>TOP_IMPACT_all</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='st'>"wilcox.test"</span>)
-}</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>TOP_IMPACT_all</span> <span class='op'>&lt;-</span> <span class='fu'>reshape2</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/reshape2/man/melt.html'>melt</a></span><span class='op'>(</span><span class='va'>boxplot_mat</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>`colnames&lt;-`</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SNP_group"</span>,<span class='st'>"max_IMPACT"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>bp</span> <span class='op'>&lt;-</span> <span class='fu'>IMPACT.snp_group_boxplot</span><span class='op'>(</span><span class='va'>TOP_IMPACT_all</span>, method<span class='op'>=</span><span class='st'>"t.test"</span><span class='op'>)</span>
+<span class='va'>bp</span> <span class='op'>&lt;-</span> <span class='fu'>IMPACT.snp_group_boxplot</span><span class='op'>(</span><span class='va'>TOP_IMPACT_all</span>, method<span class='op'>=</span><span class='st'>"wilcox.test"</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -177,7 +198,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

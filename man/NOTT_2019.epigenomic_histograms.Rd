@@ -49,7 +49,7 @@ Brain cell-specific epigenomic data from Nott et al. (2019).
 }
 \examples{
 data("BST1"); data("locus_dir");
- track.Nott_histo <- NOTT_2019.epigenomic_histograms(finemap_dat = BST1, locus_dir = locus_dir, save_plot=F, return_assay_track=T, save_annot=F)
+track.Nott_histo <- NOTT_2019.epigenomic_histograms(finemap_dat = BST1, locus_dir = locus_dir, save_plot=F, return_assay_track=T, save_annot=F)
 }
 \seealso{
 Other NOTT_2019: 

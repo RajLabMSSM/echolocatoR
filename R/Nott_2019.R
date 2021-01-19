@@ -24,7 +24,7 @@
 #' \url{https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr2:127770344-127983251&hgsid=778249165_ySowqECRKNxURRn6bafH0yewAiuf}
 #' @examples
 #' data("BST1"); data("locus_dir");
-#'  track.Nott_histo <- NOTT_2019.epigenomic_histograms(finemap_dat = BST1, locus_dir = locus_dir, save_plot=F, return_assay_track=T, save_annot=F)
+#' track.Nott_histo <- NOTT_2019.epigenomic_histograms(finemap_dat = BST1, locus_dir = locus_dir, save_plot=F, return_assay_track=T, save_annot=F)
 NOTT_2019.epigenomic_histograms <- function(finemap_dat,
                                             locus_dir,
                                             show_plot=T,
@@ -51,27 +51,6 @@ NOTT_2019.epigenomic_histograms <- function(finemap_dat,
   # library(ggbio)
   # show_plot=T;save_plot=T;full_data=T;return_assay_track=F;binwidth=2500; geom="histogram"; plot_formula="Cell_type ~."; show_regulatory_rects=T;  bigwig_dir=NULL; verbose=T; nThread=4;
   # finemap_dat=echolocatoR::LRRK2; plot.zoom=500000; fill_var="Assay"; density_adjust=.2; strip.text.y.angle=0;
-
-  # UCSC Tracks
-  import.bw.filt <- function(bw.file,
-                             gr.dat,
-                             full_data=T){
-    if(full_data){
-      # Get all ranges within min/max
-      gr.span <- gr.dat[1,]
-      GenomicRanges::mcols(gr.span) <- NULL
-      GenomicRanges::start(gr.span) <- min(gr.dat$POS,na.rm = T)
-      GenomicRanges::end(gr.span) <- max(gr.dat$POS, na.rm = T)
-    } else {
-      # Otherwise, just use the score for the exact values
-      gr.span <- gr.dat
-      }
-    # bw.dat <- rtracklayer::BigWigSelection(ranges = gr.dat,  colnames = "score")
-    bw.filt <- rtracklayer::import.bw(con = bw.file,
-                                      selection = gr.span,)
-    # plot(x = start(bw.filt), y=bw.filt$score)
-    return(bw.filt)
-  }
 
   # Import BigWig annotation files
   bigWigFiles <- echolocatoR::NOTT_2019.bigwig_metadata
@@ -514,7 +493,7 @@ NOTT_2019.get_epigenomic_peaks <- function(assays=c("ATAC","H3K27ac","H3K4me3"),
   if(convert_to_GRanges){
     printer("++ NOTT_2019:: Converting merged BED files to GRanges.", v=verbose)
     PEAKS <- biovizBase::transformDfToGr(PEAKS, seqnames = "chr", start = "start", end="end")
-    GenomeInfoDb::seqlevelsStyle(PEAKS) <- "NCBI"
+    suppressMessages(GenomeInfoDb::seqlevelsStyle(PEAKS) <- "NCBI")
   }
   printer("++ NOTT_2019::",length(PEAKS),"ranges retrieved.", v=verbose)
   return(PEAKS)
@@ -626,7 +605,7 @@ NOTT_2019.get_regulatory_regions <- function(as.granges=F,
                                                            start.field = "start",
                                                            end.field = "end",
                                                            keep.extra.columns = T)
-    GenomeInfoDb::seqlevelsStyle(regions_sub) <- "NCBI"
+    suppressMessages(GenomeInfoDb::seqlevelsStyle(regions_sub) <- "NCBI")
   }
   return(regions_sub)
 }

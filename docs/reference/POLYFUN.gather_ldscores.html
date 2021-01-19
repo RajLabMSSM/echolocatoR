@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -94,6 +94,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -112,7 +115,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -138,7 +141,7 @@
     <p>Find and import LD score files</p>
     </div>
 
-    <pre class="usage"><span class='fu'>POLYFUN.gather_ldscores</span>(<span class='no'>output_prefix</span>)</pre>
+    <pre class="usage"><span class='fu'>POLYFUN.gather_ldscores</span><span class='op'>(</span><span class='va'>output_prefix</span><span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -151,6 +154,7 @@
 <code><a href='POLYFUN.functional_enrichment.html'>POLYFUN.functional_enrichment</a>()</code>,
 <code><a href='POLYFUN.gather_annotations.html'>POLYFUN.gather_annotations</a>()</code>,
 <code><a href='POLYFUN.get_precomputed_priors.html'>POLYFUN.get_precomputed_priors</a>()</code>,
+<code><a href='POLYFUN.h2_enrichment_SNPgroups_plot.html'>POLYFUN.h2_enrichment_SNPgroups_plot</a>()</code>,
 <code><a href='POLYFUN.h2_enrichment_SNPgroups.html'>POLYFUN.h2_enrichment_SNPgroups</a>()</code>,
 <code><a href='POLYFUN.h2_enrichment.html'>POLYFUN.h2_enrichment</a>()</code>,
 <code><a href='POLYFUN.help.html'>POLYFUN.help</a>()</code>,
@@ -164,10 +168,11 @@
 <code><a href='POLYFUN_SUSIE.html'>POLYFUN_SUSIE</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>output_prefix</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"tools/polyfun/gold"</span>,<span class='st'>""</span>,<span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"echolocatoR"</span>),<span class='st'>"testrun.22"</span>)
-<span class='no'>ldscore</span> <span class='kw'>&lt;-</span> <span class='fu'>POLYFUN.gather_ldscores</span>(<span class='kw'>output_prefix</span><span class='kw'>=</span><span class='no'>output_prefix</span>)</div><div class='output co'>#&gt; [1] "POLYFUN:: &gt;1 ldscore file detected. Only using the first: /private/var/folders/sw/km9819713937hp640lj59ygw0000gn/T/RtmpUagrNk/temp_libpath15b4e60d13514/echolocatoR/tools/polyfun/gold/polyloc_test.22.l2.ldscore.parquet"
-#&gt; [1] "+ Importing parquet file with `pandas (Python)`"
-#&gt; [1] "+ CONDA:: conda already installed."</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>output_prefix</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"tools/polyfun/gold"</span>,<span class='st'>""</span>,package <span class='op'>=</span> <span class='st'>"echolocatoR"</span><span class='op'>)</span>,<span class='st'>"testrun.22"</span><span class='op'>)</span>
+<span class='va'>ldscore</span> <span class='op'>&lt;-</span> <span class='fu'>POLYFUN.gather_ldscores</span><span class='op'>(</span>output_prefix<span class='op'>=</span><span class='va'>output_prefix</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -183,7 +188,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

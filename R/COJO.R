@@ -7,8 +7,10 @@
 #' \url{https://www.cell.com/ajhg/fulltext/S0002-9297(10)00598-7}
 #' \url{https://cnsgenomics.com/software/gcta/#Overview}
 #' @examples
+#' \dontrun{
 #' data("locus_dir")
 #' cojo_dir <- COJO.make_locus_subdir(locus_dir=locus_dir)
+#' }
 COJO.make_locus_subdir <- function(locus_dir){
   cojo_dir <- file.path(locus_dir, "COJO")
   dir.create(cojo_dir, recursive = T, showWarnings = F)
@@ -254,7 +256,6 @@ COJO <- function(subset_DT,
                      min_MAF = min_MAF,
                      excluded_path = excluded_path)
   }
-
   cojo_DT <- process_COJO_results(subset_DT = subset_DT,
                                   locus_dir = locus_dir,
                                   freq_cutoff = 0.1)

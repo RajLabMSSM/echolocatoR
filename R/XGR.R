@@ -91,9 +91,11 @@ DT_to_GRanges <- function(subset_DT){
 #' @family XGR
 #' @keywords internal
 #' @examples
+#' \dontrun{
 #' data("merged_DT")
 #' merged_DT <- data.table::fread("/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/merged_UKB.csv.gz", nThread=4)
 #' fg_bg <- XGR.prepare_foreground_background(subset_DT=merged_DT, foreground_filter="Consensus_SNP==T", background_filter="leadSNP==T")
+#' }
 XGR.prepare_foreground_background  <- function(subset_DT,
                                                foreground_filter="Support>0",
                                                background_filter=NULL,
@@ -149,6 +151,7 @@ XGR.prepare_foreground_background  <- function(subset_DT,
 #'
 #' @family XGR
 #' @examples
+#' \dontrun{
 #' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 #'
 #' merged_dat <- merge_finemapping_results(dataset = dirname(root), LD_reference = "UKB", minimum_support = 0)
@@ -158,6 +161,7 @@ XGR.prepare_foreground_background  <- function(subset_DT,
 #' grouping_vars <- c("Study","Cell_type","Assay")
 #'
 #' enrich.lead <- XGR.enrichment(gr=gr, merged_dat=merged_dat, foreground_filter="leadSNP==T",  grouping_vars=grouping_vars)
+#' }
 XGR.enrichment <- function(gr,
                            merged_dat,
                            foreground_filter="Consensus_SNP==T",
@@ -221,6 +225,7 @@ XGR.enrichment <- function(gr,
 #'
 #' @family XGR
 #' @examples
+#' \dontrun{
 #' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 #'
 #' merged_dat <- merge_finemapping_results(dataset = dirname(root), LD_reference = "UKB", minimum_support = 0)
@@ -234,6 +239,7 @@ XGR.enrichment <- function(gr,
 #' enrich_res <- XGR.enrichment_bootstrap(gr=gr.merged, merged_dat=merged_dat, grouping_vars=grouping_vars,  bootstrap=F, snp_groups=c("Random","GWAS lead","UCS (-PolyFun)","UCS","Consensus (-PolyFun)","Consensus"), nThread=12, save_path=file.path(root,"XGR/celltypespecific_epigenomics.SNP_groups.csv.gz"))
 #'
 #' enrich_boot <- XGR.enrichment_bootstrap(gr=gr.merged, merged_dat=merged_dat, grouping_vars=grouping_vars,  bootstrap=T, fg_sample_size=NULL, bg_sample_size=100, iterations=100)
+#' }
 XGR.enrichment_bootstrap <- function(gr,
                                      merged_dat,
                                      snp_groups=c("Random","GWAS lead","UCS (-PolyFun)","UCS","Consensus (-PolyFun)","Consensus"),
@@ -302,6 +308,7 @@ XGR.enrichment_bootstrap <- function(gr,
 #'
 #' @family XGR
 #' @examples
+#' \dontrun{
 #' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 #' ### merged enrichment results
 #' enrich_res <- data.table::fread( file.path(root,"XGR/celltypespecific_epigenomics.SNP_groups.csv.gz"))
@@ -318,6 +325,7 @@ XGR.enrichment_bootstrap <- function(gr,
 #'
 #' # Merged volcano plot (permuted)
 #' gp <- XGR.enrichment_plot(enrich_res=enrich.scATAC.permute, title="Permuted enrichment: Cell-type-specific peaks and elements", plot_type="point")
+#' }
 XGR.enrichment_plot <- function(enrich_res,
                                 title=NULL,
                                 subtitle=NULL,
@@ -443,8 +451,10 @@ XGR.parse_metadata <- function(gr.lib,
 #' @return GRangesList
 #' @family XGR
 #' @examples
+#' \dontrun{
 #' data("BST1")
 #' gr.lib <- XGR.download_and_standardize(lib.selections=c("ENCODE_DNaseI_ClusteredV3_CellTypes"), finemap_dat=BST1, nCores=1)
+#' }
 #' @keywords internal
 XGR.download_and_standardize <- function(lib.selections=c("ENCODE_TFBS_ClusteredV3_CellTypes",
                                                           "TFBS_Conserved",
@@ -515,9 +525,11 @@ XGR.download_and_standardize <- function(lib.selections=c("ENCODE_TFBS_Clustered
 #' @family XGR
 #' @keywords internal
 #' @examples
+#' \dontrun{
 #' data("BST1")
 #' finemap_DT <- BST1
 #' gr.hits <- XGR.iterate_overlap(lib.selections=c("ENCODE_TFBS_ClusteredV3_CellTypes"), subset_DT=finemap_DT, nCores=1)
+#' }
 XGR.iterate_overlap <- function(lib.selections=c("ENCODE_TFBS_ClusteredV3_CellTypes",
                                                  "TFBS_Conserved",
                                                  "ReMap_PublicAndEncode_TFBS",
@@ -558,10 +570,12 @@ XGR.iterate_overlap <- function(lib.selections=c("ENCODE_TFBS_ClusteredV3_CellTy
 #'
 #' XGR uses a binomial enrichment tests for each annotation.
 #'
+#' @inheritParams XGR.prepare_foreground_background
 #' @examples
+#' \dontrun{
 #' data("merged_DT")
 #' enrich_res <- XGR.iterate_enrichment(subset_DT=merged_DT, foreground_filter = "Consensus_SNP", background_filter = "leadSNP", lib.selections = c("ENCODE_TFBS_ClusteredV3_CellTypes"), nCores=1)
-#' @inheritParams XGR.prepare_foreground_background
+#' }
 #' @family XGR
 #' @keywords internal
 #' @export
@@ -650,9 +664,11 @@ XGR.iterate_enrichment <- function(subset_DT,
 #' @family XGR
 #' @keywords internal
 #' @examples
+#' \dontrun{
 #' data("merged_DT")
 #' enrich_res <- XGR.iterate_enrichment(subset_DT=merged_DT, foreground_filter = "Consensus_SNP", background_filter = "leadSNP", lib.selections = c("ENCODE_TFBS_ClusteredV3_CellTypes"), nCores=1)
 #' XGR.plot_enrichment(enrich_res)
+#' }
 XGR.plot_enrichment <- function(enrich_res,
                                 adjp_thresh=0.05,
                                 top_annotations=NULL,
@@ -734,12 +750,14 @@ XGR.filter_assays <- function(gr.lib,
 #' @return \code{ggbio} track plot.
 #' @inheritParams XGR.prepare_foreground_background
 #' @examples
+#' \dontrun{
 #' data("BST1")
 #' finemap_DT <- BST1
 #' gr.lib <- XGR.download_and_standardize(c("ENCODE_DNaseI_ClusteredV3_CellTypes"), finemap_dat=finemap_DT, nCores=1)
 #' gr.filt <- XGR.filter_sources(gr.lib=gr.lib, n_top_sources=5)
 #' gr.filt <- XGR.filter_assays(gr.lib=gr.filt, n_top_assays=5)
 #' xgr.track <- XGR.plot_peaks(gr.lib=gr.filt, subset_DT=finemap_DT, fill_var="Assay", facet_var="Source")
+#' }
 XGR.plot_peaks <- function(gr.lib,
                            subset_DT,
                            fill_var="Assay",

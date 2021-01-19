@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fine-map locus with <code>FINEMAP</code> — FINEMAP • echolocatoR</title>
+<title>Fine-map locus with FINEMAP — FINEMAP • echolocatoR</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Fine-map locus with <code>FINEMAP</code> — FINEMAP" />
+<meta property="og:title" content="Fine-map locus with FINEMAP — FINEMAP" />
 <meta property="og:description" content="The stepwise conditional search starts with a causal configuration containing the
 SNP with the lowest P-value alone and then iteratively adds to the causal configuration
 the SNP given the highest posterior model probability until no further SNP yields
@@ -75,7 +75,7 @@ a higher posterior model probability." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -83,7 +83,7 @@ a higher posterior model probability." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -97,6 +97,9 @@ a higher posterior model probability." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -115,7 +118,7 @@ a higher posterior model probability." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -144,20 +147,64 @@ the SNP given the highest posterior model probability until no further SNP yield
 a higher posterior model probability.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>FINEMAP</span>(
-  <span class='no'>subset_DT</span>,
-  <span class='no'>locus_dir</span>,
-  <span class='no'>LD_matrix</span>,
-  <span class='kw'>FINEMAP_path</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>n_samples</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>n_causal</span> <span class='kw'>=</span> <span class='fl'>5</span>,
-  <span class='kw'>model</span> <span class='kw'>=</span> <span class='st'>"cond"</span>,
-  <span class='kw'>remove_tmps</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>credset_thresh</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
-  <span class='kw'>finemap_version</span> <span class='kw'>=</span> <span class='st'>"1.3.1"</span>,
-  <span class='kw'>server</span> <span class='kw'>=</span> <span class='no'>F</span>
-)</pre>
+    <pre class="usage"><span class='fu'>FINEMAP</span><span class='op'>(</span>
+  <span class='va'>subset_DT</span>,
+  <span class='va'>locus_dir</span>,
+  <span class='va'>LD_matrix</span>,
+  FINEMAP_path <span class='op'>=</span> <span class='cn'>NULL</span>,
+  n_samples <span class='op'>=</span> <span class='cn'>NULL</span>,
+  n_causal <span class='op'>=</span> <span class='fl'>5</span>,
+  model <span class='op'>=</span> <span class='st'>"cond"</span>,
+  remove_tmps <span class='op'>=</span> <span class='cn'>F</span>,
+  credset_thresh <span class='op'>=</span> <span class='fl'>0.95</span>,
+  finemap_version <span class='op'>=</span> <span class='st'>"1.4"</span>,
+  server <span class='op'>=</span> <span class='cn'>F</span>,
+  args_list <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
+  verbose <span class='op'>=</span> <span class='cn'>T</span>
+<span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>FINEMAP_path</th>
+      <td><p>Path to a custom FINEMAP executable to use
+instead of the ones included in <span class="pkg">echolocatoR</span>.
+Users can also simply supply "finemap" if this command is linked to the executable.</p></td>
+    </tr>
+    <tr>
+      <th>n_causal</th>
+      <td><p>The maximum number of potential causal SNPs per locus.
+This parameter is used somewhat differntly by different fine-mapping tools.
+See tool-specific functions for details.</p></td>
+    </tr>
+    <tr>
+      <th>model</th>
+      <td><p>"cond" for stepwise conditional search, "sss" for stochastic shotgun search.</p></td>
+    </tr>
+    <tr>
+      <th>remove_tmps</th>
+      <td><p>Whether to remove any temporary files (e.g. FINEMAP output files) after the pipeline is done running.</p></td>
+    </tr>
+    <tr>
+      <th>finemap_version</th>
+      <td><p>Which FINEMAP version to use (specify as a string).</p></td>
+    </tr>
+    <tr>
+      <th>server</th>
+      <td><p>Whether <span class="pkg">echolocatoR</span> is being run on a computing cluster/server or on a local machine.</p></td>
+    </tr>
+    <tr>
+      <th>args_list</th>
+      <td><p>A named list of additional arguments to pass to FINEMAP
+(e.g.: args_list = list("--n-iterations"=5000,"--sss"="")).
+Alternatively, can supply a string instead (e.g.: args_list = "--n-iterations 5000 --sss").</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>Whether <span class="pkg">echolocatoR</span> should be verbose or silent.</p></td>
+    </tr>
+    </table>
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
@@ -171,14 +218,18 @@ a higher posterior model probability.</p>
 <code><a href='FINEMAP.process_results.html'>FINEMAP.process_results</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"locus_dir"</span>); <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"BST1"</span>); <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"BST1_LD_matrix"</span>);
-<span class='no'>finemap_DT</span> <span class='kw'>&lt;-</span> <span class='no'>BST1</span>
-<span class='fu'><a href='https://rdrr.io/r/base/files2.html'>dir.create</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='no'>locus_dir</span>,<span class='st'>"FINEMAP"</span>), <span class='kw'>showWarnings</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>recursive</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='subset_common_snps.html'>subset_common_snps</a></span>(<span class='kw'>LD_matrix</span><span class='kw'>=</span><span class='no'>LD_matrix</span>, <span class='kw'>finemap_DT</span><span class='kw'>=</span><span class='no'>finemap_DT</span>)</div><div class='output co'>#&gt; <span class='error'>Error in subset_common_snps(LD_matrix = LD_matrix, finemap_DT = finemap_DT): unused argument (finemap_DT = finemap_DT)</span></div><div class='input'><span class='no'>LD_matrix</span> <span class='kw'>&lt;-</span> <span class='no'>out</span>$<span class='no'>LD</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'out' not found</span></div><div class='input'><span class='no'>finemap_DT</span> <span class='kw'>&lt;-</span> <span class='no'>out</span>$<span class='no'>DT</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'out' not found</span></div><div class='input'><span class='no'>finemap_DT</span> <span class='kw'>&lt;-</span> <span class='fu'>FINEMAP</span>(<span class='kw'>subset_DT</span><span class='kw'>=</span><span class='no'>finemap_DT</span>, <span class='kw'>locus_dir</span><span class='kw'>=</span><span class='no'>locus_dir</span>, <span class='kw'>LD_matrix</span><span class='kw'>=</span><span class='no'>LD_matrix</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: no non-missing arguments to max; returning -Inf</span></div><div class='output co'>#&gt; [1] "++ Constructing FINEMAP master file."
-#&gt; [1] "++ Formatting data.z file for FINEMAP"
-#&gt; [1] "++ Formatting LD Matrix for FINEMAP"
-#&gt; [1] "+++ Writing FINEMAP z and ld files..."
-#&gt; [1] "cd results/GWAS/Nalls23andMe_2019/BST1 &amp;&amp; /private/var/folders/sw/km9819713937hp640lj59ygw0000gn/T/RtmpUagrNk/temp_libpath15b4e60d13514/echolocatoR/tools/FINEMAP/finemap_v1.3_MacOSX --cond --in-files results/GWAS/Nalls23andMe_2019/BST1/FINEMAP/master --log --n-causal-snps 5"</div><div class='output co'>#&gt; <span class='error'>Error in data.table::fread(file.path(locus_dir, "FINEMAP/data.config")): File 'results/GWAS/Nalls23andMe_2019/BST1/FINEMAP/data.config' does not exist or is non-readable. getwd()=='/Users/schilder/Desktop/echolocatoR/docs/reference'</span></div></pre>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"locus_dir"</span><span class='op'>)</span>; <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"BST1"</span><span class='op'>)</span>; <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"BST1_LD_matrix"</span><span class='op'>)</span>;
+<span class='va'>finemap_DT</span> <span class='op'>&lt;-</span> <span class='va'>BST1</span>
+<span class='va'>locus_dir</span> <span class='op'>&lt;-</span> <span class='fu'>here</span><span class='fu'>::</span><span class='fu'><a href='https://here.r-lib.org//reference/here.html'>here</a></span><span class='op'>(</span><span class='va'>locus_dir</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/files2.html'>dir.create</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>locus_dir</span>,<span class='st'>"FINEMAP"</span><span class='op'>)</span>, showWarnings <span class='op'>=</span> <span class='cn'>FALSE</span>, recursive <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='va'>out</span> <span class='op'>&lt;-</span> <span class='fu'><a href='subset_common_snps.html'>subset_common_snps</a></span><span class='op'>(</span><span class='va'>BST1_LD_matrix</span>, <span class='va'>finemap_DT</span><span class='op'>)</span>
+<span class='va'>LD_matrix</span> <span class='op'>&lt;-</span> <span class='va'>out</span><span class='op'>$</span><span class='va'>LD</span>
+<span class='va'>subset_DT</span> <span class='op'>&lt;-</span> <span class='va'>out</span><span class='op'>$</span><span class='va'>DT</span>
+<span class='va'>subset_DT</span> <span class='op'>$</span><span class='va'>N</span><span class='op'>&lt;-</span> <span class='va'>subset_DT</span><span class='op'>$</span><span class='va'>N_cases</span><span class='op'>+</span><span class='va'>subset_DT</span><span class='op'>$</span><span class='va'>N_controls</span>
+<span class='va'>finemap_DT</span> <span class='op'>&lt;-</span> <span class='fu'>FINEMAP</span><span class='op'>(</span>subset_DT<span class='op'>=</span><span class='va'>subset_DT</span>, locus_dir<span class='op'>=</span><span class='va'>locus_dir</span>, LD_matrix<span class='op'>=</span><span class='va'>LD_matrix</span>, finemap_version<span class='op'>=</span><span class='st'>"1.3"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "++ FINEMAP:: Constructing master file."
+#&gt; [1] "++ FINEMAP:: Constructing data.z file."
+#&gt; [1] "++ FINEMAP:: Constructing data.ld file."</div><div class='output co'>#&gt; <span class='error'>Error in file.path("FINEMAP", exec): object 'exec' not found</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -194,7 +245,7 @@ a higher posterior model probability.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

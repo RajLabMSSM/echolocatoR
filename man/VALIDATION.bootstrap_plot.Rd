@@ -24,6 +24,7 @@ VALIDATION.bootstrap_plot(
 Plot permutation test results
 }
 \examples{
+\dontrun{
 root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 
 #### h2 ####
@@ -70,6 +71,7 @@ gp2 <- VALIDATION.bootstrap_plot(boot_res=subset(boot_res, stat>0), validation_m
 gp12 <- (gp1 / gp2) + patchwork::plot_annotation(tag_levels = "a")
 ggsave(gsub("\\\\.csv\\\\.gz",".png",path),gp12, dpi=400, height=9, width=15)
 
+}
 }
 \seealso{
 Other VALIDATION: 

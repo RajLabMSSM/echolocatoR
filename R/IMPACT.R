@@ -11,6 +11,7 @@
 #' @family IMPACT
 #' @examples
 #' annot.key <- IMPACT.get_annotation_key(save_key=F)
+#' head(annot.key)
 IMPACT.get_annotation_key <- function(URL="https://github.com/immunogenomics/IMPACT/raw/master/IMPACT707/IMPACT_annotation_key.txt",
                                       save_path="./IMPACT/IMPACT_annotation_key.txt.gz",
                                       save_key=F,
@@ -46,8 +47,10 @@ IMPACT.get_annotation_key <- function(URL="https://github.com/immunogenomics/IMP
 #' @keywords internal
 #' @family IMPACT
 #' @examples
+#' \dontrun{
 #' data("BST1")
 #' annot_melt <- IMPACT.get_annotations(subset_DT=BST1)
+#' }
 IMPACT.get_annotations <- function(baseURL="https://github.com/immunogenomics/IMPACT/raw/master/IMPACT707/Annotations",
                                    chrom=NULL,
                                    subset_DT=NULL,
@@ -72,7 +75,7 @@ IMPACT.get_annotations <- function(baseURL="https://github.com/immunogenomics/IM
   annot <- data.table::fread(URL, nThread = nThread)
 
   if(!is.null(subset_DT)){
-    annot_merge <- data.table:::merge.data.table(data.table::data.table(subset_DT),
+    annot_merge <- data.table::merge.data.table(data.table::data.table(subset_DT),
                                                  annot,
                                                  by.x = c("SNP","CHR","POS"),
                                                  by.y = c("SNP","CHR","BP"),
@@ -83,11 +86,11 @@ IMPACT.get_annotations <- function(baseURL="https://github.com/immunogenomics/IM
   # Merge with metadata
   annot.key <- IMPACT.get_annotation_key()
   annot_cols <- grep("^Annot*",colnames(annot_merge), value = T)
-  annot_melt <- data.table:::melt.data.table(annot_merge, measure.vars = annot_cols,
+  annot_melt <- data.table::melt.data.table(annot_merge, measure.vars = annot_cols,
                                              variable.name = "Annot",
                                              value.name = "IMPACT_score",
                                              na.rm=F) %>%
-    data.table:::merge.data.table(annot.key,
+    data.table::merge.data.table(annot.key,
                                   by="Annot",
                                   all = T,
                                   allow.cartesian = T)
@@ -107,8 +110,10 @@ IMPACT.get_annotations <- function(baseURL="https://github.com/immunogenomics/IM
 #' @keywords internal
 #' @family IMPACT
 #' @examples
+#' \dontrun{
 #' data("merged_DT")
 #' ANNOT_MELT <- IMPACT.iterate_get_annotations(merged_DT=merged_DT)
+#' }
 IMPACT.iterate_get_annotations <- function(merged_DT,
                                            IMPACT_score_thresh=.1,
                                            baseURL="https://github.com/immunogenomics/IMPACT/raw/master/IMPACT707/Annotations",

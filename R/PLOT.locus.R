@@ -14,7 +14,7 @@
 #'
 #' @examples
 #' library(echolocatoR)
-#' finemap_dat<-echolocatoR::BST1; LD_matrix <- echolocatoR::BST1_LD_matrix;
+#' finemap_dat<- echolocatoR::BST1; LD_matrix <- echolocatoR::BST1_LD_matrix;
 #' locus_dir <- file.path("~/Desktop","results/GWAS/Nalls23andMe_2019/BST1")
 #'
 #' locus_plot <- PLOT.locus(finemap_dat, locus_dir=locus_dir, LD_matrix=LD_matrix, Nott_epigenome=T, xtext=F, plot.zoom=c("5x"))
@@ -51,6 +51,7 @@ PLOT.locus <- function(finemap_dat,
                        Roadmap_query=NULL,
                        n_top_roadmap=7,
                        annot_overlap_threshold=5,
+                       zoom_exceptions_str="*full window$|zoom_polygon",
 
                        Nott_epigenome=F,
                        Nott_regulatory_rects=T,
@@ -68,9 +69,10 @@ PLOT.locus <- function(finemap_dat,
                        height=12,
                        width=10,
                        plot_format="jpg",
-                       save_ggplots=T,
-                       nThread=4,
+                       save_RDS=T,
                        return_list=F,
+                       conda_env="echoR",
+                       nThread=4,
                        verbose=T){
   # library(dplyr); library(ggplot2); LD_reference="UKB";
   # finemap_dat<-echolocatoR::BST1; LD_matrix <- echolocatoR::BST1_LD_matrix; locus="BST1";
@@ -78,8 +80,9 @@ PLOT.locus <- function(finemap_dat,
   # Nott_epigenome=T; Nott_regulatory_rects=T; Nott_show_placseq=T; Nott_binwidth=200; max_transcripts=1; dpi=400; height=12; width=10; results_path=NULL;  n_top_roadmap=7; annot_overlap_threshold=5; Nott_bigwig_dir=NULL;
   #  Roadmap_query=NULL; sig_cutoff=5e-8; verbose=T; QTL_prefixes=NULL; gene_track=T; genomic_units="Mb";strip.text.y.angle=0; xtext=F; plot_format="jpg"; return_list=F;
   # track_order= c("Genes","GWAS full window","zoom_polygon","GWAS","Fine-mapping", "Roadmap\nchromatin marks\ncell-types", "Nott (2019)\nread densities", "Nott (2019)\nPLAC-seq"); track_heights=NULL; plot_full_window=T;
-  message("+-------- Locus Plots --------+")
+
   locus <- basename(locus_dir)
+  message("+-------- Locus Plot: ",locus,"--------+")
   dir.create(locus_dir, showWarnings = F, recursive = T)
   # Set up data
   finemap_dat <- find_consensus_SNPs(finemap_dat = finemap_dat,
@@ -96,7 +99,7 @@ PLOT.locus <- function(finemap_dat,
   # Add LD into the dat
   finemap_dat <- LD.get_lead_r2(finemap_dat = finemap_dat,
                                 LD_matrix = LD_matrix,
-                                LD_format = "matrix")
+                                LD_format = "guess")
   # Begin constructing tracks
   TRKS <- NULL;
   # Treack: Summary
@@ -174,7 +177,8 @@ PLOT.locus <- function(finemap_dat,
       TRKS[["Genes"]] <- PLOT.transcript_model_track(finemap_dat = finemap_dat,
                                                      show.legend = show.legend_genes,
                                                      xtext = xtext,
-                                                     max_transcripts = 1,
+                                                     max_transcripts = max_transcripts,
+                                                     expand_x_mult=NULL,
                                                      verbose=T)
     })
   }
@@ -236,7 +240,8 @@ PLOT.locus <- function(finemap_dat,
                                    # Will convert data.table automatically
                                    gr.snp = gr.snp,
                                    keyword_query = Roadmap_query,
-                                   limit_files=F,
+                                   limit_files = NULL,
+                                   conda_env = conda_env,
                                    nThread = nThread)
       saveRDS(grl.roadmap, annot_file)
     }
@@ -337,19 +342,20 @@ PLOT.locus <- function(finemap_dat,
 
       #### Remove plots margins to save space ####
       TRKS_zoom <- PLOT.remove_margins(TRKS = TRKS_zoom,
-                                  finemap_dat = finemap_dat,
-                                  verbose = verbose)
-      #### Make sure last plot has xtext ####
-      TRKS_zoom <- PLOT.add_back_xtext(TRKS = TRKS_zoom,
-                                  verbose = verbose)
+                                        finemap_dat = finemap_dat,
+                                        verbose = verbose)
       #### Reorder tracks ####
       TRKS_zoom <- PLOT.reorder_tracks(TRKS = TRKS_zoom,
                                        track_order = track_order,
+                                       verbose = verbose)
+      #### Make sure last plot has xtext ####
+      TRKS_zoom <- PLOT.add_back_xtext(TRKS = TRKS_zoom,
                                        verbose = verbose)
       #### Define plot.zoom limits ####
       TRKS_zoom <- PLOT.set_window_limits(TRKS = TRKS_zoom,
                                           finemap_dat = finemap_dat,
                                           plot.zoom = pz,
+                                          exceptions_str=zoom_exceptions_str,
                                           verbose = verbose)
       #### Construct title ####
       n_snps <- if(dataset_type %in% names(TRKS_zoom)){
@@ -358,13 +364,12 @@ PLOT.locus <- function(finemap_dat,
       title_text <- paste0(basename(locus_dir),"   (",n_snps,"zoom: ",window_suffix,")")
 
       #### Check track heights ####
-      track_heights <- PLOT.check_track_heights(TRKS = TRKS_zoom,
-                                                track_heights = track_heights,
-                                                default_height = 1,
-                                                verbose = verbose)
+      heights <- PLOT.check_track_heights(TRKS = TRKS_zoom,
+                                          track_heights = track_heights,
+                                          verbose = verbose)
       #### Fuse all tracks ####
       TRKS_FINAL <- patchwork::wrap_plots(TRKS_zoom,
-                                          heights = track_heights,
+                                          heights = heights,
                                           ncol = 1) +
         patchwork::plot_annotation(title = title_text)
 
@@ -385,9 +390,11 @@ PLOT.locus <- function(finemap_dat,
 
       #### Save ggplot ####
       # Only save one zoom of these since these files are very large
-      if(save_ggplots & (pz==plot.zoom[1])){
-        trk_paths <- save_plot_tracks(locus_dir=locus_dir,
+      if(save_RDS & (pz==plot.zoom[1])){
+        trk_paths <- PLOT.save_tracks(locus_dir=locus_dir,
                                       TRKS_zoom=TRKS_zoom,
+                                      LD_reference = LD_reference,
+                                      window_suffix=window_suffix,
                                       verbose=verbose)
       }
       #### Show the plot ####
@@ -400,12 +407,15 @@ PLOT.locus <- function(finemap_dat,
 
 #### + SUPPORT FUNCTIONS + ####
 
-save_plot_tracks <- function(locus_dir,
+PLOT.save_tracks <- function(locus_dir,
                              TRKS_zoom,
+                             window_suffix,
+                             LD_reference,
                              split_tracks=F,
                              verbose=T){
   tracks_folder <- file.path(locus_dir,"plot_tracks")
   dir.create(tracks_folder, showWarnings = F, recursive = T)
+  locus <- basename(locus_dir)
   if(split_tracks){
     trk_paths <- lapply(names(TRKS_zoom), function(x){
       rds_path <-  file.path(tracks_folder,paste(paste(gsub("[:]|[\n]|[/]|[ ]","-",x),"trk",sep="_"),locus,LD_reference,window_suffix,"RDS",sep="."))
@@ -633,28 +643,36 @@ PLOT.guess_genomic_units <- function(gg,
 }
 
 
-PLOT.heights_dict <- function(){
-  c("Genes"=.33,
+PLOT.heights_dict <- function(keys=NULL,
+                              default_height=1){
+  heights_dict <- c(
     "GWAS full window"=.33,
     "QTL full window"=.33,
     "zoom_polygon"=.15,
+    "Genes"=.5,
     "GWAS"=.33,
     "QTL"=.33,
     "Fine-mapping"=1,
     "Roadmap\nchromatin marks\ncell-types"=1,
     "Nott (2019)\nread densities"=.5,
-    "Nott (2019)\nPLAC-seq"=1)
+    "Nott (2019)\nPLAC-seq"=.5)
+  if(is.null(keys)) return(heights_dict)
+  # Query dict
+  heights <- lapply(keys, function(k){
+    if(k %in% names(heights_dict)){
+      return(heights_dict[[k]])
+    }else return(default_height)
+  }) %>% unlist()
+  return(heights)
 }
 
 PLOT.check_track_heights <- function(TRKS,
-                                     track_heights,
+                                     track_heights=NULL,
                                      default_height=1,
                                      verbose=T){
   printer("+ Checking track heights...",v=verbose)
-  heights_dict <- PLOT.heights_dict()
-
   if(is.null(track_heights)){
-    track_heights <- heights_dict[names(TRKS)]
+    track_heights <- PLOT.heights_dict(keys=names(TRKS))
   } else {
     # Ensures n TRKS == n track_heights,
     ## even if user-supplied track_heights is > or < than n TRKS.
@@ -663,11 +681,13 @@ PLOT.check_track_heights <- function(TRKS,
   track_heights <- track_heights[!is.na(track_heights)]
 
   if(length(track_heights)<length(TRKS)){
+    printer("Filling in missing track lengths with",default_height,v=verbose)
     n_missing <- length(TRKS)-length(track_heights)
     track_heights <- c(track_heights, rep(default_height,n_missing))
   }
   return(track_heights)
 }
+
 
 PLOT.reorder_tracks <- function(TRKS,
                                 track_order=NULL,
@@ -766,10 +786,10 @@ PLOT.get_window_limits <- function(finemap_dat,
 #' @keywords internal
 #' @examples
 #' data("BST1")
-#' window_suffix <- get_window_suffix(finemap_dat=BST1, plot.zoom=1000)
-#' window_suffix <- get_window_suffix(finemap_dat=BST1, plot.zoom=NULL)
-#' window_suffix <- get_window_suffix(finemap_dat=BST1, plot.zoom="all")
-#' window_suffix <- get_window_suffix(finemap_dat=BST1, plot.zoom="2x")
+#' window_suffix <- PLOT.get_window_suffix(finemap_dat=BST1, plot.zoom=1000)
+#' window_suffix <- PLOT.get_window_suffix(finemap_dat=BST1, plot.zoom=NULL)
+#' window_suffix <- PLOT.get_window_suffix(finemap_dat=BST1, plot.zoom="all")
+#' window_suffix <- PLOT.get_window_suffix(finemap_dat=BST1, plot.zoom="2x")
 PLOT.get_window_suffix <- function(finemap_dat,
                                    plot.zoom,
                                    verbose=T){
@@ -796,7 +816,7 @@ PLOT.get_window_suffix <- function(finemap_dat,
 PLOT.set_window_limits <- function(TRKS,
                                    finemap_dat,
                                    plot.zoom,
-                                   exceptions_str="*full window$|zoom_polygon|^Genes$",
+                                   exceptions_str="*full window$|zoom_polygon",
                                    verbose=T){
   printer("+ Aligning xlimits for each subplot...",v=verbose)
   ### Exclude the purposefully unzoomed tracks
@@ -812,10 +832,17 @@ PLOT.set_window_limits <- function(TRKS,
                                     verbose=F)
     unit_divisor <- if(genomic_units=="Mb") 1 else 1000000
 
+    #### IMPORTANT!####
+    #  Setting x-limits via coord_cartesian() ensures data that
+    ## extends outside these limits will still be displayed.
+    ## In contrast xlim() will simply throw out this data.
+    # https://stackoverflow.com/questions/25685185/limit-ggplot2-axes-without-removing-data-outside-limits-zoom
     suppressMessages(suppressWarnings(
       TRKS[[x]] <- trk +
-        scale_x_continuous(labels = function(x)x/unit_divisor,
-                           limits = xlims)
+        scale_x_continuous(labels = function(x)x/unit_divisor) +
+                           # limits = xlims) +
+        # xlim(xlims)
+        coord_cartesian(xlim=c(xlims))
     ))
   }
   return(TRKS)
@@ -903,7 +930,9 @@ PLOT.zoom_polygon <- function(finemap_dat,
                  alpha=alpha, show.legend = F) +
     # scale_fill_gradient(limits=c(0.75, 4), low = "lightgrey", high = "red") +
     theme_void() +
-    theme(plot.margin = unit(rep(0,4),"cm") )
+    theme(plot.margin = unit(rep(0,4),"cm"),
+          axis.text.x = element_blank(),
+          axis.title.x = element_blank())
   return(zp)
 }
 
@@ -953,8 +982,9 @@ PLOT.transcript_model_track <- function(finemap_dat,
                                         stacking=c("squish","hide", "dense", "pack","full"),
                                         method="ggplot",
                                         xtext=T,
+                                        expand_x_mult=c(0.05, .1),
                                         verbose=T){
-  # finemap_dat <-echolocatoR::BST1
+  # finemap_dat <-echolocatoR::LRRK2; max_transcripts=3;
   # method="ggbio"; verbose=T; stacking="squish";  fill="blue"; transcriptAnnotation = c("symbol","transcript");  collapseTranscripts=c(F,T,"longest"); shape="arrow";
   gr.snp <- biovizBase::transformDfToGr(data = finemap_dat,
                                         seqnames = "CHR",
@@ -984,7 +1014,7 @@ PLOT.transcript_model_track <- function(finemap_dat,
                      transcriptAnnotation = transcriptAnnotation[1],
                      background.title = "grey20",
                      collapseTranscripts=collapseTranscripts[1],
-                     shape = shape[1],  )
+                     shape = shape[1])
 
   } else {
     #### ggbio ####
@@ -992,18 +1022,41 @@ PLOT.transcript_model_track <- function(finemap_dat,
                           max_transcripts = max_transcripts,
                           remove_pseudogenes = remove_pseudogenes)
     if("pals" %in% row.names(installed.packages())){
-      palette <- unname(pals::alphabet())
+      # Ensure teh palette size is always big enough for the
+      ## number of unique genes.
+      n_genes <- dplyr::n_distinct(tx$gr.snp$symbol)
+      palette <- rep(unname(pals::alphabet()),
+                     n_genes%/%length(pals::alphabet())+1 )
     }
-    names.expr <-if(max_transcripts==1)  "symbol" else  "symbol (tx_id)"
+    if(max_transcripts==1) {
+       names.expr <- "symbol"
+       fill_var <- NULL
+       color <- "darkslateblue"
+    }else {
+       names.expr <- "symbol" #"symbol   (tx_id)"
+       fill_var <- NULL
+       color <- "darkslateblue"
+    }
     tx.models <- ggbio::autoplot(tx$txdb_filt,
                                  which=tx$tx.gr,
-                                 aes_string(fill="symbol", color="symbol"),
+                                 aes_string(fill=fill_var, color=fill_var),
                                  columns =  c("symbol","tx_id"),
                                  names.expr = names.expr,
+                                 color = color,
                                  stat = "identity",
                                  show.legend = F) +
       theme_classic() +
       labs(y="Transcript")
+
+    if(!is.null(expand_x_mult)){
+      tx.models <- suppressMessages(
+        tx.models +
+          # Add some padding at top and bottom
+          scale_y_discrete(expand = expansion(mult = expand_x_mult))
+      )
+    }
+
+
 
     if(xtext==F){
       tx.models <- tx.models +
@@ -1035,6 +1088,9 @@ PLOT.transcript_model_track <- function(finemap_dat,
 get_transcripts <- function(gr.snp,
                             max_transcripts=1,
                             remove_pseudogenes=T){
+
+  # gr.snp <- GenomicRanges::makeGRangesFromDataFrame(echolocatoR::LRRK2, keep.extra.columns = T, seqnames.field = "CHR", start.field = "POS", end.field = "POS")
+
   # Warning:: MUST load the full package bc
   # it loads other necessary packages into the namespace.
 
@@ -1059,34 +1115,57 @@ get_transcripts <- function(gr.snp,
                                                SeqNameFilter(value = unique(seqnames(gr.snp)) )
                                              ))
   #### Find exact overlap between transcripts and finemap_DT ####
+  # PROBLEM: This
   hits <- GenomicRanges::findOverlaps(query = gr.snp,
-                                      subject = txdb_transcripts)
+                                      subject = txdb_transcripts,
+                                      type="any",
+                                      ignore.strand=T)
+
   #### limit the number of transcript per gene ####
   tx.filt <- data.frame(txdb_transcripts[S4Vectors::subjectHits(hits),]) %>%
-    data.table::as.data.table() %>%
-    dplyr::mutate(tx_length=abs(start-end)) %>%
-    dplyr::group_by(symbol) %>%
-    dplyr::arrange(dplyr::desc(tx_length)) %>%
-    dplyr::slice(max_transcripts) %>%
+    ## !!IMPORTANT!! If unique() isn't applied here,
+    ## dplyr will pick duplicates of the same transcript
+    unique() %>%
     subset((!is.na(symbol)) & (!is.na(tx_name))) %>%
+    dplyr::group_by(symbol) %>%
+    # slice_max does not behave as expected.
+    # If you don't explicitly group by the group var,
+    ## you will only return the top n transcripts overall,
+    ## regardless of genes (really dumb...)
+    dplyr::slice_max(order_by = c(symbol,width),
+                     n = max_transcripts,
+                     with_ties = F) %>%
     data.table::as.data.table()
+
   #### remove_pseudogenes ####
   if(remove_pseudogenes){
+    pseudo <- grep("pseudogene|nonsense_mediated_decay",unique(tx.filt$tx_biotype),value = T)
     tx.filt <- subset(tx.filt,
-                        (!tx_biotype %in% c("processed_pseudogene","pseudogene") ) &
-                        (!startsWith(symbol,"RP11")))
+                        (!tx_biotype %in% pseudo) &
+                        (!startsWith(symbol,"RP11")) &
+                        (!startsWith(symbol,"RPS"))
+                      )
   }
-  #### Convert back to granges ####
-  tx.gr <- GenomicRanges::makeGRangesFromDataFrame(tx.filt,
-                                                   start.field = "start",
-                                                   end.field = "end",
-                                                   seqnames.field = "seqnames",
+
+  ### Convert back to Granges ####
+  tx.gr <- GenomicRanges::makeGRangesFromDataFrame(tx.filt, seqnames.field = "seqnames",
+                                                   start.field = "start", end.field = "end",
                                                    keep.extra.columns = T)
+  #### Filter tx database ####
+  # Just return the full txdb (filtered version causes issues w ggbio)
+  # IMPORTANT! you must use the filteed db when plotting
+  ## bc otherwise ggbio will plot all overlapping transcripts
+  # (not just the ones you selected here).
   txdb_filt <- ensembldb::filter(txdb,
-                                 filter = AnnotationFilter::AnnotationFilterList(
-                                   TxIdFilter(tx.gr$tx_id)
-                                   # SeqNameFilter(value = unique(seqnames(gr.snp_CHR)) )
-                                 ))
+                                  filter = AnnotationFilter::AnnotationFilterList(
+                                          AnnotationFilter::TxIdFilter(value=tx.filt$tx_id)
+                                  )
+                                 )
+  #### Report ####
+  message("max_transcripts=",max_transcripts,". ")
+  message(dplyr::n_distinct(tx.gr$tx_id)," transcripts from ",dplyr::n_distinct(tx.gr$symbol)," genes returned.")
+
+
   return(list(txdb_filt=txdb_filt,
               tx.gr=tx.gr))
 }

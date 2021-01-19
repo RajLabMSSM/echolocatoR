@@ -19,6 +19,7 @@ and cell subtype of each of the 500 annotations in \emph{IMPACT}.
 }
 \examples{
 annot.key <- IMPACT.get_annotation_key(save_key=F)
+head(annot.key)
 }
 \seealso{
 Other IMPACT: 

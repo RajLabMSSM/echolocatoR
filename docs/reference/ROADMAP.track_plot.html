@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -94,6 +94,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -112,7 +115,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -138,13 +141,14 @@
     <p>Plot Roadmap query</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ROADMAP.track_plot</span>(
-  <span class='no'>grl.roadmap.filt</span>,
-  <span class='kw'>gr.snp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"density"</span>,
-  <span class='kw'>adjust</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
-  <span class='kw'>show_plot</span> <span class='kw'>=</span> <span class='no'>T</span>
-)</pre>
+    <pre class="usage"><span class='fu'>ROADMAP.track_plot</span><span class='op'>(</span>
+  <span class='va'>grl.roadmap.filt</span>,
+  gr.snp <span class='op'>=</span> <span class='cn'>NULL</span>,
+  geom <span class='op'>=</span> <span class='st'>"density"</span>,
+  adjust <span class='op'>=</span> <span class='fl'>0.2</span>,
+  show_plot <span class='op'>=</span> <span class='cn'>T</span>,
+  as.ggplot <span class='op'>=</span> <span class='cn'>T</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -175,13 +179,15 @@ Options include "density" and "histogram".</p></td>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"BST1"</span>)
-<span class='no'>finemap_DT</span> <span class='kw'>&lt;-</span> <span class='no'>BST1</span>
-<span class='no'>gr.snp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='DT_to_GRanges.html'>DT_to_GRanges</a></span>(<span class='no'>finemap_DT</span>)
-<span class='no'>grl.roadmap</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ROADMAP.query.html'>ROADMAP.query</a></span>(<span class='kw'>results_path</span><span class='kw'>=</span><span class='st'>"./Roadmap"</span>, <span class='kw'>gr.snp</span><span class='kw'>=</span><span class='no'>gr.snp</span>, <span class='kw'>keyword_query</span><span class='kw'>=</span><span class='st'>"monocyte"</span>)</div><div class='output co'>#&gt; [1] "+ ROADMAP:: 2 annotation(s) identified that match `keyword_query`."
-#&gt; [1] "ROADMAP:: All downloads complete"
-#&gt; Time difference of 0.1 secs</div><div class='input'><span class='no'>grl.roadmap.filt</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ROADMAP.merge_and_process_grl.html'>ROADMAP.merge_and_process_grl</a></span>(<span class='kw'>grl.roadmap</span><span class='kw'>=</span><span class='no'>grl.roadmap</span>, <span class='kw'>gr.snp</span><span class='kw'>=</span><span class='no'>gr.snp</span>, <span class='kw'>n_top_tissues</span><span class='kw'>=</span><span class='fl'>5</span>)
-<span class='no'>track.roadmap</span> <span class='kw'>&lt;-</span> <span class='fu'>ROADMAP.track_plot</span>(<span class='no'>grl.roadmap.filt</span>, <span class='kw'>gr.snp</span><span class='kw'>=</span><span class='no'>gr.snp</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: no non-missing arguments to max; returning -Inf</span></div><div class='output co'>#&gt; <span class='error'>Error: Faceting variables must have at least one value</span></div><div class='img'><img src='ROADMAP.track_plot-1.png' alt='' width='700' height='433' /></div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"BST1"</span><span class='op'>)</span>
+<span class='va'>finemap_DT</span> <span class='op'>&lt;-</span> <span class='va'>BST1</span>
+<span class='va'>gr.snp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='DT_to_GRanges.html'>DT_to_GRanges</a></span><span class='op'>(</span><span class='va'>finemap_DT</span><span class='op'>)</span>
+<span class='va'>grl.roadmap</span> <span class='op'>&lt;-</span> <span class='fu'><a href='ROADMAP.query.html'>ROADMAP.query</a></span><span class='op'>(</span>results_path<span class='op'>=</span><span class='st'>"./Roadmap"</span>, gr.snp<span class='op'>=</span><span class='va'>gr.snp</span>, keyword_query<span class='op'>=</span><span class='st'>"monocyte"</span><span class='op'>)</span>
+<span class='va'>grl.roadmap.filt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='ROADMAP.merge_and_process_grl.html'>ROADMAP.merge_and_process_grl</a></span><span class='op'>(</span>grl.roadmap<span class='op'>=</span><span class='va'>grl.roadmap</span>, gr.snp<span class='op'>=</span><span class='va'>gr.snp</span>, n_top_tissues<span class='op'>=</span><span class='fl'>5</span><span class='op'>)</span>
+<span class='va'>track.roadmap</span> <span class='op'>&lt;-</span> <span class='fu'>ROADMAP.track_plot</span><span class='op'>(</span><span class='va'>grl.roadmap.filt</span>, gr.snp<span class='op'>=</span><span class='va'>gr.snp</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -197,7 +203,7 @@ Options include "density" and "histogram".</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -94,6 +94,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -112,7 +115,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -138,26 +141,34 @@
     <p>Plot brain cell-specific interactome data</p>
     </div>
 
-    <pre class="usage"><span class='fu'>NOTT_2019.plac_seq_plot</span>(
-  <span class='kw'>finemap_dat</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>locus_dir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>title</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>print_plot</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>save_plot</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>return_interaction_track</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>xlims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>zoom_window</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>index_SNP</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>return_consensus_overlap</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>show_arches</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>highlight_plac</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>show_regulatory_rects</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>save_annot</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>point_size</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='kw'>height</span> <span class='kw'>=</span> <span class='fl'>7</span>,
-  <span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>7</span>,
-  <span class='kw'>dpi</span> <span class='kw'>=</span> <span class='fl'>300</span>
-)</pre>
+    <pre class="usage"><span class='fu'>NOTT_2019.plac_seq_plot</span><span class='op'>(</span>
+  finemap_dat <span class='op'>=</span> <span class='cn'>NULL</span>,
+  locus_dir <span class='op'>=</span> <span class='cn'>NULL</span>,
+  title <span class='op'>=</span> <span class='cn'>NULL</span>,
+  print_plot <span class='op'>=</span> <span class='cn'>T</span>,
+  save_plot <span class='op'>=</span> <span class='cn'>T</span>,
+  return_interaction_track <span class='op'>=</span> <span class='cn'>F</span>,
+  xlims <span class='op'>=</span> <span class='cn'>NULL</span>,
+  zoom_window <span class='op'>=</span> <span class='cn'>NULL</span>,
+  index_SNP <span class='op'>=</span> <span class='cn'>NULL</span>,
+  genomic_units <span class='op'>=</span> <span class='st'>"Mb"</span>,
+  color_dict <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>enhancers <span class='op'>=</span> <span class='st'>"springgreen2"</span>, promoters <span class='op'>=</span> <span class='st'>"purple"</span>, anchors <span class='op'>=</span> <span class='st'>"black"</span><span class='op'>)</span>,
+  return_consensus_overlap <span class='op'>=</span> <span class='cn'>T</span>,
+  show_arches <span class='op'>=</span> <span class='cn'>T</span>,
+  highlight_plac <span class='op'>=</span> <span class='cn'>F</span>,
+  show_regulatory_rects <span class='op'>=</span> <span class='cn'>T</span>,
+  show_anchors <span class='op'>=</span> <span class='cn'>T</span>,
+  strip.text.y.angle <span class='op'>=</span> <span class='fl'>0</span>,
+  xtext <span class='op'>=</span> <span class='cn'>T</span>,
+  save_annot <span class='op'>=</span> <span class='cn'>F</span>,
+  point_size <span class='op'>=</span> <span class='fl'>2</span>,
+  height <span class='op'>=</span> <span class='fl'>7</span>,
+  width <span class='op'>=</span> <span class='fl'>7</span>,
+  dpi <span class='op'>=</span> <span class='fl'>300</span>,
+  as_ggplot <span class='op'>=</span> <span class='cn'>T</span>,
+  nThread <span class='op'>=</span> <span class='fl'>4</span>,
+  verbose <span class='op'>=</span> <span class='cn'>T</span>
+<span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
@@ -180,13 +191,14 @@
 <code><a href='NOTT_2019.superenhancers.html'>NOTT_2019.superenhancers</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"BST1"</span>); <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"locus_dir"</span>);
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"BST1"</span><span class='op'>)</span>; <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"locus_dir"</span><span class='op'>)</span>;
 
-<span class='no'>trks_plus_lines</span> <span class='kw'>&lt;-</span> <span class='fu'>NOTT_2019.plac_seq_plot</span>(<span class='kw'>finemap_dat</span><span class='kw'>=</span><span class='no'>BST1</span>, <span class='kw'>locus_dir</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='st'>"~/Desktop"</span>,<span class='no'>locus_dir</span>), <span class='kw'>highlight_plac</span><span class='kw'>=</span><span class='no'>T</span>)
+<span class='va'>trks_plus_lines</span> <span class='op'>&lt;-</span> <span class='fu'>NOTT_2019.plac_seq_plot</span><span class='op'>(</span>finemap_dat<span class='op'>=</span><span class='va'>BST1</span>, locus_dir<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='st'>"~/Desktop"</span>,<span class='va'>locus_dir</span><span class='op'>)</span>, highlight_plac<span class='op'>=</span><span class='cn'>T</span><span class='op'>)</span>
 <span class='co'># Zoom in</span>
-<span class='no'>trks_plus_lines</span> <span class='kw'>&lt;-</span> <span class='fu'>NOTT_2019.plac_seq_plot</span>(<span class='kw'>finemap_dat</span><span class='kw'>=</span><span class='no'>BST1</span>, <span class='kw'>locus_dir</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='st'>"~/Desktop"</span>,<span class='no'>locus_dir</span>), <span class='kw'>zoom_window</span><span class='kw'>=</span><span class='fl'>500000</span>, <span class='kw'>highlight_plac</span><span class='kw'>=</span><span class='no'>T</span>)
-}</div></pre>
+<span class='va'>trks_plus_lines</span> <span class='op'>&lt;-</span> <span class='fu'>NOTT_2019.plac_seq_plot</span><span class='op'>(</span>finemap_dat<span class='op'>=</span><span class='va'>BST1</span>, locus_dir<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='st'>"~/Desktop"</span>,<span class='va'>locus_dir</span><span class='op'>)</span>, zoom_window<span class='op'>=</span><span class='fl'>500000</span>, highlight_plac<span class='op'>=</span><span class='cn'>T</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -202,7 +214,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

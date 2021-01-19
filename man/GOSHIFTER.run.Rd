@@ -16,9 +16,9 @@ GOSHIFTER.run(
   goshifter_path = NULL,
   chromatin_state = "TssA",
   R2_filter = 0.8,
+  overlap_threshold = 1,
   remove_tmps = T,
-  verbose = T,
-  overlap_threshold = 1
+  verbose = T
 )
 }
 \description{

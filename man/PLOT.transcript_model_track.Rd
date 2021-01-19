@@ -12,7 +12,7 @@
 PLOT.transcript_model_track(
   finemap_dat,
   max_transcripts = 1,
-  remove_RP11 = T,
+  remove_pseudogenes = T,
   show.legend = T,
   show_plot = F,
   fill = "skyblue",
@@ -22,6 +22,7 @@ PLOT.transcript_model_track(
   stacking = c("squish", "hide", "dense", "pack", "full"),
   method = "ggplot",
   xtext = T,
+  expand_x_mult = c(0.05, 0.1),
   verbose = T
 )
 }

@@ -8,6 +8,7 @@ multi_finemap(
   locus_dir,
   fullSS_path,
   finemap_method_list,
+  finemap_args = NULL,
   subset_DT,
   dataset_type,
   LD_matrix = NULL,

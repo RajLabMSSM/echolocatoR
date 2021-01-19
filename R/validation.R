@@ -6,7 +6,9 @@
 #'
 #' @family VALIDATION
 #' @examples
+#' \dontrun{
 #' plt.ALL <- VALIDATION.super_plot(root="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide")
+#' }
 VALIDATION.super_plot <- function(root="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide",
                                   height=10, width=12,
                                   layout="horiz",
@@ -429,6 +431,7 @@ VALIDATION.bootstrap <- function(metric_df,
 #'
 #' @family VALIDATION
 #' @examples
+#' \dontrun{
 #' save_path <- root <-  "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 #'
 #'
@@ -456,6 +459,7 @@ VALIDATION.bootstrap <- function(metric_df,
 #' ## metric_names <- grep("Basenji.*MAX|DeepSEA.*MAX|Roadmap.*MAX", colnames(metric_df), value = T)
 #' ## metric_df <- metric_df %>% dplyr::mutate(annot=paste(Model,Tissue,Assay,Type,Metric,sep="_"))
 #' boot_res <- VALIDATION.bootstrap_multimetric(metric_df=metric_df, metric_names=metric_names, validation_method=validation_method, save_path=gsub("\\.csv\\.gz",".bootstrap.coin_wilcox_test.csv.gz",path), grouping_var=grouping_var, iterations=10000, nThread=12)
+#' }
 VALIDATION.bootstrap_multimetric <- function(metric_df,
                                              metric_names,
                                              validation_method=NULL,
@@ -517,9 +521,11 @@ VALIDATION.bootstrap_multimetric <- function(metric_df,
 #'
 #' @family VALIDATION
 #' @examples
+#' \dontrun{
 #' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019"
 #' permute.IMPACT <-  data.table::fread(file.path(root,"_genome_wide/IMPACT/Nalls23andMe_2019.IMPACT.permutations.csv.gz"))
 #' res <- VALIDATION.permute_compare_results(permute_res=permute.IMPACT)
+#' }
 VALIDATION.compare_bootstrap_distributions <- function(boot_res,
                                                        formula_str="stat ~ SNP_group"){
   # GLM
@@ -585,6 +591,7 @@ VALIDATION.aggregate_permute_res <- function(permute_res){
 #'
 #' @family VALIDATION
 #' @examples
+#' \dontrun{
 #' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 #'
 #' #### h2 ####
@@ -631,6 +638,7 @@ VALIDATION.aggregate_permute_res <- function(permute_res){
 #' gp12 <- (gp1 / gp2) + patchwork::plot_annotation(tag_levels = "a")
 #' ggsave(gsub("\\.csv\\.gz",".png",path),gp12, dpi=400, height=9, width=15)
 #'
+#' }
 VALIDATION.bootstrap_plot <- function(boot_res,
                                       validation_method=NULL,
                                       facet_formula=". ~ .",
@@ -764,8 +772,10 @@ VALIDATION.bootstrap_plot <- function(boot_res,
 #' Check whether Support level correlates with some variable
 #'
 #' @examples
+#' \dontrun{
 #' # S-LDSC h2
 #' h2_stats <- data.table::fread("/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/Nalls23andMe_2019.grouped_snpvar_stats.csv.gz")
+#' }
 VALIDATION.compare_support <- function(plot_dat){
   plot_dat <- h2_stats
   variable <- "SNPVAR_min"

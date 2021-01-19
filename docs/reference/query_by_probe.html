@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Use <em>awk</em> to query locus subsets. — query_by_probe • echolocatoR</title>
+<title>Use awk to query locus subsets. — query_by_probe • echolocatoR</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Use <em>awk</em> to query locus subsets. — query_by_probe" />
+<meta property="og:title" content="Use awk to query locus subsets. — query_by_probe" />
 <meta property="og:description" content="To be used when probe name (but not gene name) is a column in the full summary stats file.
 Requires a gene-probe key file (probe_path).
 More commonly useful for QTL full summary stats files." />
@@ -74,7 +74,7 @@ More commonly useful for QTL full summary stats files." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -82,7 +82,7 @@ More commonly useful for QTL full summary stats files." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -96,6 +96,9 @@ More commonly useful for QTL full summary stats files." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -114,7 +117,7 @@ More commonly useful for QTL full summary stats files." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -142,24 +145,25 @@ Requires a gene-probe key file (<strong>probe_path</strong>).
 More commonly useful for QTL full summary stats files.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>query_by_probe</span>(
-  <span class='no'>fullSS_path</span>,
-  <span class='no'>subset_path</span>,
-  <span class='no'>gene</span>,
-  <span class='no'>gene_col</span>,
-  <span class='no'>chrom_col</span>,
-  <span class='no'>file_sep</span>,
-  <span class='no'>probe_path</span>,
-  <span class='kw'>coordinates_merged</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>location_sep</span> <span class='kw'>=</span> <span class='st'>":"</span>
-)</pre>
+    <pre class="usage"><span class='fu'>query_by_probe</span><span class='op'>(</span>
+  <span class='va'>fullSS_path</span>,
+  <span class='va'>subset_path</span>,
+  <span class='va'>gene</span>,
+  <span class='va'>gene_col</span>,
+  <span class='va'>chrom_col</span>,
+  <span class='va'>file_sep</span>,
+  <span class='va'>probe_path</span>,
+  coordinates_merged <span class='op'>=</span> <span class='cn'>T</span>,
+  location_sep <span class='op'>=</span> <span class='st'>":"</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>fullSS_path</th>
-      <td><p>Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.</p></td>
+      <td><p>Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.
+It is usually best to provide the absolute path rather than the relative path.</p></td>
     </tr>
     <tr>
       <th>gene_col</th>
@@ -221,7 +225,7 @@ Only used for certain eQTL datasets.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

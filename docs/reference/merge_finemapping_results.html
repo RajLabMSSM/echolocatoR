@@ -73,7 +73,7 @@ and merge into a single data.frame." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ and merge into a single data.frame." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -95,6 +95,9 @@ and merge into a single data.frame." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -113,7 +116,7 @@ and merge into a single data.frame." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,21 +143,23 @@ and merge into a single data.frame." />
 and merge into a single data.frame.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>merge_finemapping_results</span>(
-  <span class='kw'>dataset</span> <span class='kw'>=</span> <span class='st'>"./Data/GWAS"</span>,
-  <span class='kw'>minimum_support</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>include_leadSNPs</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>xlsx_path</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>from_storage</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>haploreg_annotation</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>regulomeDB_annotation</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>biomart_annotation</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>PP_threshold</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
-  <span class='kw'>consensus_threshold</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='kw'>exclude_methods</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>nThread</span> <span class='kw'>=</span> <span class='fl'>4</span>
-)</pre>
+    <pre class="usage"><span class='fu'>merge_finemapping_results</span><span class='op'>(</span>
+  dataset <span class='op'>=</span> <span class='st'>"./Data/GWAS"</span>,
+  minimum_support <span class='op'>=</span> <span class='fl'>1</span>,
+  include_leadSNPs <span class='op'>=</span> <span class='cn'>T</span>,
+  LD_reference <span class='op'>=</span> <span class='cn'>NULL</span>,
+  save_path <span class='op'>=</span> <span class='cn'>F</span>,
+  from_storage <span class='op'>=</span> <span class='cn'>T</span>,
+  haploreg_annotation <span class='op'>=</span> <span class='cn'>F</span>,
+  regulomeDB_annotation <span class='op'>=</span> <span class='cn'>F</span>,
+  biomart_annotation <span class='op'>=</span> <span class='cn'>F</span>,
+  PP_threshold <span class='op'>=</span> <span class='fl'>0.95</span>,
+  consensus_threshold <span class='op'>=</span> <span class='fl'>2</span>,
+  exclude_methods <span class='op'>=</span> <span class='cn'>NULL</span>,
+  top_CS_only <span class='op'>=</span> <span class='cn'>F</span>,
+  verbose <span class='op'>=</span> <span class='cn'>T</span>,
+  nThread <span class='op'>=</span> <span class='fl'>4</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -176,10 +181,6 @@ of fine-mapping tools that contained the SNP in their Credible Set.</p></td>
       <th>include_leadSNPs</th>
       <td><p>Include lead GWAS/QTL SNPs per locus
 (regardless of other filtering criterion).</p></td>
-    </tr>
-    <tr>
-      <th>xlsx_path</th>
-      <td><p>Save merged data.frame as excel file.</p></td>
     </tr>
     <tr>
       <th>from_storage</th>
@@ -212,6 +213,10 @@ of fine-mapping tools that contained the SNP in their Credible Set.</p></td>
       <td><p>Print messages.</p></td>
     </tr>
     <tr>
+      <th>xlsx_path</th>
+      <td><p>Save merged data.frame as excel file.</p></td>
+    </tr>
+    <tr>
       <th>consensus_thresh</th>
       <td><p>The minimum number of tools that have the SNPs in their Credible Set
 to classify it as a <strong>Consensus_SNP</strong>.</p></td>
@@ -220,192 +225,13 @@ to classify it as a <strong>Consensus_SNP</strong>.</p></td>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>dataset_dir</span> <span class='kw'>&lt;-</span> <span class='st'>"~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019"</span>
+    <pre class="examples"><div class='input'><span class='va'>dataset_dir</span> <span class='op'>&lt;-</span> <span class='st'>"~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019"</span>
 <span class='co'># UCS and lead SNPs: No annotation</span>
-<span class='no'>merged_DT</span> <span class='kw'>&lt;-</span> <span class='fu'>merge_finemapping_results</span>(<span class='kw'>dataset</span><span class='kw'>=</span><span class='no'>dataset_dir</span>, <span class='kw'>minimum_support</span><span class='kw'>=</span><span class='fl'>1</span>, <span class='kw'>include_leadSNPs</span><span class='kw'>=</span><span class='no'>T</span>)</div><div class='output co'>#&gt; [1] "+ Gathering all fine-mapping results from storage..."
-#&gt; [1] "+ Importing results... ASXL3"
-#&gt; [1] "+ Importing results... ATG14"
-#&gt; [1] "+ Importing results... ATP6V0A1"
-#&gt; [1] "+ Importing results... BIN3"
-#&gt; [1] "+ Importing results... BRIP1"
-#&gt; [1] "+ Importing results... BST1"
-#&gt; [1] "+ Importing results... C5orf24"
-#&gt; [1] "+ Importing results... CAB39L"
-#&gt; [1] "+ Importing results... CAMK2D"
-#&gt; [1] "+ Importing results... CASC16"
-#&gt; [1] "+ Importing results... CD19"
-#&gt; [1] "+ Importing results... CHD9"
-#&gt; [1] "+ Importing results... CHRNB1"
-#&gt; [1] "+ Importing results... CLCN3"
-#&gt; [1] "+ Importing results... CRHR1"
-#&gt; [1] "+ Importing results... CRLS1"
-#&gt; [1] "+ Importing results... CTSB"
-#&gt; [1] "+ Importing results... DLG2"
-#&gt; [1] "+ Importing results... DNAH17"
-#&gt; [1] "+ Importing results... DYRK1A"
-#&gt; [1] "+ Importing results... ELOVL7"
-#&gt; [1] "+ Importing results... FAM171A2"
-#&gt; [1] "+ Importing results... FAM47E-STBD1"
-#&gt; [1] "+ Importing results... FAM49B"
-#&gt; [1] "+ Importing results... FBRSL1"
-#&gt; [1] "+ Importing results... FCGR2A"
-#&gt; [1] "+ Importing results... FGF20"
-#&gt; [1] "+ Importing results... FYN"
-#&gt; [1] "+ Importing results... GALC"
-#&gt; [1] "+ Importing results... GBF1"
-#&gt; [1] "+ Importing results... GCH1"
-#&gt; [1] "+ Importing results... GPNMB"
-#&gt; [1] "+ Importing results... GS1-124K5.11"
-#&gt; [1] "+ Importing results... HIP1R"
-#&gt; [1] "+ Importing results... HLA-DRB5"
-#&gt; [1] "+ Importing results... IGSF9B"
-#&gt; [1] "+ Importing results... INPP5F"
-#&gt; [1] "+ Importing results... IP6K2"
-#&gt; [1] "+ Importing results... ITGA8"
-#&gt; [1] "+ Importing results... ITPKB"
-#&gt; [1] "+ Importing results... KCNIP3"
-#&gt; [1] "+ Importing results... KCNS3"
-#&gt; [1] "+ Importing results... KPNA1"
-#&gt; [1] "+ Importing results... KRTCAP2"
-#&gt; [1] "+ Importing results... LCORL"
-#&gt; [1] "+ Importing results... LINC00693"
-#&gt; [1] "+ Importing results... LMNB1"
-#&gt; [1] "+ Importing results... LOC100131289"
-#&gt; [1] "+ Importing results... LRRK2"
-#&gt; [1] "+ Importing results... MAP4K4"
-#&gt; [1] "+ Importing results... MBNL2"
-#&gt; [1] "+ Importing results... MCCC1"
-#&gt; [1] "+ Importing results... MED12L"
-#&gt; [1] "+ Importing results... MEX3C"
-#&gt; [1] "+ Importing results... MIPOL1"
-#&gt; [1] "+ Importing results... NOD2"
-#&gt; [1] "+ Importing results... NUCKS1"
-#&gt; [1] "+ Importing results... PAM"
-#&gt; [1] "+ Importing results... RETREG3"
-#&gt; [1] "+ Importing results... RIMS1"
-#&gt; [1] "+ Importing results... RIT2"
-#&gt; [1] "+ Importing results... RNF141"
-#&gt; [1] "+ Importing results... RPS12"
-#&gt; [1] "+ Importing results... RPS6KL1"
-#&gt; [1] "+ Importing results... SATB1"
-#&gt; [1] "+ Importing results... SCAF11"
-#&gt; [1] "+ Importing results... SETD1A"
-#&gt; [1] "+ Importing results... SH3GL2"
-#&gt; [1] "+ Importing results... SIPA1L2"
-#&gt; [1] "+ Importing results... SLC2A13"
-#&gt; [1] "+ Importing results... SNCA"
-#&gt; [1] "+ Importing results... SP1"
-#&gt; [1] "+ Importing results... SPPL2B"
-#&gt; [1] "+ Importing results... SPTSSB"
-#&gt; [1] "+ Importing results... STK39"
-#&gt; [1] "+ Importing results... SYT17"
-#&gt; [1] "+ Importing results... TMEM163"
-#&gt; [1] "+ Importing results... TMEM175"
-#&gt; [1] "+ Importing results... TRIM40"
-#&gt; [1] "+ Importing results... UBAP2"
-#&gt; [1] "+ Importing results... VAMP4"
-#&gt; [1] "+ Importing results... VPS13C"
-#&gt; [1] "+ Importing results... WNT3"
-#&gt; [1] "+ Identifying Consensus SNPs..."
-#&gt; [1] "++ support_thresh = 2"
-#&gt; [1] "+ Calculating mean Posterior Probability (mean.PP)..."
-#&gt; [1] "++ 4 fine-mapping methods used."
-#&gt; [1] "++ 680 Credible Set SNPs identified."
-#&gt; [1] "++ 224 Consensus SNPs identified."</div><div class='input'>
+<span class='va'>merged_DT</span> <span class='op'>&lt;-</span> <span class='fu'>merge_finemapping_results</span><span class='op'>(</span>dataset<span class='op'>=</span><span class='va'>dataset_dir</span>, minimum_support<span class='op'>=</span><span class='fl'>1</span>, include_leadSNPs<span class='op'>=</span><span class='cn'>T</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "+ Gathering all fine-mapping results from storage..."</div><div class='output co'>#&gt; <span class='error'>Error in merge_finemapping_results(dataset = dataset_dir, minimum_support = 1,     include_leadSNPs = T): + No multi-finemap files found.</span></div><div class='input'>
 <span class='co'># UCS and lead SNPs: With annotations</span>
-<span class='no'>merged_DT</span> <span class='kw'>&lt;-</span> <span class='fu'>merge_finemapping_results</span>(<span class='kw'>dataset</span><span class='kw'>=</span><span class='no'>dataset_dir</span>, <span class='kw'>minimum_support</span><span class='kw'>=</span><span class='fl'>1</span>, <span class='kw'>include_leadSNPs</span><span class='kw'>=</span><span class='no'>T</span>, <span class='kw'>haploreg_annotation</span><span class='kw'>=</span><span class='no'>T</span>, <span class='kw'>biomart_annotation</span><span class='kw'>=</span><span class='no'>T</span>)</div><div class='output co'>#&gt; [1] "+ Gathering all fine-mapping results from storage..."
-#&gt; [1] "+ Importing results... ASXL3"
-#&gt; [1] "+ Importing results... ATG14"
-#&gt; [1] "+ Importing results... ATP6V0A1"
-#&gt; [1] "+ Importing results... BIN3"
-#&gt; [1] "+ Importing results... BRIP1"
-#&gt; [1] "+ Importing results... BST1"
-#&gt; [1] "+ Importing results... C5orf24"
-#&gt; [1] "+ Importing results... CAB39L"
-#&gt; [1] "+ Importing results... CAMK2D"
-#&gt; [1] "+ Importing results... CASC16"
-#&gt; [1] "+ Importing results... CD19"
-#&gt; [1] "+ Importing results... CHD9"
-#&gt; [1] "+ Importing results... CHRNB1"
-#&gt; [1] "+ Importing results... CLCN3"
-#&gt; [1] "+ Importing results... CRHR1"
-#&gt; [1] "+ Importing results... CRLS1"
-#&gt; [1] "+ Importing results... CTSB"
-#&gt; [1] "+ Importing results... DLG2"
-#&gt; [1] "+ Importing results... DNAH17"
-#&gt; [1] "+ Importing results... DYRK1A"
-#&gt; [1] "+ Importing results... ELOVL7"
-#&gt; [1] "+ Importing results... FAM171A2"
-#&gt; [1] "+ Importing results... FAM47E-STBD1"
-#&gt; [1] "+ Importing results... FAM49B"
-#&gt; [1] "+ Importing results... FBRSL1"
-#&gt; [1] "+ Importing results... FCGR2A"
-#&gt; [1] "+ Importing results... FGF20"
-#&gt; [1] "+ Importing results... FYN"
-#&gt; [1] "+ Importing results... GALC"
-#&gt; [1] "+ Importing results... GBF1"
-#&gt; [1] "+ Importing results... GCH1"
-#&gt; [1] "+ Importing results... GPNMB"
-#&gt; [1] "+ Importing results... GS1-124K5.11"
-#&gt; [1] "+ Importing results... HIP1R"
-#&gt; [1] "+ Importing results... HLA-DRB5"
-#&gt; [1] "+ Importing results... IGSF9B"
-#&gt; [1] "+ Importing results... INPP5F"
-#&gt; [1] "+ Importing results... IP6K2"
-#&gt; [1] "+ Importing results... ITGA8"
-#&gt; [1] "+ Importing results... ITPKB"
-#&gt; [1] "+ Importing results... KCNIP3"
-#&gt; [1] "+ Importing results... KCNS3"
-#&gt; [1] "+ Importing results... KPNA1"
-#&gt; [1] "+ Importing results... KRTCAP2"
-#&gt; [1] "+ Importing results... LCORL"
-#&gt; [1] "+ Importing results... LINC00693"
-#&gt; [1] "+ Importing results... LMNB1"
-#&gt; [1] "+ Importing results... LOC100131289"
-#&gt; [1] "+ Importing results... LRRK2"
-#&gt; [1] "+ Importing results... MAP4K4"
-#&gt; [1] "+ Importing results... MBNL2"
-#&gt; [1] "+ Importing results... MCCC1"
-#&gt; [1] "+ Importing results... MED12L"
-#&gt; [1] "+ Importing results... MEX3C"
-#&gt; [1] "+ Importing results... MIPOL1"
-#&gt; [1] "+ Importing results... NOD2"
-#&gt; [1] "+ Importing results... NUCKS1"
-#&gt; [1] "+ Importing results... PAM"
-#&gt; [1] "+ Importing results... RETREG3"
-#&gt; [1] "+ Importing results... RIMS1"
-#&gt; [1] "+ Importing results... RIT2"
-#&gt; [1] "+ Importing results... RNF141"
-#&gt; [1] "+ Importing results... RPS12"
-#&gt; [1] "+ Importing results... RPS6KL1"
-#&gt; [1] "+ Importing results... SATB1"
-#&gt; [1] "+ Importing results... SCAF11"
-#&gt; [1] "+ Importing results... SETD1A"
-#&gt; [1] "+ Importing results... SH3GL2"
-#&gt; [1] "+ Importing results... SIPA1L2"
-#&gt; [1] "+ Importing results... SLC2A13"
-#&gt; [1] "+ Importing results... SNCA"
-#&gt; [1] "+ Importing results... SP1"
-#&gt; [1] "+ Importing results... SPPL2B"
-#&gt; [1] "+ Importing results... SPTSSB"
-#&gt; [1] "+ Importing results... STK39"
-#&gt; [1] "+ Importing results... SYT17"
-#&gt; [1] "+ Importing results... TMEM163"
-#&gt; [1] "+ Importing results... TMEM175"
-#&gt; [1] "+ Importing results... TRIM40"
-#&gt; [1] "+ Importing results... UBAP2"
-#&gt; [1] "+ Importing results... VAMP4"
-#&gt; [1] "+ Importing results... VPS13C"
-#&gt; [1] "+ Importing results... WNT3"
-#&gt; [1] "+ Identifying Consensus SNPs..."
-#&gt; [1] "++ support_thresh = 2"
-#&gt; [1] "+ Calculating mean Posterior Probability (mean.PP)..."
-#&gt; [1] "++ 4 fine-mapping methods used."
-#&gt; [1] "++ 680 Credible Set SNPs identified."
-#&gt; [1] "++ 224 Consensus SNPs identified."
-#&gt; [1] "+ Gathering annotation data from HaploReg..."
-#&gt; [1] "++ Submitting chunk 1 / 1"
-#&gt; [1] "+ Gathering annotation data from Biomart..."</div><div class='output co'>#&gt; <span class='message'>Cache found</span></div></pre>
+<span class='va'>merged_DT</span> <span class='op'>&lt;-</span> <span class='fu'>merge_finemapping_results</span><span class='op'>(</span>dataset<span class='op'>=</span><span class='va'>dataset_dir</span>, minimum_support<span class='op'>=</span><span class='fl'>1</span>, include_leadSNPs<span class='op'>=</span><span class='cn'>T</span>, haploreg_annotation<span class='op'>=</span><span class='cn'>T</span>, biomart_annotation<span class='op'>=</span><span class='cn'>T</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "+ Gathering all fine-mapping results from storage..."</div><div class='output co'>#&gt; <span class='error'>Error in merge_finemapping_results(dataset = dataset_dir, minimum_support = 1,     include_leadSNPs = T, haploreg_annotation = T, biomart_annotation = T): + No multi-finemap files found.</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -421,7 +247,7 @@ to classify it as a <strong>Consensus_SNP</strong>.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Run <span class="pkg">echolocatoR</span> pipeline on a single locus — finemap_pipeline • echolocatoR</title>
+<title>Run echolocatoR pipeline on a single locus — finemap_pipeline • echolocatoR</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Run <span class="pkg">echolocatoR</span> pipeline on a single locus — finemap_pipeline" />
+<meta property="og:title" content="Run echolocatoR pipeline on a single locus — finemap_pipeline" />
 <meta property="og:description" content="Unlike finemap_loci, you don't need to provide a top_SNPs data.frame.
 Instead, just manually provide the coordinates of the locus you want to fine-map." />
 
@@ -73,7 +73,7 @@ Instead, just manually provide the coordinates of the locus you want to fine-map
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ Instead, just manually provide the coordinates of the locus you want to fine-map
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -95,6 +95,9 @@ Instead, just manually provide the coordinates of the locus you want to fine-map
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -113,7 +116,7 @@ Instead, just manually provide the coordinates of the locus you want to fine-map
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,87 +143,97 @@ Instead, just manually provide the coordinates of the locus you want to fine-map
 Instead, just manually provide the coordinates of the locus you want to fine-map.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>finemap_pipeline</span>(
-  <span class='no'>locus</span>,
-  <span class='no'>fullSS_path</span>,
-  <span class='no'>results_dir</span>,
-  <span class='kw'>dataset_name</span> <span class='kw'>=</span> <span class='st'>"dataset_name"</span>,
-  <span class='kw'>dataset_type</span> <span class='kw'>=</span> <span class='st'>"dataset_type"</span>,
-  <span class='kw'>top_SNPs</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
-  <span class='kw'>force_new_subset</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>force_new_LD</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>force_new_finemap</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>finemap_methods</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ABF"</span>, <span class='st'>"FINEMAP"</span>, <span class='st'>"SUSIE"</span>, <span class='st'>"POLYFUN_SUSIE"</span>),
-  <span class='kw'>bp_distance</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>,
-  <span class='kw'>n_causal</span> <span class='kw'>=</span> <span class='fl'>5</span>,
-  <span class='kw'>chrom_col</span> <span class='kw'>=</span> <span class='st'>"CHR"</span>,
-  <span class='kw'>position_col</span> <span class='kw'>=</span> <span class='st'>"POS"</span>,
-  <span class='kw'>snp_col</span> <span class='kw'>=</span> <span class='st'>"SNP"</span>,
-  <span class='kw'>pval_col</span> <span class='kw'>=</span> <span class='st'>"P"</span>,
-  <span class='kw'>effect_col</span> <span class='kw'>=</span> <span class='st'>"Effect"</span>,
-  <span class='kw'>stderr_col</span> <span class='kw'>=</span> <span class='st'>"StdErr"</span>,
-  <span class='kw'>tstat_col</span> <span class='kw'>=</span> <span class='st'>"t-stat"</span>,
-  <span class='kw'>locus_col</span> <span class='kw'>=</span> <span class='st'>"Locus"</span>,
-  <span class='kw'>freq_col</span> <span class='kw'>=</span> <span class='st'>"Freq"</span>,
-  <span class='kw'>MAF_col</span> <span class='kw'>=</span> <span class='st'>"MAF"</span>,
-  <span class='kw'>A1_col</span> <span class='kw'>=</span> <span class='st'>"A1"</span>,
-  <span class='kw'>A2_col</span> <span class='kw'>=</span> <span class='st'>"A2"</span>,
-  <span class='kw'>gene_col</span> <span class='kw'>=</span> <span class='st'>"Gene"</span>,
-  <span class='kw'>N_cases_col</span> <span class='kw'>=</span> <span class='st'>"N_cases"</span>,
-  <span class='kw'>N_controls_col</span> <span class='kw'>=</span> <span class='st'>"N_controls"</span>,
-  <span class='kw'>N_cases</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>N_controls</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>proportion_cases</span> <span class='kw'>=</span> <span class='st'>"calculate"</span>,
-  <span class='kw'>sample_size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>LD_reference</span> <span class='kw'>=</span> <span class='st'>"1KGphase1"</span>,
-  <span class='kw'>superpopulation</span> <span class='kw'>=</span> <span class='st'>"EUR"</span>,
-  <span class='kw'>download_reference</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>download_method</span> <span class='kw'>=</span> <span class='st'>"direct"</span>,
-  <span class='kw'>min_POS</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>max_POS</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>min_MAF</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>trim_gene_limits</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>max_snps</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>file_sep</span> <span class='kw'>=</span> <span class='st'>"\t"</span>,
-  <span class='kw'>min_r2</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>LD_block</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>LD_block_size</span> <span class='kw'>=</span> <span class='fl'>0.7</span>,
-  <span class='kw'>min_Dprime</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>query_by</span> <span class='kw'>=</span> <span class='st'>"coordinates"</span>,
-  <span class='kw'>remove_variants</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>remove_correlates</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>probe_path</span> <span class='kw'>=</span> <span class='st'>"./Data/eQTL/gene.ILMN.map"</span>,
-  <span class='no'>conditioned_snps</span>,
-  <span class='kw'>plot_LD</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>remove_tmps</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>plot.types</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"simple"</span>),
-  <span class='kw'>PAINTOR_QTL_datasets</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>server</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>PP_threshold</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
-  <span class='kw'>consensus_threshold</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='kw'>case_control</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>QTL_prefixes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>plot.window</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>plot.Nott_epigenome</span> <span class='kw'>=</span> <span class='no'>plot.Nott_epigenome</span>,
-  <span class='kw'>plot.Nott_binwidth</span> <span class='kw'>=</span> <span class='fl'>2500</span>,
-  <span class='kw'>plot.Nott_bigwig_dir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>plot.XGR_libnames</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>plot.Roadmap</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>plot.Roadmap_query</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>conda_env</span> <span class='kw'>=</span> <span class='st'>"echoR"</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>
-)</pre>
+    <pre class="usage"><span class='fu'>finemap_pipeline</span><span class='op'>(</span>
+  <span class='va'>locus</span>,
+  <span class='va'>fullSS_path</span>,
+  fullSS_genome_build <span class='op'>=</span> <span class='st'>"hg19"</span>,
+  LD_genome_build <span class='op'>=</span> <span class='st'>"hg19"</span>,
+  <span class='va'>results_dir</span>,
+  dataset_name <span class='op'>=</span> <span class='st'>"dataset_name"</span>,
+  dataset_type <span class='op'>=</span> <span class='st'>"GWAS"</span>,
+  top_SNPs <span class='op'>=</span> <span class='st'>"auto"</span>,
+  force_new_subset <span class='op'>=</span> <span class='cn'>F</span>,
+  force_new_LD <span class='op'>=</span> <span class='cn'>F</span>,
+  force_new_finemap <span class='op'>=</span> <span class='cn'>T</span>,
+  finemap_methods <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ABF"</span>, <span class='st'>"FINEMAP"</span>, <span class='st'>"SUSIE"</span>, <span class='st'>"POLYFUN_SUSIE"</span><span class='op'>)</span>,
+  finemap_args <span class='op'>=</span> <span class='cn'>NULL</span>,
+  bp_distance <span class='op'>=</span> <span class='fl'>5e+05</span>,
+  n_causal <span class='op'>=</span> <span class='fl'>5</span>,
+  chrom_col <span class='op'>=</span> <span class='st'>"CHR"</span>,
+  chrom_type <span class='op'>=</span> <span class='cn'>NULL</span>,
+  position_col <span class='op'>=</span> <span class='st'>"POS"</span>,
+  snp_col <span class='op'>=</span> <span class='st'>"SNP"</span>,
+  pval_col <span class='op'>=</span> <span class='st'>"P"</span>,
+  effect_col <span class='op'>=</span> <span class='st'>"Effect"</span>,
+  stderr_col <span class='op'>=</span> <span class='st'>"StdErr"</span>,
+  tstat_col <span class='op'>=</span> <span class='st'>"t-stat"</span>,
+  locus_col <span class='op'>=</span> <span class='st'>"Locus"</span>,
+  freq_col <span class='op'>=</span> <span class='st'>"Freq"</span>,
+  MAF_col <span class='op'>=</span> <span class='st'>"MAF"</span>,
+  A1_col <span class='op'>=</span> <span class='st'>"A1"</span>,
+  A2_col <span class='op'>=</span> <span class='st'>"A2"</span>,
+  gene_col <span class='op'>=</span> <span class='st'>"Gene"</span>,
+  N_cases_col <span class='op'>=</span> <span class='st'>"N_cases"</span>,
+  N_controls_col <span class='op'>=</span> <span class='st'>"N_controls"</span>,
+  N_cases <span class='op'>=</span> <span class='cn'>NULL</span>,
+  N_controls <span class='op'>=</span> <span class='cn'>NULL</span>,
+  proportion_cases <span class='op'>=</span> <span class='st'>"calculate"</span>,
+  sample_size <span class='op'>=</span> <span class='cn'>NULL</span>,
+  LD_reference <span class='op'>=</span> <span class='st'>"1KGphase1"</span>,
+  superpopulation <span class='op'>=</span> <span class='st'>"EUR"</span>,
+  remote_LD <span class='op'>=</span> <span class='cn'>T</span>,
+  download_method <span class='op'>=</span> <span class='st'>"direct"</span>,
+  min_POS <span class='op'>=</span> <span class='cn'>NA</span>,
+  max_POS <span class='op'>=</span> <span class='cn'>NA</span>,
+  min_MAF <span class='op'>=</span> <span class='cn'>NA</span>,
+  trim_gene_limits <span class='op'>=</span> <span class='cn'>F</span>,
+  max_snps <span class='op'>=</span> <span class='cn'>NULL</span>,
+  file_sep <span class='op'>=</span> <span class='st'>"\t"</span>,
+  min_r2 <span class='op'>=</span> <span class='fl'>0</span>,
+  LD_block <span class='op'>=</span> <span class='cn'>F</span>,
+  LD_block_size <span class='op'>=</span> <span class='fl'>0.7</span>,
+  vcf_folder <span class='op'>=</span> <span class='cn'>NULL</span>,
+  query_by <span class='op'>=</span> <span class='st'>"coordinates"</span>,
+  remove_variants <span class='op'>=</span> <span class='cn'>F</span>,
+  remove_correlates <span class='op'>=</span> <span class='cn'>F</span>,
+  probe_path <span class='op'>=</span> <span class='st'>"./Data/eQTL/gene.ILMN.map"</span>,
+  <span class='va'>conditioned_snps</span>,
+  plot_LD <span class='op'>=</span> <span class='cn'>F</span>,
+  remove_tmps <span class='op'>=</span> <span class='cn'>T</span>,
+  plot.types <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"simple"</span><span class='op'>)</span>,
+  PAINTOR_QTL_datasets <span class='op'>=</span> <span class='cn'>NULL</span>,
+  server <span class='op'>=</span> <span class='cn'>F</span>,
+  PP_threshold <span class='op'>=</span> <span class='fl'>0.95</span>,
+  consensus_threshold <span class='op'>=</span> <span class='fl'>2</span>,
+  case_control <span class='op'>=</span> <span class='cn'>T</span>,
+  QTL_prefixes <span class='op'>=</span> <span class='cn'>NULL</span>,
+  fillNA <span class='op'>=</span> <span class='fl'>0</span>,
+  plot.zoom <span class='op'>=</span> <span class='st'>"1x"</span>,
+  plot.Nott_epigenome <span class='op'>=</span> <span class='cn'>F</span>,
+  plot.Nott_show_placseq <span class='op'>=</span> <span class='cn'>F</span>,
+  plot.Nott_binwidth <span class='op'>=</span> <span class='fl'>200</span>,
+  plot.Nott_bigwig_dir <span class='op'>=</span> <span class='cn'>NULL</span>,
+  plot.XGR_libnames <span class='op'>=</span> <span class='cn'>NULL</span>,
+  plot.Roadmap <span class='op'>=</span> <span class='cn'>F</span>,
+  plot.Roadmap_query <span class='op'>=</span> <span class='cn'>NULL</span>,
+  conda_env <span class='op'>=</span> <span class='st'>"echoR"</span>,
+  nThread <span class='op'>=</span> <span class='fl'>4</span>,
+  verbose <span class='op'>=</span> <span class='cn'>T</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>fullSS_path</th>
-      <td><p>Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.</p></td>
+      <td><p>Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.
+It is usually best to provide the absolute path rather than the relative path.</p></td>
     </tr>
     <tr>
       <th>results_dir</th>
-      <td><p>Where to store all results.</p></td>
+      <td><p>Where to store all results.
+<strong>IMPORTANT!:</strong> It is usually best to provide the absolute path rather than the relative path.
+This is especially important for <em>FINEMAP</em>.</p></td>
     </tr>
     <tr>
       <th>dataset_name</th>
@@ -240,7 +253,7 @@ This will also be used when creating the subdirectory where your results will be
       <td><p>A data.frame with the genomic coordinates of the lead SNP for each locus.
 The lead SNP will be used as the center of the window when extracting subset from the full GWAS/QTL summary statistics file.
 Only one SNP per <strong>Locus</strong> should be included.
-At minimum, <code>top_SNPs</code> should include the following columns:</p><dl'>
+At minimum, <code>top_SNPs</code> should include the following columns:</p><dl>
 <dt><em>Locus</em></dt><dd><p>A unique name for each locus. Often, loci are named after a relevant gene (e.g. LRRK2) or based on the name/coordinates of the lead SNP (e.g. locus_chr12_40734202)</p></dd>
 <dt><em>CHR</em></dt><dd><p>The chromosome that the SNP is on. Can be "chr12" or "12" format.</p></dd>
 <dt><em>POS</em></dt><dd><p>The genomic position of the SNP (in basepairs)</p></dd>
@@ -347,12 +360,12 @@ Can be inferred from <strong>freq_col</strong> if missing from the dataset.
       <td><p>Name of the effect/risk allele column in the full summary stats.
  <strong><em>IMPORTANT</em></strong>: Make sure this actually the case for your full summary stats file.
 Unfortunately, different studies report different kinds of allele information in a non-standardized way.
-Meaning that A1/A2 can refer to any number of things:</p><dl'>
+Meaning that A1/A2 can refer to any number of things:</p><dl>
  <dt>effect/other alleles</dt><dd><p>in the case of diseases</p></dd>
  <dt>ref/alt alleles</dt><dd><p>where ref is the reference genome being used</p></dd>
  <dt>major/minor alleles</dt><dd><p>This dichotomy holds true for bi-allelic SNPs but not necessary multi-allelic SNPs</p></dd>
  
-</dl><p>This makes comparing summary stats across GWAS/QTL datasets very confusing for several reasons:</p><dl'>
+</dl><p>This makes comparing summary stats across GWAS/QTL datasets very confusing for several reasons:</p><dl>
  <dt>Multi-allelic SNPs</dt><dd><p>SNPs can have more than just 2 possible alleles (multi-allelic SNPs). Even if you compare the same SNP between two studies, you may accidentally be comparing totally different alleles.</p></dd>
  <dt>Valence</dt><dd><p>The valence (+/-) of per-SNP GWAS effect sizes/beta can be relative to different allele types between studies.
  For example, let's say in one GWAS study your effect size for SNP A is 1.5 relative to the major allele in one study,
@@ -409,10 +422,11 @@ then sample_size is inferred to be:  <code>max(N_cases) + max(N_controls)</code>
     <tr>
       <th>LD_reference</th>
       <td><p>Which linkage disequilibrium reference panel do you want to use.
-Options include:</p><dl'>
+Options include:</p><dl>
 <dt>"UKB"</dt><dd><p>A pre-caclulated LD reference matrix from a subset of caucasian British individuals from the UK Biobank. See <a href='https://www.biorxiv.org/content/10.1101/807792v2'>Wiessbrod et al. (2019)</a> for more details.</p></dd>
 <dt>"1KGphase1"</dt><dd><p>Download a subset of the 1000 Genomes Project Phase 1 vcf and calculate LD on the fly with plink.</p></dd>
 <dt>"1KGphase3"</dt><dd><p>Download a subset of the 1000 Genomes Project Phase 3 vcf and calculate LD on the fly with plink.</p></dd>
+<dt>"&lt;path&gt;/*.vcf" or "&lt;path&gt;/*.vcf.gz"</dt><dd><p>Alternatively, users can provide their own custom panel by supplying a list of <em>.vcf</em> file path (one per locus) which <span class="pkg">echolocatoR</span> will use to compute LD (using <em>plink</em>).</p></dd>
 
 </dl></td>
     </tr>
@@ -420,7 +434,7 @@ Options include:</p><dl'>
       <th>superpopulation</th>
       <td><p>Subset your LD reference panel by superopulation.
 Setting the superpopulation is not currently possible when <code>LD_reference="UKB"</code>.
-<a href='https://www.internationalgenome.org/faq/which-populations-are-part-your-study/'>1KGphase1 options</a> include:</p><dl'>
+<a href='https://www.internationalgenome.org/faq/which-populations-are-part-your-study/'>1KGphase1 options</a> include:</p><dl>
 <dt>"AFR"</dt><dd><p>African [descent]</p></dd>
 <dt>"AMR"</dt><dd><p>Ad-mixed American</p></dd>
 <dt>"EAS"</dt><dd><p>East Asian</p></dd>
@@ -430,22 +444,22 @@ Setting the superpopulation is not currently possible when <code>LD_reference="U
 </dl></td>
     </tr>
     <tr>
-      <th>download_reference</th>
+      <th>remote_LD</th>
       <td><p>When acquiring LD matrixes,
 the default is to delete the full vcf or npz files after <span class="pkg">echolocatoR</span> has extracted the necssary subset.
-However, if you wish to keep these full files (which can be quite large) set <code>download_reference=T</code>.</p></td>
+However, if you wish to keep these full files (which can be quite large) set <code>remote_LD=T</code>.</p></td>
     </tr>
     <tr>
       <th>min_POS</th>
       <td><p>Manually set the minimum genomic position for your locus subset.
 <code>min_POS</code> can clip the window size set by <code>bp_distance</code>.
-Only use this parameter when fine-mapping one locus at a time.</p></td>
+Can also be a list of positions (one for each locus) (e.g. <code>min_POS=top_SNPs$min_POS</code>).</p></td>
     </tr>
     <tr>
       <th>max_POS</th>
       <td><p>Manually set the maximum genomic position for your locus subset.
 <code>max_POS</code> can clip the window size set by <code>bp_distance</code>.
-Only use this parameter when fine-mapping one locus at a time.</p></td>
+Can also be a list of positions (one for each locus) (e.g. <code>max_POS=top_SNPs$max_POS</code>).</p></td>
     </tr>
     <tr>
       <th>min_MAF</th>
@@ -483,14 +497,9 @@ This parameter is only necessary if <code>query_by!="tabix"</code>.</p></td>
       <td><p>Adjust the granularity of block sizes when <code>LD_block=T</code>.</p></td>
     </tr>
     <tr>
-      <th>min_Dprime</th>
-      <td><p>Remove any SNPs are below the LD D' threshold with the lead SNP within their respective locus.
-This is paramter currently only works when <code>LD_reference!="UKB"</code>.</p></td>
-    </tr>
-    <tr>
       <th>query_by</th>
       <td><p>Choose which method you want to use to extract locus subsets from the full summary stats file.
-Methods include:</p><dl'>
+Methods include:</p><dl>
 <dt>"tabix"</dt><dd><p>Convert the full summary stats file in an indexed tabix file. Makes querying lightning fast after the initial conversion is done. (<em>default</em>)</p></dd>
 <dt>"coordinates"</dt><dd><p>Extract locus subsets using min/max genomic coordinates with <em>awk</em>.</p></dd>
 
@@ -502,8 +511,11 @@ Methods include:</p><dl'>
     </tr>
     <tr>
       <th>remove_correlates</th>
-      <td><p>If <code>remove_correlates</code> is set to a value between 0-1,
-removes any SNPs that are in LD with any of the <code>remove_variants</code> above the threshold provided by <code>remove_correlates</code>.</p></td>
+      <td><p>A named list, where the names are the RSIDs of SNPs
+whose LD correlates you wish to remove,
+and the value is the absolute r2 threshold you wish to filter at for each RSID respectively
+(e.g. <code> remove_correlates = c("rs76904798"=.2, "rs10000737"=.8)</code>).
+This will also remove the SNPs in <code>remove_correlates</code> themselves.</p></td>
     </tr>
     <tr>
       <th>probe_path</th>
@@ -525,7 +537,7 @@ Only used for certain eQTL datasets.</p></td>
     <tr>
       <th>plot.types</th>
       <td><p>Which kinds of plots to include.
-Options:</p><dl'>
+Options:</p><dl>
 <dt>"simple"</dt><dd><p>Just plot the following tracks: GWAS, fine-mapping, gene models</p></dd>
 <dt>"fancy"</dt><dd><p>Additionally plot XGR annotation tracks (XGR, Roadmap, Nott).</p></dd>
 
@@ -550,10 +562,14 @@ For example, <code>PP_threshold=.95</code> means that all Credible Set SNPs will
 in their 95% Credible Sets to consider that it a "Consensus SNP" (<em>default=2</em>).</p></td>
     </tr>
     <tr>
-      <th>plot.window</th>
+      <th>plot.zoom</th>
       <td><p>Zoom into the center of the locus when plotting (without editing the fine-mapping results file).
-You can also pass a list of window sizes (e.g. <code><a href='https://rdrr.io/r/base/c.html'>c(50000,100000,500000)</a></code>) to automatically generate
-multiple views of each locus.</p></td>
+You can provide either:</p><ul>
+<li><p>The size of your plot window in terms of basepairs (e.g. <code>plot.zoom=50000</code> for a 50kb window).</p></li>
+<li><p>How much you want to zoom in (e.g. <code>plot.zoom="1x"</code> for the full locus, <code>plot.zoom="2x"</code> for 2x zoom into the center of the locus, etc.).</p></li>
+</ul><p>You can pass a list of window sizes (e.g. <code><a href='https://rdrr.io/r/base/c.html'>c(50000,100000,500000)</a></code>) to automatically generate
+multiple views of each locus.
+This can even be a mix of different style inputs: e.g. <code><a href='https://rdrr.io/r/base/c.html'>c("1x","4.5x",25000)</a></code>.</p></td>
     </tr>
     <tr>
       <th>plot.Nott_binwidth</th>
@@ -586,13 +602,18 @@ from the <em>UCSC Genome Browser</em>, use a set of local bigwig files.</p></td>
       <th>loci</th>
       <td><p>Character list of loci in <strong>Locus</strong> col of <code>top_SNPs</code>.</p></td>
     </tr>
+    <tr>
+      <th>min_Dprime</th>
+      <td><p>Remove any SNPs are below the LD D' threshold with the lead SNP within their respective locus.
+This is paramter currently only works when <code>LD_reference!="UKB"</code>.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The primary functions of <span class="pkg">echolocatoR</span> that expedite fine-mapping
  by wrapping many other <span class="pkg">echolocatoR</span> functions into one.
- Encompasses steps including:</p><dl'>
+ Encompasses steps including:</p><dl>
  <dt>Subset &amp; standardize</dt><dd><p>Extract subsets of the full summmary stats GWAS or QTL file and reformat them to be compatible with <span class="pkg">echolocatoR</span>'s various functions</p></dd>
  <dt>Calculate linkage disequilibrium</dt><dd><p>Download and prepare the necessary LD matrix.</p></dd>
  <dt>Fine-map</dt><dd><p>Run various fine-mapping tools and merge the results into a single multi-finemap data.frame.</p></dd>
@@ -640,7 +661,7 @@ from the <em>UCSC Genome Browser</em>, use a set of local bigwig files.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

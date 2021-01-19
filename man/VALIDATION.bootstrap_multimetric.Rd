@@ -21,6 +21,7 @@ VALIDATION.bootstrap_multimetric(
 Conduct bootstrap procedure on multiple columns
 }
 \examples{
+\dontrun{
 save_path <- root <-  "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 
 
@@ -48,6 +49,7 @@ metric_df <- data.table::fread(path, nThread=8)
 ## metric_names <- grep("Basenji.*MAX|DeepSEA.*MAX|Roadmap.*MAX", colnames(metric_df), value = T)
 ## metric_df <- metric_df \%>\% dplyr::mutate(annot=paste(Model,Tissue,Assay,Type,Metric,sep="_"))
 boot_res <- VALIDATION.bootstrap_multimetric(metric_df=metric_df, metric_names=metric_names, validation_method=validation_method, save_path=gsub("\\\\.csv\\\\.gz",".bootstrap.coin_wilcox_test.csv.gz",path), grouping_var=grouping_var, iterations=10000, nThread=12)
+}
 }
 \seealso{
 Other VALIDATION: 

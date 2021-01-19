@@ -71,6 +71,7 @@ library(ggplot2)
 data("BST1"); data("LD_matrix"); data("locus_dir");
 locus_dir <- file.path("~/Desktop",locus_dir)
 finemap_DT <- BST1  
+LD_matrix <- BST1_LD_matrix
 LD_reference <- "UKB" # Used for naming saved plots
 plot.zoom = "10x"
 show_plot <- F
@@ -91,8 +92,7 @@ show_plot <- F
 trk_plot <- PLOT.locus(finemap_dat=finemap_DT, 
                        LD_matrix=LD_matrix, 
                        LD_reference=LD_reference,
-                       locus_dir=locus_dir, 
-                       XGR_libnames=NULL,  
+                       locus_dir=locus_dir,  
                        save_plot=F,
                        show_plot=show_plot,
                        plot.zoom=plot.zoom) 
@@ -113,8 +113,7 @@ print(trk_plot)
 trk_plot_zooms <- PLOT.locus(finemap_dat=finemap_DT, 
                              LD_matrix=LD_matrix, 
                              LD_reference=LD_reference,
-                             locus_dir=locus_dir, 
-                             XGR_libnames=NULL, 
+                             locus_dir=locus_dir,  
                              save_plot=F,
                              show_plot=show_plot,
                              plot.zoom = c("1x","5x","10x")) 
@@ -135,8 +134,7 @@ print(trk_plot_zooms)
 trk_plot_list <- PLOT.locus(finemap_dat=finemap_DT, 
                              LD_matrix=LD_matrix, 
                              LD_reference=LD_reference,
-                             locus_dir=locus_dir, 
-                             XGR_libnames=NULL, 
+                             locus_dir=locus_dir,  
                              save_plot=F,
                              show_plot=show_plot,
                              plot.zoom=plot.zoom,
@@ -183,6 +181,7 @@ trk_plot.xgr <- PLOT.locus(finemap_dat=finemap_DT,
                            LD_matrix=LD_matrix, 
                            LD_reference=LD_reference,
                            locus_dir=locus_dir, 
+                           
                            XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes"), 
                            save_plot=F,
                            show_plot=show_plot,
@@ -195,17 +194,24 @@ print(trk_plot.xgr)
 
 ## Using [Roadmap](http://www.roadmapepigenomics.org/data/tables/brain) annotations
 
+* Using the `Roadmap=T` and `Roadmap_query="<query>"` arguments searches the Roadmap for chromatin mark data across various cell-types, cell-lines and tissues.  
+* Note that Roadmap queries requires `tabix` to be installed on your machine, or within a conda environment (`conda_env = "echoR"`). 
+* Parallelizing these queries across multiple thredas speeds up this process (`nThread=<n_cores_available>`), as does reusing previously stored data which is automatically saved to the locus-specific subfolder (`<dataset_type>/<dataset_name>/<locus>/annotations/Roadmap.ChromatinMarks_CellTypes.RDS`) .
+
 ```{r trk_plot.roadmap, attr.output='style="max-height: 200px;"'} 
 trk_plot.roadmap <- PLOT.locus(finemap_dat=finemap_DT, 
                                LD_matrix=LD_matrix, 
                                LD_reference=LD_reference,
-                               locus_dir=locus_dir, 
-                               XGR_libnames=NULL, 
+                               locus_dir=locus_dir,  
+                               
                                Roadmap=T, 
                                Roadmap_query="monocyte", 
+                               
                                save_plot=F, 
                                show_plot=show_plot,
-                               plot.zoom=plot.zoom)
+                               plot.zoom=plot.zoom, 
+                               nThread = parallel::detectCores()-1,
+                               conda_env = "echoR")
 ```
 
 ```{r}
@@ -222,16 +228,16 @@ print(trk_plot.roadmap)
 trk_plot.nott_2019 <- PLOT.locus(finemap_dat=finemap_DT,  
                                  LD_matrix=LD_matrix, 
                                  LD_reference=LD_reference,
-                                 locus_dir=locus_dir,
-                                 XGR_libnames=NULL, 
+                                 locus_dir=locus_dir, 
+                                 
                                  Nott_epigenome=T,  
-                                 Nott_binwidth = 100,
+                                 Nott_binwidth = 200,
                                  Nott_regulatory_rects = T, 
                                  Nott_show_placseq = T,
-                                 save_plot=T,
+                                 
+                                 save_plot=F,
                                  show_plot=show_plot,
-                                 plot.zoom=plot.zoom)
- 
+                                 plot.zoom=plot.zoom) 
 ```
 
 ```{r}
@@ -252,8 +258,9 @@ trk_plot.qtl <- PLOT.locus(finemap_dat=finemap_DT,
                            LD_matrix=LD_matrix, 
                            LD_reference=LD_reference,
                            locus_dir=locus_dir,
-                           QTL_prefixes=c("fake_eQTL.","fake_sQTL."),
-                           XGR_libnames=NULL, 
+                           
+                           QTL_prefixes=c("fake_eQTL.","fake_sQTL."), 
+                           
                            save_plot=F,
                            show_plot=show_plot,
                            plot.zoom=plot.zoom)
@@ -269,5 +276,6 @@ print(trk_plot.qtl)
 ```{r Session Info, attr.output='style="max-height: 200px;"'}
 sessioninfo::session_info()
 ```
+
 <details>
 

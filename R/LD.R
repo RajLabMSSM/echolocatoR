@@ -202,11 +202,12 @@ LD.filter_LD <- function(LD_list,
 #' @family LD
 #' @keywords internal
 #' @examples
+#' \dontrun{
+#' if(!"gaston" %in% row.names(installed.packages())){install.packages("gaston")}
 #' data("BST1"); data("locus_dir")
 #' LD_reference="~/Desktop/results/Reference/custom_panel_chr4.vcf"
 #' LD_matrix <- LD.custom_panel(LD_reference=LD_reference, subset_DT=BST1, locus_dir=locus_dir)
 #'
-#' \dontrun{
 #' locus_dir <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/QTL/Microglia_all_regions/BIN1"
 #' subset_DT <- data.table::fread(file.path(locus_dir,"Multi-finemap/BIN1.Microglia_all_regions.1KGphase3_LD.Multi-finemap.tsv.gz"))
 #' LD_reference = "/sc/hydra/projects/pd-omics/glia_omics/eQTL/post_imputation_filtering/eur/filtered_variants/AllChr.hg38.sort.filt.dbsnp.snpeff.vcf.gz"
@@ -591,8 +592,10 @@ LD.construct_subset_vcf_name <- function(subset_DT,
 #' @family LD
 #' @keywords internal
 #' @examples
+#' \dontrun{
 #' LD_reference <- "~/Desktop/results/Reference/custom_panel_chr4.vcf.gz"
 #' vcf_file <- LD.index_vcf(vcf_file=LD_reference)
+#' }
 LD.index_vcf <- function(vcf_file,
                          force_new_index=F,
                          conda_env="echoR",
@@ -631,12 +634,13 @@ LD.index_vcf <- function(vcf_file,
 #' @family LD
 #' @keywords internal
 #' @examples
+#' \dontrun{
 #' data("locus_dir"); data("BST1");
-#'
 #' # Custom
 #' LD_reference <- "~/Desktop/results/Reference/custom_panel_chr4.vcf"
 #' vcf_file <- LD.index_vcf(vcf_file=LD_reference)
 #' vcf_subset <- LD.query_vcf(subset_DT=BST1, locus_dir=locus_dir, vcf_URL=vcf_file, LD_reference=LD_reference, force_new_vcf=T)
+#' }
 LD.query_vcf <- function(subset_DT,
                          vcf_URL,
                          locus_dir,
@@ -1439,38 +1443,38 @@ LD.get_lead_r2 <- function(finemap_dat,
   if(any(c("r","r2") %in% colnames(finemap_dat)) ){
     finemap_dat <- dplyr::select(finemap_dat, -c(r,r2))
   }
+  LD_SNP <- subset(finemap_dat, leadSNP==T)$SNP
+  # Infer data type
+  if(LD_format=="guess"){
+    LD_format <- if(nrow(LD_matrix)==ncol(LD_matrix)) "matrix" else "df"
+  }
+
   if(LD_format=="matrix"){
-    LD_SNP <- subset(finemap_dat, leadSNP==T)$SNP
     if(is.null(LD_matrix)){
       printer("+ LD:: No LD_matrix detected. Setting r2=NA",v=verbose);
       dat <- finemap_dat
       dat$r2 <- NA
     } else {
       printer("+ LD:: LD_matrix detected. Coloring SNPs by LD with lead SNP.", v=verbose)
-
-#       LD_sub <- data.frame(SNP = row.names(LD_matrix),
-#                            LD_matrix[,LD_SNP]) %>%
-#         `colnames<-`(c(LD_SNP,"SNP")) %>%
-#         # subset(select = -c(r,r2))  %>%  data.table::as.data.table()
-
       LD_sub <- subset(LD_matrix, select=LD_SNP) %>%
         # subset(select = -c(r,r2)) %>%
         data.table::as.data.table(keep.rownames = T) %>%
         `colnames<-`(c("SNP","r")) %>%
         dplyr::mutate(r2 = r^2) %>%
         data.table::as.data.table()
-
       dat <- data.table::merge.data.table(finemap_dat, LD_sub,
                                           by = "SNP",
                                           all.x = T)
     }
   }
   if(LD_format=="df"){
-    dat <-  data.table::merge.data.table(finemap_dat,
-                                         LD_matrix,
-                                         by.x = "SNP",
-                                         by.y= "snp2")
-    dat$r2 <- dat$r^2
+    LD_sub <- subset(LD_matrix, select=c("SNP",LD_SNP)) %>%
+      `colnames<-`(c("SNP","r")) %>%
+      dplyr::mutate(r2 = r^2) %>%
+      data.table::as.data.table()
+    dat <- data.table::merge.data.table(finemap_dat, LD_sub,
+                                        by = "SNP",
+                                        all.x = T)
   }
 
   if(fillNA!=F){

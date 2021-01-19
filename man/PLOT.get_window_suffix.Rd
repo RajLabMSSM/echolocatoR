@@ -4,17 +4,17 @@
 \alias{PLOT.get_window_suffix}
 \title{Determine the plot suffix indicating its window size}
 \usage{
-PLOT.get_window_suffix(finemap_dat, plot.zoom)
+PLOT.get_window_suffix(finemap_dat, plot.zoom, verbose = T)
 }
 \description{
 Determine the plot suffix indicating its window size
 }
 \examples{
 data("BST1")
-window_suffix <- get_window_suffix(finemap_dat=BST1, plot.zoom=1000)
-window_suffix <- get_window_suffix(finemap_dat=BST1, plot.zoom=NULL)
-window_suffix <- get_window_suffix(finemap_dat=BST1, plot.zoom="all")
-window_suffix <- get_window_suffix(finemap_dat=BST1, plot.zoom="2x")
+window_suffix <- PLOT.get_window_suffix(finemap_dat=BST1, plot.zoom=1000)
+window_suffix <- PLOT.get_window_suffix(finemap_dat=BST1, plot.zoom=NULL)
+window_suffix <- PLOT.get_window_suffix(finemap_dat=BST1, plot.zoom="all")
+window_suffix <- PLOT.get_window_suffix(finemap_dat=BST1, plot.zoom="2x")
 }
 \seealso{
 Other plot: 

@@ -15,8 +15,10 @@ COJO.make_locus_subdir(locus_dir)
 Make \emph{GCTA-COJO} path
 }
 \examples{
+\dontrun{
 data("locus_dir")
 cojo_dir <- COJO.make_locus_subdir(locus_dir=locus_dir)
+}
 }
 \seealso{
 Other COJO: 

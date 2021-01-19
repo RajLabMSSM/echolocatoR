@@ -13,6 +13,7 @@ POLYFUN.get_precomputed_priors(
   finemap_dat = NULL,
   force_new_priors = T,
   remove_tmps = F,
+  nThread = 4,
   conda_env = "echoR"
 )
 }
@@ -20,9 +21,11 @@ POLYFUN.get_precomputed_priors(
 Extract SNP-wise prior probabilities pre-computed from many UK Biobank traits.
 }
 \examples{
+\dontrun{
+
 data("BST1"); data("locus_dir");
-finemap_DT <- BST1
-priors <- POLYFUN.get_precomputed_priors(locus_dir=locus_dir, finemap_dat=finemap_DT)
+priors <- POLYFUN.get_precomputed_priors(locus_dir=locus_dir, finemap_dat=BST1)
+}
 }
 \seealso{
 Other polyfun: 

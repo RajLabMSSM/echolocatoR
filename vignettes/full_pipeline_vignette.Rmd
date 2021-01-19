@@ -2,7 +2,18 @@
 title: "Full pipeline vignette" 
 author: "Brian M. Schilder"
 date: "Most recent update:<br> `r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_document: 
+    theme: spacelab
+    highlight: zenburn 
+    code_folding: show 
+    toc: true 
+    toc_float: true
+    smooth_scroll: true
+    number_sections: false 
+    self_contained: true
+editor_options: 
+  chunk_output_type: inline
 vignette: >
   %\VignetteIndexEntry{full_pipeline_vignette}
   %\VignetteEngine{knitr::rmarkdown}
@@ -102,7 +113,7 @@ Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS
                                           dataset_type = "GWAS",  
                                           force_new_subset = F,
                                           force_new_LD = F,
-                                          force_new_finemap = T,
+                                          force_new_finemap = F,
                                           remove_tmps = F,
                                           
                  # SUMMARY STATS ARGUMENTS
@@ -153,6 +164,14 @@ Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS
                  )
 ```
 
+# Session info  
 
+<details>
+
+```{r Session Info, attr.output='style="max-height: 200px;"'}
+sessioninfo::session_info()
+```
+
+</details>
 
 

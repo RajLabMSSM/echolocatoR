@@ -264,7 +264,7 @@ create_method_path <- function(locus_dir,
                                finemap_method,
                                LD_reference=NULL,
                                create_dir=T,
-                               compress=T){
+                               compress=F){
   method_dir <- file.path(locus_dir, finemap_method)
   # Make finemapping results folder
   if(create_dir) dir.create(method_dir, recursive = T, showWarnings = F)
@@ -272,14 +272,13 @@ create_method_path <- function(locus_dir,
   dataset <- basename(dirname(locus_dir))
   locus <- basename(locus_dir)
   if(is.null(LD_reference)){
-    file_path <- file.path(method_dir, paste0("*Multi-finemap.tsv", if(compress) ".gz" else NULL))
+    file_path <- file.path(method_dir, paste0("*Multi-finemap.tsv", if(compress) ".gz" else "*"))
   } else{
     file_path <- file.path(method_dir,
-                           paste0(paste(locus,dataset,paste0(LD_reference,"_LD"),finemap_method,"tsv", sep="."),
-                                  if(compress) ".gz" else NULL)
+                           paste0(paste(paste0(LD_reference,"_LD"),finemap_method,"tsv", sep="."),
+                                  if(compress) ".gz" else "*")
     )
   }
-
   return(file_path)
 }
 
@@ -421,6 +420,7 @@ finemap_method_handler <- function(locus_dir,
                        )
 
   } else if("PAINTOR" %in% finemap_method) {
+    #### PAINTOR ####
     finemap_dat <- PAINTOR(finemap_dat=subset_DT,
                            GWAS_datasets=ifelse(dataset_type=="GWAS",
                                                 basename(dirname(locus_dir)),NULL),

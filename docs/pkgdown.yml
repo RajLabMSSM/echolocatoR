@@ -1,10 +1,11 @@
-pandoc: 2.3.1
-pkgdown: 1.5.1
+pandoc: 2.11.1.1
+pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
+  PD_loci_vignette: PD_loci_vignette.html
   QTL_pipeline_vignette: QTL_pipeline_vignette.html
   full_pipeline_vignette: full_pipeline_vignette.html
   plotting_vignette: plotting_vignette.html
   summarise_vignette: summarise_vignette.html
-last_built: 2020-07-24T02:50Z
+last_built: 2021-01-19T00:45Z
 

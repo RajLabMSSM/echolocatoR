@@ -17,7 +17,8 @@ DEEPLEARNING.melt(
 Melt deep learning annotations into long-format
 }
 \examples{
-root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
+\dontrun{
+ root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 ## merged_dat <- merge_finemapping_results(dataset = "Data/GWAS/Nalls23andMe_2019", minimum_support = 0, LD_reference = "UKB")
 ## ANNOT <- DEEPLEARNING.query(merged_dat=merged_dat, level="Allelic_Effect", type="annot")
 
@@ -30,4 +31,5 @@ path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.anno
 ANNOT <- data.table::fread(path, nThread=8)
 ANNOT <- find_consensus_SNPs_no_PolyFun(ANNOT)
 annot.melt <- DEEPLEARNING.melt(ANNOT=ANNOT, aggregate_func="mean", save_path=gsub("\\\\.csv\\\\.gz",".snp_groups_mean.csv.gz",path))
+}
 }

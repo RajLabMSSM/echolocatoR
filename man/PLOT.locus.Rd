@@ -33,6 +33,7 @@ PLOT.locus(
   Roadmap_query = NULL,
   n_top_roadmap = 7,
   annot_overlap_threshold = 5,
+  zoom_exceptions_str = "*full window$|zoom_polygon",
   Nott_epigenome = F,
   Nott_regulatory_rects = T,
   Nott_show_placseq = T,
@@ -43,12 +44,15 @@ PLOT.locus(
   genomic_units = "Mb",
   strip.text.y.angle = 0,
   max_transcripts = 1,
-  plot.zoom = "1x",
+  plot.zoom = c("1x"),
   dpi = 300,
   height = 12,
   width = 10,
-  nThread = 4,
+  plot_format = "jpg",
+  save_RDS = T,
   return_list = F,
+  conda_env = "echoR",
+  nThread = 4,
   verbose = T
 )
 }
@@ -62,11 +66,8 @@ Add anchors to plac-seq arches
 }
 \examples{
 library(echolocatoR)
-data("LRRK2")
+finemap_dat<- echolocatoR::BST1; LD_matrix <- echolocatoR::BST1_LD_matrix;
+locus_dir <- file.path("~/Desktop","results/GWAS/Nalls23andMe_2019/BST1")
 
-locus_dir <- "/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/LRRK2"
-finemap_dat <- LRRK2
-LD_matrix <- readRDS(file.path(locus_dir,"LD/LRRK2.consensus_SNPs.LD.RDS"))
-
-LRRK2.locus_plot <- PLOT.locus(finemap_dat, locus_dir=locus_dir, LD_matrix=LD_matrix, Nott_epigenome=T, xtext=F, plot.zoom=c("5x"))
+locus_plot <- PLOT.locus(finemap_dat, locus_dir=locus_dir, LD_matrix=LD_matrix, Nott_epigenome=T, xtext=F, plot.zoom=c("5x"))
 }

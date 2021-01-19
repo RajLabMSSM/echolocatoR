@@ -10,7 +10,8 @@ ROADMAP.tabix(
   min_pos,
   max_pos,
   eid,
-  convert_to_GRanges = T
+  convert_to_GRanges = T,
+  conda_env = "echoR"
 )
 }
 \arguments{

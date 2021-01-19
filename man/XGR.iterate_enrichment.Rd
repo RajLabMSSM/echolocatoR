@@ -35,8 +35,10 @@ Write filter as a string (or \code{NULL} to include all SNPs).}
 XGR uses a binomial enrichment tests for each annotation.
 }
 \examples{
+\dontrun{
 data("merged_DT")
 enrich_res <- XGR.iterate_enrichment(subset_DT=merged_DT, foreground_filter = "Consensus_SNP", background_filter = "leadSNP", lib.selections = c("ENCODE_TFBS_ClusteredV3_CellTypes"), nCores=1)
+}
 }
 \seealso{
 Other XGR: 

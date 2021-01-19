@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -94,6 +94,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -112,7 +115,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -138,7 +141,7 @@
     <p>Uses <em>plink</em> to group highly correlated SNPs into LD blocks.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>LD.LD_blocks</span>(<span class='no'>LD_folder</span>, <span class='kw'>LD_block_size</span> <span class='kw'>=</span> <span class='fl'>0.7</span>)</pre>
+    <pre class="usage"><span class='fu'>LD.LD_blocks</span><span class='op'>(</span><span class='va'>LD_folder</span>, LD_block_size <span class='op'>=</span> <span class='fl'>0.7</span><span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -148,20 +151,33 @@
 <code><a href='LD.1KG.html'>LD.1KG</a>()</code>,
 <code><a href='LD.UKBiobank.html'>LD.UKBiobank</a>()</code>,
 <code><a href='LD.calculate_LD.html'>LD.calculate_LD</a>()</code>,
+<code><a href='LD.construct_subset_vcf_name.html'>LD.construct_subset_vcf_name</a>()</code>,
+<code><a href='LD.custom_panel.html'>LD.custom_panel</a>()</code>,
 <code><a href='LD.dprime_table.html'>LD.dprime_table</a>()</code>,
+<code><a href='LD.filter_LD.html'>LD.filter_LD</a>()</code>,
 <code><a href='LD.filter_vcf_gaston.html'>LD.filter_vcf_gaston</a>()</code>,
 <code><a href='LD.filter_vcf.html'>LD.filter_vcf</a>()</code>,
-<code><a href='LD.get_vcf_folder.html'>LD.get_vcf_folder</a>()</code>,
+<code><a href='LD.get_locus_vcf_folder.html'>LD.get_locus_vcf_folder</a>()</code>,
+<code><a href='LD.index_vcf.html'>LD.index_vcf</a>()</code>,
 <code><a href='LD.leadSNP_block.html'>LD.leadSNP_block</a>()</code>,
 <code><a href='LD.load_or_create.html'>LD.load_or_create</a>()</code>,
 <code><a href='LD.plink_LD.html'>LD.plink_LD</a>()</code>,
 <code><a href='LD.plink_file.html'>LD.plink_file</a>()</code>,
-<code><a href='LD.plot.html'>LD.plot</a>()</code>,
+<code><a href='LD.plot_LD.html'>LD.plot_LD</a>()</code>,
+<code><a href='LD.query_vcf.html'>LD.query_vcf</a>()</code>,
+<code><a href='LD.rds_to_npz.html'>LD.rds_to_npz</a>()</code>,
 <code><a href='LD.read_bin.html'>LD.read_bin</a>()</code>,
 <code><a href='LD.read_ld_table.html'>LD.read_ld_table</a>()</code>,
 <code><a href='LD.run_plink_LD.html'>LD.run_plink_LD</a>()</code>,
+<code><a href='LD.save_LD_matrix.html'>LD.save_LD_matrix</a>()</code>,
+<code><a href='LD.snpstats_get_LD.html'>LD.snpstats_get_LD</a>()</code>,
+<code><a href='LD.snpstats_get_MAF.html'>LD.snpstats_get_MAF</a>()</code>,
 <code><a href='LD.translate_population.html'>LD.translate_population</a>()</code>,
-<code><a href='LD.vcf_to_bed.html'>LD.vcf_to_bed</a>()</code></p></div>
+<code><a href='LD.vcf_to_bed.html'>LD.vcf_to_bed</a>()</code>,
+<code><a href='LDlinkR.LDproxy_batch.html'>LDlinkR.LDproxy_batch</a>()</code>,
+<code><a href='popDat_1KGphase1.html'>popDat_1KGphase1</a></code>,
+<code><a href='popDat_1KGphase3.html'>popDat_1KGphase3</a></code>,
+<code><a href='saveSparse.html'>saveSparse</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -178,7 +194,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

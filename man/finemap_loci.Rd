@@ -17,6 +17,7 @@ finemap_loci(
   results_dir = "./results",
   top_SNPs = "auto",
   finemap_methods = c("ABF", "FINEMAP", "SUSIE", "POLYFUN_SUSIE"),
+  finemap_args = NULL,
   bp_distance = 5e+05,
   n_causal = 5,
   chrom_col = "CHR",

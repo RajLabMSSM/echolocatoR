@@ -4,6 +4,11 @@
 #
 # }
 
+# *******
+# Original Data Source:
+# https://alkesgroup.broadinstitute.org/LDSCORE/DeepLearning/Dey_DeepLearning.tgz
+# *******
+
 
 #' Query deep learning annotations and LDscores
 #'
@@ -12,8 +17,10 @@
 #'
 #' @family DEEPLEARNING
 #' @examples
+#' \dontrun{
 #' data("BST1")
 #' annot.dat <- DEEPLEARNING.query_one_chr(subset_DT=BST1, tissue="NTS", model="Basenji", type="annot")
+#' }
 DEEPLEARNING.query_one_chr <- function(subset_DT,
                                        base_url="/sc/arion/projects/pd-omics/data/Dey_DeepLearning",
                                        level=c("Variant_Level","Allelic_Effect"),
@@ -79,8 +86,10 @@ DEEPLEARNING.query_one_chr <- function(subset_DT,
 #'
 #' @family DEEPLEARNING
 #' @examples
+#' \dontrun{
 #' data("merged_DT")
 #' ANNOT.DAT <- DEEPLEARNING.query_multi_chr(merged_dat=merged_DT, tissue="NTS", model="Basenji", type="annot")
+#' }
 DEEPLEARNING.query_multi_chr <- function(merged_dat,
                                         base_url="/sc/arion/projects/pd-omics/data/Dey_DeepLearning",
                                         level=c("Variant_Level","Allelic_Effect"),
@@ -113,6 +122,7 @@ DEEPLEARNING.query_multi_chr <- function(merged_dat,
 #'
 #' @family DEEPLEARNING
 #' @examples
+#' \dontrun{
 #' root = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 #' merged_dat <- merge_finemapping_results(dataset = "Data/GWAS/Nalls23andMe_2019", LD_reference = "UKB", minimum_support = 0)
 #' merged_dat <- find_consensus_SNPs_no_PolyFun(merged_dat)
@@ -126,6 +136,7 @@ DEEPLEARNING.query_multi_chr <- function(merged_dat,
 #' ANNOT.vl <- DEEPLEARNING.query (merged_dat=merged_dat, level="Variant_Level", type="annot")
 #' data.table::fwrite(ANNOT.vl, file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Variant_Level.csv.gz"))
 #'
+#' }
 DEEPLEARNING.query <- function(merged_dat,
                                base_url="/sc/arion/projects/pd-omics/data/Dey_DeepLearning",
                                level=c("Variant_Level","Allelic_Effect"),
@@ -168,7 +179,8 @@ DEEPLEARNING.query <- function(merged_dat,
 #' Melt deep learning annotations into long-format
 #'
 #' @examples
-#' root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
+#' \dontrun{
+#'  root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 #' ## merged_dat <- merge_finemapping_results(dataset = "Data/GWAS/Nalls23andMe_2019", minimum_support = 0, LD_reference = "UKB")
 #' ## ANNOT <- DEEPLEARNING.query(merged_dat=merged_dat, level="Allelic_Effect", type="annot")
 #'
@@ -181,6 +193,7 @@ DEEPLEARNING.query <- function(merged_dat,
 #' ANNOT <- data.table::fread(path, nThread=8)
 #' ANNOT <- find_consensus_SNPs_no_PolyFun(ANNOT)
 #' annot.melt <- DEEPLEARNING.melt(ANNOT=ANNOT, aggregate_func="mean", save_path=gsub("\\.csv\\.gz",".snp_groups_mean.csv.gz",path))
+#' }
 DEEPLEARNING.melt <- function(ANNOT,
                               model=c("Basenji","BiClassCNN","DeepSEA","ChromHMM","Roadmap","Others"),
                               aggregate_func="mean",
@@ -235,6 +248,7 @@ DEEPLEARNING.melt <- function(ANNOT,
 #' Plot deep learning predictions
 #'
 #' @examples
+#' \dontrun{
 #' root = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 #'
 #' #### Allelic_Effect ####
@@ -246,6 +260,7 @@ DEEPLEARNING.melt <- function(ANNOT,
 #' annot.melt <-  data.table::fread(path, nThread=8)
 #'
 #' gp <- DEEPLEARNING.plot(annot.melt=annot.melt, facet_formula="Tissue ~ Model", comparisons_filter=NULL, save_path=gsub("\\.csv\\.gz",".png",path))
+#' }
 DEEPLEARNING.plot <- function(annot.melt,
                               snp_groups=c("GWAS lead","UCS","Consensus (-POLYFUN)","Consensus"),
                               comparisons_filter=function(x){if("Consensus" %in% x) return(x)},

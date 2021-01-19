@@ -548,23 +548,25 @@ finemap_pipeline <- function(locus,
   if("simple" %in% plot.types){
     try({
       TRKS_simple <- PLOT.locus(finemap_dat = finemap_dat,
-                            LD_matrix = LD_matrix,
-                            LD_reference = LD_reference,
-                            locus_dir = locus_dir,
-                            dataset_type = dataset_type,
-                            method_list = finemap_methods,
-                            PP_threshold = PP_threshold,
-                            consensus_threshold = consensus_threshold,
-                            QTL_prefixes = QTL_prefixes,
-                            Nott_epigenome = F,
-                            plot_full_window = F,
-                            mean.PP = T,
-                            XGR_libnames = NULL,
-                            plot.zoom = plot.zoom,
-                            save_plot = T,
-                            show_plot = T,
-                            nThread = nThread,
-                            verbose = verbose)
+                                LD_matrix = LD_matrix,
+                                LD_reference = LD_reference,
+                                locus_dir = locus_dir,
+                                dataset_type = dataset_type,
+                                method_list = finemap_methods,
+                                PP_threshold = PP_threshold,
+                                consensus_threshold = consensus_threshold,
+                                QTL_prefixes = QTL_prefixes,
+                                Nott_epigenome = F,
+                                plot_full_window = F,
+                                mean.PP = T,
+                                XGR_libnames = NULL,
+                                plot.zoom = plot.zoom,
+                                save_plot = T,
+                                show_plot = T,
+
+                                conda_env = conda_env,
+                                nThread = nThread,
+                                verbose = verbose)
       locus_plots[["simple"]] <- TRKS_simple
     })
   };
@@ -593,6 +595,8 @@ finemap_pipeline <- function(locus,
                         Nott_show_placseq = plot.Nott_show_placseq,
                         Nott_binwidth = plot.Nott_binwidth,
                         Nott_bigwig_dir = plot.Nott_bigwig_dir,
+
+                        conda_env = conda_env,
                         nThread = nThread,
                         verbose = verbose)
       locus_plots[["fancy"]] <- TRKS_fancy

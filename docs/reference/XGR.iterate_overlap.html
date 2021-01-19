@@ -76,7 +76,7 @@ The GRanges merges hits from subset_DT." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -84,7 +84,7 @@ The GRanges merges hits from subset_DT." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -98,6 +98,9 @@ The GRanges merges hits from subset_DT." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -116,7 +119,7 @@ The GRanges merges hits from subset_DT." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -146,13 +149,13 @@ that overlap with the SNPs in <code>subset_DT</code>.
 The <code>GRanges</code> merges hits from <code>subset_DT</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>XGR.iterate_overlap</span>(
-  <span class='kw'>lib.selections</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ENCODE_TFBS_ClusteredV3_CellTypes"</span>, <span class='st'>"TFBS_Conserved"</span>,
-    <span class='st'>"ReMap_PublicAndEncode_TFBS"</span>, <span class='st'>"Uniform_TFBS"</span>),
-  <span class='no'>subset_DT</span>,
-  <span class='kw'>save_path</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>nCores</span> <span class='kw'>=</span> <span class='fl'>4</span>
-)</pre>
+    <pre class="usage"><span class='fu'>XGR.iterate_overlap</span><span class='op'>(</span>
+  lib.selections <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ENCODE_TFBS_ClusteredV3_CellTypes"</span>, <span class='st'>"TFBS_Conserved"</span>,
+    <span class='st'>"ReMap_PublicAndEncode_TFBS"</span>, <span class='st'>"Uniform_TFBS"</span><span class='op'>)</span>,
+  <span class='va'>subset_DT</span>,
+  save_path <span class='op'>=</span> <span class='cn'>F</span>,
+  nCores <span class='op'>=</span> <span class='fl'>4</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -165,7 +168,7 @@ For full list of libraries see:
     </tr>
     <tr>
       <th>subset_DT</th>
-      <td><p>Data.frame with at least the following columns:</p><dl'>
+      <td><p>Data.frame with at least the following columns:</p><dl>
 <dt>SNP</dt><dd><p>SNP RSID</p></dd>
 <dt>CHR</dt><dd><p>chromosome</p></dd>
 <dt>POS</dt><dd><p>position</p></dd>
@@ -188,6 +191,9 @@ For full list of libraries see:
 <code><a href='DT_to_GRanges.html'>DT_to_GRanges</a>()</code>,
 <code><a href='GRanges_to_BED.html'>GRanges_to_BED</a>()</code>,
 <code><a href='XGR.download_and_standardize.html'>XGR.download_and_standardize</a>()</code>,
+<code><a href='XGR.enrichment_bootstrap.html'>XGR.enrichment_bootstrap</a>()</code>,
+<code><a href='XGR.enrichment_plot.html'>XGR.enrichment_plot</a>()</code>,
+<code><a href='XGR.enrichment.html'>XGR.enrichment</a>()</code>,
 <code><a href='XGR.filter_assays.html'>XGR.filter_assays</a>()</code>,
 <code><a href='XGR.filter_sources.html'>XGR.filter_sources</a>()</code>,
 <code><a href='XGR.import_annotations.html'>XGR.import_annotations</a>()</code>,
@@ -198,10 +204,12 @@ For full list of libraries see:
 <code><a href='XGR.prepare_foreground_background.html'>XGR.prepare_foreground_background</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"BST1"</span>)
-<span class='no'>finemap_DT</span> <span class='kw'>&lt;-</span> <span class='no'>BST1</span>
-<span class='no'>gr.hits</span> <span class='kw'>&lt;-</span> <span class='fu'>XGR.iterate_overlap</span>(<span class='kw'>lib.selections</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ENCODE_TFBS_ClusteredV3_CellTypes"</span>), <span class='kw'>subset_DT</span><span class='kw'>=</span><span class='no'>finemap_DT</span>, <span class='kw'>nCores</span><span class='kw'>=</span><span class='fl'>1</span>)</div><div class='output co'>#&gt; <span class='message'>Start at 2020-07-23 23:00:10</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>'ENCODE_TFBS_ClusteredV3_CellTypes' (from http://galahad.well.ox.ac.uk/bigdata/ENCODE_TFBS_ClusteredV3_CellTypes.RData) has been loaded into the working environment (at 2020-07-23 23:00:26)</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>End at 2020-07-23 23:00:26</span></div><div class='output co'>#&gt; <span class='message'>Runtime in total is: 16 secs</span></div><div class='output co'>#&gt; <span class='warning'>Warning: found more than one best sequence renaming map compatible with seqname style "NCBI" for this object, using the first one</span></div><div class='output co'>#&gt; <span class='message'>8702 query SNP(s) detected with reference overlap.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: found more than one best sequence renaming map compatible with seqname style "NCBI" for this object, using the first one</span></div><div class='output co'>#&gt; <span class='message'>25970 query SNP(s) detected with reference overlap.</span></div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"BST1"</span><span class='op'>)</span>
+<span class='va'>finemap_DT</span> <span class='op'>&lt;-</span> <span class='va'>BST1</span>
+<span class='va'>gr.hits</span> <span class='op'>&lt;-</span> <span class='fu'>XGR.iterate_overlap</span><span class='op'>(</span>lib.selections<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ENCODE_TFBS_ClusteredV3_CellTypes"</span><span class='op'>)</span>, subset_DT<span class='op'>=</span><span class='va'>finemap_DT</span>, nCores<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -217,7 +225,7 @@ For full list of libraries see:
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

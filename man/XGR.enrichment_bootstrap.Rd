@@ -24,6 +24,7 @@ XGR.enrichment_bootstrap(
 XGR enrichment (bootstrapped)
 }
 \examples{
+\dontrun{
 root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 
 merged_dat <- merge_finemapping_results(dataset = dirname(root), LD_reference = "UKB", minimum_support = 0)
@@ -37,6 +38,7 @@ grouping_vars <- c("Study","Cell_type","Assay")
 enrich_res <- XGR.enrichment_bootstrap(gr=gr.merged, merged_dat=merged_dat, grouping_vars=grouping_vars,  bootstrap=F, snp_groups=c("Random","GWAS lead","UCS (-PolyFun)","UCS","Consensus (-PolyFun)","Consensus"), nThread=12, save_path=file.path(root,"XGR/celltypespecific_epigenomics.SNP_groups.csv.gz"))
 
 enrich_boot <- XGR.enrichment_bootstrap(gr=gr.merged, merged_dat=merged_dat, grouping_vars=grouping_vars,  bootstrap=T, fg_sample_size=NULL, bg_sample_size=100, iterations=100)
+}
 }
 \seealso{
 Other XGR: 

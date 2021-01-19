@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Prepare input files for <code>FINEMAP</code> — FINEMAP.construct_data • echolocatoR</title>
+<title>Prepare input files for FINEMAP — FINEMAP.construct_data • echolocatoR</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,12 @@
 
 
 
-<meta property="og:title" content="Prepare input files for <code>FINEMAP</code> — FINEMAP.construct_data" />
-<meta property="og:description" content="Creates and saves 1) the summary stats file, and 2) the LD matrix." />
+<meta property="og:title" content="Prepare input files for FINEMAP — FINEMAP.construct_data" />
+<meta property="og:description" content="Creates and saves 1) the summary stats file, and 2) the LD matrix.
+&quot;Columns beta and se are required for fine-mapping.
+Column maf is needed to output posterior effect size estimates on the
+allelic scale. All other columns are not required for computations and
+can be specified arbitrarily.&quot;" />
 
 
 
@@ -72,7 +76,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -80,7 +84,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -94,6 +98,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -112,7 +119,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -135,12 +142,25 @@
     </div>
 
     <div class="ref-description">
-    <p>Creates and saves 1) the summary stats file, and 2) the LD matrix.</p>
+    <p>Creates and saves 1) the summary stats file, and 2) the LD matrix.
+"Columns beta and se are required for fine-mapping.
+Column maf is needed to output posterior effect size estimates on the
+allelic scale. All other columns are not required for computations and
+can be specified arbitrarily."</p>
     </div>
 
-    <pre class="usage"><span class='fu'>FINEMAP.construct_data</span>(<span class='no'>locus_dir</span>, <span class='no'>subset_DT</span>, <span class='no'>LD_matrix</span>, <span class='kw'>nThread</span> <span class='kw'>=</span> <span class='fl'>4</span>)</pre>
+    <pre class="usage"><span class='fu'>FINEMAP.construct_data</span><span class='op'>(</span>
+  <span class='va'>locus_dir</span>,
+  <span class='va'>subset_DT</span>,
+  <span class='va'>LD_matrix</span>,
+  nThread <span class='op'>=</span> <span class='fl'>4</span>,
+  verbose <span class='op'>=</span> <span class='cn'>T</span>
+<span class='op'>)</span></pre>
 
 
+    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
+
+    <p><a href='http://www.christianbenner.com'>http://www.christianbenner.com</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other FINEMAP: 
@@ -150,12 +170,15 @@
 <code><a href='FINEMAP.html'>FINEMAP</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"locus_dir"</span>); <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"BST1"</span>); <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"BST1_LD_matrix"</span>);
-<span class='no'>finemap_DT</span> <span class='kw'>&lt;-</span> <span class='no'>BST1</span>
-<span class='fu'><a href='https://rdrr.io/r/base/files2.html'>dir.create</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='no'>locus_dir</span>,<span class='st'>"FINEMAP"</span>), <span class='kw'>showWarnings</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>recursive</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='subset_common_snps.html'>subset_common_snps</a></span>(<span class='kw'>LD_matrix</span><span class='kw'>=</span><span class='no'>LD_matrix</span>, <span class='kw'>finemap_DT</span><span class='kw'>=</span><span class='no'>finemap_DT</span>)</div><div class='output co'>#&gt; <span class='error'>Error in subset_common_snps(LD_matrix = LD_matrix, finemap_DT = finemap_DT): unused argument (finemap_DT = finemap_DT)</span></div><div class='input'><span class='no'>LD_matrix</span> <span class='kw'>&lt;-</span> <span class='no'>out</span>$<span class='no'>LD</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'out' not found</span></div><div class='input'><span class='no'>finemap_DT</span> <span class='kw'>&lt;-</span> <span class='no'>out</span>$<span class='no'>DT</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'out' not found</span></div><div class='input'><span class='no'>dat_paths</span> <span class='kw'>&lt;-</span> <span class='fu'>FINEMAP.construct_data</span>(<span class='kw'>locus_dir</span><span class='kw'>=</span><span class='no'>locus_dir</span>, <span class='kw'>subset_DT</span><span class='kw'>=</span><span class='no'>finemap_DT</span>, <span class='kw'>LD_matrix</span><span class='kw'>=</span><span class='no'>LD_matrix</span>)</div><div class='output co'>#&gt; [1] "++ Formatting data.z file for FINEMAP"
-#&gt; [1] "++ Formatting LD Matrix for FINEMAP"
-#&gt; [1] "+++ Writing FINEMAP z and ld files..."</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"locus_dir"</span><span class='op'>)</span>; <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"BST1"</span><span class='op'>)</span>; <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"BST1_LD_matrix"</span><span class='op'>)</span>;
+<span class='va'>finemap_DT</span> <span class='op'>&lt;-</span> <span class='va'>BST1</span>
+<span class='fu'><a href='https://rdrr.io/r/base/files2.html'>dir.create</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>locus_dir</span>,<span class='st'>"FINEMAP"</span><span class='op'>)</span>, showWarnings <span class='op'>=</span> <span class='cn'>FALSE</span>, recursive <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='va'>out</span> <span class='op'>&lt;-</span> <span class='fu'><a href='subset_common_snps.html'>subset_common_snps</a></span><span class='op'>(</span>LD_matrix<span class='op'>=</span><span class='va'>LD_matrix</span>, finemap_DT<span class='op'>=</span><span class='va'>finemap_DT</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in subset_common_snps(LD_matrix = LD_matrix, finemap_DT = finemap_DT): unused argument (finemap_DT = finemap_DT)</span></div><div class='input'><span class='va'>LD_matrix</span> <span class='op'>&lt;-</span> <span class='va'>out</span><span class='op'>$</span><span class='va'>LD</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'out' not found</span></div><div class='input'><span class='va'>finemap_DT</span> <span class='op'>&lt;-</span> <span class='va'>out</span><span class='op'>$</span><span class='va'>DT</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'out' not found</span></div><div class='input'><span class='va'>dat_paths</span> <span class='op'>&lt;-</span> <span class='fu'>FINEMAP.construct_data</span><span class='op'>(</span>locus_dir<span class='op'>=</span><span class='va'>locus_dir</span>, subset_DT<span class='op'>=</span><span class='va'>finemap_DT</span>, LD_matrix<span class='op'>=</span><span class='va'>LD_matrix</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "++ FINEMAP:: Constructing data.z file."
+#&gt; [1] "++ FINEMAP:: Constructing data.ld file."</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -171,7 +194,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

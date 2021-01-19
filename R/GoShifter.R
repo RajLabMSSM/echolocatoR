@@ -53,8 +53,11 @@ GOSHIFTER.create_LD <- function(locus_dir,
   # (chrA\tposA\trsIdA\tposB\trsIdB\tRsquared\tDPrime)
   GS_results_path <- file.path(locus_dir,"GoShifter")
   if(is.null(LD_path)) LD_path <- list.files(file.path(locus_dir,'LD'),".RDS", full.names = T)[1]
+  if( !(any(endsWith(LD_path,"_LD.RDS"), na.rm = T) | any(endsWith(LD_path,"plink.ld"), na.rm = T))){
+    stop("No LD RDS files detected.")
+  }
 
-  if(endsWith(LD_path,"_LD.RDS")){
+  if(any(endsWith(LD_path,"_LD.RDS"), na.rm = T)){
     printer("+ GOSHIFTER:: Reformatting LD",v=verbose)
     LD_matrix <- readSparse(LD_path, convert_to_df = F)
     LD_df <- as.data.frame(as.table(as.matrix(LD_matrix))) %>% `colnames<-`(c('rsIdA', 'rsIdB', 'Rsquared'))
@@ -78,7 +81,7 @@ GOSHIFTER.create_LD <- function(locus_dir,
       dplyr::select(chrA,posA,rsIdA,posB,rsIdB,Rsquared)
   }
 
-  if(endsWith(LD_path,"plink.ld")){
+  if(any(endsWith(LD_path,"plink.ld"), na.rm = T)){
     printer("++ GoShifter:: Reformatting 1000 Genomes LD",v=verbose)
     ld_file <- LD_path %>% dplyr::rename(chrA = CHR_A,
                                           posA = BP_A,
@@ -306,9 +309,9 @@ GOSHIFTER.run <- function(finemap_dat,
                           goshifter_path = NULL,
                           chromatin_state = "TssA",
                           R2_filter = 0.8,
+                          overlap_threshold = 1,
                           remove_tmps = T,
-                          verbose = T,
-                          overlap_threshold = 1){
+                          verbose = T){
   goshifter_path <- GOSHIFTER.find_goshifter_folder(goshifter = goshifter_path)
   # python <- CONDA.find_python_path(conda_env = "goshifter")
 
@@ -320,7 +323,8 @@ GOSHIFTER.run <- function(finemap_dat,
                                                .locus_dir = locus_dir,
                                                .R2_filter = R2_filter,
                                                .overlap_threshold = overlap_threshold,
-                                               .permutations=permutations){
+                                               .permutations=permutations,
+                                               .verbose=verbose){
       message(gr.name)
       gr <- GRlist[[gr.name]]
       GS_results_path <- file.path(.locus_dir,"GoShifter")
@@ -420,7 +424,7 @@ GOSHIFTER.summarise_results <- function(GS_results){
 
 #' Run \code{GoShifter} enrichment pipeline
 #'
-#'  \code{GoShifter}: Locus-specific enrichment tool.
+#' \code{GoShifter}: Locus-specific enrichment tool.
 #'
 #' @source
 #' \href{https://github.com/immunogenomics/goshifter}{GitHub}

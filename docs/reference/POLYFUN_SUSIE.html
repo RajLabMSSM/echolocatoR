@@ -73,7 +73,7 @@ function which uses a python script provided with PolyFun." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ function which uses a python script provided with PolyFun." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -95,6 +95,9 @@ function which uses a python script provided with PolyFun." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -113,7 +116,7 @@ function which uses a python script provided with PolyFun." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,19 +143,19 @@ function which uses a python script provided with PolyFun." />
 function which uses a python script provided with PolyFun.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>POLYFUN_SUSIE</span>(
-  <span class='no'>locus_dir</span>,
-  <span class='kw'>polyfun</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>finemap_dat</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>LD_matrix</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>polyfun_approach</span> <span class='kw'>=</span> <span class='st'>"non-parametric"</span>,
-  <span class='kw'>dataset_type</span> <span class='kw'>=</span> <span class='st'>"GWAS"</span>,
-  <span class='kw'>n_causal</span> <span class='kw'>=</span> <span class='fl'>5</span>,
-  <span class='kw'>sample_size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>server</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>PP_threshold</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
-  <span class='kw'>conda_env</span> <span class='kw'>=</span> <span class='st'>"echoR"</span>
-)</pre>
+    <pre class="usage"><span class='fu'>POLYFUN_SUSIE</span><span class='op'>(</span>
+  <span class='va'>locus_dir</span>,
+  polyfun <span class='op'>=</span> <span class='cn'>NULL</span>,
+  finemap_dat <span class='op'>=</span> <span class='cn'>NULL</span>,
+  LD_matrix <span class='op'>=</span> <span class='cn'>NULL</span>,
+  polyfun_approach <span class='op'>=</span> <span class='st'>"non-parametric"</span>,
+  dataset_type <span class='op'>=</span> <span class='st'>"GWAS"</span>,
+  max_causal <span class='op'>=</span> <span class='fl'>5</span>,
+  sample_size <span class='op'>=</span> <span class='cn'>NULL</span>,
+  server <span class='op'>=</span> <span class='cn'>F</span>,
+  PP_threshold <span class='op'>=</span> <span class='fl'>0.95</span>,
+  conda_env <span class='op'>=</span> <span class='st'>"echoR"</span>
+<span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
@@ -169,6 +172,7 @@ function which uses a python script provided with PolyFun.</p>
 <code><a href='POLYFUN.gather_annotations.html'>POLYFUN.gather_annotations</a>()</code>,
 <code><a href='POLYFUN.gather_ldscores.html'>POLYFUN.gather_ldscores</a>()</code>,
 <code><a href='POLYFUN.get_precomputed_priors.html'>POLYFUN.get_precomputed_priors</a>()</code>,
+<code><a href='POLYFUN.h2_enrichment_SNPgroups_plot.html'>POLYFUN.h2_enrichment_SNPgroups_plot</a>()</code>,
 <code><a href='POLYFUN.h2_enrichment_SNPgroups.html'>POLYFUN.h2_enrichment_SNPgroups</a>()</code>,
 <code><a href='POLYFUN.h2_enrichment.html'>POLYFUN.h2_enrichment</a>()</code>,
 <code><a href='POLYFUN.help.html'>POLYFUN.help</a>()</code>,
@@ -195,7 +199,7 @@ function which uses a python script provided with PolyFun.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

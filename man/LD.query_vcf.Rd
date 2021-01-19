@@ -23,12 +23,13 @@ LD.query_vcf(
 Query vcf file
 }
 \examples{
+\dontrun{
 data("locus_dir"); data("BST1");
-
 # Custom
 LD_reference <- "~/Desktop/results/Reference/custom_panel_chr4.vcf"
 vcf_file <- LD.index_vcf(vcf_file=LD_reference)
 vcf_subset <- LD.query_vcf(subset_DT=BST1, locus_dir=locus_dir, vcf_URL=vcf_file, LD_reference=LD_reference, force_new_vcf=T)
+}
 }
 \seealso{
 Other LD: 

@@ -26,6 +26,7 @@ XGR.enrichment_plot(
 Plot enrichment results
 }
 \examples{
+\dontrun{
 root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 ### merged enrichment results
 enrich_res <- data.table::fread( file.path(root,"XGR/celltypespecific_epigenomics.SNP_groups.csv.gz"))
@@ -42,6 +43,7 @@ gp <- XGR.enrichment_plot(enrich_res=enrich_res,  plot_type="bar", facet_formula
 
 # Merged volcano plot (permuted)
 gp <- XGR.enrichment_plot(enrich_res=enrich.scATAC.permute, title="Permuted enrichment: Cell-type-specific peaks and elements", plot_type="point")
+}
 }
 \seealso{
 Other XGR: 

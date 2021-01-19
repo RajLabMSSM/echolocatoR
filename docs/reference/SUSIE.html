@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -94,6 +94,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -112,7 +115,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -138,37 +141,134 @@
     <p>Sum of Single Effects (SuSiE): Iterative Bayesian Step-wise Selection</p>
     </div>
 
-    <pre class="usage"><span class='fu'>SUSIE</span>(
-  <span class='no'>subset_DT</span>,
-  <span class='no'>LD_matrix</span>,
-  <span class='kw'>dataset_type</span> <span class='kw'>=</span> <span class='st'>"GWAS"</span>,
-  <span class='kw'>n_causal</span> <span class='kw'>=</span> <span class='fl'>5</span>,
-  <span class='kw'>sample_size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>var_y</span> <span class='kw'>=</span> <span class='st'>"estimate"</span>,
-  <span class='kw'>prior_weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>PP_threshold</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
-  <span class='kw'>scaled_prior_variance</span> <span class='kw'>=</span> <span class='fl'>0.001</span>,
-  <span class='kw'>estimate_residual_variance</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>
-)</pre>
+    <pre class="usage"><span class='fu'>SUSIE</span><span class='op'>(</span>
+  <span class='va'>subset_DT</span>,
+  <span class='va'>LD_matrix</span>,
+  dataset_type <span class='op'>=</span> <span class='st'>"GWAS"</span>,
+  max_causal <span class='op'>=</span> <span class='fl'>5</span>,
+  sample_size <span class='op'>=</span> <span class='cn'>NULL</span>,
+  prior_weights <span class='op'>=</span> <span class='cn'>NULL</span>,
+  PP_threshold <span class='op'>=</span> <span class='fl'>0.95</span>,
+  scaled_prior_variance <span class='op'>=</span> <span class='fl'>0.001</span>,
+  estimate_residual_variance <span class='op'>=</span> <span class='cn'>F</span>,
+  estimate_prior_variance <span class='op'>=</span> <span class='cn'>T</span>,
+  residual_variance <span class='op'>=</span> <span class='cn'>NULL</span>,
+  max_iter <span class='op'>=</span> <span class='fl'>100</span>,
+  estimate_prior_method <span class='op'>=</span> <span class='st'>"optim"</span>,
+  manual_var_y <span class='op'>=</span> <span class='cn'>F</span>,
+  rescale_priors <span class='op'>=</span> <span class='cn'>T</span>,
+  plot_track_fit <span class='op'>=</span> <span class='cn'>F</span>,
+  return_all_CS <span class='op'>=</span> <span class='cn'>T</span>,
+  verbose <span class='op'>=</span> <span class='cn'>T</span>
+<span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>dataset_type</th>
+      <td><p>The kind dataset you're fine-mapping (e.g. GWAS, eQTL, tQTL).
+This will also be used when creating the subdirectory where your results will be stored
+(e.g. <em>Data/&lt;dataset_type&gt;/Kunkle_2019</em>).</p></td>
+    </tr>
+    <tr>
+      <th>max_causal</th>
+      <td><p>The maximum number of non-zero effects (and thus causal variants).</p></td>
+    </tr>
+    <tr>
+      <th>sample_size</th>
+      <td><p>The overall sample size of the study.
+If none is given, and <strong>N_cases</strong> and <strong>N_controls</strong> columns are present,
+then sample_size is inferred to be:  <code>max(N_cases) + max(N_controls)</code>.</p></td>
+    </tr>
+    <tr>
+      <th>prior_weights</th>
+      <td><p>a p vector of prior probability that each element is non-zero</p></td>
+    </tr>
+    <tr>
+      <th>PP_threshold</th>
+      <td><p>The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
+For example, <code>PP_threshold=.95</code> means that all Credible Set SNPs will be 95% Credible Set SNPs.</p></td>
+    </tr>
+    <tr>
+      <th>scaled_prior_variance</th>
+      <td><p>the scaled prior variance (vector of length L, or scalar. In latter case gets repeated L times)</p></td>
+    </tr>
+    <tr>
+      <th>estimate_residual_variance</th>
+      <td><p>indicates whether to estimate residual variance</p></td>
+    </tr>
+    <tr>
+      <th>estimate_prior_variance</th>
+      <td><p>indicates whether to estimate prior</p></td>
+    </tr>
+    <tr>
+      <th>residual_variance</th>
+      <td><p>the residual variance (defaults to variance of y)</p></td>
+    </tr>
+    <tr>
+      <th>max_iter</th>
+      <td><p>maximum number of iterations to perform</p></td>
+    </tr>
+    <tr>
+      <th>estimate_prior_method</th>
+      <td><p>The method used for estimating prior variance.</p></td>
+    </tr>
+    <tr>
+      <th>rescale_priors</th>
+      <td><p>If prior probabiltities are supplied,
+rescale them from 0-1 (i.e. <code>rescaled_priors = priors / sum(priors)</code>).</p></td>
+    </tr>
+    <tr>
+      <th>plot_track_fit</th>
+      <td><p>Record each iteration and make a GIF of the
+fine-mapping algorithm learning the causal variants.
+<strong>WARNING!:</strong> Making this plot can take a long time if there's many iterations.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>if true outputs some progress messages</p></td>
+    </tr>
+    </table>
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
-    <p><a href='https://stephenslab.github.io/susieR/'>https://stephenslab.github.io/susieR/</a></p>
+    <p><a href='https://stephenslab.github.io/susieR/'>GitHub</a>
+<a href='https://rss.onlinelibrary.wiley.com/doi/full/10.1111/rssb.12388'>Publication</a></p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p><strong>Notes on convergence:</strong>
+<span class="pkg">susieR</span> will often give the warning: <code>IBSS algorithm did not converge in 100 iterations!</code>.
+This means the results might not necessarily be reliable.
+There's several things you can try to avoid this:</p><ul>
+<li><p>Make sure <code>susieR</code> is up-to-date: <code><a href='https://rdrr.io/pkg/devtools/man/remote-reexports.html'> devtools::install_github("stephenslab/susieR@0.9.0")</a></code></p></li>
+<li><p>Increase <code>max_causal</code> (e.g. 5 =&gt; 10).</p></li>
+<li><p>Increase <code>max_iter</code> (e.g. 100 =&gt; 1000), though this will take longer.</p></li>
+<li><p>Decrease the locus window size, which will also speed up the algorithm but potentially miss causal variants far from the lead SNP.</p></li>
+</ul><p>Changing <code>estimate_prior_method</code> does not seem to affect covergence warnings.</p>
+<p><strong>Notes on variance:</strong>
+<a href='https://github.com/stephenslab/susieR/issues/90'>GitHub Issue</a>
+If <code>estimate_residual_variance=TRUE</code> <em>without</em> providing <code>var_y</code>
+<em>and</em> <code>L&gt;1</code>, <span class="pkg">susieR</span> will throw error:
+<code>Estimating residual variance failed: the estimated value is negative</code>
+Running <span class="pkg">susieR</span> with <code>var_y = var(b)</code> provides <em>exactly</em> the same results.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"BST1"</span>); <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"LD_matrix"</span>);
-<span class='no'>BST1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_sample_size.html'>get_sample_size</a></span>(<span class='kw'>subset_DT</span> <span class='kw'>=</span> <span class='no'>BST1</span>)</div><div class='output co'>#&gt; [1] "Calculating effective sample size (`N`) from `N_cases` and `N_controls`"</div><div class='input'><span class='no'>finemap_DT</span> <span class='kw'>&lt;-</span> <span class='fu'>SUSIE</span>(<span class='kw'>subset_DT</span><span class='kw'>=</span><span class='no'>BST1</span>, <span class='kw'>LD_matrix</span><span class='kw'>=</span><span class='no'>LD_matrix</span>)</div><div class='output co'>#&gt; [1] "++ Computing phenotype variance..."
-#&gt; [1] "+ SUSIE:: n_causal = 5"
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"BST1"</span><span class='op'>)</span>; <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"LD_matrix"</span><span class='op'>)</span>;
+<span class='co'># LD_matrix &lt;- readRDS("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/BST1/plink/UKB_LD.RDS")</span>
+<span class='va'>finemap_DT</span> <span class='op'>&lt;-</span> <span class='fu'>SUSIE</span><span class='op'>(</span>subset_DT<span class='op'>=</span><span class='va'>BST1</span>, LD_matrix<span class='op'>=</span><span class='va'>LD_matrix</span>, estimate_residual_variance<span class='op'>=</span><span class='cn'>T</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "+ Preparing sample_size (N) column"
+#&gt; [1] "++ Computing effective sample size."
+#&gt; [1] "+ SUSIE:: sample_size= 216621"
+#&gt; [1] "+ SUSIE:: max_causal = 5"
 #&gt; [1] "+ Subsetting LD matrix and finemap_dat to common SNPs..."
-#&gt; [1] "LD:: Removing unnamed rows/cols"
-#&gt; [1] "LD:: Replacing NAs with 0"
+#&gt; [1] "+ LD:: Removing unnamed rows/cols"
+#&gt; [1] "+ LD:: Replacing NAs with 0"
 #&gt; [1] "+ LD_matrix = 95 SNPs."
 #&gt; [1] "+ finemap_dat = 6216 SNPs."
 #&gt; [1] "+ 95 SNPs in common."
-#&gt; [1] "++ Subsetting complete."
-#&gt; [1] "++ Extracting Credible Sets..."</div></pre>
+#&gt; [1] "+ SUSIE:: Using `susie_suff_stat()` from susieR v0.9.0"
+#&gt; [1] "+ SUSIE:: Extracting Credible Sets..."</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -184,7 +284,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

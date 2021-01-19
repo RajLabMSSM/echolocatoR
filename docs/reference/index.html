@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -79,7 +79,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -93,6 +93,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -111,7 +114,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -288,15 +291,57 @@ cell-type-specific epigenomic peaks and coaccessibility data.</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="GGBIO.dot_summary.html">GGBIO.dot_summary()</a></code> </p>
+          <p><code><a href="DEEPLEARNING.melt.html">DEEPLEARNING.melt()</a></code> </p>
         </td>
-        <td><p>Multi-fine-map summary dot plot</p></td>
+        <td><p>Melt deep learning annotations into long-format</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="DEEPLEARNING.plot.html">DEEPLEARNING.plot()</a></code> </p>
+        </td>
+        <td><p>Plot deep learning predictions</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="DEEPLEARNING.query.html">DEEPLEARNING.query()</a></code> </p>
+        </td>
+        <td><p>Iteratively collect deep learning annotations</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="DEEPLEARNING.query_multi_chr.html">DEEPLEARNING.query_multi_chr()</a></code> </p>
+        </td>
+        <td><p>Query deep learning annotations and LDscores (iterate)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="DEEPLEARNING.query_one_chr.html">DEEPLEARNING.query_one_chr()</a></code> </p>
+        </td>
+        <td><p>Query deep learning annotations and LDscores</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="Directory_info.html">Directory_info()</a></code> </p>
+        </td>
+        <td><p>Retrieve the location of summary stats files</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="GOSHIFTER.html">GOSHIFTER()</a></code> </p>
         </td>
         <td><p>Run <code>GoShifter</code> enrichment pipeline</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="GOSHIFTER.create_LD.html">GOSHIFTER.create_LD()</a></code> </p>
+        </td>
+        <td><p>Prepare LD input for <em>GoShifter</em></p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="GOSHIFTER.create_snpmap.html">GOSHIFTER.create_snpmap()</a></code> </p>
+        </td>
+        <td><p>Prepare SNP input for <em>GoShifter</em></p></td>
       </tr><tr>
         
         <td>
@@ -315,6 +360,18 @@ cell-type-specific epigenomic peaks and coaccessibility data.</p></td>
           <p><code><a href="LD.fill_NA.html">LD.fill_NA()</a></code> </p>
         </td>
         <td><p>Fill NAs in an LD matrix</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="LD.get_lead_r2.html">LD.get_lead_r2()</a></code> </p>
+        </td>
+        <td><p>Find correlate o</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="LDlinkR.LDproxy_batch.html">LDlinkR.LDproxy_batch()</a></code> </p>
+        </td>
+        <td><p>Extract LD proxies from 1KGphase3</p></td>
       </tr><tr>
         
         <td>
@@ -342,15 +399,15 @@ cell-type-specific epigenomic peaks and coaccessibility data.</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="MOTIFBREAKR.plot.html">MOTIFBREAKR.plot()</a></code> </p>
+          <p><code><a href="MOTIFBREAKR.filter.html">MOTIFBREAKR.filter()</a></code> </p>
         </td>
-        <td><p>Plot <code>motifbreakR</code> results</p></td>
+        <td><p>Summarise <code>motifbreakR</code> + <code>echolocatoR</code> results</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="MOTIFBREAKR.summarize.html">MOTIFBREAKR.summarize()</a></code> </p>
+          <p><code><a href="MOTIFBREAKR.plot.html">MOTIFBREAKR.plot()</a></code> </p>
         </td>
-        <td><p>Summarise <code>motifbreakR</code> + <code>echolocatoR</code> results</p></td>
+        <td><p>Plot <code>motifbreakR</code> results</p></td>
       </tr><tr>
         
         <td>
@@ -414,9 +471,33 @@ cell-type-specific epigenomic peaks and coaccessibility data.</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="PLOT.dot_summary.html">PLOT.dot_summary()</a></code> </p>
+        </td>
+        <td><p>Multi-fine-map summary dot plot</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="PLOT.locus.html">PLOT.locus()</a></code> </p>
+        </td>
+        <td><p>Generate a locus plot</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="PLOT.transcript_model_track.html">PLOT.transcript_model_track()</a></code> </p>
+        </td>
+        <td><p>Plot gene/transcript models</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="POLYFUN.get_ref_prefix.html">POLYFUN.get_ref_prefix()</a></code> </p>
         </td>
         <td><p>Get ref data path prefix</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="POLYFUN.h2_enrichment_SNPgroups_plot.html">POLYFUN.h2_enrichment_SNPgroups_plot()</a></code> </p>
+        </td>
+        <td><p>Plot heritability (h2) enrichment</p></td>
       </tr><tr>
         
         <td>
@@ -453,6 +534,42 @@ cell-type-specific epigenomic peaks and coaccessibility data.</p></td>
           <p><code><a href="ROADMAP.track_plot.html">ROADMAP.track_plot()</a></code> </p>
         </td>
         <td><p>Plot Roadmap query</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="SPLICEAI.plot.html">SPLICEAI.plot()</a></code> </p>
+        </td>
+        <td><p>Plot <em>SpliceAI</em> predictions</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="SPLICEAI.run.html">SPLICEAI.run()</a></code> </p>
+        </td>
+        <td><p>Run pre-trained <em>SpliceAI</em> model to get predictions</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="SPLICEAI.snp_probs.html">SPLICEAI.snp_probs()</a></code> </p>
+        </td>
+        <td><p>Postprocess <em>SpliceAI</em> results after querying</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="SPLICEAI.subset_precomputed_tsv.html">SPLICEAI.subset_precomputed_tsv()</a></code> </p>
+        </td>
+        <td><p>Query genome-wide <em>SpliceAI</em> results file (tsv format)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="SPLICEAI.subset_precomputed_tsv_iterate.html">SPLICEAI.subset_precomputed_tsv_iterate()</a></code> </p>
+        </td>
+        <td><p>Make multiple queries to genome-wide <em>SpliceAI</em> results file (tsv format)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="SPLICEAI.subset_precomputed_vcf.html">SPLICEAI.subset_precomputed_vcf()</a></code> </p>
+        </td>
+        <td><p>Query genome-wide <em>SpliceAI</em> results file (vcf format)</p></td>
       </tr><tr>
         
         <td>
@@ -498,6 +615,36 @@ cell-type-specific epigenomic peaks and coaccessibility data.</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="SUMMARISE.plot_dataset_overlap.html">SUMMARISE.plot_dataset_overlap()</a></code> </p>
+        </td>
+        <td><p>Plot inter-study SNP overlap</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="SURE.download_annotations.html">SURE.download_annotations()</a></code> </p>
+        </td>
+        <td><p>Download <em>SuRE</em> annotations</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="SURE.melt_snp_groups.html">SURE.melt_snp_groups()</a></code> </p>
+        </td>
+        <td><p>Aggregate <em>SuRE</em> p-values for each SNP group</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="SURE.merge.html">SURE.merge()</a></code> </p>
+        </td>
+        <td><p>Merge with fine-mapping and <em>SuRE</em> results</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="SURE.plot.html">SURE.plot()</a></code> </p>
+        </td>
+        <td><p>Plot <em>SuRE</em> results across SNP groups</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="SUSIE.html">SUSIE()</a></code> </p>
         </td>
         <td><p>Fine-map with SUSIE</p></td>
@@ -522,6 +669,66 @@ cell-type-specific epigenomic peaks and coaccessibility data.</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="VALIDATION.bootstrap.html">VALIDATION.bootstrap()</a></code> </p>
+        </td>
+        <td><p>Perform validation bootstrap procedure</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="VALIDATION.bootstrap_multimetric.html">VALIDATION.bootstrap_multimetric()</a></code> </p>
+        </td>
+        <td><p>Conduct bootstrap procedure on multiple columns</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="VALIDATION.bootstrap_plot.html">VALIDATION.bootstrap_plot()</a></code> </p>
+        </td>
+        <td><p>Plot permutation test results</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="VALIDATION.compare_bootstrap_distributions.html">VALIDATION.compare_bootstrap_distributions()</a></code> </p>
+        </td>
+        <td><p>Test whether permutation p-value distributions are different</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="VALIDATION.compare_support.html">VALIDATION.compare_support()</a></code> </p>
+        </td>
+        <td><p>Check whether Support level correlates with some variable</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="VALIDATION.permute.html">VALIDATION.permute()</a></code> </p>
+        </td>
+        <td><p>Validation permutation tests</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="VALIDATION.super_plot.html">VALIDATION.super_plot()</a></code> </p>
+        </td>
+        <td><p>Merge validation assays into a single plot</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="XGR.enrichment.html">XGR.enrichment()</a></code> </p>
+        </td>
+        <td><p>XGR enrichment</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="XGR.enrichment_bootstrap.html">XGR.enrichment_bootstrap()</a></code> </p>
+        </td>
+        <td><p>XGR enrichment (bootstrapped)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="XGR.enrichment_plot.html">XGR.enrichment_plot()</a></code> </p>
+        </td>
+        <td><p>Plot enrichment results</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="auto_topSNPs_sub.html">auto_topSNPs_sub()</a></code> </p>
         </td>
         <td><p>Automatically identify top SNP per locus</p></td>
@@ -537,6 +744,12 @@ cell-type-specific epigenomic peaks and coaccessibility data.</p></td>
           <p><code><a href="check_necessary_cols.html">check_necessary_cols()</a></code> </p>
         </td>
         <td><p>Check for necessary columns</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="dataframe_2_vcf.html">dataframe_2_vcf()</a></code> </p>
+        </td>
+        <td><p>Convert a dataframe to a vcf</p></td>
       </tr><tr>
         
         <td>
@@ -594,6 +807,13 @@ cell-type-specific epigenomic peaks and coaccessibility data.</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="import.bw.filt.html">import.bw.filt()</a></code> </p>
+        </td>
+        <td><p>Import a subset of a bigwig file
+based on the coordinates in a GRanges object (gr.dat).</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="import_topSNPs.html">import_topSNPs()</a></code> </p>
         </td>
         <td><p>Import top GWAS/QTL summary statistics</p></td>
@@ -612,9 +832,22 @@ cell-type-specific epigenomic peaks and coaccessibility data.</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="merge_celltype_specific_epigenomics.html">merge_celltype_specific_epigenomics()</a></code> </p>
+        </td>
+        <td><p>Merge all cell-type-specific epigenomics</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="merge_finemapping_results.html">merge_finemapping_results()</a></code> </p>
         </td>
         <td><p>Merge fine-mapping results from all loci</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="merge_finemapping_results_each.html">merge_finemapping_results_each()</a></code> </p>
+        </td>
+        <td><p>Create full cross-locus merged files for each dataset,
+then return a subset of those files as one super-merged table.</p></td>
       </tr><tr>
         
         <td>
@@ -627,6 +860,18 @@ cell-type-specific epigenomic peaks and coaccessibility data.</p></td>
           <p><code><a href="order_loci.html">order_loci()</a></code> </p>
         </td>
         <td><p>Order loci by UCS size, or alphabetically</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="popDat_1KGphase1.html">popDat_1KGphase1</a></code> </p>
+        </td>
+        <td><p>Population metadata: 1KGphase1</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="popDat_1KGphase3.html">popDat_1KGphase3</a></code> </p>
+        </td>
+        <td><p>Population metadata: 1KGphase3</p></td>
       </tr><tr>
         
         <td>
@@ -650,7 +895,13 @@ cell-type-specific epigenomic peaks and coaccessibility data.</p></td>
         <td>
           <p><code><a href="standardize_subset.html">standardize_subset()</a></code> </p>
         </td>
-        <td><p>Stanardize the locus subset</p></td>
+        <td><p>Standardize the locus subset</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="super_summary_plot.html">super_summary_plot()</a></code> </p>
+        </td>
+        <td><p>Merge all summary plots into one super plot</p></td>
       </tr><tr>
         
         <td>
@@ -660,9 +911,15 @@ cell-type-specific epigenomic peaks and coaccessibility data.</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="update_CS_cols.html">update_CS_cols()</a></code> </p>
+          <p><code><a href="update_cols.html">update_cols()</a></code> </p>
         </td>
         <td><p>Update CS cols</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="vcf_cleaning.html">vcf_cleaning()</a></code> </p>
+        </td>
+        <td><p>Remove old vcf files</p></td>
       </tr>
     </tbody>
     </table>
@@ -682,7 +939,7 @@ cell-type-specific epigenomic peaks and coaccessibility data.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

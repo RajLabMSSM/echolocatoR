@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -94,6 +94,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -112,7 +115,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -138,13 +141,13 @@
     <p>Download 1000 Genomes reference files</p>
     </div>
 
-    <pre class="usage"><span class='fu'>POLYFUN.download_ref_files</span>(
-
-    <span class='kw'>alkes_url</span> <span class='kw'>=</span> <span class='st'>"https://data.broadinstitute.org/alkesgroup/LDSCORE/1000G_Phase1_plinkfiles.tgz"</span>,
-  <span class='kw'>results_dir</span> <span class='kw'>=</span> <span class='st'>"./results"</span>,
-  <span class='kw'>force_overwrite</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>download_method</span> <span class='kw'>=</span> <span class='st'>"wget"</span>
-)</pre>
+    <pre class="usage"><span class='fu'>POLYFUN.download_ref_files</span><span class='op'>(</span>
+ 
+    alkes_url <span class='op'>=</span> <span class='st'>"https://data.broadinstitute.org/alkesgroup/LDSCORE/1000G_Phase1_plinkfiles.tgz"</span>,
+  results_dir <span class='op'>=</span> <span class='st'>"./results"</span>,
+  force_overwrite <span class='op'>=</span> <span class='cn'>F</span>,
+  download_method <span class='op'>=</span> <span class='st'>"wget"</span>
+<span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -157,6 +160,7 @@
 <code><a href='POLYFUN.gather_annotations.html'>POLYFUN.gather_annotations</a>()</code>,
 <code><a href='POLYFUN.gather_ldscores.html'>POLYFUN.gather_ldscores</a>()</code>,
 <code><a href='POLYFUN.get_precomputed_priors.html'>POLYFUN.get_precomputed_priors</a>()</code>,
+<code><a href='POLYFUN.h2_enrichment_SNPgroups_plot.html'>POLYFUN.h2_enrichment_SNPgroups_plot</a>()</code>,
 <code><a href='POLYFUN.h2_enrichment_SNPgroups.html'>POLYFUN.h2_enrichment_SNPgroups</a>()</code>,
 <code><a href='POLYFUN.h2_enrichment.html'>POLYFUN.h2_enrichment</a>()</code>,
 <code><a href='POLYFUN.help.html'>POLYFUN.help</a>()</code>,
@@ -170,9 +174,10 @@
 <code><a href='POLYFUN_SUSIE.html'>POLYFUN_SUSIE</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>ref.prefix</span> <span class='kw'>&lt;-</span> <span class='fu'>POLYFUN.download_ref_files</span>(<span class='kw'>force_overwrite</span><span class='kw'>=</span><span class='no'>T</span>)
-}</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>ref.prefix</span> <span class='op'>&lt;-</span> <span class='fu'>POLYFUN.download_ref_files</span><span class='op'>(</span>force_overwrite<span class='op'>=</span><span class='cn'>T</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -188,7 +193,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

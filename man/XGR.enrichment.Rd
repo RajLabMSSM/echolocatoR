@@ -20,6 +20,7 @@ XGR.enrichment(
 XGR enrichment
 }
 \examples{
+\dontrun{
 root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 
 merged_dat <- merge_finemapping_results(dataset = dirname(root), LD_reference = "UKB", minimum_support = 0)
@@ -29,6 +30,7 @@ gr.merged <- merge_celltype_specific_epigenomics()
 grouping_vars <- c("Study","Cell_type","Assay")
 
 enrich.lead <- XGR.enrichment(gr=gr, merged_dat=merged_dat, foreground_filter="leadSNP==T",  grouping_vars=grouping_vars)
+}
 }
 \seealso{
 Other XGR: 

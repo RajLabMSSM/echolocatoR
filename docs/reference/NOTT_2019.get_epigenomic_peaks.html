@@ -73,7 +73,7 @@ from Nott et al. (2019)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ from Nott et al. (2019)." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -95,6 +95,9 @@ from Nott et al. (2019)." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -113,7 +116,7 @@ from Nott et al. (2019)." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,13 +143,13 @@ from Nott et al. (2019)." />
 from Nott et al. (2019).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>NOTT_2019.get_epigenomic_peaks</span>(
-  <span class='kw'>assays</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ATAC"</span>, <span class='st'>"H3K27ac"</span>, <span class='st'>"H3K4me3"</span>),
-  <span class='kw'>cell_types</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"neurons"</span>, <span class='st'>"microglia"</span>, <span class='st'>"oligo"</span>, <span class='st'>"astrocytes"</span>),
-  <span class='kw'>convert_to_GRanges</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>nThread</span> <span class='kw'>=</span> <span class='fl'>4</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>
-)</pre>
+    <pre class="usage"><span class='fu'>NOTT_2019.get_epigenomic_peaks</span><span class='op'>(</span>
+  assays <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ATAC"</span>, <span class='st'>"H3K27ac"</span>, <span class='st'>"H3K4me3"</span><span class='op'>)</span>,
+  cell_types <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"neurons"</span>, <span class='st'>"microglia"</span>, <span class='st'>"oligo"</span>, <span class='st'>"astrocytes"</span><span class='op'>)</span>,
+  convert_to_GRanges <span class='op'>=</span> <span class='cn'>T</span>,
+  nThread <span class='op'>=</span> <span class='fl'>4</span>,
+  verbose <span class='op'>=</span> <span class='cn'>T</span>
+<span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
@@ -169,9 +172,22 @@ from Nott et al. (2019).</p>
 <code><a href='NOTT_2019.superenhancers.html'>NOTT_2019.superenhancers</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>PEAKS</span> <span class='kw'>&lt;-</span> <span class='fu'>NOTT_2019.get_epigenomic_peaks</span>()</div><div class='output co'>#&gt; [1] "++ Nott_2019:: Downloading and merging 12 BED files."
+    <pre class="examples"><div class='input'><span class='va'>PEAKS</span> <span class='op'>&lt;-</span> <span class='fu'>NOTT_2019.get_epigenomic_peaks</span><span class='op'>(</span>nThread<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "++ NOTT_2019:: Downloading and merging 12 peaks BED files."
+#&gt; [1] "++ NOTT_2019:: Downloading ATAC/NeuN_optimal_peak_IDR_ENCODE.ATAC.bed"
+#&gt; [1] "++ NOTT_2019:: Downloading ATAC/PU1_optimal_peak_IDR_ENCODE.ATAC.bed"
+#&gt; [1] "++ NOTT_2019:: Downloading ATAC/Olig2_optimal_peak_IDR_ENCODE.ATAC.bed"
+#&gt; [1] "++ NOTT_2019:: Downloading ATAC/LHX2_optimal_peak_IDR_ENCODE.ATAC.bed"
+#&gt; [1] "++ NOTT_2019:: Downloading H3K27ac/NeuN_optimal_peak.H3K27.bed"
+#&gt; [1] "++ NOTT_2019:: Downloading H3K27ac/PU1_optimal_peak.H3K27.bed"
+#&gt; [1] "++ NOTT_2019:: Downloading H3K27ac/Olig2_optimal_peak.H3K27.bed"
+#&gt; [1] "++ NOTT_2019:: Downloading H3K27ac/LHX2_optimal_peak.H3K27.bed"
+#&gt; [1] "++ NOTT_2019:: Downloading H3K4me3/NeuN_optimal_peak.H3K4me3.bed"
+#&gt; [1] "++ NOTT_2019:: Downloading H3K4me3/PU1_optimal_peak.H3K4me3.bed"
+#&gt; [1] "++ NOTT_2019:: Downloading H3K4me3/Olig2_optimal_peak.H3K4me3.bed"
+#&gt; [1] "++ NOTT_2019:: Downloading H3K4me3/LHX2_optimal_peak.H3K4me3.bed"
 #&gt; [1] "++ NOTT_2019:: Converting merged BED files to GRanges."
-#&gt; [1] "++ Nott_2019:: 634540 ranges retrieved."</div></pre>
+#&gt; [1] "++ NOTT_2019:: 634540 ranges retrieved."</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -187,7 +203,7 @@ from Nott et al. (2019).</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

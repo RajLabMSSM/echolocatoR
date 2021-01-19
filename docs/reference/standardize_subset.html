@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Stanardize the locus subset — standardize_subset • echolocatoR</title>
+<title>Standardize the locus subset — standardize_subset • echolocatoR</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Stanardize the locus subset — standardize_subset" />
+<meta property="og:title" content="Standardize the locus subset — standardize_subset" />
 <meta property="og:description" content="After querying a subset of the full summary statistics,
 this function converts it into a standardized format
 that the rest of echolocatoR can work with." />
@@ -74,7 +74,7 @@ that the rest of echolocatoR can work with." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -82,7 +82,7 @@ that the rest of echolocatoR can work with." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -96,6 +96,9 @@ that the rest of echolocatoR can work with." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -114,7 +117,7 @@ that the rest of echolocatoR can work with." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -131,7 +134,7 @@ that the rest of echolocatoR can work with." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Stanardize the locus subset</h1>
+    <h1>Standardize the locus subset</h1>
     <small class="dont-index">Source: <a href='https://github.com/RajLabMSSM/echolocatoR/blob/master/R/standardize.R'><code>R/standardize.R</code></a></small>
     <div class="hidden name"><code>standardize_subset.Rd</code></div>
     </div>
@@ -142,34 +145,35 @@ this function converts it into a standardized format
 that the rest of <em>echolocatoR</em> can work with.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>standardize_subset</span>(
-  <span class='no'>locus</span>,
-  <span class='kw'>top_SNPs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>subset_path</span> <span class='kw'>=</span> <span class='st'>"./Data"</span>,
-  <span class='kw'>chrom_col</span> <span class='kw'>=</span> <span class='st'>"CHR"</span>,
-  <span class='kw'>position_col</span> <span class='kw'>=</span> <span class='st'>"POS"</span>,
-  <span class='kw'>snp_col</span> <span class='kw'>=</span> <span class='st'>"SNP"</span>,
-  <span class='kw'>pval_col</span> <span class='kw'>=</span> <span class='st'>"P"</span>,
-  <span class='kw'>effect_col</span> <span class='kw'>=</span> <span class='st'>"Effect"</span>,
-  <span class='kw'>stderr_col</span> <span class='kw'>=</span> <span class='st'>"StdErr"</span>,
-  <span class='kw'>tstat_col</span> <span class='kw'>=</span> <span class='st'>"t_stat"</span>,
-  <span class='kw'>MAF_col</span> <span class='kw'>=</span> <span class='st'>"MAF"</span>,
-  <span class='kw'>freq_col</span> <span class='kw'>=</span> <span class='st'>"Freq"</span>,
-  <span class='kw'>N_cases_col</span> <span class='kw'>=</span> <span class='st'>"N_cases"</span>,
-  <span class='kw'>N_controls_col</span> <span class='kw'>=</span> <span class='st'>"N_controls"</span>,
-  <span class='kw'>N_cases</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>N_controls</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>proportion_cases</span> <span class='kw'>=</span> <span class='st'>"calculate"</span>,
-  <span class='kw'>sample_size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>A1_col</span> <span class='kw'>=</span> <span class='st'>"A1"</span>,
-  <span class='kw'>A2_col</span> <span class='kw'>=</span> <span class='st'>"A2"</span>,
-  <span class='kw'>gene_col</span> <span class='kw'>=</span> <span class='st'>"Gene"</span>,
-  <span class='kw'>QTL_prefixes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>return_dt</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>nThread</span> <span class='kw'>=</span> <span class='fl'>4</span>,
-  <span class='kw'>download_method</span> <span class='kw'>=</span> <span class='st'>"axel"</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>
-)</pre>
+    <pre class="usage"><span class='fu'>standardize_subset</span><span class='op'>(</span>
+  <span class='va'>locus</span>,
+  top_SNPs <span class='op'>=</span> <span class='cn'>NULL</span>,
+  fullSS_genome_build <span class='op'>=</span> <span class='st'>"hg19"</span>,
+  subset_path <span class='op'>=</span> <span class='st'>"./Data"</span>,
+  chrom_col <span class='op'>=</span> <span class='st'>"CHR"</span>,
+  position_col <span class='op'>=</span> <span class='st'>"POS"</span>,
+  snp_col <span class='op'>=</span> <span class='st'>"SNP"</span>,
+  pval_col <span class='op'>=</span> <span class='st'>"P"</span>,
+  effect_col <span class='op'>=</span> <span class='st'>"Effect"</span>,
+  stderr_col <span class='op'>=</span> <span class='st'>"StdErr"</span>,
+  tstat_col <span class='op'>=</span> <span class='st'>"t_stat"</span>,
+  MAF_col <span class='op'>=</span> <span class='st'>"MAF"</span>,
+  freq_col <span class='op'>=</span> <span class='st'>"Freq"</span>,
+  N_cases_col <span class='op'>=</span> <span class='st'>"N_cases"</span>,
+  N_controls_col <span class='op'>=</span> <span class='st'>"N_controls"</span>,
+  N_cases <span class='op'>=</span> <span class='cn'>NULL</span>,
+  N_controls <span class='op'>=</span> <span class='cn'>NULL</span>,
+  proportion_cases <span class='op'>=</span> <span class='st'>"calculate"</span>,
+  sample_size <span class='op'>=</span> <span class='cn'>NULL</span>,
+  A1_col <span class='op'>=</span> <span class='st'>"A1"</span>,
+  A2_col <span class='op'>=</span> <span class='st'>"A2"</span>,
+  gene_col <span class='op'>=</span> <span class='st'>"Gene"</span>,
+  QTL_prefixes <span class='op'>=</span> <span class='cn'>NULL</span>,
+  return_dt <span class='op'>=</span> <span class='cn'>T</span>,
+  nThread <span class='op'>=</span> <span class='fl'>4</span>,
+  download_method <span class='op'>=</span> <span class='st'>"axel"</span>,
+  verbose <span class='op'>=</span> <span class='cn'>T</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -179,7 +183,7 @@ that the rest of <em>echolocatoR</em> can work with.</p>
       <td><p>A data.frame with the genomic coordinates of the lead SNP for each locus.
 The lead SNP will be used as the center of the window when extracting subset from the full GWAS/QTL summary statistics file.
 Only one SNP per <strong>Locus</strong> should be included.
-At minimum, <code>top_SNPs</code> should include the following columns:</p><dl'>
+At minimum, <code>top_SNPs</code> should include the following columns:</p><dl>
 <dt><em>Locus</em></dt><dd><p>A unique name for each locus. Often, loci are named after a relevant gene (e.g. LRRK2) or based on the name/coordinates of the lead SNP (e.g. locus_chr12_40734202)</p></dd>
 <dt><em>CHR</em></dt><dd><p>The chromosome that the SNP is on. Can be "chr12" or "12" format.</p></dd>
 <dt><em>POS</em></dt><dd><p>The genomic position of the SNP (in basepairs)</p></dd>
@@ -281,12 +285,12 @@ then sample_size is inferred to be:  <code>max(N_cases) + max(N_controls)</code>
       <td><p>Name of the effect/risk allele column in the full summary stats.
  <strong><em>IMPORTANT</em></strong>: Make sure this actually the case for your full summary stats file.
 Unfortunately, different studies report different kinds of allele information in a non-standardized way.
-Meaning that A1/A2 can refer to any number of things:</p><dl'>
+Meaning that A1/A2 can refer to any number of things:</p><dl>
  <dt>effect/other alleles</dt><dd><p>in the case of diseases</p></dd>
  <dt>ref/alt alleles</dt><dd><p>where ref is the reference genome being used</p></dd>
  <dt>major/minor alleles</dt><dd><p>This dichotomy holds true for bi-allelic SNPs but not necessary multi-allelic SNPs</p></dd>
  
-</dl><p>This makes comparing summary stats across GWAS/QTL datasets very confusing for several reasons:</p><dl'>
+</dl><p>This makes comparing summary stats across GWAS/QTL datasets very confusing for several reasons:</p><dl>
  <dt>Multi-allelic SNPs</dt><dd><p>SNPs can have more than just 2 possible alleles (multi-allelic SNPs). Even if you compare the same SNP between two studies, you may accidentally be comparing totally different alleles.</p></dd>
  <dt>Valence</dt><dd><p>The valence (+/-) of per-SNP GWAS effect sizes/beta can be relative to different allele types between studies.
  For example, let's say in one GWAS study your effect size for SNP A is 1.5 relative to the major allele in one study,
@@ -332,7 +336,7 @@ This column will be used for filtering summary stats if supplying a named list o
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

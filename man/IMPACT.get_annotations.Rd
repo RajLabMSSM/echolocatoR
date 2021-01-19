@@ -24,8 +24,10 @@ Unfortunately, you have to download the entire chromosome file at once,
  coordinates in \code{subset_DT}.
 }
 \examples{
+\dontrun{
 data("BST1")
 annot_melt <- IMPACT.get_annotations(subset_DT=BST1)
+}
 }
 \seealso{
 Other IMPACT: 

@@ -80,7 +80,7 @@ Each tools will have the following columns:
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@ Each tools will have the following columns:
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -102,6 +102,9 @@ Each tools will have the following columns:
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -120,7 +123,7 @@ Each tools will have the following columns:
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -146,7 +149,7 @@ Each tools will have the following columns:
     <p>Fine-mapping will be repeated on the same locus using each of the tools in <code>finemap_method_list</code>.
 Then, all results will be merged into the locus-specific multi-finemap file,
 along with the original per-SNP GWAS/QTL summary statistics.
-Each tools will have the following columns:</p><dl'>
+Each tools will have the following columns:</p><dl>
  <dt>&lt;tool&gt;.PP</dt><dd><p>The posterior probability (PP) of a SNP being causal for the trait. Though this is a generalization and the exact meaning of PP will differ by tools (e.g. Posterior Inclusion Probability for SUSIE).</p></dd>
  <dt>&lt;tool&gt;.CS</dt><dd><p>Which credible set the SNP is part of (within a locus). If <code>=0</code>, then the SNP was not part of any credible set. Some tools only produce one credible set per locus.</p></dd>
 
@@ -154,37 +157,31 @@ Each tools will have the following columns:</p><dl'>
 
     </div>
 
-    <pre class="usage"><span class='fu'>multi_finemap</span>(
-  <span class='no'>locus_dir</span>,
-  <span class='no'>fullSS_path</span>,
-  <span class='no'>finemap_method_list</span>,
-  <span class='no'>subset_DT</span>,
-  <span class='no'>dataset_type</span>,
-  <span class='kw'>LD_matrix</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>n_causal</span> <span class='kw'>=</span> <span class='fl'>5</span>,
-  <span class='kw'>sample_size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>snp_col</span> <span class='kw'>=</span> <span class='st'>"SNP"</span>,
-  <span class='kw'>freq_col</span> <span class='kw'>=</span> <span class='st'>"Freq"</span>,
-  <span class='kw'>effect_col</span> <span class='kw'>=</span> <span class='st'>"Effect"</span>,
-  <span class='kw'>stderr_col</span> <span class='kw'>=</span> <span class='st'>"StdErr"</span>,
-  <span class='kw'>pval_col</span> <span class='kw'>=</span> <span class='st'>"P"</span>,
-  <span class='kw'>N_cases_col</span> <span class='kw'>=</span> <span class='st'>"N_cases"</span>,
-  <span class='kw'>N_controls_col</span> <span class='kw'>=</span> <span class='st'>"N_controls"</span>,
-  <span class='kw'>A1_col</span> <span class='kw'>=</span> <span class='st'>"A1"</span>,
-  <span class='kw'>A2_col</span> <span class='kw'>=</span> <span class='st'>"A2"</span>,
-  <span class='kw'>PAINTOR_QTL_datasets</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>PP_threshold</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
-  <span class='kw'>case_control</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>conda_env</span> <span class='kw'>=</span> <span class='st'>"echoR"</span>
-)</pre>
+    <pre class="usage"><span class='fu'>multi_finemap</span><span class='op'>(</span>
+  <span class='va'>locus_dir</span>,
+  <span class='va'>fullSS_path</span>,
+  <span class='va'>finemap_method_list</span>,
+  finemap_args <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>subset_DT</span>,
+  <span class='va'>dataset_type</span>,
+  LD_matrix <span class='op'>=</span> <span class='cn'>NULL</span>,
+  n_causal <span class='op'>=</span> <span class='fl'>5</span>,
+  sample_size <span class='op'>=</span> <span class='cn'>NULL</span>,
+  PAINTOR_QTL_datasets <span class='op'>=</span> <span class='cn'>NULL</span>,
+  PP_threshold <span class='op'>=</span> <span class='fl'>0.95</span>,
+  case_control <span class='op'>=</span> <span class='cn'>T</span>,
+  verbose <span class='op'>=</span> <span class='cn'>T</span>,
+  nThread <span class='op'>=</span> <span class='fl'>4</span>,
+  conda_env <span class='op'>=</span> <span class='st'>"echoR"</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>fullSS_path</th>
-      <td><p>Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.</p></td>
+      <td><p>Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.
+It is usually best to provide the absolute path rather than the relative path.</p></td>
     </tr>
     <tr>
       <th>dataset_type</th>
@@ -203,74 +200,6 @@ See tool-specific functions for details.</p></td>
       <td><p>The overall sample size of the study.
 If none is given, and <strong>N_cases</strong> and <strong>N_controls</strong> columns are present,
 then sample_size is inferred to be:  <code>max(N_cases) + max(N_controls)</code>.</p></td>
-    </tr>
-    <tr>
-      <th>snp_col</th>
-      <td><p>Name of the SNP RSID column in the full summary stats file.
-(<em>default: ="SNP"</em>)</p></td>
-    </tr>
-    <tr>
-      <th>freq_col</th>
-      <td><p>Name of the allele frequency column in the full summary stats file.
-Effect allele frequency is preferred, but the non-effect allele can be provided instead (though this may be less accurate).
-This column is not necessary unless <code>MAF_col="calculate"</code> or the MAF column is missing.
-(<em>default: ="Freq"</em>)</p></td>
-    </tr>
-    <tr>
-      <th>effect_col</th>
-      <td><p>Name of the effect size column in the full summary stats file.
-Effect size is preferred, but if not available other metrics like Beta for Odds Ratio can be used instead.
-(<em>default: ="Effect"</em>)</p></td>
-    </tr>
-    <tr>
-      <th>stderr_col</th>
-      <td><p>Name of the standard error  column in the full summary stats file.
-You can also set <code>stderr_col="calculate"</code> to infer standard error using: <code>effect / tstat</code>.
-(<em>default: ="StdErr"</em>)</p></td>
-    </tr>
-    <tr>
-      <th>pval_col</th>
-      <td><p>Name of the p-value column in the full summary stats file.
-Raw p-values are preferred, but if not available corrected p-values (e.g. FDR) can be used instead.
-(<em>default: ="P"</em>)</p></td>
-    </tr>
-    <tr>
-      <th>N_cases_col</th>
-      <td><p>Name of the column in the full summary stats that has the number of case subjects in the study.
-This can either be per SNP sample sizes, or one number repeated across all rows.
-Proxy cases (e.g. relatives of people with the disease being investigated) should be included in this estimate if any were used in the study.
-This column is not necesssary if <code>N_cases</code> parameter is provided.
-(<em>default: ="N_cases"</em>)</p></td>
-    </tr>
-    <tr>
-      <th>N_controls_col</th>
-      <td><p>Name of the column in the full summary stats that has the number of control subjects in the study.
- This can either be per SNP sample sizes, or one number repeated across all rows.
- This column is not necesssary if <code>N_controls</code> parameter is provided.
-(<em>default: ="N_controls"</em>)</p></td>
-    </tr>
-    <tr>
-      <th>A1_col</th>
-      <td><p>Name of the effect/risk allele column in the full summary stats.
- <strong><em>IMPORTANT</em></strong>: Make sure this actually the case for your full summary stats file.
-Unfortunately, different studies report different kinds of allele information in a non-standardized way.
-Meaning that A1/A2 can refer to any number of things:</p><dl'>
- <dt>effect/other alleles</dt><dd><p>in the case of diseases</p></dd>
- <dt>ref/alt alleles</dt><dd><p>where ref is the reference genome being used</p></dd>
- <dt>major/minor alleles</dt><dd><p>This dichotomy holds true for bi-allelic SNPs but not necessary multi-allelic SNPs</p></dd>
- 
-</dl><p>This makes comparing summary stats across GWAS/QTL datasets very confusing for several reasons:</p><dl'>
- <dt>Multi-allelic SNPs</dt><dd><p>SNPs can have more than just 2 possible alleles (multi-allelic SNPs). Even if you compare the same SNP between two studies, you may accidentally be comparing totally different alleles.</p></dd>
- <dt>Valence</dt><dd><p>The valence (+/-) of per-SNP GWAS effect sizes/beta can be relative to different allele types between studies.
- For example, let's say in one GWAS study your effect size for SNP A is 1.5 relative to the major allele in one study,
-  and the minor allele happens to be the one found in the reference genome.
-  You then try to compare that effect size to that of the same SNP in another GWAS.
-  But, the valence of the effect sizes in the 2nd GWAS study are all relative to the reference genome (instead of the minor allele),
-  giving the same SNP a value of -1.2. If you took the effect sizes at face value you'd say the signals are in opposite directions.
-  But once you take into account how the valences were determined in each study you realize that they're actually both positive relative to the major allele.</p></dd>
- 
-</dl><p>This process of reversing per-SNP valences based on aligning the alleles is known as allele flipping.
-This is important when comparing individual SNPs, but can also have an impact on colocalization results.</p></td>
     </tr>
     <tr>
       <th>PAINTOR_QTL_datasets</th>
@@ -297,11 +226,12 @@ For example, <code>PP_threshold=.95</code> means that all Credible Set SNPs will
 <code><a href='find_consensus_SNPs.html'>find_consensus_SNPs</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"BST1"</span>); <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"BST1_LD_matrix"</span>);
-<span class='no'>subset_DT</span> <span class='kw'>&lt;-</span> <span class='no'>BST1</span>
-<span class='no'>finemap_method_list</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ABF"</span>,<span class='st'>"SUSIE"</span>)
-}</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"BST1"</span><span class='op'>)</span>; <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"BST1_LD_matrix"</span><span class='op'>)</span>;
+<span class='va'>subset_DT</span> <span class='op'>&lt;-</span> <span class='va'>BST1</span>
+<span class='va'>finemap_method_list</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ABF"</span>,<span class='st'>"SUSIE"</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -317,7 +247,7 @@ For example, <code>PP_threshold=.95</code> means that all Credible Set SNPs will
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

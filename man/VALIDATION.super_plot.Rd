@@ -18,7 +18,9 @@ VALIDATION.super_plot(
 Merge validation assays into a single plot
 }
 \examples{
+\dontrun{
 plt.ALL <- VALIDATION.super_plot(root="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide")
+}
 }
 \seealso{
 Other VALIDATION: 

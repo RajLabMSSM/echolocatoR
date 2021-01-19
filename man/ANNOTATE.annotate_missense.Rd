@@ -10,8 +10,10 @@ ANNOTATE.annotate_missense(merged_DT, snp_filter = "Support>0")
 Annotate any missense variants
 }
 \examples{
+\dontrun{
 data("merged_DT");
 annotated_DT <- ANNOTATE.annotate_missense(merged_DT=merged_DT, snp_filter="Support>0")
+}
 }
 \seealso{
 Other annotate: 

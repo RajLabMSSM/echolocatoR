@@ -300,9 +300,11 @@ FINEMAP.construct_master <- function(locus_dir,
 #' @source
 #' \url{http://www.christianbenner.com}
 #' @examples
+#' \dontrun{
 #' data("locus_dir"); data("BST1");
 #' finemap_DT <- BST1
 #' subset_DT <-FINEMAP.process_results(locus_dir=locus_dir, subset_DT=finemap_DT)
+#' }
 FINEMAP.process_results <- function(locus_dir,
                                     subset_DT,
                                     credset_thresh=.95,

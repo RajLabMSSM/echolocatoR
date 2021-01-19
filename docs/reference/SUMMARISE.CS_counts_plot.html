@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -94,6 +94,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -112,7 +115,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -138,14 +141,15 @@
     <p>Loci ordered by UCS size (smallest to largest).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>SUMMARISE.CS_counts_plot</span>(
-  <span class='no'>merged_DT</span>,
-  <span class='kw'>show_numbers</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>ylabel</span> <span class='kw'>=</span> <span class='st'>"Locus"</span>,
-  <span class='kw'>legend_nrow</span> <span class='kw'>=</span> <span class='fl'>3</span>,
-  <span class='kw'>label_yaxis</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>show_plot</span> <span class='kw'>=</span> <span class='no'>T</span>
-)</pre>
+    <pre class="usage"><span class='fu'>SUMMARISE.CS_counts_plot</span><span class='op'>(</span>
+  <span class='va'>merged_DT</span>,
+  show_numbers <span class='op'>=</span> <span class='cn'>T</span>,
+  ylabel <span class='op'>=</span> <span class='st'>"Locus"</span>,
+  legend_nrow <span class='op'>=</span> <span class='fl'>3</span>,
+  label_yaxis <span class='op'>=</span> <span class='cn'>T</span>,
+  top_CS_only <span class='op'>=</span> <span class='cn'>F</span>,
+  show_plot <span class='op'>=</span> <span class='cn'>T</span>
+<span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -156,10 +160,13 @@
 <code><a href='SUMMARISE.get_CS_counts.html'>SUMMARISE.get_CS_counts</a>()</code>,
 <code><a href='SUMMARISE.get_SNPgroup_counts.html'>SUMMARISE.get_SNPgroup_counts</a>()</code>,
 <code><a href='SUMMARISE.peak_overlap_plot.html'>SUMMARISE.peak_overlap_plot</a>()</code>,
-<code><a href='results_report.html'>results_report</a>()</code></p></div>
+<code><a href='SUMMARISE.plot_dataset_overlap.html'>SUMMARISE.plot_dataset_overlap</a>()</code>,
+<code><a href='results_report.html'>results_report</a>()</code>,
+<code><a href='super_summary_plot.html'>super_summary_plot</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>gg_CS</span> <span class='kw'>&lt;-</span> <span class='fu'>SUMMARISE.CS_counts_plot</span>(<span class='kw'>merged_DT</span><span class='kw'>=</span><span class='no'>merged_DT</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 86 rows containing missing values (position_stack).</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 86 rows containing missing values (position_stack).</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 415 rows containing missing values (position_stack).</span></div><div class='img'><img src='SUMMARISE.CS_counts_plot-1.png' alt='' width='700' height='433' /></div></pre>
+    <pre class="examples"><div class='input'><span class='va'>gg_CS</span> <span class='op'>&lt;-</span> <span class='fu'>SUMMARISE.CS_counts_plot</span><span class='op'>(</span>merged_DT<span class='op'>=</span><span class='va'>merged_DT</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 92 rows containing missing values (position_stack).</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 92 rows containing missing values (position_stack).</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 415 rows containing missing values (position_stack).</span></div><div class='img'><img src='SUMMARISE.CS_counts_plot-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -175,7 +182,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

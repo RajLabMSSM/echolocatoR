@@ -296,13 +296,15 @@ calculate_tstat <- function(finemap_dat,
 #'
 #' @family standardizing functions
 #' @examples
+#' \dontrun{
 #' data("BST1");
 #' subset_DT <- data.frame(BST1)[,colnames(BST1)!="MAF"]
 #' BST1 <- get_UKB_MAF(subset_DT=subset_DT )
+#' }
 get_UKB_MAF <- function(subset_DT,
                         output_path = "./Data/Reference/UKB_MAF",
                         force_new_maf = F,
-                        download_method="wget",
+                        download_method="axel",
                         nThread=4,
                         verbose=T){
   printer("UKB MAF:: Extracting MAF from UKB reference.",v=verbose)

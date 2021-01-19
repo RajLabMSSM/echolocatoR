@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -94,6 +94,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -112,7 +115,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -138,35 +141,39 @@
     <p>Handles which query method to use</p>
     </div>
 
-    <pre class="usage"><span class='fu'>query_handler</span>(
-  <span class='no'>locus</span>,
-  <span class='no'>fullSS_path</span>,
-  <span class='kw'>top_SNPs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>subset_path</span>,
-  <span class='kw'>min_POS</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>max_POS</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>bp_distance</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>,
-  <span class='kw'>locus_col</span> <span class='kw'>=</span> <span class='st'>"Gene"</span>,
-  <span class='kw'>chrom_col</span> <span class='kw'>=</span> <span class='st'>"CHR"</span>,
-  <span class='kw'>position_col</span> <span class='kw'>=</span> <span class='st'>"POS"</span>,
-  <span class='kw'>file_sep</span> <span class='kw'>=</span> <span class='st'>"\t"</span>,
-  <span class='kw'>query_by</span> <span class='kw'>=</span> <span class='st'>"coordinates"</span>,
-  <span class='kw'>probe_path</span> <span class='kw'>=</span> <span class='st'>"./Data/eQTL/gene.ILMN.map"</span>
-)</pre>
+    <pre class="usage"><span class='fu'>query_handler</span><span class='op'>(</span>
+  <span class='va'>fullSS_path</span>,
+  locus_dir <span class='op'>=</span> <span class='cn'>NULL</span>,
+  top_SNPs <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>subset_path</span>,
+  min_POS <span class='op'>=</span> <span class='cn'>NA</span>,
+  max_POS <span class='op'>=</span> <span class='cn'>NA</span>,
+  bp_distance <span class='op'>=</span> <span class='fl'>5e+05</span>,
+  locus_col <span class='op'>=</span> <span class='st'>"Gene"</span>,
+  chrom_col <span class='op'>=</span> <span class='st'>"CHR"</span>,
+  chrom_type <span class='op'>=</span> <span class='cn'>NULL</span>,
+  position_col <span class='op'>=</span> <span class='st'>"POS"</span>,
+  file_sep <span class='op'>=</span> <span class='st'>"\t"</span>,
+  query_by <span class='op'>=</span> <span class='st'>"coordinates"</span>,
+  probe_path <span class='op'>=</span> <span class='st'>"./Data/eQTL/gene.ILMN.map"</span>,
+  conda_env <span class='op'>=</span> <span class='st'>"echoR"</span>,
+  verbose <span class='op'>=</span> <span class='cn'>T</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>fullSS_path</th>
-      <td><p>Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.</p></td>
+      <td><p>Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.
+It is usually best to provide the absolute path rather than the relative path.</p></td>
     </tr>
     <tr>
       <th>top_SNPs</th>
       <td><p>A data.frame with the genomic coordinates of the lead SNP for each locus.
 The lead SNP will be used as the center of the window when extracting subset from the full GWAS/QTL summary statistics file.
 Only one SNP per <strong>Locus</strong> should be included.
-At minimum, <code>top_SNPs</code> should include the following columns:</p><dl'>
+At minimum, <code>top_SNPs</code> should include the following columns:</p><dl>
 <dt><em>Locus</em></dt><dd><p>A unique name for each locus. Often, loci are named after a relevant gene (e.g. LRRK2) or based on the name/coordinates of the lead SNP (e.g. locus_chr12_40734202)</p></dd>
 <dt><em>CHR</em></dt><dd><p>The chromosome that the SNP is on. Can be "chr12" or "12" format.</p></dd>
 <dt><em>POS</em></dt><dd><p>The genomic position of the SNP (in basepairs)</p></dd>
@@ -181,13 +188,13 @@ At minimum, <code>top_SNPs</code> should include the following columns:</p><dl'>
       <th>min_POS</th>
       <td><p>Manually set the minimum genomic position for your locus subset.
 <code>min_POS</code> can clip the window size set by <code>bp_distance</code>.
-Only use this parameter when fine-mapping one locus at a time.</p></td>
+Can also be a list of positions (one for each locus) (e.g. <code>min_POS=top_SNPs$min_POS</code>).</p></td>
     </tr>
     <tr>
       <th>max_POS</th>
       <td><p>Manually set the maximum genomic position for your locus subset.
 <code>max_POS</code> can clip the window size set by <code>bp_distance</code>.
-Only use this parameter when fine-mapping one locus at a time.</p></td>
+Can also be a list of positions (one for each locus) (e.g. <code>max_POS=top_SNPs$max_POS</code>).</p></td>
     </tr>
     <tr>
       <th>bp_distance</th>
@@ -220,7 +227,7 @@ This parameter is only necessary if <code>query_by!="tabix"</code>.</p></td>
     <tr>
       <th>query_by</th>
       <td><p>Choose which method you want to use to extract locus subsets from the full summary stats file.
-Methods include:</p><dl'>
+Methods include:</p><dl>
 <dt>"tabix"</dt><dd><p>Convert the full summary stats file in an indexed tabix file. Makes querying lightning fast after the initial conversion is done. (<em>default</em>)</p></dd>
 <dt>"coordinates"</dt><dd><p>Extract locus subsets using min/max genomic coordinates with <em>awk</em>.</p></dd>
 
@@ -230,6 +237,14 @@ Methods include:</p><dl'>
       <th>probe_path</th>
       <td><p>The location of the file containing translations between probe IDs and gene symbols.
 Only used for certain eQTL datasets.</p></td>
+    </tr>
+    <tr>
+      <th>conda_env</th>
+      <td><p>The name of a conda environment to use.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>Whether <span class="pkg">echolocatoR</span> should be verbose or silent.</p></td>
     </tr>
     </table>
 
@@ -262,7 +277,7 @@ Only used for certain eQTL datasets.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

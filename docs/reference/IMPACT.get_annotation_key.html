@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get <em>IMPACT</em> annotation key — IMPACT.get_annotation_key • echolocatoR</title>
+<title>Get IMPACT annotation key — IMPACT.get_annotation_key • echolocatoR</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Get <em>IMPACT</em> annotation key — IMPACT.get_annotation_key" />
+<meta property="og:title" content="Get IMPACT annotation key — IMPACT.get_annotation_key" />
 <meta property="og:description" content="Inlcludes the study source, tissue,cell type/line,
 and cell subtype of each of the 500 annotations in IMPACT." />
 
@@ -73,7 +73,7 @@ and cell subtype of each of the 500 annotations in IMPACT." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ and cell subtype of each of the 500 annotations in IMPACT." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -95,6 +95,9 @@ and cell subtype of each of the 500 annotations in IMPACT." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -113,7 +116,7 @@ and cell subtype of each of the 500 annotations in IMPACT." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,14 +143,14 @@ and cell subtype of each of the 500 annotations in IMPACT." />
 and cell subtype of each of the 500 annotations in <em>IMPACT</em>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>IMPACT.get_annotation_key</span>(
-
-    <span class='kw'>URL</span> <span class='kw'>=</span> <span class='st'>"https://github.com/immunogenomics/IMPACT/raw/master/IMPACT707/IMPACT_annotation_key.txt"</span>,
-  <span class='kw'>save_path</span> <span class='kw'>=</span> <span class='st'>"./IMPACT/IMPACT_annotation_key.txt.gz"</span>,
-  <span class='kw'>save_key</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>force_new_download</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>
-)</pre>
+    <pre class="usage"><span class='fu'>IMPACT.get_annotation_key</span><span class='op'>(</span>
+ 
+    URL <span class='op'>=</span> <span class='st'>"https://github.com/immunogenomics/IMPACT/raw/master/IMPACT707/IMPACT_annotation_key.txt"</span>,
+  save_path <span class='op'>=</span> <span class='st'>"./IMPACT/IMPACT_annotation_key.txt.gz"</span>,
+  save_key <span class='op'>=</span> <span class='cn'>F</span>,
+  force_new_download <span class='op'>=</span> <span class='cn'>F</span>,
+  verbose <span class='op'>=</span> <span class='cn'>T</span>
+<span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -163,7 +166,22 @@ and cell subtype of each of the 500 annotations in <em>IMPACT</em>.</p>
 <code><a href='prepare_mat_meta.html'>prepare_mat_meta</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>annot.key</span> <span class='kw'>&lt;-</span> <span class='fu'>IMPACT.get_annotation_key</span>(<span class='kw'>save_key</span><span class='kw'>=</span><span class='no'>F</span>)</div><div class='output co'>#&gt; [1] "+ IMPACT:: Downloading annotation key from GitHub..."</div></pre>
+    <pre class="examples"><div class='input'><span class='va'>annot.key</span> <span class='op'>&lt;-</span> <span class='fu'>IMPACT.get_annotation_key</span><span class='op'>(</span>save_key<span class='op'>=</span><span class='cn'>F</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "+ IMPACT:: Downloading annotation key from GitHub..."</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>annot.key</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;    Accession    TF    Tissue                 Cell IMPACT
+#&gt; 1: GSM449525  ETS1     BLOOD  Jurkat (Clone E6-1)      1
+#&gt; 2: GSM449526 RUNX1     BLOOD  Jurkat (Clone E6-1)      2
+#&gt; 3: GSM468213  RXRA     BLOOD                 UPR9      3
+#&gt; 4: GSM468214  RXRA     BLOOD                 UPR9      3
+#&gt; 5: GSM534471  CTCF ADIPOCYTE Adipose stromal cell      4
+#&gt; 6: GSM534478  CTCF ADIPOCYTE Adipose stromal cell      4
+#&gt;                                            File      CellDeriv  Annot
+#&gt; 1:  PRJNA119913_GSM449525_ETS1_peaks.narrowPeak         T.cell Annot1
+#&gt; 2: PRJNA119913_GSM449526_RUNX1_peaks.narrowPeak         T cell Annot2
+#&gt; 3:  PRJNA121283_GSM468213_RXRA_peaks.narrowPeak        Myeloid Annot3
+#&gt; 4:  PRJNA121283_GSM468214_RXRA_peaks.narrowPeak        Myeloid Annot3
+#&gt; 5:  PRJNA126099_GSM534471_CTCF_peaks.narrowPeak Adipose stroma Annot4
+#&gt; 6:  PRJNA126099_GSM534478_CTCF_peaks.narrowPeak Adipose stroma Annot4</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -179,7 +197,7 @@ and cell subtype of each of the 500 annotations in <em>IMPACT</em>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

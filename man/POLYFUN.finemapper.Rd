@@ -23,10 +23,6 @@ POLYFUN.finemapper(
 \description{
 Run \emph{PolyFun+SUSIE} fine-mapping pipeline
 }
-\examples{
-data("BST1")
-finemap_dat=BST1
-}
 \seealso{
 Other polyfun: 
 \code{\link{POLYFUN.compute_priors}()},

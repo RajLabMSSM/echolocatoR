@@ -23,9 +23,11 @@ FINEMAP.process_results(
 Post-processing of \code{FINEMAP} results
 }
 \examples{
+\dontrun{
 data("locus_dir"); data("BST1");
 finemap_DT <- BST1
 subset_DT <-FINEMAP.process_results(locus_dir=locus_dir, subset_DT=finemap_DT)
+}
 }
 \seealso{
 Other FINEMAP: 

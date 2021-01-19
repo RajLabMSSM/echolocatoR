@@ -10,7 +10,7 @@ axel(
   background = F,
   nThread = 4,
   force_overwrite = F,
-  quiet = F,
+  quiet = T,
   alternate = T,
   check_certificates = F
 )

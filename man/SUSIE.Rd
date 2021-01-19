@@ -40,8 +40,22 @@ This will also be used when creating the subdirectory where your results will be
 If none is given, and \strong{N_cases} and \strong{N_controls} columns are present,
 then sample_size is inferred to be:  \code{max(N_cases) + max(N_controls)}.}
 
+\item{prior_weights}{a p vector of prior probability that each element is non-zero}
+
 \item{PP_threshold}{The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
 For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.}
+
+\item{scaled_prior_variance}{the scaled prior variance (vector of length L, or scalar. In latter case gets repeated L times)}
+
+\item{estimate_residual_variance}{indicates whether to estimate residual variance}
+
+\item{estimate_prior_variance}{indicates whether to estimate prior}
+
+\item{residual_variance}{the residual variance (defaults to variance of y)}
+
+\item{max_iter}{maximum number of iterations to perform}
+
+\item{estimate_prior_method}{The method used for estimating prior variance.}
 
 \item{rescale_priors}{If prior probabiltities are supplied,
 rescale them from 0-1 (i.e. \code{rescaled_priors = priors / sum(priors)}).}
@@ -50,7 +64,7 @@ rescale them from 0-1 (i.e. \code{rescaled_priors = priors / sum(priors)}).}
 fine-mapping algorithm learning the causal variants.
 \strong{WARNING!:} Making this plot can take a long time if there's many iterations.}
 
-\item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
+\item{verbose}{if true outputs some progress messages}
 }
 \description{
 Sum of Single Effects (SuSiE): Iterative Bayesian Step-wise Selection

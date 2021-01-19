@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE, error = TRUE} 
+```{r, include = T, error = T} 
 root.dir <- "~/Desktop"
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -24,6 +24,8 @@ knitr::opts_knit$set(root.dir = root.dir)
 
 ```{r setup, root.dir="~/Desktop"}
 library(echolocatoR) 
+results_dir <- file.path(root.dir,"results")
+dir.create(results_dir, showWarnings = F, recursive = F)
 ```
 
 # QTL pipeline
@@ -35,7 +37,7 @@ So we're just going to make one directly from the full summary stats file itself
 - In this case, you'll want to make sure to set `grouping_vars=c("Locus","Gene")` so that you get top SNPs for each eGene-locus pair (not just one SNP per locus).  
 
 ```{r  Prepare `top_SNPs` data.frame}
-fullSS_path <- "/ad-omics/microglia_omics/Fine_Mapping/Kunkle_Microglia_all_regions/merged_coloc_results.snp.tsv.gz"
+fullSS_path <- "/Users/schilder/Desktop/Microglia_all_regions_Kunkle_2019_COLOC.snp-level.tsv.gz"
 
 top_SNPs <- import_topSNPs(  
   topSS = fullSS_path,
@@ -74,7 +76,7 @@ loci
 ```{r}
 Kunkle_2019.microgliaQTL <- finemap_loci(# GENERAL ARGUMENTS 
                                         top_SNPs = top_SNPs,  
-                                        results_dir = "~/Desktop/results",
+                                        results_dir = results_dir,
                                         
                                         loci = loci,
                                         dataset_name = "Kunkle_2019.microgliaQTL",
@@ -121,3 +123,13 @@ Kunkle_2019.microgliaQTL <- finemap_loci(# GENERAL ARGUMENTS
                  )
 ```
 
+
+# Session info
+
+<details> 
+
+```{r Session Info, attr.output='style="max-height: 200px;"'}
+sessioninfo::session_info()
+```
+
+</details>

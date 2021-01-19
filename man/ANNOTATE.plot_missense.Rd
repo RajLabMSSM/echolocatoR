@@ -18,9 +18,11 @@ ANNOTATE.plot_missense(
 Plot any missense variants
 }
 \examples{
+\dontrun{
 data("merged_DT");
 gg_missense <- ANNOTATE.plot_missense(merged_DT=merged_DT, snp_filter="Support>0")
 gg_missense <- ANNOTATE.plot_missense(merged_DT=merged_DT, snp_filter="Consensus_SNP==T")
+}
 }
 \seealso{
 Other annotate: 

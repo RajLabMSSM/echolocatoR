@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot <code>motifbreakR</code> results — MOTIFBREAKR.plot • echolocatoR</title>
+<title>Plot motifbreakR results — MOTIFBREAKR.plot • echolocatoR</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Plot <code>motifbreakR</code> results — MOTIFBREAKR.plot" />
+<meta property="og:title" content="Plot motifbreakR results — MOTIFBREAKR.plot" />
 <meta property="og:description" content="Plot motifbreakR results" />
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -94,6 +94,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -112,7 +115,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -138,7 +141,15 @@
     <p>Plot <code>motifbreakR</code> results</p>
     </div>
 
-    <pre class="usage"><span class='fu'>MOTIFBREAKR.plot</span>(<span class='no'>mb.results</span>, <span class='kw'>rsid</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>effect</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"strong"</span>, <span class='st'>"weak"</span>))</pre>
+    <pre class="usage"><span class='fu'>MOTIFBREAKR.plot</span><span class='op'>(</span>
+  <span class='va'>mb.results</span>,
+  mb.filter <span class='op'>=</span> <span class='cn'>NULL</span>,
+  rsid <span class='op'>=</span> <span class='cn'>NULL</span>,
+  effect <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"strong"</span>, <span class='st'>"weak"</span><span class='op'>)</span>,
+  save_dir <span class='op'>=</span> <span class='cn'>NULL</span>,
+  height <span class='op'>=</span> <span class='fl'>3</span>,
+  width <span class='op'>=</span> <span class='fl'>7</span>
+<span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
@@ -149,16 +160,26 @@
 <a href='https://github.com/Simon-Coetzee/MotifBreakR'>https://github.com/Simon-Coetzee/MotifBreakR</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='co'># mb.results &lt;- readRDS("/sc/arion/projects/pd-omics/brian/motifbreakR/motifbreakR_results.rds")</span>
-<span class='no'>mb.results</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span>(<span class='st'>"~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/motifbreakR/motifbreakR_results.rds"</span>)
-<span class='fu'>MOTIFBREAKR.plot</span>(<span class='kw'>mb.results</span><span class='kw'>=</span><span class='no'>mb.results</span>, <span class='kw'>rsid</span><span class='kw'>=</span><span class='st'>"rs114528427"</span>)
-
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># Example from motifbreakR</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>motifbreakR</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"example.results"</span>)
-<span class='kw pkg'>motifbreakR</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/motifbreakR/man/plotMB.html'>plotMB</a></span>(<span class='kw'>mb.results</span><span class='kw'>=</span><span class='no'>example.results</span>, <span class='st'>"rs2661839"</span>, <span class='kw'>effect</span> <span class='kw'>=</span> <span class='st'>"strong"</span>)
-}</div></pre>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>motifbreakR</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"example.results"</span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/RajLabMSSM/echolocatoR'>echolocatoR</a></span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"merged_DT"</span><span class='op'>)</span>
+<span class='va'>root</span> <span class='op'>&lt;-</span> <span class='st'>"/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/motifbreakR"</span>
+
+<span class='va'>mb.results</span><span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>root</span>,<span class='st'>"DNAH17.pvalues.RDS"</span><span class='op'>)</span><span class='op'>)</span>
+
+<span class='co'># Get overlap with PEAKS</span>
+<span class='co'># PEAKS &lt;- NOTT_2019.get_epigenomic_peaks(convert_to_GRanges = T)</span>
+<span class='va'>REGIONS</span> <span class='op'>&lt;-</span> <span class='fu'><a href='NOTT_2019.get_regulatory_regions.html'>NOTT_2019.get_regulatory_regions</a></span><span class='op'>(</span>as.granges <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span>
+<span class='va'>gr.hits</span> <span class='op'>&lt;-</span> <span class='fu'><a href='GRanges_overlap.html'>GRanges_overlap</a></span><span class='op'>(</span>dat1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>merged_DT</span>, <span class='va'>Consensus_SNP</span><span class='op'>)</span>, chrom_col.1 <span class='op'>=</span> <span class='st'>"CHR"</span>, start_col.1 <span class='op'>=</span> <span class='st'>"POS"</span>, end_col.1 <span class='op'>=</span> <span class='st'>"POS"</span>, dat2 <span class='op'>=</span> <span class='va'>REGIONS</span><span class='op'>)</span>
+<span class='va'>mb.filter</span> <span class='op'>&lt;-</span> <span class='fu'><a href='MOTIFBREAKR.filter.html'>MOTIFBREAKR.filter</a></span><span class='op'>(</span>merged_DT <span class='op'>=</span> <span class='va'>merged_DT</span>, mb.results <span class='op'>=</span> <span class='va'>mb.results</span>, pct_threshold<span class='op'>=</span><span class='cn'>NULL</span><span class='op'>)</span>
+
+<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>mb.filter</span>, <span class='va'>SNP_id</span> <span class='op'>%in%</span> <span class='va'>gr.hits</span><span class='op'>$</span><span class='va'>SNP</span><span class='op'>)</span>
+<span class='va'>plot_paths</span> <span class='op'>&lt;-</span> <span class='fu'>MOTIFBREAKR.plot</span><span class='op'>(</span>mb.results<span class='op'>=</span><span class='va'>mb.results</span>, mb.filter<span class='op'>=</span><span class='va'>mb.filter</span>, save_dir<span class='op'>=</span><span class='st'>"~/Desktop"</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -174,7 +195,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

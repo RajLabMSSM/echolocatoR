@@ -13,9 +13,11 @@ VALIDATION.compare_bootstrap_distributions(
 Test whether permutation p-value distributions are different
 }
 \examples{
+\dontrun{
 root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019"
 permute.IMPACT <-  data.table::fread(file.path(root,"_genome_wide/IMPACT/Nalls23andMe_2019.IMPACT.permutations.csv.gz"))
 res <- VALIDATION.permute_compare_results(permute_res=permute.IMPACT)
+}
 }
 \seealso{
 Other VALIDATION: 

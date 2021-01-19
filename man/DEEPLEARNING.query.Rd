@@ -20,6 +20,7 @@ DEEPLEARNING.query(
 Iteratively collect deep learning annotations
 }
 \examples{
+\dontrun{
 root = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 merged_dat <- merge_finemapping_results(dataset = "Data/GWAS/Nalls23andMe_2019", LD_reference = "UKB", minimum_support = 0)
 merged_dat <- find_consensus_SNPs_no_PolyFun(merged_dat)
@@ -33,6 +34,7 @@ data.table::fwrite(ANNOT.ae, file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.
 ANNOT.vl <- DEEPLEARNING.query (merged_dat=merged_dat, level="Variant_Level", type="annot")
 data.table::fwrite(ANNOT.vl, file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Variant_Level.csv.gz"))
 
+}
 }
 \seealso{
 Other DEEPLEARNING: 

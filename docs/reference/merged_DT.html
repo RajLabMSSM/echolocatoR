@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title><em>echolocatoR</em> output example (all loci) — merged_DT • echolocatoR</title>
+<title>echolocatoR output example (all loci) — merged_DT • echolocatoR</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="<em>echolocatoR</em> output example (all loci) — merged_DT" />
+<meta property="og:title" content="echolocatoR output example (all loci) — merged_DT" />
 <meta property="og:description" content="An example results file after running finemap_loci()
  on all Parkinson's disease (PD)-associated loci." />
 
@@ -73,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -95,6 +95,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -113,7 +116,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,12 +143,12 @@
  on all Parkinson's disease (PD)-associated loci.</p>
     </div>
 
-    <pre class="usage"><span class='no'>merged_DT</span></pre>
+    <pre class="usage"><span class='va'>merged_DT</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>data.table</p><dl'>
+    <p>data.table</p><dl>
   <dt>SNP</dt><dd><p>SNP RSID</p></dd>
   <dt>CHR</dt><dd><p>Chromosome</p></dd>
   <dt>POS</dt><dd><p>Genomic position (in basepairs)</p></dd>
@@ -162,11 +165,11 @@
 by <a href='https://www.biorxiv.org/content/10.1101/388165v3'>Nalls et al. (bioRxiv)</a>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>merged_DT</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='merge_finemapping_results.html'>merge_finemapping_results</a></span>(<span class='kw'>dataset</span> <span class='kw'>=</span> <span class='st'>"~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019"</span>)
-<span class='no'>merged_DT</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='update_CS_cols.html'>update_CS_cols</a></span>(<span class='kw'>finemap_dat</span><span class='kw'>=</span><span class='no'>merged_DT</span>)
-<span class='kw pkg'>usethis</span><span class='kw ns'>::</span><span class='fu'><a href='https://usethis.r-lib.org/reference/use_data.html'>use_data</a></span>(<span class='no'>merged_DT</span>, <span class='kw'>overwrite</span><span class='kw'>=</span><span class='no'>T</span>)
-}</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>merged_DT</span> <span class='op'>&lt;-</span> <span class='fu'><a href='merge_finemapping_results.html'>merge_finemapping_results</a></span><span class='op'>(</span>dataset <span class='op'>=</span> <span class='st'>"~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019"</span>, minimum_support<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
+<span class='fu'>usethis</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/usethis/man/use_data.html'>use_data</a></span><span class='op'>(</span><span class='va'>merged_DT</span>, overwrite<span class='op'>=</span><span class='cn'>T</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -182,7 +185,7 @@ by <a href='https://www.biorxiv.org/content/10.1101/388165v3'>Nalls et al. (bioR
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

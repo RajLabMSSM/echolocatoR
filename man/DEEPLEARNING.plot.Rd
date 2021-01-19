@@ -24,6 +24,7 @@ DEEPLEARNING.plot(
 Plot deep learning predictions
 }
 \examples{
+\dontrun{
 root = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 
 #### Allelic_Effect ####
@@ -35,4 +36,5 @@ path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.anno
 annot.melt <-  data.table::fread(path, nThread=8)
 
 gp <- DEEPLEARNING.plot(annot.melt=annot.melt, facet_formula="Tissue ~ Model", comparisons_filter=NULL, save_path=gsub("\\\\.csv\\\\.gz",".png",path))
+}
 }

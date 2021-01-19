@@ -42,7 +42,8 @@ ROADMAP.tabix <- function(results_path,
                           min_pos,
                           max_pos,
                           eid,
-                          convert_to_GRanges=T){
+                          convert_to_GRanges=T,
+                          conda_env="echoR"){
   dir.create(results_path, showWarnings = F, recursive = T)
   chrom <- paste0("chr",gsub("chr","",base::tolower(chrom)))
   tbx_start = Sys.time()
@@ -50,8 +51,9 @@ ROADMAP.tabix <- function(results_path,
   fname <- paste0(eid,"_15_coreMarks_dense.bed.bgz")
   URL <- file.path("https://egg2.wustl.edu/roadmap/data/byFileType/chromhmmSegmentations/ChmmModels/coreMarks/jointModel/final",
                    fname) # _15_coreMarks_stateno.bed.gz
-  cmd <- paste0("cd ",results_path," &&",
-                " tabix -p bed --begin 2 --end 3 ", URL," ",
+  tabix <- CONDA.find_package(package = "tabix", conda_env = "echoR")
+  cmd <- paste0("cd ",results_path," && ",
+                tabix," -p bed --begin 2 --end 3 ", URL," ",
                 chrom,":",min_pos,"-",max_pos)
   print(cmd)
   # out <- system(cmd, intern = T)
@@ -77,12 +79,15 @@ ROADMAP.tabix <- function(results_path,
 #' @inheritParams  ROADMAP.tabix
 #' @family ROADMAP
 #' @examples
+#' \dontrun{
 #' data("BST1")
 #' grl.roadmap <- ROADMAP.query(results_path="./Roadmap", gr.snp=BST1, keyword_query="placenta")
+#' }
 ROADMAP.query <- function(results_path,
                           gr.snp,
                           keyword_query=NULL,
                           limit_files=NULL,
+                          conda_env="echoR",
                           nThread=4,
                           verbose=T){
   rm_start = Sys.time()
@@ -106,7 +111,8 @@ ROADMAP.query <- function(results_path,
                            min_pos = min(gr.snp.$POS),
                            max_pos = max(gr.snp.$POS),
                            eid=eid,
-                           convert_to_GRanges=T)
+                           convert_to_GRanges=T,
+                           conda_env = conda_env)
     })
     if(length(GenomicRanges::seqnames(dat))>0){
       return(dat)
@@ -164,12 +170,14 @@ ROADMAP.merge_and_process_grl <- function(grl.roadmap,
 #' @param adjust The granularity of the peaks.
 #' @param show_plot Whether to print the plot.
 #' @examples
+#' \dontrun{
 #' data("BST1")
 #' finemap_DT <- BST1
 #' gr.snp <- DT_to_GRanges(finemap_DT)
 #' grl.roadmap <- ROADMAP.query(results_path="./Roadmap", gr.snp=gr.snp, keyword_query="monocyte")
 #' grl.roadmap.filt <- ROADMAP.merge_and_process_grl(grl.roadmap=grl.roadmap, gr.snp=gr.snp, n_top_tissues=5)
 #' track.roadmap <- ROADMAP.track_plot(grl.roadmap.filt, gr.snp=gr.snp)
+#' }
 ROADMAP.track_plot <- function(grl.roadmap.filt,
                                gr.snp=NULL,
                                geom="density",
@@ -218,9 +226,11 @@ ROADMAP.track_plot <- function(grl.roadmap.filt,
 #' }
 #' @family ROADMAP
 #' @examples
+#' \dontrun{
 #' data("BST1")
 #' finemap_DT <- BST1
 #' roadmap_plot_query <- ROADMAP.query_and_plot(subset_DT=finemap_DT, keyword_query="monocytes")
+#' }
 ROADMAP.query_and_plot <- function(subset_DT,
                                    results_path="./ROADMAP",
                                    n_top_tissues=NULL,

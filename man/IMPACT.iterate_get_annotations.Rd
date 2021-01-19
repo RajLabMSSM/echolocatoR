@@ -28,8 +28,10 @@ Unfortunately, you have to download the entire chromosome file at once,
  coordinates in \code{subset_DT}.
 }
 \examples{
+\dontrun{
 data("merged_DT")
 ANNOT_MELT <- IMPACT.iterate_get_annotations(merged_DT=merged_DT)
+}
 }
 \seealso{
 Other IMPACT: 
