@@ -209,7 +209,7 @@ trk_plot.roadmap <- PLOT.locus(finemap_dat=finemap_DT,
                                
                                save_plot=F, 
                                show_plot=show_plot,
-                               plot.zoom=plot.zoom, 
+                               plot.zoom="5x", 
                                nThread = parallel::detectCores()-1,
                                conda_env = "echoR")
 ```

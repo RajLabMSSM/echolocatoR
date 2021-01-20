@@ -1434,7 +1434,7 @@ LD.leadSNP_block <- function(leadSNP, LD_folder, LD_block_size=.7){
 #
 
 
-#' Find correlate o
+#' Find correlates of the lead GWAS/QTL SNP
 LD.get_lead_r2 <- function(finemap_dat,
                            LD_matrix=NULL,
                            fillNA=0,

@@ -53,7 +53,7 @@ is to create a [*conda*](https://docs.conda.io/en/latest/) environment.
 
 1. If you haven't done so already, install [*conda*](https://docs.conda.io/en/latest/).  
 
-2. Download the echoR.yml file found [here](https://github.com/RajLabMSSM/echolocatoR/blob/master/inst/conda/echoR.yml) (this file tells *conda* what to install).
+2. Download the *echoR.yml* file found [here](https://github.com/RajLabMSSM/echolocatoR/blob/master/inst/conda/echoR.yml) (this file tells *conda* what to install).
 
 3. In command line, create the env from the *.yml* file:  
 ```

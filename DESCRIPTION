@@ -40,7 +40,9 @@ Imports:
     EnsDb.Hsapiens.v75,  
     ensembldb,  
     BSgenome,
-    Ckmeans.1d.dp
+    Ckmeans.1d.dp,
+    biovizBase,
+    GenomeInfoDb
 Remotes:
   github::stephenslab/susieR@0.9.0,  
   bioc::3.10/remotes,  
@@ -51,11 +53,7 @@ Remotes:
   url::https://cran.r-project.org/src/contrib/Archive/XGR/XGR_1.1.7.tar.gz
 Suggests:
     pbmcapply,
-    gaston,
-    GenomeInfoDb,
-    ggnetwork,
-    RCircos, 
-    biovizBase,
+    gaston, 
     lattice,
     jsonlite,
     Matrix,
