@@ -24,6 +24,7 @@ dependencies:
   - macs2
   - bcftools
   - wget
+  - axel
   # R
   - r>=3.6.0
   - r-devtools
