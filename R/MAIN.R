@@ -470,6 +470,7 @@ finemap_pipeline <- function(locus,
                                   QTL_prefixes=QTL_prefixes,
 
                                   remove_tmps = remove_tmps,
+                                  conda_env = conda_env,
                                   verbose = verbose)
   #### Extract LD ####
   LD_list <- LD.load_or_create(locus_dir=locus_dir,
