@@ -214,12 +214,15 @@ extra_installs()
     this should be more up to date. htslib is now included in the echoR
     conda env by default.
 -   Alternatively, you may install htslib to your machine globally via
-    [brew](https://formulae.brew.sh/formula/htslib) (for Mac users) or
+    [Brew](https://formulae.brew.sh/formula/htslib) (for Mac users) or
     from [source](http://www.htslib.org/download).
 
 ##### [bcftools](http://samtools.github.io/bcftools/bcftools.html)
 
 -   Used here for filtering populations in vcf files.
+-   Can be installed via
+    [Brew](https://formulae.brew.sh/formula/bcftools) (for Mac users) or
+    [conda](https://anaconda.org/bioconda/bcftools).
 
 ##### [axel](https://github.com/axel-download-accelerator/axel)
 

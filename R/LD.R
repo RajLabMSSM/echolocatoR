@@ -928,14 +928,21 @@ LD.read_ld_table <- function(ld.path,
 #' @keywords internal
 #' @examples
 #' plink <- LD.plink_file()
-LD.plink_file <- function(base_url=system.file("tools/plink",package = "echolocatoR")){
-  os <- get_os()
-  if (os=="osx") {
-    plink <- file.path(base_url, "plink1.9_mac");
-  } else if (os=="linux") {
-    plink <- file.path(base_url, "plink1.9_linux");
-  } else {
-    plink <- file.path(base_url, "plink1.9_windows.exe");
+LD.plink_file <- function(plink="plink",
+                          conda_env=NULL){
+  if(!is.null(conda_env)){
+    plink <- CONDA.find_package("plink",conda_env = conda_env)
+  }
+  if(plink=="plink"){
+    base_url=system.file("tools/plink",package = "echolocatoR")
+    os <- get_os()
+    if (os=="osx") {
+      plink <- file.path(base_url, "plink1.9_mac");
+    } else if (os=="linux") {
+      plink <- file.path(base_url, "plink1.9_linux");
+    } else {
+      plink <- file.path(base_url, "plink1.9_windows.exe");
+    }
   }
   return(plink)
 }
@@ -1056,8 +1063,10 @@ LD.1KG <- function(locus_dir,
 #' See \code{\link{LD.run_plink_LD}} for a faster (but less flexible) alternative to computing LD.
 #' @family LD
 #' @keywords internal
-LD.dprime_table <- function(SNP_list, LD_folder){
-  plink <- LD.plink_file()
+LD.dprime_table <- function(SNP_list,
+                            LD_folder,
+                            conda_env){
+  plink <- LD.plink_file(conda_env)
   printer("+ Creating DPrime table")
   system( paste(plink, "--bfile",file.path(LD_folder,"plink"),
                 "--ld-snps", paste(SNP_list, collapse=" "),
@@ -1252,7 +1261,8 @@ LD.plink_LD <-function(leadSNP=NULL,
                        remove_correlates=F,
                        fillNA=0,
                        plink_prefix="plink",
-                       verbose=T){
+                       verbose=T,
+                       conda_env=NULL){
   # Dprime ranges from -1 to 1
   start <- Sys.time()
   if(is.null(leadSNP))leadSNP <- subset(subset_DT, leadSNP)$SNP[1]
@@ -1292,7 +1302,9 @@ LD.plink_LD <-function(leadSNP=NULL,
                                extract_file = file.path(LD_folder,"SNPs.txt"))
 
   if((min_Dprime != F) | (min_r2 != F) | (remove_correlates != F)){
-    plink.ld <- LD.dprime_table(SNP_list = row.names(ld.matrix), LD_folder)
+    plink.ld <- LD.dprime_table(SNP_list = row.names(ld.matrix),
+                                LD_folder,
+                                conda_env=conda_env)
 
     # DPrime filter
     if(min_Dprime != F){

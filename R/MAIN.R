@@ -732,6 +732,12 @@ finemap_loci <- function(loci,
                          nThread=4,
                          verbose=T){
   CONDA.activate_env(conda_env = conda_env)
+
+  check_tools(check_tabix=T,
+              stop_for_tabix=query_by=="tabix",
+              check_bcftools=T,
+              stop_for_bcftools=LD_reference %in% c("1KGphase1","1KGphase3"),
+              conda_env=conda_env)
   data.table::setDTthreads(threads = nThread);
   conditioned_snps <- snps_to_condition(conditioned_snps, top_SNPs, loci);
 
