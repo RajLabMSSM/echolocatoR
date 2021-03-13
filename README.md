@@ -1,13 +1,11 @@
--   [Automated statistical and functional fine-mapping with extensive
-    access to genome-wide
-    datasets.](#automated-statistical-and-functional-fine-mapping-with-extensive-access-to-genome-wide-datasets.)
+-   [Introduction](#introduction)
 -   [Documentation](#documentation)
     -   [Documentation website](#documentation-website)
     -   [Full pipeline vignette](#full-pipeline-vignette)
     -   [Plotting vignette](#plotting-vignette)
--   [Workflow](#workflow)
--   [Quick installation](#quick-installation)
--   [Robust installation (*conda*)](#robust-installation-conda)
+-   [Installation](#installation)
+    -   [Quick installation](#quick-installation)
+    -   [Robust installation (*conda*)](#robust-installation-conda)
 -   [Dependencies](#dependencies)
     -   [R](#r)
     -   [Python](#python)
@@ -37,13 +35,13 @@
     -   [1000 Genomes Phase 3](#genomes-phase-3)
 -   [Author](#author)
 
-\#
-<center>
+<h1>
 ) ) ) ) ))) :bat: echolocatoR :bat: ((( ( ( ( (
-</center>
-
-### Automated statistical and functional fine-mapping with extensive access to genome-wide datasets.
-
+</h1>
+<h3>
+Automated statistical and functional fine-mapping with extensive access
+to genome-wide datasets
+</h3>
 <hr>
 
 #### If you use ***echolocatoR***, please cite (thanks!):
@@ -54,6 +52,8 @@ pipeline* bioRxiv 2020.10.22.351221; doi:
 https://doi.org/10.1101/2020.10.22.351221](https://www.biorxiv.org/content/10.1101/2020.10.22.351221v1)
 
 <hr>
+
+## Introduction
 
 Fine-mapping methods are a powerful means of identifying causal variants
 underlying a given phenotype, but are underutilized due to the technical
@@ -75,6 +75,8 @@ results sharing. Therefore ***echolocatoR*** drastically reduces the
 barriers to identifying causal variants by making the entire
 fine-mapping pipeline rapid, robust and scalable.
 
+![echoFlow](./images/echolocatoR_Fig1.png)
+
 ## Documentation
 
 ### [Documentation website](https://rajlabmssm.github.io/echolocatoR/)
@@ -85,13 +87,9 @@ fine-mapping pipeline rapid, robust and scalable.
 
 <br>
 
-## Workflow
+## Installation
 
-![echoFlow](./images/echolocatoR_Fig1.png)
-
-<br>
-
-## Quick installation
+### Quick installation
 
 In R:
 
@@ -100,7 +98,7 @@ if(!"devtools" %in% installed.packages()){install.packages("devtools")}
 devtools::install_github("RajLabMSSM/echolocatoR")
 ```
 
-## Robust installation (*conda*)
+### Robust installation (*conda*)
 
 As with most softwares, installation is half the battle. The easiest way
 to install all of ***echolocatoR***’s dependencies (which include R,
@@ -176,6 +174,17 @@ For a full list of suggested packages, see
     - BSgenome  
     - Ckmeans.1d.dp  
     - refGenome   
+
+There’s some additional optional R dependencies (e.g. XGR, ) that can be
+a bit tricky, so we’ve removed it from \*echolocatoR\*’s
+[DESCRIPTION](https://github.com/RajLabMSSM/echolocatoR/blob/master/DESCRIPTION)
+file and instead provided a separate R function that helps users to
+install them afterwards:
+
+``` r
+library(echolocatoR)
+extra_installs()
+```
 
 ### Python
 

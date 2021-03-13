@@ -374,7 +374,8 @@ POLYFUN.download_ref_files <- function(alkes_url="https://data.broadinstitute.or
                                        # output_path="/sc/arion/projects/pd-omics/data/1000_Genomes/Phase1",
                                        results_dir="./results",
                                        force_overwrite=F,
-                                       download_method="wget"
+                                       download_method="wget",
+                                       conda_env="echoR"
                                        ){
   output_path <- file.path(results_dir,"resources/1000Genomes_Phase1")
   file_name <- basename(alkes_url)
@@ -391,7 +392,8 @@ POLYFUN.download_ref_files <- function(alkes_url="https://data.broadinstitute.or
                          output_path = output_path,
                          force_overwrite = force_overwrite,
                          download_method = download_method,
-                         background = F)
+                         background = F,
+                         conda_env=conda_env)
   printer("+ POLYFUN:: Unzipping reference files...")
   system(paste("tar zxvf",file.path(output_path, file_name),
                "--strip 1",

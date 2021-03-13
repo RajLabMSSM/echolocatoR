@@ -15,9 +15,9 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# <center> ) ) ) ) ))) :bat: echolocatoR :bat: ((( ( ( ( ( </center>
+<h1>  ) ) ) ) ))) :bat: echolocatoR :bat: ((( ( ( ( ( </h1>
 
-### Automated statistical and functional fine-mapping with extensive access to genome-wide datasets.
+<h3> Automated statistical and functional fine-mapping with extensive access to genome-wide datasets </h3>
 
 <hr>
 
@@ -29,6 +29,8 @@ pipeline* bioRxiv 2020.10.22.351221; doi:
 https://doi.org/10.1101/2020.10.22.351221](https://www.biorxiv.org/content/10.1101/2020.10.22.351221v1)
 
 <hr>
+
+## Introduction
 
 Fine-mapping methods are a powerful means of identifying causal variants
 underlying a given phenotype, but are underutilized due to the technical
@@ -50,6 +52,8 @@ results sharing. Therefore ***echolocatoR*** drastically reduces the
 barriers to identifying causal variants by making the entire
 fine-mapping pipeline rapid, robust and scalable.
 
+![echoFlow](./images/echolocatoR_Fig1.png)
+
 ## Documentation
 
 ### [Documentation website](https://rajlabmssm.github.io/echolocatoR/)
@@ -60,13 +64,9 @@ fine-mapping pipeline rapid, robust and scalable.
 
 <br>
 
-## Workflow
+## Installation
 
-![echoFlow](./images/echolocatoR_Fig1.png)
-
-<br>
-
-## Quick installation
+### Quick installation
 
 In R:
 
@@ -75,7 +75,7 @@ if(!"devtools" %in% installed.packages()){install.packages("devtools")}
 devtools::install_github("RajLabMSSM/echolocatoR")
 ```
 
-## Robust installation (*conda*)
+### Robust installation (*conda*)
 
 As with most softwares, installation is half the battle. The easiest way
 to install all of ***echolocatoR***'s dependencies (which include R,
@@ -89,14 +89,14 @@ to create a [*conda*](https://docs.conda.io/en/latest/) environment.
     [here](https://github.com/RajLabMSSM/echolocatoR/blob/master/inst/conda/echoR.yml)
     (this file tells *conda* what to install).
 
-3.  In command line, create the env from the *.yml* file:  
+3.  In command line, create the env from the *.yml* file:
 
 ```{=html}
 <!-- -->
 ```
     conda env create -f <path_to_file>/echoR.yml
 
-1.  Activate the new env:  
+1.  Activate the new env:
 
 ```{=html}
 <!-- -->
@@ -107,7 +107,7 @@ to create a [*conda*](https://docs.conda.io/en/latest/) environment.
     Rstudio icon). This helps to ensure Rstudio can find the paths to
     the packages in the conda env.
 
-2.  In R, install ***echolocatoR***:  
+2.  In R, install ***echolocatoR***:
 
 ``` r
 if(!"devtools" %in% installed.packages()){install.packages("devtools")}
@@ -154,6 +154,17 @@ For a full list of suggested packages, see
     - Ckmeans.1d.dp  
     - refGenome   
 
+There's some additional optional R dependencies (e.g. XGR, ) that can be
+a bit tricky, so we've removed it from \*echolocatoR\*'s
+[DESCRIPTION](https://github.com/RajLabMSSM/echolocatoR/blob/master/DESCRIPTION)
+file and instead provided a separate R function that helps users to
+install them afterwards:
+
+``` R
+library(echolocatoR)
+extra_installs()
+```
+
 ### Python
 
     - python>=3.6.1  
@@ -183,9 +194,9 @@ For a full list of suggested packages, see
 #### [Axel](https://github.com/axel-download-accelerator/axel) \*
 
 -   Rapid multi-core downloading of large files (e.g. LD matrices from
-    UK Biobank).  
+    UK Biobank).
 
--   To use it, specify `download_method="axel"` in `finemap_loci()`.  
+-   To use it, specify `download_method="axel"` in `finemap_loci()`.
 
 -   **Update**: A conda version of *axel* has been kindly provided by .
 
@@ -256,7 +267,7 @@ For more detailed information about each dataset, use `?`:
 
 -   Built-in datasets:
 
-    -   Enhancer/promoter coordinates (as *GenomicRanges*)  
+    -   Enhancer/promoter coordinates (as *GenomicRanges*)
 
     ``` r
     data("NOTT_2019.interactome")
@@ -269,7 +280,7 @@ For more detailed information about each dataset, use `?`:
     ...
     ```
 
-    -   PLAC-seq enhancer-promoter interactome coordinates  
+    -   PLAC-seq enhancer-promoter interactome coordinates
 
     ``` r
     NOTT_2019.interactome$H3K4me3_around_TSS_annotated_pe

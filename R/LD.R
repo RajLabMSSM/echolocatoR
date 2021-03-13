@@ -677,7 +677,8 @@ LD.query_vcf <- function(subset_DT,
       out.file <- downloader(input_url = vcf_URL,
                              output_path = dirname(vcf_subset),
                              download_method = download_method,
-                             nThread = nThread)
+                             nThread = nThread,
+                             conda_env=conda_env)
     } else {
       # Download tabix subset
       if(query_by_regions){

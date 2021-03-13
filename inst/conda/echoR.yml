@@ -8,7 +8,7 @@ channels:
 dependencies:
   # Python
   - python>=3.6.1
-  - pandas>=0.25.0 
+  - pandas>=0.25.0
   - fastparquet
   - pyarrow
   - scipy
@@ -24,6 +24,7 @@ dependencies:
   - macs2
   - bcftools
   - wget
+  - axel
   # R
   - r>=3.6.0
   - r-devtools

@@ -306,7 +306,8 @@ get_UKB_MAF <- function(subset_DT,
                         force_new_maf = F,
                         download_method="axel",
                         nThread=4,
-                        verbose=T){
+                        verbose=T,
+                        conda_env="echoR"){
   printer("UKB MAF:: Extracting MAF from UKB reference.",v=verbose)
   # Documentation: http://biobank.ctsu.ox.ac.uk/showcase/field.cgi?id=22801
   # subset_DT = data.table::fread("Data/GWAS/Kunkle_2019/PTK2B/PTK2B_Kunkle_2019_subset.tsv.gz")
@@ -327,7 +328,8 @@ get_UKB_MAF <- function(subset_DT,
                            background = F,
                            force_overwrite = force_new_maf,
                            download_method = download_method,
-                           nThread = nThread)
+                           nThread = nThread,
+                           conda_env=conda_env)
   }
   maf <- data.table::fread(out_file, nThread = nThread,
                            select = c(3,6),
