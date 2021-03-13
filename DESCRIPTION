@@ -42,15 +42,11 @@ Imports:
     BSgenome,
     Ckmeans.1d.dp,
     biovizBase,
-    GenomeInfoDb
+    GenomeInfoDb,
+    ggbio,
+    snpStats
 Remotes:
-  github::stephenslab/susieR@0.9.0,  
-  bioc::3.10/remotes,  
-  bioc::3.10/snpStats,
-  bioc::3.10/ggbio,
-  url::https://cran.r-project.org/src/contrib/Archive/foreign/foreign_0.8-76.tar.gz,
-  url::https://cran.r-project.org/src/contrib/Archive/refGenome/refGenome_1.7.7.tar.gz,
-  url::https://cran.r-project.org/src/contrib/Archive/XGR/XGR_1.1.7.tar.gz
+  github::stephenslab/susieR@0.9.0
 Suggests:
     pbmcapply,
     gaston, 

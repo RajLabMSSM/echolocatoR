@@ -1,46 +1,21 @@
--   [Automated statistical and functional fine-mapping with extensive
-    access to genome-wide
-    datasets.](#automated-statistical-and-functional-fine-mapping-with-extensive-access-to-genome-wide-datasets.)
--   [Documentation](#documentation)
-    -   [Documentation website](#documentation-website)
-    -   [Full pipeline vignette](#full-pipeline-vignette)
-    -   [Plotting vignette](#plotting-vignette)
--   [Workflow](#workflow)
--   [Quick installation](#quick-installation)
--   [Robust installation (*conda*)](#robust-installation-conda)
--   [Dependencies](#dependencies)
-    -   [R](#r)
-    -   [Python](#python)
-    -   [Command line](#command-line)
--   [Fine-mapping Tools](#fine-mapping-tools)
-    -   [ABF: `proportion_cases`,`MAF`](#abf-proportion_casesmaf)
-    -   [FINEMAP:`A1`,`A2`,`MAF`,`N`](#finemapa1a2mafn)
-    -   [SuSiE: `N`](#susie-n)
-    -   [PolyFun: `A1`,`A2`,`P`,`N`](#polyfun-a1a2pn)
-    -   [PAINTOR: `A1`,`A2`,`t-stat`](#paintor-a1a2t-stat)
-    -   [GCTA-COJO: `A1`,`A2`,`Freq`,`P`,`N`](#gcta-cojo-a1a2freqpn)
-    -   [coloc: `N`,`MAF`](#coloc-nmaf)
--   [Datasets](#datasets)
-    -   [Epigenomic & Genome-wide
-        Annotations](#epigenomic-genome-wide-annotations)
-    -   [QTLs](#qtls)
--   [Enrichment Tools](#enrichment-tools)
-    -   [XGR](#xgr-1)
-    -   [GoShifter](#goshifter)
-    -   [S-LDSC](#s-ldsc)
-    -   [motifbreakR](#motifbreakr)
-    -   [GARFIELD (**under
-        construction**)](#garfield-under-construction)
--   [LD Reference Panels](#ld-reference-panels)
-    -   [UK Biobank](#uk-biobank)
-    -   [1000 Genomes Phase 1](#genomes-phase-1)
-    -   [1000 Genomes Phase 3](#genomes-phase-3)
--   [Author](#author)
+---
+title: "README"
+author: "Brian M. Schilder"
+date: "Most recent update:<br> `r Sys.Date()`"
+output: 
+  md_document:
+    variant: "markdown_github"
+    toc: TRUE
+editor_options: 
+  markdown: 
+    wrap: 72
+---
 
-\#
-<center>
-) ) ) ) ))) :bat: echolocatoR :bat: ((( ( ( ( (
-</center>
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# <center> ) ) ) ) ))) :bat: echolocatoR :bat: ((( ( ( ( ( </center>
 
 ### Automated statistical and functional fine-mapping with extensive access to genome-wide datasets.
 
@@ -103,41 +78,43 @@ devtools::install_github("RajLabMSSM/echolocatoR")
 ## Robust installation (*conda*)
 
 As with most softwares, installation is half the battle. The easiest way
-to install all of ***echolocatoR***’s dependencies (which include R,
+to install all of ***echolocatoR***'s dependencies (which include R,
 Python, and command line tools) and make sure they play well together is
 to create a [*conda*](https://docs.conda.io/en/latest/) environment.
 
-1.  If you haven’t done so already, install
+1.  If you haven't done so already, install
     [*conda*](https://docs.conda.io/en/latest/).
 
 2.  Download the *echoR.yml* file found
     [here](https://github.com/RajLabMSSM/echolocatoR/blob/master/inst/conda/echoR.yml)
     (this file tells *conda* what to install).
 
-3.  In command line, create the env from the *.yml* file:
+3.  In command line, create the env from the *.yml* file:  
 
+```{=html}
 <!-- -->
-
+```
     conda env create -f <path_to_file>/echoR.yml
 
-1.  Activate the new env:
+1.  Activate the new env:  
 
+```{=html}
 <!-- -->
-
+```
     conda activate echoR
 
 1.  Open Rstudio from the command line interface (not by clicking the
     Rstudio icon). This helps to ensure Rstudio can find the paths to
     the packages in the conda env.
 
-2.  In R, install ***echolocatoR***:
+2.  In R, install ***echolocatoR***:  
 
 ``` r
 if(!"devtools" %in% installed.packages()){install.packages("devtools")}
 devtools::install_github("RajLabMSSM/echolocatoR")
 ```
 
-To make sure ***echolocatoR*** uses the packages in this env (esp. if
+To make sure ***echolocatoR*** uses the packages in this env (esp. if
 using from RStudio), you can then supply the env name to the
 `finemap_loci()` function using `conda_env="echoR"`.
 
@@ -205,16 +182,16 @@ For a full list of suggested packages, see
 
 #### [Axel](https://github.com/axel-download-accelerator/axel) \*
 
--   Rapid multi-core downloading of large files (e.g. LD matrices from
-    UK Biobank).
+-   Rapid multi-core downloading of large files (e.g. LD matrices from
+    UK Biobank).  
 
--   To use it, specify `download_method="axel"` in `finemap_loci()`.
+-   To use it, specify `download_method="axel"` in `finemap_loci()`.  
 
 -   **Update**: A conda version of *axel* has been kindly provided by .
 
 -   For more info on installing/using *axel* in general, also see this
     [tutorial](https://www.tecmint.com/axel-commandline-download-accelerator-for-linux/).
-    Depending on what kind of computer you’re using, this process will
+    Depending on what kind of computer you're using, this process will
     look a bit different:
 
     -   **Mac**: Install [brew](https://brew.sh/), then:
@@ -222,7 +199,7 @@ For a full list of suggested packages, see
     -   **CentOS/RHEL 7**:
         `yum install epel-release; yum install axel`  
     -   **Fedora**: `yum install axel; dnf install axel`  
-    -   **Debian Jessie (e.g. Ubuntu, Linux Mint)**:
+    -   **Debian Jessie (e.g. Ubuntu, Linux Mint)**:
         `aptitude install axel`
 
 <br>
@@ -264,7 +241,7 @@ For more detailed information about each dataset, use `?`:
 
 ### Epigenomic & Genome-wide Annotations
 
-#### [Nott et al. (2019)](https://science.sciencemag.org/content/366/6469/1134.abstract)
+#### [Nott et al. (2019)](https://science.sciencemag.org/content/366/6469/1134.abstract)
 
 -   Data from this publication contains results from cell type-specific
     (neurons, oligodendrocytes, astrocytes, microglia, & peripheral
@@ -279,7 +256,7 @@ For more detailed information about each dataset, use `?`:
 
 -   Built-in datasets:
 
-    -   Enhancer/promoter coordinates (as *GenomicRanges*)
+    -   Enhancer/promoter coordinates (as *GenomicRanges*)  
 
     ``` r
     data("NOTT_2019.interactome")
@@ -292,7 +269,7 @@ For more detailed information about each dataset, use `?`:
     ...
     ```
 
-    -   PLAC-seq enhancer-promoter interactome coordinates
+    -   PLAC-seq enhancer-promoter interactome coordinates  
 
     ``` r
     NOTT_2019.interactome$H3K4me3_around_TSS_annotated_pe
@@ -310,7 +287,7 @@ For more detailed information about each dataset, use `?`:
     -   Aggregate epigenomic *score* for each cell type - assay
         combination
 
-#### [Corces et al. (2020)](https://www.biorxiv.org/content/10.1101/2020.01.06.896159v1)
+#### [Corces et al. (2020)](https://www.biorxiv.org/content/10.1101/2020.01.06.896159v1)
 
 -   Data from this preprint contains results from bulk and single-cell
     chromatin accessibility epigenomic assays in 39 human brains.
@@ -326,7 +303,7 @@ For more detailed information about each dataset, use `?`:
 #### [XGR](http://xgr.r-forge.r-project.org)
 
 -   API access to a diverse library of cell type/line-specific
-    epigenomic (e.g. ENCODE) and other genome-wide annotations.
+    epigenomic (e.g. ENCODE) and other genome-wide annotations.
 
 #### [Roadmap](http://www.roadmapepigenomics.org)
 
@@ -334,7 +311,7 @@ For more detailed information about each dataset, use `?`:
 
 #### [biomaRt](https://bioconductor.org/packages/release/bioc/html/biomaRt.html)
 
--   API access to various genome-wide SNP annotations (e.g. missense,
+-   API access to various genome-wide SNP annotations (e.g. missense,
     nonsynonmous, intronic, enhancer).
 
 #### [HaploR](https://cran.r-project.org/web/packages/haploR/vignettes/haplor-vignette.html)
@@ -394,6 +371,7 @@ For more detailed information about each dataset, use `?`:
 ### [1000 Genomes Phase 3](https://www.internationalgenome.org)
 
 <hr>
+
 <hr>
 
 ## Author
