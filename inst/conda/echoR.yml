@@ -19,7 +19,7 @@ dependencies:
   - rpy2
   - requests
   # Command line
-  - tabix
+  - htslib
   - plink
   - macs2
   - bcftools

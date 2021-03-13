@@ -4,6 +4,7 @@
     -   [Full pipeline vignette](#full-pipeline-vignette)
     -   [Plotting vignette](#plotting-vignette)
 -   [Installation](#installation)
+    -   [General tips](#general-tips)
     -   [Quick installation](#quick-installation)
     -   [Robust installation (*conda*)](#robust-installation-conda)
     -   [Dependencies](#dependencies)
@@ -103,6 +104,15 @@ fine-mapping pipeline rapid, robust and scalable.
 
 ## Installation
 
+### General tips
+
+-   We generally recommend users upgrading to R\>=4.0.0 before trying to
+    install *echolocatoR.* While *echolocatoR* should technically be
+    able to run in R\>=3.6.0, some additional challenges with getting
+    dependency versions not to conflict with one another.
+
+-   
+
 ### Quick installation
 
 In R:
@@ -159,8 +169,6 @@ using from RStudio), you can then supply the env name to the
 
 For a full list of suggested packages, see
 [DESCRIPTION](https://github.com/RajLabMSSM/echolocatoR/blob/master/DESCRIPTION).
-
-\* = *optional*
 
 #### R
 
@@ -219,16 +227,24 @@ extra_installs()
 
 #### Command line
 
-##### [Tabix](http://www.htslib.org/doc/tabix.html)
+##### [tabix](http://www.htslib.org/doc/tabix.html)
 
 -   Rapid querying of summary stats files.
 -   To use it, specify `query_by="tabix"` in `finemap_loci()`.
+-   If you encounter difficulties using a conda distribution of tabix,
+    we recommend you uninstall it from the env and instead install its
+    parent package, [htslib](https://anaconda.org/bioconda/htslib) as
+    this should be more up to date. htslib is now included in the echoR
+    conda env by default.
+-   Alternatively, you may install htslib to your machine globally via
+    [brew](https://formulae.brew.sh/formula/htslib) (for Mac users) or
+    from [source](http://www.htslib.org/download).
 
 ##### [bcftools](http://samtools.github.io/bcftools/bcftools.html)
 
 -   Used here for filtering populations in vcf files.
 
-##### [Axel](https://github.com/axel-download-accelerator/axel) \*
+##### [axel](https://github.com/axel-download-accelerator/axel)
 
 -   Rapid multi-core downloading of large files (e.g. LD matrices from
     UK Biobank).
