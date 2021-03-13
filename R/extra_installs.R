@@ -7,21 +7,41 @@
 #' Rather than including them in the DESCRIPTION file,
 #' which would require them to install \pkg{echolocatoR} at all,
 #' this functions installs them afterwards.
+#' Only packages not already installed will be installed.
+#'
+#' Some of the main packages installed via this function include:
+#' \describe{
+#' \item{gaston}{CRAN}
+#' \item{plotly}{CRAN}
+#'
+#' \item{foreign}{Archived}
+#' \item{XGR}{Archived}
+#' \item{refGenome}{Archived}
+#'
+#' \item{Rgraphviz}{Bioconductor}
+#' \item{biomaRt}{Bioconductor}
+#'
+#' \item{knitrBootstrap}{GitHub}
+#' \item{susieR}{GitHub}
+#' }
+#'
 #' @examples
 #' library(echolocatoR)
 #' extra_installs()
 #' @export
 extra_installs <- function(cran_packages=T,
-                                archived_packages=T,
-                                bioc_packages=T,
-                                github_packages=T){
+                            archived_packages=T,
+                            bioc_packages=T,
+                            github_packages=T){
     printer("Installing additional echolocatoR R dependencies")
 
     #### CRAN ####
     # current CRAN version of foreign needs R >= 4.0 - so specify legacy version
     if(cran_packages){
         message("+ Installing CRAN packages...")
-        r_packages <- c("r.utils", "reticulate", "pbmcapply", "plotly","cowplot", "patchwork", "ggrepel", "curl", "gaston", "tidyverse", "BiocManager", "crayon", "roxygen2", "coloc", "haploR", "doBy")
+        r_packages <- c("r.utils", "reticulate", "pbmcapply", "plotly","patchwork",
+                        "ggrepel", "curl", "gaston", "tidyverse",
+                        "BiocManager", "crayon", "roxygen2", "coloc", "haploR", "doBy")
         required_packages <- r_packages[ ! r_packages %in% installed.packages() ]
         for(lib in required_packages){
             install.packages(lib,dependencies=TRUE)
@@ -53,7 +73,8 @@ extra_installs <- function(cran_packages=T,
     if(bioc_packages){
         message("+ Installing Bioconductor packages...")
         library(BiocManager)
-        bioc_packages <- c("supraHex", "graph", "Rgraphviz", "dnet", "rtracklayer", "biomaRt", "Rsamtools", "snpStats")
+        bioc_packages <- c("supraHex", "graph", "Rgraphviz", "dnet", "rtracklayer",
+                           "biomaRt", "Rsamtools", "snpStats")
         required_packages <- bioc_packages[ ! bioc_packages %in% installed.packages() ]
         for(lib in required_packages){
             BiocManager::install(lib)
@@ -64,7 +85,7 @@ extra_installs <- function(cran_packages=T,
     if(github_packages){
         message("+ Installing GitHub packages...")
         devtools::install_github('jimhester/knitrBootstrap')
-        # devtools::install_github("stephenslab/susieR@0.9.0")
+        devtools::install_github("stephenslab/susieR")
     }
 }
 
