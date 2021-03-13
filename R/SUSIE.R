@@ -126,6 +126,11 @@ SUSIE <- function(subset_DT,
   LD_matrix <- sub.out$LD
   subset_DT <- sub.out$DT
 
+  ## Ensure the matrix is of "symmetric" class (not just objectively symmetric)
+  ## susieR will throw an error otherwise
+  LD_matrix <- Matrix::forceSymmetric(LD_matrix)
+
+
   # library(susieR)
   # SUSIE's authors "merge[d] susie_ss and susie_bhat to susie_suff_stat" in 11/2019.
   susie_version <- utils::packageVersion("susieR")

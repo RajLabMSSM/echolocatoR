@@ -628,7 +628,7 @@ subset_common_snps <- function(LD_matrix,
                                verbose=F){
   printer("+ Subsetting LD matrix and finemap_dat to common SNPs...", v=verbose)
   # Remove duplicate SNPs
-  LD_matrix <- data.frame(LD_matrix)
+  LD_matrix <- data.frame(as.matrix(LD_matrix))
   LD_matrix <- LD.fill_NA(LD_matrix = LD_matrix,
                           fillNA = fillNA,
                           verbose = verbose)
@@ -656,7 +656,7 @@ subset_common_snps <- function(LD_matrix,
     warning("+ LD_matrix and finemap_dat do NOT have the same number of SNPs.",v=verbose)
     warning("+ LD_matrix SNPs = ",nrow(new_LD),"; finemap_dat = ",nrow(finemap_dat), v=verbose)
   }
-  return(list(LD=new_LD,
+  return(list(LD=as.matrix(new_LD),
               DT=new_DT))
 }
 

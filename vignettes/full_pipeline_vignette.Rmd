@@ -128,7 +128,10 @@ Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS
                  A2_col = "A2",
                  
                  # FILTERING ARGUMENTS
-                 bp_distance = 500000*2,
+                 ## It's often desirable to use a larger window size 
+                 ## (e.g. 2Mb which is bp_distance=500000*2), 
+                 ## but we use a small window here to speed up the process. 
+                 bp_distance = 10000,#500000*2,
                  min_MAF = 0.001,  
                  trim_gene_limits = F,
                  
