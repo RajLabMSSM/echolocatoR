@@ -35,21 +35,38 @@
     -   [1000 Genomes Phase 3](#genomes-phase-3)
 -   [Author](#author)
 
+<center>
 <h1>
 ) ) ) ) ))) :bat: echolocatoR :bat: ((( ( ( ( (
 </h1>
+</center>
 <h3>
 Automated statistical and functional fine-mapping with extensive access
 to genome-wide datasets
 </h3>
 <hr>
 
-#### If you use ***echolocatoR***, please cite (thanks!):
+#### If you use ***echolocatoR***, please cite our paper (thanks!):
 
-[Brian M. Schilder, Jack Humphrey, Towfique Raj (2020) *echolocatoR: an
-automated end-to-end statistical and functional genomic fine-mapping
-pipeline* bioRxiv 2020.10.22.351221; doi:
-https://doi.org/10.1101/2020.10.22.351221](https://www.biorxiv.org/content/10.1101/2020.10.22.351221v1)
+> BM Schilder, J Humphrey, T Raj (2020) echolocatoR: an automated
+> end-to-end statistical and functional genomic fine-mapping pipeline.
+> *bioRxiv* 2020.10.22.351221; doi:
+> <https://doi.org/10.1101/2020.10.22.351221>
+
+#### For applications of *echolocatoR* in the literature, please see:
+
+> 1.  E Navarro, E Udine, K de Paiva Lopes, M Parks, G Riboldi, BM
+>     Schilder…T Raj (2020) Discordant transcriptional signatures of
+>     mitochondrial genes in Parkinson’s disease human myeloid cells.
+>     *bioRxiv*; <https://doi.org/10.1101/2020.07.20.212407>
+> 2.  BM Schilder and T Raj (2020) Fine-Mapping of Parkinson’s Disease
+>     Susceptibility Loci Identifies Putative Causal Variants.
+>     *bioRxiv*, 0–30; <https://doi.org/10.1101/2020.10.22.340158>.
+> 3.  K de Paiva Lopes, GJL Snijders, J Humphrey, A Allan, M Sneeboer, E
+>     Navarro, BM Schilder…T Raj
+>     1.  Atlas of Genetic Effects in Human Microglia Transcriptome
+>         across Brain Regions, Aging and Disease Pathologies.
+>         *bioRxiv*; <https://doi.org/10.1101/2020.10.27.356113>.
 
 <hr>
 
