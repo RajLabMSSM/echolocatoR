@@ -44,9 +44,10 @@ Imports:
     biovizBase,
     GenomeInfoDb,
     ggbio,
-    snpStats
+    snpStats,
+    remotes 
 Remotes:
-  github::stephenslab/susieR@0.9.0
+  github::stephenslab/susieR@0.9.0 
 Suggests:
     pbmcapply,
     gaston, 
