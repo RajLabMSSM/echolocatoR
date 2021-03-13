@@ -493,7 +493,7 @@ NOTT_2019.get_epigenomic_peaks <- function(assays=c("ATAC","H3K27ac","H3K4me3"),
   if(convert_to_GRanges){
     printer("++ NOTT_2019:: Converting merged BED files to GRanges.", v=verbose)
     PEAKS <- biovizBase::transformDfToGr(PEAKS, seqnames = "chr", start = "start", end="end")
-    suppressMessages(GenomeInfoDb::seqlevelsStyle(PEAKS) <- "NCBI")
+    suppressWarnings(GenomeInfoDb::seqlevelsStyle(PEAKS) <- "NCBI")
   }
   printer("++ NOTT_2019::",length(PEAKS),"ranges retrieved.", v=verbose)
   return(PEAKS)
@@ -605,7 +605,7 @@ NOTT_2019.get_regulatory_regions <- function(as.granges=F,
                                                            start.field = "start",
                                                            end.field = "end",
                                                            keep.extra.columns = T)
-    suppressMessages(GenomeInfoDb::seqlevelsStyle(regions_sub) <- "NCBI")
+    suppressWarnings(GenomeInfoDb::seqlevelsStyle(regions_sub) <- "NCBI")
   }
   return(regions_sub)
 }

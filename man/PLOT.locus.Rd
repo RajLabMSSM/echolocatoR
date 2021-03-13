@@ -60,10 +60,6 @@ PLOT.locus(
 Generate a locus-specific plot with multiple selectable tracks.
 Users can also generate multiple zoomed in views of the plot at multiple resolutions.
 }
-\details{
-#### TO-do
-Add anchors to plac-seq arches
-}
 \examples{
 library(echolocatoR)
 finemap_dat<- echolocatoR::BST1; LD_matrix <- echolocatoR::BST1_LD_matrix;

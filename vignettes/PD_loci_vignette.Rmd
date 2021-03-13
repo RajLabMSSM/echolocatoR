@@ -54,6 +54,11 @@ Here we take advantage of the fine-mapping results files already available on th
 * `GITHUB.list_files()`: Searches the repo for files matching your regex query.
 * `GITHUB.download_files()`: Not only does this download your files, but it reconstructs the original folder structure they were found in. This is useful for *echolocatoR* output files, which are automatically organized in a hierarchical folder structure (e.g. *results/GWAS/Nalls23andMe_2019*).
 
+
+```{r locus_list}
+locus_list <- c("LRRK2","MBNL2","DYRK1A","FCGR2A","MED12L")
+```
+
 ## Multi-finemap data  
 
 First, we'll download the multi-finemap results files.  
@@ -63,7 +68,7 @@ remote_finemap <- GITHUB.list_files(creator="RajLabMSSM",
                                     repo="Fine_Mapping_Shiny",
                                     query="*Nalls23andMe_2019.*UKB.multi_finemap.csv.gz") 
   # Let's just download the loci of interest.
-locus_list <- c("LRRK2","MBNL2","DYRK1A","FCGR2A")
+
 remote_finemap <- grep(paste(locus_list,collapse="|"), remote_finemap, value = T)
 
 local_finemap <- GITHUB.download_files(filelist = remote_finemap,
@@ -79,8 +84,7 @@ Next, we'll download the files containing LD with the lead GWAS SNP.
 remote_ld <- GITHUB.list_files(creator="RajLabMSSM",
                                repo="Fine_Mapping_Shiny",
                                query="*Nalls23andMe_2019.*UKB.LD.csv.gz") 
-# Let's just download the loci of interest.
-locus_list <- c("LRRK2","MBNL2","DYRK1A","FCGR2A")
+# Let's just download the loci of interest. 
 remote_ld <- grep(paste(locus_list,collapse="|"), remote_ld, value = T)
 
 local_ld <- GITHUB.download_files(filelist = remote_ld,

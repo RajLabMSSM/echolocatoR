@@ -2,7 +2,7 @@
 % Please edit documentation in R/LD.R
 \name{LD.get_lead_r2}
 \alias{LD.get_lead_r2}
-\title{Find correlate o}
+\title{Find correlates of the lead GWAS/QTL SNP}
 \usage{
 LD.get_lead_r2(
   finemap_dat,
@@ -13,5 +13,5 @@ LD.get_lead_r2(
 )
 }
 \description{
-Find correlate o
+Find correlates of the lead GWAS/QTL SNP
 }
