@@ -1,7 +1,7 @@
 Package: echolocatoR
 Type: Package
 Title: Automated genomic fine-mapping
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: as.person(c(
     "Brian Schilder <brian_schilder@alumni.brown.edu> [aut, cre]",
     "Jack Humphrey [ctb]"

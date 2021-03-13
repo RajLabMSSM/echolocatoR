@@ -6,10 +6,7 @@
 -   [Installation](#installation)
     -   [Quick installation](#quick-installation)
     -   [Robust installation (*conda*)](#robust-installation-conda)
--   [Dependencies](#dependencies)
-    -   [R](#r)
-    -   [Python](#python)
-    -   [Command line](#command-line)
+    -   [Dependencies](#dependencies)
 -   [Fine-mapping tools](#fine-mapping-tools)
     -   [ABF: `proportion_cases`,`MAF`](#abf-proportion_casesmaf)
     -   [FINEMAP:`A1`,`A2`,`MAF`,`N`](#finemapa1a2mafn)
@@ -158,14 +155,14 @@ using from RStudio), you can then supply the env name to the
 
 <br>
 
-## Dependencies
+### Dependencies
 
 For a full list of suggested packages, see
 [DESCRIPTION](https://github.com/RajLabMSSM/echolocatoR/blob/master/DESCRIPTION).
 
 \* = *optional*
 
-### R
+#### R
 
     - magrittr  
     - R.utils  
@@ -205,7 +202,7 @@ library(echolocatoR)
 extra_installs()
 ```
 
-### Python
+#### Python
 
     - python>=3.6.1  
     - pandas>=0.25.0   
@@ -220,18 +217,18 @@ extra_installs()
     - rpy2  
     - requests  
 
-### Command line
+#### Command line
 
-#### [Tabix](http://www.htslib.org/doc/tabix.html)
+##### [Tabix](http://www.htslib.org/doc/tabix.html)
 
 -   Rapid querying of summary stats files.
 -   To use it, specify `query_by="tabix"` in `finemap_loci()`.
 
-#### [bcftools](http://samtools.github.io/bcftools/bcftools.html)
+##### [bcftools](http://samtools.github.io/bcftools/bcftools.html)
 
 -   Used here for filtering populations in vcf files.
 
-#### [Axel](https://github.com/axel-download-accelerator/axel) \*
+##### [Axel](https://github.com/axel-download-accelerator/axel) \*
 
 -   Rapid multi-core downloading of large files (e.g. LD matrices from
     UK Biobank).
