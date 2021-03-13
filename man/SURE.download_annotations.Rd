@@ -14,7 +14,8 @@ SURE.download_annotations(
   URL = "https://osf.io/vxfk3/download",
   output_dir = ".",
   nThread = 4,
-  v = verbose
+  v = verbose,
+  conda_env = "echoR"
 )
 }
 \description{

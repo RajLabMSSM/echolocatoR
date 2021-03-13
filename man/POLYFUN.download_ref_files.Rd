@@ -9,7 +9,8 @@ POLYFUN.download_ref_files(
     alkes_url = "https://data.broadinstitute.org/alkesgroup/LDSCORE/1000G_Phase1_plinkfiles.tgz",
   results_dir = "./results",
   force_overwrite = F,
-  download_method = "wget"
+  download_method = "wget",
+  conda_env = "echoR"
 )
 }
 \description{

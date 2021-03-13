@@ -721,7 +721,7 @@ PAINTOR <- function(finemap_dat=NULL,
         printer("PAINTOR:: No finemap_dat supplied. Retrieving from storage:",mfm_path)
         finemap_dat <- data.table::fread(mfm_path, nThread = 4)
       }
-      finemap_dat <- calculate.tstat(finemap_dat=finemap_dat)
+      finemap_dat <- calculate_tstat(finemap_dat=finemap_dat)
   }
   if(!is.null(QTL_datasets)){
     qtl_DT <- PAINTOR.import_QTL_DT(QTL_datasets = QTL_datasets,

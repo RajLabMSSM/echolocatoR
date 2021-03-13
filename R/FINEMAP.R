@@ -357,7 +357,7 @@ FINEMAP.process_results <- function(locus_dir,
     # NOTES:
     ## .cred files: Conditional posterior probabilities that a given variant is causal
     ## conditional on the other causal variants in the region.
-    printer("+ FINEMAP:: Importing conditional probabilties (.cred)...", v=verbose)
+    printer("+ FINEMAP:: Importing conditional probabilities (.cred)...", v=verbose)
     cred_path <- file.path(locus_dir,"FINEMAP/data.cred")
     data.cred <- data.table::fread(cred_path,
                                    na.strings = c("<NA>","NA"),

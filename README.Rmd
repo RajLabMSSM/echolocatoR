@@ -115,16 +115,14 @@ to create a [*conda*](https://docs.conda.io/en/latest/) environment.
 
 3.  In command line, create the env from the *.yml* file:
 
-```{=html}
 <!-- -->
-```
+
     conda env create -f <path_to_file>/echoR.yml
 
 1.  Activate the new env:
 
-```{=html}
 <!-- -->
-```
+
     conda activate echoR
 
 1.  Open Rstudio from the command line interface (not by clicking the
@@ -223,7 +221,7 @@ extra_installs()
 
 -   Used here for filtering populations in vcf files.
 
-##### [axel](https://github.com/axel-download-accelerator/axel) 
+##### [axel](https://github.com/axel-download-accelerator/axel)
 
 -   Rapid multi-core downloading of large files (e.g. LD matrices from
     UK Biobank).

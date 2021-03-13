@@ -222,7 +222,7 @@ Zscore.get_mean_and_sd <- function(fullSS,#="./Data/GWAS/Nalls23andMe_2019/nalls
       sample_x <- data.table::fread(fullSS, nThread = 4,
                                     select=c(effect_col, stderr_col),
                                     col.names = c("Effect","StdErr"))
-      sample_x <- subset(calculate.tstat(sample_x), select = target_col)
+      sample_x <- subset(calculate_tstat(sample_x), select = target_col)
     }else {
       sample_x <- data.table::fread(fullSS, nThread = 4, select=c(target_col))
     }

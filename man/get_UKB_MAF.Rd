@@ -10,7 +10,8 @@ get_UKB_MAF(
   force_new_maf = F,
   download_method = "axel",
   nThread = 4,
-  verbose = T
+  verbose = T,
+  conda_env = "echoR"
 )
 }
 \description{
