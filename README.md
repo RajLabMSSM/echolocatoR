@@ -10,7 +10,7 @@
     -   [R](#r)
     -   [Python](#python)
     -   [Command line](#command-line)
--   [Fine-mapping Tools](#fine-mapping-tools)
+-   [Fine-mapping tools](#fine-mapping-tools)
     -   [ABF: `proportion_cases`,`MAF`](#abf-proportion_casesmaf)
     -   [FINEMAP:`A1`,`A2`,`MAF`,`N`](#finemapa1a2mafn)
     -   [SuSiE: `N`](#susie-n)
@@ -19,17 +19,17 @@
     -   [GCTA-COJO: `A1`,`A2`,`Freq`,`P`,`N`](#gcta-cojo-a1a2freqpn)
     -   [coloc: `N`,`MAF`](#coloc-nmaf)
 -   [Datasets](#datasets)
-    -   [Epigenomic & Genome-wide
-        Annotations](#epigenomic-genome-wide-annotations)
+    -   [Epigenomic & genome-wide
+        annotations](#epigenomic-genome-wide-annotations)
     -   [QTLs](#qtls)
--   [Enrichment Tools](#enrichment-tools)
+-   [Enrichment tools](#enrichment-tools)
     -   [XGR](#xgr-1)
     -   [GoShifter](#goshifter)
     -   [S-LDSC](#s-ldsc)
     -   [motifbreakR](#motifbreakr)
     -   [GARFIELD (**under
         construction**)](#garfield-under-construction)
--   [LD Reference Panels](#ld-reference-panels)
+-   [LD reference panels](#ld-reference-panels)
     -   [UK Biobank](#uk-biobank)
     -   [1000 Genomes Phase 1](#genomes-phase-1)
     -   [1000 Genomes Phase 3](#genomes-phase-3)
@@ -46,9 +46,9 @@ to genome-wide datasets
 </h3>
 <hr>
 
-#### If you use ***echolocatoR***, please cite our paper (thanks!):
+#### If you use ***echolocatoR***, please cite our preprint (thanks!):
 
-> BM Schilder, J Humphrey, T Raj (2020) echolocatoR: an automated
+> BM Schilder, J Humphrey & T Raj (2020) echolocatoR: an automated
 > end-to-end statistical and functional genomic fine-mapping pipeline.
 > *bioRxiv* 2020.10.22.351221; doi:
 > <https://doi.org/10.1101/2020.10.22.351221>
@@ -59,14 +59,14 @@ to genome-wide datasets
 >     Schilder…T Raj (2020) Discordant transcriptional signatures of
 >     mitochondrial genes in Parkinson’s disease human myeloid cells.
 >     *bioRxiv*; <https://doi.org/10.1101/2020.07.20.212407>
-> 2.  BM Schilder and T Raj (2020) Fine-Mapping of Parkinson’s Disease
+> 2.  BM Schilder & T Raj (2020) Fine-Mapping of Parkinson’s Disease
 >     Susceptibility Loci Identifies Putative Causal Variants.
 >     *bioRxiv*, 0–30; <https://doi.org/10.1101/2020.10.22.340158>.
 > 3.  K de Paiva Lopes, GJL Snijders, J Humphrey, A Allan, M Sneeboer, E
->     Navarro, BM Schilder…T Raj
->     1.  Atlas of Genetic Effects in Human Microglia Transcriptome
->         across Brain Regions, Aging and Disease Pathologies.
->         *bioRxiv*; <https://doi.org/10.1101/2020.10.27.356113>.
+>     Navarro, BM Schilder…T Raj (2020) Atlas of Genetic Effects in
+>     Human Microglia Transcriptome across Brain Regions, Aging and
+>     Disease Pathologies.
+>     *bioRxiv*; <https://doi.org/10.1101/2020.10.27.356113>.
 
 <hr>
 
@@ -192,8 +192,10 @@ For a full list of suggested packages, see
     - Ckmeans.1d.dp  
     - refGenome   
 
-There’s some additional optional R dependencies (e.g. XGR, ) that can be
-a bit tricky, so we’ve removed it from \*echolocatoR\*’s
+There’s some additional optional R dependencies (e.g.
+[XGR](https://github.com/hfang-bristol/XGR),
+[Rgraphviz](https://www.bioconductor.org/packages/release/bioc/html/Rgraphviz.html))
+that can be a bit tricky, so we’ve removed them from *echolocatoR*’s
 [DESCRIPTION](https://github.com/RajLabMSSM/echolocatoR/blob/master/DESCRIPTION)
 file and instead provided a separate R function that helps users to
 install them afterwards:
@@ -222,7 +224,7 @@ extra_installs()
 
 #### [Tabix](http://www.htslib.org/doc/tabix.html)
 
--   Rapid querying of summary stats files.  
+-   Rapid querying of summary stats files.
 -   To use it, specify `query_by="tabix"` in `finemap_loci()`.
 
 #### [bcftools](http://samtools.github.io/bcftools/bcftools.html)
@@ -236,24 +238,24 @@ extra_installs()
 
 -   To use it, specify `download_method="axel"` in `finemap_loci()`.
 
--   **Update**: A conda version of *axel* has been kindly provided by .
+-   **Update**: A conda version of *axel* has been kindly provided by
+    [@jdblischak](https://github.com/RajLabMSSM/echolocatoR/pull/23), no
+    longer requiring a separate installation.
 
--   For more info on installing/using *axel* in general, also see this
-    [tutorial](https://www.tecmint.com/axel-commandline-download-accelerator-for-linux/).
-    Depending on what kind of computer you’re using, this process will
-    look a bit different:
+-   However, if you want to use *axel* without the conda env, see this
+    [tutorial](https://www.tecmint.com/axel-commandline-download-accelerator-for-linux/)
+    for more info on installation. Here’s a quick overview:
 
     -   **Mac**: Install [brew](https://brew.sh/), then:
-        `brew install axel`  
-    -   **CentOS/RHEL 7**:
-        `yum install epel-release; yum install axel`  
-    -   **Fedora**: `yum install axel; dnf install axel`  
+        `brew install axel`
+    -   **CentOS/RHEL 7**: `yum install epel-release; yum install axel`
+    -   **Fedora**: `yum install axel; dnf install axel`
     -   **Debian Jessie (e.g. Ubuntu, Linux Mint)**:
         `aptitude install axel`
 
 <br>
 
-## Fine-mapping Tools
+## Fine-mapping tools
 
 ***echolocatoR*** will automatically check whether you have the
 necessary columns to run each tool you selected in
@@ -288,7 +290,7 @@ Additional required columns:
 For more detailed information about each dataset, use `?`:  
 `R   library(echolocatoR)   ?NOTT_2019.interactome # example dataset`
 
-### Epigenomic & Genome-wide Annotations
+### Epigenomic & genome-wide annotations
 
 #### [Nott et al. (2019)](https://science.sciencemag.org/content/366/6469/1134.abstract)
 
@@ -378,7 +380,7 @@ For more detailed information about each dataset, use `?`:
 
 <br>
 
-## Enrichment Tools
+## Enrichment tools
 
 ### [XGR](http://xgr.r-forge.r-project.org)
 
@@ -411,7 +413,7 @@ For more detailed information about each dataset, use `?`:
 
 <br>
 
-## LD Reference Panels
+## LD reference panels
 
 ### [UK Biobank](https://www.ukbiobank.ac.uk)
 
