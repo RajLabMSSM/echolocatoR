@@ -80,7 +80,7 @@ LD.load_or_create <- function(locus_dir,
     #### Import existing LD ####
     printer("+  LD:: Previously computed LD_matrix detected. Importing...", RDS_path, v=verbose)
     LD_matrix <- readSparse(LD_path = RDS_path,
-                            convert_to_df = T)
+                            convert_to_df = F)
     LD_list <- list(DT=subset_DT,
                     LD=LD_matrix,
                     RDS_path=RDS_path)
@@ -1457,9 +1457,9 @@ LD.get_lead_r2 <- function(finemap_dat,
     finemap_dat <- dplyr::select(finemap_dat, -c(r,r2))
   }
   LD_SNP <- subset(finemap_dat, leadSNP==T)$SNP
-  # Infer data type
+  # Infer LD data format
   if(LD_format=="guess"){
-    LD_format <- if(nrow(LD_matrix)==ncol(LD_matrix)) "matrix" else "df"
+    LD_format <- if(nrow(LD_matrix)==ncol(LD_matrix) | class(LD_matrix)[1]=="dsCMatrix") "matrix" else "df"
   }
 
   if(LD_format=="matrix"){
@@ -1469,7 +1469,8 @@ LD.get_lead_r2 <- function(finemap_dat,
       dat$r2 <- NA
     } else {
       printer("+ LD:: LD_matrix detected. Coloring SNPs by LD with lead SNP.", v=verbose)
-      LD_sub <- subset(LD_matrix, select=LD_SNP) %>%
+      LD_sub <- LD_matrix[,LD_SNP] %>%
+        # subset(LD_matrix, select=LD_SNP) %>%
         # subset(select = -c(r,r2)) %>%
         data.table::as.data.table(keep.rownames = T) %>%
         `colnames<-`(c("SNP","r")) %>%

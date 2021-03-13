@@ -98,7 +98,7 @@ PLOT.locus <- function(finemap_dat,
                                 LD_format = "guess")
   # Begin constructing tracks
   TRKS <- NULL;
-  # Treack: Summary
+  # Track: Summary
   if(dot_summary){
     printer("++ PLOT:: Creating dot plot summary of fine-mapping results.")
     TRKS[["Summary"]] <- PLOT.dot_summary(finemap_dat = finemap_dat,
