@@ -142,7 +142,7 @@ For a full list of suggested packages, see [DESCRIPTION](https://github.com/RajL
 #### [Axel](https://github.com/axel-download-accelerator/axel)  *    
   + Rapid multi-core downloading of large files (e.g. LD matrices from UK Biobank).  
   + To use it, specify `download_method="axel"` in `finemap_loci()`.  
-  + **NOTE**: *axel* does not currently have a conda release. So you will need to install it as a separate step. For more info on installing/using *axel* in general, also see this [tutorial](https://www.tecmint.com/axel-commandline-download-accelerator-for-linux/). Depending on what kind of computer you're using, this process will look a bit different:  
+  + For more info on installing/using *axel* in general, see this [tutorial](https://www.tecmint.com/axel-commandline-download-accelerator-for-linux/). Depending on what kind of computer you're using, this process will look a bit different:
     - **Mac**: Install [brew](https://brew.sh/), then: `brew install axel`  
     - **CentOS/RHEL 7**: `yum install epel-release; yum install axel`  
     - **Fedora**: `yum install axel; dnf install axel`  
