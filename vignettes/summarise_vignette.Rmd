@@ -20,7 +20,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = F, message = F, error = T}
+```{r, include = T, message = F, error = T}
 root.dir <- "~/Desktop"
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -32,14 +32,10 @@ knitr::opts_chunk$set(
 knitr::opts_knit$set(
   root.dir = root.dir
   )
-# knitr::opts_chunk$get("root.dir")
-# devtools::build_vignettes(quiet = F)
-```
-
-```{r setup, root.dir="~/Desktop"}
 library(echolocatoR) 
 results_dir <- "~/Desktop/results"
 ```
+
 
 # Download data  
 
@@ -258,18 +254,6 @@ row2 <- (gg_egene$plot +
 gg_merged <- (row1  / row2)  + patchwork::plot_layout(heights = c(.15,1),ncol = 1) 
 print(gg_merged)
 
-```
- 
-Save the multi-plot as a high-resolution image.  
-
-```{r, eval=F}
-
-ggplot2::ggsave(filename = file.path(results_dir,
-                                     "GWAS/Nalls23andMe_2019",
-                                     "Fig2.results_summary.jpg"), #(or .png)
-                plot = gg_merged,
-                dpi = 500,
-                height=15, width=12)
 ```
  
 # Session info 

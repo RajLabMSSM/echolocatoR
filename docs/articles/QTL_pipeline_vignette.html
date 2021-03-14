@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>echolocatoR: QTL pipeline vignette • echolocatoR</title>
+<title>QTL pipeline vignette • echolocatoR</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="echolocatoR: QTL pipeline vignette">
+<script src="../pkgdown.js"></script><meta property="og:title" content="QTL pipeline vignette">
 <meta property="og:description" content="echolocatoR">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -54,13 +54,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/QTL_pipeline_vignette.html">echolocatoR: QTL pipeline vignette</a>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
     </li>
     <li>
-      <a href="../articles/full_pipeline_vignette.html">echolocatoR: full pipeline vignette</a>
+      <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/plotting_vignette.html">echolocatoR: plotting vignette</a>
+      <a href="../articles/full_pipeline_vignette.html">Full pipeline vignette</a>
+    </li>
+    <li>
+      <a href="../articles/plotting_vignette.html">Plotting vignette</a>
+    </li>
+    <li>
+      <a href="../articles/summarise_vignette.html">Summarise vignette</a>
     </li>
   </ul>
 </li>
@@ -68,7 +74,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -82,13 +88,13 @@
 
       
 
-      </header><div class="row">
+      </header><script src="QTL_pipeline_vignette_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>echolocatoR: QTL pipeline vignette</h1>
+      <h1 data-toc-skip>QTL pipeline vignette</h1>
                         <h4 class="author">Brian M. Schilder</h4>
             
-            <h4 class="date">Most recent update:<br> 2020-07-09</h4>
+            <h4 class="date">Most recent update:<br> 2021-03-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/RajLabMSSM/echolocatoR/blob/master/vignettes/QTL_pipeline_vignette.Rmd"><code>vignettes/QTL_pipeline_vignette.Rmd</code></a></small>
       <div class="hidden name"><code>QTL_pipeline_vignette.Rmd</code></div>
@@ -97,13 +103,27 @@
 
     
     
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">echolocatoR</span>)
-<span class="co">#&gt; Registered S3 method overwritten by 'GGally':</span>
-<span class="co">#&gt;   method from   </span>
-<span class="co">#&gt;   +.gg   ggplot2</span></pre></body></html></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">root.dir</span> <span class="op">&lt;-</span> <span class="st">"~/Desktop"</span>
+<span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_chunk.html">opts_chunk</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>
+  collapse <span class="op">=</span> <span class="cn">TRUE</span>,
+  comment <span class="op">=</span> <span class="st">"#&gt;"</span>,
+  root.dir <span class="op">=</span> <span class="va">root.dir</span>,
+  fig.height <span class="op">=</span> <span class="fl">12</span>,
+  fig.width <span class="op">=</span> <span class="fl">10</span>
+<span class="op">)</span>  
+<span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_knit.html">opts_knit</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>root.dir <span class="op">=</span> <span class="va">root.dir</span><span class="op">)</span>
+
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RajLabMSSM/echolocatoR">echolocatoR</a></span><span class="op">)</span> 
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<span class="va">results_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">root.dir</span>,<span class="st">"results"</span><span class="op">)</span> 
+<span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.create</a></span><span class="op">(</span><span class="va">results_dir</span>, showWarnings <span class="op">=</span> <span class="cn">F</span>, recursive <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></code></pre></div>
 <div id="qtl-pipeline" class="section level1">
 <h1 class="hasAnchor">
 <a href="#qtl-pipeline" class="anchor"></a>QTL pipeline</h1>
+<ul>
+<li>Here, we will use GWAS-eQTL colocalization results provided via the <a href="https://github.com/RajLabMSSM/Fine_Mapping_Shiny"><em>echolocatoR Fine-mapping Portal</em></a>, from the preprint: &gt; K de Paiva Lopes, GJL Snijders, J Humphrey, A Allan, M Sneeboer, E Navarro, BM Schilder…T Raj (2020) Atlas of Genetic Effects in Human Microglia Transcriptome across Brain Regions, Aging and Disease Pathologies. bioRxiv; <a href="https://doi.org/10.1101/2020.10.27.356113">https://doi.org/10.1101/2020.10.27.356113</a>.</li>
+</ul>
 <div id="prepare-top_snps-data-frame" class="section level2">
 <h2 class="hasAnchor">
 <a href="#prepare-top_snps-data-frame" class="anchor"></a>Prepare <code>top_SNPs</code> data.frame</h2>
@@ -112,26 +132,33 @@
 </li>
 <li>In this case, you’ll want to make sure to set <code>grouping_vars=c("Locus","Gene")</code> so that you get top SNPs for each eGene-locus pair (not just one SNP per locus).</li>
 </ul>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">fullSS_path</span> <span class="kw">&lt;-</span> <span class="st">"~/Desktop/merged_coloc_results.snp.tsv.gz"</span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fullSS_path</span> <span class="op">&lt;-</span> <span class="st">"~/Desktop/Microglia_all_regions_Kunkle_2019_COLOC.snp-level_select.tsv.gz"</span>
+<span class="co">## Download example data </span>
+<span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files.html">file.exists</a></span><span class="op">(</span><span class="va">fullSS_path</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
+  <span class="fu"><a href="https://rdrr.io/r/utils/download.file.html">download.file</a></span><span class="op">(</span><span class="st">"https://github.com/RajLabMSSM/Fine_Mapping_Shiny/raw/master/www/Microglia_all_regions_Kunkle_2019_COLOC.snp-level_select.tsv.gz"</span>, <span class="va">fullSS_path</span><span class="op">)</span>
+<span class="op">}</span>
 
-<span class="no">top_SNPs</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/import_topSNPs.html">import_topSNPs</a></span>(
-  <span class="kw">topSS</span> <span class="kw">=</span> <span class="no">fullSS_path</span>,
-  <span class="kw">chrom_col</span> <span class="kw">=</span> <span class="st">"chr"</span>,
-  <span class="kw">position_col</span> <span class="kw">=</span> <span class="st">"pos"</span>,
-  <span class="kw">snp_col</span><span class="kw">=</span><span class="st">"snp"</span>,
-  <span class="kw">pval_col</span><span class="kw">=</span><span class="st">"gwas.pvalues"</span>,
-  <span class="kw">effect_col</span><span class="kw">=</span><span class="st">"gwas.beta"</span>,
-  <span class="kw">gene_col</span><span class="kw">=</span><span class="st">"gene"</span>,
-  <span class="kw">locus_col</span> <span class="kw">=</span> <span class="st">"Locus"</span>,
-  <span class="kw">grouping_vars</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Locus"</span>,<span class="st">"Gene"</span>))
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">top_SNPs</span>)
-<span class="co">#&gt;          Gene Locus CHR     POS        SNP         P  Effect</span>
-<span class="co">#&gt; 1:      ABCA7 ABCA7  19 1050874 rs12151021 2.562e-10  0.1071</span>
-<span class="co">#&gt; 2:    ABHD17A ABCA7  19 1050874 rs12151021 2.562e-10  0.1071</span>
-<span class="co">#&gt; 3: AC004623.1 ABCA7  19 1050874 rs12151021 2.562e-10  0.1071</span>
-<span class="co">#&gt; 4: AC006277.1 ABCA7  19 1959773 rs56076117 2.345e-02 -0.0423</span>
-<span class="co">#&gt; 5: AC006538.3 ABCA7  19 1923909 rs12610391 2.449e-03 -0.0693</span>
-<span class="co">#&gt; 6: AC008993.1 ABCA7  19 1050874 rs12151021 2.562e-10  0.1071</span></pre></body></html></div>
+
+<span class="va">top_SNPs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_topSNPs.html">import_topSNPs</a></span><span class="op">(</span>  
+  topSS <span class="op">=</span> <span class="va">fullSS_path</span>,
+  chrom_col <span class="op">=</span> <span class="st">"chr"</span>, 
+  position_col <span class="op">=</span> <span class="st">"pos"</span>,
+  snp_col<span class="op">=</span><span class="st">"snp"</span>,
+  pval_col<span class="op">=</span><span class="st">"gwas.pvalues"</span>, 
+  effect_col<span class="op">=</span><span class="st">"gwas.beta"</span>, 
+  gene_col<span class="op">=</span><span class="st">"gene"</span>,
+  locus_col <span class="op">=</span> <span class="st">"Locus"</span>,
+  grouping_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Locus"</span>,<span class="st">"Gene"</span><span class="op">)</span><span class="op">)</span> 
+<span class="co">#&gt; [1] "+ Assigning gene_col and locus_col independently"</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">top_SNPs</span><span class="op">)</span>
+<span class="co">#&gt;     Locus            Gene CHR       POS        SNP         P  Effect</span>
+<span class="co">#&gt; 1:  ABCA7 ENSG00000160953  19   1050874 rs12151021 2.562e-10  0.1071</span>
+<span class="co">#&gt; 2:   BIN1 ENSG00000136731   2 127892810  rs6733839 4.022e-28  0.1693</span>
+<span class="co">#&gt; 3:    CR1 ENSG00000266094   1 207679307  rs4844600 1.598e-13  0.1324</span>
+<span class="co">#&gt; 4: INPP5D ENSG00000168918   2 233981912 rs10933431 2.552e-07  0.1001</span>
+<span class="co">#&gt; 5: MS4A6A ENSG00000149476  11  60103385 rs72924659 1.417e-14 -0.1239</span>
+<span class="co">#&gt; 6:  PILRA ENSG00000106366   7 100012579 rs60738304 1.154e-05 -0.0700</span></code></pre></div>
 </div>
 <div id="egene-locus-list" class="section level2">
 <h2 class="hasAnchor">
@@ -143,110 +170,160 @@
 <li>If you don’t want to test all pairs, you can filter the <code>top_SNPs</code> object first. In this example, I’m going to remove any pairs that don’t have matching eGene-locus names.<br>
 We’ll also limit the anaylsis to just 3 loci.</li>
 </ul>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">loci</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/gene_locus_list.html">gene_locus_list</a></span>(<span class="kw">top_SNPs</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="no">top_SNPs</span>, <span class="no">Gene</span><span class="kw">==</span><span class="no">Locus</span>))
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">loci</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gene_locus_list.html">gene_locus_list</a></span><span class="op">(</span><span class="va">top_SNPs</span><span class="op">)</span>
 <span class="co"># We'll just fine-map 2 loci to start</span>
-<span class="no">loci</span> <span class="kw">&lt;-</span> <span class="no">loci</span>[<span class="fl">1</span>:<span class="fl">3</span>]
-<span class="no">loci</span>
-<span class="co">#&gt;    ABCA7      ACE   ADAM10 </span>
-<span class="co">#&gt;  "ABCA7"    "ACE" "ADAM10"</span></pre></body></html></div>
+<span class="va">loci</span> <span class="op">&lt;-</span> <span class="va">loci</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span> 
+<span class="va">loci</span>
+<span class="co">#&gt; ENSG00000160953 ENSG00000136731 ENSG00000266094 </span>
+<span class="co">#&gt;         "ABCA7"          "BIN1"           "CR1"</span></code></pre></div>
 </div>
 <div id="run-fine-mapping-pipeline" class="section level2">
 <h2 class="hasAnchor">
 <a href="#run-fine-mapping-pipeline" class="anchor"></a>Run fine-mapping pipeline</h2>
 <p><strong>NOTE</strong>: Currently this <code><a href="../reference/finemap_loci.html">finemap_loci()</a></code> will only fine-map the GWAS results. However you can still plot the fine-mapped GWAS results using the <code>QTL_prefixes</code> argument.</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">Kunkle_2019.microgliaQTL</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/finemap_loci.html">finemap_loci</a></span>(<span class="co"># GENERAL ARGUMENTS </span>
-                                        <span class="kw">top_SNPs</span> <span class="kw">=</span> <span class="no">top_SNPs</span>,
-                                        <span class="kw">results_dir</span> <span class="kw">=</span> <span class="st">"~/Desktop/results"</span>,
-
-                                        <span class="kw">loci</span> <span class="kw">=</span> <span class="no">loci</span>,
-                                        <span class="kw">dataset_name</span> <span class="kw">=</span> <span class="st">"Kunkle_2019.microgliaQTL"</span>,
-                                        <span class="kw">dataset_type</span> <span class="kw">=</span> <span class="st">"GWAS"</span>,
-                                        <span class="kw">sample_size</span> <span class="kw">=</span> <span class="fl">21982</span> + <span class="fl">41944</span>,
-                                        <span class="kw">proportion_cases</span> <span class="kw">=</span> <span class="fl">21982</span> / <span class="fl">41944</span>,
-                                        <span class="kw">force_new_subset</span> <span class="kw">=</span> <span class="no">F</span>,
-                                        <span class="kw">force_new_LD</span> <span class="kw">=</span> <span class="no">F</span>,
-                                        <span class="kw">force_new_finemap</span> <span class="kw">=</span> <span class="no">F</span>,
-                                        <span class="kw">remove_tmps</span> <span class="kw">=</span> <span class="no">T</span>,
-
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">Kunkle_2019.microgliaQTL</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/finemap_loci.html">finemap_loci</a></span><span class="op">(</span><span class="co"># GENERAL ARGUMENTS </span>
+                                        top_SNPs <span class="op">=</span> <span class="va">top_SNPs</span>,  
+                                        results_dir <span class="op">=</span> <span class="va">results_dir</span>,
+                                        
+                                        loci <span class="op">=</span> <span class="va">loci</span>,
+                                        dataset_name <span class="op">=</span> <span class="st">"Kunkle_2019.microgliaQTL"</span>,
+                                        dataset_type <span class="op">=</span> <span class="st">"GWAS"</span>,  
+                                        sample_size <span class="op">=</span> <span class="fl">21982</span> <span class="op">+</span> <span class="fl">41944</span>,
+                                        proportion_cases <span class="op">=</span> <span class="fl">21982</span> <span class="op">/</span> <span class="fl">41944</span>,
+                                        force_new_subset <span class="op">=</span> <span class="cn">F</span>,
+                                        force_new_LD <span class="op">=</span> <span class="cn">F</span>,
+                                        force_new_finemap <span class="op">=</span> <span class="cn">F</span>,
+                                        remove_tmps <span class="op">=</span> <span class="cn">T</span>,
+                                          
                  <span class="co"># SUMMARY STATS ARGUMENTS</span>
-                 <span class="kw">fullSS_path</span> <span class="kw">=</span> <span class="no">fullSS_path</span>,
-                 <span class="kw">query_by</span> <span class="kw">=</span><span class="st">"coordinates"</span>,
-                 <span class="kw">chrom_col</span> <span class="kw">=</span> <span class="st">"chr"</span>,
-                 <span class="kw">position_col</span> <span class="kw">=</span> <span class="st">"pos"</span>,
-                 <span class="kw">snp_col</span> <span class="kw">=</span> <span class="st">"snp"</span>,
-                 <span class="kw">pval_col</span> <span class="kw">=</span> <span class="st">"gwas.pvalues"</span>,
-                 <span class="kw">effect_col</span> <span class="kw">=</span> <span class="st">"gwas.beta"</span>,
-                 <span class="kw">stderr_col</span> <span class="kw">=</span> <span class="st">"gwas.varbeta"</span>,
-                 <span class="kw">MAF_col</span> <span class="kw">=</span> <span class="st">"gwas.MAF"</span>,
-                 <span class="kw">gene_col</span> <span class="kw">=</span> <span class="st">"gene"</span>,
-
+                 fullSS_path <span class="op">=</span> <span class="va">fullSS_path</span>,
+                 query_by <span class="op">=</span><span class="st">"fullSS"</span>,
+                 chrom_col <span class="op">=</span> <span class="st">"chr"</span>, 
+                 position_col <span class="op">=</span> <span class="st">"pos"</span>, 
+                 snp_col <span class="op">=</span> <span class="st">"snp"</span>,
+                 pval_col <span class="op">=</span> <span class="st">"gwas.pvalues"</span>, 
+                 effect_col <span class="op">=</span> <span class="st">"gwas.beta"</span>, 
+                 stderr_col <span class="op">=</span> <span class="st">"gwas.varbeta"</span>, 
+                 MAF_col <span class="op">=</span> <span class="st">"gwas.MAF"</span>, 
+                 gene_col <span class="op">=</span> <span class="st">"gene"</span>,
+                 
                  <span class="co"># QTL prefixes</span>
-                 <span class="kw">QTL_prefixes</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"qtl."</span>),
-
+                 QTL_prefixes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"qtl."</span><span class="op">)</span>,
+                 
                  <span class="co"># FILTERING ARGUMENTS</span>
-                 <span class="kw">bp_distance</span> <span class="kw">=</span> <span class="fl">500000</span>, <span class="co">#100000,</span>
-                 <span class="kw">min_MAF</span> <span class="kw">=</span> <span class="fl">0.001</span>,
-
+                 bp_distance <span class="op">=</span> <span class="fl">500000</span>, <span class="co">#100000,</span>
+                 min_MAF <span class="op">=</span> <span class="fl">0.001</span>, 
+                 
                  <span class="co"># FINE-MAPPING ARGUMENTS</span>
-                 <span class="kw">finemap_methods</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"ABF"</span>,<span class="st">"FINEMAP"</span>,<span class="st">"SUSIE"</span>,<span class="st">"POLYFUN_SUSIE"</span>),
-                 <span class="kw">n_causal</span> <span class="kw">=</span> <span class="fl">5</span>,
-                 <span class="kw">PP_threshold</span> <span class="kw">=</span> <span class="fl">.95</span>,
-
+                 finemap_methods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"ABF"</span>,<span class="st">"FINEMAP"</span>,<span class="st">"SUSIE"</span>,<span class="st">"POLYFUN_SUSIE"</span><span class="op">)</span>,
+                 n_causal <span class="op">=</span> <span class="fl">5</span>,
+                 PP_threshold <span class="op">=</span> <span class="fl">.95</span>,
+                 
                  <span class="co"># LD ARGUMENTS </span>
-                 <span class="kw">LD_reference</span> <span class="kw">=</span> <span class="st">"1KGphase1"</span>,
-                 <span class="kw">superpopulation</span> <span class="kw">=</span> <span class="st">"EUR"</span>,
-                 <span class="kw">download_method</span> <span class="kw">=</span> <span class="st">"axel"</span>,
-
+                 LD_reference <span class="op">=</span> <span class="st">"1KGphase1"</span>,
+                 superpopulation <span class="op">=</span> <span class="st">"EUR"</span>,
+                 download_method <span class="op">=</span> <span class="st">"axel"</span>,
+                 
                  <span class="co"># PLOT ARGUMENTS </span>
-                 <span class="kw">plot.types</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"simple"</span>),
-                 <span class="kw">plot.window</span> <span class="kw">=</span> <span class="fl">500000</span>/<span class="fl">2</span>,
-                 )
-<span class="co">#&gt; [1] "Fine-mapping 3 gene:Locus pairs."</span>
-<span class="co">#&gt; 🦇 🦇 🦇 ABCA7 🦇 🦇 🦇</span>
-<span class="co">#&gt; ------------------ Step 1: Query ---------------</span>
-<span class="co">#&gt; [1] "+ Importing  pre-existing file: /Users/schilder/Desktop/results/GWAS/Kunkle_2019.microgliaQTL/ABCA7/Multi-finemap/ABCA7_Kunkle_2019.microgliaQTL_Multi-finemap.tsv.gz"</span>
-<span class="co">#&gt; [1] "+ Subset file looks good! :)"</span>
+                 plot.types<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"simple"</span><span class="op">)</span>,
+                 plot.zoom <span class="op">=</span> <span class="st">"1x"</span> 
+                 <span class="op">)</span>
+<span class="co">#&gt; [1] "+ CONDA:: Activating conda env 'echoR'"</span>
+<span class="co">#&gt; [1] "Checking for tabix installation..."</span>
+<span class="co">#&gt; [1] "Checking for bcftools installation..."</span>
+<span class="co">#&gt; [1] "Reassigning gene-specific locus names"</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; )   )  ) ))))))}}}}}}}} {{{{{{{{{(((((( (  (   (</span>
+<span class="co">#&gt; ABCA7_ENSG00000160953 (1 / 3)</span>
+<span class="co">#&gt; )   )  ) ))))))}}}}}}}} {{{{{{{{{(((((( (  (   (</span>
+<span class="co">#&gt; [1] "+ Importing  pre-existing file: /Users/schilder/Desktop/results/GWAS/Kunkle_2019.microgliaQTL/ABCA7_ENSG00000160953/Multi-finemap/1KGphase1_LD.Multi-finemap.tsv.gz"</span>
+<span class="co">#&gt; [1] "+ Subset file looks good."</span>
 <span class="co">#&gt; [1] "+ Removing subset tmp..."</span>
-<span class="co">#&gt; --- Step 2: Calculate Linkage Disequilibrium ---</span>
-<span class="co">#&gt; [1] "+ Previously computed LD matrix detected. Importing... /Users/schilder/Desktop/results/GWAS/Kunkle_2019.microgliaQTL/ABCA7/LD/ABCA7.1KGphase1_LD.RDS"</span>
-<span class="co">#&gt; -------------- Step 3: Filter SNPs -------------</span>
-<span class="co">#&gt; [1] "++ Post-filtered data: 724 x 22"</span>
-<span class="co">#&gt; -------- Step 4: Statistically Fine-map --------</span>
-<span class="co">#&gt; [1] "++ Previously multi-fine-mapped results identified. Importing..."</span>
-<span class="co">#&gt; [1] "++ Fine-mapping with ' ABF, FINEMAP, SUSIE, POLYFUN_SUSIE ' completed in  0.04"</span>
-<span class="co">#&gt; [1] "+ Identifying Consensus SNPs..."</span>
-<span class="co">#&gt; [1] "++ support_thresh = 2"</span>
-<span class="co">#&gt; [1] "+ Calculating mean Posterior Probability (mean.PP)..."</span>
-<span class="co">#&gt; [1] "++ 2 fine-mapping methods used."</span>
-<span class="co">#&gt; [1] "++ 0 Credible Set SNPs identified."</span>
-<span class="co">#&gt; [1] "++ 0 Consensus SNPs identified."</span>
-<span class="co">#&gt; --------------- Step 7: Visualize --------------</span>
+<span class="co">#&gt; [1] "+  LD:: Previously computed LD_matrix detected. Importing... /Users/schilder/Desktop/results/GWAS/Kunkle_2019.microgliaQTL/ABCA7_ENSG00000160953/LD/ABCA7_ENSG00000160953.1KGphase1_LD.RDS"</span>
+<span class="co">#&gt; [1] "+ FILTER:: Filtering by LD features."</span>
+<span class="co">#&gt; [1] "FILTER:: Filtering by SNP features."</span>
+<span class="co">#&gt; [1] "+ FILTER:: Removing SNPs with MAF &lt; 0.001"</span>
+<span class="co">#&gt; [1] "+ FILTER:: Post-filtered data: 2984 x 34"</span>
+<span class="co">#&gt; [1] "++ Previously multi-finemap results identified. Importing: /Users/schilder/Desktop/results/GWAS/Kunkle_2019.microgliaQTL/ABCA7_ENSG00000160953/Multi-finemap/1KGphase1_LD.Multi-finemap.tsv.gz"</span>
+<span class="co">#&gt; [1] "+ Fine-mapping with ' ABF, FINEMAP, SUSIE, POLYFUN_SUSIE ' completed:"</span>
+<span class="co">#&gt; Time difference of 0.05 secs</span>
+<span class="co">#&gt; +-------- Locus Plot: ABCA7_ENSG00000160953--------+</span>
 <span class="co">#&gt; [1] "+ Filling NAs in CS cols with 0"</span>
 <span class="co">#&gt; [1] "+ Filling NAs in PP cols with 0"</span>
-<span class="co">#&gt; [1] "GGBIO:: LD_matrix detected. Coloring SNPs by LD with lead SNP."</span>
-<span class="co">#&gt; [1] "LD Matrix dimensions: 724 x 724"</span>
-<span class="co">#&gt; [1] "Extracting LD subset for lead SNP: rs12151021"</span>
-<span class="co">#&gt; [1] "++ GGBIO:: GWAS track"</span>
-<span class="co">#&gt; using coord:genome to parse x scale</span>
-<span class="co">#&gt; [1] "++ GGBIO:: qtl. track"</span>
-<span class="co">#&gt; using coord:genome to parse x scale</span>
-<span class="co">#&gt; [1] "++ GGBIO:: ABF track"</span>
-<span class="co">#&gt; using coord:genome to parse x scale</span>
-<span class="co">#&gt; [1] "++ GGBIO:: SUSIE track"</span>
-<span class="co">#&gt; using coord:genome to parse x scale</span>
-<span class="co">#&gt; [1] "++ GGBIO:: mean track"</span>
-<span class="co">#&gt; using coord:genome to parse x scale</span>
-<span class="co">#&gt; [1] "++ GGBIO:: Gene Model Track"</span>
-<span class="co">#&gt; [1] "+ Annotating at transcript-level."</span>
-<span class="co">#&gt; [1] "+ GGBIO:: Saving plot ==&gt; /Users/schilder/Desktop/results/GWAS/Kunkle_2019.microgliaQTL/ABCA7/multiview_ABCA7_250kb.png"</span>
-<span class="co">#&gt; Fetching data...</span>
-<span class="co">#&gt; OK</span>
-<span class="co">#&gt; Parsing exons...OK</span>
-<span class="co">#&gt; Defining introns...OK</span>
-<span class="co">#&gt; Defining UTRs...OK</span>
-<span class="co">#&gt; Defining CDS...OK</span>
-<span class="co">#&gt; aggregating...</span>
-<span class="co">#&gt; Done</span>
+<span class="co">#&gt; [1] "+ LD:: LD_matrix detected. Coloring SNPs by LD with lead SNP."</span>
+<span class="co">#&gt; [1] "++ PLOT:: GWAS track"</span>
+<span class="co">#&gt; [1] "++ PLOT:: qtl. track"</span>
+<span class="co">#&gt; [1] "++ PLOT:: Merged fine-mapping track"</span>
+<span class="co">#&gt; [1] "Melting PP and CS from 5 fine-mapping methods"</span>
+<span class="co">#&gt; [1] "++ PLOT:: Adding Gene model track."</span>
+<span class="co">#&gt; Loading required package: ensembldb</span>
+<span class="co">#&gt; Loading required package: BiocGenerics</span>
+<span class="co">#&gt; Loading required package: parallel</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: 'BiocGenerics'</span>
+<span class="co">#&gt; The following objects are masked from 'package:parallel':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,</span>
+<span class="co">#&gt;     clusterExport, clusterMap, parApply, parCapply, parLapply,</span>
+<span class="co">#&gt;     parLapplyLB, parRapply, parSapply, parSapplyLB</span>
+<span class="co">#&gt; The following objects are masked from 'package:dplyr':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     combine, intersect, setdiff, union</span>
+<span class="co">#&gt; The following objects are masked from 'package:stats':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     IQR, mad, sd, var, xtabs</span>
+<span class="co">#&gt; The following objects are masked from 'package:base':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     anyDuplicated, append, as.data.frame, basename, cbind, colnames,</span>
+<span class="co">#&gt;     dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,</span>
+<span class="co">#&gt;     grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,</span>
+<span class="co">#&gt;     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,</span>
+<span class="co">#&gt;     rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,</span>
+<span class="co">#&gt;     union, unique, unsplit, which.max, which.min</span>
+<span class="co">#&gt; Loading required package: GenomicRanges</span>
+<span class="co">#&gt; Loading required package: stats4</span>
+<span class="co">#&gt; Loading required package: S4Vectors</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: 'S4Vectors'</span>
+<span class="co">#&gt; The following objects are masked from 'package:dplyr':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     first, rename</span>
+<span class="co">#&gt; The following object is masked from 'package:base':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     expand.grid</span>
+<span class="co">#&gt; Loading required package: IRanges</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: 'IRanges'</span>
+<span class="co">#&gt; The following objects are masked from 'package:dplyr':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     collapse, desc, slice</span>
+<span class="co">#&gt; Loading required package: GenomeInfoDb</span>
+<span class="co">#&gt; Loading required package: GenomicFeatures</span>
+<span class="co">#&gt; Loading required package: AnnotationDbi</span>
+<span class="co">#&gt; Loading required package: Biobase</span>
+<span class="co">#&gt; Welcome to Bioconductor</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     Vignettes contain introductory material; view with</span>
+<span class="co">#&gt;     'browseVignettes()'. To cite Bioconductor, see</span>
+<span class="co">#&gt;     'citation("Biobase")', and for packages 'citation("pkgname")'.</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: 'AnnotationDbi'</span>
+<span class="co">#&gt; The following object is masked from 'package:dplyr':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     select</span>
+<span class="co">#&gt; Loading required package: AnnotationFilter</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: 'ensembldb'</span>
+<span class="co">#&gt; The following object is masked from 'package:dplyr':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     filter</span>
+<span class="co">#&gt; The following object is masked from 'package:stats':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     filter</span>
+<span class="co">#&gt; max_transcripts=1.</span>
+<span class="co">#&gt; 67 transcripts from 67 genes returned.</span>
 <span class="co">#&gt; Fetching data...OK</span>
 <span class="co">#&gt; Parsing exons...OK</span>
 <span class="co">#&gt; Defining introns...OK</span>
@@ -255,77 +332,48 @@ We’ll also limit the anaylsis to just 3 loci.</li>
 <span class="co">#&gt; aggregating...</span>
 <span class="co">#&gt; Done</span>
 <span class="co">#&gt; Constructing graphics...</span>
-<span class="co">#&gt; Warning: Removed 128 rows containing non-finite values (stat_smooth).</span>
-<span class="co">#&gt; Warning: Removed 1 row(s) containing missing values (geom_path).</span>
-<span class="co">#&gt; Warning: Removed 128 rows containing non-finite values (stat_smooth).</span>
-<span class="co">#&gt; Warning: Removed 1 row(s) containing missing values (geom_path).</span>
-<span class="co">#&gt; Warning: Duplicated override.aes is ignored.</span>
-<span class="co">#&gt; Fetching data...OK</span>
-<span class="co">#&gt; Parsing exons...OK</span>
-<span class="co">#&gt; Defining introns...OK</span>
-<span class="co">#&gt; Defining UTRs...OK</span>
-<span class="co">#&gt; Defining CDS...OK</span>
-<span class="co">#&gt; aggregating...</span>
-<span class="co">#&gt; Done</span>
-<span class="co">#&gt; Fetching data...OK</span>
-<span class="co">#&gt; Parsing exons...OK</span>
-<span class="co">#&gt; Defining introns...OK</span>
-<span class="co">#&gt; Defining UTRs...OK</span>
-<span class="co">#&gt; Defining CDS...OK</span>
-<span class="co">#&gt; aggregating...</span>
-<span class="co">#&gt; Done</span>
-<span class="co">#&gt; Constructing graphics...</span>
-<span class="co">#&gt; Warning: Removed 128 rows containing non-finite values (stat_smooth).</span>
-<span class="co">#&gt; Warning: Removed 1 row(s) containing missing values (geom_path).</span>
-<span class="co">#&gt; Warning: Removed 128 rows containing non-finite values (stat_smooth).</span>
-<span class="co">#&gt; Warning: Removed 1 row(s) containing missing values (geom_path).</span>
-<span class="co">#&gt; Warning: Duplicated override.aes is ignored.</span></pre></body></html></div>
-<pre><code>#&gt; Fine-mappping complete:ABCA7
-#&gt; Time difference of 23.3 secs
-#&gt; 🦇 🦇 🦇 ACE 🦇 🦇 🦇 
-#&gt; ------------------ Step 1: Query ---------------
-#&gt; [1] "+ Importing  pre-existing file: /Users/schilder/Desktop/results/GWAS/Kunkle_2019.microgliaQTL/ACE/Multi-finemap/ACE_Kunkle_2019.microgliaQTL_Multi-finemap.tsv.gz"
-#&gt; [1] "+ Subset file looks good! :)"
+<span class="co">#&gt; [1] "+ Adding vertical lines to highlight SNP groups..."</span>
+<span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 1x +&lt;+&lt;+&lt;+&lt;+</span>
+<span class="co">#&gt; [1] "+ PLOT:: Get window suffix..."</span>
+<span class="co">#&gt; [1] "+ PLOT:: Removing GWAS full window track @ zoom=1x"</span>
+<span class="co">#&gt; [1] "+ Removing subplot margins..."</span>
+<span class="co">#&gt; [1] "+ Reordering tracks..."</span>
+<span class="co">#&gt; [1] "+ Ensuring last track shows genomic units..."</span>
+<span class="co">#&gt; [1] "+ Aligning xlimits for each subplot..."</span>
+<span class="co">#&gt; [1] "+ Checking track heights..."</span>
+<span class="co">#&gt; [1] "+ PLOT:: Saving plot ==&gt; /Users/schilder/Desktop/results/GWAS/Kunkle_2019.microgliaQTL/ABCA7_ENSG00000160953/multiview.ABCA7_ENSG00000160953.1KGphase1.1x.jpg"</span>
+<span class="co">#&gt; Warning: Removed 1 rows containing missing values (geom_hline).</span>
+<span class="co">#&gt; Warning: Removed 2984 rows containing missing values (geom_text).</span>
+<span class="co">#&gt; Warning: Removed 1 rows containing missing values (geom_hline).</span>
+<span class="co">#&gt; Warning: Removed 2984 rows containing missing values (geom_text).</span></code></pre></div>
+<pre><code>#&gt; Fine-mapping complete in:
+#&gt; Time difference of 20.8 secs
+#&gt; 
+#&gt; )   )  ) ))))))}}}}}}}} {{{{{{{{{(((((( (  (   (
+#&gt; BIN1_ENSG00000136731 (2 / 3)
+#&gt; )   )  ) ))))))}}}}}}}} {{{{{{{{{(((((( (  (   (
+#&gt; [1] "+ Importing  pre-existing file: /Users/schilder/Desktop/results/GWAS/Kunkle_2019.microgliaQTL/BIN1_ENSG00000136731/Multi-finemap/1KGphase1_LD.Multi-finemap.tsv.gz"
+#&gt; [1] "+ Subset file looks good."
 #&gt; [1] "+ Removing subset tmp..."
-#&gt; --- Step 2: Calculate Linkage Disequilibrium ---
-#&gt; [1] "+ Previously computed LD matrix detected. Importing... /Users/schilder/Desktop/results/GWAS/Kunkle_2019.microgliaQTL/ACE/LD/ACE.1KGphase1_LD.RDS"
-#&gt; -------------- Step 3: Filter SNPs -------------
-#&gt; [1] "++ Post-filtered data: 186 x 22"
-#&gt; -------- Step 4: Statistically Fine-map --------
-#&gt; [1] "++ Previously multi-fine-mapped results identified. Importing..."
-#&gt; [1] "++ Fine-mapping with ' ABF, FINEMAP, SUSIE, POLYFUN_SUSIE ' completed in  0.04"
-#&gt; [1] "+ Identifying Consensus SNPs..."
-#&gt; [1] "++ support_thresh = 2"
-#&gt; [1] "+ Calculating mean Posterior Probability (mean.PP)..."
-#&gt; [1] "++ 2 fine-mapping methods used."
-#&gt; [1] "++ 0 Credible Set SNPs identified."
-#&gt; [1] "++ 0 Consensus SNPs identified."
-#&gt; --------------- Step 7: Visualize --------------
+#&gt; [1] "+  LD:: Previously computed LD_matrix detected. Importing... /Users/schilder/Desktop/results/GWAS/Kunkle_2019.microgliaQTL/BIN1_ENSG00000136731/LD/BIN1_ENSG00000136731.1KGphase1_LD.RDS"
+#&gt; [1] "+ FILTER:: Filtering by LD features."
+#&gt; [1] "FILTER:: Filtering by SNP features."
+#&gt; [1] "+ FILTER:: Removing SNPs with MAF &lt; 0.001"
+#&gt; [1] "+ FILTER:: Post-filtered data: 1096 x 34"
+#&gt; [1] "++ Previously multi-finemap results identified. Importing: /Users/schilder/Desktop/results/GWAS/Kunkle_2019.microgliaQTL/BIN1_ENSG00000136731/Multi-finemap/1KGphase1_LD.Multi-finemap.tsv.gz"
+#&gt; [1] "+ Fine-mapping with ' ABF, FINEMAP, SUSIE, POLYFUN_SUSIE ' completed:"
+#&gt; Time difference of 0.05 secs
+#&gt; +-------- Locus Plot: BIN1_ENSG00000136731--------+
 #&gt; [1] "+ Filling NAs in CS cols with 0"
 #&gt; [1] "+ Filling NAs in PP cols with 0"
-#&gt; [1] "GGBIO:: LD_matrix detected. Coloring SNPs by LD with lead SNP."
-#&gt; [1] "LD Matrix dimensions: 186 x 186"
-#&gt; [1] "Extracting LD subset for lead SNP: rs4323"
-#&gt; [1] "++ GGBIO:: GWAS track"
-#&gt; using coord:genome to parse x scale
-#&gt; [1] "++ GGBIO:: qtl. track"
-#&gt; using coord:genome to parse x scale
-#&gt; [1] "++ GGBIO:: ABF track"
-#&gt; using coord:genome to parse x scale
-#&gt; [1] "++ GGBIO:: SUSIE track"
-#&gt; using coord:genome to parse x scale
-#&gt; [1] "++ GGBIO:: mean track"
-#&gt; using coord:genome to parse x scale
-#&gt; [1] "++ GGBIO:: Gene Model Track"
-#&gt; [1] "+ Annotating at transcript-level."
-#&gt; [1] "+ GGBIO:: Saving plot ==&gt; /Users/schilder/Desktop/results/GWAS/Kunkle_2019.microgliaQTL/ACE/multiview_ACE_250kb.png"
-#&gt; Fetching data...OK
-#&gt; Parsing exons...OK
-#&gt; Defining introns...OK
-#&gt; Defining UTRs...OK
-#&gt; Defining CDS...OK
-#&gt; aggregating...
-#&gt; Done
+#&gt; [1] "+ LD:: LD_matrix detected. Coloring SNPs by LD with lead SNP."
+#&gt; [1] "++ PLOT:: GWAS track"
+#&gt; [1] "++ PLOT:: qtl. track"
+#&gt; [1] "++ PLOT:: Merged fine-mapping track"
+#&gt; [1] "Melting PP and CS from 5 fine-mapping methods"
+#&gt; [1] "++ PLOT:: Adding Gene model track."
+#&gt; max_transcripts=1. 
+#&gt; 8 transcripts from 8 genes returned.
 #&gt; Fetching data...OK
 #&gt; Parsing exons...OK
 #&gt; Defining introns...OK
@@ -334,170 +382,264 @@ We’ll also limit the anaylsis to just 3 loci.</li>
 #&gt; aggregating...
 #&gt; Done
 #&gt; Constructing graphics...
-#&gt; Warning: Removed 148 rows containing non-finite values (stat_smooth).
-#&gt; Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#&gt; parametric, : span too small. fewer data values than degrees of freedom.
-#&gt; Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#&gt; parametric, : pseudoinverse used at 6.147e+07
-#&gt; Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#&gt; parametric, : neighborhood radius 1045.8
-#&gt; Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#&gt; parametric, : reciprocal condition number 0
-#&gt; Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#&gt; parametric, : There are other near singularities as well. 2.8556e+07
+#&gt; [1] "+ Adding vertical lines to highlight SNP groups..."
+#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 1x +&lt;+&lt;+&lt;+&lt;+
+#&gt; [1] "+ PLOT:: Get window suffix..."
+#&gt; [1] "+ PLOT:: Removing GWAS full window track @ zoom=1x"
+#&gt; [1] "+ Removing subplot margins..."
+#&gt; [1] "+ Reordering tracks..."
+#&gt; [1] "+ Ensuring last track shows genomic units..."
+#&gt; [1] "+ Aligning xlimits for each subplot..."
+#&gt; [1] "+ Checking track heights..."
+#&gt; [1] "+ PLOT:: Saving plot ==&gt; /Users/schilder/Desktop/results/GWAS/Kunkle_2019.microgliaQTL/BIN1_ENSG00000136731/multiview.BIN1_ENSG00000136731.1KGphase1.1x.jpg"
 #&gt; Warning: Removed 1 rows containing missing values (geom_hline).
-#&gt; Warning: Removed 186 rows containing missing values (geom_text).
-#&gt; Warning: Removed 148 rows containing non-finite values (stat_smooth).
-#&gt; Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#&gt; parametric, : span too small. fewer data values than degrees of freedom.
-#&gt; Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#&gt; parametric, : pseudoinverse used at 6.147e+07
-#&gt; Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#&gt; parametric, : neighborhood radius 1045.8
-#&gt; Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#&gt; parametric, : reciprocal condition number 0
-#&gt; Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#&gt; parametric, : There are other near singularities as well. 2.8556e+07
-#&gt; Warning: Removed 1 rows containing missing values (geom_hline).
-#&gt; Warning: Removed 186 rows containing missing values (geom_text).
-#&gt; Warning: Duplicated override.aes is ignored.</code></pre>
-<p><img src="QTL_pipeline_vignette_files/figure-html/unnamed-chunk-3-1.png" width="960"></p>
-<pre><code>#&gt; Fetching data...OK
-#&gt; Parsing exons...OK
-#&gt; Defining introns...OK
-#&gt; Defining UTRs...OK
-#&gt; Defining CDS...OK
-#&gt; aggregating...
-#&gt; Done
-#&gt; Fetching data...OK
-#&gt; Parsing exons...OK
-#&gt; Defining introns...OK
-#&gt; Defining UTRs...OK
-#&gt; Defining CDS...OK
-#&gt; aggregating...
-#&gt; Done
-#&gt; Constructing graphics...
-#&gt; Warning: Removed 148 rows containing non-finite values (stat_smooth).
-#&gt; Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#&gt; parametric, : span too small. fewer data values than degrees of freedom.
-#&gt; Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#&gt; parametric, : pseudoinverse used at 6.147e+07
-#&gt; Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#&gt; parametric, : neighborhood radius 1045.8
-#&gt; Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#&gt; parametric, : reciprocal condition number 0
-#&gt; Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#&gt; parametric, : There are other near singularities as well. 2.8556e+07
-#&gt; Warning: Removed 1 rows containing missing values (geom_hline).
-#&gt; Warning: Removed 186 rows containing missing values (geom_text).
-#&gt; Warning: Removed 148 rows containing non-finite values (stat_smooth).
-#&gt; Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#&gt; parametric, : span too small. fewer data values than degrees of freedom.
-#&gt; Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#&gt; parametric, : pseudoinverse used at 6.147e+07
-#&gt; Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#&gt; parametric, : neighborhood radius 1045.8
-#&gt; Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#&gt; parametric, : reciprocal condition number 0
-#&gt; Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#&gt; parametric, : There are other near singularities as well. 2.8556e+07
-#&gt; Warning: Removed 1 rows containing missing values (geom_hline).
-#&gt; Warning: Removed 186 rows containing missing values (geom_text).
-#&gt; Warning: Duplicated override.aes is ignored.</code></pre>
-<pre><code>#&gt; Fine-mappping complete:ACE
-#&gt; Time difference of 14.5 secs
-#&gt; 🦇 🦇 🦇 ADAM10 🦇 🦇 🦇 
-#&gt; ------------------ Step 1: Query ---------------
-#&gt; [1] "+ Importing  pre-existing file: /Users/schilder/Desktop/results/GWAS/Kunkle_2019.microgliaQTL/ADAM10/Multi-finemap/ADAM10_Kunkle_2019.microgliaQTL_Multi-finemap.tsv.gz"
-#&gt; [1] "+ Subset file looks good! :)"
+#&gt; Warning: Removed 1096 rows containing missing values (geom_text).</code></pre>
+<p><img src="QTL_pipeline_vignette_files/figure-html/unnamed-chunk-2-1.png" width="960"></p>
+<pre><code>#&gt; Warning: Removed 1 rows containing missing values (geom_hline).
+
+#&gt; Warning: Removed 1096 rows containing missing values (geom_text).</code></pre>
+<pre><code>#&gt; Fine-mapping complete in:
+#&gt; Time difference of 6.9 secs
+#&gt; 
+#&gt; )   )  ) ))))))}}}}}}}} {{{{{{{{{(((((( (  (   (
+#&gt; CR1_ENSG00000266094 (3 / 3)
+#&gt; )   )  ) ))))))}}}}}}}} {{{{{{{{{(((((( (  (   (
+#&gt; [1] "+ Importing  pre-existing file: /Users/schilder/Desktop/results/GWAS/Kunkle_2019.microgliaQTL/CR1_ENSG00000266094/Multi-finemap/1KGphase1_LD.Multi-finemap.tsv.gz"
+#&gt; [1] "+ Subset file looks good."
 #&gt; [1] "+ Removing subset tmp..."
-#&gt; --- Step 2: Calculate Linkage Disequilibrium ---
-#&gt; [1] "+ Previously computed LD matrix detected. Importing... /Users/schilder/Desktop/results/GWAS/Kunkle_2019.microgliaQTL/ADAM10/LD/ADAM10.1KGphase1_LD.RDS"
-#&gt; -------------- Step 3: Filter SNPs -------------
-#&gt; [1] "++ Post-filtered data: 270 x 22"
-#&gt; -------- Step 4: Statistically Fine-map --------
-#&gt; [1] "++ Previously multi-fine-mapped results identified. Importing..."
-#&gt; [1] "++ Fine-mapping with ' ABF, FINEMAP, SUSIE, POLYFUN_SUSIE ' completed in  0.04"
-#&gt; [1] "+ Identifying Consensus SNPs..."
-#&gt; [1] "++ support_thresh = 2"
-#&gt; [1] "+ Calculating mean Posterior Probability (mean.PP)..."
-#&gt; [1] "++ 2 fine-mapping methods used."
-#&gt; [1] "++ 0 Credible Set SNPs identified."
-#&gt; [1] "++ 0 Consensus SNPs identified."
-#&gt; --------------- Step 7: Visualize --------------
+#&gt; [1] "+  LD:: Previously computed LD_matrix detected. Importing... /Users/schilder/Desktop/results/GWAS/Kunkle_2019.microgliaQTL/CR1_ENSG00000266094/LD/CR1_ENSG00000266094.1KGphase1_LD.RDS"
+#&gt; [1] "+ FILTER:: Filtering by LD features."
+#&gt; [1] "FILTER:: Filtering by SNP features."
+#&gt; [1] "+ FILTER:: Removing SNPs with MAF &lt; 0.001"
+#&gt; [1] "+ FILTER:: Post-filtered data: 681 x 34"
+#&gt; [1] "++ Previously multi-finemap results identified. Importing: /Users/schilder/Desktop/results/GWAS/Kunkle_2019.microgliaQTL/CR1_ENSG00000266094/Multi-finemap/1KGphase1_LD.Multi-finemap.tsv.gz"
+#&gt; [1] "+ Fine-mapping with ' ABF, FINEMAP, SUSIE, POLYFUN_SUSIE ' completed:"
+#&gt; Time difference of 0.04 secs
+#&gt; +-------- Locus Plot: CR1_ENSG00000266094--------+
 #&gt; [1] "+ Filling NAs in CS cols with 0"
 #&gt; [1] "+ Filling NAs in PP cols with 0"
-#&gt; [1] "GGBIO:: LD_matrix detected. Coloring SNPs by LD with lead SNP."
-#&gt; [1] "LD Matrix dimensions: 270 x 270"
-#&gt; [1] "Extracting LD subset for lead SNP: rs383902"
-#&gt; [1] "++ GGBIO:: GWAS track"
-#&gt; using coord:genome to parse x scale
-#&gt; [1] "++ GGBIO:: qtl. track"
-#&gt; using coord:genome to parse x scale
-#&gt; [1] "++ GGBIO:: ABF track"
-#&gt; using coord:genome to parse x scale
-#&gt; [1] "++ GGBIO:: SUSIE track"
-#&gt; using coord:genome to parse x scale
-#&gt; [1] "++ GGBIO:: mean track"
-#&gt; using coord:genome to parse x scale
-#&gt; [1] "++ GGBIO:: Gene Model Track"
-#&gt; [1] "+ Annotating at transcript-level."
-#&gt; [1] "+ GGBIO:: Saving plot ==&gt; /Users/schilder/Desktop/results/GWAS/Kunkle_2019.microgliaQTL/ADAM10/multiview_ADAM10_250kb.png"
+#&gt; [1] "+ LD:: LD_matrix detected. Coloring SNPs by LD with lead SNP."
+#&gt; [1] "++ PLOT:: GWAS track"
+#&gt; [1] "++ PLOT:: qtl. track"
+#&gt; [1] "++ PLOT:: Merged fine-mapping track"
+#&gt; [1] "Melting PP and CS from 5 fine-mapping methods"
+#&gt; [1] "++ PLOT:: Adding Gene model track."
+#&gt; max_transcripts=1. 
+#&gt; 10 transcripts from 10 genes returned.
 #&gt; Fetching data...OK
 #&gt; Parsing exons...OK
 #&gt; Defining introns...OK
 #&gt; Defining UTRs...OK
-#&gt; aggregating...
-#&gt; Done
-#&gt; Fetching data...OK
-#&gt; Parsing exons...OK
-#&gt; Defining introns...OK
-#&gt; Defining UTRs...OK
+#&gt; Defining CDS...OK
 #&gt; aggregating...
 #&gt; Done
 #&gt; Constructing graphics...
-#&gt; Warning: Removed 263 rows containing non-finite values (stat_smooth).
-#&gt; Warning: Computation failed in `stat_smooth()`:
-#&gt; span is too small
+#&gt; [1] "+ Adding vertical lines to highlight SNP groups..."
+#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 1x +&lt;+&lt;+&lt;+&lt;+
+#&gt; [1] "+ PLOT:: Get window suffix..."
+#&gt; [1] "+ PLOT:: Removing GWAS full window track @ zoom=1x"
+#&gt; [1] "+ Removing subplot margins..."
+#&gt; [1] "+ Reordering tracks..."
+#&gt; [1] "+ Ensuring last track shows genomic units..."
+#&gt; [1] "+ Aligning xlimits for each subplot..."
+#&gt; [1] "+ Checking track heights..."
+#&gt; [1] "+ PLOT:: Saving plot ==&gt; /Users/schilder/Desktop/results/GWAS/Kunkle_2019.microgliaQTL/CR1_ENSG00000266094/multiview.CR1_ENSG00000266094.1KGphase1.1x.jpg"
 #&gt; Warning: Removed 1 rows containing missing values (geom_hline).
-#&gt; Warning: Removed 270 rows containing missing values (geom_text).
-#&gt; Warning: Removed 263 rows containing non-finite values (stat_smooth).
-#&gt; Warning: Computation failed in `stat_smooth()`:
-#&gt; span is too small
-#&gt; Warning: Removed 1 rows containing missing values (geom_hline).
-#&gt; Warning: Removed 270 rows containing missing values (geom_text).
-#&gt; Warning: Duplicated override.aes is ignored.</code></pre>
-<p><img src="QTL_pipeline_vignette_files/figure-html/unnamed-chunk-3-2.png" width="960"></p>
-<pre><code>#&gt; Fetching data...OK
-#&gt; Parsing exons...OK
-#&gt; Defining introns...OK
-#&gt; Defining UTRs...OK
-#&gt; aggregating...
-#&gt; Done
-#&gt; Fetching data...OK
-#&gt; Parsing exons...OK
-#&gt; Defining introns...OK
-#&gt; Defining UTRs...OK
-#&gt; aggregating...
-#&gt; Done
-#&gt; Constructing graphics...
-#&gt; Warning: Removed 263 rows containing non-finite values (stat_smooth).
-#&gt; Warning: Computation failed in `stat_smooth()`:
-#&gt; span is too small
-#&gt; Warning: Removed 1 rows containing missing values (geom_hline).
-#&gt; Warning: Removed 270 rows containing missing values (geom_text).
-#&gt; Warning: Removed 263 rows containing non-finite values (stat_smooth).
-#&gt; Warning: Computation failed in `stat_smooth()`:
-#&gt; span is too small
-#&gt; Warning: Removed 1 rows containing missing values (geom_hline).
-#&gt; Warning: Removed 270 rows containing missing values (geom_text).
-#&gt; Warning: Duplicated override.aes is ignored.</code></pre>
-<pre><code>#&gt; Fine-mappping complete:ADAM10</code></pre>
-<p><img src="QTL_pipeline_vignette_files/figure-html/unnamed-chunk-3-3.png" width="960"></p>
-<pre><code>#&gt; Time difference of 12.7 secs
-#&gt; &lt;div id="htmlwidget-a680a1fcd62a0dd1ba32" style="width:960px;height:500px;" class="datatables html-widget"&gt;&lt;/div&gt;
-#&gt; &lt;script type="application/json" data-for="htmlwidget-a680a1fcd62a0dd1ba32"&gt;{"x":{"filter":"none","extensions":["Buttons"],"caption":"&lt;caption&gt;&lt;\/caption&gt;","data":[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],"container":"&lt;table class=\"display\"&gt;\n  &lt;thead&gt;\n    &lt;tr&gt;\n      &lt;th&gt; &lt;\/th&gt;\n      &lt;th&gt;Locus&lt;\/th&gt;\n      &lt;th&gt;SNP&lt;\/th&gt;\n      &lt;th&gt;CHR&lt;\/th&gt;\n      &lt;th&gt;POS&lt;\/th&gt;\n      &lt;th&gt;P&lt;\/th&gt;\n      &lt;th&gt;Effect&lt;\/th&gt;\n      &lt;th&gt;StdErr&lt;\/th&gt;\n      &lt;th&gt;Gene&lt;\/th&gt;\n      &lt;th&gt;MAF&lt;\/th&gt;\n      &lt;th&gt;proportion_cases&lt;\/th&gt;\n      &lt;th&gt;N&lt;\/th&gt;\n      &lt;th&gt;t_stat&lt;\/th&gt;\n      &lt;th&gt;leadSNP&lt;\/th&gt;\n      &lt;th&gt;qtl.pvalues&lt;\/th&gt;\n      &lt;th&gt;qtl.beta&lt;\/th&gt;\n      &lt;th&gt;qtl.varbeta&lt;\/th&gt;\n      &lt;th&gt;qtl.MAF&lt;\/th&gt;\n      &lt;th&gt;qtl.N&lt;\/th&gt;\n      &lt;th&gt;qtl.type&lt;\/th&gt;\n      &lt;th&gt;ABF.CS&lt;\/th&gt;\n      &lt;th&gt;ABF.PP&lt;\/th&gt;\n      &lt;th&gt;SUSIE.CS&lt;\/th&gt;\n      &lt;th&gt;SUSIE.PP&lt;\/th&gt;\n      &lt;th&gt;Support&lt;\/th&gt;\n      &lt;th&gt;Consensus_SNP&lt;\/th&gt;\n      &lt;th&gt;mean.PP&lt;\/th&gt;\n      &lt;th&gt;mean.CS&lt;\/th&gt;\n    &lt;\/tr&gt;\n  &lt;\/thead&gt;\n&lt;\/table&gt;","options":{"dom":"Bfrtip","buttons":["copy","csv","excel","pdf","print"],"scrollY":400,"scrollX":true,"scrollCollapse":true,"paging":false,"columnDefs":[{"className":"dt-center","targets":"_all"},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}&lt;/script&gt;</code></pre>
+#&gt; Warning: Removed 681 rows containing missing values (geom_text).</code></pre>
+<p><img src="QTL_pipeline_vignette_files/figure-html/unnamed-chunk-2-2.png" width="960"></p>
+<pre><code>#&gt; Warning: Removed 1 rows containing missing values (geom_hline).
+
+#&gt; Warning: Removed 681 rows containing missing values (geom_text).</code></pre>
+<pre><code>#&gt; Fine-mapping complete in:</code></pre>
+<p><img src="QTL_pipeline_vignette_files/figure-html/unnamed-chunk-2-3.png" width="960"></p>
+<pre><code>#&gt; Time difference of 5.7 secs
+#&gt; [1] "+ Identifying Consensus SNPs..."
+#&gt; [1] "++ support_thresh = 2"
+#&gt; [1] "++ top_CS_only=FALSE"
+#&gt; [1] "+ Calculating mean Posterior Probability (mean.PP)..."
+#&gt; [1] "+ Replacing PP==NA with 0"
+#&gt; [1] "++ 4 fine-mapping methods used."
+#&gt; [1] "++ 9 Credible Set SNPs identified."
+#&gt; [1] "++ 9 Consensus SNPs identified."</code></pre>
 </div>
+</div>
+<div id="session-info" class="section level1">
+<h1 class="hasAnchor">
+<a href="#session-info" class="anchor"></a>Session info</h1>
+<details><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">sessioninfo</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sessioninfo/man/session_info.html">session_info</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; ─ Session info ───────────────────────────────────────────────────────────────</span>
+<span class="co">#&gt;  setting  value                       </span>
+<span class="co">#&gt;  version  R version 4.0.4 (2021-02-15)</span>
+<span class="co">#&gt;  os       macOS Big Sur 10.16         </span>
+<span class="co">#&gt;  system   x86_64, darwin17.0          </span>
+<span class="co">#&gt;  ui       X11                         </span>
+<span class="co">#&gt;  language (EN)                        </span>
+<span class="co">#&gt;  collate  en_GB.UTF-8                 </span>
+<span class="co">#&gt;  ctype    en_GB.UTF-8                 </span>
+<span class="co">#&gt;  tz       Europe/London               </span>
+<span class="co">#&gt;  date     2021-03-14                  </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; ─ Packages ───────────────────────────────────────────────────────────────────</span>
+<span class="co">#&gt;  package              * version  date       lib source        </span>
+<span class="co">#&gt;  AnnotationDbi        * 1.52.0   2020-10-27 [1] Bioconductor  </span>
+<span class="co">#&gt;  AnnotationFilter     * 1.14.0   2020-10-27 [1] Bioconductor  </span>
+<span class="co">#&gt;  askpass                1.1      2019-01-13 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  assertthat             0.2.1    2019-03-21 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  backports              1.2.1    2020-12-09 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  base64enc              0.1-3    2015-07-28 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  Biobase              * 2.50.0   2020-10-27 [1] Bioconductor  </span>
+<span class="co">#&gt;  BiocFileCache          1.14.0   2020-10-27 [1] Bioconductor  </span>
+<span class="co">#&gt;  BiocGenerics         * 0.36.0   2020-10-27 [1] Bioconductor  </span>
+<span class="co">#&gt;  BiocManager            1.30.10  2019-11-16 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  BiocParallel           1.24.1   2020-11-06 [1] Bioconductor  </span>
+<span class="co">#&gt;  biomaRt                2.46.3   2021-02-11 [1] Bioconductor  </span>
+<span class="co">#&gt;  Biostrings             2.58.0   2020-10-27 [1] Bioconductor  </span>
+<span class="co">#&gt;  biovizBase             1.38.0   2020-10-27 [1] Bioconductor  </span>
+<span class="co">#&gt;  bit                    4.0.4    2020-08-04 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  bit64                  4.0.5    2020-08-30 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  bitops                 1.0-6    2013-08-17 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  blob                   1.2.1    2020-01-20 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  boot                   1.3-27   2021-02-12 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  BSgenome               1.58.0   2020-10-27 [1] Bioconductor  </span>
+<span class="co">#&gt;  bslib                  0.2.4    2021-01-25 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  cachem                 1.0.4    2021-02-13 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  checkmate              2.0.0    2020-02-06 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  class                  7.3-18   2021-01-24 [1] CRAN (R 4.0.4)</span>
+<span class="co">#&gt;  cli                    2.3.1    2021-02-23 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  cluster                2.1.1    2021-02-14 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  colorspace             2.0-0    2020-11-11 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  crayon                 1.4.1    2021-02-08 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  crosstalk              1.1.1    2021-01-12 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  curl                   4.3      2019-12-02 [1] CRAN (R 4.0.1)</span>
+<span class="co">#&gt;  data.table             1.14.0   2021-02-21 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  DBI                    1.1.1    2021-01-15 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  dbplyr                 2.1.0    2021-02-03 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  DelayedArray           0.16.2   2021-02-26 [1] Bioconductor  </span>
+<span class="co">#&gt;  desc                   1.3.0    2021-03-05 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  DescTools              0.99.40  2021-02-03 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  dichromat              2.0-0    2013-01-24 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  digest                 0.6.27   2020-10-24 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  dplyr                * 1.0.5    2021-03-05 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  DT                     0.17     2021-01-06 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  e1071                  1.7-4    2020-10-14 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  echolocatoR          * 0.1.2    2021-03-14 [1] local         </span>
+<span class="co">#&gt;  ellipsis               0.3.1    2020-05-15 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  EnsDb.Hsapiens.v75   * 2.99.0   2021-03-13 [1] Bioconductor  </span>
+<span class="co">#&gt;  ensembldb            * 2.14.0   2020-10-27 [1] Bioconductor  </span>
+<span class="co">#&gt;  evaluate               0.14     2019-05-28 [1] CRAN (R 4.0.1)</span>
+<span class="co">#&gt;  Exact                  2.1      2020-10-02 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  expm                   0.999-6  2021-01-13 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  fansi                  0.4.2    2021-01-15 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  farver                 2.1.0    2021-02-28 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  fastmap                1.1.0    2021-01-25 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  foreign                0.8-81   2020-12-22 [1] CRAN (R 4.0.4)</span>
+<span class="co">#&gt;  Formula                1.2-4    2020-10-16 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  fs                     1.5.0    2020-07-31 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  generics               0.1.0    2020-10-31 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  GenomeInfoDb         * 1.26.4   2021-03-10 [1] Bioconductor  </span>
+<span class="co">#&gt;  GenomeInfoDbData       1.2.4    2021-02-10 [1] Bioconductor  </span>
+<span class="co">#&gt;  GenomicAlignments      1.26.0   2020-10-27 [1] Bioconductor  </span>
+<span class="co">#&gt;  GenomicFeatures      * 1.42.2   2021-03-12 [1] Bioconductor  </span>
+<span class="co">#&gt;  GenomicRanges        * 1.42.0   2020-10-27 [1] Bioconductor  </span>
+<span class="co">#&gt;  GGally                 2.1.1    2021-03-08 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  ggbio                  1.38.0   2020-10-27 [1] Bioconductor  </span>
+<span class="co">#&gt;  ggplot2                3.3.3    2020-12-30 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  ggrepel                0.9.1    2021-01-15 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  gld                    2.6.2    2020-01-08 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  glue                   1.4.2    2020-08-27 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  graph                  1.68.0   2020-10-27 [1] Bioconductor  </span>
+<span class="co">#&gt;  gridExtra              2.3      2017-09-09 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  gtable                 0.3.0    2019-03-25 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  highr                  0.8      2019-03-20 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  Hmisc                  4.5-0    2021-02-28 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  hms                    1.0.0    2021-01-13 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  htmlTable              2.1.0    2020-09-16 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  htmltools              0.5.1.1  2021-01-22 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  htmlwidgets            1.5.3    2020-12-10 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  httr                   1.4.2    2020-07-20 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  IRanges              * 2.24.1   2020-12-12 [1] Bioconductor  </span>
+<span class="co">#&gt;  jpeg                   0.1-8.1  2019-10-24 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  jquerylib              0.1.3    2020-12-17 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  jsonlite               1.7.2    2020-12-09 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  knitr                  1.31     2021-01-27 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  labeling               0.4.2    2020-10-20 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  lattice                0.20-41  2020-04-02 [1] CRAN (R 4.0.4)</span>
+<span class="co">#&gt;  latticeExtra           0.6-29   2019-12-19 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  lazyeval               0.2.2    2019-03-15 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  lifecycle              1.0.0    2021-02-15 [1] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  lmom                   2.8      2019-03-12 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  magrittr               2.0.1    2020-11-17 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  mapproj                1.2.7    2020-02-03 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  maps                   3.3.0    2018-04-03 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  MASS                   7.3-53.1 2021-02-12 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  Matrix                 1.3-2    2021-01-06 [1] CRAN (R 4.0.4)</span>
+<span class="co">#&gt;  MatrixGenerics         1.2.1    2021-01-30 [1] Bioconductor  </span>
+<span class="co">#&gt;  matrixStats            0.58.0   2021-01-29 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  memoise                2.0.0    2021-01-26 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  munsell                0.5.0    2018-06-12 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  mvtnorm                1.1-1    2020-06-09 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  nnet                   7.3-15   2021-01-24 [1] CRAN (R 4.0.4)</span>
+<span class="co">#&gt;  openssl                1.4.3    2020-09-18 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  OrganismDbi            1.32.0   2020-10-27 [1] Bioconductor  </span>
+<span class="co">#&gt;  pals                   1.6      2019-12-04 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  patchwork              1.1.1    2020-12-17 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  pillar                 1.5.1    2021-03-05 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  pkgconfig              2.0.3    2019-09-22 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  pkgdown                1.6.1    2020-09-12 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  plyr                   1.8.6    2020-03-03 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  png                    0.1-7    2013-12-03 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  prettyunits            1.1.1    2020-01-24 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  progress               1.2.2    2019-05-16 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  ProtGenerics           1.22.0   2020-10-27 [1] Bioconductor  </span>
+<span class="co">#&gt;  purrr                  0.3.4    2020-04-17 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  R.methodsS3            1.8.1    2020-08-26 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  R.oo                   1.24.0   2020-08-26 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  R.utils                2.10.1   2020-08-26 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  R6                     2.5.0    2020-10-28 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  ragg                   1.1.1    2021-02-25 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  rappdirs               0.3.3    2021-01-31 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  RBGL                   1.66.0   2020-10-27 [1] Bioconductor  </span>
+<span class="co">#&gt;  RColorBrewer           1.1-2    2014-12-07 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  Rcpp                   1.0.6    2021-01-15 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  RCurl                  1.98-1.2 2020-04-18 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  reshape                0.8.8    2018-10-23 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  reshape2               1.4.4    2020-04-09 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  reticulate             1.18     2020-10-25 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  rlang                  0.4.10   2020-12-30 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  rmarkdown              2.7      2021-02-19 [1] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  rootSolve              1.8.2.1  2020-04-27 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  rpart                  4.1-15   2019-04-12 [1] CRAN (R 4.0.4)</span>
+<span class="co">#&gt;  rprojroot              2.0.2    2020-11-15 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  Rsamtools              2.6.0    2020-10-27 [1] Bioconductor  </span>
+<span class="co">#&gt;  RSQLite                2.2.4    2021-03-12 [1] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  rstudioapi             0.13     2020-11-12 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  rtracklayer            1.50.0   2020-10-27 [1] Bioconductor  </span>
+<span class="co">#&gt;  S4Vectors            * 0.28.1   2020-12-09 [1] Bioconductor  </span>
+<span class="co">#&gt;  sass                   0.3.1    2021-01-24 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  scales                 1.1.1    2020-05-11 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  sessioninfo            1.1.1    2018-11-05 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  stringi                1.5.3    2020-09-09 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  stringr                1.4.0    2019-02-10 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  SummarizedExperiment   1.20.0   2020-10-27 [1] Bioconductor  </span>
+<span class="co">#&gt;  survival               3.2-7    2020-09-28 [1] CRAN (R 4.0.4)</span>
+<span class="co">#&gt;  systemfonts            1.0.1    2021-02-09 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  textshaping            0.3.2    2021-03-10 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  tibble                 3.1.0    2021-02-25 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  tidyselect             1.1.0    2020-05-11 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  utf8                   1.2.1    2021-03-12 [1] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  VariantAnnotation      1.36.0   2020-10-28 [1] Bioconductor  </span>
+<span class="co">#&gt;  vctrs                  0.3.6    2020-12-17 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  withr                  2.4.1    2021-01-26 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  xfun                   0.22     2021-03-11 [1] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  XML                    3.99-0.5 2020-07-23 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  xml2                   1.3.2    2020-04-23 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  XVector                0.30.0   2020-10-28 [1] Bioconductor  </span>
+<span class="co">#&gt;  yaml                   2.2.1    2020-02-01 [1] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  zlibbioc               1.36.0   2020-10-28 [1] Bioconductor  </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [1] /Library/Frameworks/R.framework/Versions/4.0/Resources/library</span></code></pre></div>
+</details>
 </div>
   </div>
 
@@ -516,7 +658,7 @@ We’ll also limit the anaylsis to just 3 loci.</li>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
