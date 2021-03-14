@@ -243,6 +243,7 @@ extract_SNP_subset <- function(locus=NULL,
                                probe_path = "./Data/eQTL/gene.ILMN.map",
                                QTL_prefixes=NULL,
                                remove_tmps=T,
+                               conda_env = "echoR",
                                verbose=T){
   if(is.null(locus)) locus <- basename(locus_dir)
   multi_path <- create_method_path(locus_dir = locus_dir,
@@ -277,6 +278,7 @@ extract_SNP_subset <- function(locus=NULL,
                   bp_distance=bp_distance,
                   query_by=query_by,
                   probe_path=probe_path,
+                  conda_env = conda_env,
                   verbose=verbose)
     # Clean file
     query <- standardize_subset(locus=locus,

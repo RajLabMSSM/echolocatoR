@@ -40,8 +40,45 @@ This will also be used when creating the subdirectory where your results will be
 If none is given, and \strong{N_cases} and \strong{N_controls} columns are present,
 then sample_size is inferred to be:  \code{max(N_cases) + max(N_controls)}.}
 
+\item{prior_weights}{A vector of length p, in which each entry
+gives the prior probability that corresponding column of X has a
+nonzero effect on the outcome, Y.}
+
 \item{PP_threshold}{The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
 For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.}
+
+\item{scaled_prior_variance}{The scaled prior variance. This is
+either a scalar or a vector of length \code{L}. The prior variance
+of each non-zero element of b is set to \code{var(Y) *
+scaled_prior_variance}. If \code{estimate_prior_variance = TRUE},
+this provides initial estimates of the prior variances.}
+
+\item{estimate_residual_variance}{If
+\code{estimate_residual_variance = TRUE}, the residual variance is
+estimated, using \code{residual_variance} as an initial value. If
+\code{estimate_residual_variance = FALSE}, the residual variance is
+fixed to the value supplied by \code{residual_variance}.}
+
+\item{estimate_prior_variance}{If \code{estimate_prior_variance =
+TRUE}, the prior variance is estimated (this is a separate
+parameter for each of the L effects). If provided,
+\code{scaled_prior_variance} is then used as an initial value for
+the optimization. When \code{estimate_prior_variance = FALSE}, the
+prior variance for each of the L effects is determined by the
+value supplied to \code{scaled_prior_variance}.}
+
+\item{residual_variance}{Variance of the residual. If
+\code{estimate_residual_variance = TRUE}, this value provides the
+initial estimate of the residual variance. By default, it is
+\code{var(Y)}.}
+
+\item{max_iter}{Maximum number of IBSS iterations to perform.}
+
+\item{estimate_prior_method}{The method used for estimating prior
+variance. When \code{estimate_prior_method = "simple"} is used, the
+likelihood at the specified prior variance is compared to the
+likelihood at a variance of zero, and the setting with the larger
+likelihood is retained.}
 
 \item{rescale_priors}{If prior probabiltities are supplied,
 rescale them from 0-1 (i.e. \code{rescaled_priors = priors / sum(priors)}).}
@@ -50,7 +87,9 @@ rescale them from 0-1 (i.e. \code{rescaled_priors = priors / sum(priors)}).}
 fine-mapping algorithm learning the causal variants.
 \strong{WARNING!:} Making this plot can take a long time if there's many iterations.}
 
-\item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
+\item{verbose}{If \code{verbose = TRUE}, the algorithm's progress,
+and a summary of the optimization settings, are printed to the
+console.}
 }
 \description{
 Sum of Single Effects (SuSiE): Iterative Bayesian Step-wise Selection

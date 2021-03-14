@@ -114,7 +114,7 @@ to create a [*conda*](https://docs.conda.io/en/latest/) environment.
 3.  In command line, create the env from the *.yml* file:  
     `conda env create -f <path_to_file>/echoR.yml`
 
-4.  Activate the new env:   
+4.  Activate the new env:  
     `conda activate echoR`
 
 5.  Open Rstudio from the command line interface (not by clicking the
@@ -245,15 +245,15 @@ All methods require the columns: `SNP`,`CHR`,`POS`,`Effect`,`StdErr`
 
 Additional required columns:
 
-### [ABF](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html) 
+### [ABF](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)
 
 #### `proportion_cases`,`MAF`
 
-### [FINEMAP](http://www.christianbenner.com) 
+### [FINEMAP](http://www.christianbenner.com)
 
 #### `A1`,`A2`,`MAF`,`N`
 
-### [SuSiE](https://github.com/stephenslab/susieR) 
+### [SuSiE](https://github.com/stephenslab/susieR)
 
 #### `N`
 

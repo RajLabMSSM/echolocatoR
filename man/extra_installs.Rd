@@ -16,6 +16,24 @@ Some of \pkg{echolocatoR}'s optional R package dependencies are especially trick
 Rather than including them in the DESCRIPTION file,
 which would require them to install \pkg{echolocatoR} at all,
 this functions installs them afterwards.
+Only packages not already installed will be installed.
+}
+\details{
+Some of the main packages installed via this function include:
+\describe{
+\item{gaston}{CRAN}
+\item{plotly}{CRAN}
+
+\item{foreign}{Archived}
+\item{XGR}{Archived}
+\item{refGenome}{Archived}
+
+\item{Rgraphviz}{Bioconductor}
+\item{biomaRt}{Bioconductor}
+
+\item{knitrBootstrap}{GitHub}
+\item{susieR}{GitHub}
+}
 }
 \examples{
 library(echolocatoR)

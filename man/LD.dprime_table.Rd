@@ -4,7 +4,7 @@
 \alias{LD.dprime_table}
 \title{Calculate LD (D')}
 \usage{
-LD.dprime_table(SNP_list, LD_folder)
+LD.dprime_table(SNP_list, LD_folder, conda_env)
 }
 \description{
 This appriach computes an LD matrix of D' (instead of r or r2) from a vcf.
