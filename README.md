@@ -7,15 +7,16 @@
     -   [General tips](#general-tips)
     -   [Quick installation](#quick-installation)
     -   [Robust installation (*conda*)](#robust-installation-conda)
+    -   [Clone installation (*Rstudio*)](#clone-installation-rstudio)
     -   [Dependencies](#dependencies)
 -   [Fine-mapping tools](#fine-mapping-tools)
-    -   [ABF: `proportion_cases`,`MAF`](#abf-proportion_casesmaf)
-    -   [FINEMAP:`A1`,`A2`,`MAF`,`N`](#finemapa1a2mafn)
-    -   [SuSiE: `N`](#susie-n)
-    -   [PolyFun: `A1`,`A2`,`P`,`N`](#polyfun-a1a2pn)
-    -   [PAINTOR: `A1`,`A2`,`t-stat`](#paintor-a1a2t-stat)
-    -   [GCTA-COJO: `A1`,`A2`,`Freq`,`P`,`N`](#gcta-cojo-a1a2freqpn)
-    -   [coloc: `N`,`MAF`](#coloc-nmaf)
+    -   [ABF](#abf)
+    -   [FINEMAP](#finemap)
+    -   [SuSiE](#susie)
+    -   [PolyFun](#polyfun)
+    -   [PAINTOR](#paintor)
+    -   [GCTA-COJO](#gcta-cojo)
+    -   [coloc](#coloc)
 -   [Datasets](#datasets)
     -   [Epigenomic & genome-wide
         annotations](#epigenomic-genome-wide-annotations)
@@ -31,7 +32,7 @@
     -   [UK Biobank](#uk-biobank)
     -   [1000 Genomes Phase 1](#genomes-phase-1)
     -   [1000 Genomes Phase 3](#genomes-phase-3)
--   [Author](#author)
+-   [Creator](#creator)
 
 <center>
 <h1>
@@ -111,8 +112,6 @@ fine-mapping pipeline rapid, robust and scalable.
     able to run in R\>=3.6.0, some additional challenges with getting
     dependency versions not to conflict with one another.
 
--   
-
 ### Quick installation
 
 In R:
@@ -136,23 +135,17 @@ to create a [*conda*](https://docs.conda.io/en/latest/) environment.
     [here](https://github.com/RajLabMSSM/echolocatoR/blob/master/inst/conda/echoR.yml)
     (this file tells *conda* what to install).
 
-3.  In command line, create the env from the *.yml* file:
+3.  In command line, create the env from the *.yml* file:  
+    `conda env create -f <path_to_file>/echoR.yml`
 
-<!-- -->
+4.  Activate the new env:  
+    `conda activate echoR`
 
-    conda env create -f <path_to_file>/echoR.yml
-
-1.  Activate the new env:
-
-<!-- -->
-
-    conda activate echoR
-
-1.  Open Rstudio from the command line interface (not by clicking the
+5.  Open Rstudio from the command line interface (not by clicking the
     Rstudio icon). This helps to ensure Rstudio can find the paths to
     the packages in the conda env.
 
-2.  In R, install ***echolocatoR***:
+6.  In R, install ***echolocatoR***:
 
 ``` r
 if(!"devtools" %in% installed.packages()){install.packages("devtools")}
@@ -163,47 +156,34 @@ To make sure ***echolocatoR*** uses the packages in this env (esp. if
 using from RStudio), you can then supply the env name to the
 `finemap_loci()` function using `conda_env="echoR"`.
 
+### Clone installation (*Rstudio*)
+
+Lastly, if you’d like (or if for some reason none of the other
+installation methods are working for you), you can alternatively clone
+and then build *echolocatoR*:
+
+1.  Clone *echolocatoR:  
+    \`git clone <https://github.com/RajLabMSSM/echolocatoR.git>\`*
+2.  Open *echolocatoR.Rproj* within the echolocatoR folder.
+3.  Then, within *Rstudio*, build *echolocatoR* by clicking the
+    following drop down menu items: `Build --> Install and Restart` (or
+    pressing the keys `CMD + SHIFT + B` on a Mac).
+
 <br>
 
 ### Dependencies
 
-For a full list of suggested packages, see
-[DESCRIPTION](https://github.com/RajLabMSSM/echolocatoR/blob/master/DESCRIPTION).
-
 #### R
 
-    - magrittr  
-    - R.utils  
-    - dplyr  
-    - BiocManager 
-    - tidyverse
-    - knitr
-    - rmarkdown  
-    - data.table  
-    - foreign  
-    - reticulate  
-    - ggplot2    
-    - ggrepel  
-    - coloc    
-    - RColorBrewer   
-    - patchwork   
-    - htmltools  
-    - stringr    
-    - openxlsx  
-    - EnsDb.Hsapiens.v75    
-    - ensembldb   
-    - ggbio    
-    - BSgenome  
-    - Ckmeans.1d.dp  
-    - refGenome   
+For a full list of required and suggested packages, see
+[DESCRIPTION](https://github.com/RajLabMSSM/echolocatoR/blob/master/DESCRIPTION).
 
-There’s some additional optional R dependencies (e.g.
+Additionally, there’s some optional R dependencies (e.g.
 [XGR](https://github.com/hfang-bristol/XGR),
 [Rgraphviz](https://www.bioconductor.org/packages/release/bioc/html/Rgraphviz.html))
-that can be a bit tricky, so we’ve removed them from *echolocatoR*’s
-[DESCRIPTION](https://github.com/RajLabMSSM/echolocatoR/blob/master/DESCRIPTION)
-file and instead provided a separate R function that helps users to
-install them afterwards:
+that can be a bit tricky to install, so we’ve removed them as
+requirements and instead provided a separate R function that helps users
+to install them afterwards if needed:
 
 ``` r
 library(echolocatoR)
@@ -211,6 +191,10 @@ extra_installs()
 ```
 
 #### Python
+
+For a full list of required python packages, see the *conda* env
+[*echoR.yml*](https://github.com/RajLabMSSM/echolocatoR/blob/master/inst/conda/echoR.yml).
+But here are some of the key ones.
 
     - python>=3.6.1  
     - pandas>=0.25.0   
@@ -231,18 +215,21 @@ extra_installs()
 
 -   Rapid querying of summary stats files.
 -   To use it, specify `query_by="tabix"` in `finemap_loci()`.
--   If you encounter difficulties using a conda distribution of tabix,
+-   If you encounter difficulties using a *conda* distribution of tabix,
     we recommend you uninstall it from the env and instead install its
-    parent package, [htslib](https://anaconda.org/bioconda/htslib) as
-    this should be more up to date. htslib is now included in the echoR
-    conda env by default.
--   Alternatively, you may install htslib to your machine globally via
-    [brew](https://formulae.brew.sh/formula/htslib) (for Mac users) or
+    parent package, [*htslib*](https://anaconda.org/bioconda/htslib) as
+    this should be more up to date. *htslib* is now included in the
+    echoR *conda* env by default.
+-   Alternatively, you may install *htslib* to your machine globally via
+    [*Brew*](https://formulae.brew.sh/formula/htslib) (for Mac users) or
     from [source](http://www.htslib.org/download).
 
 ##### [bcftools](http://samtools.github.io/bcftools/bcftools.html)
 
 -   Used here for filtering populations in vcf files.
+-   Can be installed via
+    [*Brew*](https://formulae.brew.sh/formula/bcftools) (for Mac users)
+    or [*conda*](https://anaconda.org/bioconda/bcftools).
 
 ##### [axel](https://github.com/axel-download-accelerator/axel)
 
@@ -282,19 +269,33 @@ All methods require the columns: `SNP`,`CHR`,`POS`,`Effect`,`StdErr`
 
 Additional required columns:
 
-### [ABF](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html): `proportion_cases`,`MAF`
+### [ABF](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)
 
-### [FINEMAP](http://www.christianbenner.com):`A1`,`A2`,`MAF`,`N`
+#### `proportion_cases`,`MAF`
 
-### [SuSiE](https://github.com/stephenslab/susieR): `N`
+### [FINEMAP](http://www.christianbenner.com)
 
-### [PolyFun](https://github.com/omerwe/polyfun): `A1`,`A2`,`P`,`N`
+#### `A1`,`A2`,`MAF`,`N`
 
-### [PAINTOR](https://github.com/gkichaev/PAINTOR_V3.0): `A1`,`A2`,`t-stat`
+### [SuSiE](https://github.com/stephenslab/susieR)
 
-### [GCTA-COJO](https://cnsgenomics.com/software/gcta/#COJO): `A1`,`A2`,`Freq`,`P`,`N`
+#### `N`
 
-### [coloc](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html): `N`,`MAF`
+### [PolyFun](https://github.com/omerwe/polyfun)
+
+#### `A1`,`A2`,`P`,`N`
+
+### [PAINTOR](https://github.com/gkichaev/PAINTOR_V3.0)
+
+#### `A1`,`A2`,`t-stat`
+
+### [GCTA-COJO](https://cnsgenomics.com/software/gcta/#COJO)
+
+#### `A1`,`A2`,`Freq`,`P`,`N`
+
+### [coloc](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)
+
+#### `N`,`MAF`
 
 <br>
 
@@ -437,7 +438,7 @@ For more detailed information about each dataset, use `?`:
 <hr>
 <hr>
 
-## Author
+## Creator
 
 <a href="https://bschilder.github.io/BMSchilder/" target="_blank">Brian
 M. Schilder, Bioinformatician II</a>  

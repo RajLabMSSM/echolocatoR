@@ -245,19 +245,33 @@ All methods require the columns: `SNP`,`CHR`,`POS`,`Effect`,`StdErr`
 
 Additional required columns:
 
-### [ABF](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html): `proportion_cases`,`MAF`
+### [ABF](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html) 
 
-### [FINEMAP](http://www.christianbenner.com): `A1`,`A2`,`MAF`,`N`
+#### `proportion_cases`,`MAF`
 
-### [SuSiE](https://github.com/stephenslab/susieR): `N`
+### [FINEMAP](http://www.christianbenner.com) 
 
-### [PolyFun](https://github.com/omerwe/polyfun): `A1`,`A2`,`P`,`N`
+#### `A1`,`A2`,`MAF`,`N`
 
-### [PAINTOR](https://github.com/gkichaev/PAINTOR_V3.0): `A1`,`A2`,`t-stat`
+### [SuSiE](https://github.com/stephenslab/susieR) 
 
-### [GCTA-COJO](https://cnsgenomics.com/software/gcta/#COJO): `A1`,`A2`,`Freq`,`P`,`N`
+#### `N`
 
-### [coloc](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html): `N`,`MAF`
+### [PolyFun](https://github.com/omerwe/polyfun)
+
+#### `A1`,`A2`,`P`,`N`
+
+### [PAINTOR](https://github.com/gkichaev/PAINTOR_V3.0)
+
+#### `A1`,`A2`,`t-stat`
+
+### [GCTA-COJO](https://cnsgenomics.com/software/gcta/#COJO)
+
+#### `A1`,`A2`,`Freq`,`P`,`N`
+
+### [coloc](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)
+
+#### `N`,`MAF`
 
 <br>
 
