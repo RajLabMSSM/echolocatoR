@@ -1,7 +1,7 @@
 Package: echolocatoR
 Type: Package
 Title: Automated genomic fine-mapping
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: as.person(c(
     "Brian Schilder <brian_schilder@alumni.brown.edu> [aut, cre]",
     "Jack Humphrey [ctb]"
@@ -42,15 +42,12 @@ Imports:
     BSgenome,
     Ckmeans.1d.dp,
     biovizBase,
-    GenomeInfoDb
+    GenomeInfoDb,
+    ggbio,
+    snpStats,
+    remotes 
 Remotes:
-  github::stephenslab/susieR@0.9.0,  
-  bioc::3.10/remotes,  
-  bioc::3.10/snpStats,
-  bioc::3.10/ggbio,
-  url::https://cran.r-project.org/src/contrib/Archive/foreign/foreign_0.8-76.tar.gz,
-  url::https://cran.r-project.org/src/contrib/Archive/refGenome/refGenome_1.7.7.tar.gz,
-  url::https://cran.r-project.org/src/contrib/Archive/XGR/XGR_1.1.7.tar.gz
+  github::stephenslab/susieR 
 Suggests:
     pbmcapply,
     gaston, 

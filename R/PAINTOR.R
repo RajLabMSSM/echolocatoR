@@ -15,10 +15,19 @@ PAINTOR.find_paintor_folder <- function(paintor_path=NULL){
 #'
 #' Currently there is no R or conda distribution of PAINTOR.
 #' @keywords internal
-PAINTOR.install <- function(paintor_path=NULL){
-  paintor_path <- find_paintor_path(paintor_path=paintor_path)
-  cmd <- paste("cd", paintor_path,"&& bash install")
-  system(cmd)
+PAINTOR.install <- function(paintor_path=NULL,
+                            force_reinstall=F){
+  paintor_path <- PAINTOR.find_paintor_folder(paintor_path=paintor_path)
+  install_log <- file.path(paintor_path,"install_log.txt")
+  if(file.exists(install_log) & force_reinstall==F){
+    printer("PAINTOR:: PAINTOR_V3.0 already installed (install_log.txt detected).")
+  }else {
+    cmd <- paste("cd", paintor_path,"&& bash install.sh")
+    printer("PAINTOR:: Installing PAINTOR_V3.0")
+    out <- system(cmd,intern = T)
+    printer("PAINTOR:: Writing log:",install_log)
+    data.table::fwrite(list(out), install_log)
+  }
 }
 
 
@@ -677,7 +686,8 @@ PAINTOR <- function(finemap_dat=NULL,
                     QTL_populations="EUR",
                     LD_reference="1KG_Phase1",
                     force_new_LD=F,
-                    LD_matrix=NULL){
+                    LD_matrix=NULL,
+                    force_reinstall=F){
   #@@@@@@@@@ Multi-condition, Multi-GWAS, multi-QTL, Multi-ethnic
   #    and/or Annotated Fine-mapping @@@@@@@@@
   # Note: All file formats are assumed to be single space delimited.
@@ -690,6 +700,8 @@ PAINTOR <- function(finemap_dat=NULL,
   #   printer("PAINTOR:: Inferring GWAS dataset name:", GWAS_dataset_name)
   #   }
   paintor_path <- PAINTOR.find_paintor_folder(paintor_path=paintor_path)
+  PAINTOR.install(paintor_path=paintor_path,
+                  force_reinstall=force_reinstall)
   locus_name <- PAINTOR.locusName_handler(locus_name,
                                           locus,
                                           GWAS_datasets,
@@ -709,7 +721,7 @@ PAINTOR <- function(finemap_dat=NULL,
         printer("PAINTOR:: No finemap_dat supplied. Retrieving from storage:",mfm_path)
         finemap_dat <- data.table::fread(mfm_path, nThread = 4)
       }
-      finemap_dat <- calculate.tstat(finemap_dat=finemap_dat)
+      finemap_dat <- calculate_tstat(finemap_dat=finemap_dat)
   }
   if(!is.null(QTL_datasets)){
     qtl_DT <- PAINTOR.import_QTL_DT(QTL_datasets = QTL_datasets,

@@ -12,7 +12,8 @@ axel(
   force_overwrite = F,
   quiet = T,
   alternate = T,
-  check_certificates = F
+  check_certificates = F,
+  conda_env = "echoR"
 )
 }
 \description{

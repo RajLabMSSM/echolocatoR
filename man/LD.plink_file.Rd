@@ -4,7 +4,7 @@
 \alias{LD.plink_file}
 \title{Find correct plink file}
 \usage{
-LD.plink_file(base_url = system.file("tools/plink", package = "echolocatoR"))
+LD.plink_file(plink = "plink", conda_env = NULL)
 }
 \description{
 Find correct plink file

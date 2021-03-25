@@ -653,6 +653,8 @@ SUMMARISE.peak_overlap_plot <- function(merged_DT,
                                         width=12,
                                         subplot_widths = c(1,.5),
                                         verbose=T){
+  # verbose=T;include.NOTT_2019_peaks=T; include.NOTT_2019_enhancers_promoters=T; include.NOTT_2019_PLACseq=T; include.CORCES_2020_scATACpeaks=T;
+  # include.CORCES_2020_Cicero_coaccess=T;include.CORCES_2020_bulkATACpeaks=T;include.CORCES_2020_HiChIP_FitHiChIP_coaccess=T;include.CORCES_2020_gene_annotations=T;
   # no_no_loci<- c("HLA-DRB5","MAPT","ATG14","SP1","LMNB1","ATP6V0A1",
   #                "RETREG3","UBTF","FAM171A2","MAP3K14","CRHR1","MAPT-AS1","KANSL1","NSF","WNT3")
   # merged_DT <- subset(merged_DT, !Locus %in% no_no_loci)
@@ -667,7 +669,7 @@ SUMMARISE.peak_overlap_plot <- function(merged_DT,
                                                           snp_filter = snp_filter)
      dat_melt.NOTTpeaks$background <- NA
      dat_melt.NOTTpeaks$Study <- "Nott et al. (2019)"
-     dat_melt <- rbind(dat_melt, dat_melt.NOTTpeaks, fill=T)
+     dat_melt <- base::rbind(dat_melt, dat_melt.NOTTpeaks)
    })
   }
 
@@ -677,7 +679,7 @@ SUMMARISE.peak_overlap_plot <- function(merged_DT,
                                                                snp_filter = snp_filter)
       dat_melt.NOTTreg$background <- 1
       dat_melt.NOTTreg$Study <- "Nott et al. (2019)"
-      dat_melt <- rbind(dat_melt, dat_melt.NOTTreg, fill=T)
+      dat_melt <- base::rbind(dat_melt, dat_melt.NOTTreg)
     })
   }
 
@@ -687,7 +689,7 @@ SUMMARISE.peak_overlap_plot <- function(merged_DT,
                                                              snp_filter = snp_filter)
       dat_melt.NOTTplac$background <- NA
       dat_melt.NOTTplac$Study <- "Nott et al. (2019)"
-      dat_melt <- rbind(dat_melt, dat_melt.NOTTplac, fill=T)
+      dat_melt <- base::rbind(dat_melt, dat_melt.NOTTplac)
     })
   }
 
@@ -701,7 +703,7 @@ SUMMARISE.peak_overlap_plot <- function(merged_DT,
                                                                          verbose = verbose)
       dat_melt.CORCES_scPeaks$background <- NA
       dat_melt.CORCES_scPeaks$Study <- "Corces et al. (2020)"
-      dat_melt <- rbind(dat_melt, dat_melt.CORCES_scPeaks, fill=T)
+      dat_melt <- base::rbind(dat_melt, dat_melt.CORCES_scPeaks, fill=T)
     })
   }
   if(include.CORCES_2020_bulkATACpeaks){
@@ -713,7 +715,7 @@ SUMMARISE.peak_overlap_plot <- function(merged_DT,
                                                                              verbose = verbose)
       dat_melt.CORCES_bulkPeaks$background <- NA
       dat_melt.CORCES_bulkPeaks$Study <- "Corces et al. (2020)"
-      dat_melt <- rbind(dat_melt, dat_melt.CORCES_bulkPeaks, fill=T)
+      dat_melt <- base::rbind(dat_melt, dat_melt.CORCES_bulkPeaks, fill=T)
     })
   }
 
@@ -725,6 +727,10 @@ SUMMARISE.peak_overlap_plot <- function(merged_DT,
   neuronal_cols <- grep("neuron",unique(plot_dat$Cell_type), value = T)
   plot_dat$Cell_type <- factor(plot_dat$Cell_type, levels = c("astrocytes","microglia","oligo","OPCs",neuronal_cols,"brain"), ordered = T)
   plot_dat$background <- as.numeric(plot_dat$background)
+  ### Double check there's no errors
+  plot_dat <- subset(plot_dat, !is.na(Locus))
+  ### Make sure there's no missing loci
+  # unique(plot_dat$Locus)==unique(merged_DT$Locus)
 
   # Plot
   gg_pks <- ggplot(data=plot_dat, aes(x=Assay, y=Locus, fill=Count)) +
@@ -1077,7 +1083,7 @@ super_summary_plot <- function(merged_DT,
     gg_missense<-c();
     gg_missense$plot <- patchwork::plot_spacer();
     gg_missense_width <- 0
-  } else {gg_missense_width <- .05}
+  } else {gg_missense_width <- .01}
 
   gg_peaks <- SUMMARISE.peak_overlap_plot(merged_DT = merged_DT,
                                           snp_filter=snp_filter,

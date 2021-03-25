@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -91,24 +91,101 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li>
+<a href="#documentation">Documentation</a>
+<ul>
+<li><a href="#documentation-website">Documentation website</a></li>
+<li><a href="#full-pipeline-vignette">Full pipeline vignette</a></li>
+<li><a href="#plotting-vignette">Plotting vignette</a></li>
+</ul>
+</li>
+<li>
+<a href="#installation">Installation</a>
+<ul>
+<li><a href="#general-tips">General tips</a></li>
+<li><a href="#quick-installation">Quick installation</a></li>
+<li><a href="#robust-installation-conda">Robust installation (<em>conda</em>)</a></li>
+<li><a href="#clone-installation-rstudio">Clone installation (<em>Rstudio</em>)</a></li>
+<li><a href="#dependencies">Dependencies</a></li>
+</ul>
+</li>
+<li>
+<a href="#fine-mapping-tools">Fine-mapping tools</a>
+<ul>
+<li><a href="#abf">ABF</a></li>
+<li><a href="#finemap">FINEMAP</a></li>
+<li><a href="#susie">SuSiE</a></li>
+<li><a href="#polyfun">PolyFun</a></li>
+<li><a href="#paintor">PAINTOR</a></li>
+<li><a href="#gcta-cojo">GCTA-COJO</a></li>
+<li><a href="#coloc">coloc</a></li>
+</ul>
+</li>
+<li>
+<a href="#datasets">Datasets</a>
+<ul>
+<li><a href="#epigenomic-genome-wide-annotations">Epigenomic &amp; genome-wide annotations</a></li>
+<li><a href="#qtls">QTLs</a></li>
+</ul>
+</li>
+<li>
+<a href="#enrichment-tools">Enrichment tools</a>
+<ul>
+<li><a href="#xgr-1">XGR</a></li>
+<li><a href="#goshifter">GoShifter</a></li>
+<li><a href="#s-ldsc">S-LDSC</a></li>
+<li><a href="#motifbreakr">motifbreakR</a></li>
+<li><a href="#garfield-under-construction">GARFIELD (<strong>under construction</strong>)</a></li>
+</ul>
+</li>
+<li>
+<a href="#ld-reference-panels">LD reference panels</a>
+<ul>
+<li><a href="#uk-biobank">UK Biobank</a></li>
+<li><a href="#genomes-phase-1">1000 Genomes Phase 1</a></li>
+<li><a href="#genomes-phase-3">1000 Genomes Phase 3</a></li>
+</ul>
+</li>
+<li><a href="#creator">Creator</a></li>
+</ul>
 <center>
 <div class="page-header"><h1>
-) ) ) ) ))) 🦇 echolocatoR 🦇 ((( ( ( ( (
+) ) ) ) ))) <span class="emoji" data-emoji="bat">🦇</span> echolocatoR <span class="emoji" data-emoji="bat">🦇</span> ((( ( ( ( (
 </h1></div>
 </center>
-<div id="automated-statistical-and-functional-fine-mapping-with-extensive-access-to-genome-wide-datasets" class="section level3">
-<h3 class="hasAnchor">
-<a href="#automated-statistical-and-functional-fine-mapping-with-extensive-access-to-genome-wide-datasets" class="anchor"></a>Automated statistical and functional fine-mapping with extensive access to genome-wide datasets.</h3>
+<h3>
+Automated statistical and functional fine-mapping with extensive access to genome-wide datasets
+</h3>
+<hr>
+<div id="if-you-use-echolocator-please-cite-our-preprint-thanks" class="section level4">
+<h4 class="hasAnchor">
+<a href="#if-you-use-echolocator-please-cite-our-preprint-thanks" class="anchor"></a>If you use <strong><em>echolocatoR</em></strong>, please cite our preprint (thanks!):</h4>
+<blockquote>
+<p>BM Schilder, J Humphrey &amp; T Raj (2020) echolocatoR: an automated end-to-end statistical and functional genomic fine-mapping pipeline. <em>bioRxiv</em> 2020.10.22.351221; doi: <a href="https://doi.org/10.1101/2020.10.22.351221" class="uri">https://doi.org/10.1101/2020.10.22.351221</a></p>
+</blockquote>
+</div>
+<div id="for-applications-of-echolocator-in-the-literature-please-see" class="section level4">
+<h4 class="hasAnchor">
+<a href="#for-applications-of-echolocator-in-the-literature-please-see" class="anchor"></a>For applications of <em>echolocatoR</em> in the literature, please see:</h4>
+<blockquote>
+<ol>
+<li>E Navarro, E Udine, K de Paiva Lopes, M Parks, G Riboldi, BM Schilder…T Raj (2020) Discordant transcriptional signatures of mitochondrial genes in Parkinson’s disease human myeloid cells. <em>bioRxiv</em>; <a href="https://doi.org/10.1101/2020.07.20.212407" class="uri">https://doi.org/10.1101/2020.07.20.212407</a>
+</li>
+<li>BM Schilder &amp; T Raj (2020) Fine-Mapping of Parkinson’s Disease Susceptibility Loci Identifies Putative Causal Variants. <em>bioRxiv</em>, 0–30; <a href="https://doi.org/10.1101/2020.10.22.340158" class="uri">https://doi.org/10.1101/2020.10.22.340158</a>.</li>
+<li>K de Paiva Lopes, GJL Snijders, J Humphrey, A Allan, M Sneeboer, E Navarro, BM Schilder…T Raj (2020) Atlas of Genetic Effects in Human Microglia Transcriptome across Brain Regions, Aging and Disease Pathologies. <em>bioRxiv</em>; <a href="https://doi.org/10.1101/2020.10.27.356113" class="uri">https://doi.org/10.1101/2020.10.27.356113</a>.</li>
+</ol>
+</blockquote>
 <hr>
 </div>
-<div id="when-using-echolocator-please-cite" class="section level3">
-<h3 class="hasAnchor">
-<a href="#when-using-echolocator-please-cite" class="anchor"></a>When using <strong><em>echolocatoR</em></strong>, please cite:</h3>
-<p><a href="https://www.biorxiv.org/content/10.1101/2020.10.22.351221v1">Brian M. Schilder, Jack Humphrey, Towfique Raj (2020) <em>echolocatoR: an automated end-to-end statistical and functional genomic fine-mapping pipeline</em> bioRxiv 2020.10.22.351221; doi: https://doi.org/10.1101/2020.10.22.351221</a></p>
-<hr>
+<div id="introduction" class="section level2">
+<h2 class="hasAnchor">
+<a href="#introduction" class="anchor"></a>Introduction</h2>
 <p>Fine-mapping methods are a powerful means of identifying causal variants underlying a given phenotype, but are underutilized due to the technical challenges of implementation. <strong><em>echolocatoR</em></strong> is an R package that automates end-to-end genomics fine-mapping, annotation, and plotting in order to identify the most probable causal variants associated with a given phenotype.</p>
 <p>It requires minimal input from users (a GWAS or QTL summary statistics file), and includes a suite of statistical and functional fine-mapping tools. It also includes extensive access to datasets (linkage disequilibrium panels, epigenomic and genome-wide annotations, QTL).</p>
 <p>The elimination of data gathering and preprocessing steps enables rapid fine-mapping of many loci in any phenotype, complete with locus-specific publication-ready figure generation. All results are merged into a single per-SNP summary file for additional downstream analysis and results sharing. Therefore <strong><em>echolocatoR</em></strong> drastically reduces the barriers to identifying causal variants by making the entire fine-mapping pipeline rapid, robust and scalable.</p>
+<p><img src="./images/echolocatoR_Fig1.png" alt="echoFlow"></p>
 </div>
 <div id="documentation" class="section level2">
 <h2 class="hasAnchor">
@@ -130,134 +207,125 @@
 <p><br></p>
 </div>
 </div>
-<div id="workflow" class="section level2">
+<div id="installation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#workflow" class="anchor"></a>Workflow</h2>
-<p><img src="./images/echolocatoR_Fig1.png" alt="echoFlow"></p>
-<p><br></p>
+<a href="#installation" class="anchor"></a>Installation</h2>
+<div id="general-tips" class="section level3">
+<h3 class="hasAnchor">
+<a href="#general-tips" class="anchor"></a>General tips</h3>
+<ul>
+<li>We generally recommend users upgrading to R&gt;=4.0.0 before trying to install <em>echolocatoR.</em> While <em>echolocatoR</em> should technically be able to run in R&gt;=3.6.0, some additional challenges with getting dependency versions not to conflict with one another.</li>
+</ul>
 </div>
-<div id="quick-installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#quick-installation" class="anchor"></a>Quick installation</h2>
+<div id="quick-installation" class="section level3">
+<h3 class="hasAnchor">
+<a href="#quick-installation" class="anchor"></a>Quick installation</h3>
 <p>In R:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="st">"devtools"</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span><span class="op">}</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"RajLabMSSM/echolocatoR"</span><span class="op">)</span></code></pre></div>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"RajLabMSSM/echolocatoR"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="robust-installation-conda" class="section level2">
-<h2 class="hasAnchor">
-<a href="#robust-installation-conda" class="anchor"></a>Robust installation (<em>conda</em>)</h2>
+<div id="robust-installation-conda" class="section level3">
+<h3 class="hasAnchor">
+<a href="#robust-installation-conda" class="anchor"></a>Robust installation (<em>conda</em>)</h3>
 <p>As with most softwares, installation is half the battle. The easiest way to install all of <strong><em>echolocatoR</em></strong>’s dependencies (which include R, Python, and command line tools) and make sure they play well together is to create a <a href="https://docs.conda.io/en/latest/"><em>conda</em></a> environment.</p>
 <ol>
 <li><p>If you haven’t done so already, install <a href="https://docs.conda.io/en/latest/"><em>conda</em></a>.</p></li>
-<li><p>Download the echoR.yml file found <a href="https://github.com/RajLabMSSM/echolocatoR/blob/master/inst/conda/echoR.yml">here</a> (this file tells <em>conda</em> what to install).</p></li>
-<li><p>In command line, create the env from the <em>.yml</em> file:<br></p></li>
-</ol>
-<pre><code>conda env create -f &lt;path_to_file&gt;/echoR.yml</code></pre>
-<ol>
-<li>Activate the new env:<br>
-</li>
-</ol>
-<pre><code>conda activate echoR</code></pre>
-<ol>
+<li><p>Download the <em>echoR.yml</em> file found <a href="https://github.com/RajLabMSSM/echolocatoR/blob/master/inst/conda/echoR.yml">here</a> (this file tells <em>conda</em> what to install).</p></li>
+<li><p>In command line, create the env from the <em>.yml</em> file:<br><code>conda env create -f &lt;path_to_file&gt;/echoR.yml</code></p></li>
+<li><p>Activate the new env:<br><code>conda activate echoR</code></p></li>
 <li><p>Open Rstudio from the command line interface (not by clicking the Rstudio icon). This helps to ensure Rstudio can find the paths to the packages in the conda env.</p></li>
-<li><p>In R, install <strong><em>echolocatoR</em></strong>:<br></p></li>
+<li><p>In R, install <strong><em>echolocatoR</em></strong>:</p></li>
 </ol>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="st">"devtools"</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span><span class="op">}</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"RajLabMSSM/echolocatoR"</span><span class="op">)</span></code></pre></div>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"RajLabMSSM/echolocatoR"</span><span class="op">)</span></code></pre></div>
 <p>To make sure <strong><em>echolocatoR</em></strong> uses the packages in this env (esp. if using from RStudio), you can then supply the env name to the <code><a href="reference/finemap_loci.html">finemap_loci()</a></code> function using <code>conda_env="echoR"</code>.</p>
+</div>
+<div id="clone-installation-rstudio" class="section level3">
+<h3 class="hasAnchor">
+<a href="#clone-installation-rstudio" class="anchor"></a>Clone installation (<em>Rstudio</em>)</h3>
+<p>Lastly, if you’d like (or if for some reason none of the other installation methods are working for you), you can alternatively clone and then build <em>echolocatoR</em>:</p>
+<ol>
+<li>Clone <em>echolocatoR:<br>
+`git clone <a href="https://github.com/RajLabMSSM/echolocatoR.git" class="uri">https://github.com/RajLabMSSM/echolocatoR.git</a>`</em>
+</li>
+<li>Open <em>echolocatoR.Rproj</em> within the echolocatoR folder.</li>
+<li>Then, within <em>Rstudio</em>, build <em>echolocatoR</em> by clicking the following drop down menu items: <code>Build --&gt; Install and Restart</code> (or pressing the keys <code>CMD + SHIFT + B</code> on a Mac).</li>
+</ol>
 <p><br></p>
 </div>
-<div id="dependencies" class="section level2">
-<h2 class="hasAnchor">
-<a href="#dependencies" class="anchor"></a>Dependencies</h2>
-<p>For a full list of suggested packages, see <a href="https://github.com/RajLabMSSM/echolocatoR/blob/master/DESCRIPTION">DESCRIPTION</a>.</p>
-<p>* = <em>optional</em></p>
-<div id="r" class="section level3">
+<div id="dependencies" class="section level3">
 <h3 class="hasAnchor">
-<a href="#r" class="anchor"></a>R</h3>
-<pre><code>- magrittr  
-- R.utils  
-- dplyr  
-- BiocManager 
-- tidyverse
-- knitr
-- rmarkdown  
-- data.table  
-- foreign  
-- reticulate  
-- ggplot2    
-- ggrepel  
-- coloc    
-- RColorBrewer   
-- patchwork   
-- htmltools  
-- stringr    
-- openxlsx  
-- EnsDb.Hsapiens.v75    
-- ensembldb   
-- ggbio    
-- BSgenome  
-- Ckmeans.1d.dp  
-- refGenome   </code></pre>
-</div>
-<div id="python" class="section level3">
-<h3 class="hasAnchor">
-<a href="#python" class="anchor"></a>Python</h3>
-<pre><code>- python&gt;=3.6.1  
-- pandas&gt;=0.25.0   
-- pandas-plink  
-- pyarrow  
-- fastparquet  
-- scipy  
-- scikit-learn  
-- tqdm  
-- bitarray  
-- networkx  
-- rpy2  
-- requests  </code></pre>
-</div>
-<div id="command-line" class="section level3">
-<h3 class="hasAnchor">
-<a href="#command-line" class="anchor"></a>Command line</h3>
-<div id="tabix" class="section level4">
+<a href="#dependencies" class="anchor"></a>Dependencies</h3>
+<div id="r" class="section level4">
 <h4 class="hasAnchor">
-<a href="#tabix" class="anchor"></a><a href="http://www.htslib.org/doc/tabix.html">Tabix</a>
-</h4>
+<a href="#r" class="anchor"></a>R</h4>
+<p>For a full list of required and suggested packages, see <a href="https://github.com/RajLabMSSM/echolocatoR/blob/master/DESCRIPTION">DESCRIPTION</a>.</p>
+<p>Additionally, there’s some optional R dependencies (e.g. <a href="https://github.com/hfang-bristol/XGR">XGR</a>, <a href="https://www.bioconductor.org/packages/release/bioc/html/Rgraphviz.html">Rgraphviz</a>) that can be a bit tricky to install, so we’ve removed them as requirements and instead provided a separate R function that helps users to install them afterwards if needed:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RajLabMSSM/echolocatoR">echolocatoR</a></span><span class="op">)</span>
+<span class="fu"><a href="reference/extra_installs.html">extra_installs</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="python" class="section level4">
+<h4 class="hasAnchor">
+<a href="#python" class="anchor"></a>Python</h4>
+<p>For a full list of required python packages, see the <em>conda</em> env <a href="https://github.com/RajLabMSSM/echolocatoR/blob/master/inst/conda/echoR.yml"><em>echoR.yml</em></a>. But here are some of the key ones.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> python<span class="sc">&gt;=</span><span class="dv">3</span>.<span class="fl">6.1</span>  </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> pandas<span class="sc">&gt;=</span><span class="dv">0</span>.<span class="fl">25.0</span>   </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> pandas<span class="sc">-</span>plink  </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> pyarrow  </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> fastparquet  </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> scipy  </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> scikit<span class="sc">-</span>learn  </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> tqdm  </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> bitarray  </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> networkx  </span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> rpy2  </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> requests  </span></code></pre></div>
+</div>
+<div id="command-line" class="section level4">
+<h4 class="hasAnchor">
+<a href="#command-line" class="anchor"></a>Command line</h4>
+<div id="tabix" class="section level5">
+<h5 class="hasAnchor">
+<a href="#tabix" class="anchor"></a><a href="http://www.htslib.org/doc/tabix.html">tabix</a>
+</h5>
 <ul>
-<li>Rapid querying of summary stats files.<br>
-</li>
+<li>Rapid querying of summary stats files.</li>
 <li>To use it, specify <code>query_by="tabix"</code> in <code><a href="reference/finemap_loci.html">finemap_loci()</a></code>.</li>
+<li>If you encounter difficulties using a <em>conda</em> distribution of tabix, we recommend you uninstall it from the env and instead install its parent package, <a href="https://anaconda.org/bioconda/htslib"><em>htslib</em></a> as this should be more up to date. <em>htslib</em> is now included in the echoR <em>conda</em> env by default.</li>
+<li>Alternatively, you may install <em>htslib</em> to your machine globally via <a href="https://formulae.brew.sh/formula/htslib"><em>Brew</em></a> (for Mac users) or from <a href="http://www.htslib.org/download">source</a>.</li>
 </ul>
 </div>
-<div id="bcftools" class="section level4">
-<h4 class="hasAnchor">
+<div id="bcftools" class="section level5">
+<h5 class="hasAnchor">
 <a href="#bcftools" class="anchor"></a><a href="http://samtools.github.io/bcftools/bcftools.html">bcftools</a>
-</h4>
+</h5>
 <ul>
 <li>Used here for filtering populations in vcf files.</li>
+<li>Can be installed via <a href="https://formulae.brew.sh/formula/bcftools"><em>Brew</em></a> (for Mac users) or <a href="https://anaconda.org/bioconda/bcftools"><em>conda</em></a>.</li>
 </ul>
 </div>
-<div id="axel-" class="section level4">
-<h4 class="hasAnchor">
-<a href="#axel-" class="anchor"></a><a href="https://github.com/axel-download-accelerator/axel">Axel</a> *</h4>
+<div id="axel" class="section level5">
+<h5 class="hasAnchor">
+<a href="#axel" class="anchor"></a><a href="https://github.com/axel-download-accelerator/axel">axel</a>
+</h5>
 <ul>
-<li>Rapid multi-core downloading of large files (e.g. LD matrices from UK Biobank).<br>
-</li>
-<li>To use it, specify <code>download_method="axel"</code> in <code><a href="reference/finemap_loci.html">finemap_loci()</a></code>.<br>
-</li>
+<li><p>Rapid multi-core downloading of large files (e.g. LD matrices from UK Biobank).</p></li>
+<li><p>To use it, specify <code>download_method="axel"</code> in <code><a href="reference/finemap_loci.html">finemap_loci()</a></code>.</p></li>
+<li><p><strong>Update</strong>: A conda version of <em>axel</em> has been kindly provided by <a href="https://github.com/RajLabMSSM/echolocatoR/pull/23">@jdblischak</a>, no longer requiring a separate installation.</p></li>
 <li>
-<strong>NOTE</strong>: <em>axel</em> does not currently have a conda release. So you will need to install it as a separate step. For more info on installing/using <em>axel</em> in general, also see this <a href="https://www.tecmint.com/axel-commandline-download-accelerator-for-linux/">tutorial</a>. Depending on what kind of computer you’re using, this process will look a bit different:
+<p>However, if you want to use <em>axel</em> without the conda env, see this <a href="https://www.tecmint.com/axel-commandline-download-accelerator-for-linux/">tutorial</a> for more info on installation. Here’s a quick overview:</p>
 <ul>
 <li>
-<strong>Mac</strong>: Install <a href="https://brew.sh/">brew</a>, then: <code>brew install axel</code><br>
+<strong>Mac</strong>: Install <a href="https://brew.sh/">brew</a>, then: <code>brew install axel</code>
 </li>
 <li>
-<strong>CentOS/RHEL 7</strong>: <code>yum install epel-release; yum install axel</code><br>
+<strong>CentOS/RHEL 7</strong>: <code>yum install epel-release; yum install axel</code>
 </li>
 <li>
-<strong>Fedora</strong>: <code>yum install axel; dnf install axel</code><br>
+<strong>Fedora</strong>: <code>yum install axel; dnf install axel</code>
 </li>
 <li>
 <strong>Debian Jessie (e.g. Ubuntu, Linux Mint)</strong>: <code>aptitude install axel</code>
@@ -269,49 +337,85 @@
 </div>
 </div>
 </div>
+</div>
 <div id="fine-mapping-tools" class="section level2">
 <h2 class="hasAnchor">
-<a href="#fine-mapping-tools" class="anchor"></a>Fine-mapping Tools</h2>
-<p><strong><em>echolocatoR</em></strong> will automatically check whether you have the necessary columns to run each tool you selected in <code><a href="reference/finemap_loci.html">finemap_loci(finemap_methods=...)</a></code>. It will remove any tools that for which there are missing necessary columns, and produces a message letting you know which columns are missing. Note that some columns (e.g. <code>MAF</code>,<code>N</code>,<code>t-stat</code>) can be automatically inferred if missing.<br>
+<a href="#fine-mapping-tools" class="anchor"></a>Fine-mapping tools</h2>
+<p><strong><em>echolocatoR</em></strong> will automatically check whether you have the necessary columns to run each tool you selected in <code><a href="reference/finemap_loci.html">finemap_loci(finemap_methods=...)</a></code>. It will remove any tools that for which there are missing necessary columns, and produces a message letting you know which columns are missing. Note that some columns (e.g. <code>MAF</code>,<code>N</code>,<code>t-stat</code>) can be automatically inferred if missing.<br>
 For easy reference, we list the necessary columns here as well.<br>
 See <code>?finemap_loci()</code> for descriptions of these columns.<br>
 All methods require the columns: <code>SNP</code>,<code>CHR</code>,<code>POS</code>,<code>Effect</code>,<code>StdErr</code></p>
 <p>Additional required columns:</p>
-<div id="abf-proportion_casesmaf" class="section level3">
+<div id="abf" class="section level3">
 <h3 class="hasAnchor">
-<a href="#abf-proportion_casesmaf" class="anchor"></a><a href="https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html">ABF</a>: <code>proportion_cases</code>,<code>MAF</code>
+<a href="#abf" class="anchor"></a><a href="https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html">ABF</a>
 </h3>
+<div id="proportion_casesmaf" class="section level4">
+<h4 class="hasAnchor">
+<a href="#proportion_casesmaf" class="anchor"></a><code>proportion_cases</code>,<code>MAF</code>
+</h4>
 </div>
-<div id="finemapa1a2mafn" class="section level3">
-<h3 class="hasAnchor">
-<a href="#finemapa1a2mafn" class="anchor"></a><a href="http://www.christianbenner.com">FINEMAP</a>:<code>A1</code>,<code>A2</code>,<code>MAF</code>,<code>N</code>
-</h3>
 </div>
-<div id="susie-n" class="section level3">
+<div id="finemap" class="section level3">
 <h3 class="hasAnchor">
-<a href="#susie-n" class="anchor"></a><a href="https://github.com/stephenslab/susieR">SuSiE</a>: <code>N</code>
+<a href="#finemap" class="anchor"></a><a href="http://www.christianbenner.com">FINEMAP</a>
 </h3>
+<div id="a1a2mafn" class="section level4">
+<h4 class="hasAnchor">
+<a href="#a1a2mafn" class="anchor"></a><code>A1</code>,<code>A2</code>,<code>MAF</code>,<code>N</code>
+</h4>
 </div>
-<div id="polyfun-a1a2pn" class="section level3">
-<h3 class="hasAnchor">
-<a href="#polyfun-a1a2pn" class="anchor"></a><a href="https://github.com/omerwe/polyfun">PolyFun</a>: <code>A1</code>,<code>A2</code>,<code>P</code>,<code>N</code>
-</h3>
 </div>
-<div id="paintor-a1a2t-stat" class="section level3">
+<div id="susie" class="section level3">
 <h3 class="hasAnchor">
-<a href="#paintor-a1a2t-stat" class="anchor"></a><a href="https://github.com/gkichaev/PAINTOR_V3.0">PAINTOR</a>: <code>A1</code>,<code>A2</code>,<code>t-stat</code>
+<a href="#susie" class="anchor"></a><a href="https://github.com/stephenslab/susieR">SuSiE</a>
 </h3>
+<div id="n" class="section level4">
+<h4 class="hasAnchor">
+<a href="#n" class="anchor"></a><code>N</code>
+</h4>
 </div>
-<div id="gcta-cojo-a1a2freqpn" class="section level3">
-<h3 class="hasAnchor">
-<a href="#gcta-cojo-a1a2freqpn" class="anchor"></a><a href="https://cnsgenomics.com/software/gcta/#COJO">GCTA-COJO</a>: <code>A1</code>,<code>A2</code>,<code>Freq</code>,<code>P</code>,<code>N</code>
-</h3>
 </div>
-<div id="coloc-nmaf" class="section level3">
+<div id="polyfun" class="section level3">
 <h3 class="hasAnchor">
-<a href="#coloc-nmaf" class="anchor"></a><a href="https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html">coloc</a>: <code>N</code>,<code>MAF</code>
+<a href="#polyfun" class="anchor"></a><a href="https://github.com/omerwe/polyfun">PolyFun</a>
 </h3>
+<div id="a1a2pn" class="section level4">
+<h4 class="hasAnchor">
+<a href="#a1a2pn" class="anchor"></a><code>A1</code>,<code>A2</code>,<code>P</code>,<code>N</code>
+</h4>
+</div>
+</div>
+<div id="paintor" class="section level3">
+<h3 class="hasAnchor">
+<a href="#paintor" class="anchor"></a><a href="https://github.com/gkichaev/PAINTOR_V3.0">PAINTOR</a>
+</h3>
+<div id="a1a2t-stat" class="section level4">
+<h4 class="hasAnchor">
+<a href="#a1a2t-stat" class="anchor"></a><code>A1</code>,<code>A2</code>,<code>t-stat</code>
+</h4>
+</div>
+</div>
+<div id="gcta-cojo" class="section level3">
+<h3 class="hasAnchor">
+<a href="#gcta-cojo" class="anchor"></a><a href="https://cnsgenomics.com/software/gcta/#COJO">GCTA-COJO</a>
+</h3>
+<div id="a1a2freqpn" class="section level4">
+<h4 class="hasAnchor">
+<a href="#a1a2freqpn" class="anchor"></a><code>A1</code>,<code>A2</code>,<code>Freq</code>,<code>P</code>,<code>N</code>
+</h4>
+</div>
+</div>
+<div id="coloc" class="section level3">
+<h3 class="hasAnchor">
+<a href="#coloc" class="anchor"></a><a href="https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html">coloc</a>
+</h3>
+<div id="nmaf" class="section level4">
+<h4 class="hasAnchor">
+<a href="#nmaf" class="anchor"></a><code>N</code>,<code>MAF</code>
+</h4>
 <p><br></p>
+</div>
 </div>
 </div>
 <div id="datasets" class="section level2">
@@ -320,7 +424,7 @@ All methods require the columns: <code>SNP</code>,<code>CHR</code>,<code>POS</co
 <p>For more detailed information about each dataset, use <code><a href="https://rdrr.io/r/utils/Question.html">?</a></code>:<br><code>R   library(echolocatoR)   ?NOTT_2019.interactome # example dataset</code></p>
 <div id="epigenomic--genome-wide-annotations" class="section level3">
 <h3 class="hasAnchor">
-<a href="#epigenomic--genome-wide-annotations" class="anchor"></a>Epigenomic &amp; Genome-wide Annotations</h3>
+<a href="#epigenomic--genome-wide-annotations" class="anchor"></a>Epigenomic &amp; genome-wide annotations</h3>
 <div id="nott-et-al-2019" class="section level4">
 <h4 class="hasAnchor">
 <a href="#nott-et-al-2019" class="anchor"></a><a href="https://science.sciencemag.org/content/366/6469/1134.abstract">Nott et al. (2019)</a>
@@ -329,16 +433,15 @@ All methods require the columns: <code>SNP</code>,<code>CHR</code>,<code>POS</co
 <li><p>Data from this publication contains results from cell type-specific (neurons, oligodendrocytes, astrocytes, microglia, &amp; peripheral myeloid cells) epigenomic assays (H3K27ac, ATAC, H3K4me3) from human brain tissue.</p></li>
 <li>
 <p>For detailed metadata, see:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"NOTT_2019.bigwig_metadata"</span><span class="op">)</span></code></pre></div>
 </li>
 <li>
 <p>Built-in datasets:</p>
 <ul>
-<li>Enhancer/promoter coordinates (as <em>GenomicRanges</em>)<br>
-</li>
+<li>Enhancer/promoter coordinates (as <em>GenomicRanges</em>)</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"NOTT_2019.interactome"</span><span class="op">)</span>
 <span class="co"># Examples of the data nested in "NOTT_2019.interactome" object:</span>
 <span class="va">NOTT_2019.interactome</span><span class="op">$</span><span class="va">`Neuronal promoters`</span>
@@ -348,10 +451,9 @@ All methods require the columns: <code>SNP</code>,<code>CHR</code>,<code>POS</co
 <span class="va">...</span>
 <span class="va">...</span></code></pre></div>
 <ul>
-<li>PLAC-seq enhancer-promoter interactome coordinates<br>
-</li>
+<li>PLAC-seq enhancer-promoter interactome coordinates</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">NOTT_2019.interactome</span><span class="op">$</span><span class="va">H3K4me3_around_TSS_annotated_pe</span>
 <span class="va">NOTT_2019.interactome</span><span class="op">$</span><span class="va">`Microglia interactome`</span>
 <span class="va">NOTT_2019.interactome</span><span class="op">$</span><span class="va">`Neuronal interactome`</span>
@@ -376,7 +478,7 @@ All methods require the columns: <code>SNP</code>,<code>CHR</code>,<code>POS</co
 <ul>
 <li>
 <p>Data from this preprint contains results from bulk and single-cell chromatin accessibility epigenomic assays in 39 human brains.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"CORCES_2020.bulkATACseq_peaks"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"CORCES_2020.cicero_coaccessibility"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"CORCES_2020.HiChIP_FitHiChIP_loop_calls"</span><span class="op">)</span>
@@ -436,7 +538,7 @@ All methods require the columns: <code>SNP</code>,<code>CHR</code>,<code>POS</co
 </div>
 <div id="enrichment-tools" class="section level2">
 <h2 class="hasAnchor">
-<a href="#enrichment-tools" class="anchor"></a>Enrichment Tools</h2>
+<a href="#enrichment-tools" class="anchor"></a>Enrichment tools</h2>
 <div id="xgr-1" class="section level3">
 <h3 class="hasAnchor">
 <a href="#xgr-1" class="anchor"></a><a href="http://xgr.r-forge.r-project.org">XGR</a>
@@ -459,7 +561,7 @@ All methods require the columns: <code>SNP</code>,<code>CHR</code>,<code>POS</co
 </h3>
 <ul>
 <li>Genome-wide stratified LD score regression.</li>
-<li>Inlccles 187-annotation baseline model from <a href="https://www.nature.com/articles/s41588-018-0231-8">Gazal et al. 2018</a>.<br>
+<li>Inlccles 187-annotation baseline model from <a href="https://www.nature.com/articles/s41588-018-0231-8">Gazal et al. 2018</a>.<br>
 </li>
 <li>You can alternatively supply a custom annotations matrix.</li>
 </ul>
@@ -484,7 +586,7 @@ All methods require the columns: <code>SNP</code>,<code>CHR</code>,<code>POS</co
 </div>
 <div id="ld-reference-panels" class="section level2">
 <h2 class="hasAnchor">
-<a href="#ld-reference-panels" class="anchor"></a>LD Reference Panels</h2>
+<a href="#ld-reference-panels" class="anchor"></a>LD reference panels</h2>
 <div id="uk-biobank" class="section level3">
 <h3 class="hasAnchor">
 <a href="#uk-biobank" class="anchor"></a><a href="https://www.ukbiobank.ac.uk">UK Biobank</a>
@@ -503,9 +605,9 @@ All methods require the columns: <code>SNP</code>,<code>CHR</code>,<code>POS</co
 <hr>
 </div>
 </div>
-<div id="author" class="section level2">
+<div id="creator" class="section level2">
 <h2 class="hasAnchor">
-<a href="#author" class="anchor"></a>Author</h2>
+<a href="#creator" class="anchor"></a>Creator</h2>
 <p><a href="https://bschilder.github.io/BMSchilder/" target="_blank">Brian M. Schilder, Bioinformatician II</a><br><a href="https://rajlab.org" target="_blank">Raj Lab</a><br><a href="https://icahn.mssm.edu/about/departments/neuroscience" target="_blank">Department of Neuroscience, Icahn School of Medicine at Mount Sinai</a><br><img src="./images/sinai.png" alt="Sinai"></p>
 </div>
 

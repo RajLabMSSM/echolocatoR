@@ -56,7 +56,7 @@ Here we take advantage of the fine-mapping results files already available on th
 
 
 ```{r locus_list}
-locus_list <- c("LRRK2","MBNL2","DYRK1A","FCGR2A","MED12L")
+locus_list <- c("LRRK2","MBNL2","DYRK1A","FCGR2A","MED12L")  
 ```
 
 ## Multi-finemap data  

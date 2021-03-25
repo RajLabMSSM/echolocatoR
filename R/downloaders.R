@@ -17,18 +17,20 @@ downloader <- function(input_url,
                        nThread=4,
                        alternate=T,
                        check_certificates=F,
-                       verbose=T){
+                       verbose=T,
+                       conda_env=NULL){
   if(download_method=="axel"){
     axel_avail <- length(system("which axel",intern = T))!=0
-    if(axel_avail){
+    if(axel_avail | !is.null(conda_env)){
       out_file <- axel(input_url=input_url,
                        output_path=output_path,
                        background=background,
                        nThread=nThread,
                        force_overwrite=force_overwrite,
-                       quiet=T, # output hella long otherwise...
+                       quiet=T, # output is hella long otherwise...
                        alternate=alternate,
-                       check_certificates=check_certificates)
+                       check_certificates=check_certificates,
+                       conda_env=conda_env)
     } else {
       printer("+ DOWNLOADER:: Axel not available. Defaulting to wget.",v=verbose);
       download_method <- "wget"
@@ -37,7 +39,7 @@ downloader <- function(input_url,
   }
   if(download_method=="wget"){
     wget_avail <- length(system("which wget",intern = T))!=0
-    if(wget_avail){
+    if(wget_avail | !is.null(conda_env)){
       out_file <- wget(input_url,
                        output_path,
                        background=background,
@@ -45,7 +47,8 @@ downloader <- function(input_url,
                        quiet=quiet,
                        show_progress=show_progress,
                        continue=continue,
-                       check_certificates=check_certificates)
+                       check_certificates=check_certificates,
+                       conda_env=conda_env)
     } else {
       stop("+ DOWNLOADER:: Please install wget or axel first.");
     }
@@ -68,12 +71,15 @@ wget <- function(input_url,
                  quiet=F,
                  show_progress=T,
                  continue=T,
-                 check_certificates=F){
+                 check_certificates=F,
+                 conda_env="echoR"){
   # https://stackoverflow.com/questions/21365251/how-to-run-wget-in-background-for-an-unattended-download-of-files
   ## -bqc makes wget run in the background quietly
   dir.create(output_path, showWarnings = F, recursive = T)
   out_file <- file.path(output_path,basename(input_url))
-  cmd <- paste("wget",input_url,
+  wget <- CONDA.find_package("wget", conda_env = conda_env, verbose = quiet)
+  cmd <- paste(wget,
+               input_url,
                "-np",
                ## Checking certificates can sometimes cause issues
                if(check_certificates) "" else "--no-check-certificate",
@@ -104,14 +110,17 @@ axel <- function(input_url,
                  force_overwrite=F,
                  quiet=T,
                  alternate=T,
-                 check_certificates=F){
+                 check_certificates=F,
+                 conda_env="echoR"){
   dir.create(output_path, showWarnings = F, recursive = T)
   out_file <- file.path(output_path,basename(input_url))
   if(force_overwrite){
     print("+ Overwriting pre-existing file.")
     suppressWarnings(file.remove(out_file))
   }
-  cmd <- paste("axel",input_url,
+  axel <- CONDA.find_package("axel", conda_env = conda_env, verbose = quiet)
+  cmd <- paste(axel,
+               input_url,
                "-n",nThread,
                ## Checking certificates can sometimes cause issues
                if(check_certificates) "" else "--insecure",

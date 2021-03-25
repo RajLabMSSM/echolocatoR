@@ -330,8 +330,23 @@ FINEMAP.process_results <- function(locus_dir,
                         "Using marginal probabilties from .snp results file instead.")
     results_file <- ".snp"
   }
+  #### Double check which results files are available ####
+  ## This vary depending on which version of FINEMAP you're using.
+  FINEMAP.check_files <- function(locus_dir,
+                                  results_file){
+    .cred_exists <- file.exists(file.path(locus_dir,"FINEMAP/data.cred"))
+    .snp_exists <- file.exists(file.path(locus_dir,"FINEMAP/data.snp"))
+    .config_exists <- file.exists(file.path(locus_dir,"FINEMAP/data.config"))
+    file_options <- c(".cred",".snp",".config")[c(.cred_exists,.snp_exists,.config_exists)]
+    if(!results_file %in% file_options){
+      printer(results_file,"not detected.",
+              "Using",file_options[1],"instead.")
+      return(file_options[1])
+    }else { return(results_file)}
+  }
+  results_file <- FINEMAP.check_files(locus_dir, results_file)
 
-
+  ##### Define results extraction functions ####
   FINEMAP.import_data.snp <- function(locus_dir,
                                       credset_thresh=.95,
                                       prob_col="prob",
@@ -357,7 +372,7 @@ FINEMAP.process_results <- function(locus_dir,
     # NOTES:
     ## .cred files: Conditional posterior probabilities that a given variant is causal
     ## conditional on the other causal variants in the region.
-    printer("+ FINEMAP:: Importing conditional probabilties (.cred)...", v=verbose)
+    printer("+ FINEMAP:: Importing conditional probabilities (.cred)...", v=verbose)
     cred_path <- file.path(locus_dir,"FINEMAP/data.cred")
     data.cred <- data.table::fread(cred_path,
                                    na.strings = c("<NA>","NA"),
@@ -388,7 +403,6 @@ FINEMAP.process_results <- function(locus_dir,
     printer("+ FINEMAP:: Importing top configuration probability (.config)...", v=verbose)
     config_path <- file.path(locus_dir,"FINEMAP/data.config")
     data.config <- data.table::fread(config_path, nThread=1)
-
     if(top_config_only){
       data.config <- data.config[1,]
     }
@@ -400,8 +414,7 @@ FINEMAP.process_results <- function(locus_dir,
     if(!is.null(pvalue_thresh) & "pvalue" %in% colnames(data.config)){
       data.config <- subset(data.config, pvalue<pvalue_thresh)
     }
-
-    # Restructre config file
+    # Restructure config file
     ## Use the probability of the configuration itself as the snp-wise probabilties
     data.config_format <- data.frame(SNP=strsplit(data.config$config, ",")[[1]],
                                      PP=data.config$prob,
@@ -412,14 +425,15 @@ FINEMAP.process_results <- function(locus_dir,
 
   #### Process FINEMAP results ####
   if(results_file==".cred"){
-    dat <- FINEMAP.import_data.cred(locus_dir = locus_dir,
-                                    verbose = verbose)
-    # Merge with original dataframe
-    subset_DT <- data.table::merge.data.table(data.table::data.table(subset_DT),
-                                              data.table::data.table(dat),
-                                              by="SNP",
-                                              all.x = T)
+      dat <- FINEMAP.import_data.cred(locus_dir = locus_dir,
+                                      verbose = verbose)
+      # Merge with original dataframe
+      subset_DT <- data.table::merge.data.table(data.table::data.table(subset_DT),
+                                                data.table::data.table(dat),
+                                                by="SNP",
+                                                all.x = T)
   }
+
   if (results_file==".snp"){
     dat <- FINEMAP.import_data.snp(locus_dir = locus_dir,
                                    verbose = verbose)

@@ -16,7 +16,8 @@ downloader(
   nThread = 4,
   alternate = T,
   check_certificates = F,
-  verbose = T
+  verbose = T,
+  conda_env = NULL
 )
 }
 \description{

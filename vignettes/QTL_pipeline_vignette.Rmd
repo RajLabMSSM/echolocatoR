@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = T, error = T} 
+```{r setup, include = T, error = T, message=F} 
 root.dir <- "~/Desktop"
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -19,16 +19,19 @@ knitr::opts_chunk$set(
   fig.width = 10
 )  
 knitr::opts_knit$set(root.dir = root.dir)
-```
 
-
-```{r setup, root.dir="~/Desktop"}
 library(echolocatoR) 
-results_dir <- file.path(root.dir,"results")
+library(dplyr)
+results_dir <- file.path(root.dir,"results") 
 dir.create(results_dir, showWarnings = F, recursive = F)
 ```
 
+ 
 # QTL pipeline
+
+- Here, we will use GWAS-eQTL colocalization results provided via the [*echolocatoR Fine-mapping Portal*](https://github.com/RajLabMSSM/Fine_Mapping_Shiny), from the preprint:
+> K de Paiva Lopes, GJL Snijders, J Humphrey, A Allan, M Sneeboer, E Navarro, BM Schilder…T Raj (2020) Atlas of Genetic Effects in Human Microglia Transcriptome across Brain Regions, Aging and Disease Pathologies. bioRxiv; [https://doi.org/10.1101/2020.10.27.356113](https://doi.org/10.1101/2020.10.27.356113).
+
 
 ## Prepare `top_SNPs` data.frame   
 
@@ -37,7 +40,12 @@ So we're just going to make one directly from the full summary stats file itself
 - In this case, you'll want to make sure to set `grouping_vars=c("Locus","Gene")` so that you get top SNPs for each eGene-locus pair (not just one SNP per locus).  
 
 ```{r  Prepare `top_SNPs` data.frame}
-fullSS_path <- "/Users/schilder/Desktop/Microglia_all_regions_Kunkle_2019_COLOC.snp-level.tsv.gz"
+fullSS_path <- "~/Desktop/Microglia_all_regions_Kunkle_2019_COLOC.snp-level_select.tsv.gz"
+## Download example data 
+if(!file.exists(fullSS_path)){
+  download.file("https://github.com/RajLabMSSM/Fine_Mapping_Shiny/raw/master/www/Microglia_all_regions_Kunkle_2019_COLOC.snp-level_select.tsv.gz", fullSS_path)
+}
+
 
 top_SNPs <- import_topSNPs(  
   topSS = fullSS_path,
@@ -62,7 +70,7 @@ QTL eGene-GWAS locus pairs you want to run.
 We'll also limit the anaylsis to just 3 loci.  
 
 ```{r} 
-loci <- gene_locus_list(top_SNPs=subset(top_SNPs, Gene==Locus))
+loci <- gene_locus_list(top_SNPs)
 # We'll just fine-map 2 loci to start
 loci <- loci[1:3] 
 loci
@@ -90,7 +98,7 @@ Kunkle_2019.microgliaQTL <- finemap_loci(# GENERAL ARGUMENTS
                                           
                  # SUMMARY STATS ARGUMENTS
                  fullSS_path = fullSS_path,
-                 query_by ="coordinates",
+                 query_by ="fullSS",
                  chrom_col = "chr", 
                  position_col = "pos", 
                  snp_col = "snp",
@@ -119,7 +127,7 @@ Kunkle_2019.microgliaQTL <- finemap_loci(# GENERAL ARGUMENTS
                  
                  # PLOT ARGUMENTS 
                  plot.types=c("simple"),
-                 plot.zoom = 500000/2, 
+                 plot.zoom = "1x" 
                  )
 ```
 

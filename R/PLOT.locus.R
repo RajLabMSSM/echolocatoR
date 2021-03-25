@@ -65,7 +65,7 @@ PLOT.locus <- function(finemap_dat,
                        height=12,
                        width=10,
                        plot_format="jpg",
-                       save_RDS=T,
+                       save_RDS=F,
                        return_list=F,
                        conda_env="echoR",
                        nThread=4,
@@ -98,7 +98,7 @@ PLOT.locus <- function(finemap_dat,
                                 LD_format = "guess")
   # Begin constructing tracks
   TRKS <- NULL;
-  # Treack: Summary
+  # Track: Summary
   if(dot_summary){
     printer("++ PLOT:: Creating dot plot summary of fine-mapping results.")
     TRKS[["Summary"]] <- PLOT.dot_summary(finemap_dat = finemap_dat,
@@ -106,9 +106,9 @@ PLOT.locus <- function(finemap_dat,
                                            show_plot = F)
   }
   ####  Track: Main (GWAS) frozen ####
+  full_window_name <- paste(dataset_type,"full window")
   if(plot_full_window){
     printer("++ PLOT::",dataset_type,"full window track", v=verbose)
-    full_window_name <- paste(dataset_type,"full window")
     TRKS[[full_window_name]] <- PLOT.SNP_track_merged(finemap_dat = finemap_dat,
                                                         yvar = "-log10(P)",
                                                         sig_cutoff = sig_cutoff,
@@ -141,8 +141,9 @@ PLOT.locus <- function(finemap_dat,
   #### Track: QTL ####
   for (qtl in QTL_prefixes){
     printer("++ PLOT::",qtl,"track", v=verbose)
+    pval_col <- guess_pvalue_col(finemap_dat, QTL_prefix = qtl)
     TRKS[[qtl]]  <- PLOT.SNP_track_merged(finemap_dat = finemap_dat,
-                                          yvar = paste0("-log10(",qtl,"P)"),
+                                          yvar = paste0("-log10(",pval_col,")"),
                                           sig_cutoff = sig_cutoff,
                                           labels_subset = NULL,
                                           xtext = xtext,
@@ -513,11 +514,12 @@ PLOT.SNP_track_merged <- function(finemap_dat,
           ) +
     guides(fill = guide_colourbar(barwidth = 1, barheight = 3))
 
-  #  Choose breaks and ylimss
+  #  Choose breaks and ylims
   if(startsWith(yvar,"-log")){
+    pval_stripped <- gsub("-log|-log10|[()]|[)]","",yvar)
     snp_plot <- suppressMessages(
       snp_plot + scale_y_continuous(n.breaks = 3,
-                                    limits =  c(0,-log10(min(finemap_dat$P))*1.1))
+                                    limits =  c(0,-log10(min(finemap_dat[[pval_stripped]]))*1.1))
     )
   }else {
     snp_plot <- suppressMessages(
@@ -893,14 +895,6 @@ PLOT.dot_summary <- function(finemap_dat,
 }
 
 
-
-guess_pvalue_col <- function(dat,
-                             QTL_prefix=NULL){
-  p_options <- c("p","p-value","p-values","pvalue","pvalues","pval")
-  p_options <- c(p_options, stringr::str_to_sentence(p_options))
-  pval_col <- paste0(QTL_prefix,p_options)[paste0(QTL_prefix,p_options) %in% colnames(dat)][1]
-  return(pval_col)
-}
 
 
 

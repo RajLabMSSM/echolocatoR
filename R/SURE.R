@@ -17,10 +17,12 @@
 SURE.download_annotations <- function(URL="https://osf.io/vxfk3/download",
                                       output_dir=".",
                                       nThread=4,
-                                      v=verbose){
+                                      v=verbose,
+                                      conda_env="echoR"){
   echolocatoR::downloader(input_url = URL,
                           output_path = output_dir,
-                          nThread = nThread)
+                          nThread = nThread,
+                          conda_env=conda_env)
   out_file <- file.path(output_dir, "SuRE_SNP_table_LP190708.txt.gz")
   printer("SURE:: Data downloaded ==>",out_file,v=verbose)
   return(output_path)

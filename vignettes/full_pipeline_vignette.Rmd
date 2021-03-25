@@ -103,6 +103,8 @@ Here are some key arguments:
 * *plot.zoom*: Zoom in/out from the center of each locus when producing the multiview plot.  
 You can adjust this separately from `bp_distance` so that you don't have rerun the whole pipeline each time (locus subsets, LD matrices, and fine-mapping results are all automatically saved in locus-specific folders).  
 
+*NOTE*: This example assumes you have already installed tabix (via htslib) and bcftoools. 
+
 ```{r Run fine-mapping pipeline}
 
 Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS 
@@ -126,7 +128,10 @@ Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS
                  A2_col = "A2",
                  
                  # FILTERING ARGUMENTS
-                 bp_distance = 500000*2,
+                 ## It's often desirable to use a larger window size 
+                 ## (e.g. 2Mb which is bp_distance=500000*2), 
+                 ## but we use a small window here to speed up the process. 
+                 bp_distance = 10000,#500000*2,
                  min_MAF = 0.001,  
                  trim_gene_limits = F,
                  
@@ -141,7 +146,7 @@ Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS
                                                 "max_iter"=100)),
                  
                  # LD ARGUMENTS 
-                 LD_reference = "UKB",#"1KGphase1",
+                 LD_reference = "1KGphase1",#"UKB",
                  superpopulation = "EUR",
                  download_method = "axel",
                  

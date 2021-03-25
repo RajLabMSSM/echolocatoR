@@ -16,7 +16,8 @@ LD.plink_LD(
   remove_correlates = F,
   fillNA = 0,
   plink_prefix = "plink",
-  verbose = T
+  verbose = T,
+  conda_env = NULL
 )
 }
 \description{

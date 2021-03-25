@@ -29,7 +29,8 @@ PAINTOR(
   QTL_populations = "EUR",
   LD_reference = "1KG_Phase1",
   force_new_LD = F,
-  LD_matrix = NULL
+  LD_matrix = NULL,
+  force_reinstall = F
 )
 }
 \description{

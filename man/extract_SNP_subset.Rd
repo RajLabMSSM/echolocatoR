@@ -44,6 +44,7 @@ extract_SNP_subset(
   probe_path = "./Data/eQTL/gene.ILMN.map",
   QTL_prefixes = NULL,
   remove_tmps = T,
+  conda_env = "echoR",
   verbose = T
 )
 }

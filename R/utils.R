@@ -222,7 +222,7 @@ Zscore.get_mean_and_sd <- function(fullSS,#="./Data/GWAS/Nalls23andMe_2019/nalls
       sample_x <- data.table::fread(fullSS, nThread = 4,
                                     select=c(effect_col, stderr_col),
                                     col.names = c("Effect","StdErr"))
-      sample_x <- subset(calculate.tstat(sample_x), select = target_col)
+      sample_x <- subset(calculate_tstat(sample_x), select = target_col)
     }else {
       sample_x <- data.table::fread(fullSS, nThread = 4, select=c(target_col))
     }
@@ -628,7 +628,7 @@ subset_common_snps <- function(LD_matrix,
                                verbose=F){
   printer("+ Subsetting LD matrix and finemap_dat to common SNPs...", v=verbose)
   # Remove duplicate SNPs
-  LD_matrix <- data.frame(LD_matrix)
+  LD_matrix <- data.frame(as.matrix(LD_matrix))
   LD_matrix <- LD.fill_NA(LD_matrix = LD_matrix,
                           fillNA = fillNA,
                           verbose = verbose)
@@ -656,7 +656,7 @@ subset_common_snps <- function(LD_matrix,
     warning("+ LD_matrix and finemap_dat do NOT have the same number of SNPs.",v=verbose)
     warning("+ LD_matrix SNPs = ",nrow(new_LD),"; finemap_dat = ",nrow(finemap_dat), v=verbose)
   }
-  return(list(LD=new_LD,
+  return(list(LD=as.matrix(new_LD),
               DT=new_DT))
 }
 
@@ -1326,7 +1326,7 @@ saveSparse <- function(LD_matrix,
 
 
 readSparse <- function(LD_path,
-                       convert_to_df=T){
+                       convert_to_df=F){
   LD_sparse <- readRDS(LD_path)
   if(convert_to_df) LD_sparse <- data.frame(as.matrix(LD_sparse))
   return(LD_sparse)
@@ -1634,5 +1634,15 @@ import.bw.filt <- function(bw.file,
                                     selection = gr.span)
   # plot(x = start(bw.filt), y=bw.filt$score)
   return(bw.filt)
+}
+
+
+
+guess_pvalue_col <- function(dat,
+                             QTL_prefix=NULL){
+  p_options <- c("p","p-value","p-values","pvalue","pvalues","pval")
+  p_options <- c(p_options, stringr::str_to_sentence(p_options))
+  pval_col <- paste0(QTL_prefix,p_options)[paste0(QTL_prefix,p_options) %in% colnames(dat)][1]
+  return(pval_col)
 }
 

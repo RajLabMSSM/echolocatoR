@@ -377,7 +377,7 @@ finemap_pipeline <- function(locus,
                              LD_reference="1KGphase1",
                              superpopulation="EUR",
                              remote_LD=T,
-                             download_method="direct",
+                             download_method="axel",
                              min_POS=NA,
                              max_POS=NA,
                              min_MAF=NA,
@@ -390,7 +390,7 @@ finemap_pipeline <- function(locus,
                              LD_block_size=.7,
                              vcf_folder=NULL,
                              # min_Dprime=F,
-                             query_by="coordinates",
+                             query_by="tabix",
                              remove_variants=F,
                              remove_correlates=F,
                              probe_path = "./Data/eQTL/gene.ILMN.map",
@@ -691,7 +691,7 @@ finemap_loci <- function(loci,
 
                          LD_reference="1KGphase1",
                          superpopulation="EUR",
-                         download_method="direct",
+                         download_method="axel",
                          vcf_folder=NULL,
                          remote_LD=T,
 
@@ -705,7 +705,7 @@ finemap_loci <- function(loci,
                          min_r2=0,
                          LD_block=F, LD_block_size=.7,
                          # min_Dprime=F,
-                         query_by="coordinates",
+                         query_by="tabix",
                          remove_variants=F,
                          remove_correlates=F,
                          probe_path = "./Data/eQTL/gene.ILMN.map",
@@ -733,6 +733,12 @@ finemap_loci <- function(loci,
                          nThread=4,
                          verbose=T){
   CONDA.activate_env(conda_env = conda_env)
+
+  check_tools(check_tabix=T,
+              stop_for_tabix=query_by=="tabix",
+              check_bcftools=T,
+              stop_for_bcftools=LD_reference %in% c("1KGphase1","1KGphase3"),
+              conda_env=conda_env)
   data.table::setDTthreads(threads = nThread);
   conditioned_snps <- snps_to_condition(conditioned_snps, top_SNPs, loci);
 

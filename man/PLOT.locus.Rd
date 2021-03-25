@@ -49,7 +49,7 @@ PLOT.locus(
   height = 12,
   width = 10,
   plot_format = "jpg",
-  save_RDS = T,
+  save_RDS = F,
   return_list = F,
   conda_env = "echoR",
   nThread = 4,

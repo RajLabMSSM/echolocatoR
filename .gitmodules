@@ -4,3 +4,6 @@
 [submodule "inst/tools/goshifter"]
 	path = inst/tools/goshifter
 	url = https://github.com/immunogenomics/goshifter.git
+[submodule "inst/tools/PAINTOR_V3.0"]
+	path = inst/tools/PAINTOR_V3.0
+	url = https://github.com/gkichaev/PAINTOR_V3.0.git

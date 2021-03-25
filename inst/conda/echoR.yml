@@ -8,7 +8,7 @@ channels:
 dependencies:
   # Python
   - python>=3.6.1
-  - pandas>=0.25.0 
+  - pandas>=0.25.0
   - fastparquet
   - pyarrow
   - scipy
@@ -19,7 +19,7 @@ dependencies:
   - rpy2
   - requests
   # Command line
-  - tabix
+  - htslib
   - plink
   - macs2
   - bcftools

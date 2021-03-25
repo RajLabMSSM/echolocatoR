@@ -12,7 +12,8 @@ wget(
   quiet = F,
   show_progress = T,
   continue = T,
-  check_certificates = F
+  check_certificates = F,
+  conda_env = "echoR"
 )
 }
 \description{
