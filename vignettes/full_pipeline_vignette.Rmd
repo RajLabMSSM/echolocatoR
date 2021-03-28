@@ -20,7 +20,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = T, message=F, error = T} 
+```{r, include = F, message=F, error = T} 
 root.dir <- "~/Desktop"
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -28,6 +28,8 @@ knitr::opts_chunk$set(
   root.dir = root.dir,
   fig.height = 12,
   fig.width = 10,
+  
+  # *** quick update (render without running) *** #
   eval = F
 )  
 knitr::opts_knit$set(root.dir = root.dir)  
