@@ -503,17 +503,24 @@ NOTT_2019.get_epigenomic_peaks <- function(assays=c("ATAC","H3K27ac","H3K4me3"),
 
 
 NOTT_2019.prepare_placseq_overlap <- function(merged_DT,
-                                              snp_filter="!is.na(SNP)"){
+                                              snp_filter="!is.na(SNP)",
+                                              return_counts=T){
   finemap_dat <- subset(merged_DT, eval(parse(text=snp_filter)), .drop=F)
-  interactome <- NOTT_2019.get_interactions(finemap_dat = finemap_dat)
-  dat_melt <- count_and_melt(merged_annot = interactome,
-                             snp_filter = snp_filter)
-  if(sum(dat_melt$Count==0 | is.na(dat_melt$Count), na.rm = T)>0){
-    try({
-      dat_melt[dat_melt$Count==0 | is.na(dat_melt$Count),"Count"] <- NA
-    })
+
+  if(return_counts){
+    interactome <- NOTT_2019.get_interactions(finemap_dat = finemap_dat)
+    dat_melt <- count_and_melt(merged_annot = interactome,
+                               snp_filter = snp_filter)
+    if(sum(dat_melt$Count==0 | is.na(dat_melt$Count), na.rm = T)>0){
+      try({
+        dat_melt[dat_melt$Count==0 | is.na(dat_melt$Count),"Count"] <- NA
+      })
+    }
+    return(dat_melt)
+  } else {
+    interactome <- NOTT_2019.get_interactions(finemap_dat = finemap_dat, as.granges = T)
+    return(interactome)
   }
-  return(dat_melt)
 }
 
 
@@ -521,7 +528,8 @@ NOTT_2019.prepare_placseq_overlap <- function(merged_DT,
 
 
 NOTT_2019.prepare_peak_overlap <- function(merged_DT,
-                                           snp_filter="!is.na(SNP)"){
+                                           snp_filter="!is.na(SNP)",
+                                           return_counts=T){
   PEAKS <- NOTT_2019.get_epigenomic_peaks()
   # Get SNP groups
   finemap_dat <- subset(merged_DT, eval(parse(text=snp_filter)), .drop=F)
@@ -531,24 +539,27 @@ NOTT_2019.prepare_peak_overlap <- function(merged_DT,
                              start_col.1 = "POS",
                              end_col.1 = "POS",
                              dat2 = PEAKS)
-  merged_annot <- find_topConsensus(dat = data.frame(gr.hits),
-                                    grouping_vars = c("Locus","Cell_type","Assay"))
-  dat_melt <- count_and_melt(merged_annot = merged_annot,
-                                       snp_filter = snp_filter)
-  if(sum(dat_melt$Count==0 | is.na(dat_melt$Count),na.rm = T)>0){
-    try({
-      dat_melt[dat_melt$Count==0 | is.na(dat_melt$Count),"Count"] <- NA
-    })
-  }
 
-  return(dat_melt)
+  if(return_counts){
+    merged_annot <- find_topConsensus(dat = data.frame(gr.hits),
+                                      grouping_vars = c("Locus","Cell_type","Assay"))
+    dat_melt <- count_and_melt(merged_annot = merged_annot,
+                               snp_filter = snp_filter)
+    if(sum(dat_melt$Count==0 | is.na(dat_melt$Count),na.rm = T)>0){
+      try({
+        dat_melt[dat_melt$Count==0 | is.na(dat_melt$Count),"Count"] <- NA
+      })
+    }
+    return(dat_melt)
+  } else {return(gr.hits)}
 }
 
 
 
 
 NOTT_2019.prepare_regulatory_overlap <- function(merged_DT,
-                                                  snp_filter){
+                                                 snp_filter="!is.na(SNP)",
+                                                 return_counts=T){
   gr.reg <- NOTT_2019.get_regulatory_regions(as.granges = T)
   finemap_sub <- subset(merged_DT, eval(parse(text=snp_filter)), .drop=F)
   gr.hits.reg <- GRanges_overlap(dat1 = finemap_sub,
@@ -556,11 +567,13 @@ NOTT_2019.prepare_regulatory_overlap <- function(merged_DT,
                                  start_col.1 = "POS",
                                  end_col.1 = "POS",
                                  dat2 = gr.reg)
-  merged_annot.reg <- find_topConsensus(dat = data.frame(gr.hits.reg) %>% dplyr::rename(Assay=Element),
-                                        grouping_vars = c("Locus","Cell_type","Assay"))
-  dat_melt.reg <- count_and_melt(merged_annot = merged_annot.reg,
-                                 snp_filter = snp_filter)
+  if(return_counts){
+    merged_annot.reg <- find_topConsensus(dat = data.frame(gr.hits.reg) %>% dplyr::rename(Assay=Element),
+                                          grouping_vars = c("Locus","Cell_type","Assay"))
+    dat_melt.reg <- count_and_melt(merged_annot = merged_annot.reg,
+                                   snp_filter = snp_filter)
   return(dat_melt.reg)
+  }else {return(gr.hits.reg)}
 }
 
 

@@ -24,7 +24,7 @@ dependencies:
   - axel
   # R
   - r>=4.0.0
-  - r-devtools
+  - r-remotes
   - r-reticulate
   - r-rlang
   - r-mvtnorm
@@ -44,3 +44,4 @@ dependencies:
   - bioconductor-ensdb.hsapiens.v75
   - bioconductor-biomart
   - radian
+  - pip
