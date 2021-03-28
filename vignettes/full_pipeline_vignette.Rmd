@@ -27,9 +27,10 @@ knitr::opts_chunk$set(
   comment = "#>",
   root.dir = root.dir,
   fig.height = 12,
-  fig.width = 10
+  fig.width = 10,
+  eval = F
 )  
-knitr::opts_knit$set(root.dir = root.dir) 
+knitr::opts_knit$set(root.dir = root.dir)  
 ```
 
 ```{r setup}
