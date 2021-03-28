@@ -860,7 +860,7 @@ PLOT.set_window_limits <- function(TRKS,
 PLOT.dot_summary <- function(finemap_dat,
                               PP_threshold=.95,
                               show_plot=T){
-  library(data.table)
+  # library(data.table)
   snp.labs <- construct_SNPs_labels(subset_DT = finemap_dat,
                                     remove_duplicates = F) %>%
     dplyr::arrange(CHR,POS) %>%
@@ -982,8 +982,8 @@ PLOT.transcript_model_track <- function(finemap_dat,
   suppressWarnings(GenomeInfoDb::seqlevelsStyle(gr.snp) <- "NCBI")
   #### Gviz ####
   if(method=="gviz"){
-    library(Gviz)
-    library(EnsDb.Hsapiens.v75)
+    suppressPackageStartupMessages(library(Gviz))
+    suppressPackageStartupMessages(library(EnsDb.Hsapiens.v75))
     printer("+ PLOT:: Gene Model Track",v=verbose)
     txdb <-  EnsDb.Hsapiens.v75::EnsDb.Hsapiens.v75
     tx <- ensembldb::getGeneRegionTrackForGviz(txdb,
@@ -1095,7 +1095,7 @@ get_transcripts <- function(gr.snp,
   # GenomicFeatures::genes(txdb)
 
   # BiocManager::install("EnsDb.Hsapiens.v75")
-  library(EnsDb.Hsapiens.v75)
+  suppressPackageStartupMessages(library(EnsDb.Hsapiens.v75))
   txdb <- EnsDb.Hsapiens.v75::EnsDb.Hsapiens.v75
   #### Query genome db with finemap_DT coordinates ####
   txdb_transcripts <- ensembldb::transcripts(txdb,

@@ -29,7 +29,7 @@
 #' library(echolocatoR)
 #' extra_installs()
 #' @export
-extra_installs <- function(cran_packages=T,
+extra_installs <- function(cran_packages=F,
                             archived_packages=T,
                             bioc_packages=T,
                             github_packages=T){
@@ -39,9 +39,10 @@ extra_installs <- function(cran_packages=T,
     # current CRAN version of foreign needs R >= 4.0 - so specify legacy version
     if(cran_packages){
         message("+ Installing CRAN packages...")
-        r_packages <- c("r.utils", "reticulate", "pbmcapply", "plotly","patchwork",
+        r_packages <- c("r.utils", "reticulate", "patchwork",
                         "ggrepel", "curl", "gaston", "tidyverse",
-                        "BiocManager", "crayon", "roxygen2", "coloc", "haploR", "doBy")
+                        "crayon", "roxygen2", "coloc", "haploR", "doBy")
+        # "pbmcapply", "plotly",
         required_packages <- r_packages[ ! r_packages %in% installed.packages() ]
         for(lib in required_packages){
             install.packages(lib,dependencies=TRUE)
@@ -84,8 +85,12 @@ extra_installs <- function(cran_packages=T,
     #### GitHub ####
     if(github_packages){
         message("+ Installing GitHub packages...")
-        devtools::install_github('jimhester/knitrBootstrap')
-        devtools::install_github("stephenslab/susieR")
+        if(!"knitrBootstrap" %in% installed.packages() ){
+            devtools::install_github('jimhester/knitrBootstrap')
+        }
+        if(!"susieR"  %in% installed.packages() ){
+            devtools::install_github("stephenslab/susieR")
+        }
     }
 }
 

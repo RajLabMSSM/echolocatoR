@@ -39,7 +39,7 @@ FINEMAP <- function(subset_DT,
                     FINEMAP_path=NULL,
                     n_samples=NULL,
                     n_causal=5,# Max number of allowed causal SNPs
-                    model="cond",
+                    model="sss",
                     remove_tmps=F,
                     credset_thresh=.95,
                     finemap_version="1.4",
@@ -100,8 +100,7 @@ FINEMAP <- function(subset_DT,
                        n_causal=n_causal,
                        ## May not have the args that the user
                        ## was expecting due to version differences.
-                       ## Better to shut this arg off.
-                       # args_list=args_list,
+                       args_list=args_list,
                        verbose=F)
     ## Note!: concatenating this output in rmarkdown
     ## can accidentally print many many lines.
@@ -139,7 +138,7 @@ FINEMAP <- function(subset_DT,
 
 FINEMAP.run <- function(locus_dir,
                         FINEMAP_path,
-                        model,
+                        model="sss",# "cond"
                         master_path,
                         n_causal=5,
                         args_list=list(),
@@ -325,7 +324,7 @@ FINEMAP.process_results <- function(locus_dir,
   # subset_DT <- data.table::fread(file.path(locus_dir, "Multi-finemap/ACE.Marioni_2018.1KGphase3.multi_finemap.csv.gz"))
 
   #### Handling FINEMAP version differences  ####
-  if((!finemap_version %in% c("1.3.1","1.4")) & (results_file==".cred")){
+  if((!finemap_version %in% c("1.3.1","1.4")) & any((results_file==".cred"))){
     warning("+ FINEMAP:: FINEMAP <1.3.1 does not produce .cred results files.\n",
                         "Using marginal probabilties from .snp results file instead.")
     results_file <- ".snp"
