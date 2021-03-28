@@ -27,10 +27,7 @@ knitr::opts_chunk$set(
   comment = "#>",
   root.dir = root.dir,
   fig.height = 12,
-  fig.width = 10,
-  
-  # *** quick update (render without running) *** #
-  eval = F
+  fig.width = 10
 )  
 knitr::opts_knit$set(root.dir = root.dir)  
 ```
@@ -98,7 +95,7 @@ You can adjust this separately from `bp_distance` so that you don't have rerun t
 
 **WARNING**: Please use the full absolute paths (instead of relative paths) wherever possible (e.g. `results_dir`). This is especially important for the tool *FINEMAP*.
 
-```{r Run fine-mapping pipeline}
+```{r Run fine-mapping pipeline, eval=F}
 
 Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS 
                                           top_SNPs = top_SNPs,  
