@@ -19,12 +19,11 @@ dependencies:
   # Command line
   - htslib
   - plink
-  - macs2
   - bcftools
   - wget
   - axel
   # R
-  - r>=3.6.0
+  - r>=4.0.0
   - r-devtools
   - r-reticulate
   - r-rlang

@@ -603,7 +603,96 @@ ggplot(data=melt.dat, aes(y=Locus, x=`Credible Set size`, fill=Method)) +
 
 
 
+clean_granges <- function(gr){
+  no_no_cols <- c("seqnames", "ranges", "strand", "seqlevels", "seqlengths",
+                  "isCircular", "start", "end", "width", "element")
+  metadat <- GenomicRanges::elementMetadata(gr)
+  GenomicRanges::elementMetadata(gr) <- metadat[,!colnames(metadat) %in% no_no_cols]
+  return(gr)
+}
 
+
+SUMMARISE.peak_overlap <- function(merged_DT,
+                                   snp_filter="!is.na(SNP)",
+                                   include.NOTT_2019_peaks=T,
+                                   include.NOTT_2019_enhancers_promoters=T,
+                                   include.NOTT_2019_PLACseq=T,
+                                   include.CORCES_2020_scATACpeaks=T,
+                                   include.CORCES_2020_Cicero_coaccess=T,
+                                   include.CORCES_2020_bulkATACpeaks=T,
+                                   include.CORCES_2020_HiChIP_FitHiChIP_coaccess=T,
+                                   include.CORCES_2020_gene_annotations=T,
+                                   verbose=T){
+  gr.hits <- GenomicRanges::GRanges()
+  ######## NOTT et al. 2019 #########
+  if(include.NOTT_2019_peaks){
+    try({
+      NOTTpeaks <- NOTT_2019.prepare_peak_overlap(merged_DT = merged_DT,
+                                                 snp_filter = snp_filter,
+                                                 return_counts = F)
+      NOTTpeaks <- clean_granges(NOTTpeaks)
+      NOTTpeaks$Study <- "Nott et al. (2019)"
+      gr.hits <- c(gr.hits, NOTTpeaks)
+    })
+  }
+
+  if(include.NOTT_2019_enhancers_promoters){
+    try({
+      NOTTreg <- NOTT_2019.prepare_regulatory_overlap(merged_DT = merged_DT,
+                                                     snp_filter = snp_filter,
+                                                     return_counts = F)
+      NOTTreg <- clean_granges(NOTTreg)
+      NOTTreg$background <- 1
+      NOTTreg$Study <- "Nott et al. (2019)"
+      gr.hits <- c(gr.hits, NOTTreg)
+    })
+  }
+
+  if(include.NOTT_2019_PLACseq){
+    try({
+      NOTTplac <- NOTT_2019.prepare_placseq_overlap(merged_DT = merged_DT,
+                                                     snp_filter = snp_filter,
+                                                     return_counts = F)
+      NOTTplac <- clean_granges(NOTTplac)
+      NOTTplac$background <- NA
+      NOTTplac$Study <- "Nott et al. (2019)"
+      gr.hits <- c(gr.hits, NOTTplac)
+    })
+  }
+
+  ######## CORCES et al. 2020 #########
+  if(include.CORCES_2020_scATACpeaks){
+    try({
+      CORCES_scPeaks <- CORCES_2020.prepare_scATAC_peak_overlap(merged_DT = merged_DT,
+                                                                 snp_filter = snp_filter,
+                                                                 add_cicero = include.CORCES_2020_Cicero_coaccess,
+                                                                 annotate_genes = include.CORCES_2020_gene_annotations,
+                                                                 verbose = verbose,
+                                                                 return_counts = F)
+      CORCES_scPeaks <- clean_granges(CORCES_scPeaks)
+      CORCES_scPeaks$background <- NA
+      CORCES_scPeaks$Study <- "Corces et al. (2020)"
+      gr.hits <- c(gr.hits, CORCES_scPeaks)
+    })
+  }
+  if(include.CORCES_2020_bulkATACpeaks){
+    try({
+      CORCES_bulkPeaks <- CORCES_2020.prepare_bulkATAC_peak_overlap(merged_DT = merged_DT,
+                                                                     snp_filter = snp_filter,
+                                                                     add_HiChIP_FitHiChIP = include.CORCES_2020_HiChIP_FitHiChIP_coaccess,
+                                                                     annotate_genes = include.CORCES_2020_gene_annotations,
+                                                                     verbose = verbose,
+                                                                     return_counts = F)
+      CORCES_bulkPeaks <- clean_granges(CORCES_bulkPeaks)
+      CORCES_bulkPeaks$background <- NA
+      CORCES_bulkPeaks$Study <- "Corces et al. (2020)"
+      gr.hits <- c(gr.hits, CORCES_bulkPeaks)
+    })
+  }
+  printer(length(gr.hits),"hits across",length(unique(gr.hits$Assay)),"assays in",
+          length(unique(gr.hits$Study)),"studies found.",v=verbose)
+  return(gr.hits)
+}
 
 
 
@@ -718,11 +807,18 @@ SUMMARISE.peak_overlap_plot <- function(merged_DT,
       dat_melt <- base::rbind(dat_melt, dat_melt.CORCES_bulkPeaks, fill=T)
     })
   }
+  ## Account for situations where include.CORCES_2020_bulkATACpeaks=F or no overlap was found
+  if(!"Gene_Symbol" %in% colnames(dat_melt)) dat_melt$Gene_Symbol <- NA
+  if(!"Annotation" %in% colnames(dat_melt)) dat_melt$Annotation <- NA
+
 
 
   plot_dat <- order_loci(dat = dat_melt,
                          merged_DT = merged_DT)
-  plot_dat$Assay <- factor(plot_dat$Assay, levels = c("H3K27ac","H3K4me3","ATAC","bulkATAC","scATAC","PLAC","Cicero","HiChIP_FitHiChIP","enhancers","promoters"), ordered = T)
+  plot_dat$Assay <- factor(plot_dat$Assay,
+                           levels = c("H3K27ac","H3K4me3","ATAC","bulkATAC","scATAC","PLAC",
+                                      "Cicero","HiChIP_FitHiChIP","enhancers","promoters"),
+                           ordered = T)
   if(x_strip_angle!=90) plot_dat$Cell_type <- gsub(" ","\n",plot_dat$Cell_type);
   neuronal_cols <- grep("neuron",unique(plot_dat$Cell_type), value = T)
   plot_dat$Cell_type <- factor(plot_dat$Cell_type, levels = c("astrocytes","microglia","oligo","OPCs",neuronal_cols,"brain"), ordered = T)
