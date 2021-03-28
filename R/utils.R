@@ -970,8 +970,8 @@ GRanges_overlap <- function(dat1,
                                                           keep.extra.columns = T)
   }
   # Standardize seqnames format
-  GenomeInfoDb::seqlevelsStyle(gr.dat1) <- chr_format
-  GenomeInfoDb::seqlevelsStyle(gr.dat2) <- chr_format
+  suppressWarnings(GenomeInfoDb::seqlevelsStyle(gr.dat1) <- chr_format)
+  suppressWarnings(GenomeInfoDb::seqlevelsStyle(gr.dat2) <- chr_format)
   hits <- GenomicRanges::findOverlaps(query = gr.dat1,
                                       subject = gr.dat2)
   gr.hits <- gr.dat2[ S4Vectors::subjectHits(hits), ]

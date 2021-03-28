@@ -677,7 +677,7 @@ merge_celltype_specific_epigenomics <- function(keep_extra_cols=F){
                                                                            start.field = "start2",
                                                                            end.field = "end2",
                                                                            keep.extra.columns = T))
-  GenomeInfoDb::seqlevelsStyle(gr.Nott2019.interactome) <- "NCBI"
+  suppressWarnings(GenomeInfoDb::seqlevelsStyle(gr.Nott2019.interactome) <- "NCBI")
 
   #### CORCES 2020 ####
   ## Peaks
@@ -724,7 +724,7 @@ merge_celltype_specific_epigenomics <- function(keep_extra_cols=F){
              end_col = "hg38_Stop",
              return_as_granges = T,
              verbose=F)
-  GenomeInfoDb::seqlevelsStyle(gr.Corces2020.bulk_peaks) <- "NCBI"
+  suppressWarnings(GenomeInfoDb::seqlevelsStyle(gr.Corces2020.bulk_peaks) <- "NCBI")
 
 
   ### FitChip interactome
@@ -748,7 +748,7 @@ merge_celltype_specific_epigenomics <- function(keep_extra_cols=F){
              return_as_granges = T,
              verbose=F)
   gr.Corces2020.fitchip <- c(fitchip.anchor1, fitchip.anchor2)
-  GenomeInfoDb::seqlevelsStyle(gr.Corces2020.fitchip) <- "NCBI"
+  suppressWarnings(GenomeInfoDb::seqlevelsStyle(gr.Corces2020.fitchip) <- "NCBI")
 
   #### Merge all together ####
   gr.merged <- unlist(GenomicRanges::GRangesList(gr.Nott2019.peaks,
@@ -758,7 +758,7 @@ merge_celltype_specific_epigenomics <- function(keep_extra_cols=F){
                                                  gr.Corces2020.bulk_peaks,
                                                  gr.Corces2020.cicero,
                                                  gr.Corces2020.fitchip))
-  GenomeInfoDb::seqlevelsStyle(gr.merged) <- "NCBI"
+  suppressWarnings(GenomeInfoDb::seqlevelsStyle(gr.merged) <- "NCBI")
 
   if(!keep_extra_cols){
     gr.merged <- subset(gr.merged, select=c(Study, Assay, Cell_type))

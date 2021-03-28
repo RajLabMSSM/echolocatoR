@@ -16,7 +16,8 @@ Depends: R (>= 3.6.0)
 SystemRequirements: Python (>= 3.7.0)
 biocViews:
 Imports: 
-    devtools,
+    devtools, 
+    remotes,
     magrittr,
     R.utils, 
     BiocManager, 
@@ -44,10 +45,9 @@ Imports:
     biovizBase,
     GenomeInfoDb,
     ggbio,
-    snpStats,
-    remotes 
+    snpStats
 Remotes:
-  github::stephenslab/susieR 
+  github::stephenslab/susieR@*release 
 Suggests:
     pbmcapply,
     gaston, 

@@ -1456,7 +1456,11 @@ LD.get_lead_r2 <- function(finemap_dat,
   if(any(c("r","r2") %in% colnames(finemap_dat)) ){
     finemap_dat <- dplyr::select(finemap_dat, -c(r,r2))
   }
-  LD_SNP <- subset(finemap_dat, leadSNP==T)$SNP
+  LD_SNP <- unique(subset(finemap_dat, leadSNP==T)$SNP)
+  if(length(LD_SNP)>1){
+    LD_SNP <- LD_SNP[1]
+    warning("More than one lead SNP found. Using only the first one:",LD_SNP,v=verbose)
+  }
   # Infer LD data format
   if(LD_format=="guess"){
     LD_format <- if(nrow(LD_matrix)==ncol(LD_matrix) | class(LD_matrix)[1]=="dsCMatrix") "matrix" else "df"

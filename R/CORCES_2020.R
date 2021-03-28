@@ -140,6 +140,7 @@ CORCES_2020.prepare_scATAC_peak_overlap <- function(merged_DT,
                                                     snp_filter="Consensus_SNP==T",
                                                     add_cicero=T,
                                                     annotate_genes=T,
+                                                    return_counts=T,
                                                     verbose=T){
   cell_dict <- c(ExcitatoryNeurons="neurons (+)",
                  InhibitoryNeurons="neurons (-)",
@@ -157,7 +158,7 @@ CORCES_2020.prepare_scATAC_peak_overlap <- function(merged_DT,
                                                verbose = verbose)
 
   annot_cols=NULL
-  if(annotate_genes){
+  if(annotate_genes & length(gr.hits)>0){
     annot_cols <- c("Gene_Symbol","CTCF","Distance_To_TSS","Annotation")
       printer("CORCES_2020:: Annotating peaks by cell-type-specific target genes",v=verbose)
       peak_overlap <- subset(echolocatoR::CORCES_2020.scATACseq_peaks, Peak_ID %in% unique(gr.hits$Peak_ID))
@@ -171,28 +172,37 @@ CORCES_2020.prepare_scATAC_peak_overlap <- function(merged_DT,
 
   # Melt cell type into one col
   cell_melt <- data.table::melt.data.table(data.table::data.table(data.frame(gr.hits)),
-                              measure.vars = names(cell_dict),
-                              variable.name = "cell_name",
-                              value.name = "cell_value")
+                                           measure.vars = names(cell_dict),
+                                           variable.name = "cell_name",
+                                           value.name = "cell_value")
   cell_melt[cell_melt$cell_value==1, "Cell_type"] <- cell_melt[cell_melt$cell_value==1, "cell_name"]
   cell_melt <- subset(cell_melt, !is.na(Cell_type), .drop=F)
 
-  dat_melt <- count_and_melt(merged_annot = cell_melt,
-                             grouping_vars = c("Locus","Cell_type","Assay",annot_cols),
-                             snp_filter = snp_filter)
-  dat_melt$Cell_type <- cell_dict[dat_melt$Cell_type]
-  if(sum(dat_melt$Count==0 | is.na(dat_melt$Count), na.rm = T)>0){
-    try({
-      dat_melt[dat_melt$Count==0 | is.na(dat_melt$Count),"Count"] <- NA
-    })
-  }
-  dat_melt <- subset(dat_melt, !is.na(Count))
-  dat_melt$background <- NA
+  if(return_counts){
+    dat_melt <- count_and_melt(merged_annot = cell_melt,
+                               grouping_vars = c("Locus","Cell_type","Assay",annot_cols),
+                               snp_filter = snp_filter)
+    dat_melt$Cell_type <- cell_dict[dat_melt$Cell_type]
+    if(sum(dat_melt$Count==0 | is.na(dat_melt$Count), na.rm = T)>0){
+      try({
+        dat_melt[dat_melt$Count==0 | is.na(dat_melt$Count),"Count"] <- NA
+      })
+    }
+    dat_melt <- subset(dat_melt, !is.na(Count))
+    dat_melt$background <- NA
 
-  # Make sure locus order kept
-  locus_order <- SUMMARISE.get_CS_counts(merged_DT)
-  dat_melt$Locus <- factor(dat_melt$Locus,  levels = locus_order$Locus, ordered = T)
-  return(dat_melt)
+    # Make sure locus order kept
+    locus_order <- SUMMARISE.get_CS_counts(merged_DT)
+    dat_melt$Locus <- factor(dat_melt$Locus,  levels = locus_order$Locus, ordered = T)
+    return(dat_melt)
+  } else {
+    cell_melt$Cell_type <- cell_dict[cell_melt$Cell_type]
+    gr.melt <- GenomicRanges::makeGRangesFromDataFrame(cell_melt,
+                                            keep.extra.columns = T,
+                                            seqnames.field = "seqnames",
+                                            start.field = "start",end.field = "end")
+    return(gr.melt)
+  }
 }
 
 
@@ -212,6 +222,7 @@ CORCES_2020.prepare_bulkATAC_peak_overlap <- function(merged_DT,
                                                       snp_filter="Consensus_SNP==T",
                                                       add_HiChIP_FitHiChIP=T,
                                                       annotate_genes=F,
+                                                      return_counts=T,
                                                       verbose=T){
   # Get SNP groups
   finemap_dat <- subset(merged_DT, eval(parse(text=snp_filter)), .drop=F) #finemap_dat[eval(parse(text=snp_filter))]
@@ -235,7 +246,7 @@ CORCES_2020.prepare_bulkATAC_peak_overlap <- function(merged_DT,
 
   if(add_HiChIP_FitHiChIP){
     gr.anchor_hits <- CORCES_2020.get_HiChIP_FitHiChIP_overlap(finemap_dat = finemap_dat,
-                                                               verbose=T)
+                                                               verbose=verbose)
     gr.hits <- c(gr.hits, gr.anchor_hits)
   }
 
@@ -247,22 +258,30 @@ CORCES_2020.prepare_bulkATAC_peak_overlap <- function(merged_DT,
   cell_melt[cell_melt$cell_value==1, "Cell_type"] <- cell_melt[cell_melt$cell_value==1, "cell_name"]
   cell_melt <- subset(cell_melt, !is.na(Cell_type), .drop=F)
 
-  dat_melt <- count_and_melt(merged_annot = cell_melt,
-                             grouping_vars = c("Locus","Cell_type","Assay",annot_cols),
-                             snp_filter = snp_filter)
-  if(sum(dat_melt$Count==0 | is.na(dat_melt$Count),na.rm = T)>0){
-    try({
-      dat_melt[dat_melt$Count==0 | is.na(dat_melt$Count),"Count"] <- NA
-    })
+  if(return_counts){
+    dat_melt <- count_and_melt(merged_annot = cell_melt,
+                               grouping_vars = c("Locus","Cell_type","Assay",annot_cols),
+                               snp_filter = snp_filter)
+    if(sum(dat_melt$Count==0 | is.na(dat_melt$Count),na.rm = T)>0){
+      try({
+        dat_melt[dat_melt$Count==0 | is.na(dat_melt$Count),"Count"] <- NA
+      })
+    }
+
+    dat_melt <- subset(dat_melt, !is.na(Count))
+    dat_melt$background <- NA
+
+    # Make sure locus order kept
+    locus_order <- SUMMARISE.get_CS_counts(merged_DT)
+    dat_melt$Locus <- factor(dat_melt$Locus,  levels = locus_order$Locus, ordered = T)
+    return(dat_melt)
+  }else {
+    gr.melt <- GenomicRanges::makeGRangesFromDataFrame(cell_melt,
+                                                       keep.extra.columns = T,
+                                                       seqnames.field = "seqnames",
+                                                       start.field = "start",end.field = "end")
+    return(gr.melt)
   }
-
-  dat_melt <- subset(dat_melt, !is.na(Count))
-  dat_melt$background <- NA
-
-  # Make sure locus order kept
-  locus_order <- SUMMARISE.get_CS_counts(merged_DT)
-  dat_melt$Locus <- factor(dat_melt$Locus,  levels = locus_order$Locus, ordered = T)
-  return(dat_melt)
 }
 
 

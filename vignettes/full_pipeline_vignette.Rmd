@@ -20,31 +20,22 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE, error = TRUE} 
+```{r, include = F, message=F, error = T} 
 root.dir <- "~/Desktop"
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   root.dir = root.dir,
   fig.height = 12,
-  fig.width = 10
+  fig.width = 10,
+  
+  # *** quick update (render without running) *** #
+  eval = F
 )  
-knitr::opts_knit$set(root.dir = root.dir)
-# knitr::opts_chunk$get("root.dir") 
-
-## Build vignettes
-## This will generate a /doc folder with the documentation html files.
-## Go to GitHub and enable GitHub pages, selecting "branch/doc"
-# devtools::build_vignettes(quiet = F, clean=F)
-# https://resources.github.com/whitepapers/github-and-rstudio/
-
-# devtools::build()
-
-# devtools::build_manual()
-# devtools::build_site()
+knitr::opts_knit$set(root.dir = root.dir)  
 ```
 
-```{r setup, root.dir="~/Desktop"}
+```{r setup}
 library(echolocatoR) 
 ```
 
@@ -88,7 +79,7 @@ we instead provide an example subset of the full summary stats.
 * To simulate how you'd actually use your own full summary stats file, we will save our example dataset to your computer (you can change the path to wherever you like).
 
 ```{r fullSS}
-fullSS_path <- example_fullSS(fullSS_path="~/Desktop/Nalls23andMe_2019.fullSS_subset.tsv") 
+fullSS_path <- example_fullSS(fullSS_path="./Nalls23andMe_2019.fullSS_subset.tsv") 
 ```
 
 ## Run fine-mapping pipeline  
@@ -103,19 +94,22 @@ Here are some key arguments:
 * *plot.zoom*: Zoom in/out from the center of each locus when producing the multiview plot.  
 You can adjust this separately from `bp_distance` so that you don't have rerun the whole pipeline each time (locus subsets, LD matrices, and fine-mapping results are all automatically saved in locus-specific folders).  
 
-*NOTE*: This example assumes you have already installed tabix (via htslib) and bcftoools. 
+**NOTE**: This example assumes you have already installed tabix (via htslib) and bcftoools.
+
+**WARNING**: Please use the full absolute paths (instead of relative paths) wherever possible (e.g. `results_dir`). This is especially important for the tool *FINEMAP*.
 
 ```{r Run fine-mapping pipeline}
 
 Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS 
                                           top_SNPs = top_SNPs,  
+                                          #  It's best to give absolute paths
                                           results_dir = "~/Desktop/results",
                                           loci = c("BST1","MEX3C"),# top_SNPs$Locus,
                                           dataset_name = "Nalls23andMe_2019",
                                           dataset_type = "GWAS",  
                                           force_new_subset = F,
                                           force_new_LD = F,
-                                          force_new_finemap = F,
+                                          force_new_finemap = T,
                                           remove_tmps = F,
                                           
                  # SUMMARY STATS ARGUMENTS
@@ -139,11 +133,7 @@ Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS
                  ## General
                  finemap_methods = c("ABF","FINEMAP","SUSIE","POLYFUN_SUSIE"), 
                  n_causal = 5,
-                 PP_threshold = .95,
-                 ## tool-specific
-                 finemap_args=list("FINEMAP"=list("--n-threads"=4),
-                                   "SUSIE"=list("scaled_prior_variance"=.001, 
-                                                "max_iter"=100)),
+                 PP_threshold = .95, 
                  
                  # LD ARGUMENTS 
                  LD_reference = "1KGphase1",#"UKB",
