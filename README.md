@@ -117,8 +117,8 @@ fine-mapping pipeline rapid, robust and scalable.
 In R:
 
 ``` r
-if(!"devtools" %in% installed.packages()){install.packages("devtools")}
-devtools::install_github("RajLabMSSM/echolocatoR")
+if(!"remotes" %in% installed.packages()){install.packages("remotes")}
+remotes::install_github("RajLabMSSM/echolocatoR")
 ```
 
 ### Robust installation (*conda*)
@@ -141,20 +141,25 @@ to create a [*conda*](https://docs.conda.io/en/latest/) environment.
 4.  Activate the new env:  
     `conda activate echoR`
 
-5.  Open Rstudio from the command line interface (not by clicking the
+5.  Install *echolocatoR* from command line so that it installs
+    **within** the *conda* env:
+
+6.  Open Rstudio from the command line interface (not by clicking the
     Rstudio icon). This helps to ensure Rstudio can find the paths to
-    the packages in the conda env.
+    the packages in the conda env:  
+    `open model_celltype_conservation.Rproj`
 
-6.  In R, install ***echolocatoR***:
+    Alternatively, the *conda* env also comes with
+    [*radian*](https://github.com/randy3k/radian), which is a convenient
+    R console that much more advanced than the default R console, but
+    doesn’t require access to do GUI. This can be especially useful on
+    computing clusters that don’t support RStudio or other IDEs.  
+    `radian`
 
-``` r
-if(!"devtools" %in% installed.packages()){install.packages("devtools")}
-devtools::install_github("RajLabMSSM/echolocatoR")
-```
-
-To make sure ***echolocatoR*** uses the packages in this env (esp. if
-using from RStudio), you can then supply the env name to the
-`finemap_loci()` function using `conda_env="echoR"`.
+7.  Finally, to make extra sure ***echolocatoR*** uses the packages in
+    this env (esp. if using from RStudio), you can then supply the env
+    name to the `finemap_loci()` function (and many other *echolocatoR*
+    functions) using `conda_env="echoR"`.
 
 ### Clone installation (*Rstudio*)
 
@@ -189,6 +194,15 @@ to install them afterwards if needed:
 library(echolocatoR)
 extra_installs()
 ```
+
+**data.table**:
+\[*data.table*\](<https://github.com/Rdatatable/data.table)> is a great
+R package for reading/writing/transforming tables far faster than base R
+methods. Unfortunately, in *data.table v1.14* they made some changes
+that cause errors reading/writing with compressed files (*.gz*) without
+additional setup steps on your computer. Therefore, I recommend you use
+versions v1.13 (the current CRAN binary distribution, NOT the source
+distribution, as of Feb 2021).
 
 #### Python
 

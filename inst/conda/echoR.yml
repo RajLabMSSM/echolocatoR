@@ -24,12 +24,38 @@ dependencies:
   - axel
   # R
   - r>=4.0.0
-  - r-remotes
+  - r-devtools
+  - r-susier
   - r-reticulate
   - r-rlang
   - r-mvtnorm
   - r-desctools
   - r-exact
+  - r-later
+  - r-commonmark
+  - r-patchwork
+  - r-r.methodss3
+  - r-brew
+  - r-zip
+  - r-xfun
+  - r-credentials
+  - r-whisker
+  - r-gh
+  - r-xopen
+  - r-sessioninfo
+  - r-promises
+  - r-rex
+  - r-crosstalk
+  - r-roxygen2
+  - r-gert
+  - r-r.oo
+  - r-rversions
+  - r-rcmdcheck
+  - r-dt
+  - r-covr
+  - r-usethis
+  - r-openxlsx
+  - r-r.utils
   - r-data.table
   - r-ggplot2
   - r-ckmeans.1d.dp

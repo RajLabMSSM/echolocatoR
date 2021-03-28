@@ -171,6 +171,15 @@ library(echolocatoR)
 extra_installs()
 ```
 
+**data.table**:
+[*data.table*](<https://github.com/Rdatatable/data.table)> is a great R
+package for reading/writing/transforming tables far faster than base R
+methods. Unfortunately, in *data.table v1.14* they made some changes
+that cause errors reading/writing with compressed files (*.gz*) without
+additional setup steps on your computer. Therefore, I recommend you use
+versions v1.13 (the current CRAN binary distribution, NOT the source
+distribution, as of Feb 2021).
+
 #### Python
 
 For a full list of required python packages, see the *conda* env
