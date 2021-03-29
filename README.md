@@ -7,7 +7,9 @@
     -   [General tips](#general-tips)
     -   [Quick installation](#quick-installation)
     -   [Robust installation (*conda*)](#robust-installation-conda)
+    -   [Binary installation](#binary-installation)
     -   [Clone installation (*Rstudio*)](#clone-installation-rstudio)
+    -   [](#section)
     -   [Dependencies](#dependencies)
 -   [Fine-mapping tools](#fine-mapping-tools)
     -   [ABF](#abf)
@@ -161,6 +163,13 @@ to create a [*conda*](https://docs.conda.io/en/latest/) environment.
     name to the `finemap_loci()` function (and many other *echolocatoR*
     functions) using `conda_env="echoR"`.
 
+### Binary installation
+
+You can also install echolocatoR using the compressed binary file
+available on [Google
+Drive](https://drive.google.com/drive/folders/1oS6DIBcHWkDULAh_KHudvpzVab5NkWI9?usp=sharing).
+See the READEME.md within the folder for further instructions.
+
 ### Clone installation (*Rstudio*)
 
 Lastly, if you’d like (or if for some reason none of the other
@@ -173,6 +182,8 @@ and then build *echolocatoR*:
 3.  Then, within *Rstudio*, build *echolocatoR* by clicking the
     following drop down menu items: `Build --> Install and Restart` (or
     pressing the keys `CMD + SHIFT + B` on a Mac).
+
+### 
 
 <br>
 
