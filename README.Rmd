@@ -93,7 +93,7 @@ fine-mapping pipeline rapid, robust and scalable.
 In R:
 
 ``` r
-if(!"remotes" %in% installed.packages()){install.packages("remotes")}
+if(!"remotes" %in% row.names(installed.packages())){install.packages("remotes")}
 remotes::install_github("RajLabMSSM/echolocatoR")
 ```
 
