@@ -165,10 +165,10 @@ to create a [*conda*](https://docs.conda.io/en/latest/) environment.
 
 ### Binary installation
 
-You can also install echolocatoR using the compressed binary file
+You can also install ***echolocatoR*** using the compressed binary file
 available on [Google
 Drive](https://drive.google.com/drive/folders/1oS6DIBcHWkDULAh_KHudvpzVab5NkWI9?usp=sharing).
-See the READEME.md within the folder for further instructions.
+See the README within the folder for further instructions.
 
 ### Clone installation (*Rstudio*)
 
@@ -177,7 +177,7 @@ installation methods are working for you), you can alternatively clone
 and then build *echolocatoR*:
 
 1.  Clone *echolocatoR:  
-    \`git clone <https://github.com/RajLabMSSM/echolocatoR.git>\`*
+    `git clone https://github.com/RajLabMSSM/echolocatoR.git`*
 2.  Open *echolocatoR.Rproj* within the echolocatoR folder.
 3.  Then, within *Rstudio*, build *echolocatoR* by clicking the
     following drop down menu items: `Build --> Install and Restart` (or
