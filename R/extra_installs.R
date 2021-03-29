@@ -43,7 +43,7 @@ extra_installs <- function(cran_packages=F,
                         "ggrepel", "curl", "gaston", "tidyverse",
                         "crayon", "roxygen2", "coloc", "haploR", "doBy")
         # "pbmcapply", "plotly",
-        required_packages <- r_packages[ ! r_packages %in% installed.packages() ]
+        required_packages <- r_packages[ ! r_packages %in% row.names(installed.packages()) ]
         for(lib in required_packages){
             install.packages(lib,dependencies=TRUE)
         }
@@ -54,13 +54,13 @@ extra_installs <- function(cran_packages=F,
     # several packages are no longer available on CRAN - get the last approved versions
     if(archived_packages){
         message("+ Installing Archived CRAN packages...")
-        if( ! "foreign" %in% installed.packages() ){
+        if( ! "foreign" %in% row.names(installed.packages()) ){
             install.packages("https://cran.r-project.org/src/contrib/Archive/foreign/foreign_0.8-76.tar.gz", dependencies = TRUE)
         }
-        if( ! "XGR" %in% installed.packages() ){
+        if( ! "XGR" %in% row.names(installed.packages()) ){
             install.packages("https://cran.r-project.org/src/contrib/Archive/XGR/XGR_1.1.7.tar.gz", dependencies = TRUE)
         }
-        if( ! "refGenome" %in% installed.packages() ){
+        if( ! "refGenome" %in% row.names(installed.packages()) ){
             install.packages("https://cran.r-project.org/src/contrib/Archive/refGenome/refGenome_1.7.7.tar.gz", dependencies = TRUE)
         }
         ### Above dependencies previously specified in DESCRIPTION as follows.
@@ -76,7 +76,7 @@ extra_installs <- function(cran_packages=F,
         library(BiocManager)
         bioc_packages <- c("supraHex", "graph", "Rgraphviz", "dnet", "rtracklayer",
                            "biomaRt", "Rsamtools", "snpStats")
-        required_packages <- bioc_packages[ ! bioc_packages %in% installed.packages() ]
+        required_packages <- bioc_packages[ ! bioc_packages %in% row.names(installed.packages()) ]
         for(lib in required_packages){
             BiocManager::install(lib)
         }
@@ -85,10 +85,10 @@ extra_installs <- function(cran_packages=F,
     #### GitHub ####
     if(github_packages){
         message("+ Installing GitHub packages...")
-        if(!"knitrBootstrap" %in% installed.packages() ){
+        if(!"knitrBootstrap" %in% row.names(installed.packages()) ){
             devtools::install_github('jimhester/knitrBootstrap')
         }
-        if(!"susieR"  %in% installed.packages() ){
+        if(!"susieR"  %in% row.names(installed.packages() )){
             devtools::install_github("stephenslab/susieR")
         }
     }
