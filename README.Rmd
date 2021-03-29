@@ -142,9 +142,7 @@ to create a [*conda*](https://docs.conda.io/en/latest/) environment.
 You can also install echolocatoR using the compressed binary file
 available on [Google
 Drive](https://drive.google.com/drive/folders/1oS6DIBcHWkDULAh_KHudvpzVab5NkWI9?usp=sharing).
-Once you've downloaded the file, in command line:
-
-\`**R** CMD **INSTALL**\`
+See the READEME.md within the folder for further instructions.
 
 ### Clone installation (*Rstudio*)
 
