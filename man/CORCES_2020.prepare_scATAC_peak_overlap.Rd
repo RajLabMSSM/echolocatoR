@@ -14,6 +14,7 @@ CORCES_2020.prepare_scATAC_peak_overlap(
   snp_filter = "Consensus_SNP==T",
   add_cicero = T,
   annotate_genes = T,
+  return_counts = T,
   verbose = T
 )
 }

@@ -94,6 +94,7 @@ In R:
 
 ``` r
 if(!"remotes" %in% row.names(installed.packages())){install.packages("remotes")}
+
 remotes::install_github("RajLabMSSM/echolocatoR")
 ```
 
@@ -127,8 +128,8 @@ to create a [*conda*](https://docs.conda.io/en/latest/) environment.
 
     Alternatively, the *conda* env also comes with
     [*radian*](https://github.com/randy3k/radian), which is a convenient
-    R console that much more advanced than the default R console, but
-    doesn't require access to do GUI. This can be especially useful on
+    R console that's much more advanced than the default R console, but
+    doesn't require access to a GUI. This can be especially useful on
     computing clusters that don't support RStudio or other IDEs.  
     `radian`
 
