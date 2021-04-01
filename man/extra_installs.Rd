@@ -5,8 +5,8 @@
 \title{Install tricky R packages}
 \usage{
 extra_installs(
-  cran_packages = T,
-  archived_packages = T,
+  cran_packages = F,
+  xgr = T,
   bioc_packages = T,
   github_packages = T
 )
@@ -24,9 +24,9 @@ Some of the main packages installed via this function include:
 \item{gaston}{CRAN}
 \item{plotly}{CRAN}
 
-\item{foreign}{Archived}
-\item{XGR}{Archived}
-\item{refGenome}{Archived}
+\item{XGR}{xgr}
+\item{foreign}{xgr}
+\item{refGenome}{xgr}
 
 \item{Rgraphviz}{Bioconductor}
 \item{biomaRt}{Bioconductor}

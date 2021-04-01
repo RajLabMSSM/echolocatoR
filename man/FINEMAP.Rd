@@ -14,7 +14,7 @@ FINEMAP(
   FINEMAP_path = NULL,
   n_samples = NULL,
   n_causal = 5,
-  model = "cond",
+  model = "sss",
   remove_tmps = F,
   credset_thresh = 0.95,
   finemap_version = "1.4",

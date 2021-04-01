@@ -14,6 +14,7 @@ CORCES_2020.prepare_bulkATAC_peak_overlap(
   snp_filter = "Consensus_SNP==T",
   add_HiChIP_FitHiChIP = T,
   annotate_genes = F,
+  return_counts = T,
   verbose = T
 )
 }

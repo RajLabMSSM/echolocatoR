@@ -14,9 +14,9 @@
 #' \item{gaston}{CRAN}
 #' \item{plotly}{CRAN}
 #'
-#' \item{foreign}{Archived}
-#' \item{XGR}{Archived}
-#' \item{refGenome}{Archived}
+#' \item{XGR}{xgr}
+#' \item{foreign}{xgr}
+#' \item{refGenome}{xgr}
 #'
 #' \item{Rgraphviz}{Bioconductor}
 #' \item{biomaRt}{Bioconductor}
@@ -30,9 +30,9 @@
 #' extra_installs()
 #' @export
 extra_installs <- function(cran_packages=F,
-                            archived_packages=T,
-                            bioc_packages=T,
-                            github_packages=T){
+                           xgr=T,
+                           bioc_packages=T,
+                           github_packages=T){
     printer("Installing additional echolocatoR R dependencies")
 
     #### CRAN ####
@@ -45,29 +45,49 @@ extra_installs <- function(cran_packages=F,
         # "pbmcapply", "plotly",
         required_packages <- r_packages[ ! r_packages %in% row.names(installed.packages()) ]
         for(lib in required_packages){
-            install.packages(lib,dependencies=TRUE)
+            install.packages(lib, dependencies=T)
         }
     }
 
 
-    #### Archived ####
+    #### XGR ####
+    ## XGR has been extra tricky to install and
+    ## seems to be very sensitive to R version and the versions of its dependencies.
+    ## So employ a tiered approach to installation: Bioconductor ==> CRAN ==> archived
     # several packages are no longer available on CRAN - get the last approved versions
-    if(archived_packages){
-        message("+ Installing Archived CRAN packages...")
-        if( ! "foreign" %in% row.names(installed.packages()) ){
-            install.packages("https://cran.r-project.org/src/contrib/Archive/foreign/foreign_0.8-76.tar.gz", dependencies = TRUE)
-        }
+    if(xgr){
+        #### Try via Bioconductor ####
+        message("+ Attempt 1: Installing XGR and deps via Bioconductor...")
         if( ! "XGR" %in% row.names(installed.packages()) ){
-            install.packages("https://cran.r-project.org/src/contrib/Archive/XGR/XGR_1.1.7.tar.gz", dependencies = TRUE)
+            try({
+                BiocManager::install("hfang-bristol/XGR", dependencies=T)
+            })
         }
-        if( ! "refGenome" %in% row.names(installed.packages()) ){
-            install.packages("https://cran.r-project.org/src/contrib/Archive/refGenome/refGenome_1.7.7.tar.gz", dependencies = TRUE)
+        #### Attempt 2: Try via CRAN ####
+        message("+ Attempt 2: Installing XGR and deps via CRAN...")
+        if( ! "XGR" %in% row.names(installed.packages()) ){
+            try({
+                install.packages("XGR", dependencies = T)
+            })
         }
-        ### Above dependencies previously specified in DESCRIPTION as follows.
-        ### However, removed from DESCRIPTION because these were causing serious issues with users' ability to install echolocatoR at all.
-        # url::https://cran.r-project.org/src/contrib/Archive/foreign/foreign_0.8-76.tar.gz,
-        # url::https://cran.r-project.org/src/contrib/Archive/refGenome/refGenome_1.7.7.tar.gz,
-        # url::https://cran.r-project.org/src/contrib/Archive/XGR/XGR_1.1.7.tar.gz
+        #### Attempt 3: Try via archived ####
+        if( ! "XGR" %in% row.names(installed.packages()) ){
+            #### Archived version ####
+            message("+ Attempt 3: Installing XGR and deps via Archives...")
+            if( ! "foreign" %in% row.names(installed.packages()) ){
+                install.packages("https://cran.r-project.org/src/contrib/Archive/foreign/foreign_0.8-76.tar.gz", dependencies = T)
+            }
+            if( ! "refGenome" %in% row.names(installed.packages()) ){
+                install.packages("https://cran.r-project.org/src/contrib/Archive/refGenome/refGenome_1.7.7.tar.gz", dependencies = T)
+            }
+
+            install.packages("https://cran.r-project.org/src/contrib/Archive/XGR/XGR_1.1.7.tar.gz", dependencies = T)
+            ### Above dependencies previously specified in DESCRIPTION as follows.
+            ### However, removed from DESCRIPTION because these were causing serious issues with users' ability to install echolocatoR at all.
+            # url::https://cran.r-project.org/src/contrib/Archive/foreign/foreign_0.8-76.tar.gz,
+            # url::https://cran.r-project.org/src/contrib/Archive/refGenome/refGenome_1.7.7.tar.gz,
+            # url::https://cran.r-project.org/src/contrib/Archive/XGR/XGR_1.1.7.tar.gz
+        }
     }
 
     #### Bioconductor ####
