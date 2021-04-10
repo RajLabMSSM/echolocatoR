@@ -5,7 +5,7 @@ date: "Most recent update:<br> `r Sys.Date()`"
 output: 
   md_document:
     variant: "markdown_github"
-    toc: TRUE
+    toc: FALSE
 editor_options: 
   markdown: 
     wrap: 72
@@ -295,7 +295,30 @@ Additional required columns:
 
 ### [coloc](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)
 
-#### `N`,`MAF`
+#### `N`,`MAF`  
+
+
+
+## Multi-finemap results files 
+
+The main output of **echolocatoR** are the multi-finemap files (for example, `data("BST1")`). They are stored in the locus-specific *Multi-finemap* subfolders. 
+
+### Column descriptions 
+
+- **Standardized GWAS/QTL summary statistics**: e.g.  `SNP`,`CHR`,`POS`,`Effect`,`StdErr`. See `?finemap_loci()` for descriptions of each.  
+- **leadSNP**: The designated proxy SNP per locus, which is the SNP with the smallest p-value by default. 
+- **<tool>.CS**: The 95% probability Credible Set (CS) to which a SNP belongs within a given fine-mapping tool's results. If a SNP is not in any of the tool's CS, it is assigned `NA` (or `0` for the purposes of plotting).  
+- **<tool>.PP**: The posterior probability that a SNP is causal for a given GWAS/QTL trait.  
+- **Support**: The total number of fine-mapping tools that include the SNP in its CS. 
+- **Consensus_SNP**: By default, defined as a SNP that is included in the CS of more than `N` fine-mapping tool(s), i.e. `Support>1` (default: `N=1`).  
+- **mean.PP**: The mean SNP-wise PP across all fine-mapping tools used. 
+- **mean.CS**: If mean PP is greater than the 95% probability threshold (`mean.PP>0.95`) then `mean.CS` is 1, else 0. This tends to be a very stringent threshold as it requires a high degree of agreement between fine-mapping tools. 
+
+### Notes  
+
+- Separate multi-finemap files are generated for each LD reference panel used, which is included in the file name (e.g. *UKB_LD.Multi-finemap.tsv.gz*).  
+
+- Each fine-mapping tool defines its CS and PP slightly differently, so please refer to the associated original publications for the exact details of how these are calculated (links provided above). 
 
 <br>
 
