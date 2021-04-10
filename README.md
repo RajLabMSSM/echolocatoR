@@ -285,6 +285,8 @@ Additional required columns:
 
 #### `N`,`MAF`
 
+<br>
+
 ## Multi-finemap results files
 
 The main output of **echolocatoR** are the multi-finemap files (for
@@ -298,12 +300,12 @@ example, `data("BST1")`). They are stored in the locus-specific
     descriptions of each.  
 -   **leadSNP**: The designated proxy SNP per locus, which is the SNP
     with the smallest p-value by default.
--   **<tool>.CS**: The 95% probability Credible Set (CS) to which a SNP
-    belongs within a given fine-mapping tool’s results. If a SNP is not
-    in any of the tool’s CS, it is assigned `NA` (or `0` for the
+-   **\<tool\>.CS**: The 95% probability Credible Set (CS) to which a
+    SNP belongs within a given fine-mapping tool’s results. If a SNP is
+    not in any of the tool’s CS, it is assigned `NA` (or `0` for the
     purposes of plotting).  
--   **<tool>.PP**: The posterior probability that a SNP is causal for a
-    given GWAS/QTL trait.  
+-   **\<tool\>.PP**: The posterior probability that a SNP is causal for
+    a given GWAS/QTL trait.  
 -   **Support**: The total number of fine-mapping tools that include the
     SNP in its CS.
 -   **Consensus_SNP**: By default, defined as a SNP that is included in
