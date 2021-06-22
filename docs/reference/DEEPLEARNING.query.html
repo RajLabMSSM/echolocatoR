@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -168,12 +168,12 @@
 
 <span class='co'>#### Allelic_Effect ####</span>
 <span class='va'>ANNOT.ae</span> <span class='op'>&lt;-</span> <span class='fu'>DEEPLEARNING.query</span> <span class='op'>(</span>merged_dat<span class='op'>=</span><span class='va'>merged_dat</span>, level<span class='op'>=</span><span class='st'>"Allelic_Effect"</span>, type<span class='op'>=</span><span class='st'>"annot"</span><span class='op'>)</span>
-<span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/data.table/man/fwrite.html'>fwrite</a></span><span class='op'>(</span><span class='va'>ANNOT.ae</span>, <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>root</span>,<span class='st'>"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Allelic_Effect.csv.gz"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/fwrite.html'>fwrite</a></span><span class='op'>(</span><span class='va'>ANNOT.ae</span>, <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>root</span>,<span class='st'>"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Allelic_Effect.csv.gz"</span><span class='op'>)</span><span class='op'>)</span>
 
 
 <span class='co'>#### Variant_Level ####</span>
 <span class='va'>ANNOT.vl</span> <span class='op'>&lt;-</span> <span class='fu'>DEEPLEARNING.query</span> <span class='op'>(</span>merged_dat<span class='op'>=</span><span class='va'>merged_dat</span>, level<span class='op'>=</span><span class='st'>"Variant_Level"</span>, type<span class='op'>=</span><span class='st'>"annot"</span><span class='op'>)</span>
-<span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/data.table/man/fwrite.html'>fwrite</a></span><span class='op'>(</span><span class='va'>ANNOT.vl</span>, <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>root</span>,<span class='st'>"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Variant_Level.csv.gz"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/fwrite.html'>fwrite</a></span><span class='op'>(</span><span class='va'>ANNOT.vl</span>, <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>root</span>,<span class='st'>"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Variant_Level.csv.gz"</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='op'>}</span>
 </div></pre>

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -157,7 +157,7 @@
 <code><a href='SURE.plot.html'>SURE.plot</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>sure</span> <span class='op'>&lt;-</span> <span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/data.table/man/fread.html'>fread</a></span><span class='op'>(</span><span class='st'>"/sc/arion/projects/pd-omics/data/MPRA/SURE/SuRE_SNP_table_LP190708.txt.gz"</span>, nThread<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='va'>sure</span> <span class='op'>&lt;-</span> <span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/fread.html'>fread</a></span><span class='op'>(</span><span class='st'>"/sc/arion/projects/pd-omics/data/MPRA/SURE/SuRE_SNP_table_LP190708.txt.gz"</span>, nThread<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='error'>Error in data.table::fread("/sc/arion/projects/pd-omics/data/MPRA/SURE/SuRE_SNP_table_LP190708.txt.gz",     nThread = 4): File '/sc/arion/projects/pd-omics/data/MPRA/SURE/SuRE_SNP_table_LP190708.txt.gz' does not exist or is non-readable. getwd()=='/Users/schilder/Desktop/echolocatoR/docs/reference'</span></div><div class='input'><span class='va'>merged_dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='merge_finemapping_results.html'>merge_finemapping_results</a></span><span class='op'>(</span><span class='st'>"Data/GWAS/Nalls23andMe_2019"</span>,LD_reference <span class='op'>=</span> <span class='st'>"UKB"</span>, minimum_support <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] "+ Gathering all fine-mapping results from storage..."</div><div class='output co'>#&gt; <span class='error'>Error in merge_finemapping_results("Data/GWAS/Nalls23andMe_2019", LD_reference = "UKB",     minimum_support = 0): + No multi-finemap files found.</span></div><div class='input'>
 <span class='va'>sure_DT</span> <span class='op'>&lt;-</span> <span class='fu'>SURE.merge</span><span class='op'>(</span>merged_dat<span class='op'>=</span><span class='va'>merged_dat</span>, sure<span class='op'>=</span><span class='va'>sure</span>, save_path<span class='op'>=</span><span class='st'>"/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/SURE/Nalls23andMe_2019.SURE.csv.gz"</span><span class='op'>)</span>

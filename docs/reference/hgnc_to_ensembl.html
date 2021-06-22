@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -94,6 +94,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -112,7 +115,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -138,7 +141,7 @@
     <p>Convert HGNC gene symbols to Ensembl IDs.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>hgnc_to_ensembl</span>(<span class='no'>gene_symbols</span>)</pre>
+    <pre class="usage"><span class='fu'>hgnc_to_ensembl</span><span class='op'>(</span><span class='va'>gene_symbols</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -154,8 +157,9 @@
     <p>List of ensembl IDs.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>gene_symbols</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"FOXP2"</span>,<span class='st'>"BDNF"</span>,<span class='st'>"DCX"</span>,<span class='st'>"GFAP"</span>)
-<span class='no'>ensembl_IDs</span> <span class='kw'>&lt;-</span> <span class='fu'>hgnc_to_ensembl</span>(<span class='no'>gene_symbols</span>)</div></pre>
+    <pre class="examples"><div class='input'><span class='va'>gene_symbols</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"FOXP2"</span>,<span class='st'>"BDNF"</span>,<span class='st'>"DCX"</span>,<span class='st'>"GFAP"</span><span class='op'>)</span>
+<span class='va'>ensembl_IDs</span> <span class='op'>&lt;-</span> <span class='fu'>hgnc_to_ensembl</span><span class='op'>(</span><span class='va'>gene_symbols</span><span class='op'>)</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -171,7 +175,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

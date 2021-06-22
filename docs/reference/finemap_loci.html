@@ -73,7 +73,7 @@ Uses the top_SNPs data.frame to define locus coordinates." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -181,7 +181,7 @@ Uses the <code>top_SNPs</code> data.frame to define locus coordinates.</p>
   sample_size <span class='op'>=</span> <span class='cn'>NULL</span>,
   LD_reference <span class='op'>=</span> <span class='st'>"1KGphase1"</span>,
   superpopulation <span class='op'>=</span> <span class='st'>"EUR"</span>,
-  download_method <span class='op'>=</span> <span class='st'>"direct"</span>,
+  download_method <span class='op'>=</span> <span class='st'>"axel"</span>,
   vcf_folder <span class='op'>=</span> <span class='cn'>NULL</span>,
   remote_LD <span class='op'>=</span> <span class='cn'>T</span>,
   topVariants <span class='op'>=</span> <span class='fl'>3</span>,
@@ -194,7 +194,7 @@ Uses the <code>top_SNPs</code> data.frame to define locus coordinates.</p>
   min_r2 <span class='op'>=</span> <span class='fl'>0</span>,
   LD_block <span class='op'>=</span> <span class='cn'>F</span>,
   LD_block_size <span class='op'>=</span> <span class='fl'>0.7</span>,
-  query_by <span class='op'>=</span> <span class='st'>"coordinates"</span>,
+  query_by <span class='op'>=</span> <span class='st'>"tabix"</span>,
   remove_variants <span class='op'>=</span> <span class='cn'>F</span>,
   remove_correlates <span class='op'>=</span> <span class='cn'>F</span>,
   probe_path <span class='op'>=</span> <span class='st'>"./Data/eQTL/gene.ILMN.map"</span>,
@@ -614,6 +614,85 @@ from the <em>UCSC Genome Browser</em>, use a set of local bigwig files.</p></td>
     <div class='dont-index'><p>Other MAIN: 
 <code><a href='finemap_pipeline.html'>finemap_pipeline</a>()</code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/RajLabMSSM/echolocatoR'>echolocatoR</a></span><span class='op'>)</span>
+<span class='va'>root.dir</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>
+
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"Nalls_top_SNPs"</span><span class='op'>)</span>;
+<span class='va'>top_SNPs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='import_topSNPs.html'>import_topSNPs</a></span><span class='op'>(</span>
+  topSS <span class='op'>=</span> <span class='va'>Nalls_top_SNPs</span>,
+  chrom_col <span class='op'>=</span> <span class='st'>"CHR"</span>,
+  position_col <span class='op'>=</span> <span class='st'>"BP"</span>,
+  snp_col<span class='op'>=</span><span class='st'>"SNP"</span>,
+  pval_col<span class='op'>=</span><span class='st'>"P, all studies"</span>,
+  effect_col<span class='op'>=</span><span class='st'>"Beta, all studies"</span>,
+  gene_col<span class='op'>=</span><span class='st'>"Nearest Gene"</span>,
+  locus_col <span class='op'>=</span> <span class='st'>"Nearest Gene"</span>,
+  grouping_vars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Locus"</span><span class='op'>)</span>,
+  remove_variants <span class='op'>=</span> <span class='st'>"rs34637584"</span><span class='op'>)</span>
+<span class='va'>fullSS_path</span> <span class='op'>&lt;-</span> <span class='fu'><a href='example_fullSS.html'>example_fullSS</a></span><span class='op'>(</span>fullSS_path<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>root.dir</span>,<span class='st'>"Nalls23andMe_2019.fullSS_subset.tsv"</span><span class='op'>)</span> <span class='op'>)</span>
+
+<span class='va'>Nalls23andMe_2019.results</span> <span class='op'>&lt;-</span> <span class='fu'>finemap_loci</span><span class='op'>(</span><span class='co'># GENERAL ARGUMENTS</span>
+  top_SNPs <span class='op'>=</span> <span class='va'>top_SNPs</span>,
+  <span class='co'>#  It's best to give absolute paths</span>
+  results_dir <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>root.dir</span>,<span class='st'>"results"</span><span class='op'>)</span>,
+  loci <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"BST1"</span>,<span class='st'>"MEX3C"</span><span class='op'>)</span>,<span class='co'># top_SNPs$Locus,</span>
+  dataset_name <span class='op'>=</span> <span class='st'>"Nalls23andMe_2019"</span>,
+  dataset_type <span class='op'>=</span> <span class='st'>"GWAS"</span>,
+  force_new_subset <span class='op'>=</span> <span class='cn'>F</span>,
+  force_new_LD <span class='op'>=</span> <span class='cn'>F</span>,
+  force_new_finemap <span class='op'>=</span> <span class='cn'>T</span>,
+  remove_tmps <span class='op'>=</span> <span class='cn'>F</span>,
+
+  <span class='co'># SUMMARY STATS ARGUMENTS</span>
+  fullSS_path <span class='op'>=</span> <span class='va'>fullSS_path</span>,
+  query_by <span class='op'>=</span><span class='st'>"tabix"</span>,
+  chrom_col <span class='op'>=</span> <span class='st'>"CHR"</span>, position_col <span class='op'>=</span> <span class='st'>"POS"</span>, snp_col <span class='op'>=</span> <span class='st'>"RSID"</span>,
+  pval_col <span class='op'>=</span> <span class='st'>"p"</span>, effect_col <span class='op'>=</span> <span class='st'>"beta"</span>, stderr_col <span class='op'>=</span> <span class='st'>"se"</span>,
+  freq_col <span class='op'>=</span> <span class='st'>"freq"</span>, MAF_col <span class='op'>=</span> <span class='st'>"calculate"</span>,
+  A1_col <span class='op'>=</span> <span class='st'>"A1"</span>,
+  A2_col <span class='op'>=</span> <span class='st'>"A2"</span>,
+
+  <span class='co'># FILTERING ARGUMENTS</span>
+  <span class='co'>## It's often desirable to use a larger window size</span>
+  <span class='co'>## (e.g. 2Mb which is bp_distance=500000*2),</span>
+  <span class='co'>## but we use a small window here to speed up the process.</span>
+  bp_distance <span class='op'>=</span> <span class='fl'>10000</span>,<span class='co'>#500000*2,</span>
+  min_MAF <span class='op'>=</span> <span class='fl'>0.001</span>,
+  trim_gene_limits <span class='op'>=</span> <span class='cn'>F</span>,
+
+  <span class='co'># FINE-MAPPING ARGUMENTS</span>
+  <span class='co'>## General</span>
+  finemap_methods <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ABF"</span>,<span class='st'>"FINEMAP"</span>,<span class='st'>"SUSIE"</span>,<span class='st'>"POLYFUN_SUSIE"</span><span class='op'>)</span>,
+  n_causal <span class='op'>=</span> <span class='fl'>5</span>,
+  PP_threshold <span class='op'>=</span> <span class='fl'>.95</span>,
+
+  <span class='co'># LD ARGUMENTS</span>
+  LD_reference <span class='op'>=</span> <span class='st'>"1KGphase1"</span>,<span class='co'>#"UKB",</span>
+  superpopulation <span class='op'>=</span> <span class='st'>"EUR"</span>,
+  download_method <span class='op'>=</span> <span class='st'>"axel"</span>,
+
+  <span class='co'># PLOT ARGUMENTS</span>
+  <span class='co'>## general</span>
+  plot.types<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"fancy"</span><span class='op'>)</span>,
+  <span class='co'>## Generate multiple plots of different window sizes;</span>
+  <span class='co'>### all SNPs, 4x zoomed-in, and a 50000bp window</span>
+  plot.zoom <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"all"</span>,<span class='st'>"4x"</span>,<span class='st'>"10x"</span><span class='op'>)</span>,
+  <span class='co'>## XGR</span>
+  <span class='co'># plot.XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes"),</span>
+  <span class='co'>## Roadmap</span>
+  plot.Roadmap <span class='op'>=</span> <span class='cn'>F</span>,
+  plot.Roadmap_query <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='co'># Nott et al. (2019)</span>
+  plot.Nott_epigenome <span class='op'>=</span> <span class='cn'>T</span>,
+  plot.Nott_show_placseq <span class='op'>=</span> <span class='cn'>T</span>,
+
+  verbose <span class='op'>=</span> <span class='cn'>F</span>
+<span class='op'>)</span>
+
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

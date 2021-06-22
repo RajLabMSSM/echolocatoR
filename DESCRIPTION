@@ -2,10 +2,23 @@ Package: echolocatoR
 Type: Package
 Title: Automated genomic fine-mapping
 Version: 0.1.2
-Authors@R: as.person(c(
-    "Brian Schilder <brian_schilder@alumni.brown.edu> [aut, cre]",
-    "Jack Humphrey [ctb]"
-  ))
+Authors@R: 
+    c(person(given = "Brian",
+           family = "Schilder",
+           role = c("cre"),
+           email = "brian_schilder@alumni.brown.edu",
+           comment = c(ORCID = "0000-0001-5949-2191")),
+    person(given = "Jack",
+           family = "Humphrey",
+           role = c("ctd"),
+           email = "Jack.Humphrey@mssm.edu",
+           comment = c(ORCID = "0000-0002-6274-6620")),
+    person(given = "Towfique",
+           family = "Raj",
+           role = c("ctd"),
+           email = "towfique.raj@mssm.edu",
+           comment = c(ORCID = "0000-0002-9355-5704"))
+           ) 
 Description: Automated statistical and functional fine-mapping with extensive access to genome-wide datasets.  
 License: MIT + file LICENSE
 URL: https://github.com/RajLabMSSM/echolocatoR

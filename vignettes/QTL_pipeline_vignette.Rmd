@@ -10,7 +10,7 @@ vignette: >
 ---
 
 ```{r setup, include = T, error = T, message=F} 
-root.dir <- "~/Desktop"
+root.dir <- tempdir()
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -40,7 +40,7 @@ So we're just going to make one directly from the full summary stats file itself
 - In this case, you'll want to make sure to set `grouping_vars=c("Locus","Gene")` so that you get top SNPs for each eGene-locus pair (not just one SNP per locus).  
 
 ```{r  Prepare `top_SNPs` data.frame}
-fullSS_path <- "~/Desktop/Microglia_all_regions_Kunkle_2019_COLOC.snp-level_select.tsv.gz"
+fullSS_path <- file.path(root.dir,"Microglia_all_regions_Kunkle_2019_COLOC.snp-level_select.tsv.gz")
 ## Download example data 
 if(!file.exists(fullSS_path)){
   download.file("https://github.com/RajLabMSSM/Fine_Mapping_Shiny/raw/master/www/Microglia_all_regions_Kunkle_2019_COLOC.snp-level_select.tsv.gz", fullSS_path)
@@ -137,7 +137,7 @@ Kunkle_2019.microgliaQTL <- finemap_loci(# GENERAL ARGUMENTS
 <details> 
 
 ```{r Session Info, attr.output='style="max-height: 200px;"'}
-sessioninfo::session_info()
+utils::sessionInfo()
 ```
 
 </details>

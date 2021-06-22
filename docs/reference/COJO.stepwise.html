@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Run <em>GCTA-COJO</em> conditional stepwise procedure — COJO.stepwise • echolocatoR</title>
+<title>Run GCTA-COJO conditional stepwise procedure — COJO.stepwise • echolocatoR</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Run <em>GCTA-COJO</em> conditional stepwise procedure — COJO.stepwise" />
+<meta property="og:title" content="Run GCTA-COJO conditional stepwise procedure — COJO.stepwise" />
 <meta property="og:description" content="Runs the GCTA-COJO conditional stepwise procedure to identify independent signals.
 Should only be run on full, genome-wide summary stats at once." />
 
@@ -73,7 +73,7 @@ Should only be run on full, genome-wide summary stats at once." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ Should only be run on full, genome-wide summary stats at once." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -95,6 +95,9 @@ Should only be run on full, genome-wide summary stats at once." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -113,7 +116,7 @@ Should only be run on full, genome-wide summary stats at once." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,13 +143,13 @@ Should only be run on full, genome-wide summary stats at once." />
 Should only be run on full, genome-wide summary stats at once.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>COJO.stepwise</span>(
-  <span class='kw'>GCTA_path</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"tools/gcta_1.92.1beta5_mac/bin"</span>, <span class='st'>"gcta64"</span>, <span class='kw'>package</span> <span class='kw'>=</span>
-    <span class='st'>"echolocatoR"</span>),
-  <span class='no'>locus_dir</span>,
-  <span class='no'>min_MAF</span>,
-  <span class='no'>excluded_path</span>
-)</pre>
+    <pre class="usage"><span class='fu'>COJO.stepwise</span><span class='op'>(</span>
+  GCTA_path <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"tools/gcta_1.92.1beta5_mac/bin"</span>, <span class='st'>"gcta64"</span>, package <span class='op'>=</span>
+    <span class='st'>"echolocatoR"</span><span class='op'>)</span>,
+  <span class='va'>locus_dir</span>,
+  <span class='va'>min_MAF</span>,
+  <span class='va'>excluded_path</span>
+<span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -174,7 +177,7 @@ Should only be run on full, genome-wide summary stats at once.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -164,7 +164,7 @@
 <span class='co'>#### Variant_Level ####</span>
 <span class='va'>path</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>root</span>,<span class='st'>"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Variant_Level.csv.gz"</span><span class='op'>)</span>
 
-<span class='va'>ANNOT</span> <span class='op'>&lt;-</span> <span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/data.table/man/fread.html'>fread</a></span><span class='op'>(</span><span class='va'>path</span>, nThread<span class='op'>=</span><span class='fl'>8</span><span class='op'>)</span>
+<span class='va'>ANNOT</span> <span class='op'>&lt;-</span> <span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/fread.html'>fread</a></span><span class='op'>(</span><span class='va'>path</span>, nThread<span class='op'>=</span><span class='fl'>8</span><span class='op'>)</span>
 <span class='va'>ANNOT</span> <span class='op'>&lt;-</span> <span class='fu'>find_consensus_SNPs_no_PolyFun</span><span class='op'>(</span><span class='va'>ANNOT</span><span class='op'>)</span>
 <span class='va'>annot.melt</span> <span class='op'>&lt;-</span> <span class='fu'>DEEPLEARNING.melt</span><span class='op'>(</span>ANNOT<span class='op'>=</span><span class='va'>ANNOT</span>, aggregate_func<span class='op'>=</span><span class='st'>"mean"</span>, save_path<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/grep.html'>gsub</a></span><span class='op'>(</span><span class='st'>"\\.csv\\.gz"</span>,<span class='st'>".snp_groups_mean.csv.gz"</span>,<span class='va'>path</span><span class='op'>)</span><span class='op'>)</span>
 <span class='op'>}</span>

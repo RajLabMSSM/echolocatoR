@@ -11,7 +11,7 @@ GITHUB.portal_query(
   loci = NULL,
   LD_panels = c("UKB", "1KGphase1", "1KGphase3"),
   file_types = c("multi_finemap", "LD", "plot"),
-  results_dir = "./",
+  results_dir = tempdir(),
   overwrite = F,
   nThread = parallel::detectCores() - 2,
   verbose = T
@@ -22,5 +22,9 @@ Search the \href{https://github.com/RajLabMSSM/Fine_Mapping_Shiny}{echolocatoR F
 for fine-mapping results, LD, and locus plots.
 }
 \examples{
-local_finemap <- GITHUB.portal_query(dataset_types="GWAS", phenotypes = c("schizophrenia","parkinson"),file_types = "multi_finemap", LD_panels=c("UKB","1KGphase3"))
+local_finemap <- GITHUB.portal_query(dataset_types="GWAS",
+                                     phenotypes = c("schizophrenia","parkinson"),
+                                     file_types = "multi_finemap",
+                                     loci = c("BST1","CHRNB1","LRRK2",1:3),
+                                     LD_panels=c("UKB","1KGphase3"))
 }

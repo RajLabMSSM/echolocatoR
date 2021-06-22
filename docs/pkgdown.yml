@@ -1,4 +1,4 @@
-pandoc: 2.11.1.1
+pandoc: 2.11.2
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
@@ -7,5 +7,5 @@ articles:
   full_pipeline_vignette: full_pipeline_vignette.html
   plotting_vignette: plotting_vignette.html
   summarise_vignette: summarise_vignette.html
-last_built: 2021-01-19T00:45Z
+last_built: 2021-06-22T15:45Z
 

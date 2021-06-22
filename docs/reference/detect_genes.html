@@ -73,7 +73,7 @@ fine-mapped separately." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ fine-mapped separately." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -95,6 +95,9 @@ fine-mapped separately." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -113,7 +116,7 @@ fine-mapped separately." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,14 +143,16 @@ fine-mapped separately." />
 fine-mapped separately.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>detect_genes</span>(<span class='no'>loci</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>T</span>)</pre>
+    <pre class="usage"><span class='fu'>detect_genes</span><span class='op'>(</span><span class='va'>loci</span>, verbose <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span></pre>
 
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>loci</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"BST1"</span>,<span class='st'>"LRKR2"</span>,<span class='st'>"MEX3C"</span>)
-<span class='fu'>detect_genes</span>(<span class='no'>loci</span>)</div><div class='output co'>#&gt; [1] "Fine-mapping 3 loci."</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='no'>loci</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>BST1</span><span class='kw'>=</span><span class='st'>"BST1"</span>, <span class='kw'>LRRK2</span><span class='kw'>=</span><span class='st'>"LRRK2"</span>, <span class='kw'>MEX3C</span><span class='kw'>=</span><span class='st'>"MEX3C"</span>)
-<span class='fu'>detect_genes</span>(<span class='no'>loci</span>)</div><div class='output co'>#&gt; [1] "Fine-mapping 3 gene:Locus pairs."</div><div class='output co'>#&gt; [1] TRUE</div></pre>
+    <pre class="examples"><div class='input'><span class='va'>loci</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"BST1"</span>,<span class='st'>"LRKR2"</span>,<span class='st'>"MEX3C"</span><span class='op'>)</span>
+<span class='fu'>detect_genes</span><span class='op'>(</span><span class='va'>loci</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "Fine-mapping 3 loci."</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='va'>loci</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>BST1<span class='op'>=</span><span class='st'>"BST1"</span>, LRRK2<span class='op'>=</span><span class='st'>"LRRK2"</span>, MEX3C<span class='op'>=</span><span class='st'>"MEX3C"</span><span class='op'>)</span>
+<span class='fu'>detect_genes</span><span class='op'>(</span><span class='va'>loci</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "Fine-mapping 3 gene:Locus pairs."</div><div class='output co'>#&gt; [1] TRUE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -163,7 +168,7 @@ fine-mapped separately.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

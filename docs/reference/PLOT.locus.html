@@ -73,7 +73,7 @@ Users can also generate multiple zoomed in views of the plot at multiple resolut
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -188,7 +188,7 @@ Users can also generate multiple zoomed in views of the plot at multiple resolut
   height <span class='op'>=</span> <span class='fl'>12</span>,
   width <span class='op'>=</span> <span class='fl'>10</span>,
   plot_format <span class='op'>=</span> <span class='st'>"jpg"</span>,
-  save_RDS <span class='op'>=</span> <span class='cn'>T</span>,
+  save_RDS <span class='op'>=</span> <span class='cn'>F</span>,
   return_list <span class='op'>=</span> <span class='cn'>F</span>,
   conda_env <span class='op'>=</span> <span class='st'>"echoR"</span>,
   nThread <span class='op'>=</span> <span class='fl'>4</span>,
@@ -196,10 +196,6 @@ Users can also generate multiple zoomed in views of the plot at multiple resolut
 <span class='op'>)</span></pre>
 
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>#### TO-do
-Add anchors to plac-seq arches</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/RajLabMSSM/echolocatoR'>echolocatoR</a></span><span class='op'>)</span>
@@ -213,14 +209,10 @@ Add anchors to plac-seq arches</p>
 #&gt; [1] "++ PLOT:: GWAS full window track"
 #&gt; [1] "++ PLOT:: GWAS track"
 #&gt; [1] "++ PLOT:: Merged fine-mapping track"
-#&gt; [1] "Melting PP and CS from 5 fine-mapping methods"</div><div class='output co'>#&gt; <span class='warning'>Warning: The `.dots` argument of `group_by()` is deprecated as of dplyr 1.0.0.</span>
-#&gt; <span class='warning'><span style='color: #555555;'>This warning is displayed once every 8 hours.</span><span></span>
-#&gt; <span class='warning'></span><span style='color: #555555;'>Call `lifecycle::last_warnings()` to see where this warning was generated.</span><span></span></div><div class='output co'>#&gt; [1] "++ PLOT:: Adding Gene model track."</div><div class='output co'>#&gt; <span class='message'>max_transcripts=1. </span></div><div class='output co'>#&gt; <span class='message'>15 transcripts from 15 genes returned.</span></div><div class='output co'>#&gt; <span class='message'>Fetching data...</span></div><div class='output co'>#&gt; <span class='message'>OK</span></div><div class='output co'>#&gt; <span class='message'>Parsing exons...</span></div><div class='output co'>#&gt; <span class='message'>OK</span>
+#&gt; [1] "Melting PP and CS from 5 fine-mapping methods"</div><div class='output co'>#&gt; <span class='warning'>Warning: The `.dots` argument of `group_by()` is deprecated as of dplyr 1.0.0.</span></div><div class='output co'>#&gt; [1] "++ PLOT:: Adding Gene model track."</div><div class='output co'>#&gt; <span class='message'>max_transcripts=1. </span></div><div class='output co'>#&gt; <span class='message'>15 transcripts from 15 genes returned.</span></div><div class='output co'>#&gt; <span class='message'>Fetching data...</span></div><div class='output co'>#&gt; <span class='message'>OK</span></div><div class='output co'>#&gt; <span class='message'>Parsing exons...</span></div><div class='output co'>#&gt; <span class='message'>OK</span>
 #&gt; <span class='message'>Defining introns...</span></div><div class='output co'>#&gt; <span class='message'>OK</span>
 #&gt; <span class='message'>Defining UTRs...</span></div><div class='output co'>#&gt; <span class='message'>OK</span>
-#&gt; <span class='message'>Defining CDS...</span></div><div class='output co'>#&gt; <span class='message'>OK</span></div><div class='output co'>#&gt; <span class='message'>aggregating...</span></div><div class='output co'>#&gt; <span class='message'>Done</span></div><div class='output co'>#&gt; <span class='message'>Constructing graphics...</span></div><div class='output co'>#&gt; <span class='warning'>Warning: `quo_expr()` is deprecated as of rlang 0.2.0.</span>
-#&gt; <span class='warning'>Please use `quo_squash()` instead.</span>
-#&gt; <span class='warning'></span><span style='color: #555555;'>This warning is displayed once per session.</span><span></span></div><div class='output co'>#&gt; [1] "NOTT_2019:: Creating epigenomic histograms plot"
+#&gt; <span class='message'>Defining CDS...</span></div><div class='output co'>#&gt; <span class='message'>OK</span></div><div class='output co'>#&gt; <span class='message'>aggregating...</span></div><div class='output co'>#&gt; <span class='message'>Done</span></div><div class='output co'>#&gt; <span class='message'>Constructing graphics...</span></div><div class='output co'>#&gt; [1] "NOTT_2019:: Creating epigenomic histograms plot"
 #&gt; [1] "NOTT_2019:: Importing bigWig subsets from UCSC..."
 #&gt; [1] "+ Inferring genomic limits for window: 1x"
 #&gt; [1] "++ NOTT_2019:: Downloading and merging 12 peaks BED files."
@@ -232,9 +224,9 @@ Add anchors to plac-seq arches</p>
 #&gt; [1] "++ Converting to GRanges."
 #&gt; [1] "Importing Microglia interactome ..."
 #&gt; [1] "Importing Neuronal interactome ..."
-#&gt; [1] "Importing Oligo interactome ..."</div><div class='output co'>#&gt; <span class='warning'>Warning: found more than one best sequence renaming map compatible with seqname style "NCBI" for this object, using the first one</span></div><div class='output co'>#&gt; <span class='message'>1403 query SNP(s) detected with reference overlap.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: found more than one best sequence renaming map compatible with seqname style "NCBI" for this object, using the first one</span></div><div class='output co'>#&gt; <span class='message'>1770 query SNP(s) detected with reference overlap.</span></div><div class='output co'>#&gt; [1] "++ NOTT_2019:: Adding enhancer/promoter rectangles"
-#&gt; [1] "++ Converting genomic units to Mb..."
-#&gt; [1] "++ NOTT_2019:: Returning PLAC-seq track."
+#&gt; [1] "Importing Oligo interactome ..."</div><div class='output co'>#&gt; <span class='message'>1403 query SNP(s) detected with reference overlap.</span></div><div class='output co'>#&gt; <span class='message'>1770 query SNP(s) detected with reference overlap.</span></div><div class='output co'>#&gt; Error in h(simpleError(msg, call)) : 
+#&gt;   error in evaluating the argument 'args' in selecting a method for function 'do.call': GRanges objects don't support [[, as.list(), lapply(), or unlist() at
+#&gt;   the moment
 #&gt; [1] "+ Adding vertical lines to highlight SNP groups..."</div><div class='output co'>#&gt; <span class='message'>+&gt;+&gt;+&gt;+&gt;+ plot.zoom = 5x +&lt;+&lt;+&lt;+&lt;+</span></div><div class='output co'>#&gt; [1] "+ PLOT:: Get window suffix..."
 #&gt; [1] "+ Constructing zoom polygon..."
 #&gt; [1] "+ Highlighting zoom origin..."
@@ -243,7 +235,7 @@ Add anchors to plac-seq arches</p>
 #&gt; [1] "+ Ensuring last track shows genomic units..."
 #&gt; [1] "+ Aligning xlimits for each subplot..."
 #&gt; [1] "+ Checking track heights..."
-#&gt; [1] "+ PLOT:: Saving plot ==&gt; ~/Desktop/results/GWAS/Nalls23andMe_2019/BST1/multiview.BST1..5x.jpg"</div><div class='output co'>#&gt; <span class='warning'>Warning: ggrepel: 4 unlabeled data points (too many overlaps). Consider increasing max.overlaps</span></div><div class='output co'>#&gt; <span class='warning'>Warning: ggrepel: 4 unlabeled data points (too many overlaps). Consider increasing max.overlaps</span></div><div class='output co'>#&gt; [1] "+ PLOT:: Saving ggplots tracks list ==&gt; ~/Desktop/results/GWAS/Nalls23andMe_2019/BST1/plot_tracks/multiview.BST1..5x.RDS"</div><div class='output co'>#&gt; <span class='warning'>Warning: ggrepel: 7 unlabeled data points (too many overlaps). Consider increasing max.overlaps</span></div><div class='output co'>#&gt; <span class='warning'>Warning: ggrepel: 7 unlabeled data points (too many overlaps). Consider increasing max.overlaps</span></div><div class='img'><img src='PLOT.locus-1.png' alt='' width='700' height='433' /></div></span></pre>
+#&gt; [1] "+ PLOT:: Saving plot ==&gt; ~/Desktop/results/GWAS/Nalls23andMe_2019/BST1/multiview.BST1..5x.jpg"</div><div class='output co'>#&gt; <span class='warning'>Warning: ggrepel: 4 unlabeled data points (too many overlaps). Consider increasing max.overlaps</span></div><div class='output co'>#&gt; <span class='warning'>Warning: ggrepel: 4 unlabeled data points (too many overlaps). Consider increasing max.overlaps</span></div><div class='output co'>#&gt; <span class='warning'>Warning: ggrepel: 7 unlabeled data points (too many overlaps). Consider increasing max.overlaps</span></div><div class='output co'>#&gt; <span class='warning'>Warning: ggrepel: 7 unlabeled data points (too many overlaps). Consider increasing max.overlaps</span></div><div class='img'><img src='PLOT.locus-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

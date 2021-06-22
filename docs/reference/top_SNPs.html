@@ -73,7 +73,7 @@ Used to query locus subsets.for fine-mapping." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ Used to query locus subsets.for fine-mapping." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -95,6 +95,9 @@ Used to query locus subsets.for fine-mapping." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -113,7 +116,7 @@ Used to query locus subsets.for fine-mapping." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,7 +143,7 @@ Used to query locus subsets.for fine-mapping." />
 Used to query locus subsets.for fine-mapping.</p>
     </div>
 
-    <pre class="usage"><span class='no'>top_SNPs</span></pre>
+    <pre class="usage"><span class='va'>top_SNPs</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
@@ -148,10 +151,12 @@ Used to query locus subsets.for fine-mapping.</p>
     <p>An object of class <code>data.table</code> (inherits from <code>data.frame</code>) with 97 rows and 7 columns.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"Nalls_top_SNPs"</span>)
-<span class='no'>top_SNPs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='import_topSNPs.html'>import_topSNPs</a></span>(<span class='kw'>topSS</span><span class='kw'>=</span><span class='no'>Nalls_top_SNPs</span>, <span class='kw'>chrom_col</span><span class='kw'>=</span><span class='st'>"CHR"</span>, <span class='kw'>position_col</span><span class='kw'>=</span><span class='st'>"BP"</span>, <span class='kw'>snp_col</span><span class='kw'>=</span><span class='st'>"SNP"</span>, <span class='kw'>pval_col</span><span class='kw'>=</span><span class='st'>"P, all studies"</span>, <span class='kw'>effect_col</span><span class='kw'>=</span><span class='st'>"Beta, all studies"</span>, <span class='kw'>gene_col</span><span class='kw'>=</span><span class='st'>"Nearest Gene"</span>, <span class='kw'>group_by_locus</span><span class='kw'>=</span><span class='no'>T</span>, <span class='kw'>locus_col</span><span class='kw'>=</span><span class='st'>"Nearest Gene"</span>, <span class='kw'>remove_variants</span><span class='kw'>=</span><span class='st'>"rs34637584"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in import_topSNPs(topSS = Nalls_top_SNPs, chrom_col = "CHR", position_col = "BP",     snp_col = "SNP", pval_col = "P, all studies", effect_col = "Beta, all studies",     gene_col = "Nearest Gene", group_by_locus = T, locus_col = "Nearest Gene",     remove_variants = "rs34637584"): unused argument (group_by_locus = T)</span></div><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='kw pkg'>usethis</span><span class='kw ns'>::</span><span class='fu'><a href='https://usethis.r-lib.org/reference/use_data.html'>use_data</a></span>(<span class='no'>top_SNPs</span>, <span class='kw'>overwrite</span><span class='kw'>=</span><span class='no'>T</span>)
-}</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"Nalls_top_SNPs"</span><span class='op'>)</span>
+<span class='va'>top_SNPs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='import_topSNPs.html'>import_topSNPs</a></span><span class='op'>(</span>topSS<span class='op'>=</span><span class='va'>Nalls_top_SNPs</span>, chrom_col<span class='op'>=</span><span class='st'>"CHR"</span>, position_col<span class='op'>=</span><span class='st'>"BP"</span>, snp_col<span class='op'>=</span><span class='st'>"SNP"</span>, pval_col<span class='op'>=</span><span class='st'>"P, all studies"</span>, effect_col<span class='op'>=</span><span class='st'>"Beta, all studies"</span>, gene_col<span class='op'>=</span><span class='st'>"Nearest Gene"</span>, group_by_locus<span class='op'>=</span><span class='cn'>T</span>, locus_col<span class='op'>=</span><span class='st'>"Nearest Gene"</span>, remove_variants<span class='op'>=</span><span class='st'>"rs34637584"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in import_topSNPs(topSS = Nalls_top_SNPs, chrom_col = "CHR", position_col = "BP",     snp_col = "SNP", pval_col = "P, all studies", effect_col = "Beta, all studies",     gene_col = "Nearest Gene", group_by_locus = T, locus_col = "Nearest Gene",     remove_variants = "rs34637584"): unused argument (group_by_locus = T)</span></div><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'>usethis</span><span class='fu'>::</span><span class='fu'><a href='https://usethis.r-lib.org/reference/use_data.html'>use_data</a></span><span class='op'>(</span><span class='va'>top_SNPs</span>, overwrite<span class='op'>=</span><span class='cn'>T</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -167,7 +172,7 @@ Used to query locus subsets.for fine-mapping.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

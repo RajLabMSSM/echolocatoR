@@ -15,14 +15,18 @@ GITHUB.portal_metadata <- function(verbose=T){
 #' Search the \href{https://github.com/RajLabMSSM/Fine_Mapping_Shiny}{echolocatoR Fine-mapping Portal}
 #' for fine-mapping results, LD, and locus plots.
 #' @examples
-#' local_finemap <- GITHUB.portal_query(dataset_types="GWAS", phenotypes = c("schizophrenia","parkinson"),file_types = "multi_finemap", LD_panels=c("UKB","1KGphase3"))
+#' local_finemap <- GITHUB.portal_query(dataset_types="GWAS",
+#'                                      phenotypes = c("schizophrenia","parkinson"),
+#'                                      file_types = "multi_finemap",
+#'                                      loci = c("BST1","CHRNB1","LRRK2",1:3),
+#'                                      LD_panels=c("UKB","1KGphase3"))
 GITHUB.portal_query <- function(dataset_types=NULL,
                                 datasets=NULL,
                                 phenotypes=NULL,
                                 loci=NULL,
                                 LD_panels=c("UKB","1KGphase1","1KGphase3"),
                                 file_types=c("multi_finemap","LD","plot"),
-                                results_dir="./",
+                                results_dir=tempdir(),
                                 overwrite=F,
                                 nThread=parallel::detectCores()-2,
                                 verbose=T){
@@ -42,6 +46,7 @@ GITHUB.portal_query <- function(dataset_types=NULL,
    remote_finemap <- GITHUB.list_files(creator="RajLabMSSM",
                                        repo="Fine_Mapping_Shiny",
                                        query=file_type_dict[[ftype]],
+                                       branch = "master", #IMPORTANT! not "main" like other repos for some reason
                                        # query= paste(paste0("(",paste(unique(meta$dataset_type), collapse = "|"),")"),
                                        #              paste0("(",file_type_dict[[ftype]],")"),sep="&&"),
                                        verbose = F)
@@ -102,7 +107,7 @@ GITHUB.list_files <- function(creator="neurogenomics",
 
 
 GITHUB.download_files <- function(filelist,
-                                  download_dir="./",
+                                  download_dir=tempdir(),
                                   overwrite=F,
                                   nThread=parallel::detectCores()-2,
                                   verbose=T){
@@ -111,7 +116,7 @@ GITHUB.download_files <- function(filelist,
     print(paste("Downloading",x))
     branch <- stringr::str_split(string = x, pattern = "/")[[1]][7]
     folder_structure <- paste(stringr::str_split(string = x, pattern = "/")[[1]][-c(1:7)], collapse="/")
-    destfile <- file.path(download_dir, folder_structure)
+    destfile <- gsub("/www/data","",file.path(download_dir, folder_structure))
     dir.create(dirname(destfile), showWarnings = F, recursive = T)
     if(!file.exists(destfile) & overwrite==F) download.file(url = x, destfile=destfile)
     return(destfile)

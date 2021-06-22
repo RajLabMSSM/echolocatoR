@@ -88,13 +88,13 @@
 
       
 
-      </header><script src="full_pipeline_vignette_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
+      </header><script src="full_pipeline_vignette_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Full pipeline vignette</h1>
                         <h4 class="author">Brian M. Schilder</h4>
             
-            <h4 class="date">Most recent update:<br> 2021-03-28</h4>
+            <h4 class="date">Most recent update:<br> 2021-06-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/RajLabMSSM/echolocatoR/blob/master/vignettes/full_pipeline_vignette.Rmd"><code>vignettes/full_pipeline_vignette.Rmd</code></a></small>
       <div class="hidden name"><code>full_pipeline_vignette.Rmd</code></div>
@@ -157,7 +157,7 @@ we instead provide an example subset of the full summary stats.<br>
 <li>To simulate how you’d actually use your own full summary stats file, we will save our example dataset to your computer (you can change the path to wherever you like).</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">fullSS_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/example_fullSS.html">example_fullSS</a></span><span class="op">(</span>fullSS_path<span class="op">=</span><span class="st">"./Nalls23andMe_2019.fullSS_subset.tsv"</span><span class="op">)</span> </code></pre></div>
+<code class="sourceCode R"><span class="va">fullSS_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/example_fullSS.html">example_fullSS</a></span><span class="op">(</span>fullSS_path<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">root.dir</span>,<span class="st">"Nalls23andMe_2019.fullSS_subset.tsv"</span><span class="op">)</span> <span class="op">)</span></code></pre></div>
 </div>
 <div id="run-fine-mapping-pipeline" class="section level2">
 <h2 class="hasAnchor">
@@ -185,7 +185,7 @@ You can adjust this separately from <code>bp_distance</code> so that you don’t
 <span class="va">Nalls23andMe_2019.results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/finemap_loci.html">finemap_loci</a></span><span class="op">(</span><span class="co"># GENERAL ARGUMENTS </span>
                                           top_SNPs <span class="op">=</span> <span class="va">top_SNPs</span>,  
                                           <span class="co">#  It's best to give absolute paths</span>
-                                          results_dir <span class="op">=</span> <span class="st">"~/Desktop/results"</span>,
+                                          results_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">root.dir</span>,<span class="st">"results"</span><span class="op">)</span>,
                                           loci <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"BST1"</span>,<span class="st">"MEX3C"</span><span class="op">)</span>,<span class="co"># top_SNPs$Locus,</span>
                                           dataset_name <span class="op">=</span> <span class="st">"Nalls23andMe_2019"</span>,
                                           dataset_type <span class="op">=</span> <span class="st">"GWAS"</span>,  
@@ -245,166 +245,99 @@ You can adjust this separately from <code>bp_distance</code> so that you don’t
 <h1 class="hasAnchor">
 <a href="#session-info" class="anchor"></a>Session info</h1>
 <details><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">sessioninfo</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sessioninfo/man/session_info.html">session_info</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; ─ Session info ───────────────────────────────────────────────────────────────</span>
-<span class="co">#&gt;  setting  value                       </span>
-<span class="co">#&gt;  version  R version 4.0.4 (2021-02-15)</span>
-<span class="co">#&gt;  os       macOS Big Sur 10.16         </span>
-<span class="co">#&gt;  system   x86_64, darwin17.0          </span>
-<span class="co">#&gt;  ui       X11                         </span>
-<span class="co">#&gt;  language (EN)                        </span>
-<span class="co">#&gt;  collate  en_GB.UTF-8                 </span>
-<span class="co">#&gt;  ctype    en_GB.UTF-8                 </span>
-<span class="co">#&gt;  tz       Europe/London               </span>
-<span class="co">#&gt;  date     2021-03-28                  </span>
+<code class="sourceCode R"><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; R version 4.1.0 (2021-05-18)</span>
+<span class="co">#&gt; Platform: x86_64-apple-darwin17.0 (64-bit)</span>
+<span class="co">#&gt; Running under: macOS Big Sur 10.16</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ─ Packages ───────────────────────────────────────────────────────────────────</span>
-<span class="co">#&gt;  package              * version  date       lib source        </span>
-<span class="co">#&gt;  AnnotationDbi          1.52.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  AnnotationFilter       1.14.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  askpass                1.1      2019-01-13 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  assertthat             0.2.1    2019-03-21 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  backports              1.2.1    2020-12-09 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  base64enc              0.1-3    2015-07-28 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  Biobase                2.50.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  BiocFileCache          1.14.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  BiocGenerics           0.36.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  BiocManager            1.30.10  2019-11-16 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  BiocParallel           1.24.1   2020-11-06 [1] Bioconductor  </span>
-<span class="co">#&gt;  biomaRt                2.46.3   2021-02-11 [1] Bioconductor  </span>
-<span class="co">#&gt;  Biostrings             2.58.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  biovizBase             1.38.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  bit                    4.0.4    2020-08-04 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  bit64                  4.0.5    2020-08-30 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  bitops                 1.0-6    2013-08-17 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  blob                   1.2.1    2020-01-20 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  boot                   1.3-27   2021-02-12 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  BSgenome               1.58.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  bslib                  0.2.4    2021-01-25 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  cachem                 1.0.4    2021-02-13 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  checkmate              2.0.0    2020-02-06 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  class                  7.3-18   2021-01-24 [1] CRAN (R 4.0.4)</span>
-<span class="co">#&gt;  cli                    2.3.1    2021-02-23 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  cluster                2.1.1    2021-02-14 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  colorspace             2.0-0    2020-11-11 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  crayon                 1.4.1    2021-02-08 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  crosstalk              1.1.1    2021-01-12 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  curl                   4.3      2019-12-02 [1] CRAN (R 4.0.1)</span>
-<span class="co">#&gt;  data.table             1.13.6   2020-12-30 [1] CRAN (R 4.0.4)</span>
-<span class="co">#&gt;  DBI                    1.1.1    2021-01-15 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  dbplyr                 2.1.0    2021-02-03 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  DelayedArray           0.16.3   2021-03-24 [1] Bioconductor  </span>
-<span class="co">#&gt;  desc                   1.3.0    2021-03-05 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  DescTools              0.99.40  2021-02-03 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  dichromat              2.0-0    2013-01-24 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  digest                 0.6.27   2020-10-24 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  dplyr                  1.0.5    2021-03-05 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  DT                     0.17     2021-01-06 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  e1071                  1.7-6    2021-03-18 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  echolocatoR          * 0.1.2    2021-03-28 [1] local         </span>
-<span class="co">#&gt;  ellipsis               0.3.1    2020-05-15 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  ensembldb              2.14.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  evaluate               0.14     2019-05-28 [1] CRAN (R 4.0.1)</span>
-<span class="co">#&gt;  Exact                  2.1      2020-10-02 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  expm                   0.999-6  2021-01-13 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  fansi                  0.4.2    2021-01-15 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  fastmap                1.1.0    2021-01-25 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  foreign                0.8-81   2020-12-22 [1] CRAN (R 4.0.4)</span>
-<span class="co">#&gt;  Formula                1.2-4    2020-10-16 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  fs                     1.5.0    2020-07-31 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  generics               0.1.0    2020-10-31 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  GenomeInfoDb           1.26.4   2021-03-10 [1] Bioconductor  </span>
-<span class="co">#&gt;  GenomeInfoDbData       1.2.4    2021-02-10 [1] Bioconductor  </span>
-<span class="co">#&gt;  GenomicAlignments      1.26.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  GenomicFeatures        1.42.2   2021-03-12 [1] Bioconductor  </span>
-<span class="co">#&gt;  GenomicRanges          1.42.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  GGally                 2.1.1    2021-03-08 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  ggbio                  1.38.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  ggplot2                3.3.3    2020-12-30 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  gld                    2.6.2    2020-01-08 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  glue                   1.4.2    2020-08-27 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  graph                  1.68.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  gridExtra              2.3      2017-09-09 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  gtable                 0.3.0    2019-03-25 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  Hmisc                  4.5-0    2021-02-28 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  hms                    1.0.0    2021-01-13 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  htmlTable              2.1.0    2020-09-16 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  htmltools              0.5.1.1  2021-01-22 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  htmlwidgets            1.5.3    2020-12-10 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  httr                   1.4.2    2020-07-20 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  IRanges                2.24.1   2020-12-12 [1] Bioconductor  </span>
-<span class="co">#&gt;  jpeg                   0.1-8.1  2019-10-24 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  jquerylib              0.1.3    2020-12-17 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  jsonlite               1.7.2    2020-12-09 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  knitr                  1.31     2021-01-27 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  lattice                0.20-41  2020-04-02 [1] CRAN (R 4.0.4)</span>
-<span class="co">#&gt;  latticeExtra           0.6-29   2019-12-19 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  lazyeval               0.2.2    2019-03-15 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  lifecycle              1.0.0    2021-02-15 [1] CRAN (R 4.0.3)</span>
-<span class="co">#&gt;  lmom                   2.8      2019-03-12 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  magrittr               2.0.1    2020-11-17 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  MASS                   7.3-53.1 2021-02-12 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  Matrix                 1.3-2    2021-01-06 [1] CRAN (R 4.0.4)</span>
-<span class="co">#&gt;  MatrixGenerics         1.2.1    2021-01-30 [1] Bioconductor  </span>
-<span class="co">#&gt;  matrixStats            0.58.0   2021-01-29 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  memoise                2.0.0    2021-01-26 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  munsell                0.5.0    2018-06-12 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  mvtnorm                1.1-1    2020-06-09 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  nnet                   7.3-15   2021-01-24 [1] CRAN (R 4.0.4)</span>
-<span class="co">#&gt;  openssl                1.4.3    2020-09-18 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  OrganismDbi            1.32.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  pillar                 1.5.1    2021-03-05 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  pkgconfig              2.0.3    2019-09-22 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  pkgdown                1.6.1    2020-09-12 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  plyr                   1.8.6    2020-03-03 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  png                    0.1-7    2013-12-03 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  prettyunits            1.1.1    2020-01-24 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  progress               1.2.2    2019-05-16 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  ProtGenerics           1.22.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  proxy                  0.4-25   2021-03-05 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  purrr                  0.3.4    2020-04-17 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  R6                     2.5.0    2020-10-28 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  ragg                   1.1.1    2021-02-25 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  rappdirs               0.3.3    2021-01-31 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  RBGL                   1.66.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  RColorBrewer           1.1-2    2014-12-07 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  Rcpp                   1.0.6    2021-01-15 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  RCurl                  1.98-1.3 2021-03-16 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  reshape                0.8.8    2018-10-23 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  reshape2               1.4.4    2020-04-09 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  rlang                  0.4.10   2020-12-30 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  rmarkdown              2.7      2021-02-19 [1] CRAN (R 4.0.3)</span>
-<span class="co">#&gt;  rootSolve              1.8.2.1  2020-04-27 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  rpart                  4.1-15   2019-04-12 [1] CRAN (R 4.0.4)</span>
-<span class="co">#&gt;  rprojroot              2.0.2    2020-11-15 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  Rsamtools              2.6.0    2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  RSQLite                2.2.4    2021-03-12 [1] CRAN (R 4.0.3)</span>
-<span class="co">#&gt;  rstudioapi             0.13     2020-11-12 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  rtracklayer            1.50.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  S4Vectors              0.28.1   2020-12-09 [1] Bioconductor  </span>
-<span class="co">#&gt;  sass                   0.3.1    2021-01-24 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  scales                 1.1.1    2020-05-11 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  sessioninfo            1.1.1    2018-11-05 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  stringi                1.5.3    2020-09-09 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  stringr                1.4.0    2019-02-10 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  SummarizedExperiment   1.20.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  survival               3.2-7    2020-09-28 [1] CRAN (R 4.0.4)</span>
-<span class="co">#&gt;  systemfonts            1.0.1    2021-02-09 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  textshaping            0.3.2    2021-03-10 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  tibble                 3.1.0    2021-02-25 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  tidyselect             1.1.0    2020-05-11 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  utf8                   1.2.1    2021-03-12 [1] CRAN (R 4.0.3)</span>
-<span class="co">#&gt;  VariantAnnotation      1.36.0   2020-10-28 [1] Bioconductor  </span>
-<span class="co">#&gt;  vctrs                  0.3.6    2020-12-17 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  withr                  2.4.1    2021-01-26 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  xfun                   0.22     2021-03-11 [1] CRAN (R 4.0.3)</span>
-<span class="co">#&gt;  XML                    3.99-0.6 2021-03-16 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  xml2                   1.3.2    2020-04-23 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  XVector                0.30.0   2020-10-28 [1] Bioconductor  </span>
-<span class="co">#&gt;  yaml                   2.2.1    2020-02-01 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  zlibbioc               1.36.0   2020-10-28 [1] Bioconductor  </span>
+<span class="co">#&gt; Matrix products: default</span>
+<span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.dylib</span>
+<span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; [1] /Library/Frameworks/R.framework/Versions/4.0/Resources/library</span></code></pre></div>
+<span class="co">#&gt; locale:</span>
+<span class="co">#&gt; [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; attached base packages:</span>
+<span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; other attached packages:</span>
+<span class="co">#&gt; [1] echolocatoR_0.1.2</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; loaded via a namespace (and not attached):</span>
+<span class="co">#&gt;   [1] backports_1.2.1             Hmisc_4.5-0                </span>
+<span class="co">#&gt;   [3] BiocFileCache_2.0.0         systemfonts_1.0.2          </span>
+<span class="co">#&gt;   [5] plyr_1.8.6                  lazyeval_0.2.2             </span>
+<span class="co">#&gt;   [7] splines_4.1.0               crosstalk_1.1.1            </span>
+<span class="co">#&gt;   [9] BiocParallel_1.26.0         GenomeInfoDb_1.28.0        </span>
+<span class="co">#&gt;  [11] ggplot2_3.3.4               digest_0.6.27              </span>
+<span class="co">#&gt;  [13] ensembldb_2.16.0            htmltools_0.5.1.1          </span>
+<span class="co">#&gt;  [15] fansi_0.5.0                 magrittr_2.0.1             </span>
+<span class="co">#&gt;  [17] checkmate_2.0.0             memoise_2.0.0              </span>
+<span class="co">#&gt;  [19] BSgenome_1.60.0             cluster_2.1.2              </span>
+<span class="co">#&gt;  [21] Biostrings_2.60.1           matrixStats_0.59.0         </span>
+<span class="co">#&gt;  [23] ggbio_1.40.0                pkgdown_1.6.1              </span>
+<span class="co">#&gt;  [25] prettyunits_1.1.1           jpeg_0.1-8.1               </span>
+<span class="co">#&gt;  [27] colorspace_2.0-1            blob_1.2.1                 </span>
+<span class="co">#&gt;  [29] rappdirs_0.3.3              textshaping_0.3.5          </span>
+<span class="co">#&gt;  [31] xfun_0.24                   dplyr_1.0.7                </span>
+<span class="co">#&gt;  [33] crayon_1.4.1                RCurl_1.98-1.3             </span>
+<span class="co">#&gt;  [35] jsonlite_1.7.2              graph_1.70.0               </span>
+<span class="co">#&gt;  [37] Exact_2.1                   VariantAnnotation_1.38.0   </span>
+<span class="co">#&gt;  [39] survival_3.2-11             glue_1.4.2                 </span>
+<span class="co">#&gt;  [41] gtable_0.3.0                zlibbioc_1.38.0            </span>
+<span class="co">#&gt;  [43] XVector_0.32.0              DelayedArray_0.18.0        </span>
+<span class="co">#&gt;  [45] BiocGenerics_0.38.0         scales_1.1.1               </span>
+<span class="co">#&gt;  [47] mvtnorm_1.1-2               DBI_1.1.1                  </span>
+<span class="co">#&gt;  [49] GGally_2.1.2                Rcpp_1.0.6                 </span>
+<span class="co">#&gt;  [51] progress_1.2.2              htmlTable_2.2.1            </span>
+<span class="co">#&gt;  [53] foreign_0.8-81              bit_4.0.4                  </span>
+<span class="co">#&gt;  [55] proxy_0.4-26                OrganismDbi_1.34.0         </span>
+<span class="co">#&gt;  [57] Formula_1.2-4               DT_0.18                    </span>
+<span class="co">#&gt;  [59] stats4_4.1.0                htmlwidgets_1.5.3          </span>
+<span class="co">#&gt;  [61] httr_1.4.2                  RColorBrewer_1.1-2         </span>
+<span class="co">#&gt;  [63] ellipsis_0.3.2              pkgconfig_2.0.3            </span>
+<span class="co">#&gt;  [65] reshape_0.8.8               XML_3.99-0.6               </span>
+<span class="co">#&gt;  [67] nnet_7.3-16                 sass_0.4.0                 </span>
+<span class="co">#&gt;  [69] dbplyr_2.1.1                utf8_1.2.1                 </span>
+<span class="co">#&gt;  [71] tidyselect_1.1.1            rlang_0.4.11               </span>
+<span class="co">#&gt;  [73] reshape2_1.4.4              AnnotationDbi_1.54.1       </span>
+<span class="co">#&gt;  [75] munsell_0.5.0               tools_4.1.0                </span>
+<span class="co">#&gt;  [77] cachem_1.0.5                generics_0.1.0             </span>
+<span class="co">#&gt;  [79] RSQLite_2.2.7               evaluate_0.14              </span>
+<span class="co">#&gt;  [81] stringr_1.4.0               fastmap_1.1.0              </span>
+<span class="co">#&gt;  [83] yaml_2.2.1                  ragg_1.1.3                 </span>
+<span class="co">#&gt;  [85] knitr_1.33                  bit64_4.0.5                </span>
+<span class="co">#&gt;  [87] fs_1.5.0                    purrr_0.3.4                </span>
+<span class="co">#&gt;  [89] KEGGREST_1.32.0             AnnotationFilter_1.16.0    </span>
+<span class="co">#&gt;  [91] rootSolve_1.8.2.1           RBGL_1.68.0                </span>
+<span class="co">#&gt;  [93] xml2_1.3.2                  biomaRt_2.48.1             </span>
+<span class="co">#&gt;  [95] compiler_4.1.0              rstudioapi_0.13            </span>
+<span class="co">#&gt;  [97] filelock_1.0.2              curl_4.3.1                 </span>
+<span class="co">#&gt;  [99] png_0.1-7                   e1071_1.7-7                </span>
+<span class="co">#&gt; [101] tibble_3.1.2                bslib_0.2.5.1              </span>
+<span class="co">#&gt; [103] DescTools_0.99.42           stringi_1.6.2              </span>
+<span class="co">#&gt; [105] GenomicFeatures_1.44.0      desc_1.3.0                 </span>
+<span class="co">#&gt; [107] lattice_0.20-44             ProtGenerics_1.24.0        </span>
+<span class="co">#&gt; [109] Matrix_1.3-4                vctrs_0.3.8                </span>
+<span class="co">#&gt; [111] pillar_1.6.1                lifecycle_1.0.0            </span>
+<span class="co">#&gt; [113] BiocManager_1.30.16         jquerylib_0.1.4            </span>
+<span class="co">#&gt; [115] data.table_1.14.0           bitops_1.0-7               </span>
+<span class="co">#&gt; [117] lmom_2.8                    rtracklayer_1.52.0         </span>
+<span class="co">#&gt; [119] GenomicRanges_1.44.0        R6_2.5.0                   </span>
+<span class="co">#&gt; [121] BiocIO_1.2.0                latticeExtra_0.6-29        </span>
+<span class="co">#&gt; [123] gridExtra_2.3               IRanges_2.26.0             </span>
+<span class="co">#&gt; [125] gld_2.6.2                   dichromat_2.0-0            </span>
+<span class="co">#&gt; [127] boot_1.3-28                 MASS_7.3-54                </span>
+<span class="co">#&gt; [129] assertthat_0.2.1            SummarizedExperiment_1.22.0</span>
+<span class="co">#&gt; [131] rprojroot_2.0.2             rjson_0.2.20               </span>
+<span class="co">#&gt; [133] GenomicAlignments_1.28.0    Rsamtools_2.8.0            </span>
+<span class="co">#&gt; [135] S4Vectors_0.30.0            GenomeInfoDbData_1.2.6     </span>
+<span class="co">#&gt; [137] expm_0.999-6                parallel_4.1.0             </span>
+<span class="co">#&gt; [139] hms_1.1.0                   grid_4.1.0                 </span>
+<span class="co">#&gt; [141] rpart_4.1-15                class_7.3-19               </span>
+<span class="co">#&gt; [143] rmarkdown_2.9               MatrixGenerics_1.4.0       </span>
+<span class="co">#&gt; [145] biovizBase_1.40.0           Biobase_2.52.0             </span>
+<span class="co">#&gt; [147] base64enc_0.1-3             restfulr_0.0.13</span></code></pre></div>
 </details>
 </div>
   </div>

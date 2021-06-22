@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -183,7 +183,9 @@ then sample_size is inferred to be:  <code>max(N_cases) + max(N_controls)</code>
     </tr>
     <tr>
       <th>prior_weights</th>
-      <td><p>a p vector of prior probability that each element is non-zero</p></td>
+      <td><p>A vector of length p, in which each entry
+gives the prior probability that corresponding column of X has a
+nonzero effect on the outcome, y.</p></td>
     </tr>
     <tr>
       <th>PP_threshold</th>
@@ -192,27 +194,51 @@ For example, <code>PP_threshold=.95</code> means that all Credible Set SNPs will
     </tr>
     <tr>
       <th>scaled_prior_variance</th>
-      <td><p>the scaled prior variance (vector of length L, or scalar. In latter case gets repeated L times)</p></td>
+      <td><p>The prior variance, divided by
+<code><a href='https://rdrr.io/r/stats/cor.html'>var(y)</a></code> (or by <code>(1/(n-1))yty</code> for
+<code>susie_suff_stat</code>); that is, the prior variance of each
+non-zero element of b is <code>var(y) * scaled_prior_variance</code>. The
+value provided should be either a scalar or a vector of length
+<code>L</code>. If <code>estimate_prior_variance = TRUE</code>, this provides
+initial estimates of the prior variances.</p></td>
     </tr>
     <tr>
       <th>estimate_residual_variance</th>
-      <td><p>indicates whether to estimate residual variance</p></td>
+      <td><p>If
+<code>estimate_residual_variance = TRUE</code>, the residual variance is
+estimated, using <code>residual_variance</code> as an initial value. If
+<code>estimate_residual_variance = FALSE</code>, the residual variance is
+fixed to the value supplied by <code>residual_variance</code>.</p></td>
     </tr>
     <tr>
       <th>estimate_prior_variance</th>
-      <td><p>indicates whether to estimate prior</p></td>
+      <td><p>If <code>estimate_prior_variance =
+TRUE</code>, the prior variance is estimated (this is a separate
+parameter for each of the L effects). If provided,
+<code>scaled_prior_variance</code> is then used as an initial value for
+the optimization. When <code>estimate_prior_variance = FALSE</code>, the
+prior variance for each of the L effects is determined by the
+value supplied to <code>scaled_prior_variance</code>.</p></td>
     </tr>
     <tr>
       <th>residual_variance</th>
-      <td><p>the residual variance (defaults to variance of y)</p></td>
+      <td><p>Variance of the residual. If
+<code>estimate_residual_variance = TRUE</code>, this value provides the
+initial estimate of the residual variance. By default, it is set to
+<code><a href='https://rdrr.io/r/stats/cor.html'>var(y)</a></code> in <code>susie</code> and <code>(1/(n-1))yty</code> in
+<code>susie_suff_stat</code>.</p></td>
     </tr>
     <tr>
       <th>max_iter</th>
-      <td><p>maximum number of iterations to perform</p></td>
+      <td><p>Maximum number of IBSS iterations to perform.</p></td>
     </tr>
     <tr>
       <th>estimate_prior_method</th>
-      <td><p>The method used for estimating prior variance.</p></td>
+      <td><p>The method used for estimating prior
+variance. When <code>estimate_prior_method = "simple"</code> is used, the
+likelihood at the specified prior variance is compared to the
+likelihood at a variance of zero, and the setting with the larger
+likelihood is retained.</p></td>
     </tr>
     <tr>
       <th>rescale_priors</th>
@@ -227,7 +253,9 @@ fine-mapping algorithm learning the causal variants.
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>if true outputs some progress messages</p></td>
+      <td><p>If <code>verbose = TRUE</code>, the algorithm's progress,
+and a summary of the optimization settings, are printed to the
+console.</p></td>
     </tr>
     </table>
 
@@ -241,7 +269,7 @@ fine-mapping algorithm learning the causal variants.
 <span class="pkg">susieR</span> will often give the warning: <code>IBSS algorithm did not converge in 100 iterations!</code>.
 This means the results might not necessarily be reliable.
 There's several things you can try to avoid this:</p><ul>
-<li><p>Make sure <code>susieR</code> is up-to-date: <code><a href='https://rdrr.io/pkg/devtools/man/remote-reexports.html'> devtools::install_github("stephenslab/susieR@0.9.0")</a></code></p></li>
+<li><p>Make sure <code>susieR</code> is up-to-date: <code><a href='https://devtools.r-lib.org//reference/remote-reexports.html'> devtools::install_github("stephenslab/susieR@0.9.0")</a></code></p></li>
 <li><p>Increase <code>max_causal</code> (e.g. 5 =&gt; 10).</p></li>
 <li><p>Increase <code>max_iter</code> (e.g. 100 =&gt; 1000), though this will take longer.</p></li>
 <li><p>Decrease the locus window size, which will also speed up the algorithm but potentially miss causal variants far from the lead SNP.</p></li>
@@ -267,7 +295,7 @@ Running <span class="pkg">susieR</span> with <code>var_y = var(b)</code> provide
 #&gt; [1] "+ LD_matrix = 95 SNPs."
 #&gt; [1] "+ finemap_dat = 6216 SNPs."
 #&gt; [1] "+ 95 SNPs in common."
-#&gt; [1] "+ SUSIE:: Using `susie_suff_stat()` from susieR v0.9.0"
+#&gt; [1] "+ SUSIE:: Using `susie_suff_stat()` from susieR v0.11.42"
 #&gt; [1] "+ SUSIE:: Extracting Credible Sets..."</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
