@@ -25,8 +25,7 @@ dependencies:
   # R
   - r>=4.0.0
   - r-devtools
-  ## susieR is only in Anaconda Cloud. Worth adding channel for this alone?
-  #- r-susier
+  - r-susier
   - r-reticulate
   - r-rlang
   - r-mvtnorm
