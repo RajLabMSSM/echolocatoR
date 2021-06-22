@@ -333,7 +333,11 @@ FINEMAP.process_results <- function(locus_dir,
   ## This vary depending on which version of FINEMAP you're using.
   FINEMAP.check_files <- function(locus_dir,
                                   results_file){
-    .cred_exists <- file.exists(file.path(locus_dir,"FINEMAP/data.cred"))
+    # locus_dir="/Users/schilder/Desktop/echolocatoR/results/GWAS/Nalls23andMe_2019/BST1"
+    ### In FINEMAP v1.3, only one .cred file are produced.
+    ### In FINEMAP v1.4, multiple FINEMAP files with # suffixes are produced.
+    .cred_files <- list.files(file.path(locus_dir,"FINEMAP"), "data.cred", full.names = T)
+    .cred_exists <- length(.cred_files)>0
     .snp_exists <- file.exists(file.path(locus_dir,"FINEMAP/data.snp"))
     .config_exists <- file.exists(file.path(locus_dir,"FINEMAP/data.config"))
     file_options <- c(".cred",".snp",".config")[c(.cred_exists,.snp_exists,.config_exists)]
@@ -372,7 +376,10 @@ FINEMAP.process_results <- function(locus_dir,
     ## .cred files: Conditional posterior probabilities that a given variant is causal
     ## conditional on the other causal variants in the region.
     printer("+ FINEMAP:: Importing conditional probabilities (.cred)...", v=verbose)
-    cred_path <- file.path(locus_dir,"FINEMAP/data.cred")
+    # cred_path <- file.path(locus_dir,"FINEMAP/data.cred")
+    cred_path <- list.files(file.path(locus_dir,"FINEMAP"), "data.cred", full.names = T)
+    # Only use the first CS
+    cred_path <- cred_path[1]
     data.cred <- data.table::fread(cred_path,
                                    na.strings = c("<NA>","NA"),
                                    nThread = 1)

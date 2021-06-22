@@ -573,7 +573,10 @@ NOTT_2019.prepare_regulatory_overlap <- function(merged_DT,
     dat_melt.reg <- count_and_melt(merged_annot = merged_annot.reg,
                                    snp_filter = snp_filter)
   return(dat_melt.reg)
-  }else {return(gr.hits.reg)}
+  }else {
+    gr.hits.reg$Assay <- gr.hits.reg$Element
+    return(gr.hits.reg)
+    }
 }
 
 

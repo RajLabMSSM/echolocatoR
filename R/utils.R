@@ -975,8 +975,12 @@ GRanges_overlap <- function(dat1,
   hits <- GenomicRanges::findOverlaps(query = gr.dat1,
                                       subject = gr.dat2)
   gr.hits <- gr.dat2[ S4Vectors::subjectHits(hits), ]
-  GenomicRanges::mcols(gr.hits) <- cbind(GenomicRanges::mcols(gr.hits),
-                          GenomicRanges::mcols(gr.dat1[S4Vectors::queryHits(hits),]) )
+  if(return_merged){
+    printer("+ Merging both GRanges.", v=verbose)
+    GenomicRanges::mcols(gr.hits) <- cbind(GenomicRanges::mcols(gr.hits),
+                                           GenomicRanges::mcols(gr.dat1[S4Vectors::queryHits(hits),]) )
+  }
+
   # gr.hits <- cbind(mcols(gr.regions[ S4Vectors::subjectHits(hits), ] ),
   #                         mcols(gr.consensus[S4Vectors::queryHits(hits),]) )
   message("",nrow(GenomicRanges::mcols(gr.hits))," query SNP(s) detected with reference overlap." )

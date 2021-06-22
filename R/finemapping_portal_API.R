@@ -75,13 +75,15 @@ GITHUB.portal_query <- function(dataset_types=NULL,
 
 
 
-GITHUB.list_files <- function(creator="RajLabMSSM",
-                              repo="Fine_Mapping_Shiny",
+
+GITHUB.list_files <- function(creator="neurogenomics",
+                              repo="MAGMA_Files",
+                              branch=c("main","master"),
                               query=NULL,
                               return_download_api=T,
                               verbose=T){
-    repo_api <- file.path("https://api.github.com/repos",creator,repo,
-                          "git/trees/master?recursive=1")
+  repo_api <- file.path("https://api.github.com/repos",creator,repo,
+                        paste0("git/trees/",branch[1],"?recursive=1"))
   req <- httr::GET(repo_api)
   httr::stop_for_status(req)
   filelist <- unlist(lapply(httr::content(req)$tree, "[", "path"), use.names = F)
@@ -93,27 +95,30 @@ GITHUB.list_files <- function(creator="RajLabMSSM",
     printer(paste(length(filelist),"files found matching query."),v=verbose)
   }
   if(return_download_api){
-    filelist <- file.path("https://github.com",creator,repo,"raw/master",filelist)
+    filelist <- file.path("https://github.com",creator,repo,"raw",branch,filelist)
   }
   return(filelist)
 }
 
 
 GITHUB.download_files <- function(filelist,
-                                   download_dir="./",
-                                   overwrite=F,
-                                   nThread=parallel::detectCores()-2,
+                                  download_dir="./",
+                                  overwrite=F,
+                                  nThread=parallel::detectCores()-2,
                                   verbose=T){
   printer("+ Downloading",length(filelist),"files...",v=verbose)
-  local_files <- parallel::mclapply(filelist, function(x){
+  local_files <- unlist(parallel::mclapply(filelist, function(x){
     print(paste("Downloading",x))
-    destfile <-  gsub("https://github.com/*.*/raw/master/www/data",
-                      download_dir,x)
+    branch <- stringr::str_split(string = x, pattern = "/")[[1]][7]
+    folder_structure <- paste(stringr::str_split(string = x, pattern = "/")[[1]][-c(1:7)], collapse="/")
+    destfile <- file.path(download_dir, folder_structure)
     dir.create(dirname(destfile), showWarnings = F, recursive = T)
     if(!file.exists(destfile) & overwrite==F) download.file(url = x, destfile=destfile)
     return(destfile)
-  }, mc.cores = nThread) %>% unlist()
+  }, mc.cores = nThread))
+  return(local_files)
 }
+
 
 
 GITHUB.make_data_dict <- function(named_lists){

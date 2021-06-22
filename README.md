@@ -1,41 +1,3 @@
--   [Introduction](#introduction)
--   [Documentation](#documentation)
-    -   [Documentation website](#documentation-website)
-    -   [Full pipeline vignette](#full-pipeline-vignette)
-    -   [Plotting vignette](#plotting-vignette)
--   [Installation](#installation)
-    -   [General tips](#general-tips)
-    -   [Quick installation](#quick-installation)
-    -   [Robust installation (*conda*)](#robust-installation-conda)
-    -   [Binary installation](#binary-installation)
-    -   [Clone installation (*Rstudio*)](#clone-installation-rstudio)
-    -   [](#section)
-    -   [Dependencies](#dependencies)
--   [Fine-mapping tools](#fine-mapping-tools)
-    -   [ABF](#abf)
-    -   [FINEMAP](#finemap)
-    -   [SuSiE](#susie)
-    -   [PolyFun](#polyfun)
-    -   [PAINTOR](#paintor)
-    -   [GCTA-COJO](#gcta-cojo)
-    -   [coloc](#coloc)
--   [Datasets](#datasets)
-    -   [Epigenomic & genome-wide
-        annotations](#epigenomic-genome-wide-annotations)
-    -   [QTLs](#qtls)
--   [Enrichment tools](#enrichment-tools)
-    -   [XGR](#xgr-1)
-    -   [GoShifter](#goshifter)
-    -   [S-LDSC](#s-ldsc)
-    -   [motifbreakR](#motifbreakr)
-    -   [GARFIELD (**under
-        construction**)](#garfield-under-construction)
--   [LD reference panels](#ld-reference-panels)
-    -   [UK Biobank](#uk-biobank)
-    -   [1000 Genomes Phase 1](#genomes-phase-1)
-    -   [1000 Genomes Phase 3](#genomes-phase-3)
--   [Creator](#creator)
-
 <center>
 <h1>
 ) ) ) ) ))) :bat: echolocatoR :bat: ((( ( ( ( (
@@ -120,6 +82,7 @@ In R:
 
 ``` r
 if(!"remotes" %in% row.names(installed.packages())){install.packages("remotes")}
+
 remotes::install_github("RajLabMSSM/echolocatoR")
 ```
 
@@ -153,8 +116,8 @@ to create a [*conda*](https://docs.conda.io/en/latest/) environment.
 
     Alternatively, the *conda* env also comes with
     [*radian*](https://github.com/randy3k/radian), which is a convenient
-    R console that much more advanced than the default R console, but
-    doesn’t require access to do GUI. This can be especially useful on
+    R console that’s much more advanced than the default R console, but
+    doesn’t require access to a GUI. This can be especially useful on
     computing clusters that don’t support RStudio or other IDEs.  
     `radian`
 
@@ -321,6 +284,49 @@ Additional required columns:
 ### [coloc](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)
 
 #### `N`,`MAF`
+
+<br>
+
+## Multi-finemap results files
+
+The main output of **echolocatoR** are the multi-finemap files (for
+example, `data("BST1")`). They are stored in the locus-specific
+*Multi-finemap* subfolders.
+
+### Column descriptions
+
+-   **Standardized GWAS/QTL summary statistics**:
+    e.g. `SNP`,`CHR`,`POS`,`Effect`,`StdErr`. See `?finemap_loci()` for
+    descriptions of each.  
+-   **leadSNP**: The designated proxy SNP per locus, which is the SNP
+    with the smallest p-value by default.
+-   **\<tool\>.CS**: The 95% probability Credible Set (CS) to which a
+    SNP belongs within a given fine-mapping tool’s results. If a SNP is
+    not in any of the tool’s CS, it is assigned `NA` (or `0` for the
+    purposes of plotting).  
+-   **\<tool\>.PP**: The posterior probability that a SNP is causal for
+    a given GWAS/QTL trait.  
+-   **Support**: The total number of fine-mapping tools that include the
+    SNP in its CS.
+-   **Consensus_SNP**: By default, defined as a SNP that is included in
+    the CS of more than `N` fine-mapping tool(s), i.e. `Support>1`
+    (default: `N=1`).  
+-   **mean.PP**: The mean SNP-wise PP across all fine-mapping tools
+    used.
+-   **mean.CS**: If mean PP is greater than the 95% probability
+    threshold (`mean.PP>0.95`) then `mean.CS` is 1, else 0. This tends
+    to be a very stringent threshold as it requires a high degree of
+    agreement between fine-mapping tools.
+
+### Notes
+
+-   Separate multi-finemap files are generated for each LD reference
+    panel used, which is included in the file name
+    (e.g. *UKB_LD.Multi-finemap.tsv.gz*).
+
+-   Each fine-mapping tool defines its CS and PP slightly differently,
+    so please refer to the associated original publications for the
+    exact details of how these are calculated (links provided above).
 
 <br>
 

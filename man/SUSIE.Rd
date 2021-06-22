@@ -42,16 +42,18 @@ then sample_size is inferred to be:  \code{max(N_cases) + max(N_controls)}.}
 
 \item{prior_weights}{A vector of length p, in which each entry
 gives the prior probability that corresponding column of X has a
-nonzero effect on the outcome, Y.}
+nonzero effect on the outcome, y.}
 
 \item{PP_threshold}{The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
 For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.}
 
-\item{scaled_prior_variance}{The scaled prior variance. This is
-either a scalar or a vector of length \code{L}. The prior variance
-of each non-zero element of b is set to \code{var(Y) *
-scaled_prior_variance}. If \code{estimate_prior_variance = TRUE},
-this provides initial estimates of the prior variances.}
+\item{scaled_prior_variance}{The prior variance, divided by
+\code{var(y)} (or by \code{(1/(n-1))yty} for
+\code{susie_suff_stat}); that is, the prior variance of each
+non-zero element of b is \code{var(y) * scaled_prior_variance}. The
+value provided should be either a scalar or a vector of length
+\code{L}. If \code{estimate_prior_variance = TRUE}, this provides
+initial estimates of the prior variances.}
 
 \item{estimate_residual_variance}{If
 \code{estimate_residual_variance = TRUE}, the residual variance is
@@ -69,8 +71,9 @@ value supplied to \code{scaled_prior_variance}.}
 
 \item{residual_variance}{Variance of the residual. If
 \code{estimate_residual_variance = TRUE}, this value provides the
-initial estimate of the residual variance. By default, it is
-\code{var(Y)}.}
+initial estimate of the residual variance. By default, it is set to
+\code{var(y)} in \code{susie} and \code{(1/(n-1))yty} in
+\code{susie_suff_stat}.}
 
 \item{max_iter}{Maximum number of IBSS iterations to perform.}
 
