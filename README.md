@@ -2,14 +2,8 @@
 
 [![](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![](https://img.shields.io/badge/doi-10.1101/2020.10.22.351221-yellow.svg)](https://doi.org/10.1101/2020.10.22.351221)
-[![License: MIT
-License](https://img.shields.io/badge/license-MIT%20License-blue.svg)](https://cran.r-project.org/web/licenses/MIT%20License)
-
-<div class="altmetric-embed" data-badge-popover="right"
-data-badge-type="medium-donut" data-doi="10.1101/2020.10.22.351221"
-data-hide-no-mentions="true">
-
-</div>
+[![License:
+MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://cran.r-project.org/web/licenses/MIT)
 
 <!-- badges: end -->
 <center>

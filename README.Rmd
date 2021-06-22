@@ -17,16 +17,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 <!-- badges: start -->
 
-```{r, echo = FALSE, results='asis'}
-# [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+```{r, echo = FALSE, results='asis'} 
 cat(
   badger::badge_lifecycle("stable", "green"),
   badger::badge_doi("10.1101/2020.10.22.351221", "yellow"),
-  badger::badge_license("MIT License") 
+  badger::badge_license() 
 )
 ```
-
-<div data-badge-popover="right" data-badge-type="medium-donut" data-doi="10.1101/2020.10.22.351221" data-hide-no-mentions="true" class="altmetric-embed"></div>
 
 <!-- badges: end -->
 
