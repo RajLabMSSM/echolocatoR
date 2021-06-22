@@ -65,6 +65,9 @@ dependencies:
   - r-refgenome
   - r-xgr
   - r-coloc
+  - jdblischak::r-susier
+  ### There's also this implementation of susieR which includes later versions
+  # - aksarkar::r-susier
   - r-biocmanager
   - bioconductor-snpstats
   - bioconductor-ggbio

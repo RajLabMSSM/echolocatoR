@@ -21,7 +21,7 @@ vignette: >
 ---
 
 ```{r, include = F, message=F, error = T} 
-root.dir <- "~/Desktop"
+root.dir <- tempdir()
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -76,7 +76,7 @@ we instead provide an example subset of the full summary stats.
 * To simulate how you'd actually use your own full summary stats file, we will save our example dataset to your computer (you can change the path to wherever you like).
 
 ```{r fullSS}
-fullSS_path <- example_fullSS(fullSS_path="./Nalls23andMe_2019.fullSS_subset.tsv") 
+fullSS_path <- example_fullSS(fullSS_path=file.path(root.dir,"Nalls23andMe_2019.fullSS_subset.tsv") )
 ```
 
 ## Run fine-mapping pipeline  
@@ -100,7 +100,7 @@ You can adjust this separately from `bp_distance` so that you don't have rerun t
 Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS 
                                           top_SNPs = top_SNPs,  
                                           #  It's best to give absolute paths
-                                          results_dir = "~/Desktop/results",
+                                          results_dir = file.path(root.dir,"results"),
                                           loci = c("BST1","MEX3C"),# top_SNPs$Locus,
                                           dataset_name = "Nalls23andMe_2019",
                                           dataset_type = "GWAS",  

@@ -651,6 +651,84 @@ finemap_pipeline <- function(locus,
 #' \emph{Data/<dataset_type>/<dataset_name>/<locus>/Multi-finemap/<locus>_<dataset_name>_Multi-finemap.tsv.gz}
 #' @inheritParams finemap_pipeline
 #' @return A merged data.frame with all fine-mapping results from all loci.
+#' @examples
+#' \dontrun{
+#' library(echolocatoR)
+#' root.dir <- tempdir()
+#'
+#' data("Nalls_top_SNPs");
+#' top_SNPs <- import_topSNPs(
+#'   topSS = Nalls_top_SNPs,
+#'   chrom_col = "CHR",
+#'   position_col = "BP",
+#'   snp_col="SNP",
+#'   pval_col="P, all studies",
+#'   effect_col="Beta, all studies",
+#'   gene_col="Nearest Gene",
+#'   locus_col = "Nearest Gene",
+#'   grouping_vars = c("Locus"),
+#'   remove_variants = "rs34637584")
+#' fullSS_path <- example_fullSS(fullSS_path=file.path(root.dir,"Nalls23andMe_2019.fullSS_subset.tsv") )
+#'
+#' Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS
+#'   top_SNPs = top_SNPs,
+#'   #  It's best to give absolute paths
+#'   results_dir = file.path(root.dir,"results"),
+#'   loci = c("BST1","MEX3C"),# top_SNPs$Locus,
+#'   dataset_name = "Nalls23andMe_2019",
+#'   dataset_type = "GWAS",
+#'   force_new_subset = F,
+#'   force_new_LD = F,
+#'   force_new_finemap = T,
+#'   remove_tmps = F,
+#'
+#'   # SUMMARY STATS ARGUMENTS
+#'   fullSS_path = fullSS_path,
+#'   query_by ="tabix",
+#'   chrom_col = "CHR", position_col = "POS", snp_col = "RSID",
+#'   pval_col = "p", effect_col = "beta", stderr_col = "se",
+#'   freq_col = "freq", MAF_col = "calculate",
+#'   A1_col = "A1",
+#'   A2_col = "A2",
+#'
+#'   # FILTERING ARGUMENTS
+#'   ## It's often desirable to use a larger window size
+#'   ## (e.g. 2Mb which is bp_distance=500000*2),
+#'   ## but we use a small window here to speed up the process.
+#'   bp_distance = 10000,#500000*2,
+#'   min_MAF = 0.001,
+#'   trim_gene_limits = F,
+#'
+#'   # FINE-MAPPING ARGUMENTS
+#'   ## General
+#'   finemap_methods = c("ABF","FINEMAP","SUSIE","POLYFUN_SUSIE"),
+#'   n_causal = 5,
+#'   PP_threshold = .95,
+#'
+#'   # LD ARGUMENTS
+#'   LD_reference = "1KGphase1",#"UKB",
+#'   superpopulation = "EUR",
+#'   download_method = "axel",
+#'
+#'   # PLOT ARGUMENTS
+#'   ## general
+#'   plot.types=c("fancy"),
+#'   ## Generate multiple plots of different window sizes;
+#'   ### all SNPs, 4x zoomed-in, and a 50000bp window
+#'   plot.zoom = c("all","4x","10x"),
+#'   ## XGR
+#'   # plot.XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes"),
+#'   ## Roadmap
+#'   plot.Roadmap = F,
+#'   plot.Roadmap_query = NULL,
+#'   # Nott et al. (2019)
+#'   plot.Nott_epigenome = T,
+#'   plot.Nott_show_placseq = T,
+#'
+#'   verbose = F
+#' )
+#'
+#' }
 #' @export
 finemap_loci <- function(loci,
                          fullSS_path,

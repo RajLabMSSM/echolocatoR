@@ -196,5 +196,17 @@ TABIX <- function(fullSS_path,
 
 
 
+#
+# TABIX.seqminer <- function(){
+#   sure <- data.table::fread("~/Desktop/MPRA/SURE/SuRE_SNP_table_LP190708.txt.gz")
+#   sure <- sure %>% dplyr::arrange(chr, SNPabspos)
+#   ## This allows tabix to recognize the header
+#   colnames(sure)[1] <- paste0("#",colnames(sure)[1])
+#   data.table::fwrite(sure, "~/Desktop/MPRA/SURE/SuRE_SNP_table_LP190708.tsv", sep = "\t")
+#
+#   tab <- seqminer::tabix.createIndex("~/Desktop/MPRA/SURE/SuRE_SNP_table_LP190708.tsv.gz",
+#                                      sequenceColumn = 1, startColumn = 3, endColumn = 3, metaChar = "#")
+#   tab <- seqminer::tabix.read.table(tabixFile = "~/Desktop/MPRA/SURE/SuRE_SNP_table_LP190708.tsv.gz", tabixRange = "chr1:13000-20000")
+# }
 
 

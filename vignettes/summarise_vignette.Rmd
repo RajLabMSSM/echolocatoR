@@ -21,7 +21,7 @@ vignette: >
 ---
 
 ```{r, include = T, message = F, error = T}
-root.dir <- "~/Desktop"
+root.dir <- tempdir()
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -33,7 +33,12 @@ knitr::opts_knit$set(
   root.dir = root.dir
   )
 library(echolocatoR) 
-results_dir <- "~/Desktop/results"
+results_dir <- file.path(root.dir,"results")
+```
+
+
+```{r setup}
+library(echolocatoR)
 ```
 
 
@@ -43,6 +48,11 @@ results_dir <- "~/Desktop/results"
 * We will download some of those files here using some built-in APIs.  
 
 ```{r Download data} 
+local_files <- GITHUB.portal_query(dataset_types="GWAS", 
+                                   phenotypes = c("parkinson"),
+                                   file_types = "multi_finemap",
+                                   LD_panels=c("UKB"))
+
 remote_files <- GITHUB.list_files(creator="RajLabMSSM",
                                   repo="Fine_Mapping_Shiny",
                                   query="*Nalls23andMe_2019.*UKB.multi_finemap.csv.gz") 
