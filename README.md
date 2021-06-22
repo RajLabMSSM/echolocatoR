@@ -31,6 +31,14 @@ to genome-wide datasets
 >     Disease Pathologies.
 >     *bioRxiv*; <https://doi.org/10.1101/2020.10.27.356113>.
 
+## Documentation
+
+### [Documentation website](https://rajlabmssm.github.io/echolocatoR/)
+
+### [Full pipeline vignette](https://rajlabmssm.github.io/echolocatoR/articles/full_pipeline_vignette.html)
+
+### [Plotting vignette](https://rajlabmssm.github.io/echolocatoR/articles/plotting_vignette.html)
+
 <hr>
 
 ## Introduction
@@ -56,14 +64,6 @@ barriers to identifying causal variants by making the entire
 fine-mapping pipeline rapid, robust and scalable.
 
 ![echoFlow](./images/echolocatoR_Fig1.png)
-
-## Documentation
-
-### [Documentation website](https://rajlabmssm.github.io/echolocatoR/)
-
-### [Full pipeline vignette](https://rajlabmssm.github.io/echolocatoR/articles/full_pipeline_vignette.html)
-
-### [Plotting vignette](https://rajlabmssm.github.io/echolocatoR/articles/plotting_vignette.html)
 
 <br>
 

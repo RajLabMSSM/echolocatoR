@@ -73,7 +73,7 @@ finemap_loci() on the MEX3C locus." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -167,7 +167,7 @@ by <a href='https://www.biorxiv.org/content/10.1101/388165v3'>Nalls et al. (bioR
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='va'>root_dir</span> <span class='op'>&lt;-</span> <span class='st'>"~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/MEX3C/Multi-finemap"</span>
-<span class='va'>MEX3C</span> <span class='op'>&lt;-</span> <span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/data.table/man/fread.html'>fread</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>root_dir</span>,<span class='st'>"Multi-finemap_results.txt"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>MEX3C</span> <span class='op'>&lt;-</span> <span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/fread.html'>fread</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>root_dir</span>,<span class='st'>"Multi-finemap_results.txt"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>MEX3C</span> <span class='op'>&lt;-</span> <span class='fu'><a href='update_cols.html'>update_cols</a></span><span class='op'>(</span>finemap_dat<span class='op'>=</span><span class='va'>MEX3C</span><span class='op'>)</span>
 <span class='va'>MEX3C</span> <span class='op'>&lt;-</span> <span class='fu'><a href='find_consensus_SNPs.html'>find_consensus_SNPs</a></span><span class='op'>(</span>finemap_dat<span class='op'>=</span><span class='va'>MEX3C</span><span class='op'>)</span>
 <span class='fu'>usethis</span><span class='fu'>::</span><span class='fu'><a href='https://usethis.r-lib.org/reference/use_data.html'>use_data</a></span><span class='op'>(</span><span class='va'>MEX3C</span>, overwrite <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span>

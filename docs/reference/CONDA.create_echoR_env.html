@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create conda env for <em>echolocatoR</em> — CONDA.create_echoR_env • echolocatoR</title>
+<title>Create conda env for echolocatoR — CONDA.create_echoR_env • echolocatoR</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Create conda env for <em>echolocatoR</em> — CONDA.create_echoR_env" />
+<meta property="og:title" content="Create conda env for echolocatoR — CONDA.create_echoR_env" />
 <meta property="og:description" content="Create a new env (or update and existing one)
 with the necessary Python, R, and command line packages
 to run echolocatoR." />
@@ -74,7 +74,7 @@ to run echolocatoR." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -82,7 +82,7 @@ to run echolocatoR." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -96,6 +96,9 @@ to run echolocatoR." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/PD_loci_vignette.html">PD loci</a>
+    </li>
     <li>
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
@@ -114,7 +117,7 @@ to run echolocatoR." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RajLabMSSM/echolocatoR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -142,17 +145,17 @@ with the necessary Python, R, and command line packages
 to run <em>echolocatoR</em>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>CONDA.create_echoR_env</span>(
-  <span class='kw'>conda_env</span> <span class='kw'>=</span> <span class='st'>"echoR"</span>,
-  <span class='kw'>python_version</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>channels</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"conda-forge"</span>, <span class='st'>"bioconda"</span>, <span class='st'>"r"</span>),
-  <span class='kw'>python_packages</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"pandas&gt;=0.25.0"</span>, <span class='st'>"pyarrow"</span>, <span class='st'>"scikit-learn"</span>, <span class='st'>"bitarray"</span>,
-    <span class='st'>"networkx"</span>, <span class='st'>"rpy2"</span>, <span class='st'>"scipy"</span>, <span class='st'>"pandas-plink"</span>),
-  <span class='kw'>r_packages</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"r-base"</span>, <span class='st'>"r-devtools"</span>),
-  <span class='kw'>cli_packages</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"tabix"</span>, <span class='st'>"plink"</span>, <span class='st'>"macs2"</span>),
-  <span class='kw'>force_install</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>auth_token</span> <span class='kw'>=</span> <span class='kw pkg'>devtools</span><span class='kw ns'>::</span><span class='fu'><a href='https://devtools.r-lib.org//reference/github_pat.html'>github_pat</a></span>()
-)</pre>
+    <pre class="usage"><span class='fu'>CONDA.create_echoR_env</span><span class='op'>(</span>
+  conda_env <span class='op'>=</span> <span class='st'>"echoR"</span>,
+  python_version <span class='op'>=</span> <span class='cn'>NULL</span>,
+  channels <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"conda-forge"</span>, <span class='st'>"bioconda"</span>, <span class='st'>"r"</span><span class='op'>)</span>,
+  python_packages <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"pandas&gt;=0.25.0"</span>, <span class='st'>"pyarrow"</span>, <span class='st'>"scikit-learn"</span>, <span class='st'>"bitarray"</span>,
+    <span class='st'>"networkx"</span>, <span class='st'>"rpy2"</span>, <span class='st'>"scipy"</span>, <span class='st'>"pandas-plink"</span><span class='op'>)</span>,
+  r_packages <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"r-base"</span>, <span class='st'>"r-devtools"</span><span class='op'>)</span>,
+  cli_packages <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"tabix"</span>, <span class='st'>"plink"</span>, <span class='st'>"macs2"</span><span class='op'>)</span>,
+  force_install <span class='op'>=</span> <span class='cn'>F</span>,
+  auth_token <span class='op'>=</span> <span class='fu'>devtools</span><span class='fu'>::</span><span class='fu'><a href='https://devtools.r-lib.org//reference/github_pat.html'>github_pat</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -167,7 +170,7 @@ By default uses <em>echoR</em>, the conda environment distributed with <em>echol
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     
-<dl'>
+<dl>
 <dt>plink</dt><dd><p>https://anaconda.org/bioconda/plink</p></dd>
 <dt>tabix</dt><dd><p>https://anaconda.org/bioconda/tabix</p></dd>
 
@@ -197,7 +200,7 @@ By default uses <em>echoR</em>, the conda environment distributed with <em>echol
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

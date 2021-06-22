@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -169,8 +169,8 @@
 <span class='co'>#                                              baseURL="../../data/IMPACT/IMPACT707/Annotations",</span>
 <span class='co'>#                                              all_snps_in_range=T,</span>
 <span class='co'>#                                              top_annotations_only=F)</span>
-<span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/data.table/man/fwrite.html'>fwrite</a></span><span class='op'>(</span><span class='va'>ANNOT_MELT</span>,<span class='st'>"/sc/arion/projects/pd-omics/data/IMPACT/IMPACT707/Annotations/IMPACT_overlap.csv.gz"</span><span class='op'>)</span>
-<span class='va'>ANNOT_MELT</span> <span class='op'>&lt;-</span> <span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/data.table/man/fread.html'>fread</a></span><span class='op'>(</span><span class='st'>"~/Desktop/Fine_mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/IMPACT/IMPACT_overlap.csv.gz"</span><span class='op'>)</span>
+<span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/fwrite.html'>fwrite</a></span><span class='op'>(</span><span class='va'>ANNOT_MELT</span>,<span class='st'>"/sc/arion/projects/pd-omics/data/IMPACT/IMPACT707/Annotations/IMPACT_overlap.csv.gz"</span><span class='op'>)</span>
+<span class='va'>ANNOT_MELT</span> <span class='op'>&lt;-</span> <span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/fread.html'>fread</a></span><span class='op'>(</span><span class='st'>"~/Desktop/Fine_mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/IMPACT/IMPACT_overlap.csv.gz"</span><span class='op'>)</span>
 <span class='va'>ANNOT_MELT</span> <span class='op'>&lt;-</span> <span class='fu'><a href='update_cols.html'>update_cols</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>ANNOT_MELT</span>, select<span class='op'>=</span><span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>SUSIE.Probability</span>,<span class='va'>FINEMAP.Probability</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'>## Remove no no loci</span>

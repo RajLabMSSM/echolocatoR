@@ -39,6 +39,7 @@ results_dir <- file.path(root.dir,"results")
 
 ```{r setup}
 library(echolocatoR)
+if( ! "XGR" %in% row.names(installed.packages()) ){ BiocManager::install("hfang-bristol/XGR", dependencies=T) }  
 ```
 
 
@@ -48,18 +49,12 @@ library(echolocatoR)
 * We will download some of those files here using some built-in APIs.  
 
 ```{r Download data} 
-local_files <- GITHUB.portal_query(dataset_types="GWAS", 
+local_files <- GITHUB.portal_query(results_dir = results_dir, 
+                                   dataset_types="GWAS",
                                    phenotypes = c("parkinson"),
                                    file_types = "multi_finemap",
-                                   LD_panels=c("UKB"))
-
-remote_files <- GITHUB.list_files(creator="RajLabMSSM",
-                                  repo="Fine_Mapping_Shiny",
-                                  query="*Nalls23andMe_2019.*UKB.multi_finemap.csv.gz") 
-
-local_files <- GITHUB.download_files(filelist = remote_files,
-                                     download_dir = results_dir,
-                                     overwrite = F) 
+                                   # loci = c("BST1","CHRNB1","LRRK2"),
+                                   LD_panels=c("UKB")) 
 ```
 
 # Merge `echolocatoR` results  
@@ -76,14 +71,7 @@ merged_DT <- merge_finemapping_results(minimum_support=0,
                                        top_CS_only = T,
                                        haploreg_annotation=F,
                                        biomart_annotation=F, 
-                                       verbose = F) 
-
-# Remove some loci you don't want to include
-no_no_loci <- c("HLA-DRB5","MAPT","ATG14","SP1","LMNB1","ATP6V0A1", 
-                # Tau region 
-                "RETREG3","UBTF","FAM171A2","MAP3K14","CRHR1","MAPT-AS1","KANSL1","NSF","WNT3")
-merged_DT <- subset(merged_DT, !(Locus %in% no_no_loci))
-
+                                       verbose = F)    
 results_report(merged_DT)
 ```
 
@@ -216,7 +204,8 @@ gg_peaks <- SUMMARISE.peak_overlap_plot(merged_DT,
                                         x_strip_angle = 90,
                                         drop_empty_cols = T,
                                         fill_title="Consensus SNPs\nin epigenomic peaks",
-                                        save_path="~/Desktop/peak_plot.consensus.png",
+                                        save_path=file.path(results_dir,"GWAS/Nalls23andMe_2019/_genome_wide",
+                                                            "peak_plot.consensus.png"),
                                         verbose=T)  
 createDT(gg_peaks$data)
 ```
@@ -227,7 +216,6 @@ Now for the grand finale, put them all together by calling a single function,`su
  
 
 ```{r super_summary_plot()}
-
 super_plot <- super_summary_plot(merged_DT = merged_DT,
                                   snp_filter="Consensus_SNP==T",
                                   coloc_results=local_coloc,
@@ -245,7 +233,7 @@ super_plot <- super_summary_plot(merged_DT = merged_DT,
 
 ## Manual multi-plot 
 
-Altnernatively, you can gain more customizability by merging your plots together manually with `patchwork`.  
+Alternatively, you can gain more customizability by merging your plots together manually with `patchwork`.  
 
 Make sure to set `label_yaxis=F` for some of the plots to avoid redundancy and save space. 
 
@@ -271,7 +259,7 @@ print(gg_merged)
 <details>
 
 ```{r Session Info, attr.output='style="max-height: 200px;"'}
-sessioninfo::session_info()
+utils::sessionInfo()
 ```
 
 </details>
