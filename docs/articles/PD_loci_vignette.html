@@ -88,13 +88,13 @@
 
       
 
-      </header><script src="PD_loci_vignette_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
+      </header><script src="PD_loci_vignette_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>PD loci</h1>
                         <h4 class="author">Brian M. Schilder</h4>
             
-            <h4 class="date">Most recent update:<br> 2021-03-14</h4>
+            <h4 class="date">Most recent update:<br> 2021-06-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/RajLabMSSM/echolocatoR/blob/master/vignettes/PD_loci_vignette.Rmd"><code>vignettes/PD_loci_vignette.Rmd</code></a></small>
       <div class="hidden name"><code>PD_loci_vignette.Rmd</code></div>
@@ -124,7 +124,7 @@
 <span class="co">#&gt;   +.gg   ggplot2</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com">data.table</a></span><span class="op">)</span>
 
-<span class="va">results_dir</span> <span class="op">&lt;-</span> <span class="st">"~/Desktop/results"</span></code></pre></div>
+<span class="va">results_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>,<span class="st">"results"</span><span class="op">)</span></code></pre></div>
 <p>Here we take advantage of the fine-mapping results files already available on the <a href="https://rajlab.shinyapps.io/Fine_Mapping_Shiny">echolocatoR Fine-mapping Portal</a>.</p>
 <div id="download-data" class="section level1">
 <h1 class="hasAnchor">
@@ -143,35 +143,36 @@
 <a href="#multi-finemap-data" class="anchor"></a>Multi-finemap data</h2>
 <p>First, we’ll download the multi-finemap results files.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">remote_finemap</span> <span class="op">&lt;-</span> <span class="fu">GITHUB.list_files</span><span class="op">(</span>creator<span class="op">=</span><span class="st">"RajLabMSSM"</span>,
-                                    repo<span class="op">=</span><span class="st">"Fine_Mapping_Shiny"</span>,
-                                    query<span class="op">=</span><span class="st">"*Nalls23andMe_2019.*UKB.multi_finemap.csv.gz"</span><span class="op">)</span> 
-<span class="co">#&gt; [1] "6528 files found in GitHub repo: RajLabMSSM/Fine_Mapping_Shiny"</span>
-<span class="co">#&gt; [1] "83 files found matching query."</span>
-  <span class="co"># Let's just download the loci of interest.</span>
-
-<span class="va">remote_finemap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html">grep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">locus_list</span>,collapse<span class="op">=</span><span class="st">"|"</span><span class="op">)</span>, <span class="va">remote_finemap</span>, value <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
-
-<span class="va">local_finemap</span> <span class="op">&lt;-</span> <span class="fu">GITHUB.download_files</span><span class="op">(</span>filelist <span class="op">=</span> <span class="va">remote_finemap</span>,
-                                       download_dir <span class="op">=</span> <span class="va">results_dir</span>,
-                                        overwrite <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>  </code></pre></div>
+<code class="sourceCode R"><span class="va">local_finemap</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GITHUB.portal_query.html">GITHUB.portal_query</a></span><span class="op">(</span>results_dir <span class="op">=</span> <span class="va">results_dir</span>, 
+                                     dataset_types<span class="op">=</span><span class="st">"GWAS"</span>,
+                                     phenotypes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"parkinson"</span><span class="op">)</span>,
+                                     file_types <span class="op">=</span> <span class="st">"multi_finemap"</span>,
+                                     loci <span class="op">=</span> <span class="va">locus_list</span>,
+                                     LD_panels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"UKB"</span><span class="op">)</span><span class="op">)</span>  
+<span class="co">#&gt; [1] "Fetching echolocatoR Fine-mapping Portal study metadata."</span>
+<span class="co">#&gt; [1] "+ 1 datasets remain after filtering."</span>
+<span class="co">#&gt; [1] "+ Searching for multi_finemap files..."</span>
+<span class="co">#&gt; [1] "+ 10 unique files identified."</span>
+<span class="co">#&gt; [1] "+ Downloading 5 files..."</span>
+<span class="co">#&gt; [1] "+ Returning local file paths."</span></code></pre></div>
 </div>
 <div id="ld-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#ld-data" class="anchor"></a>LD data</h2>
 <p>Next, we’ll download the files containing LD with the lead GWAS SNP.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">remote_ld</span> <span class="op">&lt;-</span> <span class="fu">GITHUB.list_files</span><span class="op">(</span>creator<span class="op">=</span><span class="st">"RajLabMSSM"</span>,
-                               repo<span class="op">=</span><span class="st">"Fine_Mapping_Shiny"</span>,
-                               query<span class="op">=</span><span class="st">"*Nalls23andMe_2019.*UKB.LD.csv.gz"</span><span class="op">)</span> 
-<span class="co">#&gt; [1] "6528 files found in GitHub repo: RajLabMSSM/Fine_Mapping_Shiny"</span>
-<span class="co">#&gt; [1] "76 files found matching query."</span>
-<span class="co"># Let's just download the loci of interest. </span>
-<span class="va">remote_ld</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html">grep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">locus_list</span>,collapse<span class="op">=</span><span class="st">"|"</span><span class="op">)</span>, <span class="va">remote_ld</span>, value <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
-
-<span class="va">local_ld</span> <span class="op">&lt;-</span> <span class="fu">GITHUB.download_files</span><span class="op">(</span>filelist <span class="op">=</span> <span class="va">remote_ld</span>,
-                                  download_dir <span class="op">=</span> <span class="va">results_dir</span>,
-                                  overwrite <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>  </code></pre></div>
+<code class="sourceCode R"><span class="va">local_ld</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GITHUB.portal_query.html">GITHUB.portal_query</a></span><span class="op">(</span>results_dir <span class="op">=</span> <span class="va">results_dir</span>, 
+                                 dataset_types<span class="op">=</span><span class="st">"GWAS"</span>,
+                                 phenotypes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"parkinson"</span><span class="op">)</span>,
+                                 file_types <span class="op">=</span> <span class="st">"LD"</span>,
+                                 loci <span class="op">=</span> <span class="va">locus_list</span>,
+                                 LD_panels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"UKB"</span><span class="op">)</span><span class="op">)</span>  
+<span class="co">#&gt; [1] "Fetching echolocatoR Fine-mapping Portal study metadata."</span>
+<span class="co">#&gt; [1] "+ 1 datasets remain after filtering."</span>
+<span class="co">#&gt; [1] "+ Searching for LD files..."</span>
+<span class="co">#&gt; [1] "+ 5 unique files identified."</span>
+<span class="co">#&gt; [1] "+ Downloading 5 files..."</span>
+<span class="co">#&gt; [1] "+ Returning local file paths."</span></code></pre></div>
 </div>
 <div id="data-dictionary" class="section level2">
 <h2 class="hasAnchor">
@@ -199,7 +200,7 @@
                     Nott_regulatory_rects <span class="op">=</span> <span class="cn">T</span>, 
                     Nott_show_placseq <span class="op">=</span> <span class="cn">T</span>,
                     
-                    save_plot<span class="op">=</span><span class="cn">T</span>, 
+                    save_plot<span class="op">=</span><span class="cn">F</span>, 
                     return_list<span class="op">=</span><span class="cn">T</span>, 
                     zoom_exceptions_str <span class="op">=</span> <span class="st">"*full window$|zoom_polygon|Genes"</span>,
                     track_order <span class="op">=</span> <span class="va">track_order</span>,
@@ -213,59 +214,6 @@
 <span class="co">#&gt; [1] "Melting PP and CS from 5 fine-mapping methods"</span>
 <span class="co">#&gt; Warning: The `.dots` argument of `group_by()` is deprecated as of dplyr 1.0.0.</span>
 <span class="co">#&gt; [1] "++ PLOT:: Adding Gene model track."</span>
-<span class="co">#&gt; Loading required package: ensembldb</span>
-<span class="co">#&gt; Loading required package: BiocGenerics</span>
-<span class="co">#&gt; Loading required package: parallel</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'BiocGenerics'</span>
-<span class="co">#&gt; The following objects are masked from 'package:parallel':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,</span>
-<span class="co">#&gt;     clusterExport, clusterMap, parApply, parCapply, parLapply,</span>
-<span class="co">#&gt;     parLapplyLB, parRapply, parSapply, parSapplyLB</span>
-<span class="co">#&gt; The following objects are masked from 'package:stats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     IQR, mad, sd, var, xtabs</span>
-<span class="co">#&gt; The following objects are masked from 'package:base':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     anyDuplicated, append, as.data.frame, basename, cbind, colnames,</span>
-<span class="co">#&gt;     dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,</span>
-<span class="co">#&gt;     grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,</span>
-<span class="co">#&gt;     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,</span>
-<span class="co">#&gt;     rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,</span>
-<span class="co">#&gt;     union, unique, unsplit, which.max, which.min</span>
-<span class="co">#&gt; Loading required package: GenomicRanges</span>
-<span class="co">#&gt; Loading required package: stats4</span>
-<span class="co">#&gt; Loading required package: S4Vectors</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'S4Vectors'</span>
-<span class="co">#&gt; The following objects are masked from 'package:data.table':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     first, second</span>
-<span class="co">#&gt; The following object is masked from 'package:base':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     expand.grid</span>
-<span class="co">#&gt; Loading required package: IRanges</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'IRanges'</span>
-<span class="co">#&gt; The following object is masked from 'package:data.table':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     shift</span>
-<span class="co">#&gt; Loading required package: GenomeInfoDb</span>
-<span class="co">#&gt; Loading required package: GenomicFeatures</span>
-<span class="co">#&gt; Loading required package: AnnotationDbi</span>
-<span class="co">#&gt; Loading required package: Biobase</span>
-<span class="co">#&gt; Welcome to Bioconductor</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     Vignettes contain introductory material; view with</span>
-<span class="co">#&gt;     'browseVignettes()'. To cite Bioconductor, see</span>
-<span class="co">#&gt;     'citation("Biobase")', and for packages 'citation("pkgname")'.</span>
-<span class="co">#&gt; Loading required package: AnnotationFilter</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'ensembldb'</span>
-<span class="co">#&gt; The following object is masked from 'package:stats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     filter</span>
 <span class="co">#&gt; max_transcripts=3.</span>
 <span class="co">#&gt; 9 transcripts from 5 genes returned.</span>
 <span class="co">#&gt; Fetching data...OK</span>
@@ -291,17 +239,11 @@
 <span class="co">#&gt; [1] "Importing Microglia interactome ..."</span>
 <span class="co">#&gt; [1] "Importing Neuronal interactome ..."</span>
 <span class="co">#&gt; [1] "Importing Oligo interactome ..."</span>
-<span class="co">#&gt; Warning in .replace_seqlevels_style(x_seqlevels, value): found more than one</span>
-<span class="co">#&gt; best sequence renaming map compatible with seqname style "NCBI" for this object,</span>
-<span class="co">#&gt; using the first one</span>
 <span class="co">#&gt; 610 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; Warning in .replace_seqlevels_style(x_seqlevels, value): found more than one</span>
-<span class="co">#&gt; best sequence renaming map compatible with seqname style "NCBI" for this object,</span>
-<span class="co">#&gt; using the first one</span>
 <span class="co">#&gt; 1466 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: Adding enhancer/promoter rectangles"</span>
-<span class="co">#&gt; [1] "++ Converting genomic units to Mb..."</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: Returning PLAC-seq track."</span>
+<span class="co">#&gt; Error in h(simpleError(msg, call)) : </span>
+<span class="co">#&gt;   error in evaluating the argument 'args' in selecting a method for function 'do.call': GRanges objects don't support [[, as.list(), lapply(), or unlist() at</span>
+<span class="co">#&gt;   the moment</span>
 <span class="co">#&gt; [1] "+ Adding vertical lines to highlight SNP groups..."</span>
 <span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 1x +&lt;+&lt;+&lt;+&lt;+</span>
 <span class="co">#&gt; [1] "+ PLOT:: Get window suffix..."</span>
@@ -311,30 +253,13 @@
 <span class="co">#&gt; [1] "+ Ensuring last track shows genomic units..."</span>
 <span class="co">#&gt; [1] "+ Aligning xlimits for each subplot..."</span>
 <span class="co">#&gt; [1] "+ Checking track heights..."</span>
-<span class="co">#&gt; [1] "+ PLOT:: Saving plot ==&gt; /Users/schilder/Desktop/results/GWAS/Nalls23andMe_2019/LRRK2/multiview.LRRK2.UKB.1x.jpg"</span>
 <span class="co">#&gt; Warning: ggrepel: 2 unlabeled data points (too many overlaps). Consider</span>
 <span class="co">#&gt; increasing max.overlaps</span>
 <span class="co">#&gt; Warning: ggrepel: 2 unlabeled data points (too many overlaps). Consider</span>
 <span class="co">#&gt; increasing max.overlaps</span>
-
-<span class="co">#&gt; Warning: ggrepel: 2 unlabeled data points (too many overlaps). Consider</span>
-<span class="co">#&gt; increasing max.overlaps</span>
-
-<span class="co">#&gt; Warning: ggrepel: 2 unlabeled data points (too many overlaps). Consider</span>
-<span class="co">#&gt; increasing max.overlaps</span>
-<span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 20x +&lt;+&lt;+&lt;+&lt;+</span>
-<span class="co">#&gt; [1] "+ PLOT:: Get window suffix..."</span>
-<span class="co">#&gt; [1] "+ Constructing zoom polygon..."</span>
-<span class="co">#&gt; [1] "+ Highlighting zoom origin..."</span>
-<span class="co">#&gt; [1] "+ Removing subplot margins..."</span>
-<span class="co">#&gt; [1] "+ Reordering tracks..."</span>
-<span class="co">#&gt; [1] "+ Ensuring last track shows genomic units..."</span>
-<span class="co">#&gt; [1] "+ Aligning xlimits for each subplot..."</span>
-<span class="co">#&gt; [1] "+ Checking track heights..."</span>
-<span class="co">#&gt; [1] "+ PLOT:: Saving plot ==&gt; /Users/schilder/Desktop/results/GWAS/Nalls23andMe_2019/LRRK2/multiview.LRRK2.UKB.20x.jpg"</span></code></pre></div>
+<span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 20x +&lt;+&lt;+&lt;+&lt;+</span></code></pre></div>
 <p><img src="PD_loci_vignette_files/figure-html/LRRK2-1.png" width="960"></p>
-<pre><code>#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 25x +&lt;+&lt;+&lt;+&lt;+
-#&gt; [1] "+ PLOT:: Get window suffix..."
+<pre><code>#&gt; [1] "+ PLOT:: Get window suffix..."
 #&gt; [1] "+ Constructing zoom polygon..."
 #&gt; [1] "+ Highlighting zoom origin..."
 #&gt; [1] "+ Removing subplot margins..."
@@ -342,9 +267,18 @@
 #&gt; [1] "+ Ensuring last track shows genomic units..."
 #&gt; [1] "+ Aligning xlimits for each subplot..."
 #&gt; [1] "+ Checking track heights..."
-#&gt; [1] "+ PLOT:: Saving plot ==&gt; /Users/schilder/Desktop/results/GWAS/Nalls23andMe_2019/LRRK2/multiview.LRRK2.UKB.25x.jpg"</code></pre>
-<p><img src="PD_loci_vignette_files/figure-html/LRRK2-2.png" width="960"><img src="PD_loci_vignette_files/figure-html/LRRK2-3.png" width="960"></p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 25x +&lt;+&lt;+&lt;+&lt;+</code></pre>
+<p><img src="PD_loci_vignette_files/figure-html/LRRK2-2.png" width="960"></p>
+<pre><code>#&gt; [1] "+ PLOT:: Get window suffix..."
+#&gt; [1] "+ Constructing zoom polygon..."
+#&gt; [1] "+ Highlighting zoom origin..."
+#&gt; [1] "+ Removing subplot margins..."
+#&gt; [1] "+ Reordering tracks..."
+#&gt; [1] "+ Ensuring last track shows genomic units..."
+#&gt; [1] "+ Aligning xlimits for each subplot..."
+#&gt; [1] "+ Checking track heights..."</code></pre>
+<p><img src="PD_loci_vignette_files/figure-html/LRRK2-3.png" width="960"></p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">locus</span> <span class="op">&lt;-</span> <span class="st">"MBNL2"</span>
 
 <span class="va">track_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="fu">PLOT.heights_dict</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
@@ -362,7 +296,7 @@
                     Nott_regulatory_rects <span class="op">=</span> <span class="cn">T</span>, 
                     Nott_show_placseq <span class="op">=</span> <span class="cn">T</span>,
                     
-                    save_plot<span class="op">=</span><span class="cn">T</span>, 
+                    save_plot<span class="op">=</span><span class="cn">F</span>, 
                     return_list<span class="op">=</span><span class="cn">T</span>,
                     zoom_exceptions_str <span class="op">=</span> <span class="st">"*full window$|zoom_polygon|Genes"</span>,
                     track_order <span class="op">=</span> <span class="va">track_order</span>,
@@ -400,17 +334,11 @@
 <span class="co">#&gt; [1] "Importing Microglia interactome ..."</span>
 <span class="co">#&gt; [1] "Importing Neuronal interactome ..."</span>
 <span class="co">#&gt; [1] "Importing Oligo interactome ..."</span>
-<span class="co">#&gt; Warning in .replace_seqlevels_style(x_seqlevels, value): found more than one</span>
-<span class="co">#&gt; best sequence renaming map compatible with seqname style "NCBI" for this object,</span>
-<span class="co">#&gt; using the first one</span>
 <span class="co">#&gt; 1865 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; Warning in .replace_seqlevels_style(x_seqlevels, value): found more than one</span>
-<span class="co">#&gt; best sequence renaming map compatible with seqname style "NCBI" for this object,</span>
-<span class="co">#&gt; using the first one</span>
 <span class="co">#&gt; 2167 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: Adding enhancer/promoter rectangles"</span>
-<span class="co">#&gt; [1] "++ Converting genomic units to Mb..."</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: Returning PLAC-seq track."</span>
+<span class="co">#&gt; Error in h(simpleError(msg, call)) : </span>
+<span class="co">#&gt;   error in evaluating the argument 'args' in selecting a method for function 'do.call': GRanges objects don't support [[, as.list(), lapply(), or unlist() at</span>
+<span class="co">#&gt;   the moment</span>
 <span class="co">#&gt; [1] "+ Adding vertical lines to highlight SNP groups..."</span>
 <span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 1x +&lt;+&lt;+&lt;+&lt;+</span>
 <span class="co">#&gt; [1] "+ PLOT:: Get window suffix..."</span>
@@ -420,30 +348,14 @@
 <span class="co">#&gt; [1] "+ Ensuring last track shows genomic units..."</span>
 <span class="co">#&gt; [1] "+ Aligning xlimits for each subplot..."</span>
 <span class="co">#&gt; [1] "+ Checking track heights..."</span>
-<span class="co">#&gt; [1] "+ PLOT:: Saving plot ==&gt; /Users/schilder/Desktop/results/GWAS/Nalls23andMe_2019/MBNL2/multiview.MBNL2.UKB.1x.jpg"</span>
-<span class="co">#&gt; Warning: ggrepel: 12 unlabeled data points (too many overlaps). Consider</span>
-<span class="co">#&gt; increasing max.overlaps</span>
 <span class="co">#&gt; Warning: ggrepel: 12 unlabeled data points (too many overlaps). Consider</span>
 <span class="co">#&gt; increasing max.overlaps</span>
 
 <span class="co">#&gt; Warning: ggrepel: 12 unlabeled data points (too many overlaps). Consider</span>
 <span class="co">#&gt; increasing max.overlaps</span>
-
-<span class="co">#&gt; Warning: ggrepel: 12 unlabeled data points (too many overlaps). Consider</span>
-<span class="co">#&gt; increasing max.overlaps</span>
-<span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 10x +&lt;+&lt;+&lt;+&lt;+</span>
-<span class="co">#&gt; [1] "+ PLOT:: Get window suffix..."</span>
-<span class="co">#&gt; [1] "+ Constructing zoom polygon..."</span>
-<span class="co">#&gt; [1] "+ Highlighting zoom origin..."</span>
-<span class="co">#&gt; [1] "+ Removing subplot margins..."</span>
-<span class="co">#&gt; [1] "+ Reordering tracks..."</span>
-<span class="co">#&gt; [1] "+ Ensuring last track shows genomic units..."</span>
-<span class="co">#&gt; [1] "+ Aligning xlimits for each subplot..."</span>
-<span class="co">#&gt; [1] "+ Checking track heights..."</span>
-<span class="co">#&gt; [1] "+ PLOT:: Saving plot ==&gt; /Users/schilder/Desktop/results/GWAS/Nalls23andMe_2019/MBNL2/multiview.MBNL2.UKB.10x.jpg"</span></code></pre></div>
+<span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 10x +&lt;+&lt;+&lt;+&lt;+</span></code></pre></div>
 <p><img src="PD_loci_vignette_files/figure-html/MBNL2-1.png" width="960"></p>
-<pre><code>#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 20x +&lt;+&lt;+&lt;+&lt;+
-#&gt; [1] "+ PLOT:: Get window suffix..."
+<pre><code>#&gt; [1] "+ PLOT:: Get window suffix..."
 #&gt; [1] "+ Constructing zoom polygon..."
 #&gt; [1] "+ Highlighting zoom origin..."
 #&gt; [1] "+ Removing subplot margins..."
@@ -451,10 +363,9 @@
 #&gt; [1] "+ Ensuring last track shows genomic units..."
 #&gt; [1] "+ Aligning xlimits for each subplot..."
 #&gt; [1] "+ Checking track heights..."
-#&gt; [1] "+ PLOT:: Saving plot ==&gt; /Users/schilder/Desktop/results/GWAS/Nalls23andMe_2019/MBNL2/multiview.MBNL2.UKB.20x.jpg"</code></pre>
+#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 20x +&lt;+&lt;+&lt;+&lt;+</code></pre>
 <p><img src="PD_loci_vignette_files/figure-html/MBNL2-2.png" width="960"></p>
-<pre><code>#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 25x +&lt;+&lt;+&lt;+&lt;+
-#&gt; [1] "+ PLOT:: Get window suffix..."
+<pre><code>#&gt; [1] "+ PLOT:: Get window suffix..."
 #&gt; [1] "+ Constructing zoom polygon..."
 #&gt; [1] "+ Highlighting zoom origin..."
 #&gt; [1] "+ Removing subplot margins..."
@@ -462,9 +373,18 @@
 #&gt; [1] "+ Ensuring last track shows genomic units..."
 #&gt; [1] "+ Aligning xlimits for each subplot..."
 #&gt; [1] "+ Checking track heights..."
-#&gt; [1] "+ PLOT:: Saving plot ==&gt; /Users/schilder/Desktop/results/GWAS/Nalls23andMe_2019/MBNL2/multiview.MBNL2.UKB.25x.jpg"</code></pre>
-<p><img src="PD_loci_vignette_files/figure-html/MBNL2-3.png" width="960"><img src="PD_loci_vignette_files/figure-html/MBNL2-4.png" width="960"></p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 25x +&lt;+&lt;+&lt;+&lt;+</code></pre>
+<p><img src="PD_loci_vignette_files/figure-html/MBNL2-3.png" width="960"></p>
+<pre><code>#&gt; [1] "+ PLOT:: Get window suffix..."
+#&gt; [1] "+ Constructing zoom polygon..."
+#&gt; [1] "+ Highlighting zoom origin..."
+#&gt; [1] "+ Removing subplot margins..."
+#&gt; [1] "+ Reordering tracks..."
+#&gt; [1] "+ Ensuring last track shows genomic units..."
+#&gt; [1] "+ Aligning xlimits for each subplot..."
+#&gt; [1] "+ Checking track heights..."</code></pre>
+<p><img src="PD_loci_vignette_files/figure-html/MBNL2-4.png" width="960"></p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">locus</span> <span class="op">&lt;-</span> <span class="st">"DYRK1A"</span>
 
 <span class="va">DYRK1A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PLOT.locus.html">PLOT.locus</a></span><span class="op">(</span>finemap_dat<span class="op">=</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html">fread</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">$</span><span class="va">finemap</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,   
@@ -478,7 +398,7 @@
                     Nott_regulatory_rects <span class="op">=</span> <span class="cn">T</span>, 
                     Nott_show_placseq <span class="op">=</span> <span class="cn">T</span>,
                     
-                    save_plot<span class="op">=</span><span class="cn">T</span>, 
+                    save_plot<span class="op">=</span><span class="cn">F</span>, 
                     return_list<span class="op">=</span><span class="cn">T</span>,
                     plot.zoom<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"25x"</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; +-------- Locus Plot: DYRK1A--------+</span>
@@ -516,9 +436,9 @@
 <span class="co">#&gt; [1] "Importing Oligo interactome ..."</span>
 <span class="co">#&gt; 1774 query SNP(s) detected with reference overlap.</span>
 <span class="co">#&gt; 1612 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: Adding enhancer/promoter rectangles"</span>
-<span class="co">#&gt; [1] "++ Converting genomic units to Mb..."</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: Returning PLAC-seq track."</span>
+<span class="co">#&gt; Error in h(simpleError(msg, call)) : </span>
+<span class="co">#&gt;   error in evaluating the argument 'args' in selecting a method for function 'do.call': GRanges objects don't support [[, as.list(), lapply(), or unlist() at</span>
+<span class="co">#&gt;   the moment</span>
 <span class="co">#&gt; [1] "+ Adding vertical lines to highlight SNP groups..."</span>
 <span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 25x +&lt;+&lt;+&lt;+&lt;+</span>
 <span class="co">#&gt; [1] "+ PLOT:: Get window suffix..."</span>
@@ -528,11 +448,10 @@
 <span class="co">#&gt; [1] "+ Reordering tracks..."</span>
 <span class="co">#&gt; [1] "+ Ensuring last track shows genomic units..."</span>
 <span class="co">#&gt; [1] "+ Aligning xlimits for each subplot..."</span>
-<span class="co">#&gt; [1] "+ Checking track heights..."</span>
-<span class="co">#&gt; [1] "+ PLOT:: Saving plot ==&gt; /Users/schilder/Desktop/results/GWAS/Nalls23andMe_2019/DYRK1A/multiview.DYRK1A.UKB.25x.jpg"</span></code></pre></div>
+<span class="co">#&gt; [1] "+ Checking track heights..."</span></code></pre></div>
 <p><img src="PD_loci_vignette_files/figure-html/DYRK1A-1.png" width="960"></p>
 <p>This region has a lot of genes so we’re going to subset the main view a bit.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">locus</span> <span class="op">&lt;-</span> <span class="st">"FCGR2A"</span>
 <span class="co"># </span>
 <span class="co"># finemap_dat &lt;- fread(data_dict$finemap[[locus]])</span>
@@ -551,7 +470,7 @@
                     Nott_regulatory_rects <span class="op">=</span> <span class="cn">T</span>, 
                     Nott_show_placseq <span class="op">=</span> <span class="cn">T</span>,
                     
-                    save_plot<span class="op">=</span><span class="cn">T</span>, 
+                    save_plot<span class="op">=</span><span class="cn">F</span>, 
                     return_list<span class="op">=</span><span class="cn">T</span>,
                     plot.zoom<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"25x"</span><span class="op">)</span><span class="op">)</span> 
 <span class="co">#&gt; +-------- Locus Plot: FCGR2A--------+</span>
@@ -587,17 +506,11 @@
 <span class="co">#&gt; [1] "Importing Microglia interactome ..."</span>
 <span class="co">#&gt; [1] "Importing Neuronal interactome ..."</span>
 <span class="co">#&gt; [1] "Importing Oligo interactome ..."</span>
-<span class="co">#&gt; Warning in .replace_seqlevels_style(x_seqlevels, value): found more than one</span>
-<span class="co">#&gt; best sequence renaming map compatible with seqname style "NCBI" for this object,</span>
-<span class="co">#&gt; using the first one</span>
 <span class="co">#&gt; 6382 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; Warning in .replace_seqlevels_style(x_seqlevels, value): found more than one</span>
-<span class="co">#&gt; best sequence renaming map compatible with seqname style "NCBI" for this object,</span>
-<span class="co">#&gt; using the first one</span>
 <span class="co">#&gt; 8738 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: Adding enhancer/promoter rectangles"</span>
-<span class="co">#&gt; [1] "++ Converting genomic units to Mb..."</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: Returning PLAC-seq track."</span>
+<span class="co">#&gt; Error in h(simpleError(msg, call)) : </span>
+<span class="co">#&gt;   error in evaluating the argument 'args' in selecting a method for function 'do.call': GRanges objects don't support [[, as.list(), lapply(), or unlist() at</span>
+<span class="co">#&gt;   the moment</span>
 <span class="co">#&gt; [1] "+ Adding vertical lines to highlight SNP groups..."</span>
 <span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 25x +&lt;+&lt;+&lt;+&lt;+</span>
 <span class="co">#&gt; [1] "+ PLOT:: Get window suffix..."</span>
@@ -608,12 +521,6 @@
 <span class="co">#&gt; [1] "+ Ensuring last track shows genomic units..."</span>
 <span class="co">#&gt; [1] "+ Aligning xlimits for each subplot..."</span>
 <span class="co">#&gt; [1] "+ Checking track heights..."</span>
-<span class="co">#&gt; [1] "+ PLOT:: Saving plot ==&gt; /Users/schilder/Desktop/results/GWAS/Nalls23andMe_2019/FCGR2A/multiview.FCGR2A.UKB.25x.jpg"</span>
-<span class="co">#&gt; Warning: ggrepel: 1 unlabeled data points (too many overlaps). Consider</span>
-<span class="co">#&gt; increasing max.overlaps</span>
-<span class="co">#&gt; Warning: ggrepel: 1 unlabeled data points (too many overlaps). Consider</span>
-<span class="co">#&gt; increasing max.overlaps</span>
-
 <span class="co">#&gt; Warning: ggrepel: 1 unlabeled data points (too many overlaps). Consider</span>
 <span class="co">#&gt; increasing max.overlaps</span>
 
@@ -625,7 +532,7 @@
 <div id="modify-plots" class="section level1">
 <h1 class="hasAnchor">
 <a href="#modify-plots" class="anchor"></a>Modify plots</h1>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">zoom</span> <span class="op">&lt;-</span> <span class="st">"25x"</span>
 <span class="va">locus</span> <span class="op">&lt;-</span> <span class="st">"FCGR2A"</span><span class="co">#"FCGR2A"</span>
 <span class="va">plot_zoom_list</span> <span class="op">&lt;-</span> <span class="va">FCGR2A</span>
@@ -666,177 +573,106 @@
 <div id="session-info" class="section level1">
 <h1 class="hasAnchor">
 <a href="#session-info" class="anchor"></a>Session info</h1>
-<details><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">sessioninfo</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sessioninfo/man/session_info.html">session_info</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; ─ Session info ───────────────────────────────────────────────────────────────</span>
-<span class="co">#&gt;  setting  value                       </span>
-<span class="co">#&gt;  version  R version 4.0.4 (2021-02-15)</span>
-<span class="co">#&gt;  os       macOS Big Sur 10.16         </span>
-<span class="co">#&gt;  system   x86_64, darwin17.0          </span>
-<span class="co">#&gt;  ui       X11                         </span>
-<span class="co">#&gt;  language (EN)                        </span>
-<span class="co">#&gt;  collate  en_GB.UTF-8                 </span>
-<span class="co">#&gt;  ctype    en_GB.UTF-8                 </span>
-<span class="co">#&gt;  tz       Europe/London               </span>
-<span class="co">#&gt;  date     2021-03-14                  </span>
+<details><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; R version 4.1.0 (2021-05-18)</span>
+<span class="co">#&gt; Platform: x86_64-apple-darwin17.0 (64-bit)</span>
+<span class="co">#&gt; Running under: macOS Big Sur 10.16</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ─ Packages ───────────────────────────────────────────────────────────────────</span>
-<span class="co">#&gt;  package              * version  date       lib source        </span>
-<span class="co">#&gt;  AnnotationDbi        * 1.52.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  AnnotationFilter     * 1.14.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  askpass                1.1      2019-01-13 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  assertthat             0.2.1    2019-03-21 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  backports              1.2.1    2020-12-09 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  base64enc              0.1-3    2015-07-28 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  Biobase              * 2.50.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  BiocFileCache          1.14.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  BiocGenerics         * 0.36.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  BiocManager            1.30.10  2019-11-16 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  BiocParallel           1.24.1   2020-11-06 [1] Bioconductor  </span>
-<span class="co">#&gt;  biomaRt                2.46.3   2021-02-11 [1] Bioconductor  </span>
-<span class="co">#&gt;  Biostrings             2.58.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  biovizBase             1.38.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  bit                    4.0.4    2020-08-04 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  bit64                  4.0.5    2020-08-30 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  bitops                 1.0-6    2013-08-17 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  blob                   1.2.1    2020-01-20 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  boot                   1.3-27   2021-02-12 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  BSgenome               1.58.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  bslib                  0.2.4    2021-01-25 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  cachem                 1.0.4    2021-02-13 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  checkmate              2.0.0    2020-02-06 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  class                  7.3-18   2021-01-24 [1] CRAN (R 4.0.4)</span>
-<span class="co">#&gt;  cli                    2.3.1    2021-02-23 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  cluster                2.1.1    2021-02-14 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  colorspace             2.0-0    2020-11-11 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  crayon                 1.4.1    2021-02-08 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  curl                   4.3      2019-12-02 [1] CRAN (R 4.0.1)</span>
-<span class="co">#&gt;  data.table           * 1.14.0   2021-02-21 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  DBI                    1.1.1    2021-01-15 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  dbplyr                 2.1.0    2021-02-03 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  DelayedArray           0.16.2   2021-02-26 [1] Bioconductor  </span>
-<span class="co">#&gt;  desc                   1.3.0    2021-03-05 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  DescTools              0.99.40  2021-02-03 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  dichromat              2.0-0    2013-01-24 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  digest                 0.6.27   2020-10-24 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  dplyr                  1.0.5    2021-03-05 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  e1071                  1.7-4    2020-10-14 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  echolocatoR          * 0.1.2    2021-03-14 [1] local         </span>
-<span class="co">#&gt;  ellipsis               0.3.1    2020-05-15 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  EnsDb.Hsapiens.v75   * 2.99.0   2021-03-13 [1] Bioconductor  </span>
-<span class="co">#&gt;  ensembldb            * 2.14.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  evaluate               0.14     2019-05-28 [1] CRAN (R 4.0.1)</span>
-<span class="co">#&gt;  Exact                  2.1      2020-10-02 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  expm                   0.999-6  2021-01-13 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  fansi                  0.4.2    2021-01-15 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  farver                 2.1.0    2021-02-28 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  fastmap                1.1.0    2021-01-25 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  foreign                0.8-81   2020-12-22 [1] CRAN (R 4.0.4)</span>
-<span class="co">#&gt;  Formula                1.2-4    2020-10-16 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  fs                     1.5.0    2020-07-31 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  generics               0.1.0    2020-10-31 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  GenomeInfoDb         * 1.26.4   2021-03-10 [1] Bioconductor  </span>
-<span class="co">#&gt;  GenomeInfoDbData       1.2.4    2021-02-10 [1] Bioconductor  </span>
-<span class="co">#&gt;  GenomicAlignments      1.26.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  GenomicFeatures      * 1.42.2   2021-03-12 [1] Bioconductor  </span>
-<span class="co">#&gt;  GenomicRanges        * 1.42.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  GGally                 2.1.1    2021-03-08 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  ggbio                  1.38.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  ggplot2                3.3.3    2020-12-30 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  ggrepel                0.9.1    2021-01-15 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  gld                    2.6.2    2020-01-08 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  glue                   1.4.2    2020-08-27 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  graph                  1.68.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  gridExtra              2.3      2017-09-09 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  gtable                 0.3.0    2019-03-25 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  highr                  0.8      2019-03-20 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  Hmisc                  4.5-0    2021-02-28 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  hms                    1.0.0    2021-01-13 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  htmlTable              2.1.0    2020-09-16 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  htmltools              0.5.1.1  2021-01-22 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  htmlwidgets            1.5.3    2020-12-10 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  httr                   1.4.2    2020-07-20 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  IRanges              * 2.24.1   2020-12-12 [1] Bioconductor  </span>
-<span class="co">#&gt;  jpeg                   0.1-8.1  2019-10-24 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  jquerylib              0.1.3    2020-12-17 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  jsonlite               1.7.2    2020-12-09 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  knitr                  1.31     2021-01-27 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  labeling               0.4.2    2020-10-20 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  lattice                0.20-41  2020-04-02 [1] CRAN (R 4.0.4)</span>
-<span class="co">#&gt;  latticeExtra           0.6-29   2019-12-19 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  lazyeval               0.2.2    2019-03-15 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  lifecycle              1.0.0    2021-02-15 [1] CRAN (R 4.0.3)</span>
-<span class="co">#&gt;  lmom                   2.8      2019-03-12 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  magrittr               2.0.1    2020-11-17 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  mapproj                1.2.7    2020-02-03 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  maps                   3.3.0    2018-04-03 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  MASS                   7.3-53.1 2021-02-12 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  Matrix                 1.3-2    2021-01-06 [1] CRAN (R 4.0.4)</span>
-<span class="co">#&gt;  MatrixGenerics         1.2.1    2021-01-30 [1] Bioconductor  </span>
-<span class="co">#&gt;  matrixStats            0.58.0   2021-01-29 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  memoise                2.0.0    2021-01-26 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  munsell                0.5.0    2018-06-12 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  mvtnorm                1.1-1    2020-06-09 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  nnet                   7.3-15   2021-01-24 [1] CRAN (R 4.0.4)</span>
-<span class="co">#&gt;  openssl                1.4.3    2020-09-18 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  OrganismDbi            1.32.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  pals                   1.6      2019-12-04 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  patchwork              1.1.1    2020-12-17 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  pillar                 1.5.1    2021-03-05 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  pkgconfig              2.0.3    2019-09-22 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  pkgdown                1.6.1    2020-09-12 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  plyr                   1.8.6    2020-03-03 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  png                    0.1-7    2013-12-03 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  prettyunits            1.1.1    2020-01-24 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  progress               1.2.2    2019-05-16 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  ProtGenerics           1.22.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  purrr                  0.3.4    2020-04-17 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  R.methodsS3            1.8.1    2020-08-26 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  R.oo                   1.24.0   2020-08-26 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  R.utils                2.10.1   2020-08-26 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  R6                     2.5.0    2020-10-28 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  ragg                   1.1.1    2021-02-25 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  rappdirs               0.3.3    2021-01-31 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  RBGL                   1.66.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  RColorBrewer           1.1-2    2014-12-07 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  Rcpp                   1.0.6    2021-01-15 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  RCurl                  1.98-1.2 2020-04-18 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  reshape                0.8.8    2018-10-23 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  reshape2               1.4.4    2020-04-09 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  rlang                  0.4.10   2020-12-30 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  rmarkdown              2.7      2021-02-19 [1] CRAN (R 4.0.3)</span>
-<span class="co">#&gt;  rootSolve              1.8.2.1  2020-04-27 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  rpart                  4.1-15   2019-04-12 [1] CRAN (R 4.0.4)</span>
-<span class="co">#&gt;  rprojroot              2.0.2    2020-11-15 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  Rsamtools              2.6.0    2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  RSQLite                2.2.4    2021-03-12 [1] CRAN (R 4.0.3)</span>
-<span class="co">#&gt;  rstudioapi             0.13     2020-11-12 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  rtracklayer            1.50.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  S4Vectors            * 0.28.1   2020-12-09 [1] Bioconductor  </span>
-<span class="co">#&gt;  sass                   0.3.1    2021-01-24 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  scales                 1.1.1    2020-05-11 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  sessioninfo            1.1.1    2018-11-05 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  stringi                1.5.3    2020-09-09 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  stringr                1.4.0    2019-02-10 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  SummarizedExperiment   1.20.0   2020-10-27 [1] Bioconductor  </span>
-<span class="co">#&gt;  survival               3.2-7    2020-09-28 [1] CRAN (R 4.0.4)</span>
-<span class="co">#&gt;  systemfonts            1.0.1    2021-02-09 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  textshaping            0.3.2    2021-03-10 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  tibble                 3.1.0    2021-02-25 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  tidyr                  1.1.3    2021-03-03 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  tidyselect             1.1.0    2020-05-11 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  utf8                   1.2.1    2021-03-12 [1] CRAN (R 4.0.3)</span>
-<span class="co">#&gt;  VariantAnnotation      1.36.0   2020-10-28 [1] Bioconductor  </span>
-<span class="co">#&gt;  vctrs                  0.3.6    2020-12-17 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  withr                  2.4.1    2021-01-26 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  xfun                   0.22     2021-03-11 [1] CRAN (R 4.0.3)</span>
-<span class="co">#&gt;  XML                    3.99-0.5 2020-07-23 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  xml2                   1.3.2    2020-04-23 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  XVector                0.30.0   2020-10-28 [1] Bioconductor  </span>
-<span class="co">#&gt;  yaml                   2.2.1    2020-02-01 [1] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  zlibbioc               1.36.0   2020-10-28 [1] Bioconductor  </span>
+<span class="co">#&gt; Matrix products: default</span>
+<span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.dylib</span>
+<span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; [1] /Library/Frameworks/R.framework/Versions/4.0/Resources/library</span></code></pre></div>
+<span class="co">#&gt; locale:</span>
+<span class="co">#&gt; [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; attached base packages:</span>
+<span class="co">#&gt; [1] stats4    parallel  stats     graphics  grDevices utils     datasets </span>
+<span class="co">#&gt; [8] methods   base     </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; other attached packages:</span>
+<span class="co">#&gt;  [1] EnsDb.Hsapiens.v75_2.99.0 ensembldb_2.16.0         </span>
+<span class="co">#&gt;  [3] AnnotationFilter_1.16.0   GenomicFeatures_1.44.0   </span>
+<span class="co">#&gt;  [5] AnnotationDbi_1.54.1      Biobase_2.52.0           </span>
+<span class="co">#&gt;  [7] GenomicRanges_1.44.0      GenomeInfoDb_1.28.0      </span>
+<span class="co">#&gt;  [9] IRanges_2.26.0            S4Vectors_0.30.0         </span>
+<span class="co">#&gt; [11] BiocGenerics_0.38.0       data.table_1.14.0        </span>
+<span class="co">#&gt; [13] echolocatoR_0.1.2        </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; loaded via a namespace (and not attached):</span>
+<span class="co">#&gt;   [1] backports_1.2.1             Hmisc_4.5-0                </span>
+<span class="co">#&gt;   [3] BiocFileCache_2.0.0         systemfonts_1.0.2          </span>
+<span class="co">#&gt;   [5] plyr_1.8.6                  lazyeval_0.2.2             </span>
+<span class="co">#&gt;   [7] splines_4.1.0               BiocParallel_1.26.0        </span>
+<span class="co">#&gt;   [9] ggplot2_3.3.4               digest_0.6.27              </span>
+<span class="co">#&gt;  [11] htmltools_0.5.1.1           fansi_0.5.0                </span>
+<span class="co">#&gt;  [13] magrittr_2.0.1              checkmate_2.0.0            </span>
+<span class="co">#&gt;  [15] memoise_2.0.0               BSgenome_1.60.0            </span>
+<span class="co">#&gt;  [17] cluster_2.1.2               Biostrings_2.60.1          </span>
+<span class="co">#&gt;  [19] matrixStats_0.59.0          R.utils_2.10.1             </span>
+<span class="co">#&gt;  [21] ggbio_1.40.0                pkgdown_1.6.1              </span>
+<span class="co">#&gt;  [23] prettyunits_1.1.1           jpeg_0.1-8.1               </span>
+<span class="co">#&gt;  [25] colorspace_2.0-1            ggrepel_0.9.1              </span>
+<span class="co">#&gt;  [27] blob_1.2.1                  rappdirs_0.3.3             </span>
+<span class="co">#&gt;  [29] textshaping_0.3.5           xfun_0.24                  </span>
+<span class="co">#&gt;  [31] dplyr_1.0.7                 crayon_1.4.1               </span>
+<span class="co">#&gt;  [33] RCurl_1.98-1.3              jsonlite_1.7.2             </span>
+<span class="co">#&gt;  [35] graph_1.70.0                Exact_2.1                  </span>
+<span class="co">#&gt;  [37] VariantAnnotation_1.38.0    survival_3.2-11            </span>
+<span class="co">#&gt;  [39] glue_1.4.2                  pals_1.7                   </span>
+<span class="co">#&gt;  [41] gtable_0.3.0                zlibbioc_1.38.0            </span>
+<span class="co">#&gt;  [43] XVector_0.32.0              DelayedArray_0.18.0        </span>
+<span class="co">#&gt;  [45] maps_3.3.0                  scales_1.1.1               </span>
+<span class="co">#&gt;  [47] mvtnorm_1.1-2               DBI_1.1.1                  </span>
+<span class="co">#&gt;  [49] GGally_2.1.2                Rcpp_1.0.6                 </span>
+<span class="co">#&gt;  [51] progress_1.2.2              htmlTable_2.2.1            </span>
+<span class="co">#&gt;  [53] mapproj_1.2.7               foreign_0.8-81             </span>
+<span class="co">#&gt;  [55] bit_4.0.4                   proxy_0.4-26               </span>
+<span class="co">#&gt;  [57] OrganismDbi_1.34.0          Formula_1.2-4              </span>
+<span class="co">#&gt;  [59] htmlwidgets_1.5.3           httr_1.4.2                 </span>
+<span class="co">#&gt;  [61] RColorBrewer_1.1-2          ellipsis_0.3.2             </span>
+<span class="co">#&gt;  [63] farver_2.1.0                R.methodsS3_1.8.1          </span>
+<span class="co">#&gt;  [65] pkgconfig_2.0.3             reshape_0.8.8              </span>
+<span class="co">#&gt;  [67] XML_3.99-0.6                nnet_7.3-16                </span>
+<span class="co">#&gt;  [69] sass_0.4.0                  dbplyr_2.1.1               </span>
+<span class="co">#&gt;  [71] utf8_1.2.1                  labeling_0.4.2             </span>
+<span class="co">#&gt;  [73] tidyselect_1.1.1            rlang_0.4.11               </span>
+<span class="co">#&gt;  [75] reshape2_1.4.4              munsell_0.5.0              </span>
+<span class="co">#&gt;  [77] tools_4.1.0                 cachem_1.0.5               </span>
+<span class="co">#&gt;  [79] generics_0.1.0              RSQLite_2.2.7              </span>
+<span class="co">#&gt;  [81] evaluate_0.14               stringr_1.4.0              </span>
+<span class="co">#&gt;  [83] fastmap_1.1.0               yaml_2.2.1                 </span>
+<span class="co">#&gt;  [85] ragg_1.1.3                  knitr_1.33                 </span>
+<span class="co">#&gt;  [87] bit64_4.0.5                 fs_1.5.0                   </span>
+<span class="co">#&gt;  [89] purrr_0.3.4                 KEGGREST_1.32.0            </span>
+<span class="co">#&gt;  [91] rootSolve_1.8.2.1           RBGL_1.68.0                </span>
+<span class="co">#&gt;  [93] R.oo_1.24.0                 xml2_1.3.2                 </span>
+<span class="co">#&gt;  [95] biomaRt_2.48.1              compiler_4.1.0             </span>
+<span class="co">#&gt;  [97] rstudioapi_0.13             filelock_1.0.2             </span>
+<span class="co">#&gt;  [99] curl_4.3.1                  png_0.1-7                  </span>
+<span class="co">#&gt; [101] e1071_1.7-7                 tibble_3.1.2               </span>
+<span class="co">#&gt; [103] bslib_0.2.5.1               DescTools_0.99.42          </span>
+<span class="co">#&gt; [105] stringi_1.6.2               highr_0.9                  </span>
+<span class="co">#&gt; [107] desc_1.3.0                  lattice_0.20-44            </span>
+<span class="co">#&gt; [109] ProtGenerics_1.24.0         Matrix_1.3-4               </span>
+<span class="co">#&gt; [111] vctrs_0.3.8                 pillar_1.6.1               </span>
+<span class="co">#&gt; [113] lifecycle_1.0.0             BiocManager_1.30.16        </span>
+<span class="co">#&gt; [115] jquerylib_0.1.4             bitops_1.0-7               </span>
+<span class="co">#&gt; [117] lmom_2.8                    patchwork_1.1.1            </span>
+<span class="co">#&gt; [119] rtracklayer_1.52.0          R6_2.5.0                   </span>
+<span class="co">#&gt; [121] BiocIO_1.2.0                latticeExtra_0.6-29        </span>
+<span class="co">#&gt; [123] gridExtra_2.3               gld_2.6.2                  </span>
+<span class="co">#&gt; [125] dichromat_2.0-0             boot_1.3-28                </span>
+<span class="co">#&gt; [127] MASS_7.3-54                 assertthat_0.2.1           </span>
+<span class="co">#&gt; [129] SummarizedExperiment_1.22.0 rprojroot_2.0.2            </span>
+<span class="co">#&gt; [131] rjson_0.2.20                GenomicAlignments_1.28.0   </span>
+<span class="co">#&gt; [133] Rsamtools_2.8.0             GenomeInfoDbData_1.2.6     </span>
+<span class="co">#&gt; [135] expm_0.999-6                hms_1.1.0                  </span>
+<span class="co">#&gt; [137] grid_4.1.0                  rpart_4.1-15               </span>
+<span class="co">#&gt; [139] tidyr_1.1.3                 class_7.3-19               </span>
+<span class="co">#&gt; [141] rmarkdown_2.9               MatrixGenerics_1.4.0       </span>
+<span class="co">#&gt; [143] biovizBase_1.40.0           base64enc_0.1-3            </span>
+<span class="co">#&gt; [145] restfulr_0.0.13</span></code></pre></div>
 </details>
 </div>
   </div>

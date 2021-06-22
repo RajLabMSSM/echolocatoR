@@ -21,7 +21,7 @@ vignette: >
 ---
 
 ```{r, include = T, error = F, dpi=300}
-root.dir <- "~/Desktop"
+root.dir <- tempdir()
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -40,7 +40,7 @@ knitr::opts_knit$set(
 library(echolocatoR) 
 library(data.table)
 
-results_dir <- file.path(tempdir(),"results")
+results_dir <- file.path(root.dir,"results")
 ```
 
 

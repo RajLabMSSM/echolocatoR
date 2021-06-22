@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -189,7 +189,7 @@
 
 
 <span class='co'># -----Import and process ------</span>
-<span class='va'>metric_df</span> <span class='op'>&lt;-</span> <span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/data.table/man/fread.html'>fread</a></span><span class='op'>(</span><span class='va'>path</span>, nThread<span class='op'>=</span><span class='fl'>8</span><span class='op'>)</span>
+<span class='va'>metric_df</span> <span class='op'>&lt;-</span> <span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/fread.html'>fread</a></span><span class='op'>(</span><span class='va'>path</span>, nThread<span class='op'>=</span><span class='fl'>8</span><span class='op'>)</span>
 <span class='co'>## metric_names &lt;- grep("Basenji.*MAX|DeepSEA.*MAX|Roadmap.*MAX", colnames(metric_df), value = T)</span>
 <span class='co'>## metric_df &lt;- metric_df %&gt;% dplyr::mutate(annot=paste(Model,Tissue,Assay,Type,Metric,sep="_"))</span>
 <span class='va'>boot_res</span> <span class='op'>&lt;-</span> <span class='fu'>VALIDATION.bootstrap_multimetric</span><span class='op'>(</span>metric_df<span class='op'>=</span><span class='va'>metric_df</span>, metric_names<span class='op'>=</span><span class='va'>metric_names</span>, validation_method<span class='op'>=</span><span class='va'>validation_method</span>, save_path<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/grep.html'>gsub</a></span><span class='op'>(</span><span class='st'>"\\.csv\\.gz"</span>,<span class='st'>".bootstrap.coin_wilcox_test.csv.gz"</span>,<span class='va'>path</span><span class='op'>)</span>, grouping_var<span class='op'>=</span><span class='va'>grouping_var</span>, iterations<span class='op'>=</span><span class='fl'>10000</span>, nThread<span class='op'>=</span><span class='fl'>12</span><span class='op'>)</span>

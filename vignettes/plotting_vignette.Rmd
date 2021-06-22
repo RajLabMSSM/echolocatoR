@@ -20,8 +20,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE, error = TRUE, dpi=300}
-root.dir <- "~/Desktop"
+```{r, include = T, error = T, dpi=300}
+root.dir <- tempdir()
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -36,7 +36,7 @@ knitr::opts_knit$set(
 # devtools::build_vignettes(quiet = F)
 ```
 
-```{r setup, root.dir="~/Desktop", dpi=300}
+```{r setup, dpi=300}
 library(echolocatoR) 
 ```
 
@@ -66,10 +66,10 @@ The plot is centered on the lead/index SNP. If a list is supplied to plot.xoom
 Load example dataset of the results from fine-mapping the BST1 locus with `finemap_loci()`.
 Original data comes from the recent Nalls et al. (2019) Parkinson's disease GWAS (see `?BST1` for details).
 
-```{r Load example data   }
+```{r Load example data}
 library(ggplot2)
 data("BST1"); data("LD_matrix"); data("locus_dir");
-locus_dir <- file.path("~/Desktop",locus_dir)
+locus_dir <- file.path(root.dir,locus_dir)
 finemap_DT <- BST1  
 LD_matrix <- BST1_LD_matrix
 LD_reference <- "UKB" # Used for naming saved plots
@@ -270,11 +270,12 @@ trk_plot.qtl <- PLOT.locus(finemap_dat=finemap_DT,
 print(trk_plot.qtl)
 ```
 
-<details>
-<summary><h1>Session Info</h1></summary>  
+# Session info  
+
+<details>  
 
 ```{r Session Info, attr.output='style="max-height: 200px;"'}
-sessioninfo::session_info()
+utils::sessionInfo()
 ```
 
 <details>

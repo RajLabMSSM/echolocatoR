@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -148,7 +148,36 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>gr.merged</span> <span class='op'>&lt;-</span> <span class='fu'>merge_celltype_specific_epigenomics</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] "++ NOTT_2019:: Downloading and merging 12 peaks BED files."
-#&gt; [1] "++ NOTT_2019:: Downloading ATAC/NeuN_optimal_peak_IDR_ENCODE.ATAC.bed"</div><div class='output co'>#&gt; <span class='error'>Error in curl::curl_download(input, tmpFile, mode = "wb", quiet = !showProgress): Could not resolve host: raw.githubusercontent.com</span></div></pre>
+#&gt; [1] "++ NOTT_2019:: Downloading ATAC/NeuN_optimal_peak_IDR_ENCODE.ATAC.bed"
+#&gt; [1] "++ NOTT_2019:: Downloading ATAC/PU1_optimal_peak_IDR_ENCODE.ATAC.bed"
+#&gt; [1] "++ NOTT_2019:: Downloading ATAC/Olig2_optimal_peak_IDR_ENCODE.ATAC.bed"
+#&gt; [1] "++ NOTT_2019:: Downloading ATAC/LHX2_optimal_peak_IDR_ENCODE.ATAC.bed"
+#&gt; [1] "++ NOTT_2019:: Downloading H3K27ac/NeuN_optimal_peak.H3K27.bed"
+#&gt; [1] "++ NOTT_2019:: Downloading H3K27ac/PU1_optimal_peak.H3K27.bed"
+#&gt; [1] "++ NOTT_2019:: Downloading H3K27ac/Olig2_optimal_peak.H3K27.bed"
+#&gt; [1] "++ NOTT_2019:: Downloading H3K27ac/LHX2_optimal_peak.H3K27.bed"
+#&gt; [1] "++ NOTT_2019:: Downloading H3K4me3/NeuN_optimal_peak.H3K4me3.bed"
+#&gt; [1] "++ NOTT_2019:: Downloading H3K4me3/PU1_optimal_peak.H3K4me3.bed"
+#&gt; [1] "++ NOTT_2019:: Downloading H3K4me3/Olig2_optimal_peak.H3K4me3.bed"
+#&gt; [1] "++ NOTT_2019:: Downloading H3K4me3/LHX2_optimal_peak.H3K4me3.bed"
+#&gt; [1] "++ NOTT_2019:: Converting merged BED files to GRanges."
+#&gt; [1] "++ NOTT_2019:: 634540 ranges retrieved."
+#&gt; [1] "Importing Astrocyte enhancers ..."
+#&gt; [1] "Importing Astrocyte promoters ..."
+#&gt; [1] "Importing Neuronal enhancers ..."
+#&gt; [1] "Importing Neuronal promoters ..."
+#&gt; [1] "Importing Oligo enhancers ..."
+#&gt; [1] "Importing Oligo promoters ..."
+#&gt; [1] "Importing Microglia enhancers ..."
+#&gt; [1] "Importing Microglia promoters ..."
+#&gt; [1] "++ Converting to GRanges."
+#&gt; [1] "XGR:: Lifting genome build: hg38.to.hg19"</div><div class='output co'>#&gt; <span class='message'>Start at 2021-06-22 16:50:27</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>End at 2021-06-22 16:50:29</span></div><div class='output co'>#&gt; <span class='message'>Runtime in total is: 2 secs</span></div><div class='output co'>#&gt; <span class='message'>Start at 2021-06-22 16:50:29</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>End at 2021-06-22 16:50:30</span></div><div class='output co'>#&gt; <span class='message'>Runtime in total is: 1 secs</span></div><div class='output co'>#&gt; <span class='message'>Start at 2021-06-22 16:50:30</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>End at 2021-06-22 16:50:32</span></div><div class='output co'>#&gt; <span class='message'>Runtime in total is: 2 secs</span></div><div class='output co'>#&gt; <span class='message'>Start at 2021-06-22 16:50:32</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>End at 2021-06-22 16:50:33</span></div><div class='output co'>#&gt; <span class='message'>Runtime in total is: 1 secs</span></div><div class='output co'>#&gt; <span class='message'>Start at 2021-06-22 16:50:34</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>End at 2021-06-22 16:50:35</span></div><div class='output co'>#&gt; <span class='message'>Runtime in total is: 1 secs</span></div><div class='output co'>#&gt; <span class='message'>Start at 2021-06-22 16:50:36</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>End at 2021-06-22 16:50:37</span></div><div class='output co'>#&gt; <span class='message'>Runtime in total is: 1 secs</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

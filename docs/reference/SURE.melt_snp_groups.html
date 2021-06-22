@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -166,7 +166,7 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>root</span> <span class='op'>&lt;-</span> <span class='st'>"/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"</span>
 
-<span class='va'>sure_DT</span> <span class='op'>&lt;-</span> <span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/data.table/man/fread.html'>fread</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>root</span>,<span class='st'>"SURE/Nalls23andMe_2019.SURE.csv.gz"</span><span class='op'>)</span>, nThread<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span>
+<span class='va'>sure_DT</span> <span class='op'>&lt;-</span> <span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/fread.html'>fread</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>root</span>,<span class='st'>"SURE/Nalls23andMe_2019.SURE.csv.gz"</span><span class='op'>)</span>, nThread<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='error'>Error in data.table::fread(file.path(root, "SURE/Nalls23andMe_2019.SURE.csv.gz"),     nThread = 4): File '/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/SURE/Nalls23andMe_2019.SURE.csv.gz' does not exist or is non-readable. getwd()=='/Users/schilder/Desktop/echolocatoR/docs/reference'</span></div><div class='input'><span class='va'>sure_DT</span> <span class='op'>&lt;-</span> <span class='fu'>find_consensus_SNPs_no_PolyFun</span><span class='op'>(</span><span class='va'>sure_DT</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] "Identifying UCS and Consensus SNPs without PolyFun"</div><div class='output co'>#&gt; <span class='error'>Error in is.data.frame(x): object 'sure_DT' not found</span></div><div class='input'>
 <span class='va'>sure.melt</span> <span class='op'>&lt;-</span> <span class='fu'>SURE.melt_snp_groups</span><span class='op'>(</span><span class='va'>sure_DT</span>, save_path<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>root</span>,<span class='st'>"SURE/Nalls23andMe_2019.SURE.snp_groups.mean.csv.gz"</span><span class='op'>)</span><span class='op'>)</span>
