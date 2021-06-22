@@ -1,3 +1,11 @@
+<!-- badges: start -->
+
+[![](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![](https://img.shields.io/badge/doi-10.1101/2020.10.22.351221-yellow.svg)](https://doi.org/10.1101/2020.10.22.351221)
+[![License:
+MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://cran.r-project.org/web/licenses/MIT)
+
+<!-- badges: end -->
 <center>
 <h1>
 ) ) ) ) ))) :bat: echolocatoR :bat: ((( ( ( ( (
@@ -295,8 +303,8 @@ example, `data("BST1")`). They are stored in the locus-specific
 
 ### Column descriptions
 
--   **Standardized GWAS/QTL summary statistics**:
-    e.g. `SNP`,`CHR`,`POS`,`Effect`,`StdErr`. See `?finemap_loci()` for
+-   **Standardized GWAS/QTL summary statistics**: e.g.
+    `SNP`,`CHR`,`POS`,`Effect`,`StdErr`. See `?finemap_loci()` for
     descriptions of each.  
 -   **leadSNP**: The designated proxy SNP per locus, which is the SNP
     with the smallest p-value by default.
@@ -321,8 +329,8 @@ example, `data("BST1")`). They are stored in the locus-specific
 ### Notes
 
 -   Separate multi-finemap files are generated for each LD reference
-    panel used, which is included in the file name
-    (e.g. *UKB_LD.Multi-finemap.tsv.gz*).
+    panel used, which is included in the file name (e.g.
+    *UKB_LD.Multi-finemap.tsv.gz*).
 
 -   Each fine-mapping tool defines its CS and PP slightly differently,
     so please refer to the associated original publications for the

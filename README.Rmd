@@ -15,6 +15,18 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+<!-- badges: start -->
+
+```{r, echo = FALSE, results='asis'} 
+cat(
+  badger::badge_lifecycle("stable", "green"),
+  badger::badge_doi("10.1101/2020.10.22.351221", "yellow"),
+  badger::badge_license() 
+)
+```
+
+<!-- badges: end -->
+
 <center><h1>  ) ) ) ) ))) :bat: echolocatoR :bat: ((( ( ( ( ( </h1></center>
 
 <h3> Automated statistical and functional fine-mapping with extensive access to genome-wide datasets </h3>
@@ -42,7 +54,6 @@ knitr::opts_chunk$set(echo = TRUE)
 >     Human Microglia Transcriptome across Brain Regions, Aging and
 >     Disease Pathologies.
 >     *bioRxiv*; <https://doi.org/10.1101/2020.10.27.356113>.
-
 
 ## Documentation
 
@@ -296,30 +307,50 @@ Additional required columns:
 
 ### [coloc](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)
 
-#### `N`,`MAF`  
+#### `N`,`MAF`
 
-<br> 
+<br>
 
-## Multi-finemap results files 
+## Multi-finemap results files
 
-The main output of **echolocatoR** are the multi-finemap files (for example, `data("BST1")`). They are stored in the locus-specific *Multi-finemap* subfolders. 
+The main output of **echolocatoR** are the multi-finemap files (for
+example, `data("BST1")`). They are stored in the locus-specific
+*Multi-finemap* subfolders.
 
-### Column descriptions 
+### Column descriptions
 
-- **Standardized GWAS/QTL summary statistics**: e.g.  `SNP`,`CHR`,`POS`,`Effect`,`StdErr`. See `?finemap_loci()` for descriptions of each.  
-- **leadSNP**: The designated proxy SNP per locus, which is the SNP with the smallest p-value by default. 
-- **\<tool\>.CS**: The 95% probability Credible Set (CS) to which a SNP belongs within a given fine-mapping tool's results. If a SNP is not in any of the tool's CS, it is assigned `NA` (or `0` for the purposes of plotting).  
-- **\<tool\>.PP**: The posterior probability that a SNP is causal for a given GWAS/QTL trait.  
-- **Support**: The total number of fine-mapping tools that include the SNP in its CS. 
-- **Consensus_SNP**: By default, defined as a SNP that is included in the CS of more than `N` fine-mapping tool(s), i.e. `Support>1` (default: `N=1`).  
-- **mean.PP**: The mean SNP-wise PP across all fine-mapping tools used. 
-- **mean.CS**: If mean PP is greater than the 95% probability threshold (`mean.PP>0.95`) then `mean.CS` is 1, else 0. This tends to be a very stringent threshold as it requires a high degree of agreement between fine-mapping tools. 
+-   **Standardized GWAS/QTL summary statistics**: e.g.
+    `SNP`,`CHR`,`POS`,`Effect`,`StdErr`. See `?finemap_loci()` for
+    descriptions of each.  
+-   **leadSNP**: The designated proxy SNP per locus, which is the SNP
+    with the smallest p-value by default.
+-   **\<tool\>.CS**: The 95% probability Credible Set (CS) to which a
+    SNP belongs within a given fine-mapping tool's results. If a SNP is
+    not in any of the tool's CS, it is assigned `NA` (or `0` for the
+    purposes of plotting).  
+-   **\<tool\>.PP**: The posterior probability that a SNP is causal for
+    a given GWAS/QTL trait.  
+-   **Support**: The total number of fine-mapping tools that include the
+    SNP in its CS.
+-   **Consensus_SNP**: By default, defined as a SNP that is included in
+    the CS of more than `N` fine-mapping tool(s), i.e. `Support>1`
+    (default: `N=1`).  
+-   **mean.PP**: The mean SNP-wise PP across all fine-mapping tools
+    used.
+-   **mean.CS**: If mean PP is greater than the 95% probability
+    threshold (`mean.PP>0.95`) then `mean.CS` is 1, else 0. This tends
+    to be a very stringent threshold as it requires a high degree of
+    agreement between fine-mapping tools.
 
-### Notes  
+### Notes
 
-- Separate multi-finemap files are generated for each LD reference panel used, which is included in the file name (e.g. *UKB_LD.Multi-finemap.tsv.gz*).  
+-   Separate multi-finemap files are generated for each LD reference
+    panel used, which is included in the file name (e.g.
+    *UKB_LD.Multi-finemap.tsv.gz*).
 
-- Each fine-mapping tool defines its CS and PP slightly differently, so please refer to the associated original publications for the exact details of how these are calculated (links provided above). 
+-   Each fine-mapping tool defines its CS and PP slightly differently,
+    so please refer to the associated original publications for the
+    exact details of how these are calculated (links provided above).
 
 <br>
 
