@@ -3,7 +3,7 @@
 \docType{data}
 \name{fullSS_dat}
 \alias{fullSS_dat}
-\title{"Example subset of full summary stats}
+\title{Example subset of full summary stats}
 \format{
 An object of class \code{data.table} (inherits from \code{data.frame}) with 38066 rows and 11 columns.
 }

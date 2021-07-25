@@ -56,15 +56,19 @@ A query is then made using the min/max genomic positions to extract a locus-spec
 }
 \examples{
 \dontrun{
-data("locus_dir"); data("Nalls_top_SNPs")
-fullSS_path <- "./results/GWAS/Nalls23andMe_2019/_genome_wide/nallsEtAl2019_allSamples_allVariants.mod.txt.gz"
-top_SNPs <- import_topSNPs(topSS = Nalls_top_SNPs, chrom_col = "CHR", position_col = "BP", snp_col="SNP", pval_col="P, all studies", effect_col="Beta, all studies", gene_col="Nearest Gene", group_by_locus = T,locus_col = "Nearest Gene")
+data("locus_dir"); data("Nalls_top_SNPs"); data("top_SNPs")
+fullSS_path <- example_fullSS(fullSS_path=file.path(root.dir,"Nalls23andMe_2019.fullSS_subset.tsv") )
 top_SNPs_BST1 <- subset(top_SNPs, Locus=='BST1')
 bp_distance <- 1e+06
 min_POS <- top_SNPs_BST1$POS - bp_distance
 max_POS <- top_SNPs_BST1$POS + bp_distance
+
 subset_file <- file.path(results_path,"BST1_Nalls23andMe_2019_subset.tsv.gz")
-dat <- TABIX(fullSS_path=fullSS_path, subset_path="auto", min_POS=min_POS, max_POS=max_POS, chrom=top_SNPs_BST1$CHR)
+dat <- TABIX(fullSS_path=fullSS_path,
+             subset_path="auto",
+             min_POS=min_POS,
+             max_POS=max_POS,
+             chrom=top_SNPs_BST1$CHR)
 }
 }
 \seealso{

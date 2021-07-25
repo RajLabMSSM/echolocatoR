@@ -346,13 +346,12 @@ get_nrows <- function(large_file){
 #' @family general
 #' @keywords internal
 get_header <- function(large_file,
+                       colnames_only=TRUE,
+                       n=2,
                        nThread=1){
-  header <- colnames(data.table::fread(large_file, nrows = 0, nThread=nThread))
-  # if(endsWith(large_file,".gz")){
-  #   header <- system(paste("zcat",large_file,"| head -1 -"), intern=T)
-  # } else {
-  #   header <- system(paste("head -1",large_file), intern=T)
-  # }
+  ### Reading in this way is more robust and able to handle bgz format.
+  header <- data.table::fread(text=readLines(con = large_file, n = n),nThread = nThread)
+  if(colnames_only) header <- colnames(header)
   return(header)
 }
 
@@ -381,9 +380,8 @@ check_if_empty <- function(file_path){
 #' @keywords internal
 column_dictionary <- function(file_path){
   # Get the index of each column name
-  f <- data.table::fread(file_path, nrows = 0, header = T)
-  cNames <- colnames(f)
-  colDict <- setNames(1:length(cNames), cNames  )
+  cNames <- get_header(large_file = file_path, colnames_only = TRUE)
+  colDict <- setNames(seq(1,length(cNames)), cNames)
   return(colDict)
 }
 
@@ -917,13 +915,7 @@ get_multifinemap_path <- function(){
 }
 
 
-infer_if_tabix <- function(file_path){
-  # must meet all of these conditions in order to use a pre-existing tabix files
-  file.exists(file_path) &
-    endsWith(file_path,".gz") &
-    file.exists(paste0(file_path,".tbi")) &
-    file.size(file_path)>0
-}
+
 
 
 # -----GenomicRanges ------
@@ -1016,12 +1008,14 @@ update_cols <- function(finemap_dat){
 #' @examples
 #' \dontrun{
 #' data("fullSS_dat")
-#' fullSS_path <- example_fullSS(fullSS_path="./Nalls23andMe_2019.fullSS_subset.tsv")
+#' fullSS_path <- example_fullSS()
 #' }
-example_fullSS <- function(fullSS_path="./Nalls23andMe_2019.fullSS_subset.tsv",
+example_fullSS <- function(fullSS_path=file.path(tempdir(),"Nalls23andMe_2019.fullSS_subset.tsv"),
+                           munged=TRUE,
                            nThread=1){
-  data("fullSS_dat")
-  data.table::fwrite(fullSS_dat, fullSS_path,
+  dat <- if(munged) echolocatoR::fullSS_munged else echolocatoR::fullSS_dat
+  data.table::fwrite(x = dat,
+                     file = fullSS_path,
                      nThread = nThread,
                      sep="\t")
   return(fullSS_path)
@@ -1301,8 +1295,8 @@ determine_chrom_type <- function(chrom_type=NULL,
   } else {
     # Slow, but it works
     printer("Determining chrom type from file header")
-    header <- data.table::fread(file_path, nThread=nThread, nrows = 1)
-    has_chr <- grepl("ch",header[[chrom_col]][1])
+    header <- get_header(large_file = file_path, colnames_only = FALSE)
+    has_chr <- grepl("ch",tolower(header[[chrom_col]][1]))
   }
   printer("Chromosome format =",if(has_chr) "chr1" else "1", v=verbose)
   return(has_chr)

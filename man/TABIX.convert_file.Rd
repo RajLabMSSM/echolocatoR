@@ -6,10 +6,8 @@
 \usage{
 TABIX.convert_file(
   fullSS_path,
-  study_dir = NULL,
   chrom_col = "CHR",
   position_col = "POS",
-  conda_env = "echoR",
   verbose = T
 )
 }
@@ -25,8 +23,6 @@ Can be "chr1" or "1" format.
 Must be in units of basepairs.
 (\emph{default: ="POS"})}
 
-\item{conda_env}{The name of a conda environment to use.}
-
 \item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
 }
 \description{
@@ -34,9 +30,8 @@ Convert summary stats file to tabix format
 }
 \examples{
 \dontrun{
-data("genome_wide_dir");
-fullSS_path <-  "~/Desktop/nallsEtAl2019_allSamples_allVariants.mod.txt"
-fullSS.gz <- TABIX.convert_file(fullSS_path=fullSS_path, results_path=results_path_genome_wide, chrom_col="CHR", position_col="POS")
+fullSS_path <- example_fullSS(fullSS_path=file.path(tempdir(),"Nalls23andMe_2019.fullSS_subset.tsv") )
+fullSS.gz <- TABIX.convert_file(fullSS_path=fullSS_path, chrom_col="CHR", position_col="POS")
 }
 }
 \seealso{

@@ -6,6 +6,7 @@
 \usage{
 example_fullSS(
   fullSS_path = "./Nalls23andMe_2019.fullSS_subset.tsv",
+  munged = TRUE,
   nThread = 1
 )
 }

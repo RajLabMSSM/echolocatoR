@@ -4,17 +4,17 @@
 \alias{TABIX.query}
 \title{Query a tabix file}
 \usage{
-TABIX.query(
-  fullSS.gz,
-  chrom,
-  start_pos,
-  end_pos,
-  conda_env = "echoR",
-  verbose = T
-)
+TABIX.query(fullSS_tabix, chrom, start_pos, end_pos, verbose = TRUE)
 }
 \description{
 Query by genomic coordinates.
+}
+\examples{
+\dontrun{
+fullSS_path <- example_fullSS(fullSS_path=file.path(tempdir(),"Nalls23andMe_2019.fullSS_subset.tsv") )
+fullSS_tabix <- TABIX.convert_file(fullSS_path=fullSS_path, chrom_col="CHR", position_col="BP")
+TABIX.query(fullSS_tabix=fullSS_tabix, chrom=4, start_pos=13737637, end_pos=13837637)
+}
 }
 \seealso{
 Other query functions: 

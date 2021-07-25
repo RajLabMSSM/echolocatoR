@@ -36,7 +36,7 @@ Useful links:
 \author{
 \strong{Maintainer}: Brian Schilder \email{brian_schilder@alumni.brown.edu} (\href{https://orcid.org/0000-0001-5949-2191}{ORCID})
 
-Other contributors:
+Authors:
 \itemize{
   \item Jack Humphrey \email{Jack.Humphrey@mssm.edu} (\href{https://orcid.org/0000-0002-6274-6620}{ORCID})
   \item Towfique Raj \email{towfique.raj@mssm.edu} (\href{https://orcid.org/0000-0002-9355-5704}{ORCID})

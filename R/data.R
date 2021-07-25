@@ -91,7 +91,7 @@
 
 
 
-#' "Example subset of full summary stats
+#' Example subset of full summary stats
 #'
 #' Data originally comes from the Parkinson's disease GWAS
 #' by \href{https://www.biorxiv.org/content/10.1101/388165v3}{Nalls et al. (bioRxiv)}.
@@ -116,6 +116,25 @@
 #' }
 "fullSS_dat"
 
+
+#' Example subset of full summary stats (munged)
+#'
+#' Data originally comes from the Parkinson's disease GWAS
+#' by \href{https://www.biorxiv.org/content/10.1101/388165v3}{Nalls et al. (bioRxiv)}.
+#'
+#' Munged using \pkg{MungeSumstats}.
+#'
+#' @source \url{https://www.biorxiv.org/content/10.1101/388165v3}
+#' @examples
+#' A subset of the full GWAS summary stats from Nalls et al. (2019)
+#' \dontrun{
+#' data("fullSS_dat")
+#' tmp_file <- tempfile(fileext = ".tsv.gz")
+#' data.table::fwrite(fullSS_dat, tmp_file)
+#' fullSS_munged <- MungeSumstats::format_sumstats(tmp_file, ref_genome = "GRCh37", return_data = TRUE)
+#' usethis::use_data(fullSS_munged, overwrite=TRUE)
+#' }
+"fullSS_munged"
 
 
 
