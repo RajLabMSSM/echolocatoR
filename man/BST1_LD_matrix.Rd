@@ -3,7 +3,7 @@
 \docType{data}
 \name{BST1_LD_matrix}
 \alias{BST1_LD_matrix}
-\title{LD with the lead SNP (BST1 locus)}
+\title{LD with the lead SNP: BST1 locus}
 \format{
 data.table
 \describe{

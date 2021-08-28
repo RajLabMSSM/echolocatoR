@@ -21,10 +21,10 @@ to genome-wide datasets
 
 > BM Schilder, J Humphrey & T Raj (2020) echolocatoR: an automated
 > end-to-end statistical and functional genomic fine-mapping pipeline.
-> *bioRxiv* 2020.10.22.351221; doi:
-> <https://doi.org/10.1101/2020.10.22.351221>
+> *bioRxiv* 2020.10.22.351221;
+> doi:<https://doi.org/10.1101/2020.10.22.351221>
 
-#### For applications of *echolocatoR* in the literature, please see:
+#### For applications of ***echolocatoR*** in the literature, please see:
 
 > 1.  E Navarro, E Udine, K de Paiva Lopes, M Parks, G Riboldi, BM
 >     Schilder…T Raj (2020) Discordant transcriptional signatures of
@@ -32,12 +32,12 @@ to genome-wide datasets
 >     *bioRxiv*; <https://doi.org/10.1101/2020.07.20.212407>
 > 2.  BM Schilder & T Raj (2020) Fine-Mapping of Parkinson’s Disease
 >     Susceptibility Loci Identifies Putative Causal Variants.
->     *bioRxiv*, 0–30; <https://doi.org/10.1101/2020.10.22.340158>.
+>     *bioRxiv*, 0–30;<https://doi.org/10.1101/2020.10.22.340158>.
 > 3.  K de Paiva Lopes, GJL Snijders, J Humphrey, A Allan, M Sneeboer, E
 >     Navarro, BM Schilder…T Raj (2020) Atlas of Genetic Effects in
 >     Human Microglia Transcriptome across Brain Regions, Aging and
 >     Disease Pathologies.
->     *bioRxiv*; <https://doi.org/10.1101/2020.10.27.356113>.
+>     *bioRxiv*;<https://doi.org/10.1101/2020.10.27.356113>.
 
 ## Documentation
 
@@ -104,20 +104,17 @@ to create a [*conda*](https://docs.conda.io/en/latest/) environment.
 1.  If you haven’t done so already, install
     [*conda*](https://docs.conda.io/en/latest/).
 
-2.  Download the *echoR.yml* file found
-    [here](https://github.com/RajLabMSSM/echolocatoR/blob/master/inst/conda/echoR.yml)
-    (this file tells *conda* what to install).
+2.  In command line, create the env from the *.yml* file (this file
+    tells *conda* what to install):
+    `conda env create -f https://github.com/RajLabMSSM/echolocatoR/raw/master/inst/conda/echoR.yml`
 
-3.  In command line, create the env from the *.yml* file:  
-    `conda env create -f <path_to_file>/echoR.yml`
-
-4.  Activate the new env:  
+3.  Activate the new env:  
     `conda activate echoR`
 
-5.  Install *echolocatoR* from command line so that it installs
+4.  Install *echolocatoR* from command line so that it installs
     **within** the *conda* env:
 
-6.  Open Rstudio from the command line interface (not by clicking the
+5.  Open Rstudio from the command line interface (not by clicking the
     Rstudio icon). This helps to ensure Rstudio can find the paths to
     the packages in the conda env:  
     `open model_celltype_conservation.Rproj`
@@ -129,10 +126,10 @@ to create a [*conda*](https://docs.conda.io/en/latest/) environment.
     computing clusters that don’t support RStudio or other IDEs.  
     `radian`
 
-7.  Finally, to make extra sure ***echolocatoR*** uses the packages in
+6.  Finally, to make extra sure ***echolocatoR*** uses the packages in
     this env (esp. if using from RStudio), you can then supply the env
-    name to the `finemap_loci()` function (and many other *echolocatoR*
-    functions) using `conda_env="echoR"`.
+    name to the `finemap_loci()` function (and many other
+    ***echolocatoR*** functions) using `conda_env="echoR"`.
 
 ### Binary installation
 
@@ -145,12 +142,12 @@ See the README within the folder for further instructions.
 
 Lastly, if you’d like (or if for some reason none of the other
 installation methods are working for you), you can alternatively clone
-and then build *echolocatoR*:
+and then build ***echolocatoR***:
 
 1.  Clone *echolocatoR:  
     `git clone https://github.com/RajLabMSSM/echolocatoR.git`*
 2.  Open *echolocatoR.Rproj* within the echolocatoR folder.
-3.  Then, within *Rstudio*, build *echolocatoR* by clicking the
+3.  Then, within *Rstudio*, build ***echolocatoR*** by clicking the
     following drop down menu items: `Build --> Install and Restart` (or
     pressing the keys `CMD + SHIFT + B` on a Mac).
 
@@ -176,15 +173,6 @@ to install them afterwards if needed:
 library(echolocatoR)
 extra_installs()
 ```
-
-**data.table**:
-\[*data.table*\](<https://github.com/Rdatatable/data.table)> is a great
-R package for reading/writing/transforming tables far faster than base R
-methods. Unfortunately, in *data.table v1.14* they made some changes
-that cause errors reading/writing with compressed files (*.gz*) without
-additional setup steps on your computer. Therefore, I recommend you use
-versions v1.13 (the current CRAN binary distribution, NOT the source
-distribution, as of Feb 2021).
 
 #### Python
 
@@ -297,7 +285,7 @@ Additional required columns:
 
 ## Multi-finemap results files
 
-The main output of **echolocatoR** are the multi-finemap files (for
+The main output of ***echolocatoR*** are the multi-finemap files (for
 example, `data("BST1")`). They are stored in the locus-specific
 *Multi-finemap* subfolders.
 

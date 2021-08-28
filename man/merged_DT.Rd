@@ -3,7 +3,7 @@
 \docType{data}
 \name{merged_DT}
 \alias{merged_DT}
-\title{\emph{echolocatoR} output example (all loci)}
+\title{\emph{echolocatoR} output example: all loci}
 \format{
 data.table
 \describe{
@@ -20,7 +20,7 @@ data.table
 merged_DT
 }
 \description{
-An example results file after running \code{\link[=finemap_loci]{finemap_loci()}}
+An example results file after running \code{finemap_loci}
  on all Parkinson's disease (PD)-associated loci.
 }
 \details{

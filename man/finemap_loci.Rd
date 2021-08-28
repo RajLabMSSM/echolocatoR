@@ -7,7 +7,7 @@
 finemap_loci(
   loci,
   fullSS_path,
-  fullSS_genome_build = "hg19",
+  fullSS_genome_build = NULL,
   LD_genome_build = "hg19",
   dataset_name = "dataset_name",
   dataset_type = "GWAS",
@@ -20,6 +20,7 @@ finemap_loci(
   finemap_args = NULL,
   bp_distance = 5e+05,
   n_causal = 5,
+  munged = FALSE,
   chrom_col = "CHR",
   chrom_type = NULL,
   position_col = "POS",
@@ -27,7 +28,7 @@ finemap_loci(
   pval_col = "P",
   effect_col = "Effect",
   stderr_col = "StdErr",
-  tstat_col = "t-stat",
+  tstat_col = "t_stat",
   MAF_col = "MAF",
   locus_col = "Locus",
   freq_col = "Freq",
@@ -136,6 +137,10 @@ resulting in a locus that is ~1Mb long (depending on the dataset).}
 \item{n_causal}{The maximum number of potential causal SNPs per locus.
 This parameter is used somewhat differntly by different fine-mapping tools.
 See tool-specific functions for details.}
+
+\item{munged}{Whether \code{fullSS_path} have already been standardised/filtered  full summary stats
+with \code{MungeSumstats::format_sumstats}.
+If \code{munged=FALSE} you'll need to provide the necessary column name arguments.}
 
 \item{chrom_col}{Name of the chromosome column in the full summary stats file.
 Can be "chr1" or "1" format.
@@ -246,7 +251,7 @@ Setting the superpopulation is not currently possible when \code{LD_reference="U
 \item{"SAS"}{South Asian}
 }}
 
-\item{remote_LD}{When acquiring LD matrixes,
+\item{remote_LD}{When acquiring LD matrices,
 the default is to delete the full vcf or npz files after \pkg{echolocatoR} has extracted the necssary subset.
 However, if you wish to keep these full files (which can be quite large) set \code{remote_LD=T}.}
 

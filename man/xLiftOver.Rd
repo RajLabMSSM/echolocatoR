@@ -19,5 +19,5 @@ xLiftOver(
 Transfer your genomic coordinates from one genome build to another.
 }
 \details{
-
+\code{xLiftOver} was extracted from the \href{http://xgr.r-forge.r-project.org}{XGR} package.
 }

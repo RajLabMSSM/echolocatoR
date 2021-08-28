@@ -1,0 +1,180 @@
+---
+title: "echolocatoR: full pipeline vignette" 
+author: "Brian M. Schilder"
+date: "Most recent update:<br> `r Sys.Date()`"
+output: 
+  rmarkdown::html_document: 
+    theme: spacelab
+    highlight: zenburn 
+    code_folding: show 
+    toc: true 
+    toc_float: true
+    smooth_scroll: true
+    number_sections: false 
+    self_contained: true
+editor_options: 
+  chunk_output_type: inline
+vignette: >
+  %\VignetteIndexEntry{echolocatoR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = F, message=F, error = T} 
+root.dir <- tempdir()
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  root.dir = root.dir,
+  fig.height = 12,
+  fig.width = 10
+)  
+knitr::opts_knit$set(root.dir = root.dir)  
+```
+
+```{r setup}
+library(echolocatoR) 
+```
+
+# Full pipeline  
+
+All examples below use data from the Parkinson's disease GWAS by Nalls et al. (2019).  
+
+## Prepare `top_SNPs` data.frame   
+
+* To enable rapid fine-mapping of many loci, you can create a `top_SNPs` data.frame  
+which contains the position of the lead/index SNP within each locus.
+* `finemap_loci()` (see next step) will then use this info to extract subsets of the   
+full GWAS/QTL summary statistics using windows centered on each lead/index SNP.
+* The `topSS` argument can either be a data.frame, or a path to a topSS file saved somehwere. Most common tabular data formats (e.g. .tsv, .csv, .xlsx) are accepted.  
+
+
+
+```{r  Prepare `top_SNPs` data.frame} 
+data("Nalls_top_SNPs");
+top_SNPs <- import_topSNPs(
+  # topSS = "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/Nalls2019_TableS2.xlsx",
+  topSS = Nalls_top_SNPs,
+  munge = TRUE,
+  ref_genome = "GRCH37", 
+  pval_col="P, all studies", 
+  effect_col="Beta, all studies", 
+  gene_col="Nearest Gene", 
+  locus_col = "Nearest Gene",
+  grouping_vars = c("Locus"),
+  remove_variants = "rs34637584") 
+head(top_SNPs)
+```
+
+
+
+## Path to full summary stats file  
+
+* Since a full GWAS summary stats file would be too large to include within *echolocatoR*,  
+we instead provide an example subset of the full summary stats.  
+
+* To simulate how you'd actually use your own full summary stats file, we will save our example dataset to your computer (you can change the path to wherever you like). 
+
+* We highly recommend munging your full summary stats using the Bioconductor package [`MungeSumstats`](https://github.com/neurogenomics/MungeSumstats) first. It's easy to use and very robust. It also means you don't have to provide most column mapping arguments in `finemap_loci` when `munged=TRUE`. 
+
+Here's an example of how to munge your full summary stats file: 
+
+```
+fullSS_path <- example_fullSS(munged = FALSE)
+fullSS_path <- MungeSumstats::format_sumstats(path = fullSS_path, ref_genome = "GRCH37")
+```
+
+We have already munged the following example summary stats for you.
+
+```{r fullSS} 
+fullSS_path <- example_fullSS(munged = TRUE)
+```
+
+## Run fine-mapping pipeline  
+
+For a full description of all arguments, see `?finemap_loci`.  
+
+Here are some key arguments:  
+
+* *results_dir*: Where you want to store all of your results.  
+* *finemap_methods*: Which fine-mapping methods you want to run (currently includes ABF, FINEMAP, SUSIE, POLYFUN_SUSIE, and COJO).  
+* *bp_distance*: Controls window size. Specifically, `bp_distance` is the number of basepairs upstream/downstream you want to extract for each locus. For example, if you want a 2Mb window (+/- 1Mb from the lead/index SNP in `top_SNPs`), set `bp_distance=1e+06`.  
+* *plot.zoom*: Zoom in/out from the center of each locus when producing the multiview plot.  
+You can adjust this separately from `bp_distance` so that you don't have rerun the whole pipeline each time (locus subsets, LD matrices, and fine-mapping results are all automatically saved in locus-specific folders).  
+
+**NOTE**: This example assumes you have already installed tabix (via htslib) and bcftoools.
+
+**WARNING**: Please use the full absolute paths (instead of relative paths) wherever possible (e.g. `results_dir`). This is especially important for the tool *FINEMAP*.
+
+```{r Run fine-mapping pipeline, eval=F}
+
+Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS 
+                                          top_SNPs = top_SNPs,  
+                                          #  It's best to give absolute paths
+                                          results_dir = file.path(root.dir,"results"),
+                                          loci = c("BST1","MEX3C"),# top_SNPs$Locus,
+                                          dataset_name = "Nalls23andMe_2019",
+                                          dataset_type = "GWAS",  
+                                          force_new_subset = TRUE,
+                                          force_new_LD = FALSE,
+                                          force_new_finemap = TRUE,
+                                          remove_tmps = FALSE,
+                                          
+                                          # Munge full sumstats first
+                                          munged = TRUE,
+                                          
+                                          # SUMMARY STATS ARGUMENTS
+                                          fullSS_path = fullSS_path,
+                                          fullSS_genome_build = "hg19",
+                                          query_by ="tabix",  
+                                          MAF_col = "calculate",   
+                                         
+                                          # FILTERING ARGUMENTS
+                                          ## It's often desirable to use a larger window size 
+                                          ## (e.g. 2Mb which is bp_distance=500000*2), 
+                                          ## but we use a small window here to speed up the process. 
+                                          bp_distance = 10000,#500000*2,
+                                          min_MAF = 0.001,  
+                                          trim_gene_limits = FALSE,
+                                         
+                                          # FINE-MAPPING ARGUMENTS
+                                          ## General
+                                          finemap_methods = c("ABF","FINEMAP","SUSIE","POLYFUN_SUSIE"), 
+                                          n_causal = 5,
+                                          PP_threshold = .95, 
+                                         
+                                          # LD ARGUMENTS 
+                                          LD_reference = "1KGphase1",#"UKB",
+                                          superpopulation = "EUR",
+                                          download_method = "axel",
+                                         
+                                          # PLOT ARGUMENTS 
+                                          ## general   
+                                          plot.types = c("fancy"),
+                                          ## Generate multiple plots of different window sizes; 
+                                          ### all SNPs, 4x zoomed-in, and a 50000bp window
+                                          plot.zoom = c("all","4x","10x"),
+                                          ## XGR
+                                          # plot.XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes"), 
+                                          ## Roadmap
+                                          plot.Roadmap = FALSE,
+                                          plot.Roadmap_query = NULL,
+                                          # Nott et al. (2019)
+                                          plot.Nott_epigenome = TRUE, 
+                                          plot.Nott_show_placseq = TRUE, 
+                                         
+                                          verbose = TRUE
+                                          )
+```
+
+# Session info  
+
+<details>
+
+```{r Session Info, attr.output='style="max-height: 200px;"'}
+utils::sessionInfo()
+```
+
+</details>
+
+

@@ -8,7 +8,7 @@ TABIX.convert_file(
   fullSS_path,
   chrom_col = "CHR",
   position_col = "POS",
-  verbose = T
+  verbose = TRUE
 )
 }
 \arguments{
@@ -30,8 +30,8 @@ Convert summary stats file to tabix format
 }
 \examples{
 \dontrun{
-fullSS_path <- example_fullSS(fullSS_path=file.path(tempdir(),"Nalls23andMe_2019.fullSS_subset.tsv") )
-fullSS.gz <- TABIX.convert_file(fullSS_path=fullSS_path, chrom_col="CHR", position_col="POS")
+fullSS_path <- example_fullSS()
+fullSS_tabix <- TABIX.convert_file(fullSS_path=fullSS_path, chrom_col="CHR", position_col="POS")
 }
 }
 \seealso{

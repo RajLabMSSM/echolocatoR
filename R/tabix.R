@@ -28,17 +28,17 @@
 TABIX <- function(fullSS_path,
                   study_dir=NULL,
                   subset_path=NULL,
-                  is_tabix=F,
+                  is_tabix=FALSE,
                   chrom_col="CHR",
                   chrom_type=NULL,
                   position_col="BP",
                   min_POS,
                   max_POS,
                   chrom,
-                  save_subset=T,
+                  save_subset=TRUE,
                   nThread=1,
                   conda_env="echoR",
-                  verbose=T){
+                  verbose=TRUE){
   #### Check if it's already an indexed tabix file ####
   tabix_out <- construct_tabix_path(fullSS_path = fullSS_path,
                                     study_dir = study_dir)
@@ -117,7 +117,7 @@ infer_if_tabix <- function(file_path){
 TABIX.convert_file <- function(fullSS_path,
                                chrom_col="CHR",
                                position_col="POS",
-                               verbose=T){
+                               verbose=TRUE){
   printer("TABIX:: Converting full summary stats file to tabix format for fast querying...",v=verbose)
   cDict <-  column_dictionary(file_path = fullSS_path)
   # Make sure input file isn't empty

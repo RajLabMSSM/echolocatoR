@@ -30,7 +30,7 @@ Options include:
 \item{"<path>/*.vcf" or "<path>/*.vcf.gz"}{Alternatively, users can provide their own custom panel by supplying a list of \emph{.vcf} file path (one per locus) which \pkg{echolocatoR} will use to compute LD (using \emph{plink}).}
 }}
 
-\item{remote_LD}{When acquiring LD matrixes,
+\item{remote_LD}{When acquiring LD matrices,
 the default is to delete the full vcf or npz files after \pkg{echolocatoR} has extracted the necssary subset.
 However, if you wish to keep these full files (which can be quite large) set \code{remote_LD=T}.}
 

@@ -2,10 +2,10 @@
 
 
 
-check_tools <- function(check_tabix=T,
-                        stop_for_tabix=F,
-                        check_bcftools=T,
-                        stop_for_bcftools=F,
+check_tools <- function(check_tabix=FALSE,
+                        stop_for_tabix=FALSE,
+                        check_bcftools=FALSE,
+                        stop_for_bcftools=FALSE,
                         conda_env=NULL){
   if(check_tabix){
     printer("Checking for tabix installation...")

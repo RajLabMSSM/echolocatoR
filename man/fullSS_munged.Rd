@@ -3,7 +3,7 @@
 \docType{data}
 \name{fullSS_munged}
 \alias{fullSS_munged}
-\title{Example subset of full summary stats (munged)}
+\title{Example subset of full summary stats: munged}
 \format{
 An object of class \code{data.table} (inherits from \code{data.frame}) with 37033 rows and 11 columns.
 }

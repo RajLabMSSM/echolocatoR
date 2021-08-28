@@ -8,17 +8,17 @@ TABIX(
   fullSS_path,
   study_dir = NULL,
   subset_path = NULL,
-  is_tabix = F,
+  is_tabix = FALSE,
   chrom_col = "CHR",
   chrom_type = NULL,
-  position_col = "POS",
+  position_col = "BP",
   min_POS,
   max_POS,
   chrom,
-  save_subset = T,
+  save_subset = TRUE,
   nThread = 1,
   conda_env = "echoR",
-  verbose = T
+  verbose = TRUE
 )
 }
 \arguments{
@@ -56,16 +56,16 @@ A query is then made using the min/max genomic positions to extract a locus-spec
 }
 \examples{
 \dontrun{
-data("locus_dir"); data("Nalls_top_SNPs"); data("top_SNPs")
-fullSS_path <- example_fullSS(fullSS_path=file.path(root.dir,"Nalls23andMe_2019.fullSS_subset.tsv") )
+data("Nalls_top_SNPs"); data("top_SNPs")
+fullSS_path <- example_fullSS()
 top_SNPs_BST1 <- subset(top_SNPs, Locus=='BST1')
 bp_distance <- 1e+06
 min_POS <- top_SNPs_BST1$POS - bp_distance
 max_POS <- top_SNPs_BST1$POS + bp_distance
 
-subset_file <- file.path(results_path,"BST1_Nalls23andMe_2019_subset.tsv.gz")
+subset_path <- file.path("BST1_Nalls23andMe_2019_subset.tsv.gz")
 dat <- TABIX(fullSS_path=fullSS_path,
-             subset_path="auto",
+             subset_path=subset_path,
              min_POS=min_POS,
              max_POS=max_POS,
              chrom=top_SNPs_BST1$CHR)

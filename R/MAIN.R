@@ -301,7 +301,7 @@
 #'  \item{"EUR"}{European}
 #'  \item{"SAS"}{South Asian}
 #'  }
-#' @param remote_LD When acquiring LD matrixes,
+#' @param remote_LD When acquiring LD matrices,
 #'  the default is to delete the full vcf or npz files after \pkg{echolocatoR} has extracted the necssary subset.
 #'  However, if you wish to keep these full files (which can be quite large) set \code{remote_LD=T}.
 #' @param plot_LD Whether to plot a subset of the LD matix.
@@ -340,7 +340,7 @@
 #' @export
 finemap_pipeline <- function(locus,
                              fullSS_path,
-                             fullSS_genome_build="hg19",
+                             fullSS_genome_build=NULL,
                              LD_genome_build="hg19",
                              results_dir,
                              dataset_name="dataset_name",
@@ -649,6 +649,9 @@ finemap_pipeline <- function(locus,
 #' @param loci The list of loci you want to fine-map.
 #' If \code{subset_path="auto"} (\emph{default}), a locus subset file name is automatically constructed as:
 #' \emph{Data/<dataset_type>/<dataset_name>/<locus>/Multi-finemap/<locus>_<dataset_name>_Multi-finemap.tsv.gz}
+#' @param munged Whether \code{fullSS_path} have already been standardised/filtered  full summary stats
+#' with \code{MungeSumstats::format_sumstats}.
+#' If \code{munged=FALSE} you'll need to provide the necessary column name arguments.
 #' @inheritParams finemap_pipeline
 #' @return A merged data.frame with all fine-mapping results from all loci.
 #' @examples
@@ -732,7 +735,7 @@ finemap_pipeline <- function(locus,
 #' @export
 finemap_loci <- function(loci,
                          fullSS_path,
-                         fullSS_genome_build="hg19",
+                         fullSS_genome_build=NULL,
                          LD_genome_build="hg19",
                          dataset_name="dataset_name",
                          dataset_type="GWAS",
@@ -745,6 +748,8 @@ finemap_loci <- function(loci,
                          finemap_args=NULL,
                          bp_distance=500000,
                          n_causal=5,
+                         munged=FALSE,
+
                          chrom_col="CHR",
                          chrom_type=NULL,
                          position_col="POS",
@@ -752,7 +757,7 @@ finemap_loci <- function(loci,
                          pval_col="P",
                          effect_col="Effect",
                          stderr_col="StdErr",
-                         tstat_col = "t-stat",
+                         tstat_col = "t_stat",
                          MAF_col="MAF",
                          locus_col="Locus",
                          freq_col="Freq",
@@ -811,12 +816,14 @@ finemap_loci <- function(loci,
                          nThread=4,
                          verbose=T){
   CONDA.activate_env(conda_env = conda_env)
-
-  check_tools(check_tabix=T,
-              stop_for_tabix=query_by=="tabix",
-              check_bcftools=T,
+  check_tools(check_tabix=TRUE,
+              stop_for_tabix=TRUE,
+              check_bcftools=TRUE,
               stop_for_bcftools=LD_reference %in% c("1KGphase1","1KGphase3"),
               conda_env=conda_env)
+  fullSS_genome_build <- check_genome(gbuild=fullSS_genome_build,
+                                      munged=munged,
+                                      fullSS_path=fullSS_path)
   data.table::setDTthreads(threads = nThread);
   conditioned_snps <- snps_to_condition(conditioned_snps, top_SNPs, loci);
 
@@ -824,6 +831,18 @@ finemap_loci <- function(loci,
     printer("Reassigning gene-specific locus names",v=verbose)
     loci <- setNames(paste(unname(loci),names(loci),sep="_"), names(loci))
   }
+
+  #### MungeSumstats ####
+  if(munged){
+    printer("+ Assuming sumstats have already been processed with MungeSumstats", v=verbose)
+    map <- MUNGESUMSTATS.col_map()
+    chrom_col <- map$chrom_col; position_col <- map$position_col; snp_col <- map$snp_col;
+    pval_col <- map$pval_col; effect_col <- map$effect_col; stderr_col <- map$stderr_col;
+    MAF_col <- map$MAF_col; freq_col <- map$freq_col;
+    N_cases_col <- map$N_cases_col;  N_controls_col <- map$N_controls_col;
+    A1_col <- map$A1_col; A2_col <- map$A2_col;
+  }
+
 
   FINEMAP_DAT <- lapply(1:length(unique(loci)), function(i){
     start_gene <- Sys.time()

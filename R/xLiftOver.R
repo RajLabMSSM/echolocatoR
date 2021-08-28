@@ -1,13 +1,9 @@
-
-
-
-
-
 #' Genome build liftover
 #'
 #' Transfer your genomic coordinates from one genome build to another.
 #'
-#' \code{xLiftOver} was extracted from the \href{http://xgr.r-forge.r-project.org}(XGR} package.
+#' \code{xLiftOver} was extracted from the \href{http://xgr.r-forge.r-project.org}{XGR} package.
+#'
 #' @export
 xLiftOver <- function (data.file,
                        format.file = c("data.frame", "bed", "chr:start-end",
@@ -15,9 +11,9 @@ xLiftOver <- function (data.file,
                        build.conversion = c(NA, "hg38.to.hg19", "hg19.to.hg38",
                                             "hg19.to.hg18", "hg18.to.hg38", "hg18.to.hg19"),
                        merged = T,
-          verbose = T, RData.location = "http://galahad.well.ox.ac.uk/bigdata",
-          guid = NULL)
-{
+                       verbose = T,
+                       RData.location = "http://galahad.well.ox.ac.uk/bigdata",
+                       guid = NULL){
   startT <- Sys.time()
   message(paste(c("Start at ", as.character(startT)), collapse = ""),
           appendLF = T)
