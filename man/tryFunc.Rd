@@ -16,7 +16,6 @@ Extension of tryCatch function.
 }
 \seealso{
 Other general: 
-\code{\link{.rbind.file.list}()},
 \code{\link{createDT_html}()},
 \code{\link{createDT}()},
 \code{\link{dt.replace}()},

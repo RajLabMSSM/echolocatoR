@@ -3,7 +3,7 @@
 \docType{data}
 \name{LRRK2}
 \alias{LRRK2}
-\title{\pkg{echolocatoR} output example (LRRK2 locus)}
+\title{\pkg{echolocatoR} output example: LRRK2 locus}
 \format{
 data.table
 \describe{

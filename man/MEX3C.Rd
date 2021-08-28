@@ -3,7 +3,7 @@
 \docType{data}
 \name{MEX3C}
 \alias{MEX3C}
-\title{\emph{echolocatoR} output example (MEX3C locus)}
+\title{\emph{echolocatoR} output example: MEX3C locus}
 \format{
 data.table
 \describe{

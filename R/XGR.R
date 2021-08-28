@@ -60,19 +60,6 @@ GRanges_to_BED <- function(GR.annotations,
 
 
 
-#' Convert data.table to GRanges object
-#'
-#' @family XGR
-#' @keywords internal
-DT_to_GRanges <- function(subset_DT){
-  dat <-  dplyr::mutate(subset_DT, SEQnames = paste0("chr",CHR))
-  gr.snp <- biovizBase::transformDfToGr(dat,
-                                        seqnames = "SEQnames",
-                                        start = "POS",
-                                        end = "POS")
-  GenomeInfoDb::seqlevelsStyle(gr.snp) <- "NCBI"
-  return(gr.snp)
-}
 
 #' Prepare SNP sets for enrichment
 #'

@@ -14,7 +14,6 @@ Annoyingly, there is no native function to do simple find-and-replace in the `DT
 }
 \seealso{
 Other general: 
-\code{\link{.rbind.file.list}()},
 \code{\link{createDT_html}()},
 \code{\link{createDT}()},
 \code{\link{example_fullSS}()},

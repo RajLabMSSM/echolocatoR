@@ -7,7 +7,7 @@
 finemap_pipeline(
   locus,
   fullSS_path,
-  fullSS_genome_build = "hg19",
+  fullSS_genome_build = NULL,
   LD_genome_build = "hg19",
   results_dir,
   dataset_name = "dataset_name",
@@ -242,7 +242,7 @@ Setting the superpopulation is not currently possible when \code{LD_reference="U
 \item{"SAS"}{South Asian}
 }}
 
-\item{remote_LD}{When acquiring LD matrixes,
+\item{remote_LD}{When acquiring LD matrices,
 the default is to delete the full vcf or npz files after \pkg{echolocatoR} has extracted the necssary subset.
 However, if you wish to keep these full files (which can be quite large) set \code{remote_LD=T}.}
 

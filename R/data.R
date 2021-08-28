@@ -1,12 +1,10 @@
-
-
-#' \pkg{echolocatoR} output example (BST1 locus)
+#' \pkg{echolocatoR} output example: BST1 locus
 #'
 #' An example results file after running
-#' \code{\link[=finemap_loci]{finemap_loci()}} on the \emph{BST1} locus.
+#' \code{finemap_loci} on the \emph{BST1} locus.
 #'
 #' Data originally comes from the Parkinson's disease GWAS
-#' by \href{https://www.biorxiv.org/content/10.1101/388165v3}{Nalls et al. (bioRxiv)}.
+#' by \href{https://www.biorxiv.org/content/10.1101/388165v3}{Nalls et al., (bioRxiv)}.
 #'
 #' @format data.table
 #' \describe{
@@ -29,7 +27,7 @@
 
 
 
-#' \pkg{echolocatoR} output example (LRRK2 locus)
+#' \pkg{echolocatoR} output example: LRRK2 locus
 #'
 #' An example results file after running
 #' \code{\link[=finemap_loci]{finemap_loci()}} on the \emph{LRRK2} locus.
@@ -58,7 +56,7 @@
 
 
 
-#' \emph{echolocatoR} output example (MEX3C locus)
+#' \emph{echolocatoR} output example: MEX3C locus
 #'
 #' An example results file after running
 #' \code{\link[=finemap_loci]{finemap_loci()}} on the \emph{MEX3C} locus.
@@ -91,7 +89,7 @@
 
 
 
-#' "Example subset of full summary stats
+#' Example subset of full summary stats
 #'
 #' Data originally comes from the Parkinson's disease GWAS
 #' by \href{https://www.biorxiv.org/content/10.1101/388165v3}{Nalls et al. (bioRxiv)}.
@@ -117,6 +115,25 @@
 "fullSS_dat"
 
 
+#' Example subset of full summary stats: munged
+#'
+#' Data originally comes from the Parkinson's disease GWAS
+#' by \href{https://www.biorxiv.org/content/10.1101/388165v3}{Nalls et al. (bioRxiv)}.
+#'
+#' Munged using \pkg{MungeSumstats}.
+#'
+#' @source \url{https://www.biorxiv.org/content/10.1101/388165v3}
+#' @examples
+#' A subset of the full GWAS summary stats from Nalls et al. (2019)
+#' \dontrun{
+#' data("fullSS_dat")
+#' tmp_file <- tempfile(fileext = ".tsv.gz")
+#' data.table::fwrite(fullSS_dat, tmp_file)
+#' fullSS_munged <- MungeSumstats::format_sumstats(tmp_file, ref_genome = "GRCh37", return_data = TRUE)
+#' usethis::use_data(fullSS_munged, overwrite=TRUE)
+#' }
+"fullSS_munged"
+
 
 
 #' Example results path for BST1 locus
@@ -141,7 +158,7 @@
 
 
 
-#' LD with the lead SNP (BST1 locus)
+#' LD with the lead SNP: BST1 locus
 #'
 #' Precomputed LD within the \emph{BST1} locus
 #'  (defined in \code{\link[=BST1]{BST1}}.
@@ -180,9 +197,9 @@
 
 
 
-#' \emph{echolocatoR} output example (all loci)
+#' \emph{echolocatoR} output example: all loci
 #'
-#' An example results file after running \code{\link[=finemap_loci]{finemap_loci()}}
+#' An example results file after running \code{finemap_loci}
 #'  on all Parkinson's disease (PD)-associated loci.
 #'
 #' Data originally comes from the PD GWAS

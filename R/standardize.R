@@ -90,7 +90,7 @@ standardize_subset <- function(locus,
 
     # Liftover if needed
     ## Do this step BEFORE inferring MAF from external source
-    if(!fullSS_genome_build %in% c("hg19","GRCh37","grch37")){
+    if(!toupper(fullSS_genome_build) %in% c("HG19","HG37","GRCH37")){
       query_mod <- LIFTOVER(dat = query_mod,
                             build.conversion = paste0(fullSS_genome_build,".to.hg19"),
                             chrom_col = "CHR", start_col = "POS", end_col = "POS",
