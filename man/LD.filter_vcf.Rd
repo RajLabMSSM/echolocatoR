@@ -9,7 +9,8 @@ LD.filter_vcf(vcf_subset, popDat, superpopulation, remove_tmp = T, verbose = T)
 \arguments{
 \item{vcf_subset}{Path to the locus subset vcf.}
 
-\item{popDat}{The metadata file listing the superpopulation to which each sample belongs.}
+\item{popDat}{The metadata file listing the superpopulation
+to which each sample belongs.}
 
 \item{superpopulation}{Subset your LD reference panel by superopulation.
 Setting the superpopulation is not currently possible when \code{LD_reference="UKB"}.
@@ -25,7 +26,8 @@ Setting the superpopulation is not currently possible when \code{LD_reference="U
 \item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
 }
 \description{
-Uses \emph{bcftools} to filter a vcf by min/max genomic coordinates (in basepairs).
+Uses \emph{bcftools} to filter a vcf by min/max genomic coordinates
+(in basepairs).
 }
 \seealso{
 Other LD: 

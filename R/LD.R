@@ -721,8 +721,8 @@ LD.query_vcf <- function(subset_DT,
 }
 
 
-LD.query_vcf <- function(vcf_url,
-                         subset_DT){
+LD.query_vcf_variantannotation <- function(vcf_url,
+                                           subset_DT){
   # vcf_url <- "ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20110521//ALL.chr18.phase1_release_v3.20101123.snps_indels_svs.genotypes.vcf.gz"
   # subset_DT <- echolocatoR::BST1
   # https://github.com/Bioconductor/VariantAnnotation/issues/29
@@ -743,8 +743,7 @@ LD.query_vcf <- function(vcf_url,
   vcf <- VariantAnnotation::VcfFile(file = vcf_url,
                                     index = paste0(vcf_url,".tbi"))
   line2 <- VariantAnnotation::readVcf(file=vcf,
-                                      genome = "hg19",
-                                      param = gr)
+                                      genome = "hg19", param = gr)
 
   open(vcf)
   repeat {

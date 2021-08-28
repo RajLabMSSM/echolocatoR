@@ -27,7 +27,8 @@ Setting the superpopulation is not currently possible when \code{LD_reference="U
 \item{"SAS"}{South Asian}
 }}
 
-\item{popDat}{The metadata file listing the superpopulation to which each sample belongs.}
+\item{popDat}{The metadata file listing the superpopulation
+to which each sample belongs.}
 
 \item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
 }
