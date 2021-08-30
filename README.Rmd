@@ -119,7 +119,8 @@ to create a [*conda*](https://docs.conda.io/en/latest/) environment.
 1.  If you haven't done so already, install
     [*conda*](https://docs.conda.io/en/latest/). 
     
-2.  In command line, create the env from the *.yml* file (this file tells *conda* what to install): 
+2.  In command line, create the env from the *.yml* file (this file tells *conda* what to install):  
+
     `conda env create -f https://github.com/RajLabMSSM/echolocatoR/raw/master/inst/conda/echoR.yml`
 
 3.  Activate the new env:  

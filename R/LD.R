@@ -161,36 +161,51 @@ LD.filter_LD <- function(LD_list,
                          remove_correlates=F,
                          min_r2=0,
                          verbose=F){
-  printer("+ FILTER:: Filtering by LD features.", v=verbose)
-  subset_DT <- LD_list$DT
+  # Avoid confusing checks
+  filter_LD <- NULL;
+
+  messager("+ FILTER:: Filtering by LD features.", v = verbose)
+  dat <- LD_list$DT
   LD_matrix <- LD_list$LD
-  if(any(remove_correlates!=F)){
+  if (any(remove_correlates != FALSE)) {
     # remove_correlates <- c("rs76904798"=.2, "rs10000737"=.8)
-    for(snp in names(remove_correlates)){
+    for (snp in names(remove_correlates)) {
       thresh <- remove_correlates[[snp]]
-      printer("+ FILTER:: Removing correlates of",snp,"at r2 ≥",thresh,v=verbose)
-      if(snp %in% row.names(LD_matrix)){
-        correlates <- colnames(LD_matrix[snp,])[LD_matrix[snp,]>=sqrt(thresh)]
-        LD_matrix <- LD_matrix[(!row.names(LD_matrix) %in% correlates),
-                               (!colnames(LD_matrix) %in% correlates)]
+      messager("+ FILTER:: Removing correlates of",
+               snp, "at r2 >=", thresh, v = verbose)
+      if (snp %in% row.names(LD_matrix)) {
+        select_r2 <- LD_matrix[snp, ]
+        correlates <- names(select_r2)[select_r2 >= sqrt(thresh)]
+        LD_matrix <- LD_matrix[
+          (!row.names(LD_matrix) %in% correlates),
+          (!colnames(LD_matrix) %in% correlates)
+        ]
       }
     }
   }
-  if(min_r2!=0 & min_r2!=F){
-    printer("+ FILTER:: Removing SNPs that don't correlate with lead SNP at r2 ≤",min_r2,v=verbose)
-    LD_list <- subset_common_snps(LD_matrix = LD_matrix,
-                                  finemap_dat = subset_DT,
-                                  verbose = F)
-    subset_DT <- LD_list$DT
+  if (all((min_r2 != 0) & ( min_r2 != FALSE))) {
+    messager("+ FILTER:: Removing SNPs that don't correlate with lead SNP",
+             "at r2 <=", paste0(min_r2,"."),v = verbose)
+    LD_list <- subset_common_snps(
+      LD_matrix = LD_matrix,
+      finemap_dat = dat,
+      verbose = FALSE
+    )
+    dat <- LD_list$DT
     LD_matrix <- LD_list$LD
-    lead.snp <- subset(subset_DT, leadSNP)$SNP[1]
-    correlates <- colnames(LD_matrix[lead.snp,])[LD_matrix[lead.snp,]>=sqrt(min_r2)]
-    LD_matrix <- LD_matrix[(row.names(LD_matrix) %in% correlates),
-                           (colnames(LD_matrix) %in% correlates)]
+    lead.snp <- subset(dat, leadSNP)$SNP[1]
+    lead.snp_r2 <- LD_matrix[lead.snp, ]
+    correlates <- names(lead.snp_r2)[lead.snp_r2 >= sqrt(min_r2)]
+    LD_matrix <- LD_matrix[
+      (row.names(LD_matrix) %in% correlates),
+      (colnames(LD_matrix) %in% correlates)
+    ]
   }
-  LD_list <- subset_common_snps(LD_matrix = LD_matrix,
-                                finemap_dat = subset_DT,
-                                verbose = F)
+  LD_list <- subset_common_snps(
+    LD_matrix = LD_matrix,
+    finemap_dat = dat,
+    verbose = FALSE
+  )
   return(LD_list)
 }
 
