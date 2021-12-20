@@ -72,5 +72,6 @@ dependencies:
   - bioconductor-ggbio
   - bioconductor-ensdb.hsapiens.v75
   - bioconductor-biomart
+  - bioconductor-mungesumstats
   - radian
   - pip

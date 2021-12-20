@@ -80,14 +80,14 @@ we instead provide an example subset of the full summary stats.
 Here's an example of how to munge your full summary stats file: 
 
 ```
-fullSS_path <- example_fullSS(munged = FALSE)
+fullSS_path <- echodata::example_fullSS(munged = FALSE)
 fullSS_path <- MungeSumstats::format_sumstats(path = fullSS_path, ref_genome = "GRCH37")
 ```
 
 We have already munged the following example summary stats for you.
 
 ```{r fullSS} 
-fullSS_path <- example_fullSS(munged = TRUE)
+fullSS_path <- echodata::example_fullSS(dataset = "Nalls2019")
 ```
 
 ## Run fine-mapping pipeline  
@@ -113,7 +113,7 @@ Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS
                                           #  It's best to give absolute paths
                                           results_dir = file.path(root.dir,"results"),
                                           loci = c("BST1","MEX3C"),# top_SNPs$Locus,
-                                          dataset_name = "Nalls23andMe_2019",
+                                          dataset_name = "Nalls2019",
                                           dataset_type = "GWAS",  
                                           force_new_subset = TRUE,
                                           force_new_LD = FALSE,

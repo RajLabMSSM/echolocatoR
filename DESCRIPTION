@@ -61,12 +61,24 @@ Imports:
     snpStats,
     seqminer,
     Rsamtools,
-    susieR (>= 0.9.0) 
+    susieR (>= 0.9.0),
+    echodata,
+    echotabix,
+    downloadR,
+    echoannot,
+    echoconda,
+    echoLD,
+    catalogueR
 Remotes:
-  github::stephenslab/susieR
+  github::RajLabMSSM/echodata,
+  github::RajLabMSSM/echotabix,
+  github::RajLabMSSM/downloadR,
+  github::RajLabMSSM/echoannot,
+  github::RajLabMSSM/echoconda,
+  github::RajLabMSSM/echoLD,
+  github::RajLabMSSM/catalogueR
 Suggests:
-    pbmcapply,
-    gaston, 
+    pbmcapply, 
     lattice,
     jsonlite,
     Matrix,
@@ -79,13 +91,11 @@ Suggests:
     png,
     readxl, 
     biomaRt,
-    haploR,
     motifbreakR,
     SNPlocs.Hsapiens.dbSNP142.GRCh37,
     BSgenome.Hsapiens.UCSC.hg19, 
     ComplexHeatmap,
     SummarizedExperiment,
-    LDlinkR, 
     coin
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr

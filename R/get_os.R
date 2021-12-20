@@ -1,8 +1,6 @@
 #' Identify current operating system (OS).
 #'
 #' @family general
-#' @examples
-#' get_os()
 #' @keywords internal
 get_os <- function(){
   sysinf <- Sys.info()
