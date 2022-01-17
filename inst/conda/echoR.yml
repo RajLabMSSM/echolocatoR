@@ -23,7 +23,7 @@ dependencies:
   - wget
   - axel
   # R
-  - r>=4.0.0
+  - r>=4.1.0
   - r-devtools
   - r-susier
   - r-reticulate
