@@ -113,6 +113,11 @@ to create a [*conda*](https://docs.conda.io/en/latest/) environment.
 
 4.  Install *echolocatoR* from command line so that it installs
     **within** the *conda* env:
+    ```R
+    if(!"remotes" %in% row.names(installed.packages())){install.packages("remotes")}
+
+    remotes::install_github("RajLabMSSM/echolocatoR")
+    ```
 
 5.  Open Rstudio from the command line interface (not by clicking the
     Rstudio icon). This helps to ensure Rstudio can find the paths to
@@ -131,13 +136,7 @@ to create a [*conda*](https://docs.conda.io/en/latest/) environment.
     name to the `finemap_loci()` function (and many other
     ***echolocatoR*** functions) using `conda_env="echoR"`.
 
-### Binary installation
-
-You can also install ***echolocatoR*** using the compressed binary file
-available on [Google
-Drive](https://drive.google.com/drive/folders/1oS6DIBcHWkDULAh_KHudvpzVab5NkWI9?usp=sharing).
-See the README within the folder for further instructions.
-
+ 
 ### Clone installation (*Rstudio*)
 
 Lastly, if you’d like (or if for some reason none of the other
