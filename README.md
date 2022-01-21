@@ -112,7 +112,7 @@ to create a [*conda*](https://docs.conda.io/en/latest/) environment.
     `conda activate echoR`
 
 4.  Install *echolocatoR* from command line so that it installs
-    **within** the *conda* env:
+    **within** the *conda* env, after opening R or radian:
     ```R
     if(!"remotes" %in% row.names(installed.packages())){install.packages("remotes")}
 
