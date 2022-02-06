@@ -20,7 +20,7 @@ Authors@R:
            comment = c(ORCID = "0000-0002-9355-5704"))
            ) 
 Description: Automated statistical and functional fine-mapping with extensive access to genome-wide datasets.  
-License: MIT + file LICENSE
+License: GPL-3
 URL: https://github.com/RajLabMSSM/echolocatoR
 BugReports: https://github.com/RajLabMSSM/echolocatoR/issues
 Encoding: UTF-8
