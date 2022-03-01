@@ -112,9 +112,9 @@ SPLICEAI.subset_precomputed_vcf <- function(subset_DT,
 SPLICEAI.subset_precomputed_tsv <- function(subset_DT,
                                             # precomputed_path="/pd-omics/data/spliceAI/spliceai_scores.raw.snv.hg19.tsv.gz",
                                             precomputed_path="/pd-omics/data/spliceAI/whole_genome_filtered_spliceai_scores.tsv.gz",
-                                            merge_data=T,
-                                            drop_na=T,
-                                            filtered=T){
+                                            merge_data=TRUE,
+                                            drop_na=TRUE,
+                                            filtered=TRUE){
   dat <- TABIX.query(fullSS.gz = precomputed_path,
                      chrom = subset_DT$CHR[1],
                      start_pos = min(subset_DT$POS),
@@ -131,7 +131,7 @@ SPLICEAI.subset_precomputed_tsv <- function(subset_DT,
     by.x = c("CHR","POS")# "A1"
     by.y = c("CHROM","POS") # "MUT"
   }
-  # summary(dat, na.rm=T)
+  # summary(dat, na.rm=TRUE)
   # hist(dat$DS_DG, breaks = 100)
   if(merge_data){
     dat_merged <- data.table:::merge.data.table(x = subset_DT,
@@ -156,16 +156,16 @@ SPLICEAI.subset_precomputed_tsv <- function(subset_DT,
 #' \dontrun{
 #' root.pd <- "/sc/arion/projects/pd-omics"
 #' precomputed_path <- file.path(root.pd,"data/spliceAI/spliceai_scores.raw.snv.hg19.tsv.gz")
-#' sumstats_paths <- list.files(file.path(root.pd, "/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019"), pattern = "*.UKB_LD.Multi-finemap.tsv.gz", recursive = T, full.names = T)
+#' sumstats_paths <- list.files(file.path(root.pd, "/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019"), pattern = "*.UKB_LD.Multi-finemap.tsv.gz", recursive = TRUE, full.names = TRUE)
 #' DAT <- SPLICEAI.subset_precomputed_tsv_iterate(sumstats_paths=sumstats_paths)
 #' }
 SPLICEAI.subset_precomputed_tsv_iterate <- function(sumstats_paths,
                                                     # precomputed_path="/pd-omics/data/spliceAI/whole_genome_filtered_spliceai_scores.tsv.gz",
                                                     precomputed_path="/pd-omics/data/spliceAI/spliceai_scores.raw.snv.hg19.tsv.gz",
-                                                    nThread=4,
-                                                    merge_data=T,
-                                                    drop_na=T,
-                                                    filtered=F,
+                                                    nThread=1,
+                                                    merge_data=TRUE,
+                                                    drop_na=TRUE,
+                                                    filtered=FALSE,
                                                     save_path="./spliceAI_subset.tsv.gz"){
   # no_no_loci <- c("HLA-DRB5","MAPT","ATG14","SP1","LMNB1","ATP6V0A1")
   # sumstats_paths <- sumstats_paths[!basename(dirname(dirname(sumstats_paths))) %in% no_no_loci]
@@ -178,15 +178,15 @@ SPLICEAI.subset_precomputed_tsv_iterate <- function(sumstats_paths,
                                                   filtered = filtered)
     if(!"Locus" %in% colnames(dat_merged)){
       locus <- basename(dirname(dirname(x)))
-      printer("Adding Locus column:", locus)
+      messager("Adding Locus column:", locus)
       dat_merged <- cbind(Locus=locus, dat_merged)
     }
     return(dat_merged)
-  }, mc.cores = nThread) %>% data.table::rbindlist(fill=T)
+  }, mc.cores = nThread) %>% data.table::rbindlist(fill=TRUE)
 
-  if(save_path!=F){
-    printer("Saving SpliceAI subset ==>",save_path)
-    dir.create(dirname(save_path),showWarnings = F, recursive = T)
+  if(save_path!=FALSE){
+    messager("Saving SpliceAI subset ==>",save_path)
+    dir.create(dirname(save_path),showWarnings = FALSE, recursive = TRUE)
     data.table::fwrite(DAT, save_path, nThread = nThread, sep="\t")
   }
   return(DAT)
@@ -207,7 +207,7 @@ SPLICEAI.subset_precomputed_tsv_iterate <- function(sumstats_paths,
 #' DAT <- data.table::fread(file.path(root, "Data/GWAS/Nalls23andMe_2019/_genome_wide/SpliceAI/spliceAI_Nalls23andMe_2019.hits.csv.gz"))
 #' }
 SPLICEAI.snp_probs <- function(DAT,
-                               save_path=F){
+                               save_path=FALSE){
   # merged_DT <- merge_finemapping_results(dataset = "./Data/GWAS/Nalls23andMe_2019",minimum_support = 0)
   # DAT <- data.table::fread("/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/spliceAI_Nalls2019.overlap.tsv.gz")
   DF <- DAT[,c("DS_AG","DS_AL","DS_DG","DS_DL")]
@@ -222,9 +222,9 @@ SPLICEAI.snp_probs <- function(DAT,
     subset(max_spliceAI_prob>.1 & ( leadSNP))
   matchDAT
   # data.table::fwrite(matchDAT, "./Data/GWAS/Nalls23andMe_2019/_genome_wide/SpliceAI/spliceAI_raw_subset_matched.tsv", sep="\t")
-  if(save_path!=F){
+  if(save_path!=FALSE){
     # save_path="./Data/GWAS/Nalls23andMe_2019/_genome_wide/spliceAI_Nalls2019.matches.tsv"
-    dir.create(dirname(save_path), showWarnings = F, recursive = T)
+    dir.create(dirname(save_path), showWarnings = FALSE, recursive = TRUE)
     data.table::fwrite(matchDAT, save_path, sep = "\t")
   }
 
@@ -270,7 +270,7 @@ SPLICEAI.plot <- function(dat_merged){
                                           measure.vars = c("DS_AG","DS_AL","DS_DG","DS_DL"),
                                           variable.name = "spliceAI_variable",
                                           value.name = "spliceAI_score",
-                                          na.rm = T)
+                                          na.rm = TRUE)
   ggplot(dat_melt, aes(x=POS, y=spliceAI_variable,   height=spliceAI_score)) +
     ggridges::geom_ridgeline()
 

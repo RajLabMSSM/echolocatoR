@@ -2,19 +2,12 @@
 % Please edit documentation in R/snps_to_condition.R
 \name{snps_to_condition}
 \alias{snps_to_condition}
-\title{Identify SNPs to condition on.}
+\title{Identify SNPs to condition on}
 \usage{
 snps_to_condition(conditioned_snps, top_SNPs, loci)
 }
 \description{
 When running conditional analyses (e.g. \emph{GCTA-COJO}),
 this functions automatically identifies SNP to condition on.
-}
-\seealso{
-Other SNP filters: 
-\code{\link{filter_snps}()},
-\code{\link{gene_trimmer}()},
-\code{\link{limit_SNPs}()},
-\code{\link{subset_common_snps}()}
 }
 \concept{SNP filters}

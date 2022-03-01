@@ -16,18 +16,21 @@ multi_finemap(
   sample_size = NULL,
   PAINTOR_QTL_datasets = NULL,
   PP_threshold = 0.95,
-  case_control = T,
-  verbose = T,
-  nThread = 4,
+  case_control = TRUE,
+  verbose = TRUE,
+  nThread = 1,
   conda_env = "echoR"
 )
 }
 \arguments{
-\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.
+\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL)
+that you want to fine-map.
 It is usually best to provide the absolute path rather than the relative path.}
 
-\item{dataset_type}{The kind dataset you're fine-mapping (e.g. GWAS, eQTL, tQTL).
-This will also be used when creating the subdirectory where your results will be stored
+\item{dataset_type}{The kind dataset you're fine-mapping
+(e.g. GWAS, eQTL, tQTL).
+This will also be used when creating the subdirectory where your results
+will be stored
 (e.g. \emph{Data/<dataset_type>/Kunkle_2019}).}
 
 \item{n_causal}{The maximum number of potential causal SNPs per locus.
@@ -35,17 +38,23 @@ This parameter is used somewhat differntly by different fine-mapping tools.
 See tool-specific functions for details.}
 
 \item{sample_size}{The overall sample size of the study.
-If none is given, and \strong{N_cases} and \strong{N_controls} columns are present,
+If none is given, and \strong{N_cases} and \strong{N_controls}
+columns are present,
 then sample_size is inferred to be:  \code{max(N_cases) + max(N_controls)}.}
 
-\item{PAINTOR_QTL_datasets}{A list of QTL datasets to be used when conducting joint functional fine-mapping with \emph{PAINTOR}.}
+\item{PAINTOR_QTL_datasets}{A list of QTL datasets to be used when
+conducting joint functional fine-mapping with \emph{PAINTOR}.}
 
-\item{PP_threshold}{The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
-For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.}
+\item{PP_threshold}{The minimum fine-mapped posterior probability
+ for a SNP to be considered part of a Credible Set.
+For example, \code{PP_threshold=.95} means that all Credible Set SNPs
+will be 95\% Credible Set SNPs.}
 
-\item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
+\item{verbose}{Print messages.}
 
-\item{conda_env}{The name of a conda environment to use.}
+\item{nThread}{Number of threads to parallelize over.}
+
+\item{conda_env}{Conda environment to use.}
 }
 \description{
 Fine-mapping will be repeated on the same locus using each of the tools in \code{finemap_method_list}.
@@ -59,14 +68,10 @@ Each tools will have the following columns:
 }
 \examples{
 \dontrun{
-data("BST1"); data("BST1_LD_matrix");
+BST1 <- echodata::BST1; data("BST1_LD_matrix");
 subset_DT <- BST1
 finemap_method_list <- c("ABF","SUSIE")
 }
-}
-\seealso{
-Other finemapping functions: 
-\code{\link{find_consensus_SNPs}()}
 }
 \concept{finemapping functions}
 \keyword{internal}

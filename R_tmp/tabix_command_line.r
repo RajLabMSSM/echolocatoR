@@ -14,7 +14,8 @@ construct_tabix_path <- function(fullSS_path,
 #' Convert summary stats file to tabix format
 #'
 #' @family query functions
-#' @inheritParams finemap_pipeline
+#' @importFrom echoconda find_package
+#' @inheritParams finemap_locus
 #' @examples
 #' \dontrun{
 #' data("genome_wide_dir");
@@ -29,7 +30,7 @@ TABIX.convert_file <- function(fullSS_path,
                                verbose=T){
   printer("TABIX:: Converting full summary stats file to tabix format for fast querying...",v=verbose)
   z_grep <- if(endsWith(fullSS_path,".gz")) "zgrep" else "grep"
-  cDict <-  column_dictionary(file_path = fullSS_path) # header.path
+  cDict <-  echodata::column_dictionary(file_path = fullSS_path) # header.path
   tabix_out <- construct_tabix_path(fullSS_path = fullSS_path,
                                        study_dir = study_dir)
   # Make sure input file isn't empty
@@ -44,7 +45,7 @@ TABIX.convert_file <- function(fullSS_path,
                paste0("-k",cDict[[position_col]],",",cDict[[position_col]],"n"),
                ")",
                # Compress with bgzip
-               "|",CONDA.find_package(package="bgzip", conda_env=conda_env),"-f",
+               "|",echoconda::find_package(package="bgzip", conda_env=conda_env),"-f",
                ">",
                tabix_out)
   printer(cmd, v=verbose)
@@ -57,7 +58,7 @@ TABIX.convert_file <- function(fullSS_path,
                           skip_lines=1,
                           conda_env="echoR",
                           verbose=T){
-    tabix <- CONDA.find_package(package="tabix",
+    tabix <- echoconda::find_package(package="tabix",
                                 conda_env=conda_env,
                                 verbose = verbose)
     printer("TABIX:: Indexing",v=verbose)
@@ -94,7 +95,7 @@ TABIX.query <- function(fullSS.gz,
                         end_pos,
                         conda_env="echoR",
                         verbose=T){
-  tabix <- CONDA.find_package(package="tabix",
+  tabix <- echoconda::find_package(package="tabix",
                               conda_env=conda_env,
                               verbose = verbose)
   coords <- paste0(chrom,":",start_pos,"-",end_pos)
@@ -119,11 +120,11 @@ TABIX.query <- function(fullSS.gz,
 #' A query is then made using the min/max genomic positions to extract a locus-specific summary stats file.
 #'
 #' @family query functions
-#' @inheritParams finemap_pipeline
+#' @inheritParams finemap_locus
 #' @return data.table of locus subset summary statistics
 #' @examples
 #' \dontrun{
-#' data("locus_dir"); data("Nalls_top_SNPs")
+#' locus_dir <- echodata::locus_dir; data("Nalls_top_SNPs")
 #' fullSS_path <- "./results/GWAS/Nalls23andMe_2019/_genome_wide/nallsEtAl2019_allSamples_allVariants.mod.txt.gz"
 #' top_SNPs <- import_topSNPs(topSS = Nalls_top_SNPs, chrom_col = "CHR", position_col = "BP", snp_col="SNP", pval_col="P, all studies", effect_col="Beta, all studies", gene_col="Nearest Gene", group_by_locus = T,locus_col = "Nearest Gene")
 #' top_SNPs_BST1 <- subset(top_SNPs, Locus=='BST1')
@@ -136,7 +137,7 @@ TABIX.query <- function(fullSS.gz,
 TABIX <- function(fullSS_path,
                   study_dir=NULL,
                   subset_path=NULL,
-                  is_tabix=F,
+                  is_tabix=FALSE,
                   chrom_col="CHR",
                   chrom_type=NULL,
                   position_col="POS",
@@ -171,7 +172,7 @@ TABIX <- function(fullSS_path,
     }
   }
   # Query
-  cDict <- column_dictionary(file_path = tabix_out)
+  cDict <- echodata::column_dictionary(file_path = tabix_out)
   # Determine chromosome format
   has_chr <- determine_chrom_type(chrom_type=chrom_type,
                                   file_path=tabix_out,

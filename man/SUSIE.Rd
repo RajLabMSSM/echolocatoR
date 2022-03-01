@@ -17,35 +17,40 @@ SUSIE(
   prior_weights = NULL,
   PP_threshold = 0.95,
   scaled_prior_variance = 0.001,
-  estimate_residual_variance = F,
-  estimate_prior_variance = T,
+  estimate_residual_variance = FALSE,
+  estimate_prior_variance = TRUE,
   residual_variance = NULL,
   max_iter = 100,
   estimate_prior_method = "optim",
-  manual_var_y = F,
-  rescale_priors = T,
-  plot_track_fit = F,
-  return_all_CS = T,
-  verbose = T
+  manual_var_y = FALSE,
+  rescale_priors = TRUE,
+  plot_track_fit = FALSE,
+  return_all_CS = TRUE,
+  verbose = TRUE
 )
 }
 \arguments{
-\item{dataset_type}{The kind dataset you're fine-mapping (e.g. GWAS, eQTL, tQTL).
-This will also be used when creating the subdirectory where your results will be stored
+\item{dataset_type}{The kind dataset you're fine-mapping
+(e.g. GWAS, eQTL, tQTL).
+This will also be used when creating the subdirectory where your results
+will be stored
 (e.g. \emph{Data/<dataset_type>/Kunkle_2019}).}
 
 \item{max_causal}{The maximum number of non-zero effects (and thus causal variants).}
 
 \item{sample_size}{The overall sample size of the study.
-If none is given, and \strong{N_cases} and \strong{N_controls} columns are present,
+If none is given, and \strong{N_cases} and \strong{N_controls}
+columns are present,
 then sample_size is inferred to be:  \code{max(N_cases) + max(N_controls)}.}
 
 \item{prior_weights}{A vector of length p, in which each entry
 gives the prior probability that corresponding column of X has a
 nonzero effect on the outcome, y.}
 
-\item{PP_threshold}{The minimum fine-mapped posterior probability for a SNP to be considered part of a Credible Set.
-For example, \code{PP_threshold=.95} means that all Credible Set SNPs will be 95\% Credible Set SNPs.}
+\item{PP_threshold}{The minimum fine-mapped posterior probability
+ for a SNP to be considered part of a Credible Set.
+For example, \code{PP_threshold=.95} means that all Credible Set SNPs
+will be 95\% Credible Set SNPs.}
 
 \item{scaled_prior_variance}{The prior variance, divided by
 \code{var(y)} (or by \code{(1/(n-1))yty} for
@@ -118,7 +123,7 @@ If \code{estimate_residual_variance=TRUE} \emph{without} providing \code{var_y}
 Running \pkg{susieR} with \code{var_y = var(b)} provides \emph{exactly} the same results.
 }
 \examples{
-data("BST1"); data("LD_matrix");
+BST1 <- echodata::BST1; data("LD_matrix");
 # LD_matrix <- readRDS("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/BST1/plink/UKB_LD.RDS")
-finemap_DT <- SUSIE(subset_DT=BST1, LD_matrix=LD_matrix, estimate_residual_variance=T)
+finemap_DT <- SUSIE(subset_DT=BST1, LD_matrix=LD_matrix, estimate_residual_variance=TRUE)
 }

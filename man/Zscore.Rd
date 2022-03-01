@@ -10,6 +10,6 @@ zscore(vec)
 Computes Z-score when you have the full vector of values (not just a subset).
 }
 \details{
-These functions are necessary for \code{\link{PAINTOR}}.
+These functions are necessary for \code{PAINTOR}.
 }
 \keyword{internal}

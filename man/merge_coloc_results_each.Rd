@@ -6,14 +6,14 @@
 \usage{
 merge_coloc_results_each(
   coloc_rda_files,
-  save_path = F,
-  save_each = F,
+  save_path = FALSE,
+  save_each = FALSE,
   results_level = "summary",
   ppH4_thresh = 0,
-  return_filter = F,
-  force_new = T,
-  nThread = 4,
-  verbose = T
+  return_filter = FALSE,
+  force_new = TRUE,
+  nThread = 1,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -35,7 +35,7 @@ Iterate merging of coloc results across files
 }
 \examples{
 # List RDS files you want to extract info from
-coloc_rds <- list.files("/sc/hydra/projects/ad-omics/microglia_omics/COLOC", pattern = "*_COLOC.RData", recursive = T, full.names = T)
+coloc_rds <- list.files("/sc/hydra/projects/ad-omics/microglia_omics/COLOC", pattern = "*_COLOC.RData", recursive = TRUE, full.names = TRUE)
 coloc_rds <- coloc_rds[!grepl("*_sQTL_*|Microglia_all_regions_Young",coloc_rds)]
 coloc_rds <- coloc_rds[grep("*Microglia_all_regions_*",coloc_rds)]
 

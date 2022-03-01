@@ -12,15 +12,15 @@ VALIDATION.bootstrap(
   metric,
   predictor = "SNP_group",
   validation_method = NULL,
-  synthesize_random = F,
+  synthesize_random = FALSE,
   snp_groups = c("Random", "GWAS lead", "UCS (-PolyFun)", "UCS",
     "Consensus (-PolyFun)", "Consensus"),
   test_method = "coin_wilcox_test",
-  locus_means = T,
+  locus_means = TRUE,
   iterations = 1000,
-  save_path = F,
-  nThread = 4,
-  verbose = T
+  save_path = FALSE,
+  nThread = 1,
+  verbose = TRUE
 )
 }
 \description{
@@ -50,7 +50,7 @@ metric <- "IMPACT_score"
 ## Import and Process ##
 metric_df <- data.table::fread(path, nThread=8)
 if(metric=="IMPACT_score") metric_df <- subset(metric_df, select=c(SNP,leadSNP,ABF.Credible_Set,ABF.PP,SUSIE.Credible_Set,SUSIE.PP,POLYFUN_SUSIE.Credible_Set,POLYFUN_SUSIE.PP,FINEMAP.Credible_Set,FINEMAP.PP,Consensus_SNP,Support,Locus,IMPACT_score))
-if(metric=="mean_IMPACT") metric_df <- find_consensus_SNPs_no_PolyFun(metric_df)
+if(metric=="mean_IMPACT") metric_df <- echodata::find_consensus_snps_no_polyfun(metric_df)
 
 #### run bootstrap ####
 boot_res <- VALIDATION.bootstrap(metric_df=metric_df, metric=metric, nThread=8, save_path=gsub("\\\\.csv\\\\.gz",".bootstrap.coin_wilcox_test.csv.gz",path) )

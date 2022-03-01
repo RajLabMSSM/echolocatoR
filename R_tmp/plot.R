@@ -9,7 +9,7 @@ construct_SNPs_labels <- function(subset_DT,
                                   consensus=T,
                                   remove_duplicates=T,
                                   verbose=F){
-  printer("+ PLOT:: Constructing SNP labels...", v=verbose)
+  messager("+ PLOT:: Constructing SNP labels...", v=verbose)
   labelSNPs <- data.table::data.table()
   subset_DT <- data.table::as.data.table(subset_DT)
 
@@ -20,7 +20,7 @@ construct_SNPs_labels <- function(subset_DT,
     before$color <- "red"
     before$shape <- 18
     before$size <- 3
-    labelSNPs <- rbind(labelSNPs, before, fill=T)
+    labelSNPs <- rbind(labelSNPs, before, fill=TRUE)
   }
   if(method){
     # AFTER fine-mapping
@@ -30,18 +30,18 @@ construct_SNPs_labels <- function(subset_DT,
       after$color<- "green3"
       after$shape <- 1
       after$size=3
-      labelSNPs <- rbind(labelSNPs, after, fill=T)
+      labelSNPs <- rbind(labelSNPs, after, fill=TRUE)
     }
   }
   if(consensus & "Consensus_SNP" %in% colnames(subset_DT)){
     # Conensus across all fine-mapping tools
-    cons_SNPs <- subset(subset_DT, Consensus_SNP==T)
+    cons_SNPs <- subset(subset_DT, Consensus_SNP==TRUE)
     if(dim(cons_SNPs)[1]>0){
       cons_SNPs$type <- "Consensus"
       cons_SNPs$color <- "darkgoldenrod1"
       cons_SNPs$shape <- 1
       cons_SNPs$size=4
-      labelSNPs <- rbind(labelSNPs, cons_SNPs, fill=T)
+      labelSNPs <- rbind(labelSNPs, cons_SNPs, fill=TRUE)
     }
   }
   # If there's duplicates only show the last one
@@ -70,10 +70,10 @@ construct_SNPs_labels <- function(subset_DT,
 #                       results_path,
 #                       conditioned_snps,
 #                       show_plot=T,
-#                       save_plot=T){
+#                       save_plot=TRUE){
 #   locus <- basename(results_path)
 #   # Label independent SNPs
-#   ind_SNPs <- subset(cojo_DT, COJO.CS==T)
+#   ind_SNPs <- subset(cojo_DT, COJO.CS==TRUE)
 #   ind_SNPs <- cbind(ind_SNPs, type="Independent",color="purple")
 #   labelSNPs <- ind_SNPs#rbind(labelSNPs, ind_SNPs)
 #
@@ -81,7 +81,7 @@ construct_SNPs_labels <- function(subset_DT,
 #   effect_SNPs <- effect_SNPs[1:5,]
 #   effect_SNPs$type <- "effect_SNPs"
 #   effect_SNPs$color <- "blue3"
-#   labelSNPs <- rbind(labelSNPs, effect_SNPs, fill=T)
+#   labelSNPs <- rbind(labelSNPs, effect_SNPs, fill=TRUE)
 #
 #   # topEffect_snps <- cojo_DT %>% arrange(desc(COJO.Conditioned_Effect))
 #   # topEffect_snps <- topEffect_snps$SNP[1:5]
@@ -251,7 +251,7 @@ construct_SNPs_labels <- function(subset_DT,
 #    plot_list <- lapply(method_list, function(method,
 #                                             finemap_dat.=finemap_dat,
 #                                             LD_matrix.=LD_matrix){
-#       printer("\n Plotting...",method)
+#       messager("\n Plotting...",method)
 #       if(method=="COJO"){
 #         p <- COJO_plot(cojo_DT = finemap_dat.,
 #                   results_path = results_path,
@@ -329,7 +329,7 @@ construct_SNPs_labels <- function(subset_DT,
 #   locus <- basename(results_path)
 #   gene_DT <- data.table::fread(file.path(results_path,"Multi-finemap/Multi-finemap_results.txt"),
 #                                nThread = 4)
-#   gene_DT <- find_consensus_SNPs(gene_DT,)
+#   gene_DT <- echodata::find_consensus_snps(gene_DT,)
 #   lead.rsid <- subset(gene_DT, leadSNP==T)$SNP
 #
 #   LD_matrix <- readRDS(file.path(results_path,"plink/LD_matrix.RData"))

@@ -20,15 +20,15 @@ psychENCODE.download_summary_stats <- function(
                          "Derived/QTLs/DER-10a_hg19_isoQTL.significant.txt",
                          "Integrative/INT-16_HiC_EP_linkages_cross_assembly.csv"))
                                                ){
-  printer("psychENCODE:: Downloading summary stats.")
+  messager("psychENCODE:: Downloading summary stats.")
   # QTLs
   for(URL in url.list){
     output.path <- file.path(output_dir, basename(URL))
     if(file.exists(output.path) | file.exists(paste0(output.path,".gz")) ){
-      printer("psychENCODE:: File already exists.")
+      messager("psychENCODE:: File already exists.")
     } else{
-      printer("psychENCODE:: Downloading:")
-      printer("              ",basename(URL))
+      messager("psychENCODE:: Downloading:")
+      messager("              ",basename(URL))
       dat <- data.table::fread(URL)
       data.table::fwrite(dat,  output.path)
       R.utils::gzip(output.path)

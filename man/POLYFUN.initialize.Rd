@@ -4,13 +4,13 @@
 \alias{POLYFUN.initialize}
 \title{Create output dir and import SNP data.frame}
 \usage{
-POLYFUN.initialize(locus_dir, finemap_dat = NULL, nThread = 4)
+POLYFUN.initialize(locus_dir, finemap_dat = NULL, nThread = 1)
 }
 \description{
 Create output dir and import SNP data.frame
 }
 \examples{
-data("BST1"); data("locus_dir");
+BST1 <- echodata::BST1; locus_dir <- echodata::locus_dir;
 finemap_DT <- POLYFUN.initialize(locus_dir=locus_dir, finemap_dat=BST1)
 }
 \seealso{

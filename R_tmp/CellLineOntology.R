@@ -25,7 +25,7 @@ CLO.dat <- lapply(1:length(cell_lines), function(i){
                                       url=df$iri[1])
   }
   return(df.summ) 
-}) %>% data.table::rbindlist(fill=T)
+}) %>% data.table::rbindlist(fill=TRUE)
 
 # CELLOSAURUS R API
 ## https://github.com/jimvine/rcellosaurus

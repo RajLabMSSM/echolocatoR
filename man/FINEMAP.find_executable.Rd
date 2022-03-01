@@ -11,7 +11,7 @@ FINEMAP.find_executable(
   FINEMAP_path = NULL,
   OS = NULL,
   version = "1.4",
-  verbose = T
+  verbose = TRUE
 )
 }
 \description{

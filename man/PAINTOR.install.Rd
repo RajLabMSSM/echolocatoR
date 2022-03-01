@@ -4,7 +4,7 @@
 \alias{PAINTOR.install}
 \title{Install PAINTOR via command line}
 \usage{
-PAINTOR.install(paintor_path = NULL, force_reinstall = F)
+PAINTOR.install(paintor_path = NULL, force_reinstall = FALSE)
 }
 \description{
 Currently there is no R or conda distribution of PAINTOR.

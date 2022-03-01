@@ -8,7 +8,7 @@ IMPACT.get_top_annotations(
   ANNOT_MELT,
   snp.filter = "!is.na(IMPACT_score)",
   top_annotations = 1,
-  force_one_annot_per_locus = F
+  force_one_annot_per_locus = FALSE
 )
 }
 \description{

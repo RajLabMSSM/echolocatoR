@@ -15,8 +15,8 @@ ABF(
   PP_threshold = 0.95,
   sample_size = NULL,
   sdY = NULL,
-  case_control = T,
-  verbose = T
+  case_control = TRUE,
+  verbose = TRUE
 )
 }
 \description{
@@ -24,12 +24,12 @@ Conduct statistical (non-functional) fine-mapping with approximate Bayes factor 
 }
 \examples{
 # GWAS
-data("BST1");
+BST1 <- echodata::BST1;
 finemap_DT <- ABF(subset_DT=BST1)
 
 # QTL
 locus_dir <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/QTL/Microglia_all_regions/BIN1"
 subset_DT <- data.table::fread(file.path(locus_dir,"/Multi-finemap/BIN1.Microglia_all_regions.1KGphase3_LD.Multi-finemap.tsv.gz"))
-finemap_DT <- ABF(subset_DT=subset_DT, case_control=F, sample_size=90)
+finemap_DT <- ABF(subset_DT=subset_DT, case_control=FALSE, sample_size=90)
 }
 \keyword{internal}

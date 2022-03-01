@@ -15,16 +15,16 @@ Plot \pkg{ComplexHeatmap} of \emph{IMPACT} scores
 }
 \examples{
 \dontrun{
-# merged_DT <- merge_finemapping_results(minimum_support = 1, include_leadSNPs = T,xlsx_path = F,dataset = "Data/GWAS/Nalls23andMe_2019")
+# merged_DT <- merge_finemapping_results(minimum_support = 1, include_leadSNPs = TRUE,xlsx_path = FALSE,dataset = "Data/GWAS/Nalls23andMe_2019")
  #merged_DT$Locus <- merged_DT$Gene
 # ANNOT_MELT <- IMPACT.iterate_get_annotations(merged_DT = merged_DT,
 #                                              IMPACT_score_thresh=0,
 #                                              baseURL="../../data/IMPACT/IMPACT707/Annotations",
-#                                              all_snps_in_range=T,
-#                                              top_annotations_only=F)
+#                                              all_snps_in_range=TRUE,
+#                                              top_annotations_only=FALSE)
 data.table::fwrite(ANNOT_MELT,"/sc/arion/projects/pd-omics/data/IMPACT/IMPACT707/Annotations/IMPACT_overlap.csv.gz")
 ANNOT_MELT <- data.table::fread("~/Desktop/Fine_mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/IMPACT/IMPACT_overlap.csv.gz")
-ANNOT_MELT <- update_cols(subset(ANNOT_MELT, select=-c(SUSIE.Probability,FINEMAP.Probability)))
+ANNOT_MELT <- echodata::update_cols(subset(ANNOT_MELT, select=-c(SUSIE.Probability,FINEMAP.Probability)))
 
 ## Remove no no loci
 no_no_loci =  c("HLA-DRB5","MAPT","ATG14","SP1","LMNB1","ATP6V0A1", "RETREG3","UBTF","FAM171A2","MAP3K14","CRHR1","MAPT-AS1","KANSL1","NSF","WNT3")

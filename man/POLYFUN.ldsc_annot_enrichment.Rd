@@ -10,8 +10,8 @@ https://www.biorxiv.org/content/10.1101/807792v3
 POLYFUN.ldsc_annot_enrichment(
  
     .results = "Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/output/PD_GWAS_LDSC/PD_GWAS_LDSC.results",
-  show_plot = T,
-  save_plot = F,
+  show_plot = TRUE,
+  save_plot = FALSE,
   title = "LDSC Heritability Enrichment",
   subtitle = "PD GWAS"
 )

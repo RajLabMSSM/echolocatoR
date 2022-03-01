@@ -7,7 +7,8 @@
 query_fullSS(fullSS_path, subset_path)
 }
 \arguments{
-\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.
+\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL)
+that you want to fine-map.
 It is usually best to provide the absolute path rather than the relative path.}
 }
 \description{
@@ -15,11 +16,7 @@ Read in a standardize the entire full summary stats file at once.
 }
 \seealso{
 Other query functions: 
-\code{\link{TABIX.convert_file}()},
-\code{\link{TABIX.query}()},
-\code{\link{TABIX}()},
-\code{\link{extract_SNP_subset}()},
-\code{\link{import_topSNPs}()},
+\code{\link{extract_snp_subset}()},
 \code{\link{query_by_coordinates_merged}()},
 \code{\link{query_by_coordinates}()},
 \code{\link{query_by_gene}()},

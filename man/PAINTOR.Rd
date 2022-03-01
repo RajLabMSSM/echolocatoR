@@ -19,18 +19,18 @@ PAINTOR(
   XGR_dataset = NA,
   ROADMAP_search = NA,
   chromatin_state = "TssA",
-  use_annotations = F,
+  use_annotations = FALSE,
   PP_threshold = 0.95,
   consensus_thresh = 2,
   multi_finemap_col_name = "PAINTOR",
-  trim_gene_limits = F,
-  force_new_subset = F,
+  trim_gene_limits = FALSE,
+  force_new_subset = FALSE,
   GWAS_populations = "EUR",
   QTL_populations = "EUR",
   LD_reference = "1KG_Phase1",
-  force_new_LD = F,
+  force_new_LD = FALSE,
   LD_matrix = NULL,
-  force_reinstall = F
+  force_reinstall = FALSE
 )
 }
 \description{

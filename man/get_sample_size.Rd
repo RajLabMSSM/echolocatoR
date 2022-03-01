@@ -4,26 +4,25 @@
 \alias{get_sample_size}
 \title{Infer sample size from summary stats}
 \usage{
-get_sample_size(subset_DT, sample_size = NULL, effective_ss = T, verbose = T)
+get_sample_size(
+  subset_DT,
+  sample_size = NULL,
+  effective_ss = TRUE,
+  verbose = TRUE
+)
 }
 \description{
 Infer sample size from summary stats
 }
 \examples{
-data("BST1")
+BST1 <- echodata::BST1
 BST1 <- finemap_DT
 subset_DT <- get_sample_size(subset_DT = finemap_DT)
 }
 \seealso{
 Other general: 
-\code{\link{createDT_html}()},
-\code{\link{createDT}()},
-\code{\link{dt.replace}()},
-\code{\link{example_fullSS}()},
-\code{\link{fillNA_CS_PP}()},
-\code{\link{get_os}()},
-\code{\link{startup_image}()},
-\code{\link{tryFunc}()}
+\code{\link{dt_replace}()},
+\code{\link{get_os}()}
 }
 \concept{general}
 \keyword{internal}

@@ -9,16 +9,16 @@ POLYFUN.h2_enrichment_SNPgroups_plot(
   snp_groups = c("GWAS lead", "UCS", "Consensus (-PolyFun)", "Consensus"),
   comparisons_filter = function(x) {     if ("Consensus" \%in\% x)          return(x) },
   method = "wilcox.test",
-  remove_outliers = T,
+  remove_outliers = TRUE,
   title = "S-LDSC heritability enrichment",
   xlabel = "SNP group",
   ylabel = bquote(~"h"^2 ~ "enrichment"),
-  show_xtext = T,
-  show_padj = T,
-  show_signif = T,
+  show_xtext = TRUE,
+  show_padj = TRUE,
+  show_signif = TRUE,
   vjust_signif = 0.5,
-  show_plot = T,
-  save_path = F
+  show_plot = TRUE,
+  save_path = FALSE
 )
 }
 \description{
@@ -30,7 +30,7 @@ root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping"
 merged_dat <- merge_finemapping_results(dataset = file.path("Data/GWAS/Nalls23andMe_2019"), LD_reference = "UKB", minimum_support = 0)
 RES <- POLYFUN.h2_enrichment_SNPgroups(merged_dat=merged_dat, out.path="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/output")
 
-plot.h2 <- POLYFUN.h2_enrichment_SNPgroups_plot(RES = RES, show_plot = T)
+plot.h2 <- POLYFUN.h2_enrichment_SNPgroups_plot(RES = RES, show_plot = TRUE)
 }
 }
 \seealso{

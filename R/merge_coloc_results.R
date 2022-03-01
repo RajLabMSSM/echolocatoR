@@ -13,16 +13,16 @@
 #' }
 merge_coloc_results <- function(all_obj,
                                 results_level=c("summary"),
-                                nThread=4,
-                                verbose=T,
-                                save_path=F){
+                                nThread=1,
+                                verbose=TRUE,
+                                save_path=FALSE){
   null_list<<-NULL
-  printer("Gathering coloc results at",results_level,"level...")
+  messager("Gathering coloc results at",results_level,"level...")
   merged_results <- parallel::mclapply(names(all_obj), function(locus){
-    printer("- Locus =",locus,v=verbose)
+    messager("- Locus =",locus,v=verbose)
     locus_obj <- all_obj[[locus]]
     parallel::mclapply(names(locus_obj), function(egene){
-      printer("eGene =",egene,v=verbose)
+      messager("eGene =",egene,v=verbose)
       egene_obj <- locus_obj[[egene]]
       if(results_level=="snp"){
         results <- egene_obj$object$results
@@ -39,7 +39,7 @@ merge_coloc_results <- function(all_obj,
     }, mc.cores=nThread) %>% data.table::rbindlist()
   }, mc.cores = 1)  %>% data.table::rbindlist()
   if(length(null_list)>0) {
-    printer("NULL results detected in",length(null_list),"Locus:eGene pairs.");
+    messager("NULL results detected in",length(null_list),"Locus:eGene pairs.");
     print(null_list);
   }
   # Rename cols
@@ -56,7 +56,7 @@ merge_coloc_results <- function(all_obj,
   merged_results$N_cases <- floor(merged_results$gwas.N * merged_results$s)
   merged_results$N_controls <- merged_results$gwas.N - merged_results$N_cases
 
-  if(save_path!=F){
+  if(save_path!=FALSE){
     data.table::fwrite(merged_results,
                        save_path,
                        sep="\t", nThread=nThread)

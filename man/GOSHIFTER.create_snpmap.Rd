@@ -4,14 +4,14 @@
 \alias{GOSHIFTER.create_snpmap}
 \title{Prepare SNP input for \emph{GoShifter}}
 \usage{
-GOSHIFTER.create_snpmap(finemap_dat, GS_results, nThread = 4, verbose = T)
+GOSHIFTER.create_snpmap(dat, GS_results, nThread = 1, verbose = TRUE)
 }
 \description{
 Prepare SNP input for \emph{GoShifter}
 }
 \examples{
-data("BST1"); data("locus_dir")
-snpmap <- GOSHIFTER.create_snpmap(finemap_dat=BST1, GS_results=file.path(locus_dir,"GoShifter"))
+BST1 <- echodata::BST1; locus_dir <- echodata::locus_dir
+snpmap <- GOSHIFTER.create_snpmap(dat=BST1, GS_results=file.path(locus_dir,"GoShifter"))
 }
 \seealso{
 Other GOSHIFTER: 

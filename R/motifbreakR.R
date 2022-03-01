@@ -39,21 +39,21 @@ MOTIFBREAKR.filter_by_metadata <- function(mb.results,
 #' # rsid_list <- unique(subset(merged_DT, Locus %in% c("LRRK2","MED12L","DYRK1A","FCGR2A") & (Consensus_SNP | leadSNP))$SNP)
 #' # rsid_list <- unique(subset(merged_DT, Consensus_SNP | leadSNP)$SNP)
 #' rsid_list <- c("rs11175620","rs7294619","rs74324737")
-#' mb.results <- MOTIFBREAKR(rsid_list=rsid_list, calculate_all_pval=T, force_new = T)
+#' mb.results <- MOTIFBREAKR(rsid_list=rsid_list, calculate_all_pval=TRUE, force_new = TRUE)
 #' }
 #' @export
 MOTIFBREAKR <- function(rsid_list,
-                        save_rds=T,
+                        save_rds=TRUE,
                         dataset_dir="./results",
                         pwmList=NULL,
                         organism=NULL,#"Hsapiens",
                         # If `filterp=T`, this is a p-value threshold. If `filterp=F` it is the pct threshold.
                         threshold=.85, # 1e-4 #  4e-8
-                        show.neutral=F,
+                        show.neutral=FALSE,
                         method="default",
-                        verbose=T,
-                        calculate_all_pval=T,
-                        force_new=F){
+                        verbose=TRUE,
+                        calculate_all_pval=TRUE,
+                        force_new=FALSE){
   ##  data("merged_DT"); snp_list <- unique(subset(merged_DT, Support>0 | leadSNP)$SNP);
   # library(echolocatoR); library(motifbreakR); library(BSgenome); save_rds=T; dataset_dir <- "./results/motifbreakR"; force_new=F;
   # pwmList=NULL; organism=NULL;  method = "default"; verbose=T; show.neutral = F; calculate_all_pval=T; threshold=1e-4;
@@ -64,34 +64,34 @@ MOTIFBREAKR <- function(rsid_list,
 
   if(!file.exists(rds_path) | force_new){
     # Prepare input
-    printer("+ MOTIFBREAKR:: Turning SNP list into motifbreakR input format.", v=verbose)
+    messager("+ MOTIFBREAKR:: Turning SNP list into motifbreakR input format.", v=verbose)
     gr.snps <- motifbreakR::snps.from.rsid(rsid = rsid_list,
                                            dbSNP = SNPlocs.Hsapiens.dbSNP142.GRCh37::SNPlocs.Hsapiens.dbSNP142.GRCh37,
                                            search.genome = BSgenome.Hsapiens.UCSC.hg19::BSgenome.Hsapiens.UCSC.hg19);
     # Subset motif databases
     if(is.null(pwmList)){pwmList <- MotifDb::MotifDb}
     if(!is.null(organism)){
-      pwmList <- pwmList[grep(paste0("^",organism),names(pwmList),value = T)]
+      pwmList <- pwmList[grep(paste0("^",organism),names(pwmList),value = TRUE)]
     }
 
     # Run motifbreakR
-    printer("+ MOTIFBREAKR:: Identifying motifs and predicting disruptions.", v=verbose)
+    messager("+ MOTIFBREAKR:: Identifying motifs and predicting disruptions.", v=verbose)
     mb.results <- motifbreakR::motifbreakR(snpList = gr.snps,
                                            pwmList = pwmList,
 
-                                           filterp = T,
+                                           filterp = TRUE,
                                            threshold = threshold,
                                            method = method,
                                            show.neutral = show.neutral,
                                            verbose = verbose);
     # Save tmp results
     if(save_rds){
-      dir.create(dirname(tmp_path),showWarnings = F, recursive = T);
-      printer("+ MOTIFBREAKR:: Saving tmp results ==>", tmp_path);
+      dir.create(dirname(tmp_path),showWarnings = FALSE, recursive = TRUE);
+      messager("+ MOTIFBREAKR:: Saving tmp results ==>", tmp_path);
       saveRDS(mb.results, tmp_path);
     }
   } else {
-    printer( "+ MOTIFBREAKR:: Using pre-existing tmp file.", v=verbose)
+    messager( "+ MOTIFBREAKR:: Using pre-existing tmp file.", v=verbose)
     mb.results <- readRDS(tmp_path)
   }
 
@@ -101,18 +101,18 @@ MOTIFBREAKR <- function(rsid_list,
 
 
 MOTIFBREAK.calc_pvals <- function(mb.results,
-                                  remove_NA_TF=T,
+                                  remove_NA_TF=TRUE,
                                   effect_strengths=c("strong"),
                                   filter_by_locus=NULL,
                                   dataset_dir="./results",
-                                  verbose=T){
+                                  verbose=TRUE){
   # Filter
   if(remove_NA_TF){
     mb.results <- subset(mb.results, !is.na(geneSymbol))
   }
   if(!is.null(effect_strengths)){
    mb.results <- subset(mb.results, effect %in% effect_strengths)
-   printer("+ MOTIFBREAKR",nrow(mb.results),"SNPs in results @",
+   messager("+ MOTIFBREAKR",nrow(mb.results),"SNPs in results @",
            paste0("`effect_strengths=",paste(effect_strengths, collapse=", "),"`"),v=verbose)
   }
   if(!is.null(filter_by_locus)){
@@ -122,12 +122,12 @@ MOTIFBREAK.calc_pvals <- function(mb.results,
 
   # Calculate p-values
   if(calculate_all_pval){
-    printer("+ MOTIFBREAKR:: Calculating p-values for all SNPs...", v=verbose)
+    messager("+ MOTIFBREAKR:: Calculating p-values for all SNPs...", v=verbose)
     mb.results_p <- motifbreakR::calculatePvalue(mb.results)
   }
   if(save_rds){
     rds_path <- file.path(dataset_dir,'_genome_wide','motifbreakR','motifbreakR_results.rds');
-    printer("+ MOTIFBREAKR:: Saving results ==>",rds_path, v=verbose)
+    messager("+ MOTIFBREAKR:: Saving results ==>",rds_path, v=verbose)
     saveRDS(mb.results_p, rds_path);
   }
   return(mb.results_p)
@@ -178,9 +178,9 @@ MOTIFBREAKR.filter <- function(merged_DT,
                                 qvalue_threshold=.05,
                                 effect_strengths=c("strong"),
                                 snp_filter="Consensus_SNP==T",
-                                top_TF_hits=F,
+                                top_TF_hits=FALSE,
                                 no_no_loci=NULL,
-                                verbose=T){
+                                verbose=TRUE){
   # Quickstart
   # pct_threshold=.7; verbose=T;
   # pvalue_threshold=1e-4;
@@ -202,7 +202,7 @@ MOTIFBREAKR.filter <- function(merged_DT,
 
   mb.merge <- data.table::merge.data.table(x = merged_DT,
                                 y = data.table::as.data.table(mb.results),
-                                by="SNP", all = T)  %>%
+                                by="SNP", all = TRUE)  %>%
     dplyr::mutate(risk_allele=ifelse(A1==REF,"REF",ifelse(A1==ALT,"ALT",NA))) %>%
     subset(!is.na(risk_allele)) %>%
     dplyr::mutate(risk_pct=ifelse(risk_allele=="REF", pctRef, pctAlt),
@@ -215,29 +215,29 @@ MOTIFBREAKR.filter <- function(merged_DT,
                   # nonrisk_pvalue=ifelse(risk_allele=="ALT", scoreRef, scoreAlt)
                   ) %>%
     dplyr::mutate(risk_qvalue = stats::p.adjust(p = risk_pvalue, method = "bonferroni"))
-  printer("+ MOTIFBREAKR",nrow(mb.merge),"SNPs in results.", v=verbose)
+  messager("+ MOTIFBREAKR",nrow(mb.merge),"SNPs in results.", v=verbose)
 
   if(!is.null(snp_filter)){
     mb.merge <- subset(mb.merge, eval(parse(text=snp_filter)))
-    printer("+ MOTIFBREAKR",nrow(mb.merge),"SNPs in results @",
+    messager("+ MOTIFBREAKR",nrow(mb.merge),"SNPs in results @",
             paste0("`snp_filter='",snp_filter,"'`"),v=verbose)
   }
 
   if(!is.null(effect_strengths)){
     mb.merge <- subset(mb.merge, effect %in% effect_strengths)
-    printer("+ MOTIFBREAKR",nrow(mb.merge),"SNPs in results @",
+    messager("+ MOTIFBREAKR",nrow(mb.merge),"SNPs in results @",
             paste0("`effect_strengths=",paste(effect_strengths, collapse=", "),"`"),v=verbose)
   }
 
   if(!is.null(pvalue_threshold)){
     mb.merge <- subset(mb.merge, risk_pvalue < pvalue_threshold)
-    printer("+ MOTIFBREAKR",nrow(mb.merge),"SNPs in results @",
+    messager("+ MOTIFBREAKR",nrow(mb.merge),"SNPs in results @",
             paste0("`pvalue_threshold=",pvalue_threshold,"`"),v=verbose)
   }
 
   if(!is.null(qvalue_threshold)){
     mb.merge <- subset(mb.merge, risk_qvalue < qvalue_threshold)
-    printer("+ MOTIFBREAKR",nrow(mb.merge),"SNPs in results @",
+    messager("+ MOTIFBREAKR",nrow(mb.merge),"SNPs in results @",
             paste0("`qvalue_threshold=",qvalue_threshold,"`"),v=verbose)
   }
 
@@ -248,7 +248,7 @@ MOTIFBREAKR.filter <- function(merged_DT,
                         # (pctAlt<pct_threshold & A1==ALT)
                         risk_pct < pct_threshold
                         )
-    printer("+ MOTIFBREAKR",nrow(mb.merge),"SNPs in results @",
+    messager("+ MOTIFBREAKR",nrow(mb.merge),"SNPs in results @",
             paste0("`pct_threshold=",pct_threshold,"`"),v=verbose)
   }
   if(top_TF_hits){
@@ -292,8 +292,8 @@ MOTIFBREAKR.filter <- function(merged_DT,
 #' mb.results<- readRDS(file.path(root,"DNAH17.pvalues.RDS"))
 #'
 #' # Get overlap with PEAKS
-#' # PEAKS <- NOTT_2019.get_epigenomic_peaks(convert_to_GRanges = T)
-#' REGIONS <- NOTT_2019.get_regulatory_regions(as.granges = T)
+#' # PEAKS <- NOTT_2019.get_epigenomic_peaks(convert_to_GRanges = TRUE)
+#' REGIONS <- NOTT_2019.get_regulatory_regions(as.granges = TRUE)
 #' gr.hits <- GRanges_overlap(dat1 = subset(merged_DT, Consensus_SNP), chrom_col.1 = "CHR", start_col.1 = "POS", end_col.1 = "POS", dat2 = REGIONS)
 #' mb.filter <- MOTIFBREAKR.filter(merged_DT = merged_DT, mb.results = mb.results, pct_threshold=NULL)
 #'
@@ -382,7 +382,7 @@ MOTIFBREAKR.summarize <- function(){
     ) %>%
     data.frame() %>% unique()
 
-  # if(save_path!=F){
+  # if(save_path!=FALSE){
   #   data.table::fwrite(locus_tally, "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/motifbreakR/motifbreakR_locus_tally_ALL.csv", sep=",")
   # }
   return(locus_tally)

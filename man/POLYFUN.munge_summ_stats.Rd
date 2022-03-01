@@ -11,7 +11,7 @@ POLYFUN.munge_summ_stats(
   sample_size = NULL,
   min_INFO = 0,
   min_MAF = 0.001,
-  force_new_munge = F,
+  force_new_munge = FALSE,
   conda_env = "echoR"
 )
 }
@@ -22,7 +22,7 @@ Munge summary stats
 \dontrun{
 data("genome_wide_dir");
 fullSS_path <- example_fullSS(fullSS_path="~/Desktop/Nalls23andMe_2019.fullSS_subset.tsv")
-munged_path <- POLYFUN.munge_summ_stats(fullSS_path=fullSS_path, locus_dir=genome_wide_dir, force_new_munge=T)
+munged_path <- POLYFUN.munge_summ_stats(fullSS_path=fullSS_path, locus_dir=genome_wide_dir, force_new_munge=TRUE)
 }
 }
 \seealso{

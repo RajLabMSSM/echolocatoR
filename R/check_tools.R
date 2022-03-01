@@ -8,10 +8,10 @@ check_tools <- function(check_tabix=FALSE,
                         stop_for_bcftools=FALSE,
                         conda_env=NULL){
   if(check_tabix){
-    printer("Checking for tabix installation...")
-    tabix <- CONDA.find_package("tabix", conda_env=conda_env, verbose = F)
+    messager("Checking for tabix installation...")
+    tabix <- echoconda::find_package("tabix", conda_env=conda_env, verbose  = FALSE)
     if(tabix=="tabix"){
-      tabix.out <- system("which tabix",intern = T)
+      tabix.out <- system("which tabix",intern = TRUE)
       if(length(tabix.out)==0){
         if(stop_for_tabix){
           stop("No tabix installation detected. ",
@@ -29,10 +29,10 @@ check_tools <- function(check_tabix=FALSE,
     }
   }
     if(check_bcftools){
-      printer("Checking for bcftools installation...")
-      bcftools <- CONDA.find_package("bcftools", conda_env=conda_env, verbose = F)
+      messager("Checking for bcftools installation...")
+      bcftools <- echoconda::find_package("bcftools", conda_env=conda_env, verbose  = FALSE)
       if(bcftools=="bcftools"){
-        bcftools.out <- system("which bcftools",intern = T)
+        bcftools.out <- system("which bcftools",intern = TRUE)
         if(length(bcftools.out)==0){
           if(check_bcftools){
             stop("No bcftools installation detected. ",

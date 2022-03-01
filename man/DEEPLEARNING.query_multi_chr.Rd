@@ -12,8 +12,8 @@ DEEPLEARNING.query_multi_chr(
   model = c("Basenji", "BiClassCNN", "DeepSEA", "ChromHMM", "Roadmap", "Others"),
   mean_max = c("MEAN", "MAX"),
   type = c("annot", "ldscore"),
-  nThread = 4,
-  verbose = T
+  nThread = 1,
+  verbose = TRUE
 )
 }
 \description{

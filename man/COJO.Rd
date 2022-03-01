@@ -14,8 +14,8 @@ COJO(
   GCTA_path = system.file("tools/gcta_1.92.1beta5_mac/bin", "gcta64", package =
     "echolocatoR"),
   bfiles = "plink_tmp/plink",
-  stepwise_procedure = T,
-  conditional_analysis = T,
+  stepwise_procedure = TRUE,
+  conditional_analysis = TRUE,
   snp_col = "SNP",
   freq_col = "Freq",
   effect_col = "Effect",

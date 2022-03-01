@@ -4,7 +4,7 @@
 \alias{IMPACT.plot_impact_score}
 \title{Locus plot of IMPACT scores}
 \usage{
-IMPACT.plot_impact_score(annot_melt, save_path = F, show_plot = T)
+IMPACT.plot_impact_score(annot_melt, save_path = FALSE, show_plot = TRUE)
 }
 \description{
 Locus plot of IMPACT scores

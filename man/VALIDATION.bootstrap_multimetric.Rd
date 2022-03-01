@@ -8,13 +8,13 @@ VALIDATION.bootstrap_multimetric(
   metric_df,
   metric_names,
   validation_method = NULL,
-  locus_means = T,
+  locus_means = TRUE,
   grouping_var = NULL,
   test_method = "coin_wilcox_test",
   iterations = 1000,
-  nThread = 4,
-  save_path = F,
-  verbose = T
+  nThread = 1,
+  save_path = FALSE,
+  verbose = TRUE
 )
 }
 \description{
@@ -46,7 +46,7 @@ validation_method = "Dey_DeepLearning"
 
 # -----Import and process ------
 metric_df <- data.table::fread(path, nThread=8)
-## metric_names <- grep("Basenji.*MAX|DeepSEA.*MAX|Roadmap.*MAX", colnames(metric_df), value = T)
+## metric_names <- grep("Basenji.*MAX|DeepSEA.*MAX|Roadmap.*MAX", colnames(metric_df), value = TRUE)
 ## metric_df <- metric_df \%>\% dplyr::mutate(annot=paste(Model,Tissue,Assay,Type,Metric,sep="_"))
 boot_res <- VALIDATION.bootstrap_multimetric(metric_df=metric_df, metric_names=metric_names, validation_method=validation_method, save_path=gsub("\\\\.csv\\\\.gz",".bootstrap.coin_wilcox_test.csv.gz",path), grouping_var=grouping_var, iterations=10000, nThread=12)
 }

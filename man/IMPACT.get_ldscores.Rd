@@ -7,7 +7,7 @@
 T Amariuta et al., IMPACT: Genomic Annotation of Cell-State-Specific Regulatory Elements Inferred from the Epigenome of Bound Transcription Factors. The American Journal of Human Genetics, 1–17 (2019).
 }
 \usage{
-IMPACT.get_ldscores(chrom = NULL, subset_DT = NULL, nThread = 4)
+IMPACT.get_ldscores(chrom = NULL, subset_DT = NULL, nThread = 1)
 }
 \description{
 Downloads per-SNP LD scores from LD SCore regression,

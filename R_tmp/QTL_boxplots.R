@@ -16,19 +16,6 @@ check.allel_direction <- function(){
 }
 
 
-
-createDT <- function(DF, caption="", scrollY=400){
-  data <- DT::datatable(DF, caption=caption,
-                        extensions = 'Buttons',
-                        options = list( dom = 'Bfrtip',
-                                        buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
-                                        scrollY = scrollY, scrollX=T, scrollCollapse = T, paging = F,
-                                        columnDefs = list(list(className = 'dt-center', targets = "_all"))
-                        )
-  )
-  return(data)
-}
-
 subset_genotype_data <- function(snp_list,
                                  genotype_path = "volunteer_421.impute2.dosage"){
   # NOTE: "volunteer_421.impute2.dosage" is the file you want to subset from!
@@ -42,11 +29,11 @@ subset_genotype_data <- function(snp_list,
 # Expression
 ## Get probe IDs for gene
 probes_mapping <- function(probe_path., gene_list){
-  printer("++ Extracting probe info")
+  messager("++ Extracting probe info")
   cmd <- paste0("grep -E '", paste0(gene_list, collapse="|"),"' ",probe_path.)
   col_names <- data.table::fread(probe_path., sep="\t", nrows = 0) %>% colnames()
   probe_map <- data.table::fread(text = system(cmd, intern = T),
-                                 sep = "\t", header = F, col.names = col_names)
+                                 sep = "\t", header = FALSE, col.names = col_names)
   if(dim(probe_map)[1]==0){
     stop("Could not identify gene in the probe mapping file: ",paste(gene_list, collapse=", "))
   }
@@ -56,26 +43,26 @@ probes_mapping <- function(probe_path., gene_list){
 }
 ## Subset expression data
 get_expression_data <- function(expression_paths, gene., probe_path){
-  printer("")
-  printer("+ Processsing Expression data")
+  messager("")
+  messager("+ Processsing Expression data")
   # Find which probes for search for
   probe_map <- probes_mapping(probe_path. = probe_path, gene_list = gene.)
   probe_list <- probe_map$PROBE_ID %>% unique()
   # Find the subjects that exist in all datasets
   # common_subjects <- lapply(expression_paths, function(x){
-  #   col_names <- data.table::fread(x, sep="\t", header = T, nrows = 0) %>% colnames()
+  #   col_names <- data.table::fread(x, sep="\t", header = TRUE, nrows = 0) %>% colnames()
   #   col_names <- col_names[-1]
   # })
   # Reduce(intersect, common_subjects)
 
   exp_dat <- lapply(expression_paths, function(x, gene.= gene, probe_list.=probe_list){
     condition = basename(dirname(x))
-    printer("++",condition)
+    messager("++",condition)
     # grep rows with the probe names
     cmd <- paste0("gzcat ",x," | grep -E '", paste0(probe_list., collapse="|"),"'")
-    col_names <- data.table::fread(x, sep="\t", header = T, nrows = 0) %>% colnames()
+    col_names <- data.table::fread(x, sep="\t", header = TRUE, nrows = 0) %>% colnames()
     exprs <- data.table::fread(text = system(cmd, intern = T),
-                               sep = "\t", header = F, col.names = col_names)
+                               sep = "\t", header = FALSE, col.names = col_names)
     ## Subset just to be sure contains probes
     exp_sub <- subset(exprs, PROBE_ID %in% probe_list.)
     # Add condition col
@@ -96,10 +83,10 @@ get_expression_data <- function(expression_paths, gene., probe_path){
 
 # eQTL SUMMARY STATS
 get_SumStats_data <- function(eQTL_SS_paths, gene){
-  printer("")
-  printer("+ Processing Summary Stats data")
+  messager("")
+  messager("+ Processing Summary Stats data")
   SS <- lapply(eQTL_SS_paths, function(qx, gene.=gene){
-    dat <- data.table::fread(qx, sep="\t", header=T)
+    dat <- data.table::fread(qx, sep="\t", header=TRUE)
     condition <- basename(dirname(dirname(qx)))
     dat <- dat %>% dplyr::rename(PROBE_ID="gene", Effect="beta", P="p-value")
     dat <- cbind(data.table::data.table(Condition = condition, Gene = gene.),
@@ -109,13 +96,13 @@ get_SumStats_data <- function(eQTL_SS_paths, gene){
 }
 
 # GENOTYPE
-get_genotype_data <- function(genotype_path, .fam_path, subset_genotype_file = F, probe_ID. = NA){
-  printer("")
-  printer("+ Processing Genotype data")
+get_genotype_data <- function(genotype_path, .fam_path, subset_genotype_file = FALSE, probe_ID. = NA){
+  messager("")
+  messager("+ Processing Genotype data")
   if(subset_genotype_file){
     geno_subset <- subset_genotype_data(probe_ID. = probe_ID)
   } else {
-    geno_subset <- data.table::fread(genotype_path, sep=" ", header=F, stringsAsFactors = F)
+    geno_subset <- data.table::fread(genotype_path, sep=" ", header=FALSE, stringsAsFactors = F)
   }
   # Add column names
   first_cols <- c("CHR","SNP","POS","A1","A2")
@@ -138,8 +125,8 @@ get_genotype_data <- function(genotype_path, .fam_path, subset_genotype_file = F
 
 # MERGE: SS + EXP + GENO
 merge_SS.EXP.GENO <- function(SS_data, geno_data, exp_data){
-  printer("")
-  printer("+ Merging Summary Stats, Genotype, and Expression data")
+  messager("")
+  messager("+ Merging Summary Stats, Genotype, and Expression data")
   ## SS + Genotype
   unique_SS <- unique(SS_data[,c("Gene","CHR","POS","Condition","Effect","t-stat","P","FDR")])
   SS_geno <- data.table:::merge.data.table(unique_SS,
@@ -170,11 +157,11 @@ merge_QTL_data <- function(snp_list,
                                                            "LPS2/LPS2.47231.261.b.txt.gz",
                                                            "LPS24/LPS24.47231.322.b.txt.gz")),
                             genotype_path = "Data/QTL/Fairfax_2014/geno.subset.txt",
-                            subset_genotype_file = F,
+                            subset_genotype_file = FALSE,
                             probe_path = "Data/QTL/Fairfax_2014/gene.ILMN.map",
                             .fam_path = "Data/QTL/Fairfax_2014/volunteers_421.fam",
                             gene = "LRRK2",
-                            save_merged=T){
+                            save_merged=TRUE){
   # Expression
   exp_data <- get_expression_data(expression_paths, gene, probe_path)
 
@@ -192,7 +179,7 @@ merge_QTL_data <- function(snp_list,
 
   # Save separate standardized files in their respective folders
   if(save_merged){
-    printer("++ Splitting and writing merged files to storage...")
+    messager("++ Splitting and writing merged files to storage...")
     for(i in 1:length(unique(SS_geno_exp$Condition))){
       results_path <- dirname(eQTL_SS_paths[i])
       QTL.condition <- basename(dirname(results_path))
@@ -200,8 +187,8 @@ merge_QTL_data <- function(snp_list,
                                      dataset_name = QTL.condition,
                                      locus = locus)
       c_sub <- subset(SS_geno_exp, Condition==QTL.condition)
-      printer("+++",subset_path)
-      data.table::fwrite(c_sub, subset_path, quote = F, sep="\t")
+      messager("+++",subset_path)
+      data.table::fwrite(c_sub, subset_path, quote = FALSE, sep="\t")
     }
   }
   return(SS_geno_exp)
@@ -221,16 +208,16 @@ eQTL_boxplots <- function(snp_list,
                                                         "LPS2/LPS2.47231.261.b.txt.gz",
                                                         "LPS24/LPS24.47231.322.b.txt.gz")),
                          genotype_path = "Data/QTL/Fairfax_2014/geno.subset.txt",
-                         subset_genotype_file = F,
+                         subset_genotype_file = FALSE,
                          probe_path = "Data/QTL/Fairfax_2014/gene.ILMN.map",
                          .fam_path = "Data/QTL/Fairfax_2014/volunteers_421.fam",
                          gene = "LRRK2",
                          show_plot = T,
                          SS_annotations = T,
-                         interact = F,
+                         interact = FALSE,
                          save_merged = T){
   # Helper function
-  printer <- function(..., v=T){if(v){print(paste(...))}}
+  printer <- function(..., v=TRUE){if(v){print(paste(...))}}
 
 
   SS_geno_exp <- merge_QTL_data(snp_list=snp_list,
@@ -244,8 +231,8 @@ eQTL_boxplots <- function(snp_list,
                                  save_merged=save_merged)
 
   if(show_plot){
-    printer("")
-    printer("+ Plotting eQTLs")
+    messager("")
+    messager("+ Plotting eQTLs")
     # encode genotypes
     DAT <- SS_geno_exp %>%
       mutate(genotype = case_when(Genotype == 0 ~ paste(A1,A1,sep="/"),
@@ -304,7 +291,7 @@ eQTL_boxplots <- function(snp_list,
 
     bp <- ggplot(data = DAT, aes(x = genotype, y = Expression, fill=Risk.level)) +
       geom_boxplot(show.legend = T) +
-      geom_jitter(alpha=.5, width =.2,  show.legend = F, height=0) +
+      geom_jitter(alpha=.5, width =.2,  show.legend = FALSE, height=0) +
       facet_grid(facets = Condition~SNP+MAF, scales = "free_x", drop = T) +
       theme_bw() +
       theme(strip.text.y = element_text(angle = 0),
@@ -317,7 +304,7 @@ eQTL_boxplots <- function(snp_list,
       # scale_fill_manual(values = c("red","yellow","green"))
       scale_fill_brewer(palette = "Spectral") +
       labs(title=gene,subtitle = "PD Risk SNPs in Fairfax eQTL", x="Genotype") +
-      geom_text(data = labels, inherit.aes = F, size = 3, color="firebrick",
+      geom_text(data = labels, inherit.aes = FALSE, size = 3, color="firebrick",
                 aes(x = 2, y = 8.25,  label = paste0("Effect = ",Effect,"\nFDR = ",FDR," ",sig)))
       # ylim(c(NA,max(SS_geno_exp$Expression)*1.1))
     print(bp)

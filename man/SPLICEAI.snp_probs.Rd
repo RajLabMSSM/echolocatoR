@@ -8,7 +8,7 @@
 \href{https://www.sciencedirect.com/science/article/pii/S0092867418316295}{Publication}
 }
 \usage{
-SPLICEAI.snp_probs(DAT, save_path = F)
+SPLICEAI.snp_probs(DAT, save_path = FALSE)
 }
 \description{
 Postprocess \emph{SpliceAI} results after querying

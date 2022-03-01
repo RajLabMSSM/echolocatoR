@@ -10,20 +10,20 @@
 #' @keywords internal
 #' @family IMPACT
 #' @examples
-#' annot.key <- IMPACT.get_annotation_key(save_key=F)
+#' annot.key <- IMPACT.get_annotation_key(save_key=FALSE)
 #' head(annot.key)
 IMPACT.get_annotation_key <- function(URL="https://github.com/immunogenomics/IMPACT/raw/master/IMPACT707/IMPACT_annotation_key.txt",
                                       save_path="./IMPACT/IMPACT_annotation_key.txt.gz",
-                                      save_key=F,
-                                      force_new_download=F,
-                                      verbose=T){
-  if(file.exists(save_path) & force_new_download==F){
+                                      save_key=FALSE,
+                                      force_new_download=FALSE,
+                                      verbose=TRUE){
+  if(file.exists(save_path) & force_new_download==FALSE){
     print("+ IMPACT:: Importing local anotation key...",v=verbose)
     annot.key <- data.table::fread(save_path)
   } else {
     print("+ IMPACT:: Downloading annotation key from GitHub...",v=verbose)
     annot.key <- data.table::fread(URL)
-    if(save_key!=F){
+    if(save_key!=FALSE){
       data.table::fwrite(annot.key, save_path, sep="\t")
       R.utils::gzip(save_path)
     }
@@ -48,15 +48,15 @@ IMPACT.get_annotation_key <- function(URL="https://github.com/immunogenomics/IMP
 #' @family IMPACT
 #' @examples
 #' \dontrun{
-#' data("BST1")
+#' BST1 <- echodata::BST1
 #' annot_melt <- IMPACT.get_annotations(subset_DT=BST1)
 #' }
 IMPACT.get_annotations <- function(baseURL="https://github.com/immunogenomics/IMPACT/raw/master/IMPACT707/Annotations",
                                    chrom=NULL,
                                    subset_DT=NULL,
-                                   nThread=4,
-                                   all_snps_in_range=F,
-                                   verbose=T){
+                                   nThread=1,
+                                   all_snps_in_range=FALSE,
+                                   verbose=TRUE){
   # These are large files stored via GitHub's large file storage (lfs)
   # Install LFS: https://git-lfs.github.com
   # Getting started with LFS: https://www.atlassian.com/git/tutorials/git-lfs
@@ -71,7 +71,7 @@ IMPACT.get_annotations <- function(baseURL="https://github.com/immunogenomics/IM
 
 
   URL <- file.path(baseURL, paste0("IMPACT707_EAS_chr",chrom,".annot.gz"))
-  printer("IMPACT:: Importing",URL, v=verbose)
+  messager("IMPACT:: Importing",URL, v=verbose)
   annot <- data.table::fread(URL, nThread = nThread)
 
   if(!is.null(subset_DT)){
@@ -79,21 +79,21 @@ IMPACT.get_annotations <- function(baseURL="https://github.com/immunogenomics/IM
                                                  annot,
                                                  by.x = c("SNP","CHR","POS"),
                                                  by.y = c("SNP","CHR","BP"),
-                                                 all.x = T,
+                                                 all.x = TRUE,
                                                  all.y = all_snps_in_range)
   } else {annot_merge <- annot}
   annot_merge <- subset(annot_merge, POS>=min(subset_DT$POS) & POS<=max(subset_DT$POS))
   # Merge with metadata
   annot.key <- IMPACT.get_annotation_key()
-  annot_cols <- grep("^Annot*",colnames(annot_merge), value = T)
+  annot_cols <- grep("^Annot*",colnames(annot_merge), value = TRUE)
   annot_melt <- data.table::melt.data.table(annot_merge, measure.vars = annot_cols,
                                              variable.name = "Annot",
                                              value.name = "IMPACT_score",
-                                             na.rm=F) %>%
+                                             na.rm=FALSE) %>%
     data.table::merge.data.table(annot.key,
                                   by="Annot",
-                                  all = T,
-                                  allow.cartesian = T)
+                                  all = TRUE,
+                                  allow.cartesian = TRUE)
   return(annot_melt)
 }
 
@@ -117,14 +117,14 @@ IMPACT.get_annotations <- function(baseURL="https://github.com/immunogenomics/IM
 IMPACT.iterate_get_annotations <- function(merged_DT,
                                            IMPACT_score_thresh=.1,
                                            baseURL="https://github.com/immunogenomics/IMPACT/raw/master/IMPACT707/Annotations",
-                                           all_snps_in_range=T,
-                                           top_annotations=F,
-                                           force_one_annot_per_locus=F,
+                                           all_snps_in_range=TRUE,
+                                           top_annotations=FALSE,
+                                           force_one_annot_per_locus=FALSE,
                                            snp.filter="!is.na(SNP)",
-                                           nThread=4,
-                                           verbose=T){
+                                           nThread=1,
+                                           verbose=TRUE){
   ANNOT_MELT <- lapply(sort(unique(merged_DT$CHR)), function(chrom, .merged_DT=merged_DT){
-    printer("+ IMPACT:: Gathering annotations for chrom = ",chrom, v=verbose)
+    messager("+ IMPACT:: Gathering annotations for chrom = ",chrom, v=verbose)
     try({
       subset_DT <- subset(.merged_DT, CHR==chrom)
       annot_melt <- IMPACT.get_annotations(baseURL = baseURL,
@@ -133,7 +133,7 @@ IMPACT.iterate_get_annotations <- function(merged_DT,
                                            all_snps_in_range = all_snps_in_range,
                                            nThread = nThread,
                                            verbose = verbose)
-      if(top_annotations!=F){
+      if(top_annotations!=FALSE){
         top_impact <- IMPACT.get_top_annotations(ANNOT_MELT = annot_melt,
                                                  snp.filter = snp.filter,
                                                  top_annotations = top_annotations,
@@ -144,7 +144,7 @@ IMPACT.iterate_get_annotations <- function(merged_DT,
                                          TF %in% top_impact$TF)
       }
       annot_melt <- subset(annot_melt, IMPACT_score >= IMPACT_score_thresh)
-      printer("+ IMPACT::",nrow(annot_melt),"annotations found at IMPACT_score ≥", IMPACT_score_thresh, v=verbose)
+      messager("+ IMPACT::",nrow(annot_melt),"annotations found at IMPACT_score ≥", IMPACT_score_thresh, v=verbose)
       return(annot_melt)
     })
   }) %>% data.table::rbindlist()
@@ -162,17 +162,17 @@ IMPACT.iterate_get_annotations <- function(merged_DT,
 #' @keywords internal
 #' @family IMPACT
 IMPACT.postprocess_annotations <- function(ANNOT_MELT,
-                                           order_loci = T,
+                                           order_loci = TRUE,
                                            no_no_loci = NULL){
   # ANNOT_MELT <- data.table::fread("Data/GWAS/Nalls23andMe_2019/_genome_wide/IMPACT/IMPACT_overlap.csv.gz")
   sort_loci_by_topConsensus_impact <- function(ANNOT_MELT){
     locus_sort <- ANNOT_MELT %>%
-      dplyr::group_by(Locus, .drop=F) %>%
-      dplyr::summarise(meanIMPACT=mean(IMPACT_score[topConsensus], na.rm = T)) %>%
+      dplyr::group_by(Locus, .drop=FALSE) %>%
+      dplyr::summarise(meanIMPACT=mean(IMPACT_score[topConsensus], na.rm = TRUE)) %>%
       dplyr::arrange(meanIMPACT) %>%
-      dplyr::mutate(Locus=factor(Locus, ordered = T))
+      dplyr::mutate(Locus=factor(Locus, ordered = TRUE))
     locus_sort[is.na(locus_sort$meanIMPACT),"meanIMPACT"] <- 0
-    ANNOT_MELT$Locus <- factor(ANNOT_MELT$Locus, levels = locus_sort$Locus, ordered = T)
+    ANNOT_MELT$Locus <- factor(ANNOT_MELT$Locus, levels = locus_sort$Locus, ordered = TRUE)
 
     ANNOT_MELT <- ANNOT_MELT%>%
       dplyr::mutate(#Tissue = ifelse(Tissue=="GI", Tissue, tolower(Tissue)),
@@ -183,10 +183,10 @@ IMPACT.postprocess_annotations <- function(ANNOT_MELT,
 
   # sort_loci_by_annot <- function(ANNOT_MELT){
   #   locus_sort <- ANNOT_MELT %>%
-  #     dplyr::group_by(Locus, .drop=F) %>%
+  #     dplyr::group_by(Locus, .drop=FALSE) %>%
   #     dplyr::arrange(TF, Tissue, CellDeriv, Cell) %>%
-  #     dplyr::mutate(Locus=factor(Locus, ordered = T))
-  #   ANNOT_MELT$Locus <- factor(ANNOT_MELT$Locus, levels = locus_sort$Locus, ordered = T)
+  #     dplyr::mutate(Locus=factor(Locus, ordered = TRUE))
+  #   ANNOT_MELT$Locus <- factor(ANNOT_MELT$Locus, levels = locus_sort$Locus, ordered = TRUE)
   #   return(ANNOT_MELT)
   # }
   #
@@ -221,16 +221,16 @@ IMPACT.postprocess_annotations <- function(ANNOT_MELT,
 IMPACT.get_top_annotations <- function(ANNOT_MELT,
                                        snp.filter="!is.na(IMPACT_score)",
                                        top_annotations=1,
-                                       force_one_annot_per_locus=F){
+                                       force_one_annot_per_locus=FALSE){
   top_impact <- ANNOT_MELT %>%
     # Group all SNPs within the snp group (snp filter)
-    dplyr::group_by(Locus, Tissue, CellDeriv, Cell, TF, .drop=F) %>%
-    dplyr::summarise(SNPs = n_distinct(SNP[eval(parse(text = snp.filter))], na.rm = T),
+    dplyr::group_by(Locus, Tissue, CellDeriv, Cell, TF, .drop=FALSE) %>%
+    dplyr::summarise(SNPs = n_distinct(SNP[eval(parse(text = snp.filter))], na.rm = TRUE),
                      # These metrics are often very similar or the same
                      ## when you only have 1 snp (in the snp group)p er locus
-                     mean_IMPACT = mean(IMPACT_score[eval(parse(text = snp.filter))], na.rm=T),
-                     max_IMPACT = max(IMPACT_score[eval(parse(text = snp.filter))], na.rm=T),
-                     median_IMPACT = median(IMPACT_score[eval(parse(text = snp.filter))], na.rm = T)
+                     mean_IMPACT = mean(IMPACT_score[eval(parse(text = snp.filter))], na.rm=TRUE),
+                     max_IMPACT = max(IMPACT_score[eval(parse(text = snp.filter))], na.rm=TRUE),
+                     median_IMPACT = median(IMPACT_score[eval(parse(text = snp.filter))], na.rm = TRUE)
                      )
   if(any(is.infinite(top_impact$max_IMPACT))){
     # Max function produces -Inf values when there's only NA values and na.rm=T
@@ -238,7 +238,7 @@ IMPACT.get_top_annotations <- function(ANNOT_MELT,
   }
 
   # Get the annotation with the top mean/max/mode
-  if(top_annotations!=F){
+  if(top_annotations!=FALSE){
     top_impact <- top_impact %>%
       # dplyr::ungroup() %>%
       dplyr::group_by(Locus) %>%
@@ -270,18 +270,18 @@ prepare_mat_meta <- function(TOP_IMPACT,
   # Reorder loci
   TOP_IMPACT <- TOP_IMPACT %>% dplyr::arrange(Tissue, CellDeriv, Cell, TF)
   TOP_IMPACT$Locus <- factor(as.character(TOP_IMPACT$Locus),
-                             levels=unique(as.character(TOP_IMPACT$Locus)), ordered = T)
+                             levels=unique(as.character(TOP_IMPACT$Locus)), ordered = TRUE)
   # Merge the meanIMPACT scores with the top annotations so that you only have one row/locus
   mat_meta <- TOP_IMPACT %>%
     dplyr::group_by(Locus, SNP_group) %>%
-    dplyr::summarise(mean_IMPACT=mean(mean_IMPACT, na.rm=T),
-                     max_IMPACT=gsub(-Inf,NA, max(max_IMPACT, na.rm=T)),
-                     median_IMPACT=mean(median_IMPACT, na.rm=T)) %>%
+    dplyr::summarise(mean_IMPACT=mean(mean_IMPACT, na.rm=TRUE),
+                     max_IMPACT=gsub(-Inf,NA, max(max_IMPACT, na.rm=TRUE)),
+                     median_IMPACT=mean(median_IMPACT, na.rm=TRUE)) %>%
     data.table::data.table() %>%
     data.table::dcast(formula ="Locus ~ SNP_group",
                       value.var=value.var) %>%
     # Get the annotations from here
-    merge(subset(TOP_IMPACT, SNP_group==snp.group), sort = F) %>%
+    merge(subset(TOP_IMPACT, SNP_group==snp.group), sort  = FALSE) %>%
     # REPLACE NA with 0!: in actuality, these are just snps with IMPACT score <.01 during query
     dplyr::mutate_at(.vars = names(snp.group),
                      .funs = function(.){as.numeric(ifelse(is.na(.),fill_na,.))}) %>%
@@ -303,16 +303,16 @@ prepare_mat_meta <- function(TOP_IMPACT,
 #' @family IMPACT
 #' @examples
 #' \dontrun{
-#' # merged_DT <- merge_finemapping_results(minimum_support = 1, include_leadSNPs = T,xlsx_path = F,dataset = "Data/GWAS/Nalls23andMe_2019")
+#' # merged_DT <- merge_finemapping_results(minimum_support = 1, include_leadSNPs = TRUE,xlsx_path = FALSE,dataset = "Data/GWAS/Nalls23andMe_2019")
 #'  #merged_DT$Locus <- merged_DT$Gene
 #' # ANNOT_MELT <- IMPACT.iterate_get_annotations(merged_DT = merged_DT,
 #' #                                              IMPACT_score_thresh=0,
 #' #                                              baseURL="../../data/IMPACT/IMPACT707/Annotations",
-#' #                                              all_snps_in_range=T,
-#' #                                              top_annotations_only=F)
+#' #                                              all_snps_in_range=TRUE,
+#' #                                              top_annotations_only=FALSE)
 #' data.table::fwrite(ANNOT_MELT,"/sc/arion/projects/pd-omics/data/IMPACT/IMPACT707/Annotations/IMPACT_overlap.csv.gz")
 #' ANNOT_MELT <- data.table::fread("~/Desktop/Fine_mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/IMPACT/IMPACT_overlap.csv.gz")
-#' ANNOT_MELT <- update_cols(subset(ANNOT_MELT, select=-c(SUSIE.Probability,FINEMAP.Probability)))
+#' ANNOT_MELT <- echodata::update_cols(subset(ANNOT_MELT, select=-c(SUSIE.Probability,FINEMAP.Probability)))
 #'
 #' ## Remove no no loci
 #' no_no_loci =  c("HLA-DRB5","MAPT","ATG14","SP1","LMNB1","ATP6V0A1", "RETREG3","UBTF","FAM171A2","MAP3K14","CRHR1","MAPT-AS1","KANSL1","NSF","WNT3")
@@ -324,16 +324,16 @@ IMPACT_heatmap <- function(ANNOT_MELT,
   library(ComplexHeatmap);# devtools::install_github("jokergoo/ComplexHeatmap")
 
   ## Remove POLYFUN results as this introduces circularity (Polyfun trains on data from ENCODE/Roadmap, as does IMPACT)
-  ANNOT_MELT <- find_consensus_SNPs_no_PolyFun(ANNOT_MELT)
+  ANNOT_MELT <- echodata::find_consensus_snps_no_polyfun(ANNOT_MELT)
   sampling_df <- ANNOT_MELT
-  snp.groups_list <- snp_group_filters()
+  snp.groups_list <- echodata::snp_group_filters()
   snp.groups_list <- snp.groups_list[names(snp.groups_list) %in% snp_groups]
   TOP_IMPACT <- lapply(names(snp.groups_list), function(x){
     print(x)
     top_impact <- IMPACT.get_top_annotations(ANNOT_MELT = ANNOT_MELT,
                                              snp.filter = snp.groups_list[[x]],
                                              top_annotations = 1,
-                                             force_one_annot_per_locus = T)
+                                             force_one_annot_per_locus = TRUE)
     top_impact$SNP_group <- x
     return(top_impact)
   }) %>% data.table::rbindlist()
@@ -351,13 +351,13 @@ IMPACT_heatmap <- function(ANNOT_MELT,
                                              snp.filter = snp.groups_list[[x]],
                                              # The number of top annots affects the significance of the t-test
                                              top_annotations = 1,
-                                             force_one_annot_per_locus = F)
+                                             force_one_annot_per_locus  = FALSE)
     top_impact$SNP_group <- x
     return(top_impact)
   }) %>% data.table::rbindlist()
 
   TOP_IMPACT_all <- subset(TOP_IMPACT_all, !Locus %in% no_no_loci)
-  TOP_IMPACT_all$SNP_group <- factor(TOP_IMPACT_all$SNP_group, levels = names(snp.groups_list), ordered = T)
+  TOP_IMPACT_all$SNP_group <- factor(TOP_IMPACT_all$SNP_group, levels = names(snp.groups_list), ordered = TRUE)
   # Use a less averaged version of the data to gain power
   TOP_IMPACT_all$rowID <- 1:nrow(TOP_IMPACT_all)
   # Depending on if and at what stage you fill na with 0, you get very different boxplot and tstats
@@ -368,7 +368,7 @@ IMPACT_heatmap <- function(ANNOT_MELT,
                                  save_path="/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/IMPACT/snp_groups.mean_topIMPACT.png",
                                  ylabel = "mean IMPACT score",
                                  comparisons_filter = NULL,
-                                 show_plot = T,
+                                 show_plot = TRUE,
                                  height = 5,
                                  width = 5)
 
@@ -406,23 +406,23 @@ IMPACT_heatmap <- function(ANNOT_MELT,
                       # column_gap = 1,
                       # column_split = colnames(mat),
                       # column_order = colnames(mat),
-                      cluster_columns = F,
+                      cluster_columns = FALSE,
                       # column_dend_side = "top",
                       column_names_side = "top",
                       column_names_rot = 0,
                       column_names_gp = gpar(col = c("red","green3","goldenrod3","goldenrod2"), cex=.75),
-                      column_names_centered = T,
+                      column_names_centered = TRUE,
                       column_gap = unit(.5,"cm"),
 
                       # Rows
-                      show_row_names = T,
+                      show_row_names = TRUE,
                       row_title = "Locus",
                       row_names_side = "left",
                       row_names_gp = gpar(cex=cex),
-                      row_dend_reorder = F,
+                      row_dend_reorder = FALSE,
                       row_split=row_split,
 
-                      cluster_rows = F,
+                      cluster_rows = FALSE,
                       # row_km = 4,
                       # row_dend_width =  unit(2, "cm"),
                       top_annotation = make_boxplot(boxplot_mat = boxplot_mat)
@@ -442,17 +442,17 @@ IMPACT_heatmap <- function(ANNOT_MELT,
     ha = Heatmap(meta,
                  name = "Metadata_table",
                  # width =widths,
-                 show_heatmap_legend = F,
+                 show_heatmap_legend = FALSE,
                  col = master_dict,
 
                  row_names_side = "right",
                  row_split = meta$Tissue,
-                 # show_row_names = F,
+                 # show_row_names = FALSE,
 
                  column_title = "Top IMPACT annotations",
                  column_names_rot = rot,
                  column_names_side = "top",
-                 column_names_centered = T,
+                 column_names_centered = TRUE,
                  column_names_gp = gpar(cex=.75),
                  cluster_rows = F ,
                  row_km = 4,
@@ -473,16 +473,16 @@ IMPACT_heatmap <- function(ANNOT_MELT,
 
     ha = Heatmap(meta[variable], name = variable,
                  width = max_text_width(meta[[variable]])*width_factor,
-                 show_heatmap_legend = F,
+                 show_heatmap_legend = FALSE,
 
                  row_names_side = "right",
                  row_names_gp = gpar(cex=.5),
                  row_split = meta[variable],
-                 # show_row_names = F,
+                 # show_row_names = FALSE,
 
                  column_names_rot = rot,
                  column_names_side = "top",
-                 column_names_centered = T,
+                 column_names_centered = TRUE,
                  column_names_gp = gpar(cex=.75),
                  cluster_rows = F ,
                  row_km = 4,
@@ -521,10 +521,10 @@ IMPACT_heatmap <- function(ANNOT_MELT,
 
 
 
-  # text_col <- function(mat_meta, variable, width_factor=1.1, rot=45, palette=F, na_fill=NA){
+  # text_col <- function(mat_meta, variable, width_factor=1.1, rot=45, palette=FALSE, na_fill=NA){
   #   meta <- data.frame(mat_meta)
   #   meta[is.na(mat_meta[[variable]]), variable] <-  na_fill
-  #   if(palette!=F){
+  #   if(palette!=FALSE){
   #     color_list =  RColorBrewer::brewer.pal(n = n_distinct(meta[[variable]]), name = palette)
   #   } else{ color_list <- NULL }
   #   ha <- rowAnnotation(TFBS = anno_text(meta[[variable]],
@@ -552,7 +552,7 @@ IMPACT_heatmap <- function(ANNOT_MELT,
   # https://rlbarter.github.io/superheat-examples/Organ/
   # Vignette: https://rlbarter.github.io/superheat/saving-superheatmaps.html
   # superheat(X = mat,
-  #           row.dendrogram = T,
+  #           row.dendrogram = TRUE,
   #
   #           # heat.lim = c(0,1),
   #           heat.pal = rev( RColorBrewer::brewer.pal(5, "Spectral")),
@@ -564,7 +564,7 @@ IMPACT_heatmap <- function(ANNOT_MELT,
   #           left.label.text.size = 3,
   #
   #           # Top plot
-  #           yt = colMeans(mat, na.rm = T),
+  #           yt = colMeans(mat, na.rm = TRUE),
   #           yt.plot.type = "boxplot",
   #           yt.axis.name="Mean IMPACT\nacross loci",
   #           n.clusters.cols = 3,
@@ -583,7 +583,7 @@ IMPACT_heatmap <- function(ANNOT_MELT,
   #
   # pheatmap::pheatmap(mat = mat, angle_col = 45,
   #                    annotation_row = meta,
-  #                    annotation_legend = F,
+  #                    annotation_legend = FALSE,
   #                    annotation_colors = )
   return(mat_meta)
 }
@@ -610,31 +610,31 @@ IMPACT.snp_group_boxplot <- function(TOP_IMPACT_all,
                                      snp_groups=c("GWAS lead","UCS","Consensus"),
                                      method="wilcox.test",
                                      comparisons_filter=function(x){if("Consensus" %in% x) return(x)},
-                                     show_plot=T,
-                                     save_path=F,
+                                     show_plot=TRUE,
+                                     save_path=FALSE,
                                      title="IMPACT scores",
                                      xlabel=NULL,
                                      ylabel=NULL,
-                                     show_padj=T,
-                                     show_signif=T,
+                                     show_padj=TRUE,
+                                     show_signif=TRUE,
                                      vjust_signif=0.5,
-                                     show_xtext=T,
-                                     shift_points=T,
+                                     show_xtext=TRUE,
+                                     shift_points=TRUE,
                                      height=10,
                                      width=10){
-  colorDict <- snp_group_colorDict()
+  colorDict <- echodata::snp_group_colorDict()
   plot_dat <- subset(TOP_IMPACT_all, SNP_group %in% snp_groups) %>%
-    dplyr::mutate(SNP_group=factor(SNP_group, levels=names(colorDict), ordered = T))
+    dplyr::mutate(SNP_group=factor(SNP_group, levels=names(colorDict), ordered = TRUE))
   snp.groups <- unique(plot_dat$SNP_group)
   comparisons <- utils::combn(x = as.character(snp.groups),
                               m=2,
                               FUN = comparisons_filter,
-                              simplify = F) %>% purrr::compact()
+                              simplify  = FALSE) %>% purrr::compact()
 
   pb <-  ggplot(data = plot_dat, aes(x=SNP_group, y=mean_IMPACT, fill=SNP_group)) +
-    geom_jitter(alpha=.1,width = .25, show.legend = F, shape=16, height=0) +
-    geom_violin(alpha=.6, show.legend = F) +
-    geom_boxplot(alpha=.6, color="black", show.legend = F) +
+    geom_jitter(alpha=.1,width = .25, show.legend = FALSE, shape=16, height=0) +
+    geom_violin(alpha=.6, show.legend  = FALSE) +
+    geom_boxplot(alpha=.6, color="black", show.legend  = FALSE) +
     geom_hline(yintercept =.5, linetype=2, alpha=.5) +
     labs(x=xlabel,
          y=ylabel,
@@ -658,7 +658,7 @@ IMPACT.snp_group_boxplot <- function(TOP_IMPACT_all,
           axis.title.x = element_blank())
   }
   if(show_plot) print(pb)
-  if(save_path!=F) ggplot2::ggsave(save_path, pb,
+  if(save_path!=FALSE) ggplot2::ggsave(save_path, pb,
                                    dpi = 300,
                                    height=height, width=width)
   return(pb)
@@ -741,7 +741,7 @@ IMPACT.plot_top_annotations <- function(){
 
   # library(ggsci)
   # barplot_layer <- function(ANNOT_MELT,
-  #                           ytext=F,
+  #                           ytext=FALSE,
   #                           title=NULL,
   #                           xlabel="Mean IMPACT score",
   #                           palette=NULL,
@@ -757,9 +757,9 @@ IMPACT.plot_top_annotations <- function(){
   #     scale_x_continuous(limits = c(0,1), breaks = c(0,.5,1) ,position = "top") +
   #     scale_y_discrete(drop=FALSE) +
   #     geom_text(aes(x=meanIMPACT, label = SNPs, color=meanIMPACT),
-  #               size=3, show.legend = F, nudge_x = .01, hjust=0) +
+  #               size=3, show.legend = FALSE, nudge_x = .01, hjust=0) +
   #     theme(legend.position = "left")
-  #   if(ytext==F){
+  #   if(ytext==FALSE){
   #     bp <- bp +
   #       ylab(NULL) +
   #       theme(axis.text.y = element_blank(),
@@ -794,7 +794,7 @@ IMPACT.plot_top_annotations <- function(){
   #
   # metadata_tiles <- function(variable="Tissue",
   #                            palette="Set3",
-  #                            show.legend=F){
+  #                            show.legend=FALSE){
   #   tiles <- ggplot(data=meta_table[,c("Locus",variable)], aes(x="1", y=Locus)) +
   #     geom_tile(aes(fill=eval(parse(text=variable))), show.legend = show.legend, alpha=.5) +
   #     # scale_fill_discrete(na.value = "transparent") +
@@ -815,7 +815,7 @@ IMPACT.plot_top_annotations <- function(){
 
 
   library(patchwork)
-  bpl <- barplot_layer(ANNOT_MELT, snp.filter = "leadSNP==T", ytext=T, title = "Lead GWAS SNPs") +
+  bpl <- barplot_layer(ANNOT_MELT, snp.filter = "leadSNP==T", ytext=TRUE, title = "Lead GWAS SNPs") +
     barplot_layer(ANNOT_MELT, snp.filter = "Support>0", title = "UCS SNPs") +
     barplot_layer(ANNOT_MELT, snp.filter = "Consensus_SNP", title = "Consensus SNPs") +
     barplot_layer(ANNOT_MELT, snp.filter = "topConsensus", title = "Top Consensus SNP") +
@@ -823,9 +823,9 @@ IMPACT.plot_top_annotations <- function(){
     patchwork::plot_layout(nrow = 1, widths = c(rep(.3,4),1))
   print(bpl)
 
-  if(save_path!=F){
+  if(save_path!=FALSE){
     save_path="./Data/GWAS/Nalls23andMe_2019/_genome_wide/IMPACT"
-    dir.create(save_path,showWarnings = F, recursive = T)
+    dir.create(save_path,showWarnings = FALSE, recursive = TRUE)
     ggsave(file.path(save_path,"IMPACT_SNPgroups_summary.png"), dpi = 400, height = 12, width = 17)
   }
 
@@ -838,8 +838,8 @@ IMPACT.plot_top_annotations <- function(){
 #' Conduct IMPACT enrichment between SNP groups a fine-mapping methods.
 #' @keywords internal
 IMPACT.compute_enrichment <- function(annot_melt, locus=NULL){
-  sum.IMPACT <- sum(annot_melt$IMPACT_score, na.rm=T)
-  len.SNPs <- n_distinct(annot_melt$SNP, na.rm = T)
+  sum.IMPACT <- sum(annot_melt$IMPACT_score, na.rm=TRUE)
+  len.SNPs <- n_distinct(annot_melt$SNP, na.rm = TRUE)
   # SNP.groups <- list("leadGWAS"=subset(annot_melt, leadSNP),
   #                    "UCS"=subset(annot_melt, Consensus_SNP),
   #                    "ABF_CS"=subset(annot_melt, ABF.CS>0),
@@ -851,8 +851,8 @@ IMPACT.compute_enrichment <- function(annot_melt, locus=NULL){
   #   print(snp.group)
   #   e <- SNP.groups[[snp.group]] %>%
   #     dplyr::group_by(TF, Tissue, Cell, CellDeriv) %>%
-  #     dplyr::summarise(enrichment = (sum(IMPACT_score, na.rm = T) / sum.IMPACT) /
-  #                        (n_distinct(SNP, na.rm = T) / len.SNPs) ) %>%
+  #     dplyr::summarise(enrichment = (sum(IMPACT_score, na.rm = TRUE) / sum.IMPACT) /
+  #                        (n_distinct(SNP, na.rm = TRUE) / len.SNPs) ) %>%
   #     dplyr::arrange(-enrichment) %>%
   #     data.table::data.table()
   #   e <- cbind(SNP.group=snp.group, e)
@@ -863,37 +863,37 @@ IMPACT.compute_enrichment <- function(annot_melt, locus=NULL){
   SNP.groups <- list(
     "leadGWAS" = annot_melt %>%
       dplyr::group_by(TF, Tissue, Cell, CellDeriv) %>%
-      dplyr::summarise(enrichment = (sum(IMPACT_score[leadSNP], na.rm = T) / sum(IMPACT_score, na.rm = T)) /
-                         (n_distinct(SNP[leadSNP], na.rm = T) / n_distinct(SNP, na.rm = T)) ),
+      dplyr::summarise(enrichment = (sum(IMPACT_score[leadSNP], na.rm = TRUE) / sum(IMPACT_score, na.rm = TRUE)) /
+                         (n_distinct(SNP[leadSNP], na.rm = TRUE) / n_distinct(SNP, na.rm = TRUE)) ),
     "UCS" = annot_melt %>%
       dplyr::group_by(TF, Tissue, Cell, CellDeriv) %>%
-      dplyr::summarise(enrichment = (sum(IMPACT_score[Support>0], na.rm = T) / sum(IMPACT_score, na.rm = T)) /
-                         (n_distinct(SNP[Support>0], na.rm = T) / n_distinct(SNP, na.rm = T)) ),
+      dplyr::summarise(enrichment = (sum(IMPACT_score[Support>0], na.rm = TRUE) / sum(IMPACT_score, na.rm = TRUE)) /
+                         (n_distinct(SNP[Support>0], na.rm = TRUE) / n_distinct(SNP, na.rm = TRUE)) ),
     "ABF_CS" = annot_melt %>%
       dplyr::group_by(TF, Tissue, Cell, CellDeriv) %>%
-      dplyr::summarise(enrichment = (sum(IMPACT_score[ABF.CS>0], na.rm = T) / sum(IMPACT_score, na.rm = T)) /
-                         (n_distinct(SNP[ABF.CS>0], na.rm = T) / n_distinct(SNP, na.rm = T)) ),
+      dplyr::summarise(enrichment = (sum(IMPACT_score[ABF.CS>0], na.rm = TRUE) / sum(IMPACT_score, na.rm = TRUE)) /
+                         (n_distinct(SNP[ABF.CS>0], na.rm = TRUE) / n_distinct(SNP, na.rm = TRUE)) ),
     "FINEMAP_CS" = annot_melt %>%
       dplyr::group_by(TF, Tissue, Cell, CellDeriv) %>%
-      dplyr::summarise(enrichment = (sum(IMPACT_score[FINEMAP.CS>0], na.rm = T) / sum(IMPACT_score, na.rm = T)) /
-                         (n_distinct(SNP[FINEMAP.CS>0], na.rm = T) / n_distinct(SNP, na.rm = T)) ),
+      dplyr::summarise(enrichment = (sum(IMPACT_score[FINEMAP.CS>0], na.rm = TRUE) / sum(IMPACT_score, na.rm = TRUE)) /
+                         (n_distinct(SNP[FINEMAP.CS>0], na.rm = TRUE) / n_distinct(SNP, na.rm = TRUE)) ),
     "SUSIE_CS" = annot_melt %>%
       dplyr::group_by(TF, Tissue, Cell, CellDeriv) %>%
-      dplyr::summarise(enrichment = (sum(IMPACT_score[SUSIE.CS>0], na.rm = T) / sum(IMPACT_score, na.rm = T)) /
-                         (n_distinct(SNP[SUSIE.CS>0], na.rm = T) / n_distinct(SNP, na.rm = T)) ),
+      dplyr::summarise(enrichment = (sum(IMPACT_score[SUSIE.CS>0], na.rm = TRUE) / sum(IMPACT_score, na.rm = TRUE)) /
+                         (n_distinct(SNP[SUSIE.CS>0], na.rm = TRUE) / n_distinct(SNP, na.rm = TRUE)) ),
     "POLYFUN_CS" = annot_melt %>%
       dplyr::group_by(TF, Tissue, Cell, CellDeriv) %>%
-      dplyr::summarise(enrichment = (sum(IMPACT_score[POLYFUN_SUSIE.CS>0], na.rm = T) / sum(IMPACT_score, na.rm = T)) /
-                         (n_distinct(SNP[POLYFUN_SUSIE.CS>0], na.rm = T) / n_distinct(SNP, na.rm = T)) ),
+      dplyr::summarise(enrichment = (sum(IMPACT_score[POLYFUN_SUSIE.CS>0], na.rm = TRUE) / sum(IMPACT_score, na.rm = TRUE)) /
+                         (n_distinct(SNP[POLYFUN_SUSIE.CS>0], na.rm = TRUE) / n_distinct(SNP, na.rm = TRUE)) ),
     "Consensus" = annot_melt %>%
       dplyr::group_by(TF, Tissue, Cell, CellDeriv) %>%
-      dplyr::summarise(enrichment = (sum(IMPACT_score[Consensus_SNP], na.rm = T) / sum(IMPACT_score, na.rm = T)) /
-                         (n_distinct(SNP[Consensus_SNP], na.rm = T) / n_distinct(SNP, na.rm = T)) )
+      dplyr::summarise(enrichment = (sum(IMPACT_score[Consensus_SNP], na.rm = TRUE) / sum(IMPACT_score, na.rm = TRUE)) /
+                         (n_distinct(SNP[Consensus_SNP], na.rm = TRUE) / n_distinct(SNP, na.rm = TRUE)) )
   )
   enrich <- data.table::rbindlist(SNP.groups, idcol = "SNP.group") %>% dplyr::arrange(-enrichment)
   enrich <- cbind(Locus=locus, enrich)
-  enrich$TF <- factor(enrich$TF, ordered = T)
-  enrich$SNP.group <- factor(enrich$SNP.group, levels=names(SNP.groups), ordered = T)
+  enrich$TF <- factor(enrich$TF, ordered = TRUE)
+  enrich$SNP.group <- factor(enrich$SNP.group, levels=names(SNP.groups), ordered = TRUE)
   return(enrich)
 }
 
@@ -903,7 +903,7 @@ IMPACT.compute_enrichment <- function(annot_melt, locus=NULL){
 #' @keywords internal
 IMPACT.iterate_enrichment <- function(gwas_paths,
                                       annot_baseURL="../../data/IMPACT/IMPACT707/Annotations"){
-  # gwas_paths <- list.files(path = "./Data/GWAS/Nalls23andMe_2019", pattern = "Multi-finemap_results.txt", recursive = T, full.names = T)
+  # gwas_paths <- list.files(path = "./Data/GWAS/Nalls23andMe_2019", pattern = "Multi-finemap_results.txt", recursive = TRUE, full.names = TRUE)
   # no_no_loci <- c("HLA-DRB5","MAPT","ATG14","SP1","LMNB1","ATP6V0A1")
   # gwas_paths <- gwas_paths[!basename(dirname(dirname(gwas_paths))) %in% no_no_loci]
 
@@ -916,7 +916,7 @@ IMPACT.iterate_enrichment <- function(gwas_paths,
   #     if(!"Locus" %in% colnames(subset_DT)){
   #       subset_DT <- cbind(Locus=locus, subset_DT)
   #     }
-  #     subset_DT <- find_consensus_SNPs(finemap_dat = subset_DT)
+  #     subset_DT <- echodata::find_consensus_snps(dat = subset_DT)
   #     annot_melt <- IMPACT.get_annotations(baseURL = annot_baseURL,
   #                                          subset_DT = subset_DT,
   #                                          nThread = 4)
@@ -924,7 +924,7 @@ IMPACT.iterate_enrichment <- function(gwas_paths,
   #                                         locus = locus)
   #   })
   #   return(enrich)
-  # }) %>% data.table::rbindlist(fill=T)
+  # }) %>% data.table::rbindlist(fill=TRUE)
 
   ENRICH <- lapply(unique(ANNOT_MELT$Locus), function(locus){
     message("+ IMPACT:: Locus = ",locus)
@@ -995,11 +995,11 @@ IMPACT.plot_enrichment <- function(ENRICH){
 #'
 #' @keywords internal
 IMPACT.plot_impact_score <- function(annot_melt,
-                                     save_path=F,
-                                     show_plot=T){
+                                     save_path=FALSE,
+                                     show_plot=TRUE){
 
   # subset_DT <- data.table::fread("Data/GWAS/Nalls23andMe_2019/CD19/Multi-finemap/Multi-finemap_results.txt")
-  # subset_DT <- find_consensus_SNPs(subset_DT)
+  # subset_DT <- echodata::find_consensus_snps(subset_DT)
   # subset_DT$Locus <- "CD19"
   # annot_melt <- IMPACT.get_annotations(baseURL = "/Volumes/Steelix/IMPACT/IMPACT707/Annotations", subset_DT = subset_DT)
 
@@ -1017,16 +1017,16 @@ IMPACT.plot_impact_score <- function(annot_melt,
 
 
   # Reduce to smaller df to make plotting faster
-  finemap_cols <- grep("*.PP$|*.CS$",colnames(annot_melt),value=T)
+  finemap_cols <- grep("*.PP$|*.CS$",colnames(annot_melt),value=TRUE)
   annot_snp <- subset(annot_melt, select=c("SNP","CHR","POS","Mb","P","Consensus_SNP","leadSNP","Support",finemap_cols)) %>% unique()
   annot_snp <- dplyr::mutate(annot_snp, SNP.Group = ifelse(Consensus_SNP,"Consensus SNP",ifelse(leadSNP,"Lead GWAS SNP",ifelse(Support>0,"Credible Set SNP",NA))))
   labelSNPs <- construct_SNPs_labels(subset_DT = annot_snp, labels_subset = c("Lead","UCS","Consensus"))
   leader_SNP <- subset(labelSNPs, type=="Lead SNP")
   CS_set <- subset(labelSNPs, type=="Credible Set")
   # ggb <- GGBIO.plot(finemap_dat = annot_snp, LD_matrix = LD_matrix,
-  #            XGR_libnames = NULL,
-  #            save_plot=F,
-  #            Nott_sn_epigenome=F)
+  #            xgr_libnames = NULL,
+  #            save_plot=FALSE,
+  #            Nott_sn_epigenome=FALSE)
   # GWAS row
   gwas <- ggplot(annot_snp, aes(x=Mb, y=-log10(P), color=-log10(P))) +
     geom_point(size=1) +
@@ -1083,10 +1083,10 @@ IMPACT.plot_impact_score <- function(annot_melt,
   # IMPACT rows
   impact <- ggplot(subset(annot_melt, IMPACT_score>0.5),
                    aes(x=Mb, y=IMPACT_score, color=TF)) +
-    geom_point(show.legend = F) +
-    # geom_col(position = "identity", show.legend = T) +
+    geom_point(show.legend  = FALSE) +
+    # geom_col(position = "identity", show.legend = TRUE) +
     facet_grid(facets = Tissue ~ ., switch = "y") +
-    # ggridges::geom_ridgeline(aes(height = IMPACT_score), na.rm = T, size=.1, show.legend = F) +
+    # ggridges::geom_ridgeline(aes(height = IMPACT_score), na.rm = TRUE, size=.1, show.legend  = FALSE) +
     # ggridges::theme_ridges() +
     theme_bw() +
     labs(y="IMPACT score per tissue") +
@@ -1104,10 +1104,10 @@ IMPACT.plot_impact_score <- function(annot_melt,
 
   if(show_plot){print(impact_plot)}
 
-  if(save_path!=F){
+  if(save_path!=FALSE){
     # save_path="./Data/GWAS/Nalls23andMe_2019/LRRK2/IMPACT/LRRK2_IMPACT_plot.png"
-    dir.create(dirname(save_path), showWarnings = F, recursive = T)
-    printer("IMPACT:: Saving plot ==>",save_path)
+    dir.create(dirname(save_path), showWarnings = FALSE, recursive = TRUE)
+    messager("IMPACT:: Saving plot ==>",save_path)
     ggsave(save_path, plot=impact_plot, height=10, width=10)
   }
   return(impact_plot)
@@ -1122,16 +1122,18 @@ IMPACT.plot_impact_score <- function(annot_melt,
 #' the annotation with the highest mean IMPACT score across all fine-mapped Consensus SNPS.
 #' Then, plot the IMPACT scores for those locus-specific top annotations.
 #' @keywords internal
+#' @importFrom echodata assign_lead_snp
+#' @importFrom data.table rbindlist
 IMPACT.plot_impact_score_compare <- function(loci=c("CD19","TRIM40","NUCKS1","LRRK2","MED12L","MEX3C")){
 
   subset_DT <- lapply(loci, function(locus){
      dat <- data.table::fread(file.path("Data/GWAS/Nalls23andMe_2019", locus,
                                  "Multi-finemap/Multi-finemap_results.txt"))
      dat$Locus <- locus
-     dat <- assign_lead_SNP(dat)
+     dat <- echodata::assign_lead_snp(dat)
      return(dat)
-  }) %>% data.table::rbindlist(fill = T)
-  subset_DT <- find_consensus_SNPs(subset_DT)
+  }) %>% data.table::rbindlist(fill = TRUE)
+  subset_DT <- echodata::find_consensus_snps(subset_DT)
   subset_DT <- find_topConsensus(subset_DT)
 
 
@@ -1139,7 +1141,7 @@ IMPACT.plot_impact_score_compare <- function(loci=c("CD19","TRIM40","NUCKS1","LR
                                                IMPACT_score_thresh=0,
                                                baseURL = "../../data/IMPACT/IMPACT707/Annotations",
                                                # baseURL="/Volumes/Steelix/IMPACT/IMPACT707/Annotations",
-                                               all_snps_in_range=T,
+                                               all_snps_in_range=TRUE,
                                                top_annotations = 1,
                                                snp.filter = "Consensus_SNP")
   # data.table::fwrite(annot_melt,"Data/GWAS/Nalls23andMe_2019/_genome_wide/IMPACT/annot_melt_topAnnot_subset.csv")
@@ -1148,7 +1150,7 @@ IMPACT.plot_impact_score_compare <- function(loci=c("CD19","TRIM40","NUCKS1","LR
   top_impact <- IMPACT.get_top_annotations(ANNOT_MELT = annot_melt,
                                            snp.filter = "Consensus_SNP",
                                            top_annotations = 1,
-                                           force_one_annot_per_locus = T)
+                                           force_one_annot_per_locus = TRUE)
   # top_impact <- subset(top_impact, Locus %in% c("CD19","NUCKS1","MEX3C"))
 
   # When data was originally merged, kept all subset_DT rows
@@ -1166,9 +1168,9 @@ IMPACT.plot_impact_score_compare <- function(loci=c("CD19","TRIM40","NUCKS1","LR
   # gr.snp_CHR <- biovizBase::transformDfToGr(subset_DT, seqnames = "CHR", start = "POS", end = "POS")
   # gene_model <- GGBIO.transcript_model_track(gr.snp_CHR,
   #                                      max_transcripts=1,
-  #                                      show.legend=T)
+  #                                      show.legend=TRUE)
   # # Remove any pseudogenes
-  # db.gr <- db.gr[grep("*pseudogene*",db.gr$tx_biotype, invert = T, fixed = F),]
+  # db.gr <- db.gr[grep("*pseudogene*",db.gr$tx_biotype, invert = TRUE, fixed  = FALSE),]
 
   # autoplot(edb,
   #          # Have to limit (can only handle depth < 1000)
@@ -1187,9 +1189,9 @@ IMPACT.plot_impact_score_compare <- function(loci=c("CD19","TRIM40","NUCKS1","LR
   #          size=.5)
   add_snp_labels <- function(p, annot_sub, y_var="-log10(P)"){
     label_tags <- construct_SNPs_labels(subset_DT = annot_sub, labels_subset = c("Lead","UCS","Consensus"),
-                                        remove_duplicates = F)
+                                        remove_duplicates  = FALSE)
     label_tags_unique <- construct_SNPs_labels(subset_DT = annot_sub, labels_subset = c("Lead","UCS","Consensus"),
-                                        remove_duplicates = T)
+                                        remove_duplicates = TRUE)
     p <- p +
       # Circles
       geom_point(data = label_tags, aes(x=Mb, y=eval(parse(text=y_var)) ),
@@ -1247,14 +1249,14 @@ IMPACT.plot_impact_score_compare <- function(loci=c("CD19","TRIM40","NUCKS1","LR
     geom_density(data = density_data,
                  aes(x=Mb, y=..scaled..),
                  color="transparent", alpha=.25, fill="green",
-                 show.legend = F, adjust=.5) +
+                 show.legend = FALSE, adjust=.5) +
       geom_point(size=.5, alpha=.5) +
       scale_color_viridis_c() +
       # geom_smooth(data=density_data,
       #             stat="smooth", method = 'loess',
       #             aes(x=Mb),
       #             span=.2,
-      #             se=F) +
+      #             se=FALSE) +
       labs(y="IMPACT score") +
       facet_grid(facets =  . ~ Locus,
                  scales = "free_x", switch = "y") +
@@ -1285,7 +1287,7 @@ IMPACT.plot_impact_score_compare <- function(loci=c("CD19","TRIM40","NUCKS1","LR
 #' @keywords internal
 IMPACT.get_ldscores <- function(chrom=NULL,
                                 subset_DT=NULL,
-                                nThread=4){
+                                nThread=1){
   warning("LDSCores do not include any SNPs with MAF<0.5%, as they are restricted to HapMap3 SNPs. \
 This may affect subsequent analyses (e.g. fine-mapping).")
   if(!is.null(subset_DT)){
@@ -1300,7 +1302,7 @@ This may affect subsequent analyses (e.g. fine-mapping).")
                                                    ldscore,
                                                    by.x = c("SNP","CHR","POS"),
                                                    by.y = c("SNP","CHR","BP"),
-                                                   all = F)
+                                                   all  = FALSE)
     return(ldscore_merge)
   } else {
     return(ldscore)

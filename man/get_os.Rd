@@ -9,19 +9,10 @@ get_os()
 \description{
 Identify current operating system (OS).
 }
-\examples{
-get_os()
-}
 \seealso{
 Other general: 
-\code{\link{createDT_html}()},
-\code{\link{createDT}()},
-\code{\link{dt.replace}()},
-\code{\link{example_fullSS}()},
-\code{\link{fillNA_CS_PP}()},
-\code{\link{get_sample_size}()},
-\code{\link{startup_image}()},
-\code{\link{tryFunc}()}
+\code{\link{dt_replace}()},
+\code{\link{get_sample_size}()}
 }
 \concept{general}
 \keyword{internal}

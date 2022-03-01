@@ -12,11 +12,11 @@
 VALIDATION.super_plot <- function(root="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide",
                                   height=10, width=12,
                                   layout="horiz",
-                                  show_plot=T,
-                                  save_plot=F){
-  snp.groups_list <- snp_group_filters()
+                                  show_plot=TRUE,
+                                  save_plot=FALSE){
+  snp.groups_list <- echodata::snp_group_filters()
   snp_groups <- names(snp.groups_list) #c("GWAS lead","UCS (-PolyFun)","UCS","Consensus")
-  expanded_groups <-  grep("Support",names(snp_group_filters()),value = T, invert = T)
+  expanded_groups <-  grep("Support",names(echodata::snp_group_filters()),value = TRUE, invert = TRUE)
 
   #### S-LDSC h2 ####
   res.h2 <- data.table::fread(file.path(root,"PolyFun/Nalls23andMe_2019.h2_enrich.snp_groups.csv.gz"))
@@ -24,12 +24,12 @@ VALIDATION.super_plot <- function(root="/sc/arion/projects/pd-omics/brian/Fine_M
                                                  snp_groups = snp_groups,
                                                  # comparisons_filter = NULL,
                                                  save_path = file.path(root,"PolyFun/Nalls23andMe_2019.h2_enrich.snp_groups_expanded.png"),
-                                                 remove_outliers = T,
-                                                 show_padj = F,
-                                                 show_signif = F,
+                                                 remove_outliers = TRUE,
+                                                 show_padj = FALSE,
+                                                 show_signif = FALSE,
                                                  vjust_signif=0.5,
-                                                 show_xtext = F,
-                                                 show_plot = T)
+                                                 show_xtext = FALSE,
+                                                 show_plot = TRUE)
 
   #### IMPACT ####
   res.IMPACT <- data.table::fread(file.path(root,"IMPACT/TOP_IMPACT_all.csv.gz"))
@@ -42,11 +42,11 @@ VALIDATION.super_plot <- function(root="/sc/arion/projects/pd-omics/brian/Fine_M
                                          ylabel = "IMPACT score",
                                          save_path = file.path(root,"IMPACT/Nalls23andMe_2019.IMPACT.snp_groups_expanded.png"),
                                          # comparisons_filter = NULL,
-                                         show_padj = F,
-                                         show_signif = F,
+                                         show_padj = FALSE,
+                                         show_signif = FALSE,
                                          vjust_signif=0.5,
-                                         show_xtext = F,
-                                         show_plot = T)
+                                         show_xtext = FALSE,
+                                         show_plot = TRUE)
 
   #### SURE ####
   res.SURE <- data.table::fread(file.path(root,"SURE/Nalls23andMe_2019.SURE.snp_groups.mean.csv.gz"))
@@ -55,9 +55,9 @@ VALIDATION.super_plot <- function(root="/sc/arion/projects/pd-omics/brian/Fine_M
                         facet_formula = ".~ Cell_type",
                         # comparisons_filter = NULL,
                         save_path = file.path(root,"SURE/Nalls23andMe_2019.SURE.snp_groups_expanded.mean.png"),
-                        show_plot = T,
-                        show_padj = F,
-                        show_signif = F,
+                        show_plot = TRUE,
+                        show_padj = FALSE,
+                        show_signif = FALSE,
                         vjust_signif=0.5,
                         width=8)
 
@@ -68,12 +68,12 @@ VALIDATION.super_plot <- function(root="/sc/arion/projects/pd-omics/brian/Fine_M
                               facet_formula="Assay ~ Model +Tissue",
                               # comparisons_filter=NULL,
                               model_metric = "MAX",
-                              remove_outliers = T,
-                              show_padj = F,
-                              show_signif = F,
+                              remove_outliers = TRUE,
+                              show_padj = FALSE,
+                              show_signif = FALSE,
                               vjust_signif=0.5,
                               save_path=gsub("\\.csv\\.gz",".png",file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Allelic_Effect.snp_groups_mean_expanded.ALL.csv.gz")),
-                              show_plot = T)
+                              show_plot = TRUE)
 
 
    # MERGE PLOTS
@@ -102,7 +102,7 @@ VALIDATION.super_plot <- function(root="/sc/arion/projects/pd-omics/brian/Fine_M
 
 
   if(show_plot) print(plt.ALL)
-  if(save_plot!=F){
+  if(save_plot!=FALSE){
     # save_plot <- file.path("~/Desktop/Fine_Mapping/Manuscripts/PD/Figures/FigS2","VALIDATION.super_plot.extended.png");  height=10; width=10;
     ggsave(save_plot, plt.ALL, dpi=400,
            height=height, width=width)
@@ -144,22 +144,22 @@ VALIDATION.super_plot <- function(root="/sc/arion/projects/pd-omics/brian/Fine_M
 #' ## Import and Process ##
 #' metric_df <- data.table::fread(path, nThread=8)
 #' if(metric=="IMPACT_score") metric_df <- subset(metric_df, select=c(SNP,leadSNP,ABF.Credible_Set,ABF.PP,SUSIE.Credible_Set,SUSIE.PP,POLYFUN_SUSIE.Credible_Set,POLYFUN_SUSIE.PP,FINEMAP.Credible_Set,FINEMAP.PP,Consensus_SNP,Support,Locus,IMPACT_score))
-#' if(metric=="mean_IMPACT") metric_df <- find_consensus_SNPs_no_PolyFun(metric_df)
+#' if(metric=="mean_IMPACT") metric_df <- echodata::find_consensus_snps_no_polyfun(metric_df)
 #'
 #' #### run bootstrap ####
 #' permute_res <- VALIDATION.permute(metric_df=metric_df, metric=metric )
 #' }
 VALIDATION.permute <- function(metric_df,
                                metric,
-                               locus_means=F,
+                               locus_means=FALSE,
                                snp_groups=c("Random","GWAS lead","UCS (-PolyFun)","UCS","Consensus (-PolyFun)","Consensus")){
-  snp_filters <- snp_group_filters(random_sample_size = 1000)
+  snp_filters <- echodata::snp_group_filters(random_sample_size = 1000)
   if(locus_means){
     snp_filters <- setNames(paste0("SNP_group=='",snp_groups,"'"), snp_groups)
   } else {
     if(!"Consensus_SNP_noPF" %in% colnames(metric_df)){
       try({
-        metric_df <- find_consensus_SNPs_no_PolyFun(metric_df)
+        metric_df <- echodata::find_consensus_snps_no_polyfun(metric_df)
       })
     }
   }
@@ -171,7 +171,7 @@ VALIDATION.permute <- function(metric_df,
                                      .metric_df=metric_df,
                                      .locus_means=locus_means,
                                      .metric=metric){
-    printer(snp_group)
+    messager(snp_group)
     snp_filt <- snp_filters[[snp_group]]
     d <- subset(.metric_df, eval(parse(text=snp_filt)),
                 select=c("Locus",if(.locus_means) NULL else "SNP",.metric))
@@ -182,7 +182,7 @@ VALIDATION.permute <- function(metric_df,
                   Locus=as.factor(Locus))
 
 
-  printer("VALIDATION:: Beginning permutation testing.")
+  messager("VALIDATION:: Beginning permutation testing.")
   ref_group <- "Random"
   target_groups <- snp_groups[!snp_groups %in% ref_group]
   RES <- lapply(target_groups, function(target,
@@ -210,9 +210,9 @@ VALIDATION.permute <- function(metric_df,
   return(RES)
 
   if(show_plot){
-    printer("VALIDATION:: Plotting permutation results.")
+    messager("VALIDATION:: Plotting permutation results.")
     library(ggplot2)
-    colorDict <- snp_group_colorDict()
+    colorDict <- echodata::snp_group_colorDict()
     ggplot(data = RES, aes(x=group2, y= z, fill=group2, label=paste("p =",p))) +
       geom_bar(stat = "identity", alpha=.5) +
       # geom_errorbar(aes(ymin=z-p_int_lower,ymax=z+p_int_upper)) +
@@ -267,7 +267,7 @@ VALIDATION.permute <- function(metric_df,
 #' ## Import and Process ##
 #' metric_df <- data.table::fread(path, nThread=8)
 #' if(metric=="IMPACT_score") metric_df <- subset(metric_df, select=c(SNP,leadSNP,ABF.Credible_Set,ABF.PP,SUSIE.Credible_Set,SUSIE.PP,POLYFUN_SUSIE.Credible_Set,POLYFUN_SUSIE.PP,FINEMAP.Credible_Set,FINEMAP.PP,Consensus_SNP,Support,Locus,IMPACT_score))
-#' if(metric=="mean_IMPACT") metric_df <- find_consensus_SNPs_no_PolyFun(metric_df)
+#' if(metric=="mean_IMPACT") metric_df <- echodata::find_consensus_snps_no_polyfun(metric_df)
 #'
 #' #### run bootstrap ####
 #' boot_res <- VALIDATION.bootstrap(metric_df=metric_df, metric=metric, nThread=8, save_path=gsub("\\.csv\\.gz",".bootstrap.coin_wilcox_test.csv.gz",path) )
@@ -276,28 +276,28 @@ VALIDATION.bootstrap <- function(metric_df,
                                  metric,
                                  predictor = "SNP_group",
                                  validation_method=NULL,
-                                 synthesize_random=F,
+                                 synthesize_random=FALSE,
                                  snp_groups=c("Random","GWAS lead","UCS (-PolyFun)","UCS","Consensus (-PolyFun)","Consensus"),
                                  test_method="coin_wilcox_test",
-                                 locus_means=T,
+                                 locus_means=TRUE,
                                  iterations=1000,
-                                 save_path=F,
-                                 nThread=4,
-                                 verbose=T){
+                                 save_path=FALSE,
+                                 nThread=1,
+                                 verbose=TRUE){
   sampling_df <- metric_df
-  snp_filters <- snp_group_filters()
+  snp_filters <- echodata::snp_group_filters()
   if(locus_means){
     snp_filters <- setNames(paste0("SNP_group=='",snp_groups,"'"), snp_groups)
   } else {
     if(!"Consensus_SNP_noPF" %in% colnames(metric_df)){
       try({
-        metric_df <- find_consensus_SNPs_no_PolyFun(metric_df)
+        metric_df <- echodata::find_consensus_snps_no_polyfun(metric_df)
       })
     }
   }
 
   # Bootstrap without replacement (in a given iteration)
-  printer("VALIDATION:: Using",test_method,v=verbose)
+  messager("VALIDATION:: Using",test_method,v=verbose)
   RES_GROUPS <- lapply(snp_groups, function(snp_group,
                                             .iterations=iterations,
                                             .test_method=test_method){
@@ -320,8 +320,8 @@ VALIDATION.bootstrap <- function(metric_df,
           if(.synthesize_random){
             # Synthesize a uniform distribution
             random_snps[[metric]] <- runif(n = bg_size,
-                                           min=min(metric_df[[metric]], na.rm = T),
-                                           max=max(metric_df[[metric]], na.rm = T))
+                                           min=min(metric_df[[metric]], na.rm = TRUE),
+                                           max=max(metric_df[[metric]], na.rm = TRUE))
           }
 
           #### Target sample ####
@@ -333,8 +333,8 @@ VALIDATION.bootstrap <- function(metric_df,
               dplyr::mutate(SNP_group=.snp_group)
             if(.synthesize_random){
               target_snps[[metric]] <- runif(n = fg_size,
-                                             min=min(metric_df[[metric]], na.rm = T),
-                                             max=max(metric_df[[metric]], na.rm = T))
+                                             min=min(metric_df[[metric]], na.rm = TRUE),
+                                             max=max(metric_df[[metric]], na.rm = TRUE))
             }
           } else {
             target_snps <- subset(metric_df, eval(parse(text=snp_filt))) %>%
@@ -392,7 +392,7 @@ VALIDATION.bootstrap <- function(metric_df,
           #### stats ####
           if(test_method=="stats_wilcox.test"){
             res_wilcox <- stats::wilcox.test(as.formula(paste(metric,"~",predictor)),
-                                      data=dat, conf.int=T)
+                                      data=dat, conf.int=TRUE)
             z =  stats::qnorm(res_wilcox$p.value/2)
             res <- data.frame(stat=res_wilcox$statistic,
                               z = z,
@@ -410,14 +410,14 @@ VALIDATION.bootstrap <- function(metric_df,
           res$test_method <- test_method
         }) ## End try
         return(res)
-    }, mc.cores = nThread) %>%  data.table::rbindlist(fill=T) %>%
+    }, mc.cores = nThread) %>%  data.table::rbindlist(fill=TRUE) %>%
         dplyr::mutate(SNP_group=snp_group)
-  })  %>% data.table::rbindlist(fill=T)
+  })  %>% data.table::rbindlist(fill=TRUE)
 
-  if(save_path!=F){
+  if(save_path!=FALSE){
     # validation_method = "Dey_DeepLearning"
-    dir.create(dirname(save_path), showWarnings = F, recursive = T)
-    printer("VALIDATION:: Saving bootstrapping results ==>",save_path,v=verbose)
+    dir.create(dirname(save_path), showWarnings = FALSE, recursive = TRUE)
+    messager("VALIDATION:: Saving bootstrapping results ==>",save_path,v=verbose)
     data.table::fwrite(RES_GROUPS, save_path)
   }
   return(RES_GROUPS)
@@ -456,20 +456,20 @@ VALIDATION.bootstrap <- function(metric_df,
 #'
 #' # -----Import and process ------
 #' metric_df <- data.table::fread(path, nThread=8)
-#' ## metric_names <- grep("Basenji.*MAX|DeepSEA.*MAX|Roadmap.*MAX", colnames(metric_df), value = T)
+#' ## metric_names <- grep("Basenji.*MAX|DeepSEA.*MAX|Roadmap.*MAX", colnames(metric_df), value = TRUE)
 #' ## metric_df <- metric_df %>% dplyr::mutate(annot=paste(Model,Tissue,Assay,Type,Metric,sep="_"))
 #' boot_res <- VALIDATION.bootstrap_multimetric(metric_df=metric_df, metric_names=metric_names, validation_method=validation_method, save_path=gsub("\\.csv\\.gz",".bootstrap.coin_wilcox_test.csv.gz",path), grouping_var=grouping_var, iterations=10000, nThread=12)
 #' }
 VALIDATION.bootstrap_multimetric <- function(metric_df,
                                              metric_names,
                                              validation_method=NULL,
-                                             locus_means=T,
+                                             locus_means=TRUE,
                                              grouping_var=NULL,
                                              test_method="coin_wilcox_test",
                                              iterations=1000,
-                                             nThread=4,
-                                             save_path=F,
-                                             verbose=T){
+                                             nThread=1,
+                                             save_path=FALSE,
+                                             verbose=TRUE){
   if(locus_means){
     RES_GROUPS <- lapply(unique(metric_df[[grouping_var]]), function(group,
                                                 .validation_method=validation_method,
@@ -482,13 +482,13 @@ VALIDATION.bootstrap_multimetric <- function(metric_df,
       VALIDATION.bootstrap(metric_df[metric_df[[grouping_var]]==group,],
                            metric=metric,
                            validation_method = .validation_method,
-                           locus_means = T,
+                           locus_means = TRUE,
                            iterations=.iterations,
                            test_method=.test_method,
                            nThread = .nThread,
-                           save_path=F) %>%
+                           save_path=FALSE) %>%
         dplyr::mutate(Metric = paste(group,metric,sep="_"))
-    }) %>% data.table::rbindlist(fill=T)
+    }) %>% data.table::rbindlist(fill=TRUE)
   } else {
     RES_GROUPS <- lapply(metric_names, function(metric,
                                                 .validation_method=validation_method,
@@ -502,12 +502,12 @@ VALIDATION.bootstrap_multimetric <- function(metric_df,
                            test_method=.test_method,
                            iterations=.iterations,
                            nThread=.nThread,
-                           save_path=F)
-    }) %>% data.table::rbindlist(fill=T)
+                           save_path=FALSE)
+    }) %>% data.table::rbindlist(fill=TRUE)
   }
 
-  if(save_path!=F){
-    printer("VALIDATION:: Saving results ==>",save_path,v=verbose)
+  if(save_path!=FALSE){
+    messager("VALIDATION:: Saving results ==>",save_path,v=verbose)
     data.table::fwrite(RES_GROUPS,save_path)
   }
   return(RES_GROUPS)
@@ -576,9 +576,9 @@ VALIDATION.compare_bootstrap_distributions <- function(boot_res,
 
 VALIDATION.aggregate_permute_res <- function(permute_res){
   permute_agg <- permute_res %>%
-    dplyr::mutate(SNP_group = factor(SNP_group, levels = unique(permute_res$SNP_group), ordered = T),
+    dplyr::mutate(SNP_group = factor(SNP_group, levels = unique(permute_res$SNP_group), ordered = TRUE),
                   Metric=.y.) %>%
-    tidyr::separate(Metric, sep="_", into=c("Model","Tissue","Assay"), extra="drop", remove=F) %>%
+    tidyr::separate(Metric, sep="_", into=c("Model","Tissue","Assay"), extra="drop", remove=FALSE) %>%
     dplyr::mutate(.y.=gsub(paste(unique(Assay),collapse="|"),"",.y.),
                   SNP_group=as.character(SNP_group)) %>%
     dplyr::select(-c(Metric,Model,Tissue,Assay))
@@ -625,16 +625,16 @@ VALIDATION.aggregate_permute_res <- function(permute_res){
 #' path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Variant_Level.bootstrap.stats_wilcox.test.csv.gz")
 #'
 #' # ------  Import
-#' boot_res <-  data.table::fread(path, nThread=4)
+#' boot_res <-  data.table::fread(path, nThread=1)
 #' if(validation_method=="SuRE MPRA") boot_res$z <- -boot_res$z
 #'
 #' # ---Plot ---
 #' library(patchwork)
-#' if(validation_method=="Dey_DeepLearning") boot_res <- data.frame(boot_res)[grepl("H3K4ME3", boot_res$Metric, fixed=T) & grepl("Basenji", boot_res$Metric, fixed=T) & grepl("_MAX_", boot_res$Metric, fixed=T),]
+#' if(validation_method=="Dey_DeepLearning") boot_res <- data.frame(boot_res)[grepl("H3K4ME3", boot_res$Metric, fixed=TRUE) & grepl("Basenji", boot_res$Metric, fixed=TRUE) & grepl("_MAX_", boot_res$Metric, fixed=TRUE),]
 #' facet_formula <- if(validation_method=="Dey_DeepLearning") "Assay  ~ Model" else ".~."
 #' facet_formula <- if(validation_method=="SuRE MPRA") ".  ~ Cell_type" else ".~."
-#' gp1 <- VALIDATION.bootstrap_plot(boot_res=boot_res, validation_method=validation_method, y_var="z", save_plot=gsub("\\.csv\\.gz",".stat_values.png",path), width=9, facet_formula=facet_formula, override_metric_count = T)
-#' gp2 <- VALIDATION.bootstrap_plot(boot_res=subset(boot_res, stat>0), validation_method=validation_method, y_var="p", save_plot=gsub("\\.csv\\.gz",".p_values.png",path), width=9,facet_formula = facet_formula, override_metric_count = T)
+#' gp1 <- VALIDATION.bootstrap_plot(boot_res=boot_res, validation_method=validation_method, y_var="z", save_plot=gsub("\\.csv\\.gz",".stat_values.png",path), width=9, facet_formula=facet_formula, override_metric_count = TRUE)
+#' gp2 <- VALIDATION.bootstrap_plot(boot_res=subset(boot_res, stat>0), validation_method=validation_method, y_var="p", save_plot=gsub("\\.csv\\.gz",".p_values.png",path), width=9,facet_formula = facet_formula, override_metric_count = TRUE)
 #' gp12 <- (gp1 / gp2) + patchwork::plot_annotation(tag_levels = "a")
 #' ggsave(gsub("\\.csv\\.gz",".png",path),gp12, dpi=400, height=9, width=15)
 #'
@@ -643,20 +643,20 @@ VALIDATION.bootstrap_plot <- function(boot_res,
                                       validation_method=NULL,
                                       facet_formula=". ~ .",
                                       y_var="z",
-                                      override_metric_count=F,
-                                      remove_random=T,
-                                      show_plot=T,
-                                      save_plot=F,
+                                      override_metric_count=FALSE,
+                                      remove_random=TRUE,
+                                      show_plot=TRUE,
+                                      save_plot=FALSE,
                                       box.padding=.5,
                                       font_size=3,
                                       height=5,
                                       width=7,
-                                      verbose=T){
+                                      verbose=TRUE){
   library(ggplot2)
-  colorDict <- snp_group_colorDict()
+  colorDict <- echodata::snp_group_colorDict()
   if(remove_random) boot_res <- subset(boot_res, SNP_group!="Random")
   plot_dat <- boot_res %>%
-    dplyr::mutate(SNP_group = factor(SNP_group, levels = names(colorDict), ordered = T))
+    dplyr::mutate(SNP_group = factor(SNP_group, levels = names(colorDict), ordered = TRUE))
   boot_res <- boot_res %>%
     dplyr::mutate(SNP_group = factor(SNP_group, levels = names(colorDict)))
 
@@ -664,7 +664,7 @@ VALIDATION.bootstrap_plot <- function(boot_res,
 
   metric_count <- length(unique(boot_res$Metric))
   if(metric_count>1|override_metric_count){
-    printer("VALIDATION:: Facetting plots by metric.",v=verbose)
+    messager("VALIDATION:: Facetting plots by metric.",v=verbose)
     glm_res <- lapply(unique(boot_res$Metric), function(metric){
       print(metric)
       VALIDATION.compare_bootstrap_distributions(boot_res=subset(boot_res, Metric==metric),
@@ -674,25 +674,25 @@ VALIDATION.bootstrap_plot <- function(boot_res,
     # Postprocess
     glm_res <- glm_res %>%
       subset(SNP_group!="(Intercept)") %>%
-      dplyr::mutate(SNP_group = factor(SNP_group, levels = unique(SNP_group), ordered = T))
+      dplyr::mutate(SNP_group = factor(SNP_group, levels = unique(SNP_group), ordered = TRUE))
 
     if(validation_method=="Dey_DeepLearning"){
       glm_res <- glm_res %>%
-        tidyr::separate(Metric, sep="_", into=c("Model","Tissue","Assay"), extra="drop", remove=F)
+        tidyr::separate(Metric, sep="_", into=c("Model","Tissue","Assay"), extra="drop", remove=FALSE)
         plot_dat <- plot_dat %>%
-          tidyr::separate(Metric, sep="_", into=c("Model","Tissue","Assay"), extra="drop", remove=F)
+          tidyr::separate(Metric, sep="_", into=c("Model","Tissue","Assay"), extra="drop", remove=FALSE)
     }
     if(validation_method=="SuRE MPRA"){
       glm_res <- glm_res %>%
-        tidyr::separate(Metric, sep="_", into=c("unit","Cell_type"), extra="drop", remove=F)
+        tidyr::separate(Metric, sep="_", into=c("unit","Cell_type"), extra="drop", remove=FALSE)
       plot_dat <- plot_dat %>%
-        tidyr::separate(Metric, sep="_", into=c("unit","Cell_type"), extra="drop", remove=F)
+        tidyr::separate(Metric, sep="_", into=c("unit","Cell_type"), extra="drop", remove=FALSE)
     }
       glm_violin <-
         ggplot(data=glm_res, aes(x=SNP_group,y=p, fill=SNP_group)) +
       geom_violin(alpha=.5) +
       geom_boxplot(alpha=.5) +
-      ggpubr::yscale("-log1p", .format = T) +
+      ggpubr::yscale("-log1p", .format = TRUE) +
       geom_jitter(height = 0, alpha=.1) +
       scale_fill_manual(values = colorDict) +
       # geom_hline(yintercept = -log10(0.05), alpha=.5, linetype=2) +
@@ -746,7 +746,7 @@ VALIDATION.bootstrap_plot <- function(boot_res,
                                                           "z =",format(as.numeric(z), digits = 2),paste0("(se = ",format(as.numeric(StdErr), digits = 2),")")
                                                           )
                                     ),
-                                show.legend = F,
+                                show.legend = FALSE,
                                 box.padding =  box.padding,
                                 alpha=.75, segment.alpha = .5,
                                 color="black",
@@ -756,7 +756,7 @@ VALIDATION.bootstrap_plot <- function(boot_res,
 
   if(show_plot) print(gp_lab)
 
-  if(save_plot!=F){
+  if(save_plot!=FALSE){
     ggsave(save_plot, gp_lab, dpi=400, height=height, width=width)
   }
   return(gp_lab)
@@ -783,7 +783,7 @@ VALIDATION.compare_support <- function(plot_dat){
   plot_dat$log <- log1p( plot_dat[[variable]])
   comparisons <- utils::combn(x = as.character(unique(plot_dat$Support)),
                               m=2,
-                              simplify = F) %>% purrr::compact()
+                              simplify  = FALSE) %>% purrr::compact()
   method="wilcox.test"
   ggpubr::ggviolin(data = plot_dat,
                    x="Support", y="log",

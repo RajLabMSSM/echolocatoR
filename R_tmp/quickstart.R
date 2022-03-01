@@ -47,37 +47,34 @@ max_snps=NULL;
 
 file_sep="\t";
 min_r2=0;
-LD_block=F;
-LD_block_size=.7;
-vcf_folder=NULL;
+leadSNP_LD_block=F;
 # min_Dprime=F;
 query_by="coordinates";
 remove_variants=F;
 remove_correlates=F;
 probe_path = "./Data/eQTL/gene.ILMN.map";
 # conditioned_snps;
-plot_LD = F;
 remove_tmps=T;
-plot.types=c("simple");
+plot_types=c("simple");
 PAINTOR_QTL_datasets=NULL;
 server=F;
 PP_threshold=.95;
 consensus_threshold=2;
 case_control=T;
-QTL_prefixes=NULL;
+qtl_prefixes=NULL;
 fillNA=0;
 
-plot.zoom="1x";
-plot.Nott_epigenome=F;
-plot.Nott_show_placseq=F;
-plot.Nott_binwidth=200;
-plot.Nott_bigwig_dir=NULL;
-plot.XGR_libnames=NULL;
-plot.Roadmap=F;
-plot.Roadmap_query=NULL;
+zoom="1x";
+nott_epigenome=F;
+nott_show_placseq=F;
+nott_binwidth=200;
+nott_bigwig_dir=NULL;
+xgr_libnames=NULL;
+roadmap=F;
+roadmap_query=NULL;
 
 conda_env="echoR";
-nThread=4;
+nThread=1;
 verbose=T;
 chrom=NULL;
 
@@ -137,18 +134,18 @@ download_method = "axel";
 
 # PLOT ARGUMENTS
 ## general
-plot.types=c("fancy");
+plot_types=c("fancy");
 ## Generate multiple plots of different window sizes;
 ### all SNPs; 4x zoomed-in; and a 50000bp window
-plot.zoom = c("all","4x",50000);
+zoom = c("all","4x",50000);
 ## XGR
-# plot.XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes");
+# xgr_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes");
 ## Roadmap
-plot.Roadmap = F;
-plot.Roadmap_query = NULL;
+roadmap = F;
+roadmap_query = NULL;
 # Nott et al. (2019)
-plot.Nott_epigenome = T;
-plot.Nott_binwidth = 100;
+nott_epigenome = T;
+nott_binwidth = 100;
 verbose=T;
 
 

@@ -47,13 +47,13 @@ COLOC.construct_dataset <- function(subset_DT,
   # Proportion cases
   if(is.na(proportion_cases)){
     if("proportion_cases" %in% colnames(subset_DT)){
-      printer("++ Extracting Proportion of Cases...")
+      messager("++ Extracting Proportion of Cases...")
       proportion_cases <- getmode(subset_DT$proportion_cases)
     }
   }
   # MAF
   if(length(MAF)==1){
-    printer("++ Extracting MAF...")
+    messager("++ Extracting MAF...")
     if(is.na(MAF) & "MAF" %in% colnames(subset_DT)){
       MAF <- subset_DT$MAF
     }
@@ -77,27 +77,27 @@ COLOC <- function(data1,
                   data2,
                   data1_type="cc",# case-control
                   data2_type="quant",
-                  shared_MAF=F,
+                  shared_MAF=FALSE,
                   data1_proportion_cases=NA,
                   data2_proportion_cases=5e-324,
                   data1_MAF="MAF",
                   data2_MAF=NA,
                   PP_threshold=0.8,
-                  save_results=T,
+                  save_results=TRUE,
                   results_path=NULL,
-                  show_plot=T,
+                  show_plot=TRUE,
                   title1=NULL,
                   subtitle1=NULL,
                   title2=NULL,
                   subtitle2=NULL){
-  printer("******** Step 5: COLOCALIZE ********")
+  messager("******** Step 5: COLOCALIZE ********")
   # The Approximate Bayes Factor colocalisation analysis described in the next section
   ## essentially works by fine mapping each trait under a single causal variant assumption
   ##and then integrating over those two posterior distributions to calculate probabilities that
   ## those variants are shared.
   # https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html
-  # data1 <- data.table::fread(dataset1_path, stringsAsFactors = F, sep="\t") %>% data.frame()
-  # data2 <- data.table::fread(dataset2_path, stringsAsFactors = F, sep="\t") %>% data.frame()
+  # data1 <- data.table::fread(dataset1_path, stringsAsFactors = FALSE, sep="\t") %>% data.frame()
+  # data2 <- data.table::fread(dataset2_path, stringsAsFactors = FALSE, sep="\t") %>% data.frame()
   common_SNPs <- intersect(data1$SNP, data2$SNP)
   data1 <- subset(data1, SNP %in% common_SNPs) %>% group_by(SNP) %>% slice(1) %>% data.frame()
   data2 <- subset(data2, SNP %in% common_SNPs) %>% group_by(SNP) %>% slice(1) %>% data.frame()
@@ -118,7 +118,7 @@ COLOC <- function(data1,
     data1$MAF <- data2$MAF
   }
   ## NOTES: MESA and Fairfax: No sample size (SNP-level), proportion of cases, or freq/MAF info available?
-  # printer("\n\n")
+  # messager("\n\n")
   coloc.res <- coloc::coloc.abf(dataset1 = data1,
                                 dataset2 = data2)
                                     # MAF = dataset1$MAF)
@@ -130,15 +130,15 @@ COLOC <- function(data1,
      "Both traits are associated and share a single causal variant.") ,
    c("PP.H0.abf","PP.H1.abf","PP.H2.abf","PP.H3.abf","PP.H4.abf"))
  # Report hypothess results
-  printer("\n Hypothesis Results @ PP_threshold =",PP_threshold,":")
+  messager("\n Hypothesis Results @ PP_threshold =",PP_threshold,":")
   true_hyp <-""
   for(h in names(hypothesis_key)){
     if(coloc.res$summary[h]>=PP_threshold){
       hyp <- hypothesis_key[h]
-      printer("    ",h,"== TRUE: **",hyp )
+      messager("    ",h,"== TRUE: **",hyp )
       true_hyp <- paste0(names(hyp),": ", hyp)
     } else{
-      printer("    ",h,"== FALSE: ")
+      messager("    ",h,"== FALSE: ")
     }
   }
 
@@ -153,7 +153,7 @@ COLOC <- function(data1,
 
   # Process results
   coloc_DT$Colocalized <- ifelse(coloc_DT$SNP.PP.H4 >= PP_threshold, T, F)
-  colocalized_snps <- subset(coloc_DT, Colocalized==T)$snp# subset(coloc_DT, Colocalized==1)$SNP
+  colocalized_snps <- subset(coloc_DT, Colocalized==TRUE)$snp# subset(coloc_DT, Colocalized==1)$SNP
   coloc_datasets <- coloc_plot_data(coloc.res, data1, data2)
   subtitle2 <- paste0("Colocalized SNPs: ", paste(colocalized_snps,sep=", "))
   if((coloc.res$summary["PP.H3.abf"] + coloc.res$summary["PP.H4.abf"] >= PP_threshold) &
@@ -163,7 +163,7 @@ COLOC <- function(data1,
   } else {
     report <- paste("Datasets NOT colocalized")
   }
-  printer("\n++",report,"at PP.H3 + PP.H4 >=",PP_threshold," and PP.H3 / PP.H4 >= 2.","\n")
+  messager("\n++",report,"at PP.H3 + PP.H4 >=",PP_threshold," and PP.H3 / PP.H4 >= 2.","\n")
 
 
   # Plot
@@ -179,12 +179,12 @@ COLOC <- function(data1,
                subtitle2 = subtitle2,
                # SNP_list = c("rs34637584","rs76904798","rs117073808"),
                alt_color_SNPs = colocalized_snps,
-               show_plot = T)
+               show_plot = TRUE)
   }
   # Save
   if(save_results){
     coloc_path <- file.path(dirname(dataset1_path),"COLOC")
-    dir.create(coloc_path, recursive = T, showWarnings = F)
+    dir.create(coloc_path, recursive = TRUE, showWarnings  = FALSE)
     data.table::fwrite(coloc_DT, file.path(coloc_path,"COLOC_results.txt"), sep="\t")
     data.table::fwrite(coloc_DT, file.path(results_path, "COLOC/COLOC_raw.txt"), sep="\t")
   }
@@ -203,14 +203,14 @@ COLOC.plot_data <- function(coloc.res,
                              Z= "z.df1",
                              lABF = "lABF.df1",
                              H4.Probability = "SNP.PP.H4")
-  coloc_DT1 <- data.table:::merge.data.table(data1, coloc_DT1, on = "SNP", all = F)
+  coloc_DT1 <- data.table:::merge.data.table(data1, coloc_DT1, on = "SNP", all  = FALSE)
   # Merge Dataset 2
   coloc_DT2 <- coloc_DT %>% dplyr::select(SNP="snp",
                                           V = "V.df2",
                                           Z= "z.df2",
                                           lABF = "lABF.df2",
                                           H4.Probability = "SNP.PP.H4")
-  coloc_DT2 <- data.table:::merge.data.table(data2, coloc_DT2, on = "SNP", all = F)
+  coloc_DT2 <- data.table:::merge.data.table(data2, coloc_DT2, on = "SNP", all  = FALSE)
   return(list(coloc_DT1=coloc_DT1, coloc_DT2=coloc_DT2))
 }
 
@@ -223,21 +223,21 @@ COLOC.plot <- function(locus,
                        subtitle2,
                        SNP_list=c(),
                        alt_color_SNPs=c(),
-                       show_plot=T){
+                       show_plot=TRUE){
   mp1 <- manhattan_plot(subset_DT = coloc_DT1,
                  locus = locus,
                  SNP_list = SNP_list,
                  alt_color_SNPs = alt_color_SNPs,
                  title = title1,
                  subtitle = subtitle1,
-                 show_plot = F)
+                 show_plot  = FALSE)
   mp2 <- manhattan_plot(subset_DT = coloc_DT2,
                        locus = locus,
                        SNP_list = SNP_list,
                        alt_color_SNPs = alt_color_SNPs,
                        title = title2,
                        subtitle = subtitle2,
-                       show_plot = F)
+                       show_plot  = FALSE)
   cp <- patchwork::wrap_plots(mp1, mp2, ncol = 1)
   if(show_plot){print(cp)}else{return(cp)}
 }
@@ -254,17 +254,17 @@ COLOC.report_summary <- function(coloc.res, PP_threshold=.8){
       "Both traits are associated and share a single causal variant.") ,
     c("PP.H0.abf","PP.H1.abf","PP.H2.abf","PP.H3.abf","PP.H4.abf"))
   # Report hypothess results
-  printer("Hypothesis Results @ PP_threshold =",PP_threshold,":")
+  messager("Hypothesis Results @ PP_threshold =",PP_threshold,":")
   true_hyp <-""
   for(h in names(hypothesis_key)){
     if(!is.na(coloc.res$summary[h])){
       if(coloc.res$summary[h]>=PP_threshold){
         hyp <- hypothesis_key[h]
-        printer("    ",h,"== TRUE: **",hyp )
+        messager("    ",h,"== TRUE: **",hyp )
         true_hyp <- paste0(names(hyp),": ", hyp)
       }
     } else{
-      printer("    ",h,"== FALSE: ")
+      messager("    ",h,"== FALSE: ")
     }
   }
 
@@ -272,7 +272,7 @@ COLOC.report_summary <- function(coloc.res, PP_threshold=.8){
   coloc_DT <- coloc.res$results
   # Process results
   coloc_DT$Colocalized <- ifelse(coloc_DT$SNP.PP.H4 >= PP_threshold, T, F)
-  colocalized_snps <- subset(coloc_DT, Colocalized==T)$snp# subset(coloc_DT, Colocalized==1)$SNP
+  colocalized_snps <- subset(coloc_DT, Colocalized==TRUE)$snp# subset(coloc_DT, Colocalized==1)$SNP
   subtitle2 <- paste0("Colocalized SNPs: ", paste(colocalized_snps,sep=", "))
   if(!is.na(coloc.res$summary)["PP.H4.abf"] ){
     if((coloc.res$summary["PP.H3.abf"] + coloc.res$summary["PP.H4.abf"] >= PP_threshold) &
@@ -281,7 +281,7 @@ COLOC.report_summary <- function(coloc.res, PP_threshold=.8){
       report <- paste("Datasets colocalized")
     } else {report <- paste("Datasets NOT colocalized") }
   } else { report <- paste("Datasets NOT colocalized")}
-  printer("+ COLOC::",report,"at: PP.H3 + PP.H4 >=",PP_threshold," and PP.H3 / PP.H4 >= 2.")
+  messager("+ COLOC::",report,"at: PP.H3 + PP.H4 >=",PP_threshold," and PP.H3 / PP.H4 >= 2.")
   return(coloc_DT)
 }
 
@@ -307,7 +307,7 @@ COLOC.report_summary <- function(coloc.res, PP_threshold=.8){
 #              subtitle2 = subtitle2,
 #              SNP_list = c("rs34637584","rs76904798","rs117073808"),
 #              alt_color_SNPs = colocalized_snps,
-#              show_plot = T)
+#              show_plot = TRUE)
 # }
 
 
@@ -319,9 +319,9 @@ COLOC.PP4_plot <- function(COLOC_DT=NULL, coloc.results_path=NULL, PP_threshold=
   COLOC_DT$coloc <- (COLOC_DT$PP.H3.abf + COLOC_DT$PP.H4.abf >= PP_threshold) &  (COLOC_DT$PP.H4.abf/COLOC_DT$PP.H3.abf >= 2)
   COLOC_DT <- COLOC_DT %>% dplyr::rename(QTL.Dataset=Dataset2)
 
-  cp <- ggplot(subset(COLOC_DT, coloc==T), aes(x=QTL.Dataset, y=PP.H4.abf, fill=QTL.Dataset)) +
+  cp <- ggplot(subset(COLOC_DT, coloc==TRUE), aes(x=QTL.Dataset, y=PP.H4.abf, fill=QTL.Dataset)) +
     facet_grid(~Locus) +
-    geom_col(show.legend = F) +
+    geom_col(show.legend  = FALSE) +
     coord_flip() +
     theme_bw() +
     scale_y_continuous(limits = c(0,1), breaks = c(0, 1)) +
@@ -337,20 +337,20 @@ COLOC.PP4_plot <- function(COLOC_DT=NULL, coloc.results_path=NULL, PP_threshold=
 COLOC.iterate_QTL <- function(GTEx_version="GTEx_V7",
                               dataset.gwas.name = "./Data/GWAS/Nalls23andMe_2019"){
   FM_all <- merge_finemapping_results(minimum_support = 0,
-                                      include_leadSNPs = T,
+                                      include_leadSNPs = TRUE,
                                       dataset = dataset.gwas.name,
-                                      xlsx_path = F)
-  QTL_files <- list.files(path = "./Data/QTL", pattern = "*.finemap.txt.gz", recursive = T, full.names = T)
-  QTL_files <- grep(paste(c("GTEx","Cardiogenics","MESA","psychENCODE"),collapse="|"), QTL_files, value = T)
-  # QTL_files <- grep(paste(c("Fairfax"),collapse="|"), QTL_files, value = T)
+                                      xlsx_path  = FALSE)
+  QTL_files <- list.files(path = "./Data/QTL", pattern = "*.finemap.txt.gz", recursive = TRUE, full.names = TRUE)
+  QTL_files <- grep(paste(c("GTEx","Cardiogenics","MESA","psychENCODE"),collapse="|"), QTL_files, value = TRUE)
+  # QTL_files <- grep(paste(c("Fairfax"),collapse="|"), QTL_files, value = TRUE)
 
   # qtl_file = QTL_files[28] # Need allele/MAF info: 1:4 (Brain_xQTL_Serve), 5:6 (Cardiogenics), 7:10 (Fairfax), 28:31 (psychENCODE) ##### (GTEx and MESA are good (tho MESA needs sample size))
   COLOC_DT <- lapply(QTL_files, function(qtl_file){
     dataset.qtl.name <- gsub(".finemap.txt.gz","",basename(qtl_file))
-    printer("")
+    messager("")
     message("mergeQTL:: ", dataset.qtl.name)
     FM_merge <- mergeQTL.merge_handler(FM_all = FM_all, qtl_file = qtl_file)
-    subset(FM_merge, SNP %in% c("rs7294619","rs76904798","rs11175620")) %>% createDT()
+    subset(FM_merge, SNP %in% c("rs7294619","rs76904798","rs11175620")) %>% echodata::createDT()
     ## WARNING: DON'T try to allele flip. Coloc does this for you.
     # FM_merge <- mergeQTL.flip_alleles(FM_merge) # NOTE!: Allele flipping makes a BIG difference.
 
@@ -361,7 +361,7 @@ COLOC.iterate_QTL <- function(GTEx_version="GTEx_V7",
     # FM_merge$Adjusted.Effect <- FM_merge$Effect * FM_merge$mean.PP
 
     coloc_dt <- lapply(unique(FM_merge$Gene), function(locus){
-          printer("+ COLOC::",locus)
+          messager("+ COLOC::",locus)
           FM_gene <- subset(FM_merge, Locus==locus)
           FM_gene <- FM_gene[!is.na(FM_gene$QTL.Effect),]
           default_results <- data.table::data.table(Locus=locus,
@@ -381,12 +381,12 @@ COLOC.iterate_QTL <- function(GTEx_version="GTEx_V7",
                                  varbeta = FM_gene$StdErr^2, # MUST be squared
                                  snp = FM_gene$SNP,
 
-                                 N =  max(FM_gene$N_cases, na.rm = T) + max(FM_gene$N_controls, na.rm = T), # [optional]
+                                 N =  max(FM_gene$N_cases, na.rm = TRUE) + max(FM_gene$N_controls, na.rm = TRUE), # [optional]
                                  s = getmode(FM_gene$proportion_cases), # use overall proportions
                                  MAF = FM_gene$MAF, # [required]
                                  type = "cc")
             # QTL
-            if(all(is.na(FM_gene$QTL.MAF))){FM_gene$QTL.MAF <- FM_gene$MAF; printer("+ COLOC:: No QTL.MAF given. Using GWAS.MAF instead.")}
+            if(all(is.na(FM_gene$QTL.MAF))){FM_gene$QTL.MAF <- FM_gene$MAF; messager("+ COLOC:: No QTL.MAF given. Using GWAS.MAF instead.")}
             FM_gene$QTL.MAF <- FM_gene$MAF ##############111111111111111
             dataset.qtl <- list(pvalues = FM_gene$QTL.P,
                                 beta = FM_gene$QTL.Effect,
@@ -415,17 +415,17 @@ COLOC.iterate_QTL <- function(GTEx_version="GTEx_V7",
             dat <- dat %>% dplyr::rename(nSNPs_overlap=nsnps)
             return(dat)
           } else{
-            printer("COLOC:: No overlapping SNPs.")
+            messager("COLOC:: No overlapping SNPs.")
             return(default_results)
           }
-    }) %>% data.table::rbindlist(fill=T)
+    }) %>% data.table::rbindlist(fill=TRUE)
     return(coloc_dt)
-  }) %>% data.table::rbindlist(fill=T)
+  }) %>% data.table::rbindlist(fill=TRUE)
 
   # Save
   if(save_results){
     coloc_path <- file.path(dataset.gwas.name,"_genome_wide","COLOC")
-    dir.create(coloc_path, recursive = T, showWarnings = F)
+    dir.create(coloc_path, recursive = TRUE, showWarnings  = FALSE)
     data.table::fwrite(COLOC_DT, file.path(coloc_path,"COLOC_results_noFlip-gwasEffect.txt"), sep="\t")
   }
   COLOC.PP4_plot(COLOC_DT, PP_threshold = .95)

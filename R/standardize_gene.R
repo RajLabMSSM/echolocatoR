@@ -1,12 +1,23 @@
-standardize_gene <- function(merged_COLOC,
+#' Standardize genes
+#'
+#' Convert ensembl IDs to gene symbols.
+#'
+#' @keywords internal
+#' @importFrom tidyr separate
+standardize_gene <- function(dat,
                              gene_col="gene",
-                             verbose=T){
-  printer("Standardizing gene name",v=verbose)
-  merged_COLOC <- tidyr::separate(merged_COLOC,
-                                  col=gene_col, sep = ":",
-                                  into = c("chr","start","end","ensembl_id"),
-                                  fill="left", remove = F)
-  merged_COLOC$Gene <- ensembl_to_hgnc(ensembl_ids = gsub("\\..*","",merged_COLOC$ensembl_id))
-  return(merged_COLOC)
+                             verbose=TRUE){
+  requireNamespace("orthogene")
+
+  messager("Standardizing gene name",v=verbose)
+  dat <- tidyr::separate(dat,
+                         col=gene_col,
+                         sep = ":",
+                         into = c("chr","start","end","ensembl_id"),
+                         fill="left",
+                         remove  = FALSE)
+  genes <- gsub("\\..*","",dat$ensembl_id)
+  dat$Gene <- orthogene::map_genes(genes = genes)$name
+  return(dat)
 }
 

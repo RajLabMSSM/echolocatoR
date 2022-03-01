@@ -2,16 +2,15 @@
 % Please edit documentation in R/order_loci.R
 \name{order_loci}
 \alias{order_loci}
-\title{Order loci by UCS size, or alphabetically}
+\title{Order loci}
 \usage{
-order_loci(dat, merged_DT, by_UCS_size = F, descending = T, verbose = F)
+order_loci(dat, by_UCS_size = FALSE, descending = TRUE, verbose = FALSE)
 }
 \description{
-Order loci by UCS size, or alphabetically
+Order loci by UCS size, or alphabetically.
 }
 \examples{
-data("merged_DT");
-... by UCS size ...
-merged_DT <- order_loci(dat=merged_DT, merged_DT=merged_DT, descending=F)
-... alphabetically ...
+merged_DT <- echodata::get_Nalls2019_merged()
+merged_DT2 <- echolocatoR:::order_loci(dat=merged_DT)
 }
+\keyword{internal}

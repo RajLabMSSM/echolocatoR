@@ -1,10 +1,10 @@
 
-Data_dirs_to_table <- function(Data_dirs, writeCSV=F){
-  df <- data.table::rbindlist(Data_dirs, fill=T)
+Data_dirs_to_table <- function(Data_dirs, writeCSV=FALSE){
+  df <- data.table::rbindlist(Data_dirs, fill=TRUE)
   df <- cbind(Dataset=names(Data_dirs), df)
-  createDT(df)
-  if(writeCSV!=F){
-    data.table::fwrite(df, writeCSV, quote = F, sep = ",", row.names = F)
+  echodata::createDT(df)
+  if(writeCSV!=FALSE){
+    data.table::fwrite(df, writeCSV, quote = FALSE, sep = ",", row.names  = FALSE)
   }
   return(df)
 }
@@ -210,7 +210,7 @@ list_Data_dirs <- function(writeCSV = "~/Desktop/Fine_Mapping/Data/directories_t
 #'
 #' @family directory
 Directory_info <- function(dataset_name, variable="fullSS.local"){
-  Data_dirs <- list_Data_dirs(writeCSV = F)
+  Data_dirs <- list_Data_dirs(writeCSV  = FALSE)
   directory = subset(Data_dirs, Dataset==dataset_name, select=variable) %>% as.character()
   return(directory)
 }

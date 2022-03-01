@@ -10,7 +10,7 @@
 \usage{
 GOSHIFTER(
   locus_dir,
-  snp_df,
+  dat,
   SNP.Group = "",
   goshifter_path = NULL,
   permutations = 1000,
@@ -19,12 +19,17 @@ GOSHIFTER(
   chromatin_states = c("TssA"),
   R2_filter = 0.8,
   overlap_threshold = 1,
-  force_new_goshifter = F,
-  remove_tmps = T,
-  verbose = T,
-  save_results = T
+  force_new_goshifter = FALSE,
+  remove_tmps = TRUE,
+  verbose = TRUE,
+  save_results = TRUE
 )
 }
 \description{
 \code{GoShifter}: Locus-specific enrichment tool.
+}
+\examples{
+locus_dir <- echodata::locus_dir
+dat <- echodata::BST1
+gs_out <- echolocatoR:::GOSHIFTER(locus_dir = locus_dir, dat = dat)
 }

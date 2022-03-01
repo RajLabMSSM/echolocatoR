@@ -16,7 +16,7 @@ POLYFUN_SUSIE(
   dataset_type = "GWAS",
   max_causal = 5,
   sample_size = NULL,
-  server = F,
+  server = FALSE,
   PP_threshold = 0.95,
   conda_env = "echoR"
 )

@@ -4,7 +4,11 @@
 \alias{IMPACT.postprocess_annotations}
 \title{Prepare \emph{IMPACT} annotations}
 \usage{
-IMPACT.postprocess_annotations(ANNOT_MELT, order_loci = T, no_no_loci = NULL)
+IMPACT.postprocess_annotations(
+  ANNOT_MELT,
+  order_loci = TRUE,
+  no_no_loci = NULL
+)
 }
 \description{
 Transform \emph{IMPACT} annotations from wide format (one row per SNP) to

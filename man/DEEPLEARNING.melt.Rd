@@ -10,7 +10,7 @@ DEEPLEARNING.melt(
   aggregate_func = "mean",
   replace_NA = NA,
   replace_negInf = NA,
-  save_path = F
+  save_path = FALSE
 )
 }
 \description{
@@ -29,7 +29,7 @@ path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.anno
 path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Variant_Level.csv.gz")
 
 ANNOT <- data.table::fread(path, nThread=8)
-ANNOT <- find_consensus_SNPs_no_PolyFun(ANNOT)
+ANNOT <- echodata::find_consensus_snps_no_polyfun(ANNOT)
 annot.melt <- DEEPLEARNING.melt(ANNOT=ANNOT, aggregate_func="mean", save_path=gsub("\\\\.csv\\\\.gz",".snp_groups_mean.csv.gz",path))
 }
 }

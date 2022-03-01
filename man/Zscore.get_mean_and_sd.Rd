@@ -9,7 +9,7 @@ Zscore.get_mean_and_sd(
   target_col = "statistic",
   effect_col = "beta",
   stderr_col = "se",
-  use_saved = T,
+  use_saved = TRUE,
   output_path
 )
 }
@@ -19,6 +19,6 @@ so that you can later accurately compute Z-scores
 when you're only working with a subset of the data.
 }
 \details{
-These functions are necessary for \code{\link{PAINTOR}}.
+These functions are necessary for \code{PAINTOR}.
 }
 \keyword{internal}

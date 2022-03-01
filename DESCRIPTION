@@ -1,7 +1,7 @@
 Package: echolocatoR
 Type: Package
 Title: Automated genomic fine-mapping
-Version: 0.2.1
+Version: 2.0.0
 Authors@R: 
     c(person(given = "Brian",
            family = "Schilder",
@@ -33,6 +33,7 @@ Imports:
     remotes,
     magrittr,
     R.utils, 
+    utils,
     BiocManager, 
     tidyverse, 
     knitr,
@@ -68,7 +69,8 @@ Imports:
     echoannot,
     echoconda,
     echoLD,
-    catalogueR
+    echoplot,
+    lifecycle
 Remotes:
   github::RajLabMSSM/echodata,
   github::RajLabMSSM/echotabix,
@@ -76,6 +78,7 @@ Remotes:
   github::RajLabMSSM/echoannot,
   github::RajLabMSSM/echoconda,
   github::RajLabMSSM/echoLD,
+  github::RajLabMSSM/echoplot,
   github::RajLabMSSM/catalogueR
 Suggests:
     pbmcapply, 
@@ -96,6 +99,7 @@ Suggests:
     BSgenome.Hsapiens.UCSC.hg19, 
     ComplexHeatmap,
     SummarizedExperiment,
-    coin
-RoxygenNote: 7.1.1
+    coin,
+    catalogueR
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr

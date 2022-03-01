@@ -7,8 +7,8 @@
 PAINTOR.import_QTL_DT(
   QTL_datasets,
   locus,
-  trim_gene_limits = F,
-  force_new_subset = F,
+  trim_gene_limits = FALSE,
+  force_new_subset = FALSE,
   metric = "t_stat"
 )
 }

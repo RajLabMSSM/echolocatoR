@@ -8,9 +8,9 @@
 #' that the rest of \emph{echolocatoR} can work with.
 #'
 #' @family standardizing functions
-#' @inheritParams finemap_pipeline
+#' @inheritParams finemap_locus
 #' @examples
-#' data("BST1")
+#' BST1 <- echodata::BST1
 #' ... Screw up Freq to see if function can fix it and infer MAF ...
 #' BST1$rsid <- BST1$SNP
 #' BST1 <- data.frame(BST1)[,!colnames(BST1) %in% c("MAF","SNP")]
@@ -40,12 +40,12 @@ standardize_subset <- function(locus,
                                A1_col="A1",
                                A2_col="A2",
                                gene_col="Gene",
-                               QTL_prefixes=NULL,
-                               return_dt=T,
-                               nThread=4,
+                               qtl_prefixes=NULL,
+                               return_dt=TRUE,
+                               nThread=1,
                                download_method="axel",
-                               verbose=T){
-  printer("LD:: Standardizing summary statistics subset.",v=verbose)
+                               verbose=TRUE){
+  messager("LD:: Standardizing summary statistics subset.",v=verbose)
   query_check <- data.table::fread(subset_path, nrows = 2)
 
 
@@ -54,12 +54,12 @@ standardize_subset <- function(locus,
     stop("Could not find any rows in full data that matched query :(")
   } else{
     query <- data.table::fread(subset_path,
-                               header=T, stringsAsFactors = F,
+                               header=TRUE, stringsAsFactors = FALSE,
                                nThread = nThread)
 
     ## Calculate StdErr
     if(stderr_col=="calculate"){
-      printer("Calculating Standard Error...",v=verbose)
+      messager("Calculating Standard Error...",v=verbose)
       query$StdErr <- subset(query, select=effect_col) / subset(query, select=tstat_col)
       stderr_col <- "StdErr"
     }
@@ -73,13 +73,13 @@ standardize_subset <- function(locus,
       query <- dplyr::rename(query, SNP=snp_col)
     }
     # Gene col
-    printer("++ Preparing Gene col", v=verbose)
+    messager("++ Preparing Gene col", v=verbose)
     if(gene_col %in% colnames(query)){
       query <- dplyr::rename(query, Gene=gene_col)
       query_mod$Gene <- query$Gene
       # Subset by eGene
-      if(detect_genes(loci = locus, verbose = F)){
-        printer("+ Subsetting to gene =",names(locus), v=verbose)
+      if(detect_genes(loci = locus, verbose  = FALSE)){
+        messager("+ Subsetting to gene =",names(locus), v=verbose)
         query_mod <- subset(query_mod, Gene==names(locus))
         query <- subset(query, Gene==names(locus))
         if(dplyr::n_distinct(query_mod$SNP)!=nrow(query_mod)) stop("N rows must be equal to N unique SNPS.")
@@ -94,7 +94,7 @@ standardize_subset <- function(locus,
       query_mod <- LIFTOVER(dat = query_mod,
                             build.conversion = paste0(fullSS_genome_build,".to.hg19"),
                             chrom_col = "CHR", start_col = "POS", end_col = "POS",
-                            return_as_granges = F,
+                            return_as_granges = FALSE,
                             verbose = verbose)
     }
     # Have to subset both ways bc some SNPs only available in certain builds
@@ -103,7 +103,7 @@ standardize_subset <- function(locus,
 
 
     # Add ref/alt alleles if available
-    printer("++ Preparing A1,A1 cols", v=verbose)
+    messager("++ Preparing A1,A1 cols", v=verbose)
     if(any(A1_col %in% colnames(query)) & any(A2_col %in% colnames(query))){
       query2 <- query %>% dplyr::rename(A1=A1_col, A2=A2_col)
       query_mod$A1 <- toupper(query2$A1)
@@ -112,7 +112,7 @@ standardize_subset <- function(locus,
 
     # ------ Optional columns ------ #
     ## Infer MAF from freq (assuming MAF is alway less than 0.5)
-    printer("++ Preparing MAF,Freq cols", v=verbose)
+    messager("++ Preparing MAF,Freq cols", v=verbose)
     if(any(MAF_col %in% colnames(query))){
       query <- query %>% dplyr::rename(MAF=MAF_col)
       query_mod$MAF <- as.numeric(query$MAF)
@@ -121,20 +121,20 @@ standardize_subset <- function(locus,
         query <- query %>% dplyr::rename(Freq=freq_col)
         query_mod$Freq <- as.numeric(query$Freq)
         if(MAF_col=="calculate" | !(MAF_col %in% colnames(query)) ){
-          printer("++ Inferring MAF from frequency column...")
+          messager("++ Inferring MAF from frequency column...")
           query_mod$MAF <- ifelse(abs(query$Freq<0.5), abs(query$Freq), abs(1-query$Freq))
         }
-      } else {printer("++ Could not infer MAF",v=verbose)}
+      } else {messager("++ Could not infer MAF",v=verbose)}
     }
     if(any("MAF" %in% colnames(query))){
       query_mod$MAF <- abs(query_mod$MAF)
-      printer("++ Removing SNPs with MAF== 0 | NULL | NA", v=verbose)
+      messager("++ Removing SNPs with MAF== 0 | NULL | NA", v=verbose)
       query_mod <- subset(query_mod, !(is.na(MAF) | is.null(MAF) | MAF==0))
       query <- subset(query, SNP %in% unique(query_mod$SNP))
     }
 
     ## Add proportion of cases if available
-    printer("++ Preparing N_cases,N_controls cols", v=verbose)
+    messager("++ Preparing N_cases,N_controls cols", v=verbose)
     if(any(N_cases_col %in% colnames(query)) & any(N_controls_col %in% colnames(query))){
       query <- query %>% dplyr::rename(N_cases=N_cases_col, N_controls=N_controls_col)
       query_mod$N_cases <- query$N_cases
@@ -152,7 +152,7 @@ standardize_subset <- function(locus,
       }
     }
 
-    printer("++ Preparing `proportion_cases` col", v=verbose)
+    messager("++ Preparing `proportion_cases` col", v=verbose)
     if(proportion_cases !="calculate"){
       if(length(proportion_cases)==nrow(query)){
         query_mod$proportion_cases <- query[[proportion_cases]]
@@ -162,34 +162,34 @@ standardize_subset <- function(locus,
     } else if(proportion_cases=="calculate" &
               "N_cases" %in% colnames(query_mod) &
               "N_controls" %in% colnames(query_mod)){
-      printer("++ Calculating `proportion_cases`.")
+      messager("++ Calculating `proportion_cases`.")
       ### Calculate proportion of cases if N_cases and N_controls available
       query_mod$proportion_cases <- query_mod$N_cases / (query_mod$N_controls + query_mod$N_cases)
     } else {
       ### Otherwise don't include this col
-      printer("++ 'proportion_cases' not included in data subset.")
+      messager("++ 'proportion_cases' not included in data subset.")
     }
 
     # Calculate sample size
-    printer("++ Preparing N col", v=verbose)
+    messager("++ Preparing N col", v=verbose)
     query_mod$N <- get_sample_size(subset_DT = query_mod,
                                    sample_size = sample_size,
                                    verbose=verbose)[["N"]]
 
-    printer("++ Preparing t-stat col", v=verbose)
+    messager("++ Preparing t-stat col", v=verbose)
     query_mod$t_stat <- calculate_tstat(finemap_dat = query_mod,
                                         tstat_col = tstat_col)[["t_stat"]]
 
     if(any(query_mod$P<=0)){
-      printer("++ Replacing P-values==0 with", .Machine$double.xmin, v=verbose)
+      messager("++ Replacing P-values==0 with", .Machine$double.xmin, v=verbose)
       query_mod[(query_mod$P<=0),"P"] <- .Machine$double.xmin
     }
     if(any(is.na(query_mod$P))){
-      printer("++ Removing SNPs with P-values==NA", v=verbose)
+      messager("++ Removing SNPs with P-values==NA", v=verbose)
       query_mod <- subset(query_mod, !is.na(P))
     }
 
-    printer("++ Assigning lead SNP", v=verbose)
+    messager("++ Assigning lead SNP", v=verbose)
     # Add leadSNP col
     if(is.null(top_SNPs)){
       top_SNPs <- cbind(Locus=locus,(query_mod %>% arrange(P))[1,])
@@ -203,7 +203,7 @@ standardize_subset <- function(locus,
     # Remove any duplicate columns
     query_mod <- data.frame(query_mod)[,!duplicated(colnames(query_mod))]
 
-    printer("++ Ensuring Effect, StdErr, P are numeric", v=verbose)
+    messager("++ Ensuring Effect, StdErr, P are numeric", v=verbose)
     # Only convert to numeric AFTER removing NAs (otherwise as.numeric will turn them into 0s)
     query_mod <- suppressWarnings(
       query_mod  %>%
@@ -214,13 +214,13 @@ standardize_subset <- function(locus,
       )
 
     # Add QTL cols
-    if(!is.null(QTL_prefixes)){
-      printer("++ Adding back cols starting with:",paste(QTL_prefixes,collapse = ","), v=verbose)
-      qtl_cols <- grep(paste(QTL_prefixes,collapse = "|"),colnames(query), value = T)
+    if(!is.null(qtl_prefixes)){
+      messager("++ Adding back cols starting with:",paste(qtl_prefixes,collapse = ","), v=verbose)
+      qtl_cols <- grep(paste(qtl_prefixes,collapse = "|"),colnames(query), value = TRUE)
       query_mod <- cbind(data.frame(query_mod), data.frame(query)[,qtl_cols])
     }
 
-    printer("++ Ensuring 1 SNP per row", v=verbose)
+    messager("++ Ensuring 1 SNP per row", v=verbose)
     ## Get just one SNP per location (just pick the first one)
     query_mod <- query_mod %>%
       dplyr::group_by(CHR, POS) %>%
@@ -231,15 +231,15 @@ standardize_subset <- function(locus,
     query_mod <- dplyr::ungroup(query_mod)
     # Trim whitespaces
     ## Extra whitespace causes problems when you try to make space-delimited files
-    printer("++ Removing extra whitespace", v=verbose)
+    messager("++ Removing extra whitespace", v=verbose)
     cols_to_be_rectified <- names(query_mod)[vapply(query_mod, is.character, logical(1))]
-    query_mod <- query_mod %>% dplyr::mutate_at(.vars = vars(cols_to_be_rectified),
+    query_mod <- query_mod %>% dplyr::mutate_at(.vars =dplyr::vars(cols_to_be_rectified),
                                                 .funs = trimws )
-    printer("++ Saving subset ==>",subset_path, v=verbose)
-    dir.create(dirname(subset_path), showWarnings = F, recursive = T)
+    messager("++ Saving subset ==>",subset_path, v=verbose)
+    dir.create(dirname(subset_path), showWarnings = FALSE, recursive = TRUE)
     data.table::fwrite(query_mod, subset_path,
                        sep = "\t", nThread = nThread)
-    if(return_dt==T){return(query_mod)}
+    if(return_dt==TRUE){return(query_mod)}
   }
 }
 
@@ -279,10 +279,10 @@ calculate_tstat <- function(finemap_dat,
     finemap_dat <- finemap_dat %>% dplyr::rename(t_stat = tstat_col)
   } else {
     if(("Effect" %in% colnames(finemap_dat)) & ("StdErr" %in% colnames(finemap_dat))){
-      printer("+ Calculating t-statistic from Effect and StdErr...")
+      messager("+ Calculating t-statistic from Effect and StdErr...")
       finemap_dat <- finemap_dat %>% dplyr::mutate(t_stat =  Effect/StdErr)
     } else {
-      printer("+ Could not calculate t-stat due to missing Effect and/or StdErr columns. Returning input data.")
+      messager("+ Could not calculate t-stat due to missing Effect and/or StdErr columns. Returning input data.")
     }
   }
   return(data.table::data.table(finemap_dat))
@@ -297,18 +297,18 @@ calculate_tstat <- function(finemap_dat,
 #' @family standardizing functions
 #' @examples
 #' \dontrun{
-#' data("BST1");
+#' BST1 <- echodata::BST1;
 #' subset_DT <- data.frame(BST1)[,colnames(BST1)!="MAF"]
 #' BST1 <- get_UKB_MAF(subset_DT=subset_DT )
 #' }
 get_UKB_MAF <- function(subset_DT,
                         output_path = "./Data/Reference/UKB_MAF",
-                        force_new_maf = F,
+                        force_new_maf = FALSE,
                         download_method="axel",
-                        nThread=4,
-                        verbose=T,
+                        nThread=1,
+                        verbose=TRUE,
                         conda_env="echoR"){
-  printer("UKB MAF:: Extracting MAF from UKB reference.",v=verbose)
+  messager("UKB MAF:: Extracting MAF from UKB reference.",v=verbose)
   # Documentation: http://biobank.ctsu.ox.ac.uk/showcase/field.cgi?id=22801
   # subset_DT = data.table::fread("Data/GWAS/Kunkle_2019/PTK2B/PTK2B_Kunkle_2019_subset.tsv.gz")
   chrom <- unique(subset_DT$CHR)
@@ -316,16 +316,16 @@ get_UKB_MAF <- function(subset_DT,
   out_file <- file.path(output_path, basename(input_url))
   if(file.exists(out_file)){
     if(file.size(out_file)==0){
-      printer("+ UKB MAF:: Removing empty UKB MAF ref file.");
+      messager("+ UKB MAF:: Removing empty UKB MAF ref file.");
       file.remove(out_file)
     }
   }
-  if(file.exists(out_file) & force_new_maf==F){
-    printer("+ UKB MAF:: Importing pre-existing file",v=verbose)
+  if(file.exists(out_file) & force_new_maf==FALSE){
+    messager("+ UKB MAF:: Importing pre-existing file",v=verbose)
   } else{
     out_file <- downloader(input_url = input_url,
                            output_path = output_path,
-                           background = F,
+                           background = FALSE,
                            force_overwrite = force_new_maf,
                            download_method = download_method,
                            nThread = nThread,
@@ -336,7 +336,7 @@ get_UKB_MAF <- function(subset_DT,
                            col.names = c("POS","MAF"))
   maf <- subset(maf, POS %in% subset_DT$POS)
   if("MAF" %in% colnames(subset_DT)){
-    printer(" UKB MAF:: Existing 'MAF' col detected. Naming UKB MAF col 'MAF_UKB'",v=verbose)
+    messager(" UKB MAF:: Existing 'MAF' col detected. Naming UKB MAF col 'MAF_UKB'",v=verbose)
     maf <- dplyr::rename(maf, MAF_UKB=MAF)
   }
   merged_dat <- data.table::merge.data.table(subset_DT, maf,

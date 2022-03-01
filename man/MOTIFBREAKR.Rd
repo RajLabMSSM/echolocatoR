@@ -14,16 +14,16 @@
 \usage{
 MOTIFBREAKR(
   rsid_list,
-  save_rds = T,
+  save_rds = TRUE,
   dataset_dir = "./results",
   pwmList = NULL,
   organism = NULL,
   threshold = 0.85,
-  show.neutral = F,
+  show.neutral = FALSE,
   method = "default",
-  verbose = T,
-  calculate_all_pval = T,
-  force_new = F
+  verbose = TRUE,
+  calculate_all_pval = TRUE,
+  force_new = FALSE
 )
 }
 \arguments{
@@ -52,7 +52,7 @@ a transcription factor binding motif (if it falls witihn one).
 # rsid_list <- unique(subset(merged_DT, Locus \%in\% c("LRRK2","MED12L","DYRK1A","FCGR2A") & (Consensus_SNP | leadSNP))$SNP)
 # rsid_list <- unique(subset(merged_DT, Consensus_SNP | leadSNP)$SNP)
 rsid_list <- c("rs11175620","rs7294619","rs74324737")
-mb.results <- MOTIFBREAKR(rsid_list=rsid_list, calculate_all_pval=T, force_new = T)
+mb.results <- MOTIFBREAKR(rsid_list=rsid_list, calculate_all_pval=TRUE, force_new = TRUE)
 }
 }
 \seealso{

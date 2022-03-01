@@ -17,8 +17,8 @@
 # """
 
 fGWAS.install <- function(echo_path="./echolocatoR/tools",
-                          download.annotations=F){
-  printer("fGWAS:: Installing and compiling fGWAS.")
+                          download.annotations=FALSE){
+  messager("fGWAS:: Installing and compiling fGWAS.")
   # Install R wrapper
   # devtools::install_github("wzhy2000/fGWAS/pkg")
   # # Install and compile tool
@@ -45,24 +45,24 @@ fGWAS.install <- function(echo_path="./echolocatoR/tools",
 
 fGWAS.download_annotations <- function(FM_all,
                                        results_path="./Data/GWAS/Nalls23andMe_2019/_genome_wide",
-                                       force_new_annot = F,
+                                       force_new_annot = FALSE,
                                        dataset = ""
                                        ){
   # Path/file names
   Input_path <- file.path(results_path,"fGWAS","Input")
-  dir.create(Input_path, showWarnings = F, recursive = T)
+  dir.create(Input_path, showWarnings = FALSE, recursive = T)
   annot.file.name <- file.path(Input_path, paste0("annotations.",basename(dataset),".txt"))
 
   # Takes a long time: Redo only if it doesn't exist (or its being forced to)
-  if(!file.exists(annot.file.name) | force_new_annot==T){
-    printer("fGWAS: Downloading annotations from GitHub repo:")
-    printer("       https://github.com/joepickrell/1000-genomes")
+  if(!file.exists(annot.file.name) | force_new_annot==TRUE){
+    messager("fGWAS: Downloading annotations from GitHub repo:")
+    messager("       https://github.com/joepickrell/1000-genomes")
     # system(paste("git submodule add https://github.com/joepickrell/1000-genomes.git",annot.folder))
     base.url <- "https://github.com/joepickrell/1000-genomes/raw/master"
     FM.snps <- unique(FM_all$SNP) #paste(unique(FM_all$SNP), collapse="|")
     # Download each annotation and merge with data
     annots.filt <- lapply(unique(FM_all$CHR), function(chr){
-      printer("fGWAS: Downloading annotations for Chrom",chr)
+      messager("fGWAS: Downloading annotations for Chrom",chr)
       file.url <- file.path(base.url, paste0("chr",chr,".annot.wdist.wcoding.gz"))
       chr.dat <- data.table::fread(file.url)
       CHR.dat <- subset(chr.dat, rs %in% FM.snps)
@@ -71,8 +71,8 @@ fGWAS.download_annotations <- function(FM_all,
     # Save filtered annotations
     data.table::fwrite(annots.filt, annot.file.name, sep="\t")
   } else {
-    printer("+ fGWAS: Existing annotations found.")
-    printer("    Importing:",annot.file.name)
+    messager("+ fGWAS: Existing annotations found.")
+    messager("    Importing:",annot.file.name)
     annots.filt <- data.table::fread(annot.file.name, nThread = 4)
     }
   # Merge annotations afterwards
@@ -98,7 +98,7 @@ fGWAS.annotation_names <- function(fgwas="./echolocatoR/tools/fgwas-0.3.6/src/fg
   annot_files$Source <- lapply(annot_files$bed.name, function(s){strsplit(s,"/")[[1]][1]}) %>% unlist()
   annot_files <- tidyr::separate(annot_files, col = "Name",
                                  into=c("Annot"),
-                                 sep="\\.",remove=F, extra="drop")
+                                 sep="\\.",remove=FALSE, extra="drop")
   annot_files$Annot <- make.unique(annot_files$Annot)
   return(annot_files)
 }
@@ -107,7 +107,7 @@ fGWAS.top_annotations <- function(dat.fgwas, annot_files, SNP.Group=""){
   ## Count how many SNPs have hits per annotation
   overlapping.snps <- subset(dat.fgwas, select=as.character(annot_files$Name) ) %>%
     colSums()
-  printer("fGWAS: Annotations with the most overlapping SNPs:",SNP.Group)
+  messager("fGWAS: Annotations with the most overlapping SNPs:",SNP.Group)
   print(head(overlapping.snps %>% sort(decreasing = T), 5))
   overlap.df <- data.frame(overlapping.snps) %>% `colnames<-`(SNP.Group)
   # data.table::data.table(overlap.df, keep.rownames = "Annot", key="Annot")
@@ -120,11 +120,11 @@ fGWAS.prepare_input <- function(FM_annot,
                                 results_path="./Data/GWAS/Nalls23andMe_2019/_genome_wide",
                                 SNP.Groups = c("Consensus", "CredibleSet", "GWAS.lead", "Selected", "Random"),
                                 dataset = "./Data/GWAS/Nalls23andMe_2019",
-                                selected_SNPs = F,
-                                random.seed = F,
+                                selected_SNPs = FALSE,
+                                random.seed = FALSE,
                                 Locus=NA
                                 ){
-  printer("fGWAS: Preparing input files.")
+  messager("fGWAS: Preparing input files.")
   # """
   # 1. SNPID: a SNP identifier
   # 2. CHR: the chromosome for the SNP
@@ -133,7 +133,7 @@ fGWAS.prepare_input <- function(FM_annot,
   # 5. Z: the Z-score for from the association study
   # 6. N: the sample size used in the association study at this SNP (this can vary from SNP to SNP due to, e.g., missing data).
   # """
-  dir.create(file.path(results_path, "fGWAS"), showWarnings = F, recursive = F)
+  dir.create(file.path(results_path, "fGWAS"), showWarnings = FALSE, recursive = F)
   # List annotation names
   annot_files <- fGWAS.annotation_names()
 
@@ -144,7 +144,7 @@ fGWAS.prepare_input <- function(FM_annot,
   fgwas.inputs <- data.frame()
   overlap.df.list <- list()
   for(group in SNP.Groups){
-    printer("+ fGWAS: Creating", group, "file")
+    messager("+ fGWAS: Creating", group, "file")
     if(group=="GWAS"){
       dat.fgwas <- FM_annot
     }
@@ -155,16 +155,16 @@ fGWAS.prepare_input <- function(FM_annot,
     }
     # Subset according to which group we're looking at
     if(group=="Consensus"){
-      dat.fgwas <- subset(FM_annot, Consensus_SNP==T)
+      dat.fgwas <- subset(FM_annot, Consensus_SNP==TRUE)
     }
     if(group=="CredibleSet"){
       dat.fgwas <- subset(FM_annot, Support>0)
     }
     if(group=="GWAS.lead"){
-      dat.fgwas <- subset(FM_annot, leadSNP==T)
+      dat.fgwas <- subset(FM_annot, leadSNP==TRUE)
     }
     if(group=="Selected"){
-      if(any(selected_SNPs!=F)){
+      if(any(selected_SNPs!=FALSE)){
         dat.fgwas <- subset(FM_annot, SNP %in% selected_SNPs)
       } else {
         stop("+ fGWAS:: Please provide a list of SNPs to the argument 'selected_SNPs',",
@@ -172,8 +172,8 @@ fGWAS.prepare_input <- function(FM_annot,
       }
     }
     if(group=="Random"){
-      CS.size <- nrow(subset(FM_annot, Consensus_SNP==T))
-      if(random.seed!=F){set.seed(random.seed)}
+      CS.size <- nrow(subset(FM_annot, Consensus_SNP==TRUE))
+      if(random.seed!=FALSE){set.seed(random.seed)}
       dat.fgwas <- FM_annot[sample(nrow(FM_annot), CS.size), ]
     }
 
@@ -203,9 +203,9 @@ fGWAS.prepare_input <- function(FM_annot,
 
     # Save file
     dat.path <- file.path(results_path,"fGWAS","Input",paste0("dat.fgwas.",group,".txt"))
-    dir.create(dirname(dat.path), showWarnings = F, recursive = T)
-    data.table::fwrite(dat.fgwas, dat.path, sep = " ", quote = F, nThread = 4)
-    gzip(dat.path, overwrite=T)
+    dir.create(dirname(dat.path), showWarnings = FALSE, recursive = T)
+    data.table::fwrite(dat.fgwas, dat.path, sep = " ", quote = FALSE, nThread = 4)
+    gzip(dat.path, overwrite=TRUE)
     # Add to summary dataframe
     fgwas.inputs <- rbind(fgwas.inputs, data.frame(SNP.Group=group,
                                                    File=paste0(dat.path,".gz"),
@@ -225,7 +225,7 @@ fGWAS.prepare_input <- function(FM_annot,
 fGWAS.gather_results <- function(results_path,
                                  output_dir=file.path(results_path,"fGWAS/Output")
                                  ){
-  printer("+ fGWAS: Gathering all results...")
+  messager("+ fGWAS: Gathering all results...")
   #### Default output:
   # 1. fgwas.params. The maximum likelihood parameter estimates for each parameter in the model. The columns are the name of the parameter (“pi” is the parameter for the prior probability that any given genomic region contains an association), the lower bound of the 95% confidence interval on the parameter, the maximum likelihood estimate of the parameter, and the upper bound of the 95% confidence interval on the parameter.
   # 2. fgwas.llk. The likelihood of the model. The lines are the log-likelihood of the model under the maximum likelihood parameter estimates, the number of parameters, and the AIC.
@@ -242,7 +242,7 @@ fGWAS.gather_results <- function(results_path,
   df <- data.frame(llk.file=llk.files,
                    params.file=params.files)
   df <- tidyr::separate(df, col = "llk.file", into=c("SNP.Group","Annot",NA),
-                        sep="__|\\.",remove=F, extra="drop")
+                        sep="__|\\.",remove=FALSE, extra="drop")
   # Gather results stats for each file
   res_df <- lapply(df$llk.file, function(llk){
     # llk file
@@ -258,10 +258,10 @@ fGWAS.gather_results <- function(results_path,
     res$CI_hi <- res.p$CI_hi[-1]
     res$estimate <- res.p$estimate[-1]
     return(res)
-  }) %>% data.table::rbindlist(fill=T)
+  }) %>% data.table::rbindlist(fill=TRUE)
   # Merge stats with preliminary df
   DF <- data.table:::merge.data.table(df, res_df, by = "llk.file")
-  printer("+ Data for",nrow(DF),"results gathered.")
+  messager("+ Data for",nrow(DF),"results gathered.")
   return(DF)
 }
 
@@ -273,13 +273,13 @@ fGWAS.run <- function(results_path="./Data/GWAS/Nalls23andMe_2019/_genome_wide",
   # Iterate over each annotation file,
   ## so you can figure out where are significant.
   fgwas.out = file.path(results_path,"fGWAS","Output")
-  dir.create(file.path(fgwas.out), showWarnings = F, recursive = T)
+  dir.create(file.path(fgwas.out), showWarnings = FALSE, recursive = T)
   fg.start <- Sys.time()
   for(annot in rownames(overlap.DF)){
-    printer("")
-    printer("------------------")
-    printer("------------------")
-    printer("+ fGWAS: Using annotation =",annot)
+    messager("")
+    messager("------------------")
+    messager("------------------")
+    messager("+ fGWAS: Using annotation =",annot)
     # Iterate over each SNP.group file,
     ## so you can compare their enrichment results to one another.
     for(i in 1:nrow(fgwas.inputs)){
@@ -305,7 +305,7 @@ fGWAS.run <- function(results_path="./Data/GWAS/Nalls23andMe_2019/_genome_wide",
     }
   }
   fg.end <- Sys.time()
-  printer("fGWAS:",nrow(overlap.DF)*ncol(overlap.DF),"enrichment tests run in",
+  messager("fGWAS:",nrow(overlap.DF)*ncol(overlap.DF),"enrichment tests run in",
           round(fg.end-fg.start,2))
 }
 
@@ -316,18 +316,18 @@ fGWAS <- function(results_path = "./Data/GWAS/Nalls23andMe_2019/_genome_wide",
                   fgwas = "./echolocatoR/tools/fgwas-0.3.6/src/fgwas",
                   dataset = "./Data/GWAS/Nalls23andMe_2019",
                   SNP.Groups = c("GWAS","Multi-finemap"),#c("Consensus", "CredibleSet", "GWAS.lead", "Selected", "Random"),
-                  selected_SNPs = F,
+                  selected_SNPs = FALSE,
                   remove_tmps = T,
-                  force_new_fgwas = F,
-                  force_new_annot = F,
-                  random.seed = F,
+                  force_new_fgwas = FALSE,
+                  force_new_annot = FALSE,
+                  random.seed = FALSE,
                   random.iterations = 100){
   fgwas.out = file.path(results_path,"fGWAS","Output")
   # [0] Check if results already exist for this dataset
   output.summary <- file.path(results_path,"fGWAS",paste0("fGWAS_summary.",basename(dataset),".txt"))
-  if(file.exists(output.summary) & force_new_fgwas==F){
-    printer("fGWAS:: Results file already exists.")
-    printer("  Importing: ",output.summary)
+  if(file.exists(output.summary) & force_new_fgwas==FALSE){
+    messager("fGWAS:: Results file already exists.")
+    messager("  Importing: ",output.summary)
     RESULTS.DF <- data.table::fread(output.summary)
   } else {
     # [1] Create FM annot file
@@ -343,13 +343,13 @@ fGWAS <- function(results_path = "./Data/GWAS/Nalls23andMe_2019/_genome_wide",
 
     # [2] Prepare inputs
     if("Random" == paste(SNP.Groups, collapse="")){
-      printer("+ fGWAS:: Conducting",random.iterations,"for Random SNPs.")
+      messager("+ fGWAS:: Conducting",random.iterations,"for Random SNPs.")
     } else if("Random" %in% SNP.Groups){
-        printer("+ fGWAS:: More than one SNP Group specified. Only conducting one Random iteration.")
+        messager("+ fGWAS:: More than one SNP Group specified. Only conducting one Random iteration.")
         random.iterations <- 1
     }
     RESULTS.DF <- lapply(1:random.iterations, function(iter){
-      printer("+ fGWAS:: Iteration =",iter)
+      messager("+ fGWAS:: Iteration =",iter)
       prepare_input.list <- fGWAS.prepare_input(FM_annot = FM_annot,
                                                 results_path = results_path,
                                                 SNP.Groups = SNP.Groups,
@@ -366,21 +366,21 @@ fGWAS <- function(results_path = "./Data/GWAS/Nalls23andMe_2019/_genome_wide",
                 fgwas.inputs=fgwas.inputs)
 
       # [4] Gather results
-      printer("fGWAS:: Saving all fGWAS results to ==>",output.summary)
+      messager("fGWAS:: Saving all fGWAS results to ==>",output.summary)
       results.DF <- fGWAS.gather_results(results_path = results_path)
       data.table::fwrite(results.DF, output.summary, sep="\t", nThread = 4)
       # wut <- data.table::fread( "./Data/GWAS/Nalls23andMe_2019/_genome_wide/fGWAS/fGWAS_summary.Nalls23andMe_2019.txt")
 
       # [5] Delete tmp files (input/output)
       if(remove_tmps){
-        printer("fGWAS: Removing tmp input files...")
+        messager("fGWAS: Removing tmp input files...")
         # Remove Input
         suppressWarnings(file.remove(list.files(file.path(dirname(fgwas.out),"Input"), pattern = ".gz")))
         # Remove Output
         removeDirectory(fgwas.out, recursive = T, mustExist = F)
       }
       return(results.DF)
-    }) %>% data.table::rbindlist(fill=T)
+    }) %>% data.table::rbindlist(fill=TRUE)
   }
 
   # annot.info <- fGWAS.annotation_names()
@@ -408,7 +408,7 @@ fGWAS.boxplot <- function(results.DF,
   DF$Enrichment <- factor(DF$Enrichment, levels = c("Enriched","Depleted","None"),
                      labels = c("Enriched","Depleted","None"),
                      ordered = T)
-  # counts <- DF %>% dplyr::group_by(SNP.Group, Enrichment, .drop=F) %>% count() %>%
+  # counts <- DF %>% dplyr::group_by(SNP.Group, Enrichment, .drop=FALSE) %>% count() %>%
   #   arrange(Enrichment, SNP.Group) %>%
   #   subset(Enrichment!="None")
   # x.ticks <- paste0(counts$SNP.Group,"\n(n=",counts$n,")")
@@ -424,9 +424,9 @@ fGWAS.boxplot <- function(results.DF,
 
   bp <- ggplot(DF, aes(x=SNP.Group, y=estimate, fill=SNP.Group,
                        text = paste("Annotation:",Annot))) +
-    geom_point(show.legend = F, aes(alpha=0.7)) +
-    geom_jitter(width = .2, show.legend = F, height=0) +
-    geom_boxplot(show.legend = F, aes(alpha=0.7)) +
+    geom_point(show.legend = FALSE, aes(alpha=0.7)) +
+    geom_jitter(width = .2, show.legend = FALSE, height=0) +
+    geom_boxplot(show.legend = FALSE, aes(alpha=0.7)) +
     facet_grid("~Enrichment") +
     # stat_summary(
     #   fun.data = stat_box_data,
@@ -458,11 +458,11 @@ fGWAS.boxplot <- function(results.DF,
 
 
 fGWAS.line_plot <- function(RESULTS.DF,
-                            show_plot=T,
-                            remove_random=T,
+                            show_plot=TRUE,
+                            remove_random=TRUE,
                             results_path,
-                            save_plot=T,
-                            top_annots=F){
+                            save_plot=TRUE,
+                            top_annots=FALSE){
   DF <- RESULTS.DF
   if(remove_random){ DF <- subset(DF, !(SNP.Group %in% c("Random", "Selected"))) %>% droplevels() }
   annot_files <- fGWAS.annotation_names()
@@ -512,8 +512,8 @@ fGWAS.line_plot <- function(RESULTS.DF,
   ## Point w/ CIs
   point.plot <- ggplot(annot.df, aes(x=log2(estimate),  y=description, fill=SNP.Group, color=SNP.Group)) +
     # xlim(c(-max(abs(annot.df$estimate)), max(abs(annot.df$estimate)) )) +
-    geom_point(show.legend = F, alpha = 0.5) +
-    geom_errorbarh(aes(xmin=CI_low, xmax=CI_high), show.legend = F, alpha = 0.5 ) +
+    geom_point(show.legend = FALSE, alpha = 0.5) +
+    geom_errorbarh(aes(xmin=CI_low, xmax=CI_high), show.legend = FALSE, alpha = 0.5 ) +
     theme_minimal() +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
@@ -553,7 +553,7 @@ fGWAS.line_plot <- function(RESULTS.DF,
 
 fGWAS.heatmap <- function(RESULTS.DF,
                           annotation_or_tissue="tissue",
-                          show_plot=T){
+                          show_plot=TRUE){
   DF <- RESULTS.DF
   # library(heatmaply)
   annot_files <- fGWAS.annotation_names()
@@ -562,7 +562,7 @@ fGWAS.heatmap <- function(RESULTS.DF,
 
     ## By each annotation
     mat <- reshape2::acast(DF, Annot~SNP.Group, value.var="estimate",
-                           fun.aggregate = mean, drop = F, fill = 0)
+                           fun.aggregate = mean, drop = FALSE, fill = 0)
     # Add annotation metadata
     mat.annot <- data.table:::merge.data.table(
       data.table(mat, keep.rownames = "Annot", key="Annot"),
@@ -629,7 +629,7 @@ fGWAS.estimate_summary <- function(RESULTS.DF){
     subset((abs(estimate) == max(abs(estimate)) ) & (SNP.Group=="GWAS"))
 
   percent <- round(nrow(consensus.sig.subset)/nrow(sig.subset)*100,2)
-  printer("fGWAS:: Consensus SNPs had the largest absolute estimate in",
+  messager("fGWAS:: Consensus SNPs had the largest absolute estimate in",
           nrow(consensus.sig.subset),"/",nrow(sig.subset),"(",percent,"%)",
           "tests where the estimate was >",thresh)
 
@@ -644,7 +644,7 @@ fGWAS.estimate_summary <- function(RESULTS.DF){
 
 # dat.path <- file.path(results_path,"fGWAS/fgwas.data.txt")
 # data.table::fwrite(dat.fgwas, dat.path, sep="\t",
-#                    row.names = F, col.names = T)
+#                    row.names = FALSE, col.names = T)
 #
 # r <- fGWAS::fg.load.simple(file.simple.snp = dat.path )
 

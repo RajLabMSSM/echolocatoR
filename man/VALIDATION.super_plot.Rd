@@ -10,8 +10,8 @@ VALIDATION.super_plot(
   height = 10,
   width = 12,
   layout = "horiz",
-  show_plot = T,
-  save_plot = F
+  show_plot = TRUE,
+  save_plot = FALSE
 )
 }
 \description{

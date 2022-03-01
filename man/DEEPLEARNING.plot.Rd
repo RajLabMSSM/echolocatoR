@@ -10,12 +10,12 @@ DEEPLEARNING.plot(
   comparisons_filter = function(x) {     if ("Consensus" \%in\% x)          return(x) },
   model_metric = c("MAX"),
   facet_formula = ". ~ Model",
-  remove_outliers = T,
-  show_padj = T,
-  show_signif = T,
+  remove_outliers = TRUE,
+  show_padj = TRUE,
+  show_signif = TRUE,
   vjust_signif = 0,
-  show_plot = T,
-  save_path = F,
+  show_plot = TRUE,
+  save_path = FALSE,
   height = 6,
   width = 8
 )

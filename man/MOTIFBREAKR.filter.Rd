@@ -12,9 +12,9 @@ MOTIFBREAKR.filter(
   qvalue_threshold = 0.05,
   effect_strengths = c("strong"),
   snp_filter = "Consensus_SNP==T",
-  top_TF_hits = F,
+  top_TF_hits = FALSE,
   no_no_loci = NULL,
-  verbose = T
+  verbose = TRUE
 )
 }
 \description{

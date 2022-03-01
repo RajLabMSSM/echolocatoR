@@ -10,7 +10,7 @@
 #' @keywords internal
 #' @examples
 #' # List RDS files you want to extract info from
-#' coloc_rds <- list.files("/sc/hydra/projects/ad-omics/microglia_omics/COLOC", pattern = "*_COLOC.RData", recursive = T, full.names = T)
+#' coloc_rds <- list.files("/sc/hydra/projects/ad-omics/microglia_omics/COLOC", pattern = "*_COLOC.RData", recursive = TRUE, full.names = TRUE)
 #' coloc_rds <- coloc_rds[!grepl("*_sQTL_*|Microglia_all_regions_Young",coloc_rds)]
 #' coloc_rds <- coloc_rds[grep("*Microglia_all_regions_*",coloc_rds)]
 #'
@@ -19,16 +19,16 @@
 #' # SNP-level
 #' coloc_snp <- merge_coloc_results_each(coloc_rds_files=coloc_rds, save_path="/sc/arion/projects/pd-omics/brian/all_COLOC_results.Microglia_all_regions.snp-level.tsv.gz", results_level="snp", filter="leadSNP==T")
 merge_coloc_results_each <- function(coloc_rda_files,
-                                     save_path=F,
-                                     save_each=F,
+                                     save_path=FALSE,
+                                     save_each=FALSE,
                                      results_level="summary",
                                      ppH4_thresh=0,
-                                     return_filter=F,
-                                     force_new=T,
-                                     nThread=4,
-                                     verbose=T){
-  if(file.exists(save_path) & force_new==F){
-    printer("Importing pre-existing file:",save_path, v=verbose)
+                                     return_filter=FALSE,
+                                     force_new=TRUE,
+                                     nThread=1,
+                                     verbose=TRUE){
+  if(file.exists(save_path) & force_new==FALSE){
+    messager("Importing pre-existing file:",save_path, v=verbose)
     merged_COLOC <- data.table::fread(save_path, nThread = nThread)
   } else {
     merged_COLOC <- lapply(coloc_rda_files, function(f,
@@ -46,16 +46,16 @@ merge_coloc_results_each <- function(coloc_rda_files,
       if(save_each){
         subset_path <- file.path(dirname(.save_path),
                                  gsub("_COLOC.RData$",paste0("_COLOC.",.results_level,"-level.tsv.gz"), basename(f)))
-        printer("+ Saving study-specific results ==>",subset_path,v=.verbose)
+        messager("+ Saving study-specific results ==>",subset_path,v=.verbose)
       }  else {subset_path <- F}
       merged_coloc <- merge_coloc_results(all_obj = all_obj,
                                           results_level = .results_level,
                                           nThread = .nThread,
                                           save_path = subset_path,
-                                          verbose = F)
+                                          verbose  = FALSE)
       if(.results_level=="summary"){
         merged_coloc <- subset(merged_coloc,  PP.H4.abf > .ppH4_thresh)
-        printer("+",nrow(merged_coloc),"Locus-Gene pairs identified at",paste0("PP.H4>",.ppH4_thresh), v=verbose)
+        messager("+",nrow(merged_coloc),"Locus-Gene pairs identified at",paste0("PP.H4>",.ppH4_thresh), v=verbose)
       }
       merged_coloc$Study <- basename(dirname(f))
       merged_coloc$Dataset <- gsub("_COLOC.tsv|_COLOC.RData","",basename(f))
@@ -69,26 +69,26 @@ merge_coloc_results_each <- function(coloc_rda_files,
       if(.results_level=="snp"){
         # Assign lead snps
         ## Have to do this via merging to avoid assigning lead SNP in one gene as leadSNP in all genes.
-        printer("Assigning Locus-Gene specific lead SNPs",v=.verbose)
+        messager("Assigning Locus-Gene specific lead SNPs",v=.verbose)
         lead.df <- merged_coloc %>%
           dplyr::group_by(Dataset, Locus, Gene) %>%
           dplyr::arrange(qtl.pvalues,dplyr::desc(abs(qtl.beta))) %>%
           dplyr::slice(1) %>%
-          dplyr::mutate(leadSNP=T) %>%
+          dplyr::mutate(leadSNP=TRUE) %>%
           dplyr::select(c("Study","Dataset","Locus","Gene","snp","leadSNP"))
         merged_coloc <- data.table::merge.data.table(merged_coloc,
                                                      lead.df,
                                                      by = c("Study","Dataset","Locus","Gene","snp"),
-                                                     all.x = T)
+                                                     all.x = TRUE)
         merged_coloc[is.na(merged_coloc$leadSNP),"leadSNP"] <- F
       }
       # Filter
-      if(.return_filter!=F) merged_coloc <- subset(merged_coloc, eval(parse(text = .return_filter)))
+      if(.return_filter!=FALSE) merged_coloc <- subset(merged_coloc, eval(parse(text = .return_filter)))
       return(merged_coloc)
-    }) %>% data.table::rbindlist(fill=T)
-    if(save_path!=F){
-      printer("+ Saving merged results ==>", save_path, v=verbose)
-      dir.create(dirname(save_path), showWarnings = F, recursive = T)
+    }) %>% data.table::rbindlist(fill=TRUE)
+    if(save_path!=FALSE){
+      messager("+ Saving merged results ==>", save_path, v=verbose)
+      dir.create(dirname(save_path), showWarnings = FALSE, recursive = TRUE)
       data.table::fwrite(merged_COLOC, save_path, nThread = nThread)
     }
   }

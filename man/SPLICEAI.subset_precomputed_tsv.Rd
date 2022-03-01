@@ -12,9 +12,9 @@ SPLICEAI.subset_precomputed_tsv(
   subset_DT,
  
     precomputed_path = "/pd-omics/data/spliceAI/whole_genome_filtered_spliceai_scores.tsv.gz",
-  merge_data = T,
-  drop_na = T,
-  filtered = T
+  merge_data = TRUE,
+  drop_na = TRUE,
+  filtered = TRUE
 )
 }
 \description{

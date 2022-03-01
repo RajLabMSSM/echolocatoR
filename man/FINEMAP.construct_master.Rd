@@ -12,7 +12,7 @@ FINEMAP.construct_master(
   n_samples,
   dataset_number = 1,
   file.k = NA,
-  verbose = T
+  verbose = TRUE
 )
 }
 \description{
@@ -20,7 +20,7 @@ Creates and saves the master file
 which tells \code{FINEMAP} where to find each input file.
 }
 \examples{
-data("locus_dir");
+locus_dir <- echodata::locus_dir;
 master_path <- FINEMAP.construct_master(locus_dir=locus_dir, n_samples=25000)
 }
 \seealso{

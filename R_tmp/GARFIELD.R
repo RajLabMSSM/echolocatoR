@@ -25,7 +25,7 @@ library(garfield) # BiocManager::install("garfield")
 
 
 # INPUT FILES
-dir.create("./Data/GWAS/Nalls23andMe_2019/_genome_wide/GARFIELD", showWarnings = F, recursive = T)
+dir.create("./Data/GWAS/Nalls23andMe_2019/_genome_wide/GARFIELD", showWarnings = FALSE, recursive = T)
 
 garfield.run(out.file = "GARFIELD.",
              data.dir = "./Data/GWAS/Nalls23andMe_2019/_genome_wide/GARFIELD",

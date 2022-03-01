@@ -8,12 +8,12 @@
 #' \url{https://cnsgenomics.com/software/gcta/#Overview}
 #' @examples
 #' \dontrun{
-#' data("locus_dir")
+#' locus_dir <- echodata::locus_dir
 #' cojo_dir <- COJO.make_locus_subdir(locus_dir=locus_dir)
 #' }
 COJO.make_locus_subdir <- function(locus_dir){
   cojo_dir <- file.path(locus_dir, "COJO")
-  dir.create(cojo_dir, recursive = T, showWarnings = F)
+  dir.create(cojo_dir, recursive = TRUE, showWarnings  = FALSE)
   return(cojo_dir)
 }
 
@@ -44,7 +44,7 @@ COJO.conditional <- function(GCTA_path=system.file("tools/gcta_1.92.1beta5_mac/b
   # Create file of SNPs you want to condition on
   snp_list = paste(conditioned_snps, collapse="\n")
   conditioned_path <- file.path(cojo_dir,"cojo-cond.txt")
-  data.table::fwrite(list(snp_list),conditioned_path, quote = F, sep=" ")
+  data.table::fwrite(list(snp_list),conditioned_path, quote = FALSE, sep=" ")
   # Command line
   cojo_cmd1 <- paste(GCTA_path,
                      " --bfile ",file.path(locus_dir,"LD/plink"),
@@ -54,7 +54,7 @@ COJO.conditional <- function(GCTA_path=system.file("tools/gcta_1.92.1beta5_mac/b
                      " --cojo-cond ",conditioned_path,
                      " --exclude ",excluded_path,
                      " --out ",file.path(cojo_dir,"cojo"), sep="")
-  printer("+ COJO:: conditional analysis -- Conditioning on:",paste(snp_list, collapse=", ") )
+  messager("+ COJO:: conditional analysis -- Conditioning on:",paste(snp_list, collapse=", ") )
   system(cojo_cmd1)
 }
 # Conditional results
@@ -98,7 +98,7 @@ COJO.stepwise <- function(GCTA_path=system.file("tools/gcta_1.92.1beta5_mac/bin"
                      ## the LD correlations between the SNPs.
                      " --exclude ",excluded_path,
                      " --out ",file.path(cojo_dir,"cojo"), sep="")
-  printer("+ COJO:: Stepwise Selection Procedure -- Identifying independent SNPs...")
+  messager("+ COJO:: Stepwise Selection Procedure -- Identifying independent SNPs...")
   system(cojo_cmd2)
 }
 
@@ -134,7 +134,7 @@ get_stepwise_results <- function(cojo_dir){
 process_COJO_results <- function(subset_DT,
                                  locus_dir,
                                  freq_cutoff=0.1){
-  printer("+ COJO:: Processing results...")
+  messager("+ COJO:: Processing results...")
   cojo_dir <- COJO.make_locus_subdir(locus_dir)
   # Stepwise results
   ## FILTER BY FREQ
@@ -142,7 +142,7 @@ process_COJO_results <- function(subset_DT,
     subset(freq_geno > freq_cutoff)
   independent_SNPs <- stepwise_results$SNP
   # Conditional results
-  cond_snps <- data.table::fread(file.path(cojo_dir,"cojo-cond.txt"), header=F)$V1
+  cond_snps <- data.table::fread(file.path(cojo_dir,"cojo-cond.txt"), header=FALSE)$V1
   conditional_results <- get_conditional_results(cojo_dir) %>%
     dplyr::select(SNP, Conditioned_Effect = bC)
 
@@ -150,7 +150,7 @@ process_COJO_results <- function(subset_DT,
   # Merge with original data
   cojo_DT <- data.table:::merge.data.table(data.table::data.table(subset_DT, key = "SNP"),
                                            data.table::data.table(conditional_results, key = "SNP"),
-                                              by = "SNP", all = T)
+                                              by = "SNP", all = TRUE)
   cojo_DT$CS <- ifelse(cojo_DT$SNP %in% independent_SNPs,1,0)
   return(cojo_DT)
 }
@@ -175,8 +175,8 @@ COJO <- function(subset_DT,
                  min_MAF=0,
                  GCTA_path=system.file("tools/gcta_1.92.1beta5_mac/bin","gcta64",package="echolocatoR"),
                  bfiles="plink_tmp/plink",
-                 stepwise_procedure=T,
-                 conditional_analysis=T,
+                 stepwise_procedure=TRUE,
+                 conditional_analysis=TRUE,
                  snp_col="SNP",
                  freq_col="Freq",
                  effect_col="Effect",
@@ -220,7 +220,7 @@ COJO <- function(subset_DT,
                     N)
     # Create genome-wide dir
     genome_dir <- file.path(dirname(locus_dir),"_genome_wide","COJO")
-    dir.create(genome_dir, showWarnings = F, recursive = T)
+    dir.create(genome_dir, showWarnings = FALSE, recursive = TRUE)
     cojo_dir <- genome_dir
   } else {
     # Use subset of summary stats (not for the stepwise conditional procedure)
@@ -240,7 +240,7 @@ COJO <- function(subset_DT,
 
   # Create of SNPs to exclude from analysis
   excluded_path <- file.path(cojo_dir,"excluded_snps.txt")
-  data.table::fwrite(list(excluded_snps),excluded_path , quote = F)
+  data.table::fwrite(list(excluded_snps),excluded_path , quote  = FALSE)
 
   ## Run COJO
   if(stepwise_procedure){

@@ -36,8 +36,8 @@ root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2
 mb.results<- readRDS(file.path(root,"DNAH17.pvalues.RDS"))
 
 # Get overlap with PEAKS
-# PEAKS <- NOTT_2019.get_epigenomic_peaks(convert_to_GRanges = T)
-REGIONS <- NOTT_2019.get_regulatory_regions(as.granges = T)
+# PEAKS <- NOTT_2019.get_epigenomic_peaks(convert_to_GRanges = TRUE)
+REGIONS <- NOTT_2019.get_regulatory_regions(as.granges = TRUE)
 gr.hits <- GRanges_overlap(dat1 = subset(merged_DT, Consensus_SNP), chrom_col.1 = "CHR", start_col.1 = "POS", end_col.1 = "POS", dat2 = REGIONS)
 mb.filter <- MOTIFBREAKR.filter(merged_DT = merged_DT, mb.results = mb.results, pct_threshold=NULL)
 

@@ -7,11 +7,11 @@ library(ggplot2)
 # merged_results <- readxl::read_excel("~/Desktop/Fine_Mapping/Data/annotated_results_table.xlsx")
 # finemap_dat <- data.table::fread("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/LRRK2/Multi-finemap/Multi-finemap_results.txt")
 # merged_results <- merge_finemapping_results(minimum_support=1,
-#                                             include_leadSNPs=T,
+#                                             include_leadSNPs=TRUE,
 #                                             xlsx_path="./Data/annotated_finemapping_results.xlsx",
-#                                             from_storage=T,
-#                                             haploreg_annotation=T,
-#                                             biomart_annotation=T,
+#                                             from_storage=TRUE,
+#                                             haploreg_annotation=TRUE,
+#                                             biomart_annotation=TRUE,
 #                                             verbose = F)
 
 gather_locus_report <- function(){
@@ -20,7 +20,7 @@ gather_locus_report <- function(){
   # For each locus...
   locus_report <- lapply(multi_files, function(f){
     locus <- basename(dirname(dirname(f)))
-    printer("+ Extracting SNP count data for locus:", locus)
+    messager("+ Extracting SNP count data for locus:", locus)
     dat <- data.table::fread(f)
     # Count signficiant SNPs from GWAS
     snp_count <- subset(dat, P<=5e-8) %>% count()
@@ -34,7 +34,7 @@ gather_locus_report <- function(){
     report["CS_SNP.count"] <-  (subset(dat, Support > 0) %>% count())$n
 
     # Count Consensus SNPs
-    report$Consensus_SNP.count <- (subset(dat, Consensus_SNP==T) %>% count())$n
+    report$Consensus_SNP.count <- (subset(dat, Consensus_SNP==TRUE) %>% count())$n
     return(report)
   }) %>% data.table::rbindlist()
   return(locus_report)
@@ -126,7 +126,7 @@ SNPgroups_plot <- function(locus_report){
 #   locus_report <- as.data.frame(locus_report)
 #   cuts <- cut_interval(locus_report[,column], length=cutsize)
 #   # breaks <- seq(0, max_value, by = cutsize)
-#   # cuts <- Hmisc::cut2(locus_report[,column], cuts = breaks, include.lowest=T, right=F)
+#   # cuts <- Hmisc::cut2(locus_report[,column], cuts = breaks, include.lowest=TRUE, right=FALSE)
 #   # e=cuts[3]
 #   intervals <- lapply(cuts, function(e){
 #       splitter <- suppressWarnings( strsplit(toString(e), ",|)|\\(|\\]|\\[|] ")[[1]] %>% as.integer())

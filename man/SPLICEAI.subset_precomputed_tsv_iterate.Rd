@@ -11,10 +11,10 @@
 SPLICEAI.subset_precomputed_tsv_iterate(
   sumstats_paths,
   precomputed_path = "/pd-omics/data/spliceAI/spliceai_scores.raw.snv.hg19.tsv.gz",
-  nThread = 4,
-  merge_data = T,
-  drop_na = T,
-  filtered = F,
+  nThread = 1,
+  merge_data = TRUE,
+  drop_na = TRUE,
+  filtered = FALSE,
   save_path = "./spliceAI_subset.tsv.gz"
 )
 }
@@ -25,7 +25,7 @@ Make multiple queries to genome-wide \emph{SpliceAI} results file (tsv format)
 \dontrun{
 root.pd <- "/sc/arion/projects/pd-omics"
 precomputed_path <- file.path(root.pd,"data/spliceAI/spliceai_scores.raw.snv.hg19.tsv.gz")
-sumstats_paths <- list.files(file.path(root.pd, "/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019"), pattern = "*.UKB_LD.Multi-finemap.tsv.gz", recursive = T, full.names = T)
+sumstats_paths <- list.files(file.path(root.pd, "/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019"), pattern = "*.UKB_LD.Multi-finemap.tsv.gz", recursive = TRUE, full.names = TRUE)
 DAT <- SPLICEAI.subset_precomputed_tsv_iterate(sumstats_paths=sumstats_paths)
 }
 }

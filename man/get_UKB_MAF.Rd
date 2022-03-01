@@ -7,10 +7,10 @@
 get_UKB_MAF(
   subset_DT,
   output_path = "./Data/Reference/UKB_MAF",
-  force_new_maf = F,
+  force_new_maf = FALSE,
   download_method = "axel",
-  nThread = 4,
-  verbose = T,
+  nThread = 1,
+  verbose = TRUE,
   conda_env = "echoR"
 )
 }
@@ -20,7 +20,7 @@ download MAF from UK Biobank and use that instead.
 }
 \examples{
 \dontrun{
-data("BST1");
+BST1 <- echodata::BST1;
 subset_DT <- data.frame(BST1)[,colnames(BST1)!="MAF"]
 BST1 <- get_UKB_MAF(subset_DT=subset_DT )
 }

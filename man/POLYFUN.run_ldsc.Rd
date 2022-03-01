@@ -17,8 +17,8 @@ POLYFUN.run_ldsc(
   weights.path = file.path(polyfun, "example_data/weights."),
   prefix = "LDSC",
   chrom = "all",
-  compute_ldscores = F,
-  allow_missing_SNPs = T,
+  compute_ldscores = FALSE,
+  allow_missing_SNPs = TRUE,
  
     munged_path = "/sc/arion/projects/pd-omics/tools/polyfun/Nalls23andMe_2019.sumstats_munged.parquet",
   ref.prefix = "/sc/arion/projects/pd-omics/data/1000_Genomes/Phase1/1000G.mac5eur.",

@@ -7,9 +7,9 @@
 merge_coloc_results(
   all_obj,
   results_level = c("summary"),
-  nThread = 4,
-  verbose = T,
-  save_path = F
+  nThread = 1,
+  verbose = TRUE,
+  save_path = FALSE
 )
 }
 \arguments{

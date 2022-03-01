@@ -6,19 +6,19 @@
 \usage{
 GOSHIFTER.create_LD(
   locus_dir,
-  finemap_dat = NULL,
+  dat = NULL,
   LD_path = NULL,
   conda_env = "goshifter",
-  nThread = 4,
-  verbose = T
+  nThread = 1,
+  verbose = TRUE
 )
 }
 \description{
 Prepare LD input for \emph{GoShifter}
 }
 \examples{
-data("BST1"); data("locus_dir")
-LD_folder <- GOSHIFTER.create_LD(locus_dir=locus_dir, finemap_dat=subset(BST1, P<5e-8))
+BST1 <- echodata::BST1; locus_dir <- echodata::locus_dir
+LD_folder <- GOSHIFTER.create_LD(locus_dir=locus_dir, dat=subset(BST1, P<5e-8))
 }
 \seealso{
 Other GOSHIFTER: 

@@ -13,8 +13,8 @@ POLYFUN.h2_enrichment_SNPgroups(
  
     ldsc_dir = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/output",
   ldsc_suffix = "*.snpvar_constrained.gz",
-  save_enrich = F,
-  nThread = 4
+  save_enrich = FALSE,
+  nThread = 1
 )
 }
 \description{
@@ -25,7 +25,7 @@ Run heritability enrichment tests across SNP groups
 root <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 # IMPORTANT! For this to make sense, you need to merge the full data ("merged_DT" only includes Support>0 and leadSNPs)
 merged_dat <- merge_finemapping_results(dataset = dirname(root), LD_reference = "UKB", minimum_support = 0)
-merged_dat <- find_consensus_SNPs_no_PolyFun(merged_dat)
+merged_dat <- echodata::find_consensus_snps_no_polyfun(merged_dat)
 
 RES <- POLYFUN.h2_enrichment_SNPgroups(merged_dat=merged_dat, ldsc_dir=file.path(root,"PolyFun/output"),  save_enrich=file.path(root,"PolyFun/Nalls23andMe_2019.h2_enrich.snp_groups.csv.gz"))
 }

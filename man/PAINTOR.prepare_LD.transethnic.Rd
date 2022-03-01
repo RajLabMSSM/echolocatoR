@@ -13,8 +13,8 @@ PAINTOR.prepare_LD.transethnic(
   QTL_datasets,
   QTL_populations = c("AFA", "CAU", "HIS"),
   LD_reference = "1KG_Phase1",
-  force_new_LD = F,
-  shared_snps_only = T,
+  force_new_LD = FALSE,
+  shared_snps_only = TRUE,
   fillNA = 0
 )
 }

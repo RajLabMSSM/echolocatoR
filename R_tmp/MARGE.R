@@ -23,7 +23,7 @@ MARGE.find_motifs <- function(finemap_dat,
                               output_dir="./HOMER_results",
                               genome="hg19"){
   # chromosome, start, end, region ID
-  dir.create(output_dir,showWarnings = F, recursive = T)
+  dir.create(output_dir,showWarnings = FALSE, recursive = T)
   finemap_dat <- finemap_dat %>%
     dplyr::select(chromosome="CHR",start="POS",end="POS", dplyr::everything())
   # Run

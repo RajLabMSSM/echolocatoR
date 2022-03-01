@@ -17,11 +17,11 @@ SURE.plot(
   title = "SuRE MPRA",
   xlabel = "SNP Group",
   facet_formula = ". ~ Cell_type",
-  show_padj = T,
-  show_signif = T,
+  show_padj = TRUE,
+  show_signif = TRUE,
   vjust_signif = 0.5,
-  show_plot = T,
-  save_path = F,
+  show_plot = TRUE,
+  save_path = FALSE,
   height = 5,
   width = 5
 )

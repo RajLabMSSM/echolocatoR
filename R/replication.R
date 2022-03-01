@@ -9,11 +9,11 @@ REPLICATION.compare_LD_panels <- function(root="/sc/arion/projects/pd-omics/bria
   # merged_UKB <- data.table::fread(file.path(root,"Data/GWAS/Nalls23andMe_2019/_genome_wide/merged_UKB.csv.gz"))
   merged_UKB <- merge_finemapping_results(dataset = file.path(root,dataset),
                                           LD_reference = "UKB",
-                                          minimum_support = 1, include_leadSNPs = T)
+                                          minimum_support = 1, include_leadSNPs = TRUE)
   # merged_1KG <- data.table::fread(file.path(root,"Data/GWAS/Nalls23andMe_2019/_genome_wide/merged_1KGphase3.csv.gz"))
   merged_1KG <- merge_finemapping_results(dataset = file.path(root,dataset),
                                           LD_reference = "1KGphase3",
-                                          minimum_support = 1, include_leadSNPs = T)
+                                          minimum_support = 1, include_leadSNPs = TRUE)
   # Merge and remove non-overlapping loci
   common_loci <- dplyr::intersect(unique(merged_UKB$Locus),
                                   unique(merged_1KG$Locus))
@@ -42,21 +42,21 @@ REPLICATION.compare_LD_panels <- function(root="/sc/arion/projects/pd-omics/bria
                   Consensus_overlap=Consensus_SNP.UKB>0 & Consensus_SNP.1KG>0)
   overlap_summary <- overlap %>%
     dplyr::group_by(Locus) %>%
-    dplyr::summarise(leadSNP_overlap=sum(leadSNP_overlap, na.rm = T),
-                     leadSNP_prop=sum(leadSNP_overlap, na.rm = T)/sum(leadSNP_overlap, na.rm = T),
+    dplyr::summarise(leadSNP_overlap=sum(leadSNP_overlap, na.rm = TRUE),
+                     leadSNP_prop=sum(leadSNP_overlap, na.rm = TRUE)/sum(leadSNP_overlap, na.rm = TRUE),
 
-                     UCS_overlap=sum(UCS_overlap, na.rm = T),
-                     UCS_prop=sum(UCS_overlap, na.rm = T)/sum(UCS_overlap, na.rm = T),
+                     UCS_overlap=sum(UCS_overlap, na.rm = TRUE),
+                     UCS_prop=sum(UCS_overlap, na.rm = TRUE)/sum(UCS_overlap, na.rm = TRUE),
 
-                     Consensus_overlap=sum(Consensus_overlap, na.rm = T),
-                     Consensus_prop=sum(Consensus_overlap, na.rm = T)/sum(Consensus_overlap, na.rm = T)
+                     Consensus_overlap=sum(Consensus_overlap, na.rm = TRUE),
+                     Consensus_prop=sum(Consensus_overlap, na.rm = TRUE)/sum(Consensus_overlap, na.rm = TRUE)
     ) %>% data.frame()
 
   #### heatmap ####
   heat <- REPLICATION.compare_PP_heatmap(merged_PD = merged_PD)
 
   #### scatter plot ####
-  methods <- gsub("\\.PP\\.UKB","",grep("*\\.PP\\.UKB", colnames(merged_PD), value = T))
+  methods <- gsub("\\.PP\\.UKB","",grep("*\\.PP\\.UKB", colnames(merged_PD), value = TRUE))
   pp_list <- lapply(methods, function(m){
     print(m)
     REPLICATION.compare_PP_scatterplot(merged_PD=merged_PD,
@@ -64,7 +64,7 @@ REPLICATION.compare_LD_panels <- function(root="/sc/arion/projects/pd-omics/bria
                                        col2=paste0(m,".PP.1KG"),
                                        title=paste(m,"PP"),
                                        max_labels = 2,
-                                       show_plot = F)
+                                       show_plot  = FALSE)
   }) %>% `names<-`(methods)
 
   #### boxplot ####
@@ -79,9 +79,9 @@ REPLICATION.compare_LD_panels <- function(root="/sc/arion/projects/pd-omics/bria
     patchwork::plot_annotation(tag_levels = "a", title = "UKB LD vs. 1KG LD")
   print(pp_wrap)
 
-  if(save_plot!=F){
+  if(save_plot!=FALSE){
     save_path <- file.path(results_dir, "GWAS/Nalls23andMe_2019/_genome_wide","LD_comparison/UKB_vs_1KG.PP.png")
-    dir.create(dirname(save_path), showWarnings = F, recursive = T)
+    dir.create(dirname(save_path), showWarnings = FALSE, recursive = TRUE)
     ggsave(save_path, pp_wrap, dpi = 300, width = 10, height = 12)
   }
 
@@ -95,7 +95,7 @@ REPLICATION.compare_singleton_results <- function(singleton_url="/pd-omics/data/
                                                   results_dir="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data",
                                                   save_path=file.path(results_dir,"GWAS/Nalls23andMe_2019/_genome_wide/Singleton_comparison/Schilder_vs_Grenn.png")){
   # Originally from: https://storage.googleapis.com/nihnialng-share-f23bef932184/pd_meta5_sum_stats_fm_results.csv.gz
-  singleton <- data.table::fread(singleton_url, nThread=4)
+  singleton <- data.table::fread(singleton_url, nThread=1)
   # Merging by SNP yields waaaaaay more hits than CHR/POS, even after liftover.
   merged_PD <- data.table::merge.data.table(merged_dat,
                                             singleton,
@@ -110,7 +110,7 @@ REPLICATION.compare_singleton_results <- function(singleton_url="/pd-omics/data/
   spearman <- cor.test(overlap$FINEMAP.PP, overlap$prob, method="spearman")
 
   #### scatter plot ####
-  methods <- gsub("\\.PP","",grep("*\\.PP$", colnames(merged_PD), value = T))
+  methods <- gsub("\\.PP","",grep("*\\.PP$", colnames(merged_PD), value = TRUE))
   pp_list <- lapply(methods, function(m){
     print(m)
     REPLICATION.compare_PP_scatterplot(merged_PD=merged_PD,
@@ -121,8 +121,8 @@ REPLICATION.compare_singleton_results <- function(singleton_url="/pd-omics/data/
                                        filter_str = "prob > 0",
                                        xlabel=paste0(m," PP (Schilder et al.)"),
                                        ylabel="FINEMAP PP (Grenn et al.)",
-                                       show_count = F,
-                                       show_plot = F)
+                                       show_count = FALSE,
+                                       show_plot  = FALSE)
   }) %>% `names<-`(methods)
 
   bp <- REPLICATION.compare_PP_pairedplot(merged_PD=merged_PD,
@@ -133,7 +133,7 @@ REPLICATION.compare_singleton_results <- function(singleton_url="/pd-omics/data/
                                                            "prob"="(Grenn et al.)"),
                                           filter_str="FINEMAP.PP>0 & prob>0",
                                           ylabel = "FINEMAP PP",
-                                          show_plot = F)
+                                          show_plot  = FALSE)
   pp_list$paired_FINEMAP.PP <- bp
 
   library(patchwork)
@@ -141,8 +141,8 @@ REPLICATION.compare_singleton_results <- function(singleton_url="/pd-omics/data/
     patchwork::plot_annotation(tag_levels = "a",
                                title = "Fine-mapping: Schilder et al. vs. Grenn et al.")
   if(show_plot) print(pp_wrap)
-  if(save_path!=F){
-    dir.create(dirname(save_path),showWarnings = F, recursive = T)
+  if(save_path!=FALSE){
+    dir.create(dirname(save_path),showWarnings = FALSE, recursive = TRUE)
     ggsave(save_path,
            plot = pp_wrap, dpi = 300,  width = 10, height = 12)
   }
@@ -162,8 +162,8 @@ REPLICATION.compare_PP_scatterplot <- function(merged_PD,
                                               max_labels=5,
                                               xlabel=col1,
                                               ylabel=col2,
-                                              show_count=T,
-                                              show_plot=T){
+                                              show_count=TRUE,
+                                              show_plot=TRUE){
   library(ggplot2)
   #### Scatter plot ####
   label_snps <- subset(merged_PD, eval(parse(text=col1))>.75 &  eval(parse(text=col2))>.75) %>%
@@ -207,7 +207,7 @@ REPLICATION.compare_PP_pairedplot <- function(merged_PD,
                                                line_alpha=.1,
                                                xlabel=NULL,
                                                ylabel=NULL,
-                                               show_plot=T){
+                                               show_plot=TRUE){
   melt_PD <- data.table::melt.data.table(data = subset(merged_PD, eval(parse(text = filter_str))),
                                          id.vars = c("SNP","Locus","P"),
                                          measure.vars = c(col1,col2),
@@ -243,7 +243,7 @@ REPLICATION.compare_PP_pairedplot <- function(merged_PD,
 
 
 REPLICATION.compare_PP_heatmap <- function(merged_PD,
-                                           PP_cols= grep("\\.PP\\.UKB$|\\.PP\\.1KG$", colnames(merged_PD), value = T)){
+                                           PP_cols= grep("\\.PP\\.UKB$|\\.PP\\.1KG$", colnames(merged_PD), value = TRUE)){
   sources <- lapply(PP_cols, function(x) rev(strsplit(x,"\\.")[[1]])[1]) %>% unlist()
   corr_dat <- data.frame(merged_PD, row.names = merged_PD$SNP)[,PP_cols]
   corr_dat[is.na(corr_dat)] <- 0
@@ -257,14 +257,14 @@ REPLICATION.compare_PP_heatmap <- function(merged_PD,
   heat <- heatmaply(x = corr_mat,
                     col = viridis::magma(10), #rev(RColorBrewer::brewer.pal(10,"magma")),
                     # plot_method="ggplot",
-                    # return_ppxpy = T,
+                    # return_ppxpy = TRUE,
                     # file = file.path("Data/GWAS/Nalls23andMe_2019/_genome_wide","LD_comparison/UKB_vs_1KG.PP.heatmap.png"),
                     key.title = "Spearman's rho",
                     grid_gap = .75,
 
                     limits = c(-1,1),
-                    row_side_colors = data.frame("LD panel"=sources, check.names = F),
-                    col_side_colors = data.frame("LD panel"=sources, check.names = F)
+                    row_side_colors = data.frame("LD panel"=sources, check.names  = FALSE),
+                    col_side_colors = data.frame("LD panel"=sources, check.names  = FALSE)
   )
   print(heat)
   return(heat)

@@ -12,8 +12,8 @@ DEEPLEARNING.query_one_chr(
   model = c("Basenji", "BiClassCNN", "DeepSEA", "ChromHMM", "Roadmap", "Others"),
   mean_max = c("MEAN", "MAX"),
   type = c("annot", "ldscore"),
-  nThread = 4,
-  verbose = T
+  nThread = 1,
+  verbose = TRUE
 )
 }
 \description{
@@ -22,7 +22,7 @@ then merge with \code{subset_DT} by \emph{SNP}.
 }
 \examples{
 \dontrun{
-data("BST1")
+BST1 <- echodata::BST1
 annot.dat <- DEEPLEARNING.query_one_chr(subset_DT=BST1, tissue="NTS", model="Basenji", type="annot")
 }
 }

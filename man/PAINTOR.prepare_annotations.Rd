@@ -9,7 +9,7 @@ PAINTOR.prepare_annotations(
   BED_paths,
   PT_results_path,
   locus_name,
-  remove_BED = F
+  remove_BED = FALSE
 )
 }
 \description{

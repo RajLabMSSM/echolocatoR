@@ -8,9 +8,9 @@ IMPACT.get_annotation_key(
  
     URL = "https://github.com/immunogenomics/IMPACT/raw/master/IMPACT707/IMPACT_annotation_key.txt",
   save_path = "./IMPACT/IMPACT_annotation_key.txt.gz",
-  save_key = F,
-  force_new_download = F,
-  verbose = T
+  save_key = FALSE,
+  force_new_download = FALSE,
+  verbose = TRUE
 )
 }
 \description{
@@ -18,7 +18,7 @@ Inlcludes the study source, tissue,cell type/line,
 and cell subtype of each of the 500 annotations in \emph{IMPACT}.
 }
 \examples{
-annot.key <- IMPACT.get_annotation_key(save_key=F)
+annot.key <- IMPACT.get_annotation_key(save_key=FALSE)
 head(annot.key)
 }
 \seealso{

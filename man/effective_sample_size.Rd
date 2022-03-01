@@ -4,7 +4,7 @@
 \alias{effective_sample_size}
 \title{Calculate effective sample size}
 \usage{
-effective_sample_size(finemap_dat, sample_size = NULL, verbose = T)
+effective_sample_size(finemap_dat, sample_size = NULL, verbose = TRUE)
 }
 \arguments{
 \item{finemap_dat}{Preprocessed \emph{echolocatoR} locus subset file.
@@ -17,7 +17,7 @@ i.e., this is the sample size required to identify an association with a
  (from email correpsondence with Omer Weissbrod)
 }
 \examples{
-data("BST1");
+BST1 <- echodata::BST1;
 finemap_DT <- effective_sample_size(finemap_dat=BST1)
 }
 \keyword{internal}

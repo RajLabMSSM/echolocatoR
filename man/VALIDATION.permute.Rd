@@ -10,7 +10,7 @@
 VALIDATION.permute(
   metric_df,
   metric,
-  locus_means = F,
+  locus_means = FALSE,
   snp_groups = c("Random", "GWAS lead", "UCS (-PolyFun)", "UCS",
     "Consensus (-PolyFun)", "Consensus")
 )
@@ -39,7 +39,7 @@ metric <- "IMPACT_score"
 ## Import and Process ##
 metric_df <- data.table::fread(path, nThread=8)
 if(metric=="IMPACT_score") metric_df <- subset(metric_df, select=c(SNP,leadSNP,ABF.Credible_Set,ABF.PP,SUSIE.Credible_Set,SUSIE.PP,POLYFUN_SUSIE.Credible_Set,POLYFUN_SUSIE.PP,FINEMAP.Credible_Set,FINEMAP.PP,Consensus_SNP,Support,Locus,IMPACT_score))
-if(metric=="mean_IMPACT") metric_df <- find_consensus_SNPs_no_PolyFun(metric_df)
+if(metric=="mean_IMPACT") metric_df <- echodata::find_consensus_snps_no_polyfun(metric_df)
 
 #### run bootstrap ####
 permute_res <- VALIDATION.permute(metric_df=metric_df, metric=metric )

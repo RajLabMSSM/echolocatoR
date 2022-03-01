@@ -15,19 +15,19 @@
 #' @keywords internal
 #' @examples
 #' # GWAS
-#' data("BST1");
+#' BST1 <- echodata::BST1;
 #' finemap_DT <- ABF(subset_DT=BST1)
 #'
 #' # QTL
 #' locus_dir <- "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/QTL/Microglia_all_regions/BIN1"
 #' subset_DT <- data.table::fread(file.path(locus_dir,"/Multi-finemap/BIN1.Microglia_all_regions.1KGphase3_LD.Multi-finemap.tsv.gz"))
-#' finemap_DT <- ABF(subset_DT=subset_DT, case_control=F, sample_size=90)
+#' finemap_DT <- ABF(subset_DT=subset_DT, case_control=FALSE, sample_size=90)
 ABF <- function(subset_DT,
                 PP_threshold=.95,
                 sample_size=NULL,
                 sdY=NULL,
-                case_control=T,
-                verbose=T){
+                case_control=TRUE,
+                verbose=TRUE){
   #data.table::fread("Data/GWAS/Nalls23andMe_2019/LRRK2/LRRK2_Nalls23andMe_2019_subset.txt")
   if(case_control){
    dataset <- list(beta = subset_DT$Effect,
@@ -50,7 +50,7 @@ ABF <- function(subset_DT,
     ss_df <- get_sample_size(subset_DT = subset_DT,
                              sample_size = sample_size,
                              verbose = verbose)
-    if(!is.null(ss_df)) dataset$N <-  max(ss_df$N, na.rm = T);
+    if(!is.null(ss_df)) dataset$N <-  max(ss_df$N, na.rm = TRUE);
   } else {dataset$N <- sample_size}
 
   #### Run ABF ####

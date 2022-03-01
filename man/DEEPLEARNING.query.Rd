@@ -12,8 +12,8 @@ DEEPLEARNING.query(
   model = c("Basenji", "BiClassCNN", "DeepSEA", "ChromHMM", "Roadmap", "Others"),
   mean_max = c("MEAN", "MAX"),
   type = c("annot", "ldscore"),
-  nThread = 4,
-  verbose = T
+  nThread = 1,
+  verbose = TRUE
 )
 }
 \description{
@@ -23,7 +23,7 @@ Iteratively collect deep learning annotations
 \dontrun{
 root = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 merged_dat <- merge_finemapping_results(dataset = "Data/GWAS/Nalls23andMe_2019", LD_reference = "UKB", minimum_support = 0)
-merged_dat <- find_consensus_SNPs_no_PolyFun(merged_dat)
+merged_dat <- echodata::find_consensus_snps_no_polyfun(merged_dat)
 
 #### Allelic_Effect ####
 ANNOT.ae <- DEEPLEARNING.query (merged_dat=merged_dat, level="Allelic_Effect", type="annot")

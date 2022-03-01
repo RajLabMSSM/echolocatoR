@@ -8,12 +8,12 @@ IMPACT.iterate_get_annotations(
   merged_DT,
   IMPACT_score_thresh = 0.1,
   baseURL = "https://github.com/immunogenomics/IMPACT/raw/master/IMPACT707/Annotations",
-  all_snps_in_range = T,
-  top_annotations = F,
-  force_one_annot_per_locus = F,
+  all_snps_in_range = TRUE,
+  top_annotations = FALSE,
+  force_one_annot_per_locus = FALSE,
   snp.filter = "!is.na(SNP)",
-  nThread = 4,
-  verbose = T
+  nThread = 1,
+  verbose = TRUE
 )
 }
 \description{

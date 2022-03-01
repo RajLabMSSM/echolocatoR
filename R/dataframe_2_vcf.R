@@ -1,6 +1,7 @@
 #' Convert a dataframe to a vcf
 #'
 #' @family utils
+#' @importFrom echoconda find_package
 #' @examples
 #' data("merge_DT")
 #'
@@ -30,7 +31,7 @@ dataframe_2_vcf <- function(subset_DT,
   data.table::fwrite(x = dat_mod, file="./tmp.tsv",sep = "\t")
 
   # STEP 2
-  bcftools <- CONDA.find_package(package = "bcftools",
+  bcftools <- echoconda::find_package(package = "bcftools",
                                  conda_env = conda_env)
   ## Convert tsv to vcf with bcftools
   cmd <- paste(bcftools,

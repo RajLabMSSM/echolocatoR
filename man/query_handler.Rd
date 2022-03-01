@@ -2,7 +2,7 @@
 % Please edit documentation in R/query.R
 \name{query_handler}
 \alias{query_handler}
-\title{Handles which query method to use}
+\title{Query handler}
 \usage{
 query_handler(
   fullSS_path,
@@ -18,77 +18,75 @@ query_handler(
   position_col = "POS",
   file_sep = "\\t",
   query_by = "coordinates",
-  probe_path = "./Data/eQTL/gene.ILMN.map",
   conda_env = "echoR",
-  verbose = T
+  verbose = TRUE
 )
 }
 \arguments{
-\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.
+\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL)
+that you want to fine-map.
 It is usually best to provide the absolute path rather than the relative path.}
 
-\item{top_SNPs}{A data.frame with the genomic coordinates of the lead SNP for each locus.
-The lead SNP will be used as the center of the window when extracting subset from the full GWAS/QTL summary statistics file.
+\item{top_SNPs}{A data.frame with the genomic coordinates of the lead SNP
+for each locus.
+The lead SNP will be used as the center of the window when extracting
+subset from the full GWAS/QTL summary statistics file.
 Only one SNP per \strong{Locus} should be included.
 At minimum, \code{top_SNPs} should include the following columns:
 \describe{
-\item{\emph{Locus}}{A unique name for each locus. Often, loci are named after a relevant gene (e.g. LRRK2) or based on the name/coordinates of the lead SNP (e.g. locus_chr12_40734202) }
-\item{\emph{CHR}}{The chromosome that the SNP is on. Can be "chr12" or "12" format.}
+\item{\emph{Locus}}{A unique name for each locus. Often,
+ loci are named after a relevant gene (e.g. LRRK2) or based on
+  the name/coordinates of the lead SNP (e.g. locus_chr12_40734202) }
+\item{\emph{CHR}}{The chromosome that the SNP is on.
+ Can be "chr12" or "12" format.}
 \item{\emph{POS}}{The genomic position of the SNP (in basepairs)}
 }}
 
 \item{subset_path}{Path of the resulting locus subset file.}
 
-\item{min_POS}{Manually set the minimum genomic position for your locus subset.
-\code{min_POS} can clip the window size set by \code{bp_distance}.
-Can also be a list of positions (one for each locus) (e.g. \code{min_POS=top_SNPs$min_POS}).}
+\item{min_POS}{Minimum genomic position to include.}
 
-\item{max_POS}{Manually set the maximum genomic position for your locus subset.
-\code{max_POS} can clip the window size set by \code{bp_distance}.
-Can also be a list of positions (one for each locus) (e.g. \code{max_POS=top_SNPs$max_POS}).}
+\item{max_POS}{Maximum genomic position to include.}
 
-\item{bp_distance}{The width of the window size you want each locus to be.
-For example, if \code{bp_distance=500000} then the locus will span 500kb from the lead SNP in either direction,
-resulting in a locus that is ~1Mb long (depending on the dataset).}
+\item{bp_distance}{Distance around the lead SNP to include.}
 
 \item{locus_col}{Name of the locus column in the full summary stats file.
 (\emph{default: ="Locus"})}
 
-\item{chrom_col}{Name of the chromosome column in the full summary stats file.
+\item{chrom_col}{Name of the chromosome column in the full summary stats
+file.
 Can be "chr1" or "1" format.
 (\emph{default: ="CHR"})}
 
-\item{position_col}{Name of the genomic position column in the full summary stats file.
+\item{position_col}{Name of the genomic position column in the full summary
+stats file.
 Must be in units of basepairs.
 (\emph{default: ="POS"})}
 
 \item{file_sep}{The separator in the full summary stats file.
 This parameter is only necessary if \code{query_by!="tabix"}.}
 
-\item{query_by}{Choose which method you want to use to extract locus subsets from the full summary stats file.
+\item{query_by}{Choose which method you want to use to extract
+ locus subsets from the full summary stats file.
 Methods include:
 \describe{
-\item{"tabix"}{Convert the full summary stats file in an indexed tabix file. Makes querying lightning fast after the initial conversion is done. (\emph{default})}
-\item{"coordinates"}{Extract locus subsets using min/max genomic coordinates with \emph{awk}.}
+\item{"tabix"}{Convert the full summary stats file in an indexed tabix file.
+ Makes querying lightning fast after the initial conversion is done.
+  (\emph{default})}
+\item{"coordinates"}{Extract locus subsets using min/max genomic c
+oordinates with \emph{awk}.}
 }}
 
-\item{probe_path}{The location of the file containing translations between probe IDs and gene symbols.
-Only used for certain eQTL datasets.}
+\item{conda_env}{Conda environment to use.}
 
-\item{conda_env}{The name of a conda environment to use.}
-
-\item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
+\item{verbose}{Print messages.}
 }
 \description{
 Handles which query method to use
 }
 \seealso{
 Other query functions: 
-\code{\link{TABIX.convert_file}()},
-\code{\link{TABIX.query}()},
-\code{\link{TABIX}()},
-\code{\link{extract_SNP_subset}()},
-\code{\link{import_topSNPs}()},
+\code{\link{extract_snp_subset}()},
 \code{\link{query_by_coordinates_merged}()},
 \code{\link{query_by_coordinates}()},
 \code{\link{query_by_gene}()},

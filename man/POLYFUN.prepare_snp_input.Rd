@@ -21,7 +21,7 @@ PolyFun requires a space-delimited (gzipped or not) file with these columns:
 }
 }
 \examples{
-data("BST1"); data("locus_dir");
+BST1 <- echodata::BST1; locus_dir <- echodata::locus_dir;
 finemap_dat <- BST1
 PF.output.path <- file.path(locus_dir, "PolyFun")
 POLYFUN.prepare_snp_input(PF.output.path=PF.output.path, locus_dir=locus_dir, finemap_dat=finemap_dat)

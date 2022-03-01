@@ -9,14 +9,14 @@ check_necessary_cols(
   finemap_methods,
   sample_size = NULL,
   dataset_type = "GWAS",
-  verbose = T
+  verbose = TRUE
 )
 }
 \description{
 Check for necessary columns
 }
 \examples{
-data("BST1");
+BST1 <- echodata::BST1;
 finemap_methods <- c("ABF","FINEMAP","SUSIE","POLYFUN_SUSIE")
 finemap_methods <- check_necessary_cols(subset_DT=BST1, finemap_methods=finemap_methods)
 }

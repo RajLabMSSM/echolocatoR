@@ -3,14 +3,14 @@
 #' Check for necessary columns
 #'
 #' @examples
-#' data("BST1");
+#' BST1 <- echodata::BST1;
 #' finemap_methods <- c("ABF","FINEMAP","SUSIE","POLYFUN_SUSIE")
 #' finemap_methods <- check_necessary_cols(subset_DT=BST1, finemap_methods=finemap_methods)
 check_necessary_cols <- function(subset_DT,
                                  finemap_methods,
                                  sample_size=NULL,
                                  dataset_type="GWAS",
-                                 verbose=T){
+                                 verbose=TRUE){
   for_all <- c("SNP","CHR","POS","Effect","StdErr")
   required_dict <- list(ABF=c(for_all,
                               if(is.null(sample_size)) "N" else NULL,
@@ -62,11 +62,11 @@ check_necessary_cols <- function(subset_DT,
 #' }
 #'
 #' @family finemapping functions
-#' @inheritParams finemap_pipeline
+#' @inheritParams finemap_locus
 #' @keywords internal
 #' @examples
 #' \dontrun{
-#' data("BST1"); data("BST1_LD_matrix");
+#' BST1 <- echodata::BST1; data("BST1_LD_matrix");
 #' subset_DT <- BST1
 #' finemap_method_list <- c("ABF","SUSIE")
 #' }
@@ -90,16 +90,16 @@ multi_finemap <- function(locus_dir,
                           # A2_col="A2",
                           PAINTOR_QTL_datasets=NULL,
                           PP_threshold=.95,
-                          case_control=T,
-                          verbose=T,
-                          nThread=4,
+                          case_control=TRUE,
+                          verbose=TRUE,
+                          nThread=1,
                           conda_env="echoR"){
   # PAINTOR_QTL_datasets=NULL;PP_threshold=.95; effect_col="Effect"; n_causal=5; sample_size=1000; stderr_col="StdErr"; pval_col="P"; N_cases_col="N_cases"; N_controls_col="N_controls"; A1_col="A1"; A2_col="A2";conditioned_snps=NULL;
-  printer("++ Fine-mapping using multiple tools:", paste(finemap_method_list, collapse=", "),v=verbose)
+  messager("++ Fine-mapping using multiple tools:", paste(finemap_method_list, collapse=", "),v=verbose)
   # Check overlap
-  sub.out <- subset_common_snps(LD_matrix = LD_matrix,
-                                finemap_dat = subset_DT,
-                                verbose = F)
+  sub.out <- echoLD::subset_common_snps(LD_matrix = LD_matrix,
+                                        dat = subset_DT,
+                                        verbose  = FALSE)
   LD_matrix <- sub.out$LD
   subset_DT <- sub.out$DT
 
@@ -145,16 +145,16 @@ multi_finemap <- function(locus_dir,
      })
       # },
       # # WARNING
-      # warning = function(w){printer("WARNING")},
+      # warning = function(w){messager("WARNING")},
       # # ERROR
       # error = function(e){
       #   message("SUSIE::Error:: Could not identify Credible Set.");
       #   return(null_DT)
       #   }
       # ) ## End tryCatch
-      try({printer("++ Credible Set SNPs identified =",nrow(subset(finemap_dat, CS>0)),v=verbose )})
+      try({messager("++ Credible Set SNPs identified =",nrow(subset(finemap_dat, CS>0)),v=verbose )})
       # Add results to method-specific columns
-      printer("++ Merging",m,"results with multi-finemap data.",v=verbose);
+      messager("++ Merging",m,"results with multi-finemap data.",v=verbose);
       value_var <- if(m=="COJO"){"Conditioned_Effect"}else{"PP"};
       dat_select <- subset(finemap_dat, select = c("SNP","CS",value_var) );
       # Rename columns according to method name
@@ -165,7 +165,7 @@ multi_finemap <- function(locus_dir,
       merged_dat <- data.table::merge.data.table(x = merged_dat,
                                                   y = dat_select,
                                                   by = "SNP",
-                                                  all.x = T);
+                                                  all.x = TRUE);
   }
   if(nrow(merged_dat)!=dplyr::n_distinct(merged_dat$SNP)) stop("Duplicate SNP rows detected.")
   return(merged_dat)
@@ -182,11 +182,11 @@ multi_finemap <- function(locus_dir,
 create_method_path <- function(locus_dir,
                                finemap_method,
                                LD_reference=NULL,
-                               create_dir=T,
-                               compress=F){
+                               create_dir=TRUE,
+                               compress=FALSE){
   method_dir <- file.path(locus_dir, finemap_method)
   # Make finemapping results folder
-  if(create_dir) dir.create(method_dir, recursive = T, showWarnings = F)
+  if(create_dir) dir.create(method_dir, recursive = TRUE, showWarnings  = FALSE)
   # Return results file name
   dataset <- basename(dirname(locus_dir))
   locus <- basename(locus_dir)
@@ -208,8 +208,8 @@ create_method_path <- function(locus_dir,
 #' @keywords internal
 save_finemap_results <- function(finemap_dat,
                                  file_dir,
-                                 nThread=4){
-  data.table::fwrite(finemap_dat, file_dir, sep = "\t", na = NA, quote = F,
+                                 nThread=1){
+  data.table::fwrite(finemap_dat, file_dir, sep = "\t", na = NA, quote = FALSE,
                      nThread = nThread)
 }
 
@@ -243,7 +243,7 @@ SUSIE.args_intrepreter <- function(args_list,
 
 
 #' @family finemapping functions
-#' @inheritParams finemap_pipeline
+#' @inheritParams finemap_locus
 #' @keywords internal
 finemap_method_handler <- function(locus_dir,
                                    fullSS_path,
@@ -251,7 +251,7 @@ finemap_method_handler <- function(locus_dir,
                                    finemap_args=NULL,
                                    subset_DT,
                                    dataset_type="GWAS",
-                                   force_new_finemap=T,
+                                   force_new_finemap=TRUE,
                                    LD_matrix=NULL,
                                    n_causal=5,
                                    conditioned_snps,
@@ -267,14 +267,14 @@ finemap_method_handler <- function(locus_dir,
                                    # A2_col="A2",
                                    PAINTOR_QTL_datasets=NULL,
                                    PP_threshold=.95,
-                                   case_control=T,
+                                   case_control=TRUE,
 
-                                   verbose=T,
-                                   nThread=4,
+                                   verbose=TRUE,
+                                   nThread=1,
                                    conda_env="echoR"){
-  sub.out <- subset_common_snps(LD_matrix=LD_matrix,
-                                finemap_dat=subset_DT,
-                                verbose = F)
+  sub.out <- echoLD::subset_common_snps(LD_matrix=LD_matrix,
+                                        dat=subset_DT,
+                                        verbose  = FALSE)
   LD_matrix <- sub.out$LD
   subset_DT <- sub.out$DT
   # INITIATE FINE-MAPPING
@@ -321,13 +321,13 @@ finemap_method_handler <- function(locus_dir,
 
   } else if("COJO" %in% finemap_method){
     #### COJO ####
-    conditioned_snps <- subset(subset_DT, leadSNP==T)$SNP
+    conditioned_snps <- subset(subset_DT, leadSNP==TRUE)$SNP
     finemap_dat <- COJO(subset_DT = subset_DT,
                        locus_dir = locus_dir,
                        fullSS_path = fullSS_path,
                        conditioned_snps = conditioned_snps,
-                       conditional_analysis = T,
-                       stepwise_procedure = F
+                       conditional_analysis = TRUE,
+                       stepwise_procedure = FALSE
 
                        # snp_col = snp_col,
                        # freq_col = freq_col,
@@ -346,11 +346,11 @@ finemap_method_handler <- function(locus_dir,
                            QTL_datasets=NULL,
                            locus=basename(locus_dir),
                            n_causal=n_causal,
-                           use_annotations=F,
+                           use_annotations=FALSE,
                            PP_threshold=PP_threshold,
                            GWAS_populations="EUR",
                            LD_matrix=LD_matrix,
-                           force_new_LD=F)
+                           force_new_LD=FALSE)
   } else {
     stop("[::ERROR::] Enter valid finemap_method: 'SUSIE', 'ABF', 'FINEMAP', 'COJO', and 'PAINTOR' are currently available.")
   }
@@ -359,7 +359,7 @@ finemap_method_handler <- function(locus_dir,
 
 
 
-#' @inheritParams finemap_pipeline
+#' @inheritParams finemap_locus
 #' @family finemapping functions
 #' @keywords internal
 finemap_handler <- function(locus_dir,
@@ -368,7 +368,7 @@ finemap_handler <- function(locus_dir,
                             finemap_args=NULL,
                             subset_DT,
                             dataset_type="GWAS",
-                            force_new_finemap=T,
+                            force_new_finemap=TRUE,
                             LD_reference=NULL,
                             LD_matrix=NULL,
                             n_causal=5,
@@ -386,10 +386,10 @@ finemap_handler <- function(locus_dir,
                             PAINTOR_QTL_datasets=NULL,
                             PP_threshold=.95,
                             consensus_threshold=2,
-                            case_control=T,
+                            case_control=TRUE,
                             conda_env="echoR",
-                            nThread=4,
-                            verbose=T){
+                            nThread=1,
+                            verbose=TRUE){
   start_FM <- Sys.time()
   set.seed(1)
   # First, check if there's more than one fin-mapping method given. If so, switch to multi-finemap function
@@ -398,10 +398,10 @@ finemap_handler <- function(locus_dir,
     file_path <- create_method_path(locus_dir = locus_dir,
                                    LD_reference = LD_reference,
                                    finemap_method = "Multi-finemap",
-                                   compress = T)
+                                   compress = TRUE)
     ### If so, import the previous results
-    if(file.exists(file_path) & force_new_finemap==F){
-      printer("++ Previously multi-finemap results identified. Importing:",file_path, v=verbose)
+    if(file.exists(file_path) & force_new_finemap==FALSE){
+      messager("++ Previously multi-finemap results identified. Importing:",file_path, v=verbose)
       finemap_dat <- data.table::fread(file_path, nThread=nThread)
     } else {
       ### If not, or if forcing new fine-mapping is set to TRUE, fine-map using multiple tools
@@ -436,14 +436,14 @@ finemap_handler <- function(locus_dir,
                                    verbose = verbose,
                                    nThread = nThread,
                                    conda_env = conda_env)
-      finemap_dat <- find_consensus_SNPs(finemap_dat = finemap_dat,
+      finemap_dat <- echodata::find_consensus_snps(dat = finemap_dat,
                                          credset_thresh = PP_threshold,
                                          consensus_thresh = consensus_threshold,
                                          verbose = verbose)
       save_finemap_results(finemap_dat, file_path)
     }
   end_FM <- Sys.time()
-  printer("+ Fine-mapping with '", paste0(finemap_methods, collapse=", "),"' completed:",v=verbose)
+  messager("+ Fine-mapping with '", paste0(finemap_methods, collapse=", "),"' completed:",v=verbose)
   print(round(end_FM-start_FM,2))
   return(finemap_dat)
 }

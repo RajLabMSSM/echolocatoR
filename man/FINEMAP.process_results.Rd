@@ -15,8 +15,8 @@ FINEMAP.process_results(
   finemap_version = "1.4",
   results_file = ".cred",
   nThread = 1,
-  sort_by_CS = T,
-  verbose = T
+  sort_by_CS = TRUE,
+  verbose = TRUE
 )
 }
 \description{
@@ -24,7 +24,7 @@ Post-processing of \code{FINEMAP} results
 }
 \examples{
 \dontrun{
-data("locus_dir"); data("BST1");
+locus_dir <- echodata::locus_dir; BST1 <- echodata::BST1;
 finemap_DT <- BST1
 subset_DT <-FINEMAP.process_results(locus_dir=locus_dir, subset_DT=finemap_DT)
 }

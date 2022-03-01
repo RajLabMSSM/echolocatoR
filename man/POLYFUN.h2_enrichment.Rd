@@ -7,7 +7,7 @@
 https://www.biorxiv.org/content/10.1101/807792v3
 }
 \usage{
-POLYFUN.h2_enrichment(h2_df, target_SNPs = NULL, fillNA = T)
+POLYFUN.h2_enrichment(h2_df, target_SNPs = NULL, fillNA = TRUE)
 }
 \description{
 Run heritability enrichment tests

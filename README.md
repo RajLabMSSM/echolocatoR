@@ -1,53 +1,30 @@
-<!-- badges: start -->
-
-[![](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
-[![](https://img.shields.io/badge/doi-10.1101/2020.10.22.351221-yellow.svg)](https://doi.org/10.1101/2020.10.22.351221)
+<img src='https://github.com/RajLabMSSM/echolocatoR/raw/  dev/inst/hex/hex.png' height='300'><br><br>
+[![](https://img.shields.io/badge/devel%20version-2.0.0-black.svg)](https://github.com/RajLabMSSM/echolocatoR)
+[![R build
+status](https://github.com/RajLabMSSM/echolocatoR/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/RajLabMSSM/echolocatoR/actions)
+[![](https://img.shields.io/github/last-commit/RajLabMSSM/echolocatoR.svg)](https://github.com/RajLabMSSM/echolocatoR/commits/master)
+[![](https://codecov.io/gh/RajLabMSSM/echolocatoR/branch/master/graph/badge.svg)](https://codecov.io/gh/RajLabMSSM/echolocatoR)
 [![License:
-MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://cran.r-project.org/web/licenses/MIT)
+GPL-3](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://cran.r-project.org/web/licenses/GPL-3)
+<h5>
+Author: <i>Brian M. Schilder</i>
+</h5>
+<h5>
+README updated: <i>Mar-01-2022</i>
+</h5>
 
-<!-- badges: end -->
-<center>
-<h1>
-) ) ) ) ))) :bat: echolocatoR :bat: ((( ( ( ( (
-</h1>
-</center>
-<h3>
-Automated statistical and functional fine-mapping with extensive access
-to genome-wide datasets
-</h3>
-<hr>
+## `echolocatoR`: Automated statistical and functional fine-mapping with extensive access to genome-wide datasets.
 
-#### If you use ***echolocatoR***, please cite our preprint (thanks!):
+This R package is part of the *echoverse* suite that supports
+[`echolocatoR`](https://github.com/RajLabMSSM/echolocatoR): an automated
+genomic fine-mapping pipeline.
 
-> BM Schilder, J Humphrey & T Raj (2020) echolocatoR: an automated
-> end-to-end statistical and functional genomic fine-mapping pipeline.
-> *bioRxiv* 2020.10.22.351221;
-> doi:<https://doi.org/10.1101/2020.10.22.351221>
+If you use `echolocatoR`, please cite:
 
-#### For applications of ***echolocatoR*** in the literature, please see:
-
-> 1.  E Navarro, E Udine, K de Paiva Lopes, M Parks, G Riboldi, BM
->     Schilder…T Raj (2020) Discordant transcriptional signatures of
->     mitochondrial genes in Parkinson’s disease human myeloid cells.
->     *bioRxiv*; <https://doi.org/10.1101/2020.07.20.212407>
-> 2.  BM Schilder & T Raj (2020) Fine-Mapping of Parkinson’s Disease
->     Susceptibility Loci Identifies Putative Causal Variants.
->     *bioRxiv*, 0–30;<https://doi.org/10.1101/2020.10.22.340158>.
-> 3.  K de Paiva Lopes, GJL Snijders, J Humphrey, A Allan, M Sneeboer, E
->     Navarro, BM Schilder…T Raj (2020) Atlas of Genetic Effects in
->     Human Microglia Transcriptome across Brain Regions, Aging and
->     Disease Pathologies.
->     *bioRxiv*;<https://doi.org/10.1101/2020.10.27.356113>.
-
-## Documentation
-
-### [Documentation website](https://rajlabmssm.github.io/echolocatoR/)
-
-### [Full pipeline vignette](https://rajlabmssm.github.io/echolocatoR/articles/full_pipeline_vignette.html)
-
-### [Plotting vignette](https://rajlabmssm.github.io/echolocatoR/articles/plotting_vignette.html)
-
-<hr>
+> Brian M Schilder, Jack Humphrey, Towfique Raj (2021) echolocatoR: an
+> automated end-to-end statistical and functional genomic fine-mapping
+> pipeline, *Bioinformatics*; btab658,
+> <https://doi.org/10.1093/bioinformatics/btab658>
 
 ## Introduction
 
@@ -73,173 +50,48 @@ fine-mapping pipeline rapid, robust and scalable.
 
 ![echoFlow](./images/echolocatoR_Fig1.png)
 
-<br>
-
 ## Installation
 
-### General tips
-
--   We generally recommend users upgrading to R\>=4.0.0 before trying to
-    install *echolocatoR.* While *echolocatoR* should technically be
-    able to run in R\>=3.6.0, some additional challenges with getting
-    dependency versions not to conflict with one another.
-
-### Quick installation
-
-In R:
-
 ``` r
-if(!"remotes" %in% row.names(installed.packages())){install.packages("remotes")}
+if(!require("remotes")) install.packages("remotes")
 
 remotes::install_github("RajLabMSSM/echolocatoR")
-```
-
-### Robust installation (*conda*)
-
-As with most softwares, installation is half the battle. The easiest way
-to install all of ***echolocatoR***’s dependencies (which include R,
-Python, and command line tools) and make sure they play well together is
-to create a [*conda*](https://docs.conda.io/en/latest/) environment.
-
-1.  If you haven’t done so already, install
-    [*conda*](https://docs.conda.io/en/latest/).
-
-2.  In command line, create the env from the *.yml* file (this file
-    tells *conda* what to install):
-    `conda env create -f https://github.com/RajLabMSSM/echolocatoR/raw/master/inst/conda/echoR.yml`
-
-3.  Activate the new env:  
-    `conda activate echoR`
-
-4.  Install *echolocatoR* from command line so that it installs
-    **within** the *conda* env:
-
-5.  Open Rstudio from the command line interface (not by clicking the
-    Rstudio icon). This helps to ensure Rstudio can find the paths to
-    the packages in the conda env:  
-    `open model_celltype_conservation.Rproj`
-
-    Alternatively, the *conda* env also comes with
-    [*radian*](https://github.com/randy3k/radian), which is a convenient
-    R console that’s much more advanced than the default R console, but
-    doesn’t require access to a GUI. This can be especially useful on
-    computing clusters that don’t support RStudio or other IDEs.  
-    `radian`
-
-6.  Finally, to make extra sure ***echolocatoR*** uses the packages in
-    this env (esp. if using from RStudio), you can then supply the env
-    name to the `finemap_loci()` function (and many other
-    ***echolocatoR*** functions) using `conda_env="echoR"`.
-
-### Binary installation
-
-You can also install ***echolocatoR*** using the compressed binary file
-available on [Google
-Drive](https://drive.google.com/drive/folders/1oS6DIBcHWkDULAh_KHudvpzVab5NkWI9?usp=sharing).
-See the README within the folder for further instructions.
-
-### Clone installation (*Rstudio*)
-
-Lastly, if you’d like (or if for some reason none of the other
-installation methods are working for you), you can alternatively clone
-and then build ***echolocatoR***:
-
-1.  Clone *echolocatoR:  
-    `git clone https://github.com/RajLabMSSM/echolocatoR.git`*
-2.  Open *echolocatoR.Rproj* within the echolocatoR folder.
-3.  Then, within *Rstudio*, build ***echolocatoR*** by clicking the
-    following drop down menu items: `Build --> Install and Restart` (or
-    pressing the keys `CMD + SHIFT + B` on a Mac).
-
-### 
-
-<br>
-
-### Dependencies
-
-#### R
-
-For a full list of required and suggested packages, see
-[DESCRIPTION](https://github.com/RajLabMSSM/echolocatoR/blob/master/DESCRIPTION).
-
-Additionally, there’s some optional R dependencies (e.g.
-[XGR](https://github.com/hfang-bristol/XGR),
-[Rgraphviz](https://www.bioconductor.org/packages/release/bioc/html/Rgraphviz.html))
-that can be a bit tricky to install, so we’ve removed them as
-requirements and instead provided a separate R function that helps users
-to install them afterwards if needed:
-
-``` r
 library(echolocatoR)
-extra_installs()
 ```
 
-#### Python
+## Documentation
 
-For a full list of required python packages, see the *conda* env
-[*echoR.yml*](https://github.com/RajLabMSSM/echolocatoR/blob/master/inst/conda/echoR.yml).
-But here are some of the key ones.
+### [Website](https://rajlabmssm.github.io/echolocatoR)
 
-    - python>=3.6.1  
-    - pandas>=0.25.0   
-    - pandas-plink  
-    - pyarrow  
-    - fastparquet  
-    - scipy  
-    - scikit-learn  
-    - tqdm  
-    - bitarray  
-    - networkx  
-    - rpy2  
-    - requests  
+### [Getting started](https://rajlabmssm.github.io/echolocatoR/articles/echolocatoR)
 
-#### Command line
+### \[Bugs/requests\]
 
-##### [tabix](http://www.htslib.org/doc/tabix.html)
+Please report any bugs/requests on [GitHub
+Issues](https://github.com/RajLabMSSM/echolocatoR/issues):
 
--   Rapid querying of summary stats files.
--   To use it, specify `query_by="tabix"` in `finemap_loci()`.
--   If you encounter difficulties using a *conda* distribution of tabix,
-    we recommend you uninstall it from the env and instead install its
-    parent package, [*htslib*](https://anaconda.org/bioconda/htslib) as
-    this should be more up to date. *htslib* is now included in the
-    echoR *conda* env by default.
--   Alternatively, you may install *htslib* to your machine globally via
-    [*Brew*](https://formulae.brew.sh/formula/htslib) (for Mac users) or
-    from [source](http://www.htslib.org/download).
+\[Contributions\])(<https://github.com/RajLabMSSM/echolocatoR/pulls>)
+are welcome!:
 
-##### [bcftools](http://samtools.github.io/bcftools/bcftools.html)
+## Literature
 
--   Used here for filtering populations in vcf files.
--   Can be installed via
-    [*Brew*](https://formulae.brew.sh/formula/bcftools) (for Mac users)
-    or [*conda*](https://anaconda.org/bioconda/bcftools).
+### For applications of ***echolocatoR*** in the literature, please see:
 
-##### [axel](https://github.com/axel-download-accelerator/axel)
+> 1.  E Navarro, E Udine, K de Paiva Lopes, M Parks, G Riboldi, BM
+>     Schilder…T Raj (2020) Dysregulation of mitochondrial and
+>     proteo-lysosomal genes in Parkinson’s disease myeloid cells.
+>     Nature Genetics. <https://doi.org/10.1101/2020.07.20.212407>
+> 2.  BM Schilder, T Raj (2021) Fine-Mapping of Parkinson’s Disease
+>     Susceptibility Loci Identifies Putative Causal Variants. Human
+>     Molecular Genetics, ddab294,
+>     <https://doi.org/10.1093/hmg/ddab294>  
+> 3.  K de Paiva Lopes, G JL Snijders, J Humphrey, A Allan, M Sneeboer,
+>     E Navarro, BM Schilder…T Raj (2022) Genetic analysis of the human
+>     microglial transcriptome across brain regions, aging and disease
+>     pathologies. Nature Genetics,
+>     <https://doi.org/10.1038/s41588-021-00976-y>
 
--   Rapid multi-core downloading of large files (e.g. LD matrices from
-    UK Biobank).
-
--   To use it, specify `download_method="axel"` in `finemap_loci()`.
-
--   **Update**: A conda version of *axel* has been kindly provided by
-    [@jdblischak](https://github.com/RajLabMSSM/echolocatoR/pull/23), no
-    longer requiring a separate installation.
-
--   However, if you want to use *axel* without the conda env, see this
-    [tutorial](https://www.tecmint.com/axel-commandline-download-accelerator-for-linux/)
-    for more info on installation. Here’s a quick overview:
-
-    -   **Mac**: Install [brew](https://brew.sh/), then:
-        `brew install axel`
-    -   **CentOS/RHEL 7**: `yum install epel-release; yum install axel`
-    -   **Fedora**: `yum install axel; dnf install axel`
-    -   **Debian Jessie (e.g. Ubuntu, Linux Mint)**:
-        `aptitude install axel`
-
-<br>
-
-## Fine-mapping tools
+## `echofinemap`: Fine-mapping tools
 
 ***echolocatoR*** will automatically check whether you have the
 necessary columns to run each tool you selected in
@@ -286,7 +138,7 @@ Additional required columns:
 ## Multi-finemap results files
 
 The main output of ***echolocatoR*** are the multi-finemap files (for
-example, `data("BST1")`). They are stored in the locus-specific
+example, `echodata::BST1`). They are stored in the locus-specific
 *Multi-finemap* subfolders.
 
 ### Column descriptions
@@ -296,12 +148,12 @@ example, `data("BST1")`). They are stored in the locus-specific
     descriptions of each.  
 -   **leadSNP**: The designated proxy SNP per locus, which is the SNP
     with the smallest p-value by default.
--   **\<tool\>.CS**: The 95% probability Credible Set (CS) to which a
-    SNP belongs within a given fine-mapping tool’s results. If a SNP is
-    not in any of the tool’s CS, it is assigned `NA` (or `0` for the
+-   **\<tool>.CS**: The 95% probability Credible Set (CS) to which a SNP
+    belongs within a given fine-mapping tool’s results. If a SNP is not
+    in any of the tool’s CS, it is assigned `NA` (or `0` for the
     purposes of plotting).  
--   **\<tool\>.PP**: The posterior probability that a SNP is causal for
-    a given GWAS/QTL trait.  
+-   **\<tool>.PP**: The posterior probability that a SNP is causal for a
+    given GWAS/QTL trait.  
 -   **Support**: The total number of fine-mapping tools that include the
     SNP in its CS.
 -   **Consensus_SNP**: By default, defined as a SNP that is included in
@@ -324,14 +176,22 @@ example, `data("BST1")`). They are stored in the locus-specific
     so please refer to the associated original publications for the
     exact details of how these are calculated (links provided above).
 
-<br>
-
 ## Datasets
 
-For more detailed information about each dataset, use `?`:  
-`R   library(echolocatoR)   ?NOTT_2019.interactome # example dataset`
+Datasets are now stored/retrieved via the following **echoverse**
+sub-packages.
 
-### Epigenomic & genome-wide annotations
+For more detailed information about each dataset, use `?`:
+
+``` r
+library(echoannot)   
+?NOTT_2019.interactome # epigenomic annotations
+
+library(echodata) 
+?BST1 # fine-mapping results 
+```
+
+### `echoannot`: Epigenomic & genome-wide annotations
 
 #### [Nott et al. (2019)](https://science.sciencemag.org/content/366/6469/1134.abstract)
 
@@ -339,58 +199,6 @@ For more detailed information about each dataset, use `?`:
     (neurons, oligodendrocytes, astrocytes, microglia, & peripheral
     myeloid cells) epigenomic assays (H3K27ac, ATAC, H3K4me3) from human
     brain tissue.
-
--   For detailed metadata, see:
-
-    ``` r
-    data("NOTT_2019.bigwig_metadata")
-    ```
-
--   Built-in datasets:
-
-    -   Enhancer/promoter coordinates (as *GenomicRanges*)
-
-    ``` r
-    data("NOTT_2019.interactome")
-    # Examples of the data nested in "NOTT_2019.interactome" object:
-    NOTT_2019.interactome$`Neuronal promoters`
-    NOTT_2019.interactome$`Neuronal enhancers`
-    NOTT_2019.interactome$`Microglia promoters`
-    NOTT_2019.interactome$`Microglia enhancers`
-    ...
-    ...
-    ```
-
-    -   PLAC-seq enhancer-promoter interactome coordinates
-
-    ``` r
-    NOTT_2019.interactome$H3K4me3_around_TSS_annotated_pe
-    NOTT_2019.interactome$`Microglia interactome`
-    NOTT_2019.interactome$`Neuronal interactome`
-    NOTT_2019.interactome$`Oligo interactome`
-    ...
-    ...
-    ```
-
--   API access to full bigWig files on UCSC Genome Browser, which
-    includes
-
-    -   Epigenomic reads (as *GenomicRanges*)  
-    -   Aggregate epigenomic *score* for each cell type - assay
-        combination
-
-#### [Corces et al. (2020)](https://www.biorxiv.org/content/10.1101/2020.01.06.896159v1)
-
--   Data from this preprint contains results from bulk and single-cell
-    chromatin accessibility epigenomic assays in 39 human brains.
-
-    ``` r
-    data("CORCES_2020.bulkATACseq_peaks")
-    data("CORCES_2020.cicero_coaccessibility")
-    data("CORCES_2020.HiChIP_FitHiChIP_loop_calls")
-    data("CORCES_2020.scATACseq_celltype_peaks")
-    data("CORCES_2020.scATACseq_peaks")
-    ```
 
 #### [XGR](http://xgr.r-forge.r-project.org)
 
@@ -410,7 +218,7 @@ For more detailed information about each dataset, use `?`:
 
 -   API access to known per-SNP QTL and epigenomic data hits.
 
-### QTLs
+### `catalogueR`: QTLs
 
 #### [eQTL Catalogue](https://www.ebi.ac.uk/eqtl/)
 
@@ -454,7 +262,7 @@ For more detailed information about each dataset, use `?`:
 
 <br>
 
-## LD reference panels
+## `echoLD`: LD reference panels
 
 ### [UK Biobank](https://www.ukbiobank.ac.uk)
 
@@ -463,13 +271,65 @@ For more detailed information about each dataset, use `?`:
 ### [1000 Genomes Phase 3](https://www.internationalgenome.org)
 
 <hr>
-<hr>
 
-## Creator
+## Contact
 
 <a href="https://bschilder.github.io/BMSchilder/" target="_blank">Brian
 M. Schilder, Bioinformatician II</a>  
 <a href="https://rajlab.org" target="_blank">Raj Lab</a>  
 <a href="https://icahn.mssm.edu/about/departments/neuroscience" target="_blank">Department
-of Neuroscience, Icahn School of Medicine at Mount Sinai</a>  
-![Sinai](./images/sinai.png)
+of Neuroscience, Icahn School of Medicine at Mount Sinai</a>
+
+<br>
+
+# Session info
+
+<details>
+
+``` r
+utils::sessionInfo()
+```
+
+```
+## R version 4.1.2 (2021-11-01)
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Ubuntu 20.04.3 LTS
+## 
+## Matrix products: default
+## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so
+## 
+## locale:
+##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=C             
+##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## loaded via a namespace (and not attached):
+##  [1] tidyselect_1.1.2    xfun_0.29           purrr_0.3.4        
+##  [4] colorspace_2.0-3    vctrs_0.3.8         generics_0.1.2     
+##  [7] htmltools_0.5.2     usethis_2.1.5       yaml_2.3.5         
+## [10] utf8_1.2.2          rlang_1.0.1         gert_1.5.0         
+## [13] pillar_1.7.0        glue_1.6.2          DBI_1.1.2          
+## [16] RColorBrewer_1.1-2  rvcheck_0.2.1       lifecycle_1.0.1    
+## [19] stringr_1.4.0       dlstats_0.1.4       munsell_0.5.0      
+## [22] gtable_0.3.0        evaluate_0.15       knitr_1.37         
+## [25] fastmap_1.1.0       curl_4.3.2          sys_3.4            
+## [28] fansi_1.0.2         openssl_1.4.6       scales_1.1.1       
+## [31] BiocManager_1.30.16 desc_1.4.0          jsonlite_1.8.0     
+## [34] fs_1.5.2            credentials_1.3.2   ggplot2_3.3.5      
+## [37] askpass_1.1         digest_0.6.29       stringi_1.7.6      
+## [40] gh_1.3.0            dplyr_1.0.8         grid_4.1.2         
+## [43] rprojroot_2.0.2     cli_3.2.0           tools_4.1.2        
+## [46] yulab.utils_0.0.4   magrittr_2.0.2      tibble_3.1.6       
+## [49] crayon_1.5.0        pkgconfig_2.0.3     ellipsis_0.3.2     
+## [52] assertthat_0.2.1    rmarkdown_2.11      httr_1.4.2         
+## [55] rstudioapi_0.13     gitcreds_0.1.1      badger_0.1.0       
+## [58] R6_2.5.1            compiler_4.1.2
+```
+
+</details>

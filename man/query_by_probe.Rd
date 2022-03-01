@@ -11,27 +11,28 @@ query_by_probe(
   gene_col,
   chrom_col,
   file_sep,
-  probe_path,
-  coordinates_merged = T,
+  probe_path = NULL,
+  coordinates_merged = TRUE,
   location_sep = ":"
 )
 }
 \arguments{
-\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL) that you want to fine-map.
+\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL)
+that you want to fine-map.
 It is usually best to provide the absolute path rather than the relative path.}
 
-\item{gene_col}{For QTL studies, the name of the [e]gene column in the full summary stats file (\emph{default: "gene"}).
-This column will be used for filtering summary stats if supplying a named list of gene:Locus pairs to \code{loci}.}
+\item{gene_col}{For QTL studies, the name of the \[e\]gene column in the
+full summary stats file (\emph{default: "gene"}).
+This column will be used for filtering summary stats if supplying a named
+list of gene:Locus pairs to \code{loci}.}
 
-\item{chrom_col}{Name of the chromosome column in the full summary stats file.
+\item{chrom_col}{Name of the chromosome column in the full summary stats
+file.
 Can be "chr1" or "1" format.
 (\emph{default: ="CHR"})}
 
 \item{file_sep}{The separator in the full summary stats file.
 This parameter is only necessary if \code{query_by!="tabix"}.}
-
-\item{probe_path}{The location of the file containing translations between probe IDs and gene symbols.
-Only used for certain eQTL datasets.}
 
 \item{coordinates_merged}{Whether \strong{CHR} and \strong{POS} are merged into one column (e.g. chr12:12209944).}
 
@@ -44,11 +45,7 @@ More commonly useful for QTL full summary stats files.
 }
 \seealso{
 Other query functions: 
-\code{\link{TABIX.convert_file}()},
-\code{\link{TABIX.query}()},
-\code{\link{TABIX}()},
-\code{\link{extract_SNP_subset}()},
-\code{\link{import_topSNPs}()},
+\code{\link{extract_snp_subset}()},
 \code{\link{query_by_coordinates_merged}()},
 \code{\link{query_by_coordinates}()},
 \code{\link{query_by_gene}()},

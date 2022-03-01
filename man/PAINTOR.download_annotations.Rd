@@ -11,7 +11,7 @@ PAINTOR.download_annotations(
   XGR_dataset = NA,
   ROADMAP_search = NA,
   chromatin_state = "TssA",
-  no_annotations = F
+  no_annotations = FALSE
 )
 }
 \description{

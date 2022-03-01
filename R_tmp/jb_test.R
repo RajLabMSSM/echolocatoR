@@ -32,7 +32,7 @@ Nalls23andMe_2019.results <- finemap_loci(
   finemap_methods = c("FINEMAP", "SUSIE"),
   LD_reference = "UKB",
   download_method = "axel",
-  plot.types = c()
+  plot_types = c()
 )
 
 Nalls23andMe_2019.results[SUSIE.CS > 0, list(SNP, FINEMAP.CS, FINEMAP.PP, SUSIE.CS, SUSIE.PP)]

@@ -51,14 +51,14 @@
 #' fine-mapping algorithm learning the causal variants.
 #' \strong{WARNING!:} Making this plot can take a long time if there's many iterations.
 #' @inheritParams susieR::susie_suff_stat
-#' @inheritParams finemap_pipeline
+#' @inheritParams finemap_locus
 #' @source
 #' \href{https://stephenslab.github.io/susieR/}{GitHub}
 #' \href{https://rss.onlinelibrary.wiley.com/doi/full/10.1111/rssb.12388}{Publication}
 #' @examples
-#' data("BST1"); data("LD_matrix");
+#' BST1 <- echodata::BST1; data("LD_matrix");
 #' # LD_matrix <- readRDS("~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/BST1/plink/UKB_LD.RDS")
-#' finemap_DT <- SUSIE(subset_DT=BST1, LD_matrix=LD_matrix, estimate_residual_variance=T)
+#' finemap_DT <- SUSIE(subset_DT=BST1, LD_matrix=LD_matrix, estimate_residual_variance=TRUE)
 #' @export
 SUSIE <- function(subset_DT,
                   LD_matrix,
@@ -75,21 +75,21 @@ SUSIE <- function(subset_DT,
                   # PolyFun uses default `scaled_prior_variance=0.0001` (susieR default=0.2)
                   scaled_prior_variance=0.001,# (previously 0.001)
                   # susieR default estimate_residual_variance=T
-                  estimate_residual_variance=F,
+                  estimate_residual_variance=FALSE,
                   # susieR default estimate_prior_variance=T
-                  estimate_prior_variance=T,
+                  estimate_prior_variance=TRUE,
                   # susieR default residual_variance=NULL
                   residual_variance=NULL,
                   # susieR default max_iter=100
                   max_iter=100,
                   # susieR default="optim"
                   estimate_prior_method="optim",
-                  manual_var_y=F,
+                  manual_var_y=FALSE,
 
-                  rescale_priors=T,
-                  plot_track_fit=F,
-                  return_all_CS=T,
-                  verbose=T){
+                  rescale_priors=TRUE,
+                  plot_track_fit=FALSE,
+                  return_all_CS=TRUE,
+                  verbose=TRUE){
   # Quickstart
   # dataset_type="GWAS";max_causal=5;sample_size=NULL;prior_weights=NULL;PP_threshold=.95;scaled_prior_variance=0.001;
   # estimate_residual_variance=F;estimate_prior_variance=T;residual_variance=NULL;max_iter=100;manual_var_y=F;rescale_priors=T; estimate_prior_method="optim";
@@ -99,10 +99,10 @@ SUSIE <- function(subset_DT,
   # sample_size
   if(is.null(sample_size)){
     ss_df <- get_sample_size(subset_DT, sample_size = sample_size)
-    sample_size <- if("N" %in% colnames(ss_df)) max(ss_df$N, na.rm = T)
+    sample_size <- if("N" %in% colnames(ss_df)) max(ss_df$N, na.rm = TRUE)
     if(is.null(sample_size)) stop("sample_size=NULL")
   }
-  printer("+ SUSIE:: sample_size=",sample_size,v=verbose)
+  messager("+ SUSIE:: sample_size=",sample_size,v=verbose)
 
   # var_y
   if(manual_var_y){
@@ -111,16 +111,16 @@ SUSIE <- function(subset_DT,
   } else {var_y <- rlang::missing_arg()}
 
 
-  printer("+ SUSIE:: max_causal =",max_causal, v=verbose)
+  messager("+ SUSIE:: max_causal =",max_causal, v=verbose)
   if(!is.null(prior_weights)){
-    printer("+ SUSIE:: Utilizing prior_weights for",length(prior_weights),"SNPs.",v=verbose)
+    messager("+ SUSIE:: Utilizing prior_weights for",length(prior_weights),"SNPs.",v=verbose)
     if(rescale_priors){
-      printer("+ SUSIE:: Rescaling priors",v=verbose)
-      prior_weights <- prior_weights / sum(prior_weights, na.rm = T)
+      messager("+ SUSIE:: Rescaling priors",v=verbose)
+      prior_weights <- prior_weights / sum(prior_weights, na.rm = TRUE)
     }
   }
-  sub.out <- subset_common_snps(LD_matrix=LD_matrix,
-                                finemap_dat=subset_DT,
+  sub.out <- echoLD::subset_common_snps(LD_matrix=LD_matrix,
+                                dat=subset_DT,
                                 fillNA = 0,
                                 verbose = verbose)
   LD_matrix <- sub.out$LD
@@ -135,10 +135,10 @@ SUSIE <- function(subset_DT,
   # SUSIE's authors "merge[d] susie_ss and susie_bhat to susie_suff_stat" in 11/2019.
   susie_version <- utils::packageVersion("susieR")
   if(length(find("susie_bhat"))==0){
-    printer("+ SUSIE:: Using `susie_suff_stat()` from susieR",paste0("v",susie_version),v=verbose)
+    messager("+ SUSIE:: Using `susie_suff_stat()` from susieR",paste0("v",susie_version),v=verbose)
     susie_func <- get("susie_suff_stat", asNamespace("susieR"))
   } else {
-    printer("+ SUSIE:: Using `susie_bhat()` from susieR",paste0("v",susie_version),v=verbose)
+    messager("+ SUSIE:: Using `susie_bhat()` from susieR",paste0("v",susie_version),v=verbose)
     susie_func <- get("susie_bhat", asNamespace("susieR"))
   }
 
@@ -155,7 +155,7 @@ SUSIE <- function(subset_DT,
                              # Raising max_iter can help susie converge
                              max_iter = max_iter,
                              ### Correspondence with Omer Weissbrod (7/28/2020):
-                             ## The value of var_y also shouldn't make a big difference if estimate_residual_variance=T,
+                             ## The value of var_y also shouldn't make a big difference if estimate_residual_variance=TRUE,
                              ## because it just sets the initial value of the optimization algorithm. However,
                              ## if estimate_residual_variance=F it makes a big difference.
                              ## I also found that I often get the error you mentioned if var_y is very small.
@@ -169,7 +169,7 @@ SUSIE <- function(subset_DT,
                              ## which means supplying var_y=NULL will give you errors!!!
                              ## When var_y is missing, it will be calculated automatically.
                              ### Correspondence with Omer Weissbrod (7/28/2020):
-                             ## The value of var_y also shouldn't make a big difference if estimate_residual_variance=T,
+                             ## The value of var_y also shouldn't make a big difference if estimate_residual_variance=TRUE,
                              ## because it just sets the initial value of the optimization algorithm. However,
                              ## if estimate_residual_variance=F it makes a big difference.
                              ## I also found that I often get the error you mentioned ("Estimating residual variance failed: the estimated value is negative") if var_y is very small.
@@ -183,14 +183,14 @@ SUSIE <- function(subset_DT,
                              coverage = PP_threshold,
                              track_fit = plot_track_fit,
 
-                             verbose = F)
+                             verbose  = FALSE)
 
   if(plot_track_fit){
     track_path <- file.path(locus_dir, "SUSIE","test_track_fit")
-    dir.create(dirname(track_path),showWarnings = F, recursive = T)
+    dir.create(dirname(track_path),showWarnings = FALSE, recursive = TRUE)
     try({susieR::susie_plot_iteration(fitted_bhat, n_causal, track_path)})
   }
-  printer("+ SUSIE:: Extracting Credible Sets...",v=verbose)
+  messager("+ SUSIE:: Extracting Credible Sets...",v=verbose)
   ## Get PIP
   subset_DT$PP <- susieR::susie_get_pip(fitted_bhat)
   ## Get CS assignments
@@ -232,15 +232,15 @@ get_var_y <- function(subset_DT,
   ## so that we just coincidentally happen to see only zeros and ones. Of course it's incorrect,
   ##but since we're doing this anyway it makes sense to be consistent and estimate var_y under this assumption as well.
   if(dataset_type=="GWAS" & "N_cases" %in% colnames(subset_DT) & "N_controls" %in% colnames(subset_DT)){
-    printer("++ Computing phenotype variance...")
+    messager("++ Computing phenotype variance...")
     phenotype_variance <- var(c(rep(0, max(subset_DT$N_cases)),
                                 rep(1, max(subset_DT$N_controls)))
     )
   } else if(dataset_type=="eQTL" & "Expression" %in% colnames(subset_DT)){
     phenotype_variance <- var(subset_DT$Expression)
   } else {
-    printer("++ Phenotype variance could not be calculated from this data.")
-    printer("    Estimating prior variance instead...")
+    messager("++ Phenotype variance could not be calculated from this data.")
+    messager("    Estimating prior variance instead...")
     phenotype_variance <- 1
   }
   return(list(var_y=phenotype_variance))

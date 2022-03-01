@@ -11,8 +11,8 @@ FINEMAP.construct_data(
   locus_dir,
   subset_DT,
   LD_matrix,
-  nThread = 4,
-  verbose = T
+  nThread = 1,
+  verbose = TRUE
 )
 }
 \description{
@@ -23,10 +23,10 @@ allelic scale. All other columns are not required for computations and
 can be specified arbitrarily."
 }
 \examples{
-data("locus_dir"); data("BST1"); data("BST1_LD_matrix");
+locus_dir <- echodata::locus_dir; BST1 <- echodata::BST1; data("BST1_LD_matrix");
 finemap_DT <- BST1
 dir.create(file.path(locus_dir,"FINEMAP"), showWarnings = FALSE, recursive = TRUE)
-out <- subset_common_snps(LD_matrix=LD_matrix, finemap_DT=finemap_DT)
+out <- echoLD::subset_common_snps(LD_matrix=LD_matrix, dat=finemap_DT)
 LD_matrix <- out$LD
 finemap_DT <- out$DT
 dat_paths <- FINEMAP.construct_data(locus_dir=locus_dir, subset_DT=finemap_DT, LD_matrix=LD_matrix)

@@ -12,7 +12,7 @@ PAINTOR.create_locusFile.QTL(
   locus_name,
   metric_suffix = ".t_stat",
   NA_method = c("fill", "drop"),
-  force_new_zscore = F
+  force_new_zscore = FALSE
 )
 }
 \description{

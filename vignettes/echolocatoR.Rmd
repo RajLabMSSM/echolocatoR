@@ -51,12 +51,10 @@ full GWAS/QTL summary statistics using windows centered on each lead/index SNP.
 
 
 ```{r  Prepare `top_SNPs` data.frame} 
-data("Nalls_top_SNPs");
-top_SNPs <- import_topSNPs(
-  # topSS = "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/Nalls2019_TableS2.xlsx",
-  topSS = Nalls_top_SNPs,
+topSS <- echodata::topSNPs_Nalls2019_raw
+top_SNPs <- echodata::import_topSNPs( 
+  topSS = topSS,
   munge = TRUE,
-  ref_genome = "GRCH37", 
   pval_col="P, all studies", 
   effect_col="Beta, all studies", 
   gene_col="Nearest Gene", 
@@ -87,7 +85,7 @@ fullSS_path <- MungeSumstats::format_sumstats(path = fullSS_path, ref_genome = "
 We have already munged the following example summary stats for you.
 
 ```{r fullSS} 
-fullSS_path <- echodata::example_fullSS(dataset = "Nalls2019")
+fullSS_path <- echolocatoR::example_fullSS(dataset = "Nalls2019")
 ```
 
 ## Run fine-mapping pipeline  
@@ -108,7 +106,7 @@ You can adjust this separately from `bp_distance` so that you don't have rerun t
 
 ```{r Run fine-mapping pipeline, eval=F}
 
-Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS 
+Nalls23andMe_2019.results <- echolocatoR:: finemap_loci(# GENERAL ARGUMENTS 
                                           top_SNPs = top_SNPs,  
                                           #  It's best to give absolute paths
                                           results_dir = file.path(root.dir,"results"),

@@ -4,7 +4,7 @@
 #' Computes Z-score when you don't have the full vector,
 #' but you have the necessary info about the full vector stored in \code{z.info}.
 #'
-#'These functions are necessary for \code{\link{PAINTOR}}.
+#'These functions are necessary for \code{PAINTOR}.
 #' @keywords internal
 Zscore <- function(x, z.info){
   # Need to use the mean and standard deviation of the FULL dataset (i.e. all beta fomr the full summary stats file)
@@ -19,10 +19,10 @@ Zscore <- function(x, z.info){
 #'
 #' Computes Z-score when you have the full vector of values (not just a subset).
 #'
-#' These functions are necessary for \code{\link{PAINTOR}}.
+#' These functions are necessary for \code{PAINTOR}.
 #' @keywords internal
 zscore <- function(vec){
-  z <- scale(vec, center = T, scale = T)[,1]
+  z <- scale(vec, center = TRUE, scale = TRUE)[,1]
   return(z)
 }
 

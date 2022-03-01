@@ -9,15 +9,15 @@ VALIDATION.bootstrap_plot(
   validation_method = NULL,
   facet_formula = ". ~ .",
   y_var = "z",
-  override_metric_count = F,
-  remove_random = T,
-  show_plot = T,
-  save_plot = F,
+  override_metric_count = FALSE,
+  remove_random = TRUE,
+  show_plot = TRUE,
+  save_plot = FALSE,
   box.padding = 0.5,
   font_size = 3,
   height = 5,
   width = 7,
-  verbose = T
+  verbose = TRUE
 )
 }
 \description{
@@ -58,16 +58,16 @@ path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.anno
 path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Variant_Level.bootstrap.stats_wilcox.test.csv.gz")
 
 # ------  Import
-boot_res <-  data.table::fread(path, nThread=4)
+boot_res <-  data.table::fread(path, nThread=1)
 if(validation_method=="SuRE MPRA") boot_res$z <- -boot_res$z
 
 # ---Plot ---
 library(patchwork)
-if(validation_method=="Dey_DeepLearning") boot_res <- data.frame(boot_res)[grepl("H3K4ME3", boot_res$Metric, fixed=T) & grepl("Basenji", boot_res$Metric, fixed=T) & grepl("_MAX_", boot_res$Metric, fixed=T),]
+if(validation_method=="Dey_DeepLearning") boot_res <- data.frame(boot_res)[grepl("H3K4ME3", boot_res$Metric, fixed=TRUE) & grepl("Basenji", boot_res$Metric, fixed=TRUE) & grepl("_MAX_", boot_res$Metric, fixed=TRUE),]
 facet_formula <- if(validation_method=="Dey_DeepLearning") "Assay  ~ Model" else ".~."
 facet_formula <- if(validation_method=="SuRE MPRA") ".  ~ Cell_type" else ".~."
-gp1 <- VALIDATION.bootstrap_plot(boot_res=boot_res, validation_method=validation_method, y_var="z", save_plot=gsub("\\\\.csv\\\\.gz",".stat_values.png",path), width=9, facet_formula=facet_formula, override_metric_count = T)
-gp2 <- VALIDATION.bootstrap_plot(boot_res=subset(boot_res, stat>0), validation_method=validation_method, y_var="p", save_plot=gsub("\\\\.csv\\\\.gz",".p_values.png",path), width=9,facet_formula = facet_formula, override_metric_count = T)
+gp1 <- VALIDATION.bootstrap_plot(boot_res=boot_res, validation_method=validation_method, y_var="z", save_plot=gsub("\\\\.csv\\\\.gz",".stat_values.png",path), width=9, facet_formula=facet_formula, override_metric_count = TRUE)
+gp2 <- VALIDATION.bootstrap_plot(boot_res=subset(boot_res, stat>0), validation_method=validation_method, y_var="p", save_plot=gsub("\\\\.csv\\\\.gz",".p_values.png",path), width=9,facet_formula = facet_formula, override_metric_count = TRUE)
 gp12 <- (gp1 / gp2) + patchwork::plot_annotation(tag_levels = "a")
 ggsave(gsub("\\\\.csv\\\\.gz",".png",path),gp12, dpi=400, height=9, width=15)
 

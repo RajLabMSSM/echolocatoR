@@ -1,4 +1,4 @@
-#' Identify SNPs to condition on.
+#' Identify SNPs to condition on
 #'
 #' When running conditional analyses (e.g. \emph{GCTA-COJO}),
 #' this functions automatically identifies SNP to condition on.

@@ -19,9 +19,4 @@ Convert a dataframe to a vcf
 data("merge_DT")
 
 }
-\seealso{
-Other utils: 
-\code{\link{LIFTOVER}()},
-\code{\link{rbind_GRanges}()}
-}
 \concept{utils}

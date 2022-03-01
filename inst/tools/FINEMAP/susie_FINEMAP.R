@@ -12,9 +12,9 @@ write_finemap_sumstats <- function(z, LD_file, n, k, prefix) {
              k=paste0(prefix,".k"),
              log=paste0(prefix,".log"),
              meta=paste0(prefix,".master"))
-  write.table(z,cfg$z,quote=F,col.names=F)
+  write.table(z,cfg$z,quote=FALSE,col.names=F)
   if (!is.null(k)) {
-      write.table(t(k),cfg$k,quote=F,col.names=F,row.names=F)
+      write.table(t(k),cfg$k,quote=FALSE,col.names=FALSE,row.names=F)
       write("z;ld;snp;config;k;log;n-ind",file=cfg$meta)
       write(paste(cfg$z, cfg$ld, cfg$snp, cfg$config, cfg$k, cfg$log, n, sep=";"),
         file=cfg$meta,append=TRUE)
@@ -98,7 +98,7 @@ dat = readRDS(input)
 sumstats = dat$sumstats
 N = nrow(dat$data$X)
 ld = tempfile(fileext = ".ld")
-write.table(cor(dat$data$X),ld,quote=F,col.names=F,row.names=F)
+write.table(cor(dat$data$X),ld,quote=FALSE,col.names=FALSE,row.names=F)
 posterior = finemap_mvar(sumstats[1,,] / sumstats[2,,],
                                         ld, N, k=NULL,
                                         args, prefix=tempfile(fileext = ".finemap"))

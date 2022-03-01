@@ -18,7 +18,7 @@
 #' @family DEEPLEARNING
 #' @examples
 #' \dontrun{
-#' data("BST1")
+#' BST1 <- echodata::BST1
 #' annot.dat <- DEEPLEARNING.query_one_chr(subset_DT=BST1, tissue="NTS", model="Basenji", type="annot")
 #' }
 DEEPLEARNING.query_one_chr <- function(subset_DT,
@@ -29,24 +29,24 @@ DEEPLEARNING.query_one_chr <- function(subset_DT,
                                        # assay=c("DNASE","H3K27ac","H3K4me1","H3K4me3"),
                                        mean_max=c("MEAN","MAX"),
                                        type=c("annot","ldscore"),
-                                       nThread=4,
-                                       verbose=T){
+                                       nThread=1,
+                                       verbose=TRUE){
   level=level[1]; tissue=tissue[1]; model=model[1]; mean_max=mean_max[1]; type=type[1];
 
   if(level=="Allelic_Effect"){
-    printer("DEEPLEARNING:: Only the following models are available when 'level=Variant_Level': Basenji and DeepSEA",v=verbose)
+    messager("DEEPLEARNING:: Only the following models are available when 'level=Variant_Level': Basenji and DeepSEA",v=verbose)
     model <- model[model %in% c("Basenji","DeepSEA")]
   }
   subset_DT$CHR <- gsub("chr","",subset_DT$CHR)
   chrom <- subset_DT$CHR[1]
 
-  printer("DEEPLEARNING:: Searching",base_url,"for matching files",v=verbose)
+  messager("DEEPLEARNING:: Searching",base_url,"for matching files",v=verbose)
   # Naming and file formats are inconsistent across folders,
   ## so you have to do a mix of file searching and filtering
   search_dir = file.path(base_url, level, tissue, model)
   search_files = list.files(search_dir,
                             paste("*",chrom,paste0(type,".gz"),sep="\\."),
-                            recursive=T, full.names=T)
+                            recursive=TRUE, full.names=TRUE)
   # Filter assay
   # search_files <- search_files[grepl(assay, basename(search_files))]
   # Filter mean/max
@@ -54,7 +54,7 @@ DEEPLEARNING.query_one_chr <- function(subset_DT,
   search_files <- search_files[grepl(mean_max_pattern, toupper(basename(search_files)))]
 
   if(length(search_files)==0)stop("DEEPLEARNING:: No files meeting criterion were found.");
-  printer("DEEPLEARNING:: Importing file <<=",search_files,v=verbose)
+  messager("DEEPLEARNING:: Importing file <<=",search_files,v=verbose)
   annot.dat  <- data.frame(subset_DT)
   for(x in search_files){
     # Get assay
@@ -67,7 +67,7 @@ DEEPLEARNING.query_one_chr <- function(subset_DT,
     if("L2" %in% colnames(annot)) annot <- dplyr::rename(AN=L2)
     merged <- data.table::merge.data.table(subset_DT,
                                               subset(annot, select=-c(SNP,AN)),
-                                              all.x = T,
+                                              all.x = TRUE,
                                               by="SNP") %>% data.frame()
     annot.dat[ new_col_name ] <-  merged$AN
   }
@@ -98,10 +98,10 @@ DEEPLEARNING.query_multi_chr <- function(merged_dat,
                                         # assay=c("DNASE","H3K27ac","H3K4me1","H3K4me3"),
                                         mean_max=c("MEAN","MAX"),
                                         type=c("annot","ldscore"),
-                                        nThread=4,
-                                        verbose=T){
+                                        nThread=1,
+                                        verbose=TRUE){
   ANNOT.DAT <- parallel::mclapply(unique(merged_dat$CHR), function(chrom){
-    printer("Chromosome:",chrom)
+    messager("Chromosome:",chrom)
     DEEPLEARNING.query_one_chr(subset_DT=subset(merged_dat, CHR==chrom),
                                 base_url=base_url,
                                 level=level,
@@ -125,7 +125,7 @@ DEEPLEARNING.query_multi_chr <- function(merged_dat,
 #' \dontrun{
 #' root = "/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide"
 #' merged_dat <- merge_finemapping_results(dataset = "Data/GWAS/Nalls23andMe_2019", LD_reference = "UKB", minimum_support = 0)
-#' merged_dat <- find_consensus_SNPs_no_PolyFun(merged_dat)
+#' merged_dat <- echodata::find_consensus_snps_no_polyfun(merged_dat)
 #'
 #' #### Allelic_Effect ####
 #' ANNOT.ae <- DEEPLEARNING.query (merged_dat=merged_dat, level="Allelic_Effect", type="annot")
@@ -145,8 +145,8 @@ DEEPLEARNING.query <- function(merged_dat,
                                # assay=c("DNASE","H3K27ac","H3K4me1","H3K4me3"),
                                mean_max=c("MEAN","MAX"),
                                type=c("annot","ldscore"),
-                               nThread=4,
-                               verbose=T){
+                               nThread=1,
+                               verbose=TRUE){
   # Get every combination of each argument
   param_combs <- expand.grid(level=level, tissue=tissue, model=model, mean_max=mean_max, type=type)
 
@@ -191,7 +191,7 @@ DEEPLEARNING.query <- function(merged_dat,
 #' path <- file.path(root,"Dey_DeepLearning/Nalls23andMe_2019.Dey_DeepLearning.annot.Variant_Level.csv.gz")
 #'
 #' ANNOT <- data.table::fread(path, nThread=8)
-#' ANNOT <- find_consensus_SNPs_no_PolyFun(ANNOT)
+#' ANNOT <- echodata::find_consensus_snps_no_polyfun(ANNOT)
 #' annot.melt <- DEEPLEARNING.melt(ANNOT=ANNOT, aggregate_func="mean", save_path=gsub("\\.csv\\.gz",".snp_groups_mean.csv.gz",path))
 #' }
 DEEPLEARNING.melt <- function(ANNOT,
@@ -199,43 +199,43 @@ DEEPLEARNING.melt <- function(ANNOT,
                               aggregate_func="mean",
                               replace_NA=NA,
                               replace_negInf=NA,
-                              save_path=F){
-  snp.groups_list <- snp_group_filters()
+                              save_path=FALSE){
+  snp.groups_list <- echodata::snp_group_filters()
   agg_func <- get(aggregate_func)
   sampling_df <- ANNOT
   annot.melt <- ANNOT %>%
     dplyr::group_by(Locus) %>%
-    dplyr::summarise_at(.vars = vars(grep(paste(model, collapse="|"),colnames(.), value = T)),
-                        .funs = list("Random"= ~ agg_func(tidyr::replace_na(sample(.x, size=3, replace = T),replace_NA), na.rm = T),
-                                     "All"= ~ agg_func(tidyr::replace_na(.x,replace_NA), na.rm = T),
-                                     "GWAS nom. sig."= ~ agg_func(tidyr::replace_na(.x[P<.05],replace_NA), na.rm = T),
-                                     "GWAS sig."= ~ agg_func(tidyr::replace_na(.x[P<5e-8],replace_NA), na.rm = T),
-                                     "GWAS lead"= ~ agg_func(tidyr::replace_na(.x[leadSNP],replace_NA), na.rm = T),
-                                     "ABF CS"= ~ agg_func(tidyr::replace_na(.x[ABF.CS>0],replace_NA), na.rm = T),
-                                     "SUSIE CS"= ~ agg_func(tidyr::replace_na(.x[SUSIE.CS>0],replace_NA), na.rm = T),
-                                     "POLYFUN-SUSIE CS"= ~ agg_func(tidyr::replace_na(.x[POLYFUN_SUSIE.CS>0],replace_NA), na.rm = T),
-                                     "FINEMAP CS"= ~ agg_func(tidyr::replace_na(.x[FINEMAP.CS>0],replace_NA), na.rm = T),
-                                     "UCS (-PolyFun)"= ~ agg_func(tidyr::replace_na(.x[Support_noPF>0],replace_NA), na.rm = T),
-                                     "UCS"= ~ agg_func(tidyr::replace_na(.x[Support>0],replace_NA), na.rm = T),
-                                     "Support==0"= ~ agg_func(tidyr::replace_na(.x[Support==0],replace_NA), na.rm = T),
-                                     "Support==1"= ~ agg_func(tidyr::replace_na(.x[Support==1],replace_NA), na.rm = T),
-                                     "Support==2"= ~ agg_func(tidyr::replace_na(.x[Support==2],replace_NA), na.rm = T),
-                                     "Support==3"= ~ agg_func(tidyr::replace_na(.x[Support==3],replace_NA), na.rm = T),
-                                     "Support==4"= ~ agg_func(tidyr::replace_na(.x[Support==4],replace_NA), na.rm = T),
-                                     "Consensus (-PolyFun)"= ~ agg_func(tidyr::replace_na(.x[Consensus_SNP_noPF],replace_NA), na.rm = T),
-                                     "Consensus"= ~ agg_func(tidyr::replace_na(.x[Consensus_SNP],replace_NA), na.rm = T)
+    dplyr::summarise_at(.vars =dplyr::vars(grep(paste(model, collapse="|"),colnames(.), value = TRUE)),
+                        .funs = list("Random"= ~ agg_func(tidyr::replace_na(sample(.x, size=3, replace = TRUE),replace_NA), na.rm = TRUE),
+                                     "All"= ~ agg_func(tidyr::replace_na(.x,replace_NA), na.rm = TRUE),
+                                     "GWAS nom. sig."= ~ agg_func(tidyr::replace_na(.x[P<.05],replace_NA), na.rm = TRUE),
+                                     "GWAS sig."= ~ agg_func(tidyr::replace_na(.x[P<5e-8],replace_NA), na.rm = TRUE),
+                                     "GWAS lead"= ~ agg_func(tidyr::replace_na(.x[leadSNP],replace_NA), na.rm = TRUE),
+                                     "ABF CS"= ~ agg_func(tidyr::replace_na(.x[ABF.CS>0],replace_NA), na.rm = TRUE),
+                                     "SUSIE CS"= ~ agg_func(tidyr::replace_na(.x[SUSIE.CS>0],replace_NA), na.rm = TRUE),
+                                     "POLYFUN-SUSIE CS"= ~ agg_func(tidyr::replace_na(.x[POLYFUN_SUSIE.CS>0],replace_NA), na.rm = TRUE),
+                                     "FINEMAP CS"= ~ agg_func(tidyr::replace_na(.x[FINEMAP.CS>0],replace_NA), na.rm = TRUE),
+                                     "UCS (-PolyFun)"= ~ agg_func(tidyr::replace_na(.x[Support_noPF>0],replace_NA), na.rm = TRUE),
+                                     "UCS"= ~ agg_func(tidyr::replace_na(.x[Support>0],replace_NA), na.rm = TRUE),
+                                     "Support==0"= ~ agg_func(tidyr::replace_na(.x[Support==0],replace_NA), na.rm = TRUE),
+                                     "Support==1"= ~ agg_func(tidyr::replace_na(.x[Support==1],replace_NA), na.rm = TRUE),
+                                     "Support==2"= ~ agg_func(tidyr::replace_na(.x[Support==2],replace_NA), na.rm = TRUE),
+                                     "Support==3"= ~ agg_func(tidyr::replace_na(.x[Support==3],replace_NA), na.rm = TRUE),
+                                     "Support==4"= ~ agg_func(tidyr::replace_na(.x[Support==4],replace_NA), na.rm = TRUE),
+                                     "Consensus (-PolyFun)"= ~ agg_func(tidyr::replace_na(.x[Consensus_SNP_noPF],replace_NA), na.rm = TRUE),
+                                     "Consensus"= ~ agg_func(tidyr::replace_na(.x[Consensus_SNP],replace_NA), na.rm = TRUE)
                         ),
     ) %>%
     data.table::data.table() %>%
     data.table::melt.data.table(id.vars = "Locus", variable.name = "Annotation") %>%
     # dplyr::mutate(value = as.numeric(gsub(-Inf,replace_negInf,value))) %>%
-    tidyr::separate(col = "Annotation", sep="_", into=c("Model","Tissue","Assay","Type","Metric","SNP_group"), remove=F) %>%
+    tidyr::separate(col = "Annotation", sep="_", into=c("Model","Tissue","Assay","Type","Metric","SNP_group"), remove=FALSE) %>%
     dplyr::mutate(Annotation = DescTools::StrTrim(Annotation, "_"),
                   SNP_group = factor(SNP_group,
-                                     levels = names(snp.groups_list), ordered = T))
-  if(save_path!=F){
-    printer("DEEPLEARNING:: Saving aggregated SNP_group values",aggregate_func,"==>",save_path)
-    dir.create(dirname(save_path), showWarnings = F, recursive = T)
+                                     levels = names(snp.groups_list), ordered = TRUE))
+  if(save_path!=FALSE){
+    messager("DEEPLEARNING:: Saving aggregated SNP_group values",aggregate_func,"==>",save_path)
+    dir.create(dirname(save_path), showWarnings = FALSE, recursive = TRUE)
     data.table::fwrite(annot.melt, save_path)
   }
   return(annot.melt)
@@ -266,32 +266,32 @@ DEEPLEARNING.plot <- function(annot.melt,
                               comparisons_filter=function(x){if("Consensus" %in% x) return(x)},
                               model_metric=c("MAX"),
                               facet_formula=". ~ Model",
-                              remove_outliers=T,
-                              show_padj=T,
-                              show_signif=T,
+                              remove_outliers=TRUE,
+                              show_padj=TRUE,
+                              show_signif=TRUE,
                               vjust_signif=0,
-                              show_plot=T,
-                              save_path=F,
+                              show_plot=TRUE,
+                              save_path=FALSE,
                               height=6,
                               width=8){
 
   if(remove_outliers){
     # https://www.r-bloggers.com/2020/01/how-to-remove-outliers-in-r/
-    outliers <- boxplot(annot.melt$value, plot=F)$out
+    outliers <- boxplot(annot.melt$value, plot=FALSE)$out
     annot.melt <- annot.melt[-which(annot.melt$value %in% outliers),]
   }
-  colorDict <- snp_group_colorDict()
+  colorDict <- echodata::snp_group_colorDict()
   dat_plot <-  subset(annot.melt,
                       Metric %in% model_metric &
                         SNP_group %in%  snp_groups) %>%
-    dplyr::mutate(SNP_group=factor(SNP_group, levels = names(colorDict), ordered = T))
+    dplyr::mutate(SNP_group=factor(SNP_group, levels = names(colorDict), ordered = TRUE))
     # dplyr::group_by(SNP_group, Locus, Model, Tissue) %>%
-    # dplyr::summarise(value=mean(value,na.rm = T))
+    # dplyr::summarise(value=mean(value,na.rm = TRUE))
   snp.groups <- unique(dat_plot$SNP_group)
   comparisons <- utils::combn(x = as.character(snp.groups),
                               m=2,
                               FUN = comparisons_filter,
-                              simplify = F) %>% purrr::compact()
+                              simplify  = FALSE) %>% purrr::compact()
   method="wilcox.test"
   gp <- ggplot(data = dat_plot, aes(x=SNP_group, y=value, fill=SNP_group)) +
     geom_jitter(alpha=.1, width = .3, height=0) +
@@ -308,7 +308,7 @@ DEEPLEARNING.plot <- function(annot.melt,
           legend.position = "none",
           strip.background = element_rect(fill = "grey20"),
           strip.text= element_text(color = "white"))
-    # coord_cartesian(ylim = quantile(dat_plot$value, c(0.1, 0.9), na.rm = T))
+    # coord_cartesian(ylim = quantile(dat_plot$value, c(0.1, 0.9), na.rm = TRUE))
   if(show_padj){
     gp <- gp + ggpubr::stat_compare_means(method = method,
                                           comparisons = comparisons,
@@ -325,7 +325,7 @@ DEEPLEARNING.plot <- function(annot.melt,
   #   theme_bw() +
   #   scale_fill_manual(values = colorDict) +
   #   xlim(c(0,.05))
-  if(save_path!=F){
+  if(save_path!=FALSE){
     # save_path <- file.path("/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/Dey_DeepLearning",
     #                        paste("Nalls23andMe_2019","Dey_DeepLearning",model.metric,"png",sep="."))
     ggsave(save_path,

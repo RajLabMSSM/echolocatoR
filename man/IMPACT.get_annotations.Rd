@@ -8,9 +8,9 @@ IMPACT.get_annotations(
   baseURL = "https://github.com/immunogenomics/IMPACT/raw/master/IMPACT707/Annotations",
   chrom = NULL,
   subset_DT = NULL,
-  nThread = 4,
-  all_snps_in_range = F,
-  verbose = T
+  nThread = 1,
+  all_snps_in_range = FALSE,
+  verbose = TRUE
 )
 }
 \description{
@@ -25,7 +25,7 @@ Unfortunately, you have to download the entire chromosome file at once,
 }
 \examples{
 \dontrun{
-data("BST1")
+BST1 <- echodata::BST1
 annot_melt <- IMPACT.get_annotations(subset_DT=BST1)
 }
 }

@@ -15,10 +15,10 @@ POLYFUN.compute_priors(
   weights_path = NULL,
   prefix = "PD_GWAS",
   chrom = "all",
-  compute_ldscores = F,
-  allow_missing_SNPs = T,
+  compute_ldscores = FALSE,
+  allow_missing_SNPs = TRUE,
   ref_prefix = NULL,
-  remove_tmps = T,
+  remove_tmps = TRUE,
   conda_env = "echoR"
 )
 }
@@ -27,7 +27,7 @@ Recompute SNP-wise priors from summary stats
 }
 \examples{
 \dontrun{
-data("locus_dir");
+locus_dir <- echodata::locus_dir;
 fullSS_path <- example_fullSS(fullSS_path="~/Desktop/Nalls23andMe_2019.fullSS_subset.tsv")
 munged_path <- "results/GWAS/Nalls23andMe_2019/_genome_wide/PolyFun/nallsEtAl2019_allSamples_allVariants.mod.munged.parquet"
 LDSC.files <- POLYFUN.compute_priors(locus_dir=locus_dir, fullSS_path=fullSS_path, conda_env="echoR")

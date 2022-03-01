@@ -27,29 +27,36 @@ standardize_subset(
   A1_col = "A1",
   A2_col = "A2",
   gene_col = "Gene",
-  QTL_prefixes = NULL,
-  return_dt = T,
-  nThread = 4,
+  qtl_prefixes = NULL,
+  return_dt = TRUE,
+  nThread = 1,
   download_method = "axel",
-  verbose = T
+  verbose = TRUE
 )
 }
 \arguments{
-\item{top_SNPs}{A data.frame with the genomic coordinates of the lead SNP for each locus.
-The lead SNP will be used as the center of the window when extracting subset from the full GWAS/QTL summary statistics file.
+\item{top_SNPs}{A data.frame with the genomic coordinates of the lead SNP
+for each locus.
+The lead SNP will be used as the center of the window when extracting
+subset from the full GWAS/QTL summary statistics file.
 Only one SNP per \strong{Locus} should be included.
 At minimum, \code{top_SNPs} should include the following columns:
 \describe{
-\item{\emph{Locus}}{A unique name for each locus. Often, loci are named after a relevant gene (e.g. LRRK2) or based on the name/coordinates of the lead SNP (e.g. locus_chr12_40734202) }
-\item{\emph{CHR}}{The chromosome that the SNP is on. Can be "chr12" or "12" format.}
+\item{\emph{Locus}}{A unique name for each locus. Often,
+ loci are named after a relevant gene (e.g. LRRK2) or based on
+  the name/coordinates of the lead SNP (e.g. locus_chr12_40734202) }
+\item{\emph{CHR}}{The chromosome that the SNP is on.
+ Can be "chr12" or "12" format.}
 \item{\emph{POS}}{The genomic position of the SNP (in basepairs)}
 }}
 
-\item{chrom_col}{Name of the chromosome column in the full summary stats file.
+\item{chrom_col}{Name of the chromosome column in the full summary stats
+file.
 Can be "chr1" or "1" format.
 (\emph{default: ="CHR"})}
 
-\item{position_col}{Name of the genomic position column in the full summary stats file.
+\item{position_col}{Name of the genomic position column in the full summary
+stats file.
 Must be in units of basepairs.
 (\emph{default: ="POS"})}
 
@@ -57,81 +64,137 @@ Must be in units of basepairs.
 (\emph{default: ="SNP"})}
 
 \item{pval_col}{Name of the p-value column in the full summary stats file.
-Raw p-values are preferred, but if not available corrected p-values (e.g. FDR) can be used instead.
+Raw p-values are preferred, but if not available corrected p-values
+(e.g. FDR) can be used instead.
 (\emph{default: ="P"})}
 
 \item{effect_col}{Name of the effect size column in the full summary stats file.
-Effect size is preferred, but if not available other metrics like Beta for Odds Ratio can be used instead.
+Effect size is preferred, but if not available other metrics like Beta for
+Odds Ratio can be used instead.
 (\emph{default: ="Effect"})}
 
 \item{stderr_col}{Name of the standard error  column in the full summary stats file.
-You can also set \code{stderr_col="calculate"} to infer standard error using: \code{effect / tstat}.
+You can also set \code{stderr_col="calculate"} to infer standard error
+using: \code{effect / tstat}.
 (\emph{default: ="StdErr"})}
 
-\item{tstat_col}{Name of the t-statistic column in the full summary stats file.
-This column is not necessary unless \code{stderr_col="calculate"} or the standard error column is missing.
+\item{tstat_col}{Name of the t-statistic column in the full
+summary stats file.
+This column is not necessary unless \code{stderr_col="calculate"}
+or the standard error column is missing.
 (\emph{default: ="t-stat"})}
 
-\item{MAF_col}{Name of the minor allele frequency column in the full summary stats file.
+\item{MAF_col}{Name of the minor allele frequency column in the
+full summary stats file.
 Can be inferred from \strong{freq_col} if missing from the dataset.
 (\emph{default: ="MAF"})}
 
-\item{freq_col}{Name of the allele frequency column in the full summary stats file.
-Effect allele frequency is preferred, but the non-effect allele can be provided instead (though this may be less accurate).
-This column is not necessary unless \code{MAF_col="calculate"} or the MAF column is missing.
+\item{freq_col}{Name of the allele frequency column in the full
+ summary stats file.
+Effect allele frequency is preferred, but the non-effect allele can
+be provided instead (though this may be less accurate).
+This column is not necessary unless \code{MAF_col="calculate"} or
+ the MAF column is missing.
 (\emph{default: ="Freq"})}
 
-\item{N_cases_col}{Name of the column in the full summary stats that has the number of case subjects in the study.
-This can either be per SNP sample sizes, or one number repeated across all rows.
-Proxy cases (e.g. relatives of people with the disease being investigated) should be included in this estimate if any were used in the study.
+\item{N_cases_col}{Name of the column in the full summary stats that has
+ the number of case subjects in the study.
+This can either be per SNP sample sizes, or one number repeated
+across all rows.
+Proxy cases (e.g. relatives of people with the disease being investigated)
+should be included in this estimate if any were used in the study.
 This column is not necesssary if \code{N_cases} parameter is provided.
 (\emph{default: ="N_cases"})}
 
-\item{N_controls_col}{Name of the column in the full summary stats that has the number of control subjects in the study.
- This can either be per SNP sample sizes, or one number repeated across all rows.
+\item{N_controls_col}{Name of the column in the full summary stats that
+ has the number of control subjects in the study.
+ This can either be per SNP sample sizes, or one number repeated across
+  all rows.
  This column is not necesssary if \code{N_controls} parameter is provided.
 (\emph{default: ="N_controls"})}
 
 \item{N_cases}{The number of case subjects in the study.
-Instead of providing a redundant \strong{N_cases_col} column, you can simply enter one value here.}
+Instead of providing a redundant \strong{N_cases_col} column,
+you can simply enter one value here.}
 
 \item{N_controls}{The number of control subjects in the study.
-Instead of providing a redundant \strong{N_controls_col} column, you can simply enter one value here.}
+Instead of providing a redundant \strong{N_controls_col} column,
+you can simply enter one value here.}
 
-\item{proportion_cases}{The proportion of total subjects in the study that were cases.
-if \code{proportion_cases="calculate"} then this is inferred:  \code{N_controls / N_controls}.}
+\item{proportion_cases}{The proportion of total subjects in the
+study that were cases.
+ if \code{proportion_cases="calculate"} then this is inferred:
+ \code{N_controls / N_controls}.}
 
 \item{sample_size}{The overall sample size of the study.
-If none is given, and \strong{N_cases} and \strong{N_controls} columns are present,
+If none is given, and \strong{N_cases} and \strong{N_controls}
+columns are present,
 then sample_size is inferred to be:  \code{max(N_cases) + max(N_controls)}.}
 
-\item{A1_col}{Name of the effect/risk allele column in the full summary stats.
- \strong{\emph{IMPORTANT}}: Make sure this actually the case for your full summary stats file.
-Unfortunately, different studies report different kinds of allele information in a non-standardized way.
+\item{A1_col}{Name of the effect/risk allele column in the full
+summary stats.
+ \strong{\emph{IMPORTANT}}: Make sure this actually the case for your
+  full summary stats file.
+Unfortunately, different studies report different kinds of allele
+information in a non-standardized way.
 Meaning that A1/A2 can refer to any number of things:
  \describe{
  \item{effect/other alleles}{in the case of diseases}
  \item{ref/alt alleles}{where ref is the reference genome being used}
- \item{major/minor alleles}{This dichotomy holds true for bi-allelic SNPs but not necessary multi-allelic SNPs}
+ \item{major/minor alleles}{This dichotomy holds true for bi-allelic
+  SNPs but not necessary multi-allelic SNPs}
  }
- This makes comparing summary stats across GWAS/QTL datasets very confusing for several reasons:
+ This makes comparing summary stats across GWAS/QTL datasets very
+ confusing for several reasons:
  \describe{
- \item{Multi-allelic SNPs}{SNPs can have more than just 2 possible alleles (multi-allelic SNPs). Even if you compare the same SNP between two studies, you may accidentally be comparing totally different alleles.}
- \item{Valence}{The valence (+/-) of per-SNP GWAS effect sizes/beta can be relative to different allele types between studies.
- For example, let's say in one GWAS study your effect size for SNP A is 1.5 relative to the major allele in one study,
+ \item{Multi-allelic SNPs}{SNPs can have more than just 2 possible
+ alleles (multi-allelic SNPs). Even if you compare the same SNP
+ between two studies, you may accidentally be comparing
+ totally different alleles.}
+ \item{Valence}{The valence (+/-) of per-SNP GWAS effect sizes/beta
+  can be relative to different allele types between studies.
+ For example, let's say in one GWAS study your effect size for
+  SNP A is 1.5 relative to the major allele in one study,
   and the minor allele happens to be the one found in the reference genome.
-  You then try to compare that effect size to that of the same SNP in another GWAS.
-  But, the valence of the effect sizes in the 2nd GWAS study are all relative to the reference genome (instead of the minor allele),
-  giving the same SNP a value of -1.2. If you took the effect sizes at face value you'd say the signals are in opposite directions.
-  But once you take into account how the valences were determined in each study you realize that they're actually both positive relative to the major allele.}
+  You then try to compare that effect size to that of the same
+  SNP in another GWAS.
+  But, the valence of the effect sizes in the 2nd GWAS study are all
+  relative to the reference genome (instead of the minor allele),
+  giving the same SNP a value of -1.2. If you took the effect sizes
+   at face value you'd say the signals are in opposite directions.
+  But once you take into account how the valences were determined in
+   each study you realize that they're actually both positive relative
+    to the major allele.}
  }
-This process of reversing per-SNP valences based on aligning the alleles is known as allele flipping.
-This is important when comparing individual SNPs, but can also have an impact on colocalization results.}
+This process of reversing per-SNP valences based on aligning the alleles
+ is known as allele flipping.
+This is important when comparing individual SNPs, but can also have an
+impact on colocalization results.}
 
-\item{gene_col}{For QTL studies, the name of the [e]gene column in the full summary stats file (\emph{default: "gene"}).
-This column will be used for filtering summary stats if supplying a named list of gene:Locus pairs to \code{loci}.}
+\item{gene_col}{For QTL studies, the name of the \[e\]gene column in the
+full summary stats file (\emph{default: "gene"}).
+This column will be used for filtering summary stats if supplying a named
+list of gene:Locus pairs to \code{loci}.}
 
-\item{verbose}{Whether \pkg{echolocatoR} should be verbose or silent.}
+\item{nThread}{Number of threads to parallelize over.}
+
+\item{download_method}{\itemize{
+\item{\code{"axel"} : }{Multi-threaded}
+\item{\code{"wget"} : }{Single-threaded}
+\item{\code{"download.file"} : }{Single-threaded}
+\item{\code{"internal"} : }{Single-threaded 
+(passed to \link[utils]{download.file})}
+\item{\code{"wininet"} : }{Single-threaded 
+(passed to \link[utils]{download.file})}
+\item{\code{"libcurl"} : }{Single-threaded 
+(passed to \link[utils]{download.file})}
+\item{\code{"curl"} : }{Single-threaded 
+(passed to \link[utils]{download.file})}
+}
+ or
+\code{"download.file"} (single-threaded) .}
+
+\item{verbose}{Print messages.}
 }
 \description{
 After querying a subset of the full summary statistics,
@@ -139,7 +202,7 @@ this function converts it into a standardized format
 that the rest of \emph{echolocatoR} can work with.
 }
 \examples{
-data("BST1")
+BST1 <- echodata::BST1
 ... Screw up Freq to see if function can fix it and infer MAF ...
 BST1$rsid <- BST1$SNP
 BST1 <- data.frame(BST1)[,!colnames(BST1) \%in\% c("MAF","SNP")]
