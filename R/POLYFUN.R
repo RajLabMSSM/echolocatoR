@@ -209,8 +209,9 @@ POLYFUN.get_precomputed_priors <- function(polyfun=NULL,
 
   if((file.exists(snp_w_priors.file)) & force_new_priors==F){
     print("++ Importing pre-existing priors.")
-    priors <- data.table::fread(snp_w_priors.file, nThread = nThread) %>%
-      dplyr::rename(SNP=SNP_x) %>% dplyr::select(-SNP_y)
+    #### Import results ####
+    priors <- read_priors(snp_w_priors.file=snp_w_priors.file,
+                          nThread=nThread)
     return(priors)
   } else {
     finemap_dat <- POLYFUN.initialize(finemap_dat=finemap_dat,
@@ -225,7 +226,10 @@ POLYFUN.get_precomputed_priors <- function(polyfun=NULL,
     try({
       cmd <- paste(python,
                    file.path(polyfun,"extract_snpvar.py"),
-                   "--snps",snp.path,
+                   ## arg name was changed from --snps ==> --sumstats
+                   ## at some point.
+                   # "--snps",snp.path,
+                   "--sumstats",snp.path,
                    "--out",snp_w_priors.file)
       print(cmd)
       system(cmd)
@@ -243,17 +247,30 @@ POLYFUN.get_precomputed_priors <- function(polyfun=NULL,
                                                force_new_priors=force_new_priors,
                                                conda_env = conda_env)
     }
-    # Import results
-    priors <- data.table::fread(snp_w_priors.file,
-                                nThread = nThread) %>%
-      dplyr::rename(SNP=SNP_x) %>% dplyr::select(-SNP_y)
+    #### Import results ####
+    priors <- read_priors(snp_w_priors.file=snp_w_priors.file,
+                          nThread=nThread)
     return(priors)
   }
   if(remove_tmps){ file.remove(snp.path) }
 }
 
 
-
+read_priors <- function(snp_w_priors.file,
+                        nThread=1){
+  #### Import results ####
+  ## Handles PolyFun version differences:
+  ## https://github.com/RajLabMSSM/echolocatoR/issues/80
+  priors <- data.table::fread(snp_w_priors.file,
+                              nThread = nThread)
+  if("SNP_x" %in% colnames(priors)){
+    priors <- priors %>% dplyr::rename(SNP=SNP_x)
+  }
+  if("SNP_y" %in% colnames(priors)){
+    priors <- priors %>% dplyr::select(-SNP_y)
+  }
+  return(priors)
+}
 
 # %%%%%%%%%%%%%%%% PolyFun approaches 2 & 3 %%%%%%%%%%%%%%%%
 ## 2. Computing prior causal probabilities via an L2-regularized extension of S-LDSC
