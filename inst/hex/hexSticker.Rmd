@@ -39,7 +39,7 @@ sticker(subplot = img1, package="",
         h_color = "#4ee8e8", 
         spotlight = TRUE, #l_height = 20, 
         white_around_sticker=FALSE, 
-        filename= "/Desktop/echolocatoR/inst/hex/ecolocatoR.png")
+        filename= "/Desktop/echolocatoR/inst/hex/hex.png")
 
 ```
 
