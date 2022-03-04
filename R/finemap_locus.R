@@ -23,7 +23,8 @@
 #' @param loci Character list of loci in \strong{Locus} col of \code{top_SNPs}.
 #' @param fullSS_path Path to the full summary statistics file (GWAS or QTL)
 #' that you want to fine-map.
-#' It is usually best to provide the absolute path rather than the relative path.
+#' It is usually best to provide the absolute path rather
+#' than the relative path.
 #' @param results_dir Where to store all results.
 #' \strong{IMPORTANT!:} It is usually best to provide the absolute path
 #' rather than the relative path.
@@ -35,11 +36,13 @@
 #' \item{"tabix"}{Convert the full summary stats file in an indexed tabix file.
 #'  Makes querying lightning fast after the initial conversion is done.
 #'   (\emph{default})}
-#' \item{"coordinates"}{Extract locus subsets using min/max genomic c
-#' oordinates with \emph{awk}.}
+#' \item{"coordinates"}{Extract locus subsets using min/max genomic
+#' coordinates with \emph{awk}.}
 #' }
-#' @param dataset_name The name you want to assign to the dataset being fine-mapped,
-#' This will be used to name the subdirectory where your results will be stored
+#' @param dataset_name The name you want to assign to the dataset
+#' being fine-mapped,
+#' This will be used to name the subdirectory where your
+#' results will be stored
 #' (e.g. \emph{Data/GWAS/<dataset_name>}).
 #' Don't use special characters (e.g.".", "/").
 #' @param dataset_type The kind dataset you're fine-mapping
@@ -82,7 +85,8 @@
 #' Effect size is preferred, but if not available other metrics like Beta for
 #' Odds Ratio can be used instead.
 #' (\emph{default: ="Effect"})
-#' @param stderr_col Name of the standard error  column in the full summary stats file.
+#' @param stderr_col Name of the standard error
+#' column in the full summary stats file.
 #' You can also set \code{stderr_col="calculate"} to infer standard error
 #' using: \code{effect / tstat}.
 #' (\emph{default: ="StdErr"})
@@ -232,6 +236,7 @@
 #' @inheritParams echoLD::load_or_create
 #' @inheritParams echoLD::filter_LD
 #' @inheritParams echoplot::plot_locus
+#' @inheritParams echofinemap::multifinemap
 #' @importFrom echoplot plot_locus
 #' @importFrom echodata filter_snps
 #' @importFrom echoLD load_or_create filter_LD subset_common_snps
@@ -269,7 +274,7 @@ finemap_locus <- function(#### Main args ####
                           PP_threshold=.95,
                           consensus_threshold=2,
                           fillNA=0,
-                          conditioned_snps,
+                          conditioned_snps=NULL,
                           #### Colname mapping args ####
                           munged = FALSE,
                           chrom_col="CHR",

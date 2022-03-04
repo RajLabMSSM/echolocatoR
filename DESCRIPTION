@@ -56,16 +56,6 @@ Imports:
     BSgenome,
     biovizBase,
     lifecycle
-Remotes:
-  github::RajLabMSSM/echodata,
-  github::RajLabMSSM/echotabix,
-  github::RajLabMSSM/downloadR,
-  github::RajLabMSSM/echoannot,
-  github::RajLabMSSM/echoconda,
-  github::RajLabMSSM/echoLD,
-  github::RajLabMSSM/echoplot,
-  github::RajLabMSSM/catalogueR,
-  github::RajLabMSSM/echofinemap
 Suggests:
     downloadR,
     rmarkdown,
@@ -80,6 +70,16 @@ Suggests:
     ComplexHeatmap,
     coin,
     testthat (>= 3.0.0)
+Remotes:
+  github::RajLabMSSM/echodata,
+  github::RajLabMSSM/echotabix,
+  github::RajLabMSSM/downloadR,
+  github::RajLabMSSM/echoannot,
+  github::RajLabMSSM/echoconda,
+  github::RajLabMSSM/echoLD,
+  github::RajLabMSSM/echoplot,
+  github::RajLabMSSM/catalogueR,
+  github::RajLabMSSM/echofinemap
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr
 Config/testthat/edition: 3

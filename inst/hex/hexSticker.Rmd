@@ -29,17 +29,22 @@ You can make awesome hex stickers for your R packages using [hexSticker](https:/
 
 
 ```{r}   
-img1 <- "/Desktop/echolocatoR/images/echolocatoR_logo.png"
+img1 <- here::here("images/echolocatoR_logo.png")
 # img2 <- "../images/phoenix_pixel.png"
 
-sticker(subplot = img1, package="",
-        # url = "https://github.com/RajLabMSSM/echolocatoR", u_color = "white", u_size = 3,
-        p_size=20, s_x=1, s_y=1.1,  s_width = .8,
-        h_fill = "#686ea6",#"#2a3182",
-        h_color = "#4ee8e8", 
-        spotlight = TRUE, #l_height = 20, 
-        white_around_sticker=FALSE, 
-        filename= "/Desktop/echolocatoR/inst/hex/ecolocatoR.png")
+stick <- hexSticker::sticker(
+        subplot = img1, 
+        url = tolower("https://github.com/RajLabMSSM/echolocatoR"), u_color = "#56ffff", u_size = 3.5,
+        #### Package name ####
+        package="echoverse",p_color = "white",p_size=10, p_y = .5, 
+        #### Subplot #####
+        s_x=1, s_y=1,  s_width = .9,
+        #### Fill & border ####
+        h_fill = "#25355c", h_color = "#41c6c8", 
+        #### Spotlight ####
+        spotlight = TRUE, l_alpha = .3, l_width = 10,  
+        #### File output ####
+        filename= here::here("inst/hex/hex.png"), dpi = 300)
 
 ```
 

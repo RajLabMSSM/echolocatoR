@@ -15,6 +15,7 @@
 #' @inheritParams echoLD::load_or_create
 #' @inheritParams echoLD::filter_LD
 #' @inheritParams echoplot::plot_locus
+#' @inheritParams echofinemap::multifinemap
 #'
 #' @return A merged data.frame with all fine-mapping results from all loci.
 #'

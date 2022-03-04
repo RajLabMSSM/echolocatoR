@@ -87,7 +87,8 @@ Please report any bugs/requests on [GitHub Issues](https://github.com/RajLabMSSM
 
 ***echolocatoR*** will automatically check whether you have the
 necessary columns to run each tool you selected in
-`finemap_loci(finemap_methods=...)`. It will remove any tools that for
+`echolocatoR::finemap_loci(finemap_methods=...)`.
+It will remove any tools that for
 which there are missing necessary columns, and produces a message
 letting you know which columns are missing. Note that some columns (e.g.
 `MAF`,`N`,`t-stat`) can be automatically inferred if missing.  
@@ -97,33 +98,24 @@ All methods require the columns: `SNP`,`CHR`,`POS`,`Effect`,`StdErr`
 
 Additional required columns:
 
-### [ABF](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)
+```{r}
+knitr::kable(echofinemap::required_cols())
+```
 
-#### `proportion_cases`,`MAF`
+
+### [ABF](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)
 
 ### [FINEMAP](http://www.christianbenner.com)
 
-#### `A1`,`A2`,`MAF`,`N`
-
 ### [SuSiE](https://github.com/stephenslab/susieR)
-
-#### `N`
 
 ### [PolyFun](https://github.com/omerwe/polyfun)
 
-#### `A1`,`A2`,`P`,`N`
-
 ### [PAINTOR](https://github.com/gkichaev/PAINTOR_V3.0)
-
-#### `A1`,`A2`,`t-stat`
 
 ### [GCTA-COJO](https://cnsgenomics.com/software/gcta/#COJO)
 
-#### `A1`,`A2`,`Freq`,`P`,`N`
-
 ### [coloc](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)
-
-#### `N`,`MAF`
 
 <br>
 
