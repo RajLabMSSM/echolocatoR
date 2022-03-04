@@ -5,7 +5,7 @@
 \title{Bar plot of tool-specific CS sizes}
 \usage{
 SUMMARISE.CS_counts_plot(
-  merged_DT,
+  merged_dat,
   show_numbers = T,
   ylabel = "Locus",
   legend_nrow = 3,
@@ -18,7 +18,8 @@ SUMMARISE.CS_counts_plot(
 Loci ordered by UCS size (smallest to largest).
 }
 \examples{
-gg_CS <- SUMMARISE.CS_counts_plot(merged_DT=merged_DT)
+data("merged_DT")
+gg_CS <- SUMMARISE.CS_counts_plot(merged_dat=merged_DT)
 }
 \seealso{
 Other summarise: 

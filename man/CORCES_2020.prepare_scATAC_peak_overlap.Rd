@@ -9,7 +9,7 @@ cell-type-specific epigenomic peaks and coaccessibility data.}
 }
 \usage{
 CORCES_2020.prepare_scATAC_peak_overlap(
-  merged_DT,
+  merged_dat,
   FDR_filter = NULL,
   snp_filter = "Consensus_SNP==T",
   add_cicero = T,
@@ -24,8 +24,8 @@ cell-type-specific epigenomic peaks and coaccessibility data.
 }
 \examples{
 data("merged_DT");
-finemap_dat <- subset(merged_DT, Consensus_SNP)
-dat_melt <- CORCES_2020.prepare_scATAC_peak_overlap(merged_DT=merged_DT)
+merged_dat <- subset(merged_DT, Consensus_SNP)
+dat_melt <- CORCES_2020.prepare_scATAC_peak_overlap(merged_dat=merged_dat)
 }
 \seealso{
 Other CORCES_2020: 

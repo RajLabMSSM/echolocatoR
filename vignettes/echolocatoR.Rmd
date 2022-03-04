@@ -34,6 +34,8 @@ knitr::opts_knit$set(root.dir = root.dir)
 
 ```{r setup}
 library(echolocatoR) 
+
+root.dir <- tempdir()
 ```
 
 # Full pipeline  
@@ -166,6 +168,15 @@ Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS
                                           verbose = TRUE
                                           )
 ```
+
+
+```{r}
+dataset <-  file.path(root.dir,"results/GWAS/Nalls23andMe_2019/")
+merged_dat <- echolocatoR::merge_finemapping_results(dataset = dataset,
+                                                     minimum_support = 0)
+```
+
+
 
 # Session info  
 

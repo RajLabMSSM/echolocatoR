@@ -63,9 +63,9 @@ and merge into a single data.frame.
 \examples{
 dataset_dir <- "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019"
 # UCS and lead SNPs: No annotation
-merged_DT <- merge_finemapping_results(dataset=dataset_dir, minimum_support=1, include_leadSNPs=T)
+merged_dat <- merge_finemapping_results(dataset=dataset_dir, minimum_support=1, include_leadSNPs=T)
 
 # UCS and lead SNPs: With annotations
-merged_DT <- merge_finemapping_results(dataset=dataset_dir, minimum_support=1, include_leadSNPs=T, haploreg_annotation=T, biomart_annotation=T)
+merged_dat <- merge_finemapping_results(dataset=dataset_dir, minimum_support=1, include_leadSNPs=T, haploreg_annotation=T, biomart_annotation=T)
 }
 \concept{annotatate}

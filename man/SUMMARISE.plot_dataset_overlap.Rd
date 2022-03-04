@@ -5,7 +5,7 @@
 \title{Plot inter-study SNP overlap}
 \usage{
 SUMMARISE.plot_dataset_overlap(
-  merged_DT,
+  merged_dat,
   snp_filter = "!is.na(SNP)",
   filename = NA,
   formula_str = "~ SNP + Dataset",

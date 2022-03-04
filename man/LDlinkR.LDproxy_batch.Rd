@@ -22,7 +22,7 @@ Eeasy to use but doesn't scale up well to many SNPs (takes way too long).
 }
 \examples{
 data("merged_DT")
-lead.snps <- setNames(subset(merged_DT, leadSNP)$Locus, subset(merged_DT, leadSNP)$SNP)
+lead.snps <- setNames(subset(merged_dat, leadSNP)$Locus, subset(merged_dat, leadSNP)$SNP)
 proxies <- LDlinkR.LDproxy_batch(snp=lead.snps)
 }
 \seealso{

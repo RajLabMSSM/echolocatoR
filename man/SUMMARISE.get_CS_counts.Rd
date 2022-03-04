@@ -4,14 +4,14 @@
 \alias{SUMMARISE.get_CS_counts}
 \title{Tally tool-specific and union CS sizes}
 \usage{
-SUMMARISE.get_CS_counts(merged_DT, top_CS_only = F)
+SUMMARISE.get_CS_counts(merged_dat, top_CS_only = F)
 }
 \description{
 Tally tool-specific and union CS sizes
 }
 \examples{
 data("merged_DT");
-locus_order <- SUMMARISE.get_CS_counts(merged_DT=merged_DT)
+locus_order <- SUMMARISE.get_CS_counts(merged_dat=merged_DT)
 }
 \seealso{
 Other summarise: 

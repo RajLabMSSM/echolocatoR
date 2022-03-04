@@ -4,14 +4,14 @@
 \alias{SUMMARISE.get_SNPgroup_counts}
 \title{Tally locus-specific SNP group sizes}
 \usage{
-SUMMARISE.get_SNPgroup_counts(merged_DT, grouping_vars = "Locus")
+SUMMARISE.get_SNPgroup_counts(merged_dat, grouping_vars = "Locus")
 }
 \description{
 Tally locus-specific SNP group sizes
 }
 \examples{
 data("merged_DT");
-snp_groups <- SUMMARISE.get_SNPgroup_counts(merged_DT=merged_DT)
+snp_groups <- SUMMARISE.get_SNPgroup_counts(merged_dat=merged_DT)
 }
 \seealso{
 Other summarise: 

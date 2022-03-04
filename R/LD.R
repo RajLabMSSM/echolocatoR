@@ -1553,7 +1553,7 @@ LD.get_lead_r2 <- function(finemap_dat,
 #' \href{https://www.rdocumentation.org/packages/LDlinkR/versions/1.0.2}{website}
 #' @examples
 #' data("merged_DT")
-#' lead.snps <- setNames(subset(merged_DT, leadSNP)$Locus, subset(merged_DT, leadSNP)$SNP)
+#' lead.snps <- setNames(subset(merged_dat, leadSNP)$Locus, subset(merged_dat, leadSNP)$SNP)
 #' proxies <- LDlinkR.LDproxy_batch(snp=lead.snps)
 LDlinkR.LDproxy_batch <- function(snp,
                                   pop="CEU",

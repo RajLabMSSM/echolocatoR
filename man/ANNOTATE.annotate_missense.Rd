@@ -4,7 +4,7 @@
 \alias{ANNOTATE.annotate_missense}
 \title{Annotate any missense variants}
 \usage{
-ANNOTATE.annotate_missense(merged_DT, snp_filter = "Support>0")
+ANNOTATE.annotate_missense(merged_dat, snp_filter = "Support>0")
 }
 \description{
 Annotate any missense variants
@@ -12,7 +12,7 @@ Annotate any missense variants
 \examples{
 \dontrun{
 data("merged_DT");
-annotated_DT <- ANNOTATE.annotate_missense(merged_DT=merged_DT, snp_filter="Support>0")
+annotated_DT <- ANNOTATE.annotate_missense(merged_dat=merged_DT, snp_filter="Support>0")
 }
 }
 \seealso{

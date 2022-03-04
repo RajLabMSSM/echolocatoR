@@ -5,7 +5,7 @@
 \title{Plot transethnic PAINTOR results}
 \usage{
 transethnic_plot(
-  merged_DT,
+  merged_dat,
   save_path,
   title = locus,
   subtitle = "Trans-ethnic Fine-mapping",

@@ -33,8 +33,8 @@ Prepare custom foreground and background SNPs sets for enrichment tests with XGR
 \examples{
 \dontrun{
 data("merged_DT")
-merged_DT <- data.table::fread("/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/merged_UKB.csv.gz", nThread=4)
-fg_bg <- XGR.prepare_foreground_background(subset_DT=merged_DT, foreground_filter="Consensus_SNP==T", background_filter="leadSNP==T")
+merged_dat <- data.table::fread("/pd-omics/brian/Fine_Mapping/Data/GWAS/Nalls23andMe_2019/_genome_wide/merged_UKB.csv.gz", nThread=4)
+fg_bg <- XGR.prepare_foreground_background(subset_DT=merged_dat, foreground_filter="Consensus_SNP==T", background_filter="leadSNP==T")
 }
 }
 \seealso{

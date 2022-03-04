@@ -11,7 +11,7 @@ merge_finemapping_results_each(
   minimum_support = 1,
   include_leadSNPs = T,
   return_filter = "!is.na(SNP)",
-  merged_path = "merged_DT.csv.gz",
+  merged_path = "merged_dat.csv.gz",
   force_new_merge = F,
   nThread = 4,
   verbose = T

@@ -55,9 +55,9 @@ Plot overlap between some SNP group and various epigenomic data
 data("merged_DT");
 
 ... Consensus SNPs ...
-gg_peaks <- SUMMARISE.peak_overlap_plot(merged_DT=merged_DT, snp_filter="Consensus_SNP==T", fill_title="Consensus SNPs in epigenomic peaks")
+gg_peaks <- SUMMARISE.peak_overlap_plot(merged_dat=merged_DT, snp_filter="Consensus_SNP==T", fill_title="Consensus SNPs in epigenomic peaks")
 ... UCS SNPs ...
-gg_peaks <- SUMMARISE.peak_overlap_plot(merged_DT=merged_DT, snp_filter="Support>0", fill_title="UCS SNPs in epigenomic peaks")
+gg_peaks <- SUMMARISE.peak_overlap_plot(merged_dat=merged_DT, snp_filter="Support>0", fill_title="UCS SNPs in epigenomic peaks")
 }
 \seealso{
 Other summarise: 

@@ -5,7 +5,7 @@
 \title{Prepare transethnic PAINTOR results}
 \usage{
 gather.transethnic.LD(
-  merged_DT,
+  merged_dat,
   locus,
   conditions = c("Nalls23andMe_2019", "MESA_AFA", "MESA_CAU", "MESA_HIS")
 )

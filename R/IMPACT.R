@@ -112,9 +112,9 @@ IMPACT.get_annotations <- function(baseURL="https://github.com/immunogenomics/IM
 #' @examples
 #' \dontrun{
 #' data("merged_DT")
-#' ANNOT_MELT <- IMPACT.iterate_get_annotations(merged_DT=merged_DT)
+#' ANNOT_MELT <- IMPACT.iterate_get_annotations(merged_dat=merged_DT)
 #' }
-IMPACT.iterate_get_annotations <- function(merged_DT,
+IMPACT.iterate_get_annotations <- function(merged_dat,
                                            IMPACT_score_thresh=.1,
                                            baseURL="https://github.com/immunogenomics/IMPACT/raw/master/IMPACT707/Annotations",
                                            all_snps_in_range=T,
@@ -123,10 +123,10 @@ IMPACT.iterate_get_annotations <- function(merged_DT,
                                            snp.filter="!is.na(SNP)",
                                            nThread=4,
                                            verbose=T){
-  ANNOT_MELT <- lapply(sort(unique(merged_DT$CHR)), function(chrom, .merged_DT=merged_DT){
+  ANNOT_MELT <- lapply(sort(unique(merged_dat$CHR)), function(chrom, .merged_dat=merged_dat){
     printer("+ IMPACT:: Gathering annotations for chrom = ",chrom, v=verbose)
     try({
-      subset_DT <- subset(.merged_DT, CHR==chrom)
+      subset_DT <- subset(.merged_dat, CHR==chrom)
       annot_melt <- IMPACT.get_annotations(baseURL = baseURL,
                                            # baseURL = "../../data/IMPACT/IMPACT707/Annotations",
                                            subset_DT = subset_DT,
@@ -303,9 +303,9 @@ prepare_mat_meta <- function(TOP_IMPACT,
 #' @family IMPACT
 #' @examples
 #' \dontrun{
-#' # merged_DT <- merge_finemapping_results(minimum_support = 1, include_leadSNPs = T,xlsx_path = F,dataset = "Data/GWAS/Nalls23andMe_2019")
-#'  #merged_DT$Locus <- merged_DT$Gene
-#' # ANNOT_MELT <- IMPACT.iterate_get_annotations(merged_DT = merged_DT,
+#' # merged_dat <- merge_finemapping_results(minimum_support = 1, include_leadSNPs = T,xlsx_path = F,dataset = "Data/GWAS/Nalls23andMe_2019")
+#'  #merged_dat$Locus <- merged_dat$Gene
+#' # ANNOT_MELT <- IMPACT.iterate_get_annotations(merged_dat = merged_dat,
 #' #                                              IMPACT_score_thresh=0,
 #' #                                              baseURL="../../data/IMPACT/IMPACT707/Annotations",
 #' #                                              all_snps_in_range=T,
@@ -721,8 +721,8 @@ hierarchical_colors <- function(mat_meta){
 #'
 #' @keywords internal
 IMPACT.plot_top_annotations <- function(){
-  # merged_DT <- quick_merged_DT()
-  # consensus.snps <- subset(merged_DT, Consensus_SNP)$SNP
+  # merged_dat <- quick_merged_DT()
+  # consensus.snps <- subset(merged_dat, Consensus_SNP)$SNP
 
 
 

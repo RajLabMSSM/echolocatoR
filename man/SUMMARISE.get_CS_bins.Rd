@@ -4,14 +4,14 @@
 \alias{SUMMARISE.get_CS_bins}
 \title{Count bins of tool-specific and union CS sizes}
 \usage{
-SUMMARISE.get_CS_bins(merged_DT)
+SUMMARISE.get_CS_bins(merged_dat)
 }
 \description{
 Count bins of tool-specific and union CS sizes
 }
 \examples{
 data("merged_DT");
-bin_counts <- SUMMARISE.get_CS_bins(merged_DT=merged_DT)
+bin_counts <- SUMMARISE.get_CS_bins(merged_dat=merged_DT)
 }
 \seealso{
 Other summarise: 

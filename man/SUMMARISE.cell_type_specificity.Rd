@@ -6,7 +6,7 @@
 \usage{
 SUMMARISE.cell_type_specificity(
   plot_dat,
-  merged_DT,
+  merged_dat,
   min_count = NULL,
   top_celltype_only = F,
   label_yaxis = T,

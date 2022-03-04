@@ -15,9 +15,9 @@ Plot \pkg{ComplexHeatmap} of \emph{IMPACT} scores
 }
 \examples{
 \dontrun{
-# merged_DT <- merge_finemapping_results(minimum_support = 1, include_leadSNPs = T,xlsx_path = F,dataset = "Data/GWAS/Nalls23andMe_2019")
- #merged_DT$Locus <- merged_DT$Gene
-# ANNOT_MELT <- IMPACT.iterate_get_annotations(merged_DT = merged_DT,
+# merged_dat <- merge_finemapping_results(minimum_support = 1, include_leadSNPs = T,xlsx_path = F,dataset = "Data/GWAS/Nalls23andMe_2019")
+ #merged_dat$Locus <- merged_dat$Gene
+# ANNOT_MELT <- IMPACT.iterate_get_annotations(merged_dat = merged_dat,
 #                                              IMPACT_score_thresh=0,
 #                                              baseURL="../../data/IMPACT/IMPACT707/Annotations",
 #                                              all_snps_in_range=T,

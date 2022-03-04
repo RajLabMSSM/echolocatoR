@@ -4,14 +4,14 @@
 \alias{SUMMARISE.CS_bin_plot}
 \title{Plot CS bin counts}
 \usage{
-SUMMARISE.CS_bin_plot(merged_DT, show_plot = T)
+SUMMARISE.CS_bin_plot(merged_dat, show_plot = T)
 }
 \description{
 Plot CS bin counts
 }
 \examples{
 data("merged_DT");
-bin_plot <- SUMMARISE.CS_bin_plot(merged_DT=merged_DT)
+bin_plot <- SUMMARISE.CS_bin_plot(merged_dat=merged_DT)
 }
 \seealso{
 Other summarise: 

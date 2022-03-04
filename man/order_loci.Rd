@@ -4,7 +4,7 @@
 \alias{order_loci}
 \title{Order loci by UCS size, or alphabetically}
 \usage{
-order_loci(dat, merged_DT, by_UCS_size = F, descending = T, verbose = F)
+order_loci(dat, merged_dat, by_UCS_size = F, descending = T, verbose = F)
 }
 \description{
 Order loci by UCS size, or alphabetically
@@ -12,6 +12,6 @@ Order loci by UCS size, or alphabetically
 \examples{
 data("merged_DT");
 ... by UCS size ...
-merged_DT <- order_loci(dat=merged_DT, merged_DT=merged_DT, descending=F)
+merged_dat <- order_loci(dat=merged_DT, merged_dat=merged_DT, descending=F)
 ... alphabetically ...
 }

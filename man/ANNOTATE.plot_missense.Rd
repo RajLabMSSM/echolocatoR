@@ -5,7 +5,7 @@
 \title{Plot any missense variants}
 \usage{
 ANNOTATE.plot_missense(
-  merged_DT,
+  merged_dat,
   snp_filter = "Support>0",
   label_yaxis = F,
   x_label = "UCS missense\\nmutations",
@@ -20,8 +20,8 @@ Plot any missense variants
 \examples{
 \dontrun{
 data("merged_DT");
-gg_missense <- ANNOTATE.plot_missense(merged_DT=merged_DT, snp_filter="Support>0")
-gg_missense <- ANNOTATE.plot_missense(merged_DT=merged_DT, snp_filter="Consensus_SNP==T")
+gg_missense <- ANNOTATE.plot_missense(merged_dat=merged_DT, snp_filter="Support>0")
+gg_missense <- ANNOTATE.plot_missense(merged_dat=merged_DT, snp_filter="Consensus_SNP==T")
 }
 }
 \seealso{

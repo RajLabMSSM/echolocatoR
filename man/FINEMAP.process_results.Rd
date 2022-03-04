@@ -14,6 +14,7 @@ FINEMAP.process_results(
   pvalue_thresh = 0.05,
   finemap_version = "1.4",
   results_file = ".cred",
+  n_causal = 5,
   nThread = 1,
   sort_by_CS = T,
   verbose = T

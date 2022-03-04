@@ -7,3 +7,6 @@
 [submodule "inst/tools/PAINTOR_V3.0"]
 	path = inst/tools/PAINTOR_V3.0
 	url = https://github.com/gkichaev/PAINTOR_V3.0.git
+[submodule "inst/tools/polyfun"]
+	path = inst/tools/polyfun
+	url = https://github.com/omerwe/polyfun.git/

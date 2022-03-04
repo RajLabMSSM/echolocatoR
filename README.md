@@ -1,3 +1,10 @@
+README
+================
+\<img
+src=‘<https://github.com/neurogenomics/echolocatoR/raw/main/inst/hex/echolocatoR.png>’,
+height=‘400’\> Brian M. Schilder
+Most recent update:<br> 2022-03-04
+
 <!-- badges: start -->
 
 [![](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
@@ -17,37 +24,11 @@ to genome-wide datasets
 </h3>
 <hr>
 
-#### If you use ***echolocatoR***, please cite our preprint (thanks!):
+If you use `echolocatoR`, please cite:
 
-> BM Schilder, J Humphrey & T Raj (2020) echolocatoR: an automated
-> end-to-end statistical and functional genomic fine-mapping pipeline.
-> *bioRxiv* 2020.10.22.351221;
-> doi:<https://doi.org/10.1101/2020.10.22.351221>
-
-#### For applications of ***echolocatoR*** in the literature, please see:
-
-> 1.  E Navarro, E Udine, K de Paiva Lopes, M Parks, G Riboldi, BM
->     Schilder…T Raj (2020) Discordant transcriptional signatures of
->     mitochondrial genes in Parkinson’s disease human myeloid cells.
->     *bioRxiv*; <https://doi.org/10.1101/2020.07.20.212407>
-> 2.  BM Schilder & T Raj (2020) Fine-Mapping of Parkinson’s Disease
->     Susceptibility Loci Identifies Putative Causal Variants.
->     *bioRxiv*, 0–30;<https://doi.org/10.1101/2020.10.22.340158>.
-> 3.  K de Paiva Lopes, GJL Snijders, J Humphrey, A Allan, M Sneeboer, E
->     Navarro, BM Schilder…T Raj (2020) Atlas of Genetic Effects in
->     Human Microglia Transcriptome across Brain Regions, Aging and
->     Disease Pathologies.
->     *bioRxiv*;<https://doi.org/10.1101/2020.10.27.356113>.
-
-## Documentation
-
-### [Documentation website](https://rajlabmssm.github.io/echolocatoR/)
-
-### [Full pipeline vignette](https://rajlabmssm.github.io/echolocatoR/articles/full_pipeline_vignette.html)
-
-### [Plotting vignette](https://rajlabmssm.github.io/echolocatoR/articles/plotting_vignette.html)
-
-<hr>
+> Jack Humphrey and Towfique Raj (NA). echolocatoR: Automated genomic
+> fine-mapping. R package version 0.2.2.
+> <https://github.com/RajLabMSSM/echolocatoR>
 
 ## Introduction
 
@@ -73,15 +54,47 @@ fine-mapping pipeline rapid, robust and scalable.
 
 ![echoFlow](./images/echolocatoR_Fig1.png)
 
+## Documentation
+
+### [Website](https://rajlabmssm.github.io/echolocatoR)
+
+### [Getting started](https://rajlabmssm.github.io/echolocatoR/articles/echolocatoR)
+
+### Bugs/requests
+
+Please report any bugs/requests on [GitHub
+Issues](https://github.com/RajLabMSSM/echolocatoR/issues):
+
+[Contributions](https://github.com/RajLabMSSM/echolocatoR/pulls) are
+welcome!:
+
+## Literature
+
+### For applications of ***echolocatoR*** in the literature, please see:
+
+> 1.  E Navarro, E Udine, K de Paiva Lopes, M Parks, G Riboldi, BM
+>     Schilder…T Raj (2020) Dysregulation of mitochondrial and
+>     proteo-lysosomal genes in Parkinson’s disease myeloid cells.
+>     Nature Genetics. <https://doi.org/10.1101/2020.07.20.212407>
+> 2.  BM Schilder, T Raj (2021) Fine-Mapping of Parkinson’s Disease
+>     Susceptibility Loci Identifies Putative Causal Variants. Human
+>     Molecular Genetics, ddab294,
+>     <https://doi.org/10.1093/hmg/ddab294>  
+> 3.  K de Paiva Lopes, G JL Snijders, J Humphrey, A Allan, M Sneeboer,
+>     E Navarro, BM Schilder…T Raj (2022) Genetic analysis of the human
+>     microglial transcriptome across brain regions, aging and disease
+>     pathologies. Nature Genetics,
+>     <https://doi.org/10.1038/s41588-021-00976-y>
+
 <br>
 
 ## Installation
 
 ### General tips
 
--   We generally recommend users upgrading to R\>=4.0.0 before trying to
+-   We generally recommend users upgrading to R>=4.0.0 before trying to
     install *echolocatoR.* While *echolocatoR* should technically be
-    able to run in R\>=3.6.0, some additional challenges with getting
+    able to run in R>=3.6.0, some additional challenges with getting
     dependency versions not to conflict with one another.
 
 ### Quick installation
@@ -112,12 +125,7 @@ to create a [*conda*](https://docs.conda.io/en/latest/) environment.
     `conda activate echoR`
 
 4.  Install *echolocatoR* from command line so that it installs
-    **within** the *conda* env, after opening R or radian:
-    ```R
-    if(!"remotes" %in% row.names(installed.packages())){install.packages("remotes")}
-
-    remotes::install_github("RajLabMSSM/echolocatoR")
-    ```
+    **within** the *conda* env:
 
 5.  Open Rstudio from the command line interface (not by clicking the
     Rstudio icon). This helps to ensure Rstudio can find the paths to
@@ -136,7 +144,13 @@ to create a [*conda*](https://docs.conda.io/en/latest/) environment.
     name to the `finemap_loci()` function (and many other
     ***echolocatoR*** functions) using `conda_env="echoR"`.
 
- 
+### Binary installation
+
+You can also install ***echolocatoR*** using the compressed binary file
+available on [Google
+Drive](https://drive.google.com/drive/folders/1oS6DIBcHWkDULAh_KHudvpzVab5NkWI9?usp=sharing).
+See the README within the folder for further instructions.
+
 ### Clone installation (*Rstudio*)
 
 Lastly, if you’d like (or if for some reason none of the other
@@ -295,12 +309,12 @@ example, `data("BST1")`). They are stored in the locus-specific
     descriptions of each.  
 -   **leadSNP**: The designated proxy SNP per locus, which is the SNP
     with the smallest p-value by default.
--   **\<tool\>.CS**: The 95% probability Credible Set (CS) to which a
-    SNP belongs within a given fine-mapping tool’s results. If a SNP is
-    not in any of the tool’s CS, it is assigned `NA` (or `0` for the
+-   **\<tool>.CS**: The 95% probability Credible Set (CS) to which a SNP
+    belongs within a given fine-mapping tool’s results. If a SNP is not
+    in any of the tool’s CS, it is assigned `NA` (or `0` for the
     purposes of plotting).  
--   **\<tool\>.PP**: The posterior probability that a SNP is causal for
-    a given GWAS/QTL trait.  
+-   **\<tool>.PP**: The posterior probability that a SNP is causal for a
+    given GWAS/QTL trait.  
 -   **Support**: The total number of fine-mapping tools that include the
     SNP in its CS.
 -   **Consensus_SNP**: By default, defined as a SNP that is included in

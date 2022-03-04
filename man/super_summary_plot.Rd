@@ -5,7 +5,7 @@
 \title{Merge all summary plots into one super plot}
 \usage{
 super_summary_plot(
-  merged_DT,
+  merged_dat,
   snp_filter = "Consensus_SNP==T",
   coloc_results = NULL,
   plot_missense = T,

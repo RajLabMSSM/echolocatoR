@@ -5,7 +5,7 @@
 \title{Gather all \emph{IMPACT} annotations that overlap with your query}
 \usage{
 IMPACT.iterate_get_annotations(
-  merged_DT,
+  merged_dat,
   IMPACT_score_thresh = 0.1,
   baseURL = "https://github.com/immunogenomics/IMPACT/raw/master/IMPACT707/Annotations",
   all_snps_in_range = T,
@@ -30,7 +30,7 @@ Unfortunately, you have to download the entire chromosome file at once,
 \examples{
 \dontrun{
 data("merged_DT")
-ANNOT_MELT <- IMPACT.iterate_get_annotations(merged_DT=merged_DT)
+ANNOT_MELT <- IMPACT.iterate_get_annotations(merged_dat=merged_DT)
 }
 }
 \seealso{

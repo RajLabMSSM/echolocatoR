@@ -72,7 +72,7 @@ PAINTOR.create_locusFile <- function(subset_path,
     dplyr::mutate(CHR=paste0("chr",CHR),
                   RSID=SNP,
                   ZSCORE.P1=Zscore(x = Effect, z.info = z.info.gwas))
-  merged_DT <- finemap_dat
+  merged_dat <- finemap_dat
 
   # Merge QTL data (for loop won't run if QTL_datasets=NULL)
   i=1
@@ -84,25 +84,25 @@ PAINTOR.create_locusFile <- function(subset_path,
                                          use_saved=T,
                                          output_path=file.path(dirname(fullSS),paste0("z.info.",qtl,".RDS")) )
     # Merge QTL data together
-    merged_DT <- mergeQTL.merge_handler(FM_all = merged_DT, qtl_file = qtl)
-    merged_DT <- dplyr::mutate(merged_DT,
+    merged_dat <- mergeQTL.merge_handler(FM_all = merged_dat, qtl_file = qtl)
+    merged_dat <- dplyr::mutate(merged_dat,
                                QTL.ZSCORE = Zscore(x=QTL.Effect, z.info = z.info.qtl ))
-    names(merged_DT)[names(merged_DT) == "QTL.ZSCORE"] <- paste0("ZSCORE.P",i+1)
-    QTL.cols <- grep("QTL.",colnames(merged_DT), value = T)
-    merged_DT <- dplyr::select(merged_DT, -QTL.cols)
+    names(merged_dat)[names(merged_dat) == "QTL.ZSCORE"] <- paste0("ZSCORE.P",i+1)
+    QTL.cols <- grep("QTL.",colnames(merged_dat), value = T)
+    merged_dat <- dplyr::select(merged_dat, -QTL.cols)
     i = i +1
   }
   # Post-processing
   ## Subset to only necessary columns
-  z.cols <- grep("ZSCORE.P",colnames(merged_DT), value=T)
-  merged_DT <- subset(merged_DT, select=c("RSID","CHR","POS",z.cols))
+  z.cols <- grep("ZSCORE.P",colnames(merged_dat), value=T)
+  merged_dat <- subset(merged_dat, select=c("RSID","CHR","POS",z.cols))
   ## Remove NAs (PAINTOR doesn't tolerate missing values)
-  merged_DT <- merged_DT[complete.cases(merged_DT),]
+  merged_dat <- merged_dat[complete.cases(merged_dat),]
   ## Save
-  data.table::fwrite(merged_DT,
+  data.table::fwrite(merged_dat,
                      file.path(PT_results_path, locus_name),
                      sep=" ", quote = F, na = NA, nThread = 4)
-  return(merged_DT)
+  return(merged_dat)
 }
 
 
@@ -496,13 +496,13 @@ PAINTOR.merge_results <- function(finemap_dat,
                                   PP_threshold=.5,
                                   multi_finemap_col_name="PAINTOR"){
   printer("PAINTOR:: Merging PAINTOR results with multi-finemap file.")
-  merged_DT <- data.table:::merge.data.table(finemap_dat, paintor.results[,c("RSID","Posterior_Prob")],
+  merged_dat <- data.table:::merge.data.table(finemap_dat, paintor.results[,c("RSID","Posterior_Prob")],
                                              by.x="SNP", by.y="RSID", all.x = T)
   PP.col.name <- paste0(multi_finemap_col_name,".PP")
-  names(merged_DT)[names(merged_DT) == "Posterior_Prob"] <- PP.col.name
-  merged_DT[,paste0(multi_finemap_col_name,".CS")] <- ifelse(subset(merged_DT,select=PP.col.name) > PP_threshold, 1, 0)
-  printer("PAINTOR:: Credible Set size =",sum(subset(merged_DT, select=paste0(multi_finemap_col_name,".CS")),na.rm=T))
-  return(merged_DT)
+  names(merged_dat)[names(merged_dat) == "Posterior_Prob"] <- PP.col.name
+  merged_dat[,paste0(multi_finemap_col_name,".CS")] <- ifelse(subset(merged_dat,select=PP.col.name) > PP_threshold, 1, 0)
+  printer("PAINTOR:: Credible Set size =",sum(subset(merged_dat, select=paste0(multi_finemap_col_name,".CS")),na.rm=T))
+  return(merged_dat)
 }
 
 
@@ -851,25 +851,25 @@ PAINTOR <- function(finemap_dat=NULL,
                                                             paste0(GWAS_datasets,".leadSNP")))
                                 )
 
-  merged_DT <- PAINTOR.merge_results(finemap_dat = finemap_dat.P,
+  merged_dat <- PAINTOR.merge_results(finemap_dat = finemap_dat.P,
                                      paintor.results = paintor.results,
                                      PP_threshold = PP_threshold,
                                      multi_finemap_col_name = multi_finemap_col_name)
-  merged_DT <- find_consensus_SNPs(merged_DT,
+  merged_dat <- find_consensus_SNPs(merged_dat,
                                    credset_thresh = PP_threshold,
                                    consensus_thresh = consensus_thresh)
 
   # Update Consensus SNP col and Summarise
-  # merged_DT <- find_consensus_SNPs(merged_DT, support_thresh = 2)
+  # merged_dat <- find_consensus_SNPs(merged_dat, support_thresh = 2)
   # top_snps <- (finemap_dat %>% arrange(desc(Support)))[,c("SNP","Support","Consensus_SNP")] %>% head(10)
-  # data.table::fwrite(merged_DT, mfm_path, nThread = 4, sep="\t")
+  # data.table::fwrite(merged_dat, mfm_path, nThread = 4, sep="\t")
 
   # PLOT
-  transethnic_plot(merged_DT = merged_DT,
+  transethnic_plot(merged_dat = merged_dat,
                    save_path = file.path(PT_results_path,"track_plot.enumerate2.png"),
                    PAINTOR.label="PAINTOR\nTrans-ethnic",
                    conditions = c("Nalls23andMe_2019","MESA_CAU","MESA_HIS"))
-  return(merged_DT)
+  return(merged_dat)
 }
 
 
@@ -881,7 +881,7 @@ PAINTOR <- function(finemap_dat=NULL,
 #' Prepare transethnic PAINTOR results
 #'
 #' @keywords internal
-gather.transethnic.LD <- function(merged_DT,
+gather.transethnic.LD <- function(merged_dat,
                                   locus,
                                   conditions=c("Nalls23andMe_2019",
                                                "MESA_AFA","MESA_CAU","MESA_HIS")){
@@ -890,30 +890,30 @@ gather.transethnic.LD <- function(merged_DT,
     fullSS <- dirname(Directory_info(cond, variable = "fullSS.local"))
     ld.path <- file.path(fullSS, locus,"plink","LD_matrix.RData")
     LD_matrix <- readRDS(ld.path)
-    lead.snp <- merged_DT[merged_DT[,paste0(cond,".leadSNP")]==T,]$SNP
+    lead.snp <- merged_dat[merged_dat[,paste0(cond,".leadSNP")]==T,]$SNP
     dat <- data.table(SNP=names(LD_matrix[lead.snp,]),
                       r2=LD_matrix[lead.snp,]^2)
-    merged_DT <- data.table:::merge.data.table(merged_DT, dat, by = "SNP")
-    colnames(merged_DT)[colnames(merged_DT)=="r2"] <- paste0(cond,".r2")
+    merged_dat <- data.table:::merge.data.table(merged_dat, dat, by = "SNP")
+    colnames(merged_dat)[colnames(merged_dat)=="r2"] <- paste0(cond,".r2")
   }
-  merged_DT <- dplyr::mutate(merged_DT,
+  merged_dat <- dplyr::mutate(merged_dat,
                              Mb=round(POS/1000000,3))
 
-  return(data.table::data.table(merged_DT))
+  return(data.table::data.table(merged_dat))
 }
 
 
 #' Plot transethnic PAINTOR results
 #'
 #' @keywords internal
-transethnic_plot <- function(merged_DT,
+transethnic_plot <- function(merged_dat,
                              save_path,
                              title=locus,
                              subtitle="Trans-ethnic Fine-mapping",
                              PAINTOR.label="PAINTOR\nTrans-ethnic",
                              conditions=c("MESA_AFA","MESA_CAU","MESA_HIS")){
   # cons.snp <-  "rs7294619"; subset(plot_DT, SNP==cons.snp);
-  plot_DT <- gather.transethnic.LD(merged_DT, conditions=conditions)
+  plot_DT <- gather.transethnic.LD(merged_dat, conditions=conditions)
   plot_DT$PAINTOR.label <- PAINTOR.label
   # Melt P
   P.vars <- paste0(conditions,".P")

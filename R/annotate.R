@@ -33,10 +33,10 @@
 #' @examples
 #' dataset_dir <- "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019"
 #' # UCS and lead SNPs: No annotation
-#' merged_DT <- merge_finemapping_results(dataset=dataset_dir, minimum_support=1, include_leadSNPs=T)
+#' merged_dat <- merge_finemapping_results(dataset=dataset_dir, minimum_support=1, include_leadSNPs=T)
 #'
 #' # UCS and lead SNPs: With annotations
-#' merged_DT <- merge_finemapping_results(dataset=dataset_dir, minimum_support=1, include_leadSNPs=T, haploreg_annotation=T, biomart_annotation=T)
+#' merged_dat <- merge_finemapping_results(dataset=dataset_dir, minimum_support=1, include_leadSNPs=T, haploreg_annotation=T, biomart_annotation=T)
 merge_finemapping_results <- function(dataset="./Data/GWAS",
                                       minimum_support=1,
                                       include_leadSNPs=T,
@@ -56,8 +56,8 @@ merge_finemapping_results <- function(dataset="./Data/GWAS",
   if(from_storage){
     printer("+ Gathering all fine-mapping results from storage...", v=verbose)
     # Find all multi-finemap_results files
-    multifinemap_pattern <-  multifinemap_pattern <- file.path(dataset, paste0("*.*Multi-finemap.tsv*"))
-    multifinemap_pattern2 <-  multifinemap_pattern <- file.path(dataset, paste0("*.*multi_finemap.csv*"))
+    multifinemap_pattern <- paste0("*.Multi-finemap.tsv")
+    multifinemap_pattern2 <- paste0("*.multi_finemap.csv")
 
     multi_dirs <- list.files(path = dataset,
                              pattern = paste0( c(basename(multifinemap_pattern),
@@ -173,15 +173,15 @@ merge_finemapping_results_each <- function(study_dirs,
                                            minimum_support=1,
                                            include_leadSNPs=T,
                                            return_filter="!is.na(SNP)",
-                                           merged_path="merged_DT.csv.gz",
+                                           merged_path="merged_dat.csv.gz",
                                            force_new_merge=F,
                                            nThread=4,
                                            verbose=T){
 
   if(file.exists(merged_path) & force_new_merge==F){
-    merged_DT <- data.table::fread(merged_path, nThread = nThread)
+    merged_dat <- data.table::fread(merged_path, nThread = nThread)
   } else {
-    merged_DT <- lapply(study_dirs,
+    merged_dat <- lapply(study_dirs,
                         function(study_dir){
                           printer("Study:",basename(study_dir))
                           merged_all <- merge_finemapping_results(dataset = study_dir,
@@ -197,11 +197,11 @@ merge_finemapping_results_each <- function(study_dirs,
     # Save merged multi-study file
     if(merged_path!=F){
       printer("+ SUMMARISE:: Saving merged subset after filtering criterion:",return_filter,v=verbose)
-      data.table::fwrite(merged_DT, merged_path,
+      data.table::fwrite(merged_dat, merged_path,
                          nThread=nThread, sep = ",")
     }
   }
-  return(merged_DT)
+  return(merged_dat)
 }
 
 
@@ -558,26 +558,26 @@ epigenetics_enrichment <- function(snp_list1,
 #' @examples
 #' \dontrun{
 #' data("merged_DT");
-#' annotated_DT <- ANNOTATE.annotate_missense(merged_DT=merged_DT, snp_filter="Support>0")
+#' annotated_DT <- ANNOTATE.annotate_missense(merged_dat=merged_DT, snp_filter="Support>0")
 #' }
-ANNOTATE.annotate_missense <- function(merged_DT,
+ANNOTATE.annotate_missense <- function(merged_dat,
                                        snp_filter="Support>0"){
-  snp_info <- biomart_snp_info(snp_list = unique(subset(merged_DT, eval(parse(text=snp_filter)))$SNP))
+  snp_info <- biomart_snp_info(snp_list = unique(subset(merged_dat, eval(parse(text=snp_filter)))$SNP))
   # unique(snp_info$consequence_type_tv)
   missense <- suppressMessages(snp_info %>%
                                  dplyr::group_by(refsnp_id) %>%
                                  dplyr::summarise(Missense = ifelse(any(consequence_type_tv=="missense_variant",na.rm = T),T,F)) %>%
                                  data.table::data.table())
 
-  merged_DT <- data.table::merge.data.table(merged_DT, missense,
+  merged_dat <- data.table::merge.data.table(merged_dat, missense,
                                             all.x=T,
                                             by.x="SNP",
                                             by.y = "refsnp_id")
-  # missense_counts <- suppressMessages(merged_DT %>% dplyr::group_by(Locus) %>%
+  # missense_counts <- suppressMessages(merged_dat %>% dplyr::group_by(Locus) %>%
   #   dplyr::summarise(Missense=sum(Missense, na.rm=T)))
-  printer(sum(subset(merged_DT, Support>0)$Missense, na.rm = T),"missense mutations detected in UCS.")
-  printer(sum(subset(merged_DT, Consensus_SNP)$Missense, na.rm = T),"missense mutations detected in Consensus SNPs")
-  return(merged_DT)
+  printer(sum(subset(merged_dat, Support>0)$Missense, na.rm = T),"missense mutations detected in UCS.")
+  printer(sum(subset(merged_dat, Consensus_SNP)$Missense, na.rm = T),"missense mutations detected in Consensus SNPs")
+  return(merged_dat)
 }
 
 
@@ -587,18 +587,18 @@ ANNOTATE.annotate_missense <- function(merged_DT,
 #' @examples
 #' \dontrun{
 #' data("merged_DT");
-#' gg_missense <- ANNOTATE.plot_missense(merged_DT=merged_DT, snp_filter="Support>0")
-#' gg_missense <- ANNOTATE.plot_missense(merged_DT=merged_DT, snp_filter="Consensus_SNP==T")
+#' gg_missense <- ANNOTATE.plot_missense(merged_dat=merged_DT, snp_filter="Support>0")
+#' gg_missense <- ANNOTATE.plot_missense(merged_dat=merged_DT, snp_filter="Consensus_SNP==T")
 #' }
-ANNOTATE.plot_missense <- function(merged_DT,
+ANNOTATE.plot_missense <- function(merged_dat,
                                    snp_filter="Support>0",
                                    label_yaxis=F,
                                    x_label="UCS missense\nmutations",
                                    show.legend=T,
                                    show_numbers=F,
                                    show_plot=T){
-  locus_order <- SUMMARISE.get_CS_counts(merged_DT = merged_DT)
-  annotated_DT <- ANNOTATE.annotate_missense(merged_DT=merged_DT,
+  locus_order <- SUMMARISE.get_CS_counts(merged_dat = merged_dat)
+  annotated_DT <- ANNOTATE.annotate_missense(merged_dat=merged_dat,
                                              snp_filter=snp_filter)
   dat_melt <-
     data.table::setDT(annotated_DT)[, .(Missense = n_distinct(SNP[Missense==T], na.rm = T)),

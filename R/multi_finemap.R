@@ -242,11 +242,20 @@ multi_finemap <- function(locus_dir,
       cols <- colnames(dat_select);
       colnames(dat_select) <- c("SNP", paste(m, cols[2:length(cols)], sep="." ));
       # Merge new columns into DT
-      sum(data.table::as.data.table(merged_dat)$SNP %in% data.table::as.data.table(dat_select)$SNP)
-      merged_dat <- data.table::merge.data.table(x = merged_dat,
-                                                  y = dat_select,
-                                                  by = "SNP",
-                                                  all.x = T);
+      ####--------------------------------------------------####
+      #### Something wacky is going on here with data.table ####
+      ## Only SUSIE results are merging, the rest are NAs, unless you set
+      ## all.y=TRUE, in which case duplicate SNPs/row are generated.
+      ## Even setting the keys doesn't seem to help.
+      ##
+      ## The only way to fix this seems to be converting to data.frames
+      ## temporarily, merge, and then convert back to data.table.
+      merged_dat <- merge(x = data.frame(merged_dat,check.names = FALSE),
+                          y = data.frame(dat_select, check.names = FALSE),
+                          by = "SNP",
+                          all.x = T);
+      merged_dat <- data.table::data.table(merged_dat)
+      ####--------------------------------------------------####
   }
   if(nrow(merged_dat)!=dplyr::n_distinct(merged_dat$SNP)) stop("Duplicate SNP rows detected.")
   return(merged_dat)

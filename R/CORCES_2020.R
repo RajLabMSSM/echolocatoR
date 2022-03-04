@@ -133,9 +133,9 @@ CORCES_2020.get_HiChIP_FitHiChIP_overlap <- function(finemap_dat,
 #' @source \url{https://www.biorxiv.org/content/10.1101/2020.01.06.896159v1}
 #' @examples
 #' data("merged_DT");
-#' finemap_dat <- subset(merged_DT, Consensus_SNP)
-#' dat_melt <- CORCES_2020.prepare_scATAC_peak_overlap(merged_DT=merged_DT)
-CORCES_2020.prepare_scATAC_peak_overlap <- function(merged_DT,
+#' merged_dat <- subset(merged_DT, Consensus_SNP)
+#' dat_melt <- CORCES_2020.prepare_scATAC_peak_overlap(merged_dat=merged_dat)
+CORCES_2020.prepare_scATAC_peak_overlap <- function(merged_dat,
                                                     FDR_filter=NULL,
                                                     snp_filter="Consensus_SNP==T",
                                                     add_cicero=T,
@@ -150,7 +150,7 @@ CORCES_2020.prepare_scATAC_peak_overlap <- function(merged_DT,
                  Astrocytes="astrocytes",
                  OPCs="OPCs")
   # Get SNP groups
-  finemap_dat <- subset(merged_DT, eval(parse(text=snp_filter)), .drop=F) #finemap_dat[eval(parse(text=snp_filter))]
+  finemap_dat <- subset(merged_dat, eval(parse(text=snp_filter)), .drop=F) #finemap_dat[eval(parse(text=snp_filter))]
   # Get overlap with PEAKS and merge
   gr.hits <- CORCES_2020.get_ATAC_peak_overlap(finemap_dat = finemap_dat,
                                                add_cicero = add_cicero,
@@ -192,7 +192,7 @@ CORCES_2020.prepare_scATAC_peak_overlap <- function(merged_DT,
     dat_melt$background <- NA
 
     # Make sure locus order kept
-    locus_order <- SUMMARISE.get_CS_counts(merged_DT)
+    locus_order <- SUMMARISE.get_CS_counts(merged_dat)
     dat_melt$Locus <- factor(dat_melt$Locus,  levels = locus_order$Locus, ordered = T)
     return(dat_melt)
   } else {
@@ -215,9 +215,9 @@ CORCES_2020.prepare_scATAC_peak_overlap <- function(merged_DT,
 #' @source \url{https://www.biorxiv.org/content/10.1101/2020.01.06.896159v1}
 #' @examples
 #' data("merged_DT");
-#' finemap_dat <- subset(merged_DT, Consensus_SNP)
-#' dat_melt <- CORCES_2020.prepare_bulkATAC_peak_overlap(merged_DT=merged_DT)
-CORCES_2020.prepare_bulkATAC_peak_overlap <- function(merged_DT,
+#' merged_dat <- subset(merged_DT, Consensus_SNP)
+#' dat_melt <- CORCES_2020.prepare_bulkATAC_peak_overlap(merged_dat=merged_dat)
+CORCES_2020.prepare_bulkATAC_peak_overlap <- function(merged_dat,
                                                       FDR_filter=NULL,
                                                       snp_filter="Consensus_SNP==T",
                                                       add_HiChIP_FitHiChIP=T,
@@ -225,7 +225,7 @@ CORCES_2020.prepare_bulkATAC_peak_overlap <- function(merged_DT,
                                                       return_counts=T,
                                                       verbose=T){
   # Get SNP groups
-  finemap_dat <- subset(merged_DT, eval(parse(text=snp_filter)), .drop=F) #finemap_dat[eval(parse(text=snp_filter))]
+  finemap_dat <- subset(merged_dat, eval(parse(text=snp_filter)), .drop=F) #finemap_dat[eval(parse(text=snp_filter))]
   # Get overlap with PEAKS and merge
   gr.hits <- CORCES_2020.get_ATAC_peak_overlap(finemap_dat = finemap_dat,
                                                add_cicero = F,
@@ -272,7 +272,7 @@ CORCES_2020.prepare_bulkATAC_peak_overlap <- function(merged_DT,
     dat_melt$background <- NA
 
     # Make sure locus order kept
-    locus_order <- SUMMARISE.get_CS_counts(merged_DT)
+    locus_order <- SUMMARISE.get_CS_counts(merged_dat)
     dat_melt$Locus <- factor(dat_melt$Locus,  levels = locus_order$Locus, ordered = T)
     return(dat_melt)
   }else {
