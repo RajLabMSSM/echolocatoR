@@ -1,24 +1,15 @@
 ---
-title: "echolocatoR: full pipeline vignette" 
-author: "Brian M. Schilder"
-date: "Most recent update:<br> `r Sys.Date()`"
-output: 
-  rmarkdown::html_document: 
-    theme: spacelab
-    highlight: zenburn 
-    code_folding: show 
-    toc: true 
-    toc_float: true
-    smooth_scroll: true
-    number_sections: false 
-    self_contained: true
-editor_options: 
-  chunk_output_type: inline
+title: "Getting Started" 
+author: "<h4>Author: <i>Brian M. Schilder</i></h4>" 
+date: "<h4>Updated: <i>`r format( Sys.Date(), '%b-%d-%Y')`</i></h4>"
+output:
+  BiocStyle::html_document
 vignette: >
-  %\VignetteIndexEntry{echolocatoR}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+    %\VignetteIndexEntry{echolocatoR} 
+    %\usepackage[utf8]{inputenc}
+    %\VignetteEngine{knitr::rmarkdown}
 ---
+
 
 ```{r, include = F, message=F, error = T} 
 root.dir <- tempdir()
@@ -170,7 +161,7 @@ Nalls23andMe_2019.results <- finemap_loci(# GENERAL ARGUMENTS
 ```
 
 
-```{r}
+```{r, eval=F}
 dataset <-  file.path(root.dir,"results/GWAS/Nalls23andMe_2019/")
 merged_dat <- echolocatoR::merge_finemapping_results(dataset = dataset,
                                                      minimum_support = 0)

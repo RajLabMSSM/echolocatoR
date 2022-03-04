@@ -87,6 +87,7 @@ Suggests:
     SummarizedExperiment,
     LDlinkR, 
     coin,
-    badger
+    badger,
+    BiocStyle
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr

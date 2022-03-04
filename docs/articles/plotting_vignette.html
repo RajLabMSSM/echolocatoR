@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,23 +33,20 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../articles/echolocatoR.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -60,9 +59,6 @@
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/full_pipeline_vignette.html">Full pipeline vignette</a>
-    </li>
-    <li>
       <a href="../articles/plotting_vignette.html">Plotting vignette</a>
     </li>
     <li>
@@ -73,7 +69,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/RajLabMSSM/echolocatoR/">
+  <a href="https://github.com/RajLabMSSM/echolocatoR/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -88,15 +84,19 @@
 
       
 
-      </header><script src="plotting_vignette_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Plotting vignette</h1>
-                        <h4 class="author">Brian M. Schilder</h4>
+                        <h4 data-toc-skip class="author"><h4>
+Author: <i>Brian M. Schilder</i>
+</h4></h4>
             
-            <h4 class="date">Most recent update:<br> 2021-06-22</h4>
+            <h4 data-toc-skip class="date"><h4>
+Updated: <i>Mar-04-2022</i>
+</h4></h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/RajLabMSSM/echolocatoR/blob/master/vignettes/plotting_vignette.Rmd"><code>vignettes/plotting_vignette.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/RajLabMSSM/echolocatoR/blob/HEAD/vignettes/plotting_vignette.Rmd" class="external-link"><code>vignettes/plotting_vignette.Rmd</code></a></small>
       <div class="hidden name"><code>plotting_vignette.Rmd</code></div>
 
     </div>
@@ -104,21 +104,34 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RajLabMSSM/echolocatoR">echolocatoR</a></span><span class="op">)</span> 
+<code class="sourceCode R"><span class="va">root.dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_chunk.html" class="external-link">opts_chunk</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>
+  collapse <span class="op">=</span> <span class="cn">TRUE</span>,
+  comment <span class="op">=</span> <span class="st">"#&gt;"</span>,
+  root.dir <span class="op">=</span> <span class="va">root.dir</span>, 
+  fig.height <span class="op">=</span> <span class="fl">12</span>,
+  fig.width <span class="op">=</span> <span class="fl">10</span>
+<span class="op">)</span>  
+<span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_knit.html" class="external-link">opts_knit</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>
+  root.dir <span class="op">=</span> <span class="va">root.dir</span>
+  <span class="op">)</span>
+<span class="co"># knitr::opts_chunk$get("root.dir")</span>
+<span class="co"># devtools::build_vignettes(quiet = F)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RajLabMSSM/echolocatoR" class="external-link">echolocatoR</a></span><span class="op">)</span> 
 <span class="co">#&gt; Registered S3 method overwritten by 'GGally':</span>
 <span class="co">#&gt;   method from   </span>
 <span class="co">#&gt;   +.gg   ggplot2</span></code></pre></div>
-<div id="plotting-loci-with-echolocator" class="section level1">
-<h1 class="hasAnchor">
-<a href="#plotting-loci-with-echolocator" class="anchor"></a>Plotting loci with <em>echolocatoR</em>
-</h1>
+<div class="section level2">
+<h2 id="plotting-loci-with-echolocator">Plotting loci with <em>echolocatoR</em><a class="anchor" aria-label="anchor" href="#plotting-loci-with-echolocator"></a>
+</h2>
 <p><em>echolocatoR</em> contains various functions that can be used separately<br>
 from the comprehensive <code><a href="../reference/finemap_loci.html">finemap_loci()</a></code> pipeline.</p>
 <p>Generate a multi-view plot of a given locus using <code><a href="../reference/PLOT.locus.html">PLOT.locus()</a></code>.</p>
 <ul>
 <li>You can mix and match different tracks and annotations using the different arguments (see <code><a href="../reference/PLOT.locus.html">?PLOT.locus</a></code> for details).</li>
 </ul>
-<p>The plot is centered on the lead/index SNP. If a list is supplied to plot.xoom * <code><a href="../reference/PLOT.locus.html">PLOT.locus()</a></code> returns a series of <code>ggplot</code> objects bound together with <a href="https://patchwork.data-imaginist.com"><code>patchwork</code></a>. One can further modify this object using <code>ggplot2</code> functions like <code>+ theme()</code>. + The modifications will be applied to all tracks at once.</p>
+<p>The plot is centered on the lead/index SNP. If a list is supplied to plot.xoom * <code><a href="../reference/PLOT.locus.html">PLOT.locus()</a></code> returns a series of <code>ggplot</code> objects bound together with <a href="https://patchwork.data-imaginist.com" class="external-link"><code>patchwork</code></a>. One can further modify this object using <code>ggplot2</code> functions like <code>+ theme()</code>. + The modifications will be applied to all tracks at once.</p>
 <ul>
 <li>Save a high-resolution versions the plot by setting <code>save_plot=T</code>.
 <ul>
@@ -131,14 +144,14 @@ from the comprehensive <code><a href="../reference/finemap_loci.html">finemap_lo
 </ul>
 </li>
 </ul>
-<div id="load-example-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#load-example-data" class="anchor"></a>Load example data</h2>
+<div class="section level3">
+<h3 id="load-example-data">Load example data<a class="anchor" aria-label="anchor" href="#load-example-data"></a>
+</h3>
 <p>Load example dataset of the results from fine-mapping the BST1 locus with <code><a href="../reference/finemap_loci.html">finemap_loci()</a></code>. Original data comes from the recent Nalls et al. (2019) Parkinson’s disease GWAS (see <code><a href="../reference/BST1.html">?BST1</a></code> for details).</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"BST1"</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"LD_matrix"</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"locus_dir"</span><span class="op">)</span>;
-<span class="va">locus_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="st">"~/Desktop"</span>,<span class="va">locus_dir</span><span class="op">)</span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"BST1"</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"LD_matrix"</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"locus_dir"</span><span class="op">)</span>;
+<span class="va">locus_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">root.dir</span>,<span class="va">locus_dir</span><span class="op">)</span>
 <span class="va">finemap_DT</span> <span class="op">&lt;-</span> <span class="va">BST1</span>  
 <span class="va">LD_matrix</span> <span class="op">&lt;-</span> <span class="va">BST1_LD_matrix</span>
 <span class="va">LD_reference</span> <span class="op">&lt;-</span> <span class="st">"UKB"</span> <span class="co"># Used for naming saved plots</span>
@@ -153,147 +166,51 @@ from the comprehensive <code><a href="../reference/finemap_loci.html">finemap_lo
 <span class="co"># finemap_DT &lt;- find_consensus_SNPs(finemap_DT) </span>
 <span class="co"># finemap_DT &lt;- update_CS_cols(finemap_DT)</span></code></pre></div>
 </div>
-<div id="full-window" class="section level2">
-<h2 class="hasAnchor">
-<a href="#full-window" class="anchor"></a>Full window</h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="full-window">Full window<a class="anchor" aria-label="anchor" href="#full-window"></a>
+</h3>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">trk_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PLOT.locus.html">PLOT.locus</a></span><span class="op">(</span>finemap_dat<span class="op">=</span><span class="va">finemap_DT</span>, 
                        LD_matrix<span class="op">=</span><span class="va">LD_matrix</span>, 
                        LD_reference<span class="op">=</span><span class="va">LD_reference</span>,
                        locus_dir<span class="op">=</span><span class="va">locus_dir</span>,  
                        save_plot<span class="op">=</span><span class="cn">F</span>,
                        show_plot<span class="op">=</span><span class="va">show_plot</span>,
-                       plot.zoom<span class="op">=</span><span class="va">plot.zoom</span><span class="op">)</span> 
-<span class="co">#&gt; +-------- Locus Plot: BST1--------+</span>
-<span class="co">#&gt; [1] "+ Filling NAs in CS cols with 0"</span>
-<span class="co">#&gt; [1] "+ Filling NAs in PP cols with 0"</span>
-<span class="co">#&gt; [1] "+ LD:: LD_matrix detected. Coloring SNPs by LD with lead SNP."</span>
-<span class="co">#&gt; [1] "++ PLOT:: GWAS full window track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: GWAS track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: Merged fine-mapping track"</span>
-<span class="co">#&gt; [1] "Melting PP and CS from 5 fine-mapping methods"</span>
-<span class="co">#&gt; Warning: The `.dots` argument of `group_by()` is deprecated as of dplyr 1.0.0.</span>
-<span class="co">#&gt; [1] "++ PLOT:: Adding Gene model track."</span>
-<span class="co">#&gt; max_transcripts=1.</span>
-<span class="co">#&gt; 15 transcripts from 15 genes returned.</span>
-<span class="co">#&gt; Fetching data...OK</span>
-<span class="co">#&gt; Parsing exons...OK</span>
-<span class="co">#&gt; Defining introns...OK</span>
-<span class="co">#&gt; Defining UTRs...OK</span>
-<span class="co">#&gt; Defining CDS...OK</span>
-<span class="co">#&gt; aggregating...</span>
-<span class="co">#&gt; Done</span>
-<span class="co">#&gt; Constructing graphics...</span>
-<span class="co">#&gt; [1] "+ Adding vertical lines to highlight SNP groups..."</span>
-<span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 10x +&lt;+&lt;+&lt;+&lt;+</span>
-<span class="co">#&gt; [1] "+ PLOT:: Get window suffix..."</span>
-<span class="co">#&gt; [1] "+ Constructing zoom polygon..."</span>
-<span class="co">#&gt; [1] "+ Highlighting zoom origin..."</span>
-<span class="co">#&gt; [1] "+ Removing subplot margins..."</span>
-<span class="co">#&gt; [1] "+ Reordering tracks..."</span>
-<span class="co">#&gt; [1] "+ Ensuring last track shows genomic units..."</span>
-<span class="co">#&gt; [1] "+ Aligning xlimits for each subplot..."</span>
-<span class="co">#&gt; [1] "+ Checking track heights..."</span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">trk_plot</span><span class="op">)</span>
-<span class="co">#&gt; $`10x`</span></code></pre></div>
-<p><img src="plotting_vignette_files/figure-html/unnamed-chunk-2-1.png" width="960"></p>
+                       plot.zoom<span class="op">=</span><span class="va">plot.zoom</span><span class="op">)</span> </code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">trk_plot</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="at-multiple-zooms" class="section level2">
-<h2 class="hasAnchor">
-<a href="#at-multiple-zooms" class="anchor"></a>At multiple zooms</h2>
+<div class="section level3">
+<h3 id="at-multiple-zooms">At multiple zooms<a class="anchor" aria-label="anchor" href="#at-multiple-zooms"></a>
+</h3>
 <ul>
 <li>You can easily generate the same locus plot at multiple zoomed in views by supplying a list to <code>plot.zoom</code>.<br>
 </li>
-<li>This list can be composed of zoom multipliers (e.g. <code><a href="https://rdrr.io/r/base/c.html">c("1x", "2x")</a></code>), window widths in units of basepairs (e.g. <code><a href="https://rdrr.io/r/base/c.html">c(5000, 1500)</a></code>), or a mixture of both (e.g. <code><a href="https://rdrr.io/r/base/c.html">c("1x","4x", 5000, 2000)</a></code>).</li>
+<li>This list can be composed of zoom multipliers (e.g. <code>c("1x", "2x")</code>), window widths in units of basepairs (e.g. <code>c(5000, 1500)</code>), or a mixture of both (e.g. <code>c("1x","4x", 5000, 2000)</code>).</li>
 <li>Each zoom view will be saved individually with its respective scale as the suffix (e.g. <code>multiview.BST1.UKB.4x.jpg</code>).<br>
 </li>
 <li>Each zoom view is stored as a named item within the returned list.</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">trk_plot_zooms</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PLOT.locus.html">PLOT.locus</a></span><span class="op">(</span>finemap_dat<span class="op">=</span><span class="va">finemap_DT</span>, 
                              LD_matrix<span class="op">=</span><span class="va">LD_matrix</span>, 
                              LD_reference<span class="op">=</span><span class="va">LD_reference</span>,
                              locus_dir<span class="op">=</span><span class="va">locus_dir</span>,  
                              save_plot<span class="op">=</span><span class="cn">F</span>,
                              show_plot<span class="op">=</span><span class="va">show_plot</span>,
-                             plot.zoom <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"1x"</span>,<span class="st">"5x"</span>,<span class="st">"10x"</span><span class="op">)</span><span class="op">)</span> 
-<span class="co">#&gt; +-------- Locus Plot: BST1--------+</span>
-<span class="co">#&gt; [1] "+ Filling NAs in CS cols with 0"</span>
-<span class="co">#&gt; [1] "+ Filling NAs in PP cols with 0"</span>
-<span class="co">#&gt; [1] "+ LD:: LD_matrix detected. Coloring SNPs by LD with lead SNP."</span>
-<span class="co">#&gt; [1] "++ PLOT:: GWAS full window track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: GWAS track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: Merged fine-mapping track"</span>
-<span class="co">#&gt; [1] "Melting PP and CS from 5 fine-mapping methods"</span>
-<span class="co">#&gt; [1] "++ PLOT:: Adding Gene model track."</span>
-<span class="co">#&gt; max_transcripts=1.</span>
-<span class="co">#&gt; 15 transcripts from 15 genes returned.</span>
-<span class="co">#&gt; Fetching data...OK</span>
-<span class="co">#&gt; Parsing exons...OK</span>
-<span class="co">#&gt; Defining introns...OK</span>
-<span class="co">#&gt; Defining UTRs...OK</span>
-<span class="co">#&gt; Defining CDS...OK</span>
-<span class="co">#&gt; aggregating...</span>
-<span class="co">#&gt; Done</span>
-<span class="co">#&gt; Constructing graphics...</span>
-<span class="co">#&gt; [1] "+ Adding vertical lines to highlight SNP groups..."</span>
-<span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 1x +&lt;+&lt;+&lt;+&lt;+</span>
-<span class="co">#&gt; [1] "+ PLOT:: Get window suffix..."</span>
-<span class="co">#&gt; [1] "+ PLOT:: Removing GWAS full window track @ zoom=1x"</span>
-<span class="co">#&gt; [1] "+ Removing subplot margins..."</span>
-<span class="co">#&gt; [1] "+ Reordering tracks..."</span>
-<span class="co">#&gt; [1] "+ Ensuring last track shows genomic units..."</span>
-<span class="co">#&gt; [1] "+ Aligning xlimits for each subplot..."</span>
-<span class="co">#&gt; [1] "+ Checking track heights..."</span>
-<span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 5x +&lt;+&lt;+&lt;+&lt;+</span>
-<span class="co">#&gt; [1] "+ PLOT:: Get window suffix..."</span>
-<span class="co">#&gt; [1] "+ Constructing zoom polygon..."</span>
-<span class="co">#&gt; [1] "+ Highlighting zoom origin..."</span>
-<span class="co">#&gt; [1] "+ Removing subplot margins..."</span>
-<span class="co">#&gt; [1] "+ Reordering tracks..."</span>
-<span class="co">#&gt; [1] "+ Ensuring last track shows genomic units..."</span>
-<span class="co">#&gt; [1] "+ Aligning xlimits for each subplot..."</span>
-<span class="co">#&gt; [1] "+ Checking track heights..."</span>
-<span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 10x +&lt;+&lt;+&lt;+&lt;+</span>
-<span class="co">#&gt; [1] "+ PLOT:: Get window suffix..."</span>
-<span class="co">#&gt; [1] "+ Constructing zoom polygon..."</span>
-<span class="co">#&gt; [1] "+ Highlighting zoom origin..."</span>
-<span class="co">#&gt; [1] "+ Removing subplot margins..."</span>
-<span class="co">#&gt; [1] "+ Reordering tracks..."</span>
-<span class="co">#&gt; [1] "+ Ensuring last track shows genomic units..."</span>
-<span class="co">#&gt; [1] "+ Aligning xlimits for each subplot..."</span>
-<span class="co">#&gt; [1] "+ Checking track heights..."</span>
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">trk_plot_zooms</span><span class="op">)</span> <span class="co"># Get zoom view names</span>
-<span class="co">#&gt; [1] "1x"  "5x"  "10x"</span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">trk_plot_zooms</span><span class="op">)</span>
-<span class="co">#&gt; $`1x`</span>
-<span class="co">#&gt; Warning: ggrepel: 1 unlabeled data points (too many overlaps). Consider</span>
-<span class="co">#&gt; increasing max.overlaps</span>
-
-<span class="co">#&gt; Warning: ggrepel: 1 unlabeled data points (too many overlaps). Consider</span>
-<span class="co">#&gt; increasing max.overlaps</span></code></pre></div>
-<p><img src="plotting_vignette_files/figure-html/unnamed-chunk-3-1.png" width="960"></p>
-<pre><code>#&gt; 
-#&gt; $`5x`
-#&gt; Warning: ggrepel: 3 unlabeled data points (too many overlaps). Consider
-#&gt; increasing max.overlaps
-#&gt; Warning: ggrepel: 3 unlabeled data points (too many overlaps). Consider
-#&gt; increasing max.overlaps</code></pre>
-<p><img src="plotting_vignette_files/figure-html/unnamed-chunk-3-2.png" width="960"></p>
-<pre><code>#&gt; 
-#&gt; $`10x`</code></pre>
-<p><img src="plotting_vignette_files/figure-html/unnamed-chunk-3-3.png" width="960"></p>
+                             plot.zoom <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1x"</span>,<span class="st">"5x"</span>,<span class="st">"10x"</span><span class="op">)</span><span class="op">)</span> 
+<span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">trk_plot_zooms</span><span class="op">)</span> <span class="co"># Get zoom view names</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">trk_plot_zooms</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="return-as-list" class="section level2">
-<h2 class="hasAnchor">
-<a href="#return-as-list" class="anchor"></a>Return as list</h2>
+<div class="section level3">
+<h3 id="return-as-list">Return as list<a class="anchor" aria-label="anchor" href="#return-as-list"></a>
+</h3>
 <ul>
-<li>For even further control over each track of the multi-view plot, specify <code><a href="../reference/PLOT.locus.html">PLOT.locus(..., return_list=T)</a></code> to instead return a named list (nested within each zoom view list item) of <code>ggplot</code> objects which can each be modified individually.</li>
-<li>Once you’ve made your modifications, you can then bind this list of plots back together with <code><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html">patchwork::wrap_plots(tracks_list, ncol = 1)</a></code>.</li>
+<li>For even further control over each track of the multi-view plot, specify <code>PLOT.locus(..., return_list=T)</code> to instead return a named list (nested within each zoom view list item) of <code>ggplot</code> objects which can each be modified individually.</li>
+<li>Once you’ve made your modifications, you can then bind this list of plots back together with <code>patchwork::wrap_plots(tracks_list, ncol = 1)</code>.</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">trk_plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PLOT.locus.html">PLOT.locus</a></span><span class="op">(</span>finemap_dat<span class="op">=</span><span class="va">finemap_DT</span>, 
                              LD_matrix<span class="op">=</span><span class="va">LD_matrix</span>, 
                              LD_reference<span class="op">=</span><span class="va">LD_reference</span>,
@@ -301,134 +218,61 @@ from the comprehensive <code><a href="../reference/finemap_loci.html">finemap_lo
                              save_plot<span class="op">=</span><span class="cn">F</span>,
                              show_plot<span class="op">=</span><span class="va">show_plot</span>,
                              plot.zoom<span class="op">=</span><span class="va">plot.zoom</span>,
-                             return_list<span class="op">=</span><span class="cn">T</span><span class="op">)</span>  
-<span class="co">#&gt; +-------- Locus Plot: BST1--------+</span>
-<span class="co">#&gt; [1] "+ Filling NAs in CS cols with 0"</span>
-<span class="co">#&gt; [1] "+ Filling NAs in PP cols with 0"</span>
-<span class="co">#&gt; [1] "+ LD:: LD_matrix detected. Coloring SNPs by LD with lead SNP."</span>
-<span class="co">#&gt; [1] "++ PLOT:: GWAS full window track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: GWAS track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: Merged fine-mapping track"</span>
-<span class="co">#&gt; [1] "Melting PP and CS from 5 fine-mapping methods"</span>
-<span class="co">#&gt; [1] "++ PLOT:: Adding Gene model track."</span>
-<span class="co">#&gt; max_transcripts=1.</span>
-<span class="co">#&gt; 15 transcripts from 15 genes returned.</span>
-<span class="co">#&gt; Fetching data...OK</span>
-<span class="co">#&gt; Parsing exons...OK</span>
-<span class="co">#&gt; Defining introns...OK</span>
-<span class="co">#&gt; Defining UTRs...OK</span>
-<span class="co">#&gt; Defining CDS...OK</span>
-<span class="co">#&gt; aggregating...</span>
-<span class="co">#&gt; Done</span>
-<span class="co">#&gt; Constructing graphics...</span>
-<span class="co">#&gt; [1] "+ Adding vertical lines to highlight SNP groups..."</span>
-<span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 10x +&lt;+&lt;+&lt;+&lt;+</span>
-<span class="co">#&gt; [1] "+ PLOT:: Get window suffix..."</span>
-<span class="co">#&gt; [1] "+ Constructing zoom polygon..."</span>
-<span class="co">#&gt; [1] "+ Highlighting zoom origin..."</span>
-<span class="co">#&gt; [1] "+ Removing subplot margins..."</span>
-<span class="co">#&gt; [1] "+ Reordering tracks..."</span>
-<span class="co">#&gt; [1] "+ Ensuring last track shows genomic units..."</span>
-<span class="co">#&gt; [1] "+ Aligning xlimits for each subplot..."</span>
-<span class="co">#&gt; [1] "+ Checking track heights..."</span></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+                             return_list<span class="op">=</span><span class="cn">T</span><span class="op">)</span>  </code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">view1_list</span> <span class="op">&lt;-</span> <span class="va">trk_plot_list</span><span class="op">[[</span><span class="va">plot.zoom</span><span class="op">]</span><span class="op">]</span>
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">view1_list</span><span class="op">)</span> <span class="co"># Get track names from a particular zoom view</span>
-<span class="co">#&gt; [1] "GWAS full window" "zoom_polygon"     "Genes"            "GWAS"            </span>
-<span class="co">#&gt; [5] "Fine-mapping"</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">view1_list</span><span class="op">)</span> <span class="co"># Get track names from a particular zoom view</span></code></pre></div>
 <p>Modify a specific tracks within a view.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Modify your selected track</span>
 <span class="va">modified_track</span> <span class="op">&lt;-</span> <span class="va">view1_list</span><span class="op">$</span><span class="va">GWAS</span> <span class="op">+</span> 
-                      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Modified GWAS"</span><span class="op">)</span> <span class="op">+</span> 
-                      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_dark</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-                      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span>
+                      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Modified GWAS"</span><span class="op">)</span> <span class="op">+</span> 
+                      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_dark</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+                      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># Put it back into your track list</span>
 <span class="va">view1_list</span><span class="op">[[</span><span class="st">"GWAS"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">modified_track</span>
 <span class="co"># Remove a plot you don't want</span>
 <span class="va">view1_list</span><span class="op">[[</span><span class="st">"Genes"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NULL</span>
 <span class="co"># Specify the relative heights of each track (make sure it matches your new # of plots!)</span>
-<span class="va">track_heights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.3</span>,<span class="fl">.1</span>,<span class="fl">.3</span>,<span class="fl">1</span><span class="op">)</span>
+<span class="va">track_heights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.3</span>,<span class="fl">.1</span>,<span class="fl">.3</span>,<span class="fl">1</span><span class="op">)</span>
 
 <span class="co"># Bind them together and plot</span>
-<span class="va">fused_plot</span> <span class="op">&lt;-</span> <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html">wrap_plots</a></span><span class="op">(</span><span class="va">view1_list</span>, 
+<span class="va">fused_plot</span> <span class="op">&lt;-</span> <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">view1_list</span>, 
                                     heights <span class="op">=</span> <span class="va">track_heights</span>,
                                     ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">fused_plot</span><span class="op">)</span></code></pre></div>
-<p><img src="plotting_vignette_files/figure-html/modify%20track-1.png" width="960"></p>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fused_plot</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="using-xgr-annotations" class="section level2">
-<h2 class="hasAnchor">
-<a href="#using-xgr-annotations" class="anchor"></a>Using XGR annotations</h2>
+<div class="section level3">
+<h3 id="using-xgr-annotations">Using XGR annotations<a class="anchor" aria-label="anchor" href="#using-xgr-annotations"></a>
+</h3>
 <ul>
 <li>Whenever you use annotation arguments (e.g. <code>XGR_libnames</code>,<code>Roadmap</code>,<code>Nott_epigenome</code>) the annotations that overlap with your locus will automatically be saved as <code>GRanges</code> objects in a locus-specific subdirectory:<br><em>results/<dataset_type>/<dataset_name>/<locus>/annotation</locus></dataset_name></dataset_type></em>
 </li>
 <li>If a selected annotation has previously been downloaded and stored for that locus, <code><a href="../reference/PLOT.locus.html">PLOT.locus()</a></code> will automatically detect and import it to save time.</li>
 </ul>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">trk_plot.xgr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PLOT.locus.html">PLOT.locus</a></span><span class="op">(</span>finemap_dat<span class="op">=</span><span class="va">finemap_DT</span>, 
                            LD_matrix<span class="op">=</span><span class="va">LD_matrix</span>, 
                            LD_reference<span class="op">=</span><span class="va">LD_reference</span>,
                            locus_dir<span class="op">=</span><span class="va">locus_dir</span>, 
                            
-                           XGR_libnames<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"ENCODE_TFBS_ClusteredV3_CellTypes"</span><span class="op">)</span>, 
+                           XGR_libnames<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ENCODE_TFBS_ClusteredV3_CellTypes"</span><span class="op">)</span>, 
                            save_plot<span class="op">=</span><span class="cn">F</span>,
                            show_plot<span class="op">=</span><span class="va">show_plot</span>,
-                           plot.zoom<span class="op">=</span><span class="va">plot.zoom</span><span class="op">)</span>
-<span class="co">#&gt; +-------- Locus Plot: BST1--------+</span>
-<span class="co">#&gt; [1] "+ Filling NAs in CS cols with 0"</span>
-<span class="co">#&gt; [1] "+ Filling NAs in PP cols with 0"</span>
-<span class="co">#&gt; [1] "+ LD:: LD_matrix detected. Coloring SNPs by LD with lead SNP."</span>
-<span class="co">#&gt; [1] "++ PLOT:: GWAS full window track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: GWAS track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: Merged fine-mapping track"</span>
-<span class="co">#&gt; [1] "Melting PP and CS from 5 fine-mapping methods"</span>
-<span class="co">#&gt; [1] "++ PLOT:: Adding Gene model track."</span>
-<span class="co">#&gt; max_transcripts=1.</span>
-<span class="co">#&gt; 15 transcripts from 15 genes returned.</span>
-<span class="co">#&gt; Fetching data...OK</span>
-<span class="co">#&gt; Parsing exons...OK</span>
-<span class="co">#&gt; Defining introns...OK</span>
-<span class="co">#&gt; Defining UTRs...OK</span>
-<span class="co">#&gt; Defining CDS...OK</span>
-<span class="co">#&gt; aggregating...</span>
-<span class="co">#&gt; Done</span>
-<span class="co">#&gt; Constructing graphics...</span>
-<span class="co">#&gt; [1] "++ PLOT:: XGR Tracks"</span>
-<span class="co">#&gt; Start at 2021-06-22 17:11:17</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; 'ENCODE_TFBS_ClusteredV3_CellTypes' (from http://galahad.well.ox.ac.uk/bigdata/ENCODE_TFBS_ClusteredV3_CellTypes.RData) has been loaded into the working environment (at 2021-06-22 17:11:24)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; End at 2021-06-22 17:11:24</span>
-<span class="co">#&gt; Runtime in total is: 7 secs</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; 8702 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; Warning in max(xlim): no non-missing arguments to max; returning -Inf</span>
-<span class="co">#&gt; [1] "+ Adding vertical lines to highlight SNP groups..."</span>
-<span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 10x +&lt;+&lt;+&lt;+&lt;+</span>
-<span class="co">#&gt; [1] "+ PLOT:: Get window suffix..."</span>
-<span class="co">#&gt; [1] "+ Constructing zoom polygon..."</span>
-<span class="co">#&gt; [1] "+ Highlighting zoom origin..."</span>
-<span class="co">#&gt; [1] "+ Removing subplot margins..."</span>
-<span class="co">#&gt; [1] "+ Reordering tracks..."</span>
-<span class="co">#&gt; [1] "+ Ensuring last track shows genomic units..."</span>
-<span class="co">#&gt; [1] "+ Aligning xlimits for each subplot..."</span>
-<span class="co">#&gt; [1] "+ Checking track heights..."</span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">trk_plot.xgr</span><span class="op">)</span>
-<span class="co">#&gt; $`10x`</span></code></pre></div>
-<p><img src="plotting_vignette_files/figure-html/unnamed-chunk-4-1.png" width="960"></p>
+                           plot.zoom<span class="op">=</span><span class="va">plot.zoom</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">trk_plot.xgr</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="using-roadmap-annotations" class="section level2">
-<h2 class="hasAnchor">
-<a href="#using-roadmap-annotations" class="anchor"></a>Using <a href="http://www.roadmapepigenomics.org/data/tables/brain">Roadmap</a> annotations</h2>
+<div class="section level3">
+<h3 id="using-roadmap-annotations">Using <a href="http://www.roadmapepigenomics.org/data/tables/brain" class="external-link">Roadmap</a> annotations<a class="anchor" aria-label="anchor" href="#using-roadmap-annotations"></a>
+</h3>
 <ul>
 <li>Using the <code>Roadmap=T</code> and <code>Roadmap_query="&lt;query&gt;"</code> arguments searches the Roadmap for chromatin mark data across various cell-types, cell-lines and tissues.<br>
 </li>
 <li>Note that Roadmap queries requires <code>tabix</code> to be installed on your machine, or within a conda environment (<code>conda_env = "echoR"</code>).</li>
 <li>Parallelizing these queries across multiple thredas speeds up this process (<code>nThread=&lt;n_cores_available&gt;</code>), as does reusing previously stored data which is automatically saved to the locus-specific subfolder (<code>&lt;dataset_type&gt;/&lt;dataset_name&gt;/&lt;locus&gt;/annotations/Roadmap.ChromatinMarks_CellTypes.RDS</code>) .</li>
 </ul>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">trk_plot.roadmap</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PLOT.locus.html">PLOT.locus</a></span><span class="op">(</span>finemap_dat<span class="op">=</span><span class="va">finemap_DT</span>, 
                                LD_matrix<span class="op">=</span><span class="va">LD_matrix</span>, 
                                LD_reference<span class="op">=</span><span class="va">LD_reference</span>,
@@ -440,89 +284,19 @@ from the comprehensive <code><a href="../reference/finemap_loci.html">finemap_lo
                                save_plot<span class="op">=</span><span class="cn">F</span>, 
                                show_plot<span class="op">=</span><span class="va">show_plot</span>,
                                plot.zoom<span class="op">=</span><span class="st">"5x"</span>, 
-                               nThread <span class="op">=</span> <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html">detectCores</a></span><span class="op">(</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span>,
-                               conda_env <span class="op">=</span> <span class="st">"echoR"</span><span class="op">)</span>
-<span class="co">#&gt; +-------- Locus Plot: BST1--------+</span>
-<span class="co">#&gt; [1] "+ Filling NAs in CS cols with 0"</span>
-<span class="co">#&gt; [1] "+ Filling NAs in PP cols with 0"</span>
-<span class="co">#&gt; [1] "+ LD:: LD_matrix detected. Coloring SNPs by LD with lead SNP."</span>
-<span class="co">#&gt; [1] "++ PLOT:: GWAS full window track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: GWAS track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: Merged fine-mapping track"</span>
-<span class="co">#&gt; [1] "Melting PP and CS from 5 fine-mapping methods"</span>
-<span class="co">#&gt; [1] "++ PLOT:: Adding Gene model track."</span>
-<span class="co">#&gt; max_transcripts=1.</span>
-<span class="co">#&gt; 15 transcripts from 15 genes returned.</span>
-<span class="co">#&gt; Fetching data...OK</span>
-<span class="co">#&gt; Parsing exons...OK</span>
-<span class="co">#&gt; Defining introns...OK</span>
-<span class="co">#&gt; Defining UTRs...OK</span>
-<span class="co">#&gt; Defining CDS...OK</span>
-<span class="co">#&gt; aggregating...</span>
-<span class="co">#&gt; Done</span>
-<span class="co">#&gt; Constructing graphics...</span>
-<span class="co">#&gt; [1] "+ PLOT:: Creating Roadmap track"</span>
-<span class="co">#&gt; [1] "+ ROADMAP:: 2 annotation(s) identified that match `keyword_query`."</span>
-<span class="co">#&gt; [1] "ROADMAP:: All downloads complete"</span>
-<span class="co">#&gt; Time difference of 15.2 secs</span>
-<span class="co">#&gt; Warning in max(xlim): no non-missing arguments to max; returning -Inf</span>
-<span class="co">#&gt; [1] "+ Adding vertical lines to highlight SNP groups..."</span>
-<span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span>
-<span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span>
-
-<span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span>
-
-<span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span>
-<span class="co">#&gt; Warning: Removed 4 rows containing missing values (position_stack).</span>
-<span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 5x +&lt;+&lt;+&lt;+&lt;+</span>
-<span class="co">#&gt; [1] "+ PLOT:: Get window suffix..."</span>
-<span class="co">#&gt; [1] "+ Constructing zoom polygon..."</span>
-<span class="co">#&gt; [1] "+ Highlighting zoom origin..."</span>
-<span class="co">#&gt; [1] "+ Removing subplot margins..."</span>
-<span class="co">#&gt; [1] "+ Reordering tracks..."</span>
-<span class="co">#&gt; [1] "+ Ensuring last track shows genomic units..."</span>
-<span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span>
-<span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span>
-
-<span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span>
-
-<span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span>
-<span class="co">#&gt; Warning: Removed 4 rows containing missing values (position_stack).</span>
-<span class="co">#&gt; [1] "+ Aligning xlimits for each subplot..."</span>
-<span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span>
-<span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span>
-
-<span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span>
-
-<span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span>
-<span class="co">#&gt; Warning: Removed 4 rows containing missing values (position_stack).</span>
-<span class="co">#&gt; [1] "+ Checking track heights..."</span></code></pre></div>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">trk_plot.roadmap</span><span class="op">)</span>
-<span class="co">#&gt; $`5x`</span>
-<span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span>
-
-<span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span>
-
-<span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span>
-
-<span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span>
-<span class="co">#&gt; Warning: Removed 4 rows containing missing values (position_stack).</span>
-<span class="co">#&gt; Warning: ggrepel: 5 unlabeled data points (too many overlaps). Consider</span>
-<span class="co">#&gt; increasing max.overlaps</span>
-
-<span class="co">#&gt; Warning: ggrepel: 5 unlabeled data points (too many overlaps). Consider</span>
-<span class="co">#&gt; increasing max.overlaps</span></code></pre></div>
-<p><img src="plotting_vignette_files/figure-html/unnamed-chunk-5-1.png" width="960"></p>
+                               nThread <span class="op">=</span> <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span>,
+                               conda_env <span class="op">=</span> <span class="st">"echoR"</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">trk_plot.roadmap</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="using-nott_2019-annotations" class="section level2">
-<h2 class="hasAnchor">
-<a href="#using-nott_2019-annotations" class="anchor"></a>Using <a href="https://science.sciencemag.org/content/366/6469/1134.abstract">Nott_2019</a> annotations</h2>
+<div class="section level3">
+<h3 id="using-nott_2019-annotations">Using <a href="https://science.sciencemag.org/content/366/6469/1134.abstract" class="external-link">Nott_2019</a> annotations<a class="anchor" aria-label="anchor" href="#using-nott_2019-annotations"></a>
+</h3>
 <ul>
-<li>Query and plot brain cell type-specific epigenomic assays from <a href="https://science.sciencemag.org/content/366/6469/1134.abstract">Nott et al. (Science, 2019)</a><br>
+<li>Query and plot brain cell type-specific epigenomic assays from <a href="https://science.sciencemag.org/content/366/6469/1134.abstract" class="external-link">Nott et al. (Science, 2019)</a><br>
 (see <code><a href="../reference/NOTT_2019.bigwig_metadata.html">?NOTT_2019.bigwig_metadata</a></code> for details).</li>
 </ul>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">trk_plot.nott_2019</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PLOT.locus.html">PLOT.locus</a></span><span class="op">(</span>finemap_dat<span class="op">=</span><span class="va">finemap_DT</span>,  
                                  LD_matrix<span class="op">=</span><span class="va">LD_matrix</span>, 
                                  LD_reference<span class="op">=</span><span class="va">LD_reference</span>,
@@ -535,481 +309,139 @@ from the comprehensive <code><a href="../reference/finemap_loci.html">finemap_lo
                                  
                                  save_plot<span class="op">=</span><span class="cn">F</span>,
                                  show_plot<span class="op">=</span><span class="va">show_plot</span>,
-                                 plot.zoom<span class="op">=</span><span class="va">plot.zoom</span><span class="op">)</span> 
-<span class="co">#&gt; +-------- Locus Plot: BST1--------+</span>
-<span class="co">#&gt; [1] "+ Filling NAs in CS cols with 0"</span>
-<span class="co">#&gt; [1] "+ Filling NAs in PP cols with 0"</span>
-<span class="co">#&gt; [1] "+ LD:: LD_matrix detected. Coloring SNPs by LD with lead SNP."</span>
-<span class="co">#&gt; [1] "++ PLOT:: GWAS full window track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: GWAS track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: Merged fine-mapping track"</span>
-<span class="co">#&gt; [1] "Melting PP and CS from 5 fine-mapping methods"</span>
-<span class="co">#&gt; [1] "++ PLOT:: Adding Gene model track."</span>
-<span class="co">#&gt; max_transcripts=1.</span>
-<span class="co">#&gt; 15 transcripts from 15 genes returned.</span>
-<span class="co">#&gt; Fetching data...OK</span>
-<span class="co">#&gt; Parsing exons...OK</span>
-<span class="co">#&gt; Defining introns...OK</span>
-<span class="co">#&gt; Defining UTRs...OK</span>
-<span class="co">#&gt; Defining CDS...OK</span>
-<span class="co">#&gt; aggregating...</span>
-<span class="co">#&gt; Done</span>
-<span class="co">#&gt; Constructing graphics...</span>
-<span class="co">#&gt; [1] "NOTT_2019:: Creating epigenomic histograms plot"</span>
-<span class="co">#&gt; [1] "NOTT_2019:: Importing bigWig subsets from UCSC..."</span>
-<span class="co">#&gt; [1] "+ Inferring genomic limits for window: 1x"</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: Downloading and merging 12 peaks BED files."</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: Converting merged BED files to GRanges."</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: 634540 ranges retrieved."</span>
-<span class="co">#&gt; 1860925 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; [1] "+ PLOT:: Calculating max histogram height"</span>
-<span class="co">#&gt; [1] "++ Converting label units to Mb..."</span>
-<span class="co">#&gt; [1] "NOTT_2019:: Creating PLAC-seq interactome plot"</span>
-<span class="co">#&gt; [1] "+ NOTT_2019:: Getting interactome data."</span>
-<span class="co">#&gt; [1] "++ Converting to GRanges."</span>
-<span class="co">#&gt; [1] "Importing Microglia interactome ..."</span>
-<span class="co">#&gt; [1] "Importing Neuronal interactome ..."</span>
-<span class="co">#&gt; [1] "Importing Oligo interactome ..."</span>
-<span class="co">#&gt; 1403 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; 1770 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; Error in h(simpleError(msg, call)) : </span>
-<span class="co">#&gt;   error in evaluating the argument 'args' in selecting a method for function 'do.call': GRanges objects don't support [[, as.list(), lapply(), or unlist() at</span>
-<span class="co">#&gt;   the moment</span>
-<span class="co">#&gt; [1] "+ Adding vertical lines to highlight SNP groups..."</span>
-<span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 10x +&lt;+&lt;+&lt;+&lt;+</span>
-<span class="co">#&gt; [1] "+ PLOT:: Get window suffix..."</span>
-<span class="co">#&gt; [1] "+ Constructing zoom polygon..."</span>
-<span class="co">#&gt; [1] "+ Highlighting zoom origin..."</span>
-<span class="co">#&gt; [1] "+ Removing subplot margins..."</span>
-<span class="co">#&gt; [1] "+ Reordering tracks..."</span>
-<span class="co">#&gt; [1] "+ Ensuring last track shows genomic units..."</span>
-<span class="co">#&gt; [1] "+ Aligning xlimits for each subplot..."</span>
-<span class="co">#&gt; [1] "+ Checking track heights..."</span></code></pre></div>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">trk_plot.nott_2019</span><span class="op">)</span>
-<span class="co">#&gt; $`10x`</span></code></pre></div>
-<p><img src="plotting_vignette_files/figure-html/unnamed-chunk-6-1.png" width="960"></p>
+                                 plot.zoom<span class="op">=</span><span class="va">plot.zoom</span><span class="op">)</span> </code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">trk_plot.nott_2019</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="using-qtl-datasets" class="section level2">
-<h2 class="hasAnchor">
-<a href="#using-qtl-datasets" class="anchor"></a>Using QTL datasets</h2>
+<div class="section level3">
+<h3 id="using-qtl-datasets">Using QTL datasets<a class="anchor" aria-label="anchor" href="#using-qtl-datasets"></a>
+</h3>
 <ul>
 <li>Plot multiple QTL p-value columns (or really P-value columns from any kind of datset).<br>
 </li>
 <li>Each QTL dataset will be plotted as a new track.</li>
 </ul>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Make fake QTL P-values for the sake a demonstration</span>
-<span class="va">finemap_DT</span><span class="op">$</span><span class="va">fake_eQTL.P</span> <span class="op">&lt;-</span> <span class="va">finemap_DT</span><span class="op">$</span><span class="va">P</span>  <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">.9</span>,<span class="fl">.7</span><span class="op">)</span>
-<span class="va">finemap_DT</span><span class="op">$</span><span class="va">fake_sQTL.P</span> <span class="op">&lt;-</span> <span class="va">finemap_DT</span><span class="op">$</span><span class="va">P</span>  <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">.8</span>,<span class="fl">.5</span><span class="op">)</span>
+<span class="va">finemap_DT</span><span class="op">$</span><span class="va">fake_eQTL.P</span> <span class="op">&lt;-</span> <span class="va">finemap_DT</span><span class="op">$</span><span class="va">P</span>  <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">.9</span>,<span class="fl">.7</span><span class="op">)</span>
+<span class="va">finemap_DT</span><span class="op">$</span><span class="va">fake_sQTL.P</span> <span class="op">&lt;-</span> <span class="va">finemap_DT</span><span class="op">$</span><span class="va">P</span>  <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">.8</span>,<span class="fl">.5</span><span class="op">)</span>
 
 <span class="va">trk_plot.qtl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PLOT.locus.html">PLOT.locus</a></span><span class="op">(</span>finemap_dat<span class="op">=</span><span class="va">finemap_DT</span>, 
                            LD_matrix<span class="op">=</span><span class="va">LD_matrix</span>, 
                            LD_reference<span class="op">=</span><span class="va">LD_reference</span>,
                            locus_dir<span class="op">=</span><span class="va">locus_dir</span>,
                            
-                           QTL_prefixes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"fake_eQTL."</span>,<span class="st">"fake_sQTL."</span><span class="op">)</span>, 
+                           QTL_prefixes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"fake_eQTL."</span>,<span class="st">"fake_sQTL."</span><span class="op">)</span>, 
                            
                            save_plot<span class="op">=</span><span class="cn">F</span>,
                            show_plot<span class="op">=</span><span class="va">show_plot</span>,
-                           plot.zoom<span class="op">=</span><span class="va">plot.zoom</span><span class="op">)</span>
-<span class="co">#&gt; +-------- Locus Plot: BST1--------+</span>
-<span class="co">#&gt; [1] "+ Filling NAs in CS cols with 0"</span>
-<span class="co">#&gt; [1] "+ Filling NAs in PP cols with 0"</span>
-<span class="co">#&gt; [1] "+ LD:: LD_matrix detected. Coloring SNPs by LD with lead SNP."</span>
-<span class="co">#&gt; [1] "++ PLOT:: GWAS full window track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: GWAS track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: fake_eQTL. track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: fake_sQTL. track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: Merged fine-mapping track"</span>
-<span class="co">#&gt; [1] "Melting PP and CS from 5 fine-mapping methods"</span>
-<span class="co">#&gt; [1] "++ PLOT:: Adding Gene model track."</span>
-<span class="co">#&gt; max_transcripts=1.</span>
-<span class="co">#&gt; 15 transcripts from 15 genes returned.</span>
-<span class="co">#&gt; Fetching data...OK</span>
-<span class="co">#&gt; Parsing exons...OK</span>
-<span class="co">#&gt; Defining introns...OK</span>
-<span class="co">#&gt; Defining UTRs...OK</span>
-<span class="co">#&gt; Defining CDS...OK</span>
-<span class="co">#&gt; aggregating...</span>
-<span class="co">#&gt; Done</span>
-<span class="co">#&gt; Constructing graphics...</span>
-<span class="co">#&gt; [1] "+ Adding vertical lines to highlight SNP groups..."</span>
-<span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 10x +&lt;+&lt;+&lt;+&lt;+</span>
-<span class="co">#&gt; [1] "+ PLOT:: Get window suffix..."</span>
-<span class="co">#&gt; [1] "+ Constructing zoom polygon..."</span>
-<span class="co">#&gt; [1] "+ Highlighting zoom origin..."</span>
-<span class="co">#&gt; [1] "+ Removing subplot margins..."</span>
-<span class="co">#&gt; [1] "+ Reordering tracks..."</span>
-<span class="co">#&gt; [1] "+ Ensuring last track shows genomic units..."</span>
-<span class="co">#&gt; [1] "+ Aligning xlimits for each subplot..."</span>
-<span class="co">#&gt; [1] "+ Checking track heights..."</span></code></pre></div>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">trk_plot.qtl</span><span class="op">)</span>
-<span class="co">#&gt; $`10x`</span></code></pre></div>
-<p><img src="plotting_vignette_files/figure-html/unnamed-chunk-7-1.png" width="960"></p>
-<details><summary><h1>
-Session Info
-</h1>
-</summary><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">sessioninfo</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sessioninfo/man/session_info.html">session_info</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; ─ Session info ───────────────────────────────────────────────────────────────</span>
-<span class="co">#&gt;  setting  value                       </span>
-<span class="co">#&gt;  version  R version 4.1.0 (2021-05-18)</span>
-<span class="co">#&gt;  os       macOS Big Sur 10.16         </span>
-<span class="co">#&gt;  system   x86_64, darwin17.0          </span>
-<span class="co">#&gt;  ui       X11                         </span>
-<span class="co">#&gt;  language (EN)                        </span>
-<span class="co">#&gt;  collate  en_GB.UTF-8                 </span>
-<span class="co">#&gt;  ctype    en_GB.UTF-8                 </span>
-<span class="co">#&gt;  tz       Europe/London               </span>
-<span class="co">#&gt;  date     2021-06-22                  </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; ─ Packages ───────────────────────────────────────────────────────────────────</span>
-<span class="co">#&gt;  package              * version  date       lib</span>
-<span class="co">#&gt;  AnnotationDbi        * 1.54.1   2021-06-08 [3]</span>
-<span class="co">#&gt;  AnnotationFilter     * 1.16.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  ape                    5.5      2021-04-25 [3]</span>
-<span class="co">#&gt;  assertthat             0.2.1    2019-03-21 [3]</span>
-<span class="co">#&gt;  backports              1.2.1    2020-12-09 [3]</span>
-<span class="co">#&gt;  base64enc              0.1-3    2015-07-28 [3]</span>
-<span class="co">#&gt;  Biobase              * 2.52.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  BiocFileCache          2.0.0    2021-05-19 [3]</span>
-<span class="co">#&gt;  BiocGenerics         * 0.38.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  BiocIO                 1.2.0    2021-05-19 [3]</span>
-<span class="co">#&gt;  BiocManager            1.30.16  2021-06-15 [3]</span>
-<span class="co">#&gt;  BiocParallel           1.26.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  biomaRt                2.48.1   2021-06-08 [3]</span>
-<span class="co">#&gt;  Biostrings             2.60.1   2021-06-06 [3]</span>
-<span class="co">#&gt;  biovizBase             1.40.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  bit                    4.0.4    2020-08-04 [3]</span>
-<span class="co">#&gt;  bit64                  4.0.5    2020-08-30 [3]</span>
-<span class="co">#&gt;  bitops                 1.0-7    2021-04-24 [3]</span>
-<span class="co">#&gt;  blob                   1.2.1    2020-01-20 [3]</span>
-<span class="co">#&gt;  boot                   1.3-28   2021-05-03 [3]</span>
-<span class="co">#&gt;  BSgenome               1.60.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  bslib                  0.2.5.1  2021-05-18 [3]</span>
-<span class="co">#&gt;  cachem                 1.0.5    2021-05-15 [3]</span>
-<span class="co">#&gt;  checkmate              2.0.0    2020-02-06 [3]</span>
-<span class="co">#&gt;  class                  7.3-19   2021-05-03 [3]</span>
-<span class="co">#&gt;  cli                    2.5.0    2021-04-26 [3]</span>
-<span class="co">#&gt;  cluster                2.1.2    2021-04-17 [3]</span>
-<span class="co">#&gt;  colorspace             2.0-1    2021-05-04 [3]</span>
-<span class="co">#&gt;  crayon                 1.4.1    2021-02-08 [3]</span>
-<span class="co">#&gt;  crul                   1.1.0    2021-02-15 [3]</span>
-<span class="co">#&gt;  curl                   4.3.1    2021-04-30 [3]</span>
-<span class="co">#&gt;  data.table             1.14.0   2021-02-21 [3]</span>
-<span class="co">#&gt;  DBI                    1.1.1    2021-01-15 [3]</span>
-<span class="co">#&gt;  dbplyr                 2.1.1    2021-04-06 [3]</span>
-<span class="co">#&gt;  DelayedArray           0.18.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  desc                   1.3.0    2021-03-05 [3]</span>
-<span class="co">#&gt;  DescTools              0.99.42  2021-06-17 [3]</span>
-<span class="co">#&gt;  dichromat              2.0-0    2013-01-24 [3]</span>
-<span class="co">#&gt;  digest                 0.6.27   2020-10-24 [3]</span>
-<span class="co">#&gt;  dnet                   1.1.7    2020-02-20 [3]</span>
-<span class="co">#&gt;  dplyr                  1.0.7    2021-06-18 [3]</span>
-<span class="co">#&gt;  e1071                  1.7-7    2021-05-23 [3]</span>
-<span class="co">#&gt;  echolocatoR          * 0.1.2    2021-06-22 [1]</span>
-<span class="co">#&gt;  ellipsis               0.3.2    2021-04-29 [3]</span>
-<span class="co">#&gt;  EnsDb.Hsapiens.v75   * 2.99.0   2021-06-06 [3]</span>
-<span class="co">#&gt;  ensembldb            * 2.16.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  evaluate               0.14     2019-05-28 [3]</span>
-<span class="co">#&gt;  Exact                  2.1      2020-10-02 [3]</span>
-<span class="co">#&gt;  expm                   0.999-6  2021-01-13 [3]</span>
-<span class="co">#&gt;  fansi                  0.5.0    2021-05-25 [3]</span>
-<span class="co">#&gt;  farver                 2.1.0    2021-02-28 [3]</span>
-<span class="co">#&gt;  fastmap                1.1.0    2021-01-25 [3]</span>
-<span class="co">#&gt;  filelock               1.0.2    2018-10-05 [3]</span>
-<span class="co">#&gt;  foreign                0.8-81   2020-12-22 [3]</span>
-<span class="co">#&gt;  Formula                1.2-4    2020-10-16 [3]</span>
-<span class="co">#&gt;  fs                     1.5.0    2020-07-31 [3]</span>
-<span class="co">#&gt;  generics               0.1.0    2020-10-31 [3]</span>
-<span class="co">#&gt;  GenomeInfoDb         * 1.28.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  GenomeInfoDbData       1.2.6    2021-05-28 [3]</span>
-<span class="co">#&gt;  GenomicAlignments      1.28.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  GenomicFeatures      * 1.44.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  GenomicRanges        * 1.44.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  GGally                 2.1.2    2021-06-21 [3]</span>
-<span class="co">#&gt;  ggbio                  1.40.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  ggnetwork              0.5.9    2021-06-04 [3]</span>
-<span class="co">#&gt;  ggplot2              * 3.3.4    2021-06-16 [3]</span>
-<span class="co">#&gt;  ggrepel                0.9.1    2021-01-15 [3]</span>
-<span class="co">#&gt;  gld                    2.6.2    2020-01-08 [3]</span>
-<span class="co">#&gt;  glue                   1.4.2    2020-08-27 [3]</span>
-<span class="co">#&gt;  graph                  1.70.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  gridExtra              2.3      2017-09-09 [3]</span>
-<span class="co">#&gt;  gtable                 0.3.0    2019-03-25 [3]</span>
-<span class="co">#&gt;  hexbin                 1.28.2   2021-01-08 [3]</span>
-<span class="co">#&gt;  highr                  0.9      2021-04-16 [3]</span>
-<span class="co">#&gt;  Hmisc                  4.5-0    2021-02-28 [3]</span>
-<span class="co">#&gt;  hms                    1.1.0    2021-05-17 [3]</span>
-<span class="co">#&gt;  htmlTable              2.2.1    2021-05-18 [3]</span>
-<span class="co">#&gt;  htmltools              0.5.1.1  2021-01-22 [3]</span>
-<span class="co">#&gt;  htmlwidgets            1.5.3    2020-12-10 [3]</span>
-<span class="co">#&gt;  httpcode               0.3.0    2020-04-10 [3]</span>
-<span class="co">#&gt;  httr                   1.4.2    2020-07-20 [3]</span>
-<span class="co">#&gt;  igraph                 1.2.6    2020-10-06 [3]</span>
-<span class="co">#&gt;  IRanges              * 2.26.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  jpeg                   0.1-8.1  2019-10-24 [3]</span>
-<span class="co">#&gt;  jquerylib              0.1.4    2021-04-26 [3]</span>
-<span class="co">#&gt;  jsonlite               1.7.2    2020-12-09 [3]</span>
-<span class="co">#&gt;  KEGGREST               1.32.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  knitr                  1.33     2021-04-24 [3]</span>
-<span class="co">#&gt;  labeling               0.4.2    2020-10-20 [3]</span>
-<span class="co">#&gt;  lattice                0.20-44  2021-05-02 [3]</span>
-<span class="co">#&gt;  latticeExtra           0.6-29   2019-12-19 [3]</span>
-<span class="co">#&gt;  lazyeval               0.2.2    2019-03-15 [3]</span>
-<span class="co">#&gt;  lifecycle              1.0.0    2021-02-15 [3]</span>
-<span class="co">#&gt;  lmom                   2.8      2019-03-12 [3]</span>
-<span class="co">#&gt;  magrittr               2.0.1    2020-11-17 [3]</span>
-<span class="co">#&gt;  mapproj                1.2.7    2020-02-03 [3]</span>
-<span class="co">#&gt;  maps                   3.3.0    2018-04-03 [3]</span>
-<span class="co">#&gt;  MASS                   7.3-54   2021-05-03 [3]</span>
-<span class="co">#&gt;  Matrix                 1.3-4    2021-06-01 [3]</span>
-<span class="co">#&gt;  MatrixGenerics         1.4.0    2021-05-19 [3]</span>
-<span class="co">#&gt;  matrixStats            0.59.0   2021-06-01 [3]</span>
-<span class="co">#&gt;  memoise                2.0.0    2021-01-26 [3]</span>
-<span class="co">#&gt;  munsell                0.5.0    2018-06-12 [3]</span>
-<span class="co">#&gt;  mvtnorm                1.1-2    2021-06-07 [3]</span>
-<span class="co">#&gt;  nlme                   3.1-152  2021-02-04 [3]</span>
-<span class="co">#&gt;  nnet                   7.3-16   2021-05-03 [3]</span>
-<span class="co">#&gt;  OrganismDbi            1.34.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  osfr                   0.2.8    2020-02-17 [3]</span>
-<span class="co">#&gt;  pals                   1.7      2021-04-17 [3]</span>
-<span class="co">#&gt;  patchwork              1.1.1    2020-12-17 [3]</span>
-<span class="co">#&gt;  pillar                 1.6.1    2021-05-16 [3]</span>
-<span class="co">#&gt;  pkgconfig              2.0.3    2019-09-22 [3]</span>
-<span class="co">#&gt;  pkgdown                1.6.1    2020-09-12 [3]</span>
-<span class="co">#&gt;  plyr                   1.8.6    2020-03-03 [3]</span>
-<span class="co">#&gt;  png                    0.1-7    2013-12-03 [3]</span>
-<span class="co">#&gt;  prettyunits            1.1.1    2020-01-24 [3]</span>
-<span class="co">#&gt;  progress               1.2.2    2019-05-16 [3]</span>
-<span class="co">#&gt;  ProtGenerics           1.24.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  proxy                  0.4-26   2021-06-07 [3]</span>
-<span class="co">#&gt;  purrr                  0.3.4    2020-04-17 [3]</span>
-<span class="co">#&gt;  R6                     2.5.0    2020-10-28 [3]</span>
-<span class="co">#&gt;  ragg                   1.1.3    2021-06-09 [3]</span>
-<span class="co">#&gt;  rappdirs               0.3.3    2021-01-31 [3]</span>
-<span class="co">#&gt;  RBGL                   1.68.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  RCircos                1.2.1    2019-03-12 [3]</span>
-<span class="co">#&gt;  RColorBrewer           1.1-2    2014-12-07 [3]</span>
-<span class="co">#&gt;  Rcpp                   1.0.6    2021-01-15 [3]</span>
-<span class="co">#&gt;  RCurl                  1.98-1.3 2021-03-16 [3]</span>
-<span class="co">#&gt;  readr                  1.4.0    2020-10-05 [3]</span>
-<span class="co">#&gt;  reshape                0.8.8    2018-10-23 [3]</span>
-<span class="co">#&gt;  reshape2               1.4.4    2020-04-09 [3]</span>
-<span class="co">#&gt;  restfulr               0.0.13   2017-08-06 [3]</span>
-<span class="co">#&gt;  Rgraphviz              2.36.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  rjson                  0.2.20   2018-06-08 [3]</span>
-<span class="co">#&gt;  rlang                  0.4.11   2021-04-30 [3]</span>
-<span class="co">#&gt;  rmarkdown              2.9      2021-06-15 [3]</span>
-<span class="co">#&gt;  rootSolve              1.8.2.1  2020-04-27 [3]</span>
-<span class="co">#&gt;  rpart                  4.1-15   2019-04-12 [3]</span>
-<span class="co">#&gt;  rprojroot              2.0.2    2020-11-15 [3]</span>
-<span class="co">#&gt;  Rsamtools              2.8.0    2021-05-19 [3]</span>
-<span class="co">#&gt;  RSQLite                2.2.7    2021-04-22 [3]</span>
-<span class="co">#&gt;  rstudioapi             0.13     2020-11-12 [3]</span>
-<span class="co">#&gt;  rtracklayer            1.52.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  S4Vectors            * 0.30.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  sass                   0.4.0    2021-05-12 [3]</span>
-<span class="co">#&gt;  scales                 1.1.1    2020-05-11 [3]</span>
-<span class="co">#&gt;  sessioninfo            1.1.1    2018-11-05 [3]</span>
-<span class="co">#&gt;  stringi                1.6.2    2021-05-17 [3]</span>
-<span class="co">#&gt;  stringr                1.4.0    2019-02-10 [3]</span>
-<span class="co">#&gt;  SummarizedExperiment   1.22.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  supraHex               1.30.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  survival               3.2-11   2021-04-26 [3]</span>
-<span class="co">#&gt;  systemfonts            1.0.2    2021-05-11 [3]</span>
-<span class="co">#&gt;  textshaping            0.3.5    2021-06-09 [3]</span>
-<span class="co">#&gt;  tibble                 3.1.2    2021-05-16 [3]</span>
-<span class="co">#&gt;  tidyr                  1.1.3    2021-03-03 [3]</span>
-<span class="co">#&gt;  tidyselect             1.1.1    2021-04-30 [3]</span>
-<span class="co">#&gt;  utf8                   1.2.1    2021-03-12 [3]</span>
-<span class="co">#&gt;  VariantAnnotation      1.38.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  vctrs                  0.3.8    2021-04-29 [3]</span>
-<span class="co">#&gt;  withr                  2.4.2    2021-04-18 [3]</span>
-<span class="co">#&gt;  xfun                   0.24     2021-06-15 [3]</span>
-<span class="co">#&gt;  XGR                    1.1.8    2021-06-22 [3]</span>
-<span class="co">#&gt;  XML                    3.99-0.6 2021-03-16 [3]</span>
-<span class="co">#&gt;  xml2                   1.3.2    2020-04-23 [3]</span>
-<span class="co">#&gt;  XVector                0.32.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  yaml                   2.2.1    2020-02-01 [3]</span>
-<span class="co">#&gt;  zlibbioc               1.38.0   2021-05-19 [3]</span>
-<span class="co">#&gt;  source                            </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  local                             </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  Github (hfang-bristol/XGR@4b86c9f)</span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt;  CRAN (R 4.1.0)                    </span>
-<span class="co">#&gt;  Bioconductor                      </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [1] /private/var/folders/zq/h7mtybc533b1qzkys_ttgpth0000gn/T/RtmplIUggK/temp_libpath50a46ff44e71</span>
-<span class="co">#&gt; [2] /private/var/folders/zq/h7mtybc533b1qzkys_ttgpth0000gn/T/RtmplIUggK/temp_libpath50a42a4792c9</span>
-<span class="co">#&gt; [3] /Library/Frameworks/R.framework/Versions/4.1/Resources/library</span></code></pre></div>
-<details></details></details>
+                           plot.zoom<span class="op">=</span><span class="va">plot.zoom</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">trk_plot.qtl</span><span class="op">)</span></code></pre></div>
 </div>
+</div>
+<div class="section level2">
+<h2 id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
+</h2>
+<details><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; R version 4.1.2 (2021-11-01)</span>
+<span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span>
+<span class="co">#&gt; Running under: Ubuntu 20.04.3 LTS</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Matrix products: default</span>
+<span class="co">#&gt; BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; locale:</span>
+<span class="co">#&gt;  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span>
+<span class="co">#&gt;  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span>
+<span class="co">#&gt;  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=C             </span>
+<span class="co">#&gt;  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span>
+<span class="co">#&gt;  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span>
+<span class="co">#&gt; [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; attached base packages:</span>
+<span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; other attached packages:</span>
+<span class="co">#&gt; [1] echolocatoR_0.2.2 BiocStyle_2.22.0 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; loaded via a namespace (and not attached):</span>
+<span class="co">#&gt;   [1] backports_1.4.1             Hmisc_4.6-0                </span>
+<span class="co">#&gt;   [3] BiocFileCache_2.2.1         systemfonts_1.0.4          </span>
+<span class="co">#&gt;   [5] plyr_1.8.6                  lazyeval_0.2.2             </span>
+<span class="co">#&gt;   [7] splines_4.1.2               BiocParallel_1.28.3        </span>
+<span class="co">#&gt;   [9] GenomeInfoDb_1.30.1         ggplot2_3.3.5              </span>
+<span class="co">#&gt;  [11] digest_0.6.29               ensembldb_2.18.3           </span>
+<span class="co">#&gt;  [13] htmltools_0.5.2             fansi_1.0.2                </span>
+<span class="co">#&gt;  [15] magrittr_2.0.2              checkmate_2.0.0            </span>
+<span class="co">#&gt;  [17] memoise_2.0.1               BSgenome_1.62.0            </span>
+<span class="co">#&gt;  [19] cluster_2.1.2               Biostrings_2.62.0          </span>
+<span class="co">#&gt;  [21] matrixStats_0.61.0          ggbio_1.42.0               </span>
+<span class="co">#&gt;  [23] pkgdown_2.0.2               prettyunits_1.1.1          </span>
+<span class="co">#&gt;  [25] jpeg_0.1-9                  colorspace_2.0-3           </span>
+<span class="co">#&gt;  [27] rappdirs_0.3.3              blob_1.2.2                 </span>
+<span class="co">#&gt;  [29] textshaping_0.3.6           xfun_0.30                  </span>
+<span class="co">#&gt;  [31] dplyr_1.0.8                 crayon_1.5.0               </span>
+<span class="co">#&gt;  [33] RCurl_1.98-1.6              jsonlite_1.8.0             </span>
+<span class="co">#&gt;  [35] graph_1.72.0                Exact_3.1                  </span>
+<span class="co">#&gt;  [37] VariantAnnotation_1.40.0    survival_3.2-13            </span>
+<span class="co">#&gt;  [39] glue_1.6.2                  gtable_0.3.0               </span>
+<span class="co">#&gt;  [41] zlibbioc_1.40.0             XVector_0.34.0             </span>
+<span class="co">#&gt;  [43] DelayedArray_0.20.0         BiocGenerics_0.40.0        </span>
+<span class="co">#&gt;  [45] scales_1.1.1                mvtnorm_1.1-3              </span>
+<span class="co">#&gt;  [47] DBI_1.1.2                   GGally_2.1.2               </span>
+<span class="co">#&gt;  [49] Rcpp_1.0.8                  progress_1.2.2             </span>
+<span class="co">#&gt;  [51] htmlTable_2.4.0             foreign_0.8-81             </span>
+<span class="co">#&gt;  [53] bit_4.0.4                   proxy_0.4-26               </span>
+<span class="co">#&gt;  [55] OrganismDbi_1.36.0          Formula_1.2-4              </span>
+<span class="co">#&gt;  [57] stats4_4.1.2                htmlwidgets_1.5.4          </span>
+<span class="co">#&gt;  [59] httr_1.4.2                  RColorBrewer_1.1-2         </span>
+<span class="co">#&gt;  [61] ellipsis_0.3.2              pkgconfig_2.0.3            </span>
+<span class="co">#&gt;  [63] reshape_0.8.8               XML_3.99-0.9               </span>
+<span class="co">#&gt;  [65] dbplyr_2.1.1                nnet_7.3-16                </span>
+<span class="co">#&gt;  [67] sass_0.4.0                  utf8_1.2.2                 </span>
+<span class="co">#&gt;  [69] tidyselect_1.1.2            rlang_1.0.1                </span>
+<span class="co">#&gt;  [71] reshape2_1.4.4              AnnotationDbi_1.56.2       </span>
+<span class="co">#&gt;  [73] munsell_0.5.0               tools_4.1.2                </span>
+<span class="co">#&gt;  [75] cachem_1.0.6                cli_3.2.0                  </span>
+<span class="co">#&gt;  [77] generics_0.1.2              RSQLite_2.2.10             </span>
+<span class="co">#&gt;  [79] evaluate_0.15               stringr_1.4.0              </span>
+<span class="co">#&gt;  [81] fastmap_1.1.0               yaml_2.3.5                 </span>
+<span class="co">#&gt;  [83] ragg_1.2.2                  knitr_1.37                 </span>
+<span class="co">#&gt;  [85] bit64_4.0.5                 fs_1.5.2                   </span>
+<span class="co">#&gt;  [87] purrr_0.3.4                 KEGGREST_1.34.0            </span>
+<span class="co">#&gt;  [89] AnnotationFilter_1.18.0     rootSolve_1.8.2.3          </span>
+<span class="co">#&gt;  [91] RBGL_1.70.0                 xml2_1.3.3                 </span>
+<span class="co">#&gt;  [93] biomaRt_2.50.3              compiler_4.1.2             </span>
+<span class="co">#&gt;  [95] rstudioapi_0.13             filelock_1.0.2             </span>
+<span class="co">#&gt;  [97] curl_4.3.2                  png_0.1-7                  </span>
+<span class="co">#&gt;  [99] e1071_1.7-9                 tibble_3.1.6               </span>
+<span class="co">#&gt; [101] bslib_0.3.1                 DescTools_0.99.44          </span>
+<span class="co">#&gt; [103] stringi_1.7.6               GenomicFeatures_1.46.5     </span>
+<span class="co">#&gt; [105] desc_1.4.0                  lattice_0.20-45            </span>
+<span class="co">#&gt; [107] ProtGenerics_1.26.0         Matrix_1.3-4               </span>
+<span class="co">#&gt; [109] vctrs_0.3.8                 pillar_1.7.0               </span>
+<span class="co">#&gt; [111] lifecycle_1.0.1             BiocManager_1.30.16        </span>
+<span class="co">#&gt; [113] jquerylib_0.1.4             data.table_1.14.2          </span>
+<span class="co">#&gt; [115] bitops_1.0-7                lmom_2.8                   </span>
+<span class="co">#&gt; [117] rtracklayer_1.54.0          GenomicRanges_1.46.1       </span>
+<span class="co">#&gt; [119] R6_2.5.1                    BiocIO_1.4.0               </span>
+<span class="co">#&gt; [121] latticeExtra_0.6-29         bookdown_0.24              </span>
+<span class="co">#&gt; [123] gridExtra_2.3               IRanges_2.28.0             </span>
+<span class="co">#&gt; [125] gld_2.6.4                   dichromat_2.0-0            </span>
+<span class="co">#&gt; [127] boot_1.3-28                 MASS_7.3-54                </span>
+<span class="co">#&gt; [129] assertthat_0.2.1            SummarizedExperiment_1.24.0</span>
+<span class="co">#&gt; [131] rprojroot_2.0.2             rjson_0.2.21               </span>
+<span class="co">#&gt; [133] GenomicAlignments_1.30.0    Rsamtools_2.10.0           </span>
+<span class="co">#&gt; [135] S4Vectors_0.32.3            GenomeInfoDbData_1.2.7     </span>
+<span class="co">#&gt; [137] expm_0.999-6                parallel_4.1.2             </span>
+<span class="co">#&gt; [139] hms_1.1.1                   grid_4.1.2                 </span>
+<span class="co">#&gt; [141] rpart_4.1-15                class_7.3-19               </span>
+<span class="co">#&gt; [143] rmarkdown_2.12              MatrixGenerics_1.6.0       </span>
+<span class="co">#&gt; [145] biovizBase_1.42.0           Biobase_2.54.0             </span>
+<span class="co">#&gt; [147] base64enc_0.1-3             restfulr_0.0.13</span></code></pre></div>
+<details></details></details>
 </div>
   </div>
 
@@ -1024,11 +456,13 @@ Session Info
 
 
       <footer><div class="copyright">
-  <p>Developed by Brian Schilder.</p>
+  <p></p>
+<p>Developed by Brian Schilder, Jack Humphrey, Towfique Raj.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -1036,6 +470,8 @@ Session Info
 
   
 
+
+  
 
   </body>
 </html>

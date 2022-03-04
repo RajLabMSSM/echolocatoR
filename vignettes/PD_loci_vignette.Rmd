@@ -1,23 +1,13 @@
 ---
-title: "PD loci"
-author: "Brian M. Schilder"
-date: "Most recent update:<br> `r Sys.Date()`"
-output: 
-  rmarkdown::html_document: 
-    theme: spacelab
-    highlight: zenburn 
-    code_folding: show 
-    toc: true 
-    toc_float: true
-    smooth_scroll: true
-    number_sections: false 
-    self_contained: true
-editor_options: 
-  chunk_output_type: inline
+title: "PD loci" 
+author: "<h4>Author: <i>Brian M. Schilder</i></h4>" 
+date: "<h4>Updated: <i>`r format( Sys.Date(), '%b-%d-%Y')`</i></h4>"
+output:
+  BiocStyle::html_document
 vignette: >
-  %\VignetteIndexEntry{PD_loci}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+    %\VignetteIndexEntry{PD_loci} 
+    %\usepackage[utf8]{inputenc}
+    %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r, include = T, error = F, dpi=300}
@@ -36,7 +26,7 @@ knitr::opts_knit$set(
 # devtools::build_vignettes(quiet = F)
 ```
 
-```{r setup, root.dir="~/Desktop", dpi=300}
+```{r setup, eval=F}
 library(echolocatoR) 
 library(data.table)
 
@@ -63,7 +53,7 @@ locus_list <- c("LRRK2","MBNL2","DYRK1A","FCGR2A","MED12L")
 
 First, we'll download the multi-finemap results files.  
 
-```{r multi_finemap}
+```{r multi_finemap, eval=F}
 local_finemap <- GITHUB.portal_query(results_dir = results_dir, 
                                      dataset_types="GWAS",
                                      phenotypes = c("parkinson"),
@@ -76,7 +66,7 @@ local_finemap <- GITHUB.portal_query(results_dir = results_dir,
 
 Next, we'll download the files containing LD with the lead GWAS SNP. 
 
-```{r LD}
+```{r LD, eval=F}
 local_ld <- GITHUB.portal_query(results_dir = results_dir, 
                                  dataset_types="GWAS",
                                  phenotypes = c("parkinson"),
@@ -92,14 +82,14 @@ This way, you can simply find the right file path my locus name.
 
 This function also infers a number of other useful variables from this data. 
 
-```{r Data dictionary}
+```{r Data dictionary, eval=F}
 named_list <- list("finemap"=local_finemap,
                    "LD"=local_ld)
 data_dict <- GITHUB.make_data_dict(named_list)
 ```
 
 
-```{r LRRK2, attr.output='style="max-height: 200px;"'} 
+```{r LRRK2, attr.output='style="max-height: 200px;"', eval=F} 
 locus <- "LRRK2"
 
 track_order <- names(PLOT.heights_dict())
@@ -123,7 +113,7 @@ LRRK2 <- PLOT.locus(finemap_dat=fread(data_dict$finemap[[locus]]),
                     plot.zoom=c("1x","20x","25x")) 
 ```
 
-```{r MBNL2, attr.output='style="max-height: 200px;"'} 
+```{r MBNL2, attr.output='style="max-height: 200px;"', eval=F} 
 locus <- "MBNL2"
 
 track_order <- names(PLOT.heights_dict())
@@ -149,7 +139,7 @@ MBNL2 <- PLOT.locus(finemap_dat=fread(data_dict$finemap[[locus]]),
 ```
  
  
-```{r DYRK1A, attr.output='style="max-height: 200px;"'} 
+```{r DYRK1A, attr.output='style="max-height: 200px;"', eval=F} 
 locus <- "DYRK1A"
 
 DYRK1A <- PLOT.locus(finemap_dat=fread(data_dict$finemap[[locus]]),   
@@ -170,7 +160,7 @@ DYRK1A <- PLOT.locus(finemap_dat=fread(data_dict$finemap[[locus]]),
  
 This region has a lot of genes so we're going to subset the main view a bit. 
  
-```{r FCGR2A, attr.output='style="max-height: 200px;"'} 
+```{r FCGR2A, attr.output='style="max-height: 200px;"', eval=F} 
 locus <- "FCGR2A"
 # 
 # finemap_dat <- fread(data_dict$finemap[[locus]])
@@ -196,7 +186,7 @@ FCGR2A <- PLOT.locus(finemap_dat=fread(data_dict$finemap[[locus]]),
 
 # Modify plots
 
-```{r}
+```{r, eval=F}
 zoom <- "25x"
 locus <- "FCGR2A"#"FCGR2A"
 plot_zoom_list <- FCGR2A

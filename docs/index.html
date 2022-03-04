@@ -59,9 +59,6 @@
       <a href="articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
     <li>
-      <a href="articles/hexSticker.html">hexSticker</a>
-    </li>
-    <li>
       <a href="articles/plotting_vignette.html">Plotting vignette</a>
     </li>
     <li>
@@ -89,26 +86,26 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div class="section level1">
-<div class="page-header"><h1 id="readme">README<a class="anchor" aria-label="anchor" href="#readme"></a>
-</h1></div>
-<p>&lt;img src=‘<a href="https://github.com/neurogenomics/echolocatoR/raw/main/inst/hex/echolocatoR.png" class="external-link uri">https://github.com/neurogenomics/echolocatoR/raw/main/inst/hex/echolocatoR.png</a>’, height=‘400’&gt; Brian M. Schilder Most recent update:<br> 2022-03-04</p>
-<!-- badges: start -->
 
-<!-- badges: end -->
+<img src="https://github.com/RajLabMSSM/echolocatoR/raw/%20%20dev/inst/hex/echolocatoR.png" height="300"><br><br><a href="https://github.com/RajLabMSSM/echolocatoR" class="external-link"><img src="https://img.shields.io/badge/devel%20version-0.2.2-black.svg"></a> <a href="https://github.com/RajLabMSSM/echolocatoR/actions" class="external-link"><img src="https://github.com/RajLabMSSM/echolocatoR/workflows/R-CMD-check-bioc/badge.svg" alt="R build status"></a> <a href="https://github.com/RajLabMSSM/echolocatoR/commits/master" class="external-link"><img src="https://img.shields.io/github/last-commit/RajLabMSSM/echolocatoR.svg"></a> <a href="https://codecov.io/gh/RajLabMSSM/echolocatoR" class="external-link"><img src="https://codecov.io/gh/RajLabMSSM/echolocatoR/branch/master/graph/badge.svg"></a> <a href="https://cran.r-project.org/web/licenses/MIT" class="external-link"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a> <a href="https://doi.org/10.1093/bioinformatics/btab658" class="external-link"><img src="https://img.shields.io/badge/doi-10.1093/bioinformatics/btab658-blue.svg"></a>
+<h5>
+Author: <i>Brian M. Schilder</i>
+</h5>
+<h5>
+README updated: <i>Mar-04-2022</i>
+</h5>
 <center>
-<h1>
+<div class="page-header"><h1>
 ) ) ) ) ))) <span class="emoji" data-emoji="bat">🦇</span> echolocatoR <span class="emoji" data-emoji="bat">🦇</span> ((( ( ( ( (
-</h1>
+</h1></div>
 </center>
-<h3 id="readme-1">
+<h3>
 Automated statistical and functional fine-mapping with extensive access to genome-wide datasets
-<a class="anchor" aria-label="anchor" href="#readme-1"></a>
 </h3>
 <hr>
 <p>If you use <code>echolocatoR</code>, please cite:</p>
 <blockquote>
-<p>Jack Humphrey and Towfique Raj (NA). echolocatoR: Automated genomic fine-mapping. R package version 0.2.2. <a href="https://github.com/RajLabMSSM/echolocatoR" class="external-link uri">https://github.com/RajLabMSSM/echolocatoR</a></p>
+<p>Brian M Schilder, Jack Humphrey, Towfique Raj (2021) echolocatoR: an automated end-to-end statistical and functional genomic fine-mapping pipeline, <em>Bioinformatics</em>; btab658, <a href="https://doi.org/10.1093/bioinformatics/btab658" class="external-link uri">https://doi.org/10.1093/bioinformatics/btab658</a></p>
 </blockquote>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
@@ -174,7 +171,7 @@ Automated statistical and functional fine-mapping with extensive access to genom
 </h3>
 <p>In R:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="st">"remotes"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/row.names.html" class="external-link">row.names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html" class="external-link">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span><span class="op">}</span>
+<code class="sourceCode R"><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://remotes.r-lib.org" class="external-link">"remotes"</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span>
 
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"RajLabMSSM/echolocatoR"</span><span class="op">)</span></code></pre></div>
 </div>
@@ -608,7 +605,6 @@ All methods require the columns: <code>SNP</code>,<code>CHR</code>,<code>POS</co
 <a href="https://www.internationalgenome.org" class="external-link">1000 Genomes Phase 3</a><a class="anchor" aria-label="anchor" href="#1000-genomes-phase-3"></a>
 </h3>
 <hr>
-<hr>
 </div>
 </div>
 <div class="section level2">
@@ -616,7 +612,7 @@ All methods require the columns: <code>SNP</code>,<code>CHR</code>,<code>POS</co
 </h2>
 <p><a href="https://bschilder.github.io/BMSchilder/" target="_blank" class="external-link">Brian M. Schilder, Bioinformatician II</a><br><a href="https://rajlab.org" target="_blank" class="external-link">Raj Lab</a><br><a href="https://icahn.mssm.edu/about/departments/neuroscience" target="_blank" class="external-link">Department of Neuroscience, Icahn School of Medicine at Mount Sinai</a><br><img src="./images/sinai.png" alt="Sinai"></p>
 </div>
-</div>
+
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -654,14 +650,7 @@ All methods require the columns: <code>SNP</code>,<code>CHR</code>,<code>POS</co
 </ul>
 </div>
 
-<div class="dev-status">
-<h2 data-toc-skip>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-green.svg"></a></li>
-<li><a href="https://doi.org/10.1101/2020.10.22.351221" class="external-link"><img src="https://img.shields.io/badge/doi-10.1101/2020.10.22.351221-yellow.svg"></a></li>
-<li><a href="https://cran.r-project.org/web/licenses/MIT" class="external-link"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a></li>
-</ul>
-</div>
+
 
   </div>
 </div>

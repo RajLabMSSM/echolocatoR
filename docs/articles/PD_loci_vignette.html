@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,23 +33,20 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../articles/echolocatoR.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -60,9 +59,6 @@
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/full_pipeline_vignette.html">Full pipeline vignette</a>
-    </li>
-    <li>
       <a href="../articles/plotting_vignette.html">Plotting vignette</a>
     </li>
     <li>
@@ -73,7 +69,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/RajLabMSSM/echolocatoR/">
+  <a href="https://github.com/RajLabMSSM/echolocatoR/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -88,15 +84,19 @@
 
       
 
-      </header><script src="PD_loci_vignette_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>PD loci</h1>
-                        <h4 class="author">Brian M. Schilder</h4>
+                        <h4 data-toc-skip class="author"><h4>
+Author: <i>Brian M. Schilder</i>
+</h4></h4>
             
-            <h4 class="date">Most recent update:<br> 2021-06-22</h4>
+            <h4 data-toc-skip class="date"><h4>
+Updated: <i>Mar-04-2022</i>
+</h4></h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/RajLabMSSM/echolocatoR/blob/master/vignettes/PD_loci_vignette.Rmd"><code>vignettes/PD_loci_vignette.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/RajLabMSSM/echolocatoR/blob/HEAD/vignettes/PD_loci_vignette.Rmd" class="external-link"><code>vignettes/PD_loci_vignette.Rmd</code></a></small>
       <div class="hidden name"><code>PD_loci_vignette.Rmd</code></div>
 
     </div>
@@ -104,32 +104,29 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">root.dir</span> <span class="op">&lt;-</span> <span class="st">"~/Desktop"</span>
-<span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_chunk.html">opts_chunk</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>
+<code class="sourceCode R"><span class="va">root.dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_chunk.html" class="external-link">opts_chunk</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>
   collapse <span class="op">=</span> <span class="cn">TRUE</span>,
   comment <span class="op">=</span> <span class="st">"#&gt;"</span>,
   root.dir <span class="op">=</span> <span class="va">root.dir</span>, 
   fig.height <span class="op">=</span> <span class="fl">12</span>,
   fig.width <span class="op">=</span> <span class="fl">10</span>
 <span class="op">)</span>  
-<span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_knit.html">opts_knit</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>
+<span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_knit.html" class="external-link">opts_knit</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>
   root.dir <span class="op">=</span> <span class="va">root.dir</span>
   <span class="op">)</span>
 <span class="co"># knitr::opts_chunk$get("root.dir")</span>
 <span class="co"># devtools::build_vignettes(quiet = F)</span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RajLabMSSM/echolocatoR">echolocatoR</a></span><span class="op">)</span> 
-<span class="co">#&gt; Registered S3 method overwritten by 'GGally':</span>
-<span class="co">#&gt;   method from   </span>
-<span class="co">#&gt;   +.gg   ggplot2</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com">data.table</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RajLabMSSM/echolocatoR" class="external-link">echolocatoR</a></span><span class="op">)</span> 
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span>
 
-<span class="va">results_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>,<span class="st">"results"</span><span class="op">)</span></code></pre></div>
-<p>Here we take advantage of the fine-mapping results files already available on the <a href="https://rajlab.shinyapps.io/Fine_Mapping_Shiny">echolocatoR Fine-mapping Portal</a>.</p>
-<div id="download-data" class="section level1">
-<h1 class="hasAnchor">
-<a href="#download-data" class="anchor"></a>Download data</h1>
-<p><em>echolocatoR</em> includes some functions to search for and extract files from GitHub repos. In this case we’ll get files from the <a href="https://rajlab.shinyapps.io/Fine_Mapping_Shiny">echolocatoR Fine-mapping Portal</a>, but these functions can be used on any public GitHub repo.</p>
+<span class="va">results_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">root.dir</span>,<span class="st">"results"</span><span class="op">)</span></code></pre></div>
+<p>Here we take advantage of the fine-mapping results files already available on the <a href="https://rajlab.shinyapps.io/Fine_Mapping_Shiny" class="external-link">echolocatoR Fine-mapping Portal</a>.</p>
+<div class="section level2">
+<h2 id="download-data">Download data<a class="anchor" aria-label="anchor" href="#download-data"></a>
+</h2>
+<p><em>echolocatoR</em> includes some functions to search for and extract files from GitHub repos. In this case we’ll get files from the <a href="https://rajlab.shinyapps.io/Fine_Mapping_Shiny" class="external-link">echolocatoR Fine-mapping Portal</a>, but these functions can be used on any public GitHub repo.</p>
 <ul>
 <li>
 <code>GITHUB.list_files()</code>: Searches the repo for files matching your regex query.</li>
@@ -137,60 +134,48 @@
 <code>GITHUB.download_files()</code>: Not only does this download your files, but it reconstructs the original folder structure they were found in. This is useful for <em>echolocatoR</em> output files, which are automatically organized in a hierarchical folder structure (e.g. <em>results/GWAS/Nalls23andMe_2019</em>).</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">locus_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"LRRK2"</span>,<span class="st">"MBNL2"</span>,<span class="st">"DYRK1A"</span>,<span class="st">"FCGR2A"</span>,<span class="st">"MED12L"</span><span class="op">)</span>  </code></pre></div>
-<div id="multi-finemap-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#multi-finemap-data" class="anchor"></a>Multi-finemap data</h2>
+<code class="sourceCode R"><span class="va">locus_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"LRRK2"</span>,<span class="st">"MBNL2"</span>,<span class="st">"DYRK1A"</span>,<span class="st">"FCGR2A"</span>,<span class="st">"MED12L"</span><span class="op">)</span>  </code></pre></div>
+<div class="section level3">
+<h3 id="multi-finemap-data">Multi-finemap data<a class="anchor" aria-label="anchor" href="#multi-finemap-data"></a>
+</h3>
 <p>First, we’ll download the multi-finemap results files.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">local_finemap</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GITHUB.portal_query.html">GITHUB.portal_query</a></span><span class="op">(</span>results_dir <span class="op">=</span> <span class="va">results_dir</span>, 
                                      dataset_types<span class="op">=</span><span class="st">"GWAS"</span>,
-                                     phenotypes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"parkinson"</span><span class="op">)</span>,
+                                     phenotypes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"parkinson"</span><span class="op">)</span>,
                                      file_types <span class="op">=</span> <span class="st">"multi_finemap"</span>,
                                      loci <span class="op">=</span> <span class="va">locus_list</span>,
-                                     LD_panels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"UKB"</span><span class="op">)</span><span class="op">)</span>  
-<span class="co">#&gt; [1] "Fetching echolocatoR Fine-mapping Portal study metadata."</span>
-<span class="co">#&gt; [1] "+ 1 datasets remain after filtering."</span>
-<span class="co">#&gt; [1] "+ Searching for multi_finemap files..."</span>
-<span class="co">#&gt; [1] "+ 10 unique files identified."</span>
-<span class="co">#&gt; [1] "+ Downloading 5 files..."</span>
-<span class="co">#&gt; [1] "+ Returning local file paths."</span></code></pre></div>
+                                     LD_panels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"UKB"</span><span class="op">)</span><span class="op">)</span>  </code></pre></div>
 </div>
-<div id="ld-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#ld-data" class="anchor"></a>LD data</h2>
+<div class="section level3">
+<h3 id="ld-data">LD data<a class="anchor" aria-label="anchor" href="#ld-data"></a>
+</h3>
 <p>Next, we’ll download the files containing LD with the lead GWAS SNP.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">local_ld</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GITHUB.portal_query.html">GITHUB.portal_query</a></span><span class="op">(</span>results_dir <span class="op">=</span> <span class="va">results_dir</span>, 
                                  dataset_types<span class="op">=</span><span class="st">"GWAS"</span>,
-                                 phenotypes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"parkinson"</span><span class="op">)</span>,
+                                 phenotypes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"parkinson"</span><span class="op">)</span>,
                                  file_types <span class="op">=</span> <span class="st">"LD"</span>,
                                  loci <span class="op">=</span> <span class="va">locus_list</span>,
-                                 LD_panels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"UKB"</span><span class="op">)</span><span class="op">)</span>  
-<span class="co">#&gt; [1] "Fetching echolocatoR Fine-mapping Portal study metadata."</span>
-<span class="co">#&gt; [1] "+ 1 datasets remain after filtering."</span>
-<span class="co">#&gt; [1] "+ Searching for LD files..."</span>
-<span class="co">#&gt; [1] "+ 5 unique files identified."</span>
-<span class="co">#&gt; [1] "+ Downloading 5 files..."</span>
-<span class="co">#&gt; [1] "+ Returning local file paths."</span></code></pre></div>
+                                 LD_panels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"UKB"</span><span class="op">)</span><span class="op">)</span>  </code></pre></div>
 </div>
-<div id="data-dictionary" class="section level2">
-<h2 class="hasAnchor">
-<a href="#data-dictionary" class="anchor"></a>Data dictionary</h2>
+<div class="section level3">
+<h3 id="data-dictionary">Data dictionary<a class="anchor" aria-label="anchor" href="#data-dictionary"></a>
+</h3>
 <p>Now let’s put them in a data dictionary for easy retrieval later. This way, you can simply find the right file path my locus name.</p>
 <p>This function also infers a number of other useful variables from this data.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">named_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"finemap"</span><span class="op">=</span><span class="va">local_finemap</span>,
+<code class="sourceCode R"><span class="va">named_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"finemap"</span><span class="op">=</span><span class="va">local_finemap</span>,
                    <span class="st">"LD"</span><span class="op">=</span><span class="va">local_ld</span><span class="op">)</span>
 <span class="va">data_dict</span> <span class="op">&lt;-</span> <span class="fu">GITHUB.make_data_dict</span><span class="op">(</span><span class="va">named_list</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">locus</span> <span class="op">&lt;-</span> <span class="st">"LRRK2"</span>
 
-<span class="va">track_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="fu">PLOT.heights_dict</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-<span class="va">track_order</span> <span class="op">&lt;-</span> <span class="fu">R.utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/R.utils/man/insert.html">insert</a></span><span class="op">(</span><span class="va">track_order</span><span class="op">[</span><span class="va">track_order</span><span class="op">!=</span><span class="st">"Genes"</span><span class="op">]</span>, <span class="fl">1</span>, <span class="st">"Genes"</span><span class="op">)</span>
+<span class="va">track_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">PLOT.heights_dict</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="va">track_order</span> <span class="op">&lt;-</span> <span class="fu">R.utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/R.utils/man/insert.html" class="external-link">insert</a></span><span class="op">(</span><span class="va">track_order</span><span class="op">[</span><span class="va">track_order</span><span class="op">!=</span><span class="st">"Genes"</span><span class="op">]</span>, <span class="fl">1</span>, <span class="st">"Genes"</span><span class="op">)</span>
 
-<span class="va">LRRK2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PLOT.locus.html">PLOT.locus</a></span><span class="op">(</span>finemap_dat<span class="op">=</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html">fread</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">$</span><span class="va">finemap</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,   
-                    LD_matrix<span class="op">=</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html">fread</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">$</span><span class="va">LD</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,
+<span class="va">LRRK2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PLOT.locus.html">PLOT.locus</a></span><span class="op">(</span>finemap_dat<span class="op">=</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">$</span><span class="va">finemap</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,   
+                    LD_matrix<span class="op">=</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">$</span><span class="va">LD</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,
                     LD_reference<span class="op">=</span><span class="st">"UKB"</span>,
                     locus_dir<span class="op">=</span><span class="va">data_dict</span><span class="op">$</span><span class="va">locus_dir</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span>, 
                     
@@ -204,89 +189,16 @@
                     return_list<span class="op">=</span><span class="cn">T</span>, 
                     zoom_exceptions_str <span class="op">=</span> <span class="st">"*full window$|zoom_polygon|Genes"</span>,
                     track_order <span class="op">=</span> <span class="va">track_order</span>,
-                    plot.zoom<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"1x"</span>,<span class="st">"20x"</span>,<span class="st">"25x"</span><span class="op">)</span><span class="op">)</span> 
-<span class="co">#&gt; +-------- Locus Plot: LRRK2--------+</span>
-<span class="co">#&gt; [1] "+ Filling NAs in CS cols with 0"</span>
-<span class="co">#&gt; [1] "+ Filling NAs in PP cols with 0"</span>
-<span class="co">#&gt; [1] "++ PLOT:: GWAS full window track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: GWAS track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: Merged fine-mapping track"</span>
-<span class="co">#&gt; [1] "Melting PP and CS from 5 fine-mapping methods"</span>
-<span class="co">#&gt; Warning: The `.dots` argument of `group_by()` is deprecated as of dplyr 1.0.0.</span>
-<span class="co">#&gt; [1] "++ PLOT:: Adding Gene model track."</span>
-<span class="co">#&gt; max_transcripts=3.</span>
-<span class="co">#&gt; 9 transcripts from 5 genes returned.</span>
-<span class="co">#&gt; Fetching data...OK</span>
-<span class="co">#&gt; Parsing exons...OK</span>
-<span class="co">#&gt; Defining introns...OK</span>
-<span class="co">#&gt; Defining UTRs...OK</span>
-<span class="co">#&gt; Defining CDS...OK</span>
-<span class="co">#&gt; aggregating...</span>
-<span class="co">#&gt; Done</span>
-<span class="co">#&gt; Constructing graphics...</span>
-<span class="co">#&gt; [1] "NOTT_2019:: Creating epigenomic histograms plot"</span>
-<span class="co">#&gt; [1] "NOTT_2019:: Importing bigWig subsets from UCSC..."</span>
-<span class="co">#&gt; [1] "+ Inferring genomic limits for window: 1x"</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: Downloading and merging 12 peaks BED files."</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: Converting merged BED files to GRanges."</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: 634540 ranges retrieved."</span>
-<span class="co">#&gt; 441294 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; [1] "+ PLOT:: Calculating max histogram height"</span>
-<span class="co">#&gt; [1] "++ Converting label units to Mb..."</span>
-<span class="co">#&gt; [1] "NOTT_2019:: Creating PLAC-seq interactome plot"</span>
-<span class="co">#&gt; [1] "+ NOTT_2019:: Getting interactome data."</span>
-<span class="co">#&gt; [1] "++ Converting to GRanges."</span>
-<span class="co">#&gt; [1] "Importing Microglia interactome ..."</span>
-<span class="co">#&gt; [1] "Importing Neuronal interactome ..."</span>
-<span class="co">#&gt; [1] "Importing Oligo interactome ..."</span>
-<span class="co">#&gt; 610 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; 1466 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; Error in h(simpleError(msg, call)) : </span>
-<span class="co">#&gt;   error in evaluating the argument 'args' in selecting a method for function 'do.call': GRanges objects don't support [[, as.list(), lapply(), or unlist() at</span>
-<span class="co">#&gt;   the moment</span>
-<span class="co">#&gt; [1] "+ Adding vertical lines to highlight SNP groups..."</span>
-<span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 1x +&lt;+&lt;+&lt;+&lt;+</span>
-<span class="co">#&gt; [1] "+ PLOT:: Get window suffix..."</span>
-<span class="co">#&gt; [1] "+ PLOT:: Removing GWAS full window track @ zoom=1x"</span>
-<span class="co">#&gt; [1] "+ Removing subplot margins..."</span>
-<span class="co">#&gt; [1] "+ Reordering tracks..."</span>
-<span class="co">#&gt; [1] "+ Ensuring last track shows genomic units..."</span>
-<span class="co">#&gt; [1] "+ Aligning xlimits for each subplot..."</span>
-<span class="co">#&gt; [1] "+ Checking track heights..."</span>
-<span class="co">#&gt; Warning: ggrepel: 2 unlabeled data points (too many overlaps). Consider</span>
-<span class="co">#&gt; increasing max.overlaps</span>
-<span class="co">#&gt; Warning: ggrepel: 2 unlabeled data points (too many overlaps). Consider</span>
-<span class="co">#&gt; increasing max.overlaps</span>
-<span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 20x +&lt;+&lt;+&lt;+&lt;+</span></code></pre></div>
-<p><img src="PD_loci_vignette_files/figure-html/LRRK2-1.png" width="960"></p>
-<pre><code>#&gt; [1] "+ PLOT:: Get window suffix..."
-#&gt; [1] "+ Constructing zoom polygon..."
-#&gt; [1] "+ Highlighting zoom origin..."
-#&gt; [1] "+ Removing subplot margins..."
-#&gt; [1] "+ Reordering tracks..."
-#&gt; [1] "+ Ensuring last track shows genomic units..."
-#&gt; [1] "+ Aligning xlimits for each subplot..."
-#&gt; [1] "+ Checking track heights..."
-#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 25x +&lt;+&lt;+&lt;+&lt;+</code></pre>
-<p><img src="PD_loci_vignette_files/figure-html/LRRK2-2.png" width="960"></p>
-<pre><code>#&gt; [1] "+ PLOT:: Get window suffix..."
-#&gt; [1] "+ Constructing zoom polygon..."
-#&gt; [1] "+ Highlighting zoom origin..."
-#&gt; [1] "+ Removing subplot margins..."
-#&gt; [1] "+ Reordering tracks..."
-#&gt; [1] "+ Ensuring last track shows genomic units..."
-#&gt; [1] "+ Aligning xlimits for each subplot..."
-#&gt; [1] "+ Checking track heights..."</code></pre>
-<p><img src="PD_loci_vignette_files/figure-html/LRRK2-3.png" width="960"></p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+                    plot.zoom<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1x"</span>,<span class="st">"20x"</span>,<span class="st">"25x"</span><span class="op">)</span><span class="op">)</span> </code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">locus</span> <span class="op">&lt;-</span> <span class="st">"MBNL2"</span>
 
-<span class="va">track_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="fu">PLOT.heights_dict</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-<span class="va">track_order</span> <span class="op">&lt;-</span> <span class="fu">R.utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/R.utils/man/insert.html">insert</a></span><span class="op">(</span><span class="va">track_order</span><span class="op">[</span><span class="va">track_order</span><span class="op">!=</span><span class="st">"Genes"</span><span class="op">]</span>, <span class="fl">1</span>, <span class="st">"Genes"</span><span class="op">)</span>
+<span class="va">track_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">PLOT.heights_dict</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="va">track_order</span> <span class="op">&lt;-</span> <span class="fu">R.utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/R.utils/man/insert.html" class="external-link">insert</a></span><span class="op">(</span><span class="va">track_order</span><span class="op">[</span><span class="va">track_order</span><span class="op">!=</span><span class="st">"Genes"</span><span class="op">]</span>, <span class="fl">1</span>, <span class="st">"Genes"</span><span class="op">)</span>
 
 
-<span class="va">MBNL2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PLOT.locus.html">PLOT.locus</a></span><span class="op">(</span>finemap_dat<span class="op">=</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html">fread</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">$</span><span class="va">finemap</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,   
-                    LD_matrix<span class="op">=</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html">fread</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">$</span><span class="va">LD</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,
+<span class="va">MBNL2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PLOT.locus.html">PLOT.locus</a></span><span class="op">(</span>finemap_dat<span class="op">=</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">$</span><span class="va">finemap</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,   
+                    LD_matrix<span class="op">=</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">$</span><span class="va">LD</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,
                     LD_reference<span class="op">=</span><span class="st">"UKB"</span>,
                     locus_dir<span class="op">=</span><span class="va">data_dict</span><span class="op">$</span><span class="va">locus_dir</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span>, 
                     
@@ -300,95 +212,12 @@
                     return_list<span class="op">=</span><span class="cn">T</span>,
                     zoom_exceptions_str <span class="op">=</span> <span class="st">"*full window$|zoom_polygon|Genes"</span>,
                     track_order <span class="op">=</span> <span class="va">track_order</span>,
-                    plot.zoom<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"1x"</span>,<span class="st">"10x"</span>,<span class="st">"20x"</span>,<span class="st">"25x"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; +-------- Locus Plot: MBNL2--------+</span>
-<span class="co">#&gt; [1] "+ Filling NAs in CS cols with 0"</span>
-<span class="co">#&gt; [1] "+ Filling NAs in PP cols with 0"</span>
-<span class="co">#&gt; [1] "++ PLOT:: GWAS full window track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: GWAS track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: Merged fine-mapping track"</span>
-<span class="co">#&gt; [1] "Melting PP and CS from 5 fine-mapping methods"</span>
-<span class="co">#&gt; [1] "++ PLOT:: Adding Gene model track."</span>
-<span class="co">#&gt; max_transcripts=1.</span>
-<span class="co">#&gt; 11 transcripts from 11 genes returned.</span>
-<span class="co">#&gt; Fetching data...OK</span>
-<span class="co">#&gt; Parsing exons...OK</span>
-<span class="co">#&gt; Defining introns...OK</span>
-<span class="co">#&gt; Defining UTRs...OK</span>
-<span class="co">#&gt; Defining CDS...OK</span>
-<span class="co">#&gt; aggregating...</span>
-<span class="co">#&gt; Done</span>
-<span class="co">#&gt; Constructing graphics...</span>
-<span class="co">#&gt; [1] "NOTT_2019:: Creating epigenomic histograms plot"</span>
-<span class="co">#&gt; [1] "NOTT_2019:: Importing bigWig subsets from UCSC..."</span>
-<span class="co">#&gt; [1] "+ Inferring genomic limits for window: 1x"</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: Downloading and merging 12 peaks BED files."</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: Converting merged BED files to GRanges."</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: 634540 ranges retrieved."</span>
-<span class="co">#&gt; 1852039 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; [1] "+ PLOT:: Calculating max histogram height"</span>
-<span class="co">#&gt; [1] "++ Converting label units to Mb..."</span>
-<span class="co">#&gt; [1] "NOTT_2019:: Creating PLAC-seq interactome plot"</span>
-<span class="co">#&gt; [1] "+ NOTT_2019:: Getting interactome data."</span>
-<span class="co">#&gt; [1] "++ Converting to GRanges."</span>
-<span class="co">#&gt; [1] "Importing Microglia interactome ..."</span>
-<span class="co">#&gt; [1] "Importing Neuronal interactome ..."</span>
-<span class="co">#&gt; [1] "Importing Oligo interactome ..."</span>
-<span class="co">#&gt; 1865 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; 2167 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; Error in h(simpleError(msg, call)) : </span>
-<span class="co">#&gt;   error in evaluating the argument 'args' in selecting a method for function 'do.call': GRanges objects don't support [[, as.list(), lapply(), or unlist() at</span>
-<span class="co">#&gt;   the moment</span>
-<span class="co">#&gt; [1] "+ Adding vertical lines to highlight SNP groups..."</span>
-<span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 1x +&lt;+&lt;+&lt;+&lt;+</span>
-<span class="co">#&gt; [1] "+ PLOT:: Get window suffix..."</span>
-<span class="co">#&gt; [1] "+ PLOT:: Removing GWAS full window track @ zoom=1x"</span>
-<span class="co">#&gt; [1] "+ Removing subplot margins..."</span>
-<span class="co">#&gt; [1] "+ Reordering tracks..."</span>
-<span class="co">#&gt; [1] "+ Ensuring last track shows genomic units..."</span>
-<span class="co">#&gt; [1] "+ Aligning xlimits for each subplot..."</span>
-<span class="co">#&gt; [1] "+ Checking track heights..."</span>
-<span class="co">#&gt; Warning: ggrepel: 12 unlabeled data points (too many overlaps). Consider</span>
-<span class="co">#&gt; increasing max.overlaps</span>
-
-<span class="co">#&gt; Warning: ggrepel: 12 unlabeled data points (too many overlaps). Consider</span>
-<span class="co">#&gt; increasing max.overlaps</span>
-<span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 10x +&lt;+&lt;+&lt;+&lt;+</span></code></pre></div>
-<p><img src="PD_loci_vignette_files/figure-html/MBNL2-1.png" width="960"></p>
-<pre><code>#&gt; [1] "+ PLOT:: Get window suffix..."
-#&gt; [1] "+ Constructing zoom polygon..."
-#&gt; [1] "+ Highlighting zoom origin..."
-#&gt; [1] "+ Removing subplot margins..."
-#&gt; [1] "+ Reordering tracks..."
-#&gt; [1] "+ Ensuring last track shows genomic units..."
-#&gt; [1] "+ Aligning xlimits for each subplot..."
-#&gt; [1] "+ Checking track heights..."
-#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 20x +&lt;+&lt;+&lt;+&lt;+</code></pre>
-<p><img src="PD_loci_vignette_files/figure-html/MBNL2-2.png" width="960"></p>
-<pre><code>#&gt; [1] "+ PLOT:: Get window suffix..."
-#&gt; [1] "+ Constructing zoom polygon..."
-#&gt; [1] "+ Highlighting zoom origin..."
-#&gt; [1] "+ Removing subplot margins..."
-#&gt; [1] "+ Reordering tracks..."
-#&gt; [1] "+ Ensuring last track shows genomic units..."
-#&gt; [1] "+ Aligning xlimits for each subplot..."
-#&gt; [1] "+ Checking track heights..."
-#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 25x +&lt;+&lt;+&lt;+&lt;+</code></pre>
-<p><img src="PD_loci_vignette_files/figure-html/MBNL2-3.png" width="960"></p>
-<pre><code>#&gt; [1] "+ PLOT:: Get window suffix..."
-#&gt; [1] "+ Constructing zoom polygon..."
-#&gt; [1] "+ Highlighting zoom origin..."
-#&gt; [1] "+ Removing subplot margins..."
-#&gt; [1] "+ Reordering tracks..."
-#&gt; [1] "+ Ensuring last track shows genomic units..."
-#&gt; [1] "+ Aligning xlimits for each subplot..."
-#&gt; [1] "+ Checking track heights..."</code></pre>
-<p><img src="PD_loci_vignette_files/figure-html/MBNL2-4.png" width="960"></p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+                    plot.zoom<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1x"</span>,<span class="st">"10x"</span>,<span class="st">"20x"</span>,<span class="st">"25x"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">locus</span> <span class="op">&lt;-</span> <span class="st">"DYRK1A"</span>
 
-<span class="va">DYRK1A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PLOT.locus.html">PLOT.locus</a></span><span class="op">(</span>finemap_dat<span class="op">=</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html">fread</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">$</span><span class="va">finemap</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,   
-                    LD_matrix<span class="op">=</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html">fread</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">$</span><span class="va">LD</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,
+<span class="va">DYRK1A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PLOT.locus.html">PLOT.locus</a></span><span class="op">(</span>finemap_dat<span class="op">=</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">$</span><span class="va">finemap</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,   
+                    LD_matrix<span class="op">=</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">$</span><span class="va">LD</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,
                     LD_reference<span class="op">=</span><span class="st">"UKB"</span>,
                     locus_dir<span class="op">=</span><span class="va">data_dict</span><span class="op">$</span><span class="va">locus_dir</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span>, 
                     
@@ -400,58 +229,9 @@
                     
                     save_plot<span class="op">=</span><span class="cn">F</span>, 
                     return_list<span class="op">=</span><span class="cn">T</span>,
-                    plot.zoom<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"25x"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; +-------- Locus Plot: DYRK1A--------+</span>
-<span class="co">#&gt; [1] "+ Filling NAs in CS cols with 0"</span>
-<span class="co">#&gt; [1] "+ Filling NAs in PP cols with 0"</span>
-<span class="co">#&gt; [1] "++ PLOT:: GWAS full window track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: GWAS track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: Merged fine-mapping track"</span>
-<span class="co">#&gt; [1] "Melting PP and CS from 5 fine-mapping methods"</span>
-<span class="co">#&gt; [1] "++ PLOT:: Adding Gene model track."</span>
-<span class="co">#&gt; max_transcripts=3.</span>
-<span class="co">#&gt; 61 transcripts from 34 genes returned.</span>
-<span class="co">#&gt; Fetching data...OK</span>
-<span class="co">#&gt; Parsing exons...OK</span>
-<span class="co">#&gt; Defining introns...OK</span>
-<span class="co">#&gt; Defining UTRs...OK</span>
-<span class="co">#&gt; Defining CDS...OK</span>
-<span class="co">#&gt; aggregating...</span>
-<span class="co">#&gt; Done</span>
-<span class="co">#&gt; Constructing graphics...</span>
-<span class="co">#&gt; [1] "NOTT_2019:: Creating epigenomic histograms plot"</span>
-<span class="co">#&gt; [1] "NOTT_2019:: Importing bigWig subsets from UCSC..."</span>
-<span class="co">#&gt; [1] "+ Inferring genomic limits for window: 1x"</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: Downloading and merging 12 peaks BED files."</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: Converting merged BED files to GRanges."</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: 634540 ranges retrieved."</span>
-<span class="co">#&gt; 1644471 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; [1] "+ PLOT:: Calculating max histogram height"</span>
-<span class="co">#&gt; [1] "++ Converting label units to Mb..."</span>
-<span class="co">#&gt; [1] "NOTT_2019:: Creating PLAC-seq interactome plot"</span>
-<span class="co">#&gt; [1] "+ NOTT_2019:: Getting interactome data."</span>
-<span class="co">#&gt; [1] "++ Converting to GRanges."</span>
-<span class="co">#&gt; [1] "Importing Microglia interactome ..."</span>
-<span class="co">#&gt; [1] "Importing Neuronal interactome ..."</span>
-<span class="co">#&gt; [1] "Importing Oligo interactome ..."</span>
-<span class="co">#&gt; 1774 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; 1612 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; Error in h(simpleError(msg, call)) : </span>
-<span class="co">#&gt;   error in evaluating the argument 'args' in selecting a method for function 'do.call': GRanges objects don't support [[, as.list(), lapply(), or unlist() at</span>
-<span class="co">#&gt;   the moment</span>
-<span class="co">#&gt; [1] "+ Adding vertical lines to highlight SNP groups..."</span>
-<span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 25x +&lt;+&lt;+&lt;+&lt;+</span>
-<span class="co">#&gt; [1] "+ PLOT:: Get window suffix..."</span>
-<span class="co">#&gt; [1] "+ Constructing zoom polygon..."</span>
-<span class="co">#&gt; [1] "+ Highlighting zoom origin..."</span>
-<span class="co">#&gt; [1] "+ Removing subplot margins..."</span>
-<span class="co">#&gt; [1] "+ Reordering tracks..."</span>
-<span class="co">#&gt; [1] "+ Ensuring last track shows genomic units..."</span>
-<span class="co">#&gt; [1] "+ Aligning xlimits for each subplot..."</span>
-<span class="co">#&gt; [1] "+ Checking track heights..."</span></code></pre></div>
-<p><img src="PD_loci_vignette_files/figure-html/DYRK1A-1.png" width="960"></p>
+                    plot.zoom<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"25x"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>This region has a lot of genes so we’re going to subset the main view a bit.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">locus</span> <span class="op">&lt;-</span> <span class="st">"FCGR2A"</span>
 <span class="co"># </span>
 <span class="co"># finemap_dat &lt;- fread(data_dict$finemap[[locus]])</span>
@@ -459,8 +239,8 @@
 <span class="co">#                                 plot.zoom = "3x")</span>
 <span class="co"># finemap_dat &lt;- subset(finemap_dat, Mb&gt;xlims[1] &amp; Mb&lt;xlims[2] )</span>
 
-<span class="va">FCGR2A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PLOT.locus.html">PLOT.locus</a></span><span class="op">(</span>finemap_dat<span class="op">=</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html">fread</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">$</span><span class="va">finemap</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,   
-                    LD_matrix<span class="op">=</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html">fread</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">$</span><span class="va">LD</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,
+<span class="va">FCGR2A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PLOT.locus.html">PLOT.locus</a></span><span class="op">(</span>finemap_dat<span class="op">=</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">$</span><span class="va">finemap</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,   
+                    LD_matrix<span class="op">=</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">$</span><span class="va">LD</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,
                     LD_reference<span class="op">=</span><span class="st">"UKB"</span>,
                     locus_dir<span class="op">=</span><span class="va">data_dict</span><span class="op">$</span><span class="va">locus_dir</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span>, 
                     
@@ -472,67 +252,13 @@
                     
                     save_plot<span class="op">=</span><span class="cn">F</span>, 
                     return_list<span class="op">=</span><span class="cn">T</span>,
-                    plot.zoom<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"25x"</span><span class="op">)</span><span class="op">)</span> 
-<span class="co">#&gt; +-------- Locus Plot: FCGR2A--------+</span>
-<span class="co">#&gt; [1] "+ Filling NAs in CS cols with 0"</span>
-<span class="co">#&gt; [1] "+ Filling NAs in PP cols with 0"</span>
-<span class="co">#&gt; [1] "++ PLOT:: GWAS full window track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: GWAS track"</span>
-<span class="co">#&gt; [1] "++ PLOT:: Merged fine-mapping track"</span>
-<span class="co">#&gt; [1] "Melting PP and CS from 5 fine-mapping methods"</span>
-<span class="co">#&gt; [1] "++ PLOT:: Adding Gene model track."</span>
-<span class="co">#&gt; max_transcripts=3.</span>
-<span class="co">#&gt; 136 transcripts from 58 genes returned.</span>
-<span class="co">#&gt; Fetching data...OK</span>
-<span class="co">#&gt; Parsing exons...OK</span>
-<span class="co">#&gt; Defining introns...OK</span>
-<span class="co">#&gt; Defining UTRs...OK</span>
-<span class="co">#&gt; Defining CDS...OK</span>
-<span class="co">#&gt; aggregating...</span>
-<span class="co">#&gt; Done</span>
-<span class="co">#&gt; Constructing graphics...</span>
-<span class="co">#&gt; [1] "NOTT_2019:: Creating epigenomic histograms plot"</span>
-<span class="co">#&gt; [1] "NOTT_2019:: Importing bigWig subsets from UCSC..."</span>
-<span class="co">#&gt; [1] "+ Inferring genomic limits for window: 1x"</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: Downloading and merging 12 peaks BED files."</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: Converting merged BED files to GRanges."</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: 634540 ranges retrieved."</span>
-<span class="co">#&gt; 3803756 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; [1] "+ PLOT:: Calculating max histogram height"</span>
-<span class="co">#&gt; [1] "++ Converting label units to Mb..."</span>
-<span class="co">#&gt; [1] "NOTT_2019:: Creating PLAC-seq interactome plot"</span>
-<span class="co">#&gt; [1] "+ NOTT_2019:: Getting interactome data."</span>
-<span class="co">#&gt; [1] "++ Converting to GRanges."</span>
-<span class="co">#&gt; [1] "Importing Microglia interactome ..."</span>
-<span class="co">#&gt; [1] "Importing Neuronal interactome ..."</span>
-<span class="co">#&gt; [1] "Importing Oligo interactome ..."</span>
-<span class="co">#&gt; 6382 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; 8738 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; Error in h(simpleError(msg, call)) : </span>
-<span class="co">#&gt;   error in evaluating the argument 'args' in selecting a method for function 'do.call': GRanges objects don't support [[, as.list(), lapply(), or unlist() at</span>
-<span class="co">#&gt;   the moment</span>
-<span class="co">#&gt; [1] "+ Adding vertical lines to highlight SNP groups..."</span>
-<span class="co">#&gt; +&gt;+&gt;+&gt;+&gt;+ plot.zoom = 25x +&lt;+&lt;+&lt;+&lt;+</span>
-<span class="co">#&gt; [1] "+ PLOT:: Get window suffix..."</span>
-<span class="co">#&gt; [1] "+ Constructing zoom polygon..."</span>
-<span class="co">#&gt; [1] "+ Highlighting zoom origin..."</span>
-<span class="co">#&gt; [1] "+ Removing subplot margins..."</span>
-<span class="co">#&gt; [1] "+ Reordering tracks..."</span>
-<span class="co">#&gt; [1] "+ Ensuring last track shows genomic units..."</span>
-<span class="co">#&gt; [1] "+ Aligning xlimits for each subplot..."</span>
-<span class="co">#&gt; [1] "+ Checking track heights..."</span>
-<span class="co">#&gt; Warning: ggrepel: 1 unlabeled data points (too many overlaps). Consider</span>
-<span class="co">#&gt; increasing max.overlaps</span>
-
-<span class="co">#&gt; Warning: ggrepel: 1 unlabeled data points (too many overlaps). Consider</span>
-<span class="co">#&gt; increasing max.overlaps</span></code></pre></div>
-<p><img src="PD_loci_vignette_files/figure-html/FCGR2A-1.png" width="960"></p>
+                    plot.zoom<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"25x"</span><span class="op">)</span><span class="op">)</span> </code></pre></div>
 </div>
 </div>
-<div id="modify-plots" class="section level1">
-<h1 class="hasAnchor">
-<a href="#modify-plots" class="anchor"></a>Modify plots</h1>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="section level2">
+<h2 id="modify-plots">Modify plots<a class="anchor" aria-label="anchor" href="#modify-plots"></a>
+</h2>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">zoom</span> <span class="op">&lt;-</span> <span class="st">"25x"</span>
 <span class="va">locus</span> <span class="op">&lt;-</span> <span class="st">"FCGR2A"</span><span class="co">#"FCGR2A"</span>
 <span class="va">plot_zoom_list</span> <span class="op">&lt;-</span> <span class="va">FCGR2A</span>
@@ -540,139 +266,75 @@
 <span class="va">mod_plot</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">plot_zoom_list</span>, <span class="va">locus</span>, <span class="va">zoom</span><span class="op">)</span><span class="op">{</span>
   <span class="co"># deparse(substitute(FCGR2A))</span>
   <span class="va">TRKS</span> <span class="op">&lt;-</span> <span class="va">plot_zoom_list</span><span class="op">[[</span><span class="va">zoom</span><span class="op">]</span><span class="op">]</span>
-  <span class="va">finemap_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html">fread</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">$</span><span class="va">finemap</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
+  <span class="va">finemap_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">$</span><span class="va">finemap</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
   
-  <span class="va">n_snps</span> <span class="op">&lt;-</span> <span class="kw">if</span><span class="op">(</span><span class="va">data_dict</span><span class="op">$</span><span class="va">dataset_type</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">TRKS</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
-          <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"n SNPs: "</span>,
-                 <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html">ggplot_build</a></span><span class="op">(</span><span class="va">TRKS</span><span class="op">[[</span><span class="va">data_dict</span><span class="op">$</span><span class="va">dataset_type</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">$</span><span class="va">data</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,<span class="st">", "</span><span class="op">)</span>
+  <span class="va">n_snps</span> <span class="op">&lt;-</span> <span class="kw">if</span><span class="op">(</span><span class="va">data_dict</span><span class="op">$</span><span class="va">dataset_type</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">TRKS</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
+          <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"n SNPs: "</span>,
+                 <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build</a></span><span class="op">(</span><span class="va">TRKS</span><span class="op">[[</span><span class="va">data_dict</span><span class="op">$</span><span class="va">dataset_type</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">$</span><span class="va">data</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,<span class="st">", "</span><span class="op">)</span>
         <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span><span class="cn">NULL</span><span class="op">}</span>
-  <span class="va">title_text</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">$</span><span class="va">locus_dir</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,<span class="st">"   ("</span>,<span class="va">n_snps</span>,<span class="st">"zoom: "</span>,<span class="va">zoom</span>,<span class="st">")"</span><span class="op">)</span>
+  <span class="va">title_text</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">$</span><span class="va">locus_dir</span><span class="op">[[</span><span class="va">locus</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,<span class="st">"   ("</span>,<span class="va">n_snps</span>,<span class="st">"zoom: "</span>,<span class="va">zoom</span>,<span class="st">")"</span><span class="op">)</span>
      
   <span class="co"># Alter track</span>
   <span class="va">TRKS</span><span class="op">[[</span><span class="st">"Genes"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">TRKS</span><span class="op">[[</span><span class="st">"Genes"</span><span class="op">]</span><span class="op">]</span> <span class="op">+</span>  
-    <span class="fu">scale_y_discrete</span><span class="op">(</span>expand <span class="op">=</span> <span class="fu">expansion</span><span class="op">(</span>add  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.0</span>,<span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+    <span class="fu">scale_y_discrete</span><span class="op">(</span>expand <span class="op">=</span> <span class="fu">expansion</span><span class="op">(</span>add  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.0</span>,<span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
   
   
   <span class="co"># Fuse tracks</span>
-  <span class="va">LOCUS_zoom</span> <span class="op">&lt;-</span> <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html">wrap_plots</a></span><span class="op">(</span><span class="va">TRKS</span>, 
+  <span class="va">LOCUS_zoom</span> <span class="op">&lt;-</span> <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">TRKS</span>, 
                                        ncol <span class="op">=</span> <span class="fl">1</span>, 
                                        heights <span class="op">=</span> <span class="va">heights</span><span class="op">)</span> <span class="op">+</span>
-      <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html">plot_annotation</a></span><span class="op">(</span>title <span class="op">=</span> <span class="va">title_text</span><span class="op">)</span>
+      <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>title <span class="op">=</span> <span class="va">title_text</span><span class="op">)</span>
    
   <span class="co"># Save plot</span>
-  <span class="fu">ggsave</span><span class="op">(</span>filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">results_dir</span>,<span class="st">"GWAS/Nalls23andMe_2019"</span>,<span class="va">locus</span>,
-                              <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"multiview."</span>,<span class="va">locus</span>,
+  <span class="fu">ggsave</span><span class="op">(</span>filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">results_dir</span>,<span class="st">"GWAS/Nalls23andMe_2019"</span>,<span class="va">locus</span>,
+                              <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"multiview."</span>,<span class="va">locus</span>,
                                      <span class="st">".UKB."</span>,<span class="va">zoom</span>,<span class="st">"_mod.jpg"</span><span class="op">)</span><span class="op">)</span>, 
          plot <span class="op">=</span> <span class="va">LOCUS_zoom</span>, 
          dpi <span class="op">=</span> <span class="fl">300</span>, 
          height<span class="op">=</span><span class="fl">12</span>,
          width<span class="op">=</span><span class="fl">10</span><span class="op">)</span>
-  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">LOCUS_zoom</span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">LOCUS_zoom</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 </div>
-<div id="session-info" class="section level1">
-<h1 class="hasAnchor">
-<a href="#session-info" class="anchor"></a>Session info</h1>
-<details><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; R version 4.1.0 (2021-05-18)</span>
-<span class="co">#&gt; Platform: x86_64-apple-darwin17.0 (64-bit)</span>
-<span class="co">#&gt; Running under: macOS Big Sur 10.16</span>
+<div class="section level2">
+<h2 id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
+</h2>
+<details><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; R version 4.1.2 (2021-11-01)</span>
+<span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span>
+<span class="co">#&gt; Running under: Ubuntu 20.04.3 LTS</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Matrix products: default</span>
-<span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.dylib</span>
-<span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib</span>
+<span class="co">#&gt; BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; locale:</span>
-<span class="co">#&gt; [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8</span>
+<span class="co">#&gt;  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span>
+<span class="co">#&gt;  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span>
+<span class="co">#&gt;  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=C             </span>
+<span class="co">#&gt;  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span>
+<span class="co">#&gt;  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span>
+<span class="co">#&gt; [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; attached base packages:</span>
-<span class="co">#&gt; [1] stats4    parallel  stats     graphics  grDevices utils     datasets </span>
-<span class="co">#&gt; [8] methods   base     </span>
+<span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; other attached packages:</span>
-<span class="co">#&gt;  [1] EnsDb.Hsapiens.v75_2.99.0 ensembldb_2.16.0         </span>
-<span class="co">#&gt;  [3] AnnotationFilter_1.16.0   GenomicFeatures_1.44.0   </span>
-<span class="co">#&gt;  [5] AnnotationDbi_1.54.1      Biobase_2.52.0           </span>
-<span class="co">#&gt;  [7] GenomicRanges_1.44.0      GenomeInfoDb_1.28.0      </span>
-<span class="co">#&gt;  [9] IRanges_2.26.0            S4Vectors_0.30.0         </span>
-<span class="co">#&gt; [11] BiocGenerics_0.38.0       data.table_1.14.0        </span>
-<span class="co">#&gt; [13] echolocatoR_0.1.2        </span>
+<span class="co">#&gt; [1] BiocStyle_2.22.0</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; loaded via a namespace (and not attached):</span>
-<span class="co">#&gt;   [1] backports_1.2.1             Hmisc_4.5-0                </span>
-<span class="co">#&gt;   [3] BiocFileCache_2.0.0         systemfonts_1.0.2          </span>
-<span class="co">#&gt;   [5] plyr_1.8.6                  lazyeval_0.2.2             </span>
-<span class="co">#&gt;   [7] splines_4.1.0               BiocParallel_1.26.0        </span>
-<span class="co">#&gt;   [9] ggplot2_3.3.4               digest_0.6.27              </span>
-<span class="co">#&gt;  [11] htmltools_0.5.1.1           fansi_0.5.0                </span>
-<span class="co">#&gt;  [13] magrittr_2.0.1              checkmate_2.0.0            </span>
-<span class="co">#&gt;  [15] memoise_2.0.0               BSgenome_1.60.0            </span>
-<span class="co">#&gt;  [17] cluster_2.1.2               Biostrings_2.60.1          </span>
-<span class="co">#&gt;  [19] matrixStats_0.59.0          R.utils_2.10.1             </span>
-<span class="co">#&gt;  [21] ggbio_1.40.0                pkgdown_1.6.1              </span>
-<span class="co">#&gt;  [23] prettyunits_1.1.1           jpeg_0.1-8.1               </span>
-<span class="co">#&gt;  [25] colorspace_2.0-1            ggrepel_0.9.1              </span>
-<span class="co">#&gt;  [27] blob_1.2.1                  rappdirs_0.3.3             </span>
-<span class="co">#&gt;  [29] textshaping_0.3.5           xfun_0.24                  </span>
-<span class="co">#&gt;  [31] dplyr_1.0.7                 crayon_1.4.1               </span>
-<span class="co">#&gt;  [33] RCurl_1.98-1.3              jsonlite_1.7.2             </span>
-<span class="co">#&gt;  [35] graph_1.70.0                Exact_2.1                  </span>
-<span class="co">#&gt;  [37] VariantAnnotation_1.38.0    survival_3.2-11            </span>
-<span class="co">#&gt;  [39] glue_1.4.2                  pals_1.7                   </span>
-<span class="co">#&gt;  [41] gtable_0.3.0                zlibbioc_1.38.0            </span>
-<span class="co">#&gt;  [43] XVector_0.32.0              DelayedArray_0.18.0        </span>
-<span class="co">#&gt;  [45] maps_3.3.0                  scales_1.1.1               </span>
-<span class="co">#&gt;  [47] mvtnorm_1.1-2               DBI_1.1.1                  </span>
-<span class="co">#&gt;  [49] GGally_2.1.2                Rcpp_1.0.6                 </span>
-<span class="co">#&gt;  [51] progress_1.2.2              htmlTable_2.2.1            </span>
-<span class="co">#&gt;  [53] mapproj_1.2.7               foreign_0.8-81             </span>
-<span class="co">#&gt;  [55] bit_4.0.4                   proxy_0.4-26               </span>
-<span class="co">#&gt;  [57] OrganismDbi_1.34.0          Formula_1.2-4              </span>
-<span class="co">#&gt;  [59] htmlwidgets_1.5.3           httr_1.4.2                 </span>
-<span class="co">#&gt;  [61] RColorBrewer_1.1-2          ellipsis_0.3.2             </span>
-<span class="co">#&gt;  [63] farver_2.1.0                R.methodsS3_1.8.1          </span>
-<span class="co">#&gt;  [65] pkgconfig_2.0.3             reshape_0.8.8              </span>
-<span class="co">#&gt;  [67] XML_3.99-0.6                nnet_7.3-16                </span>
-<span class="co">#&gt;  [69] sass_0.4.0                  dbplyr_2.1.1               </span>
-<span class="co">#&gt;  [71] utf8_1.2.1                  labeling_0.4.2             </span>
-<span class="co">#&gt;  [73] tidyselect_1.1.1            rlang_0.4.11               </span>
-<span class="co">#&gt;  [75] reshape2_1.4.4              munsell_0.5.0              </span>
-<span class="co">#&gt;  [77] tools_4.1.0                 cachem_1.0.5               </span>
-<span class="co">#&gt;  [79] generics_0.1.0              RSQLite_2.2.7              </span>
-<span class="co">#&gt;  [81] evaluate_0.14               stringr_1.4.0              </span>
-<span class="co">#&gt;  [83] fastmap_1.1.0               yaml_2.2.1                 </span>
-<span class="co">#&gt;  [85] ragg_1.1.3                  knitr_1.33                 </span>
-<span class="co">#&gt;  [87] bit64_4.0.5                 fs_1.5.0                   </span>
-<span class="co">#&gt;  [89] purrr_0.3.4                 KEGGREST_1.32.0            </span>
-<span class="co">#&gt;  [91] rootSolve_1.8.2.1           RBGL_1.68.0                </span>
-<span class="co">#&gt;  [93] R.oo_1.24.0                 xml2_1.3.2                 </span>
-<span class="co">#&gt;  [95] biomaRt_2.48.1              compiler_4.1.0             </span>
-<span class="co">#&gt;  [97] rstudioapi_0.13             filelock_1.0.2             </span>
-<span class="co">#&gt;  [99] curl_4.3.1                  png_0.1-7                  </span>
-<span class="co">#&gt; [101] e1071_1.7-7                 tibble_3.1.2               </span>
-<span class="co">#&gt; [103] bslib_0.2.5.1               DescTools_0.99.42          </span>
-<span class="co">#&gt; [105] stringi_1.6.2               highr_0.9                  </span>
-<span class="co">#&gt; [107] desc_1.3.0                  lattice_0.20-44            </span>
-<span class="co">#&gt; [109] ProtGenerics_1.24.0         Matrix_1.3-4               </span>
-<span class="co">#&gt; [111] vctrs_0.3.8                 pillar_1.6.1               </span>
-<span class="co">#&gt; [113] lifecycle_1.0.0             BiocManager_1.30.16        </span>
-<span class="co">#&gt; [115] jquerylib_0.1.4             bitops_1.0-7               </span>
-<span class="co">#&gt; [117] lmom_2.8                    patchwork_1.1.1            </span>
-<span class="co">#&gt; [119] rtracklayer_1.52.0          R6_2.5.0                   </span>
-<span class="co">#&gt; [121] BiocIO_1.2.0                latticeExtra_0.6-29        </span>
-<span class="co">#&gt; [123] gridExtra_2.3               gld_2.6.2                  </span>
-<span class="co">#&gt; [125] dichromat_2.0-0             boot_1.3-28                </span>
-<span class="co">#&gt; [127] MASS_7.3-54                 assertthat_0.2.1           </span>
-<span class="co">#&gt; [129] SummarizedExperiment_1.22.0 rprojroot_2.0.2            </span>
-<span class="co">#&gt; [131] rjson_0.2.20                GenomicAlignments_1.28.0   </span>
-<span class="co">#&gt; [133] Rsamtools_2.8.0             GenomeInfoDbData_1.2.6     </span>
-<span class="co">#&gt; [135] expm_0.999-6                hms_1.1.0                  </span>
-<span class="co">#&gt; [137] grid_4.1.0                  rpart_4.1-15               </span>
-<span class="co">#&gt; [139] tidyr_1.1.3                 class_7.3-19               </span>
-<span class="co">#&gt; [141] rmarkdown_2.9               MatrixGenerics_1.4.0       </span>
-<span class="co">#&gt; [143] biovizBase_1.40.0           base64enc_0.1-3            </span>
-<span class="co">#&gt; [145] restfulr_0.0.13</span></code></pre></div>
+<span class="co">#&gt;  [1] rstudioapi_0.13     knitr_1.37          magrittr_2.0.2     </span>
+<span class="co">#&gt;  [4] R6_2.5.1            ragg_1.2.2          rlang_1.0.1        </span>
+<span class="co">#&gt;  [7] fastmap_1.1.0       stringr_1.4.0       tools_4.1.2        </span>
+<span class="co">#&gt; [10] xfun_0.30           cli_3.2.0           jquerylib_0.1.4    </span>
+<span class="co">#&gt; [13] systemfonts_1.0.4   htmltools_0.5.2     yaml_2.3.5         </span>
+<span class="co">#&gt; [16] digest_0.6.29       rprojroot_2.0.2     pkgdown_2.0.2      </span>
+<span class="co">#&gt; [19] crayon_1.5.0        bookdown_0.24       textshaping_0.3.6  </span>
+<span class="co">#&gt; [22] BiocManager_1.30.16 purrr_0.3.4         sass_0.4.0         </span>
+<span class="co">#&gt; [25] fs_1.5.2            memoise_2.0.1       cachem_1.0.6       </span>
+<span class="co">#&gt; [28] evaluate_0.15       rmarkdown_2.12      stringi_1.7.6      </span>
+<span class="co">#&gt; [31] compiler_4.1.2      bslib_0.3.1         desc_1.4.0         </span>
+<span class="co">#&gt; [34] jsonlite_1.8.0</span></code></pre></div>
 </details>
 </div>
   </div>
@@ -688,11 +350,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Brian Schilder.</p>
+  <p></p>
+<p>Developed by Brian Schilder, Jack Humphrey, Towfique Raj.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -700,6 +364,8 @@
 
   
 
+
+  
 
   </body>
 </html>

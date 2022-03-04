@@ -6,6 +6,7 @@ status](https://github.com/RajLabMSSM/echolocatoR/workflows/R-CMD-check-bioc/bad
 [![](https://codecov.io/gh/RajLabMSSM/echolocatoR/branch/master/graph/badge.svg)](https://codecov.io/gh/RajLabMSSM/echolocatoR)
 [![License:
 MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://cran.r-project.org/web/licenses/MIT)
+[![](https://img.shields.io/badge/doi-10.1093/bioinformatics/btab658-blue.svg)](https://doi.org/10.1093/bioinformatics/btab658)
 <h5>
 Author: <i>Brian M. Schilder</i>
 </h5>
@@ -13,14 +14,6 @@ Author: <i>Brian M. Schilder</i>
 README updated: <i>Mar-04-2022</i>
 </h5>
 
-<!-- badges: start -->
-
-[![](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
-[![](https://img.shields.io/badge/doi-10.1101/2020.10.22.351221-yellow.svg)](https://doi.org/10.1101/2020.10.22.351221)
-[![License:
-MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://cran.r-project.org/web/licenses/MIT)
-
-<!-- badges: end -->
 <center>
 <h1>
 ) ) ) ) ))) :bat: echolocatoR :bat: ((( ( ( ( (
@@ -34,9 +27,10 @@ to genome-wide datasets
 
 If you use `echolocatoR`, please cite:
 
-> Jack Humphrey and Towfique Raj (NA). echolocatoR: Automated genomic
-> fine-mapping. R package version 0.2.2.
-> <https://github.com/RajLabMSSM/echolocatoR>
+> Brian M Schilder, Jack Humphrey, Towfique Raj (2021) echolocatoR: an
+> automated end-to-end statistical and functional genomic fine-mapping
+> pipeline, *Bioinformatics*; btab658,
+> <https://doi.org/10.1093/bioinformatics/btab658>
 
 ## Introduction
 
@@ -110,7 +104,7 @@ welcome!:
 In R:
 
 ``` r
-if(!"remotes" %in% row.names(installed.packages())){install.packages("remotes")}
+if(!require("remotes")) install.packages("remotes")
 
 remotes::install_github("RajLabMSSM/echolocatoR")
 ```
@@ -483,7 +477,6 @@ For more detailed information about each dataset, use `?`:
 
 ### [1000 Genomes Phase 3](https://www.internationalgenome.org)
 
-<hr>
 <hr>
 
 ## Creator

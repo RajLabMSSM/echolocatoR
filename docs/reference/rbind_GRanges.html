@@ -41,9 +41,6 @@
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/hexSticker.html">hexSticker</a>
-    </li>
-    <li>
       <a href="../articles/plotting_vignette.html">Plotting vignette</a>
     </li>
     <li>
@@ -90,18 +87,18 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"merged_DT"</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">gr.hits</span> <span class="op">&lt;-</span> <span class="fu"><a href="CORCES_2020.get_ATAC_peak_overlap.html">CORCES_2020.get_ATAC_peak_overlap</a></span><span class="op">(</span>finemap_dat <span class="op">=</span> <span class="va">merged_DT</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "CORCES_2020:: Extracting overlapping cell-type-specific scATAC-seq peaks"</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Start at 2022-03-04 18:39:30</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Start at 2022-03-04 19:51:18</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> First, import the files formatted as 'data.frame' (2022-03-04 18:39:30) ...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 	import the data file (2022-03-04 18:39:30) ...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> First, import the files formatted as 'data.frame' (2022-03-04 19:51:18) ...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 	import the data file (2022-03-04 19:51:18) ...</span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in XGR::xLiftOver():</span> argument "data.file" is missing, with no default</span>
 <span class="r-in"><span class="va">gr.hits</span><span class="op">$</span><span class="va">extra_col</span> <span class="op">&lt;-</span> <span class="st">"Extra"</span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in gr.hits$extra_col &lt;- "Extra":</span> object 'gr.hits' not found</span>
 <span class="r-in"><span class="va">gr.anchor_hits</span> <span class="op">&lt;-</span> <span class="fu"><a href="CORCES_2020.get_HiChIP_FitHiChIP_overlap.html">CORCES_2020.get_HiChIP_FitHiChIP_overlap</a></span><span class="op">(</span>finemap_dat <span class="op">=</span> <span class="va">merged_DT</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Start at 2022-03-04 18:39:30</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Start at 2022-03-04 19:51:18</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> First, import the files formatted as 'data.frame' (2022-03-04 18:39:30) ...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 	import the data file (2022-03-04 18:39:30) ...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> First, import the files formatted as 'data.frame' (2022-03-04 19:51:18) ...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 	import the data file (2022-03-04 19:51:18) ...</span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in XGR::xLiftOver():</span> argument "data.file" is missing, with no default</span>
 <span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="op">{</span><span class="va">gr.bind</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">gr.hits</span>, <span class="va">gr.anchor_hits</span><span class="op">)</span><span class="op">}</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Error in try({ : object 'gr.hits' not found</span>

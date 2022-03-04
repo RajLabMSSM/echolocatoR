@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,23 +33,20 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">echolocatoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../articles/echolocatoR.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -60,9 +59,6 @@
       <a href="../articles/QTL_pipeline_vignette.html">QTL pipeline vignette</a>
     </li>
     <li>
-      <a href="../articles/full_pipeline_vignette.html">Full pipeline vignette</a>
-    </li>
-    <li>
       <a href="../articles/plotting_vignette.html">Plotting vignette</a>
     </li>
     <li>
@@ -73,7 +69,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/RajLabMSSM/echolocatoR/">
+  <a href="https://github.com/RajLabMSSM/echolocatoR/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -88,20 +84,19 @@
 
       
 
-      </header><script src="summarise_vignette_files/header-attrs-2.9/header-attrs.js"></script><script src="summarise_vignette_files/htmlwidgets-1.5.3/htmlwidgets.js"></script><script src="summarise_vignette_files/jquery-3.5.1/jquery.min.js"></script><link href="summarise_vignette_files/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
-<script src="summarise_vignette_files/datatables-binding-0.18/datatables.js"></script><link href="summarise_vignette_files/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet">
-<link href="summarise_vignette_files/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet">
-<script src="summarise_vignette_files/dt-core-1.10.20/js/jquery.dataTables.min.js"></script><script src="summarise_vignette_files/jszip-1.10.20/jszip.min.js"></script><script src="summarise_vignette_files/pdfmake-1.10.20/pdfmake.js"></script><script src="summarise_vignette_files/pdfmake-1.10.20/vfs_fonts.js"></script><link href="summarise_vignette_files/dt-ext-buttons-1.10.20/css/buttons.dataTables.min.css" rel="stylesheet">
-<script src="summarise_vignette_files/dt-ext-buttons-1.10.20/js/dataTables.buttons.min.js"></script><script src="summarise_vignette_files/dt-ext-buttons-1.10.20/js/buttons.flash.min.js"></script><script src="summarise_vignette_files/dt-ext-buttons-1.10.20/js/buttons.html5.min.js"></script><script src="summarise_vignette_files/dt-ext-buttons-1.10.20/js/buttons.colVis.min.js"></script><script src="summarise_vignette_files/dt-ext-buttons-1.10.20/js/buttons.print.min.js"></script><link href="summarise_vignette_files/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet">
-<script src="summarise_vignette_files/crosstalk-1.1.1/js/crosstalk.min.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Summarise vignette</h1>
-                        <h4 class="author">Brian M. Schilder</h4>
+                        <h4 data-toc-skip class="author"><h4>
+Author: <i>Brian M. Schilder</i>
+</h4></h4>
             
-            <h4 class="date">Most recent update:<br> 2021-06-22</h4>
+            <h4 data-toc-skip class="date"><h4>
+Updated: <i>Mar-04-2022</i>
+</h4></h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/RajLabMSSM/echolocatoR/blob/master/vignettes/summarise_vignette.Rmd"><code>vignettes/summarise_vignette.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/RajLabMSSM/echolocatoR/blob/HEAD/vignettes/summarise_vignette.Rmd" class="external-link"><code>vignettes/summarise_vignette.Rmd</code></a></small>
       <div class="hidden name"><code>summarise_vignette.Rmd</code></div>
 
     </div>
@@ -109,52 +104,46 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">root.dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_chunk.html">opts_chunk</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>
+<code class="sourceCode R"><span class="va">root.dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_chunk.html" class="external-link">opts_chunk</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>
   collapse <span class="op">=</span> <span class="cn">TRUE</span>,
   comment <span class="op">=</span> <span class="st">"#&gt;"</span>,
   root.dir <span class="op">=</span> <span class="va">root.dir</span>, 
   fig.height <span class="op">=</span> <span class="fl">12</span>,
   fig.width <span class="op">=</span> <span class="fl">10</span>
 <span class="op">)</span>  
-<span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_knit.html">opts_knit</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>
+<span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_knit.html" class="external-link">opts_knit</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>
   root.dir <span class="op">=</span> <span class="va">root.dir</span>
   <span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RajLabMSSM/echolocatoR">echolocatoR</a></span><span class="op">)</span> 
-<span class="va">results_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">root.dir</span>,<span class="st">"results"</span><span class="op">)</span></code></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RajLabMSSM/echolocatoR" class="external-link">echolocatoR</a></span><span class="op">)</span> 
+<span class="va">results_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">root.dir</span>,<span class="st">"results"</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RajLabMSSM/echolocatoR">echolocatoR</a></span><span class="op">)</span>
-<span class="kw">if</span><span class="op">(</span> <span class="op">!</span> <span class="st">"XGR"</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/row.names.html">row.names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">)</span><span class="op">{</span> <span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"hfang-bristol/XGR"</span>, dependencies<span class="op">=</span><span class="cn">T</span><span class="op">)</span> <span class="op">}</span>  </code></pre></div>
-<div id="download-data" class="section level1">
-<h1 class="hasAnchor">
-<a href="#download-data" class="anchor"></a>Download data</h1>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RajLabMSSM/echolocatoR" class="external-link">echolocatoR</a></span><span class="op">)</span>
+<span class="co"># if(!require("XGR")) install.packages("XGR")  </span></code></pre></div>
+<div class="section level2">
+<h2 id="download-data">Download data<a class="anchor" aria-label="anchor" href="#download-data"></a>
+</h2>
 <ul>
-<li>Many fine-mapping results can be found on the <a href="https://rajlab.shinyapps.io/Fine_Mapping_Shiny">echolocatoR Fine-mapping Portal</a>.<br>
+<li>Many fine-mapping results can be found on the <a href="https://rajlab.shinyapps.io/Fine_Mapping_Shiny" class="external-link">echolocatoR Fine-mapping Portal</a>.<br>
 </li>
 <li>We will download some of those files here using some built-in APIs.</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">local_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GITHUB.portal_query.html">GITHUB.portal_query</a></span><span class="op">(</span>results_dir <span class="op">=</span> <span class="va">results_dir</span>, 
                                    dataset_types<span class="op">=</span><span class="st">"GWAS"</span>,
-                                   phenotypes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"parkinson"</span><span class="op">)</span>,
+                                   phenotypes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"parkinson"</span><span class="op">)</span>,
                                    file_types <span class="op">=</span> <span class="st">"multi_finemap"</span>,
                                    <span class="co"># loci = c("BST1","CHRNB1","LRRK2"),</span>
-                                   LD_panels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"UKB"</span><span class="op">)</span><span class="op">)</span> 
-<span class="co">#&gt; [1] "Fetching echolocatoR Fine-mapping Portal study metadata."</span>
-<span class="co">#&gt; [1] "+ 1 datasets remain after filtering."</span>
-<span class="co">#&gt; [1] "+ Searching for multi_finemap files..."</span>
-<span class="co">#&gt; [1] "+ 160 unique files identified."</span>
-<span class="co">#&gt; [1] "+ Downloading 83 files..."</span>
-<span class="co">#&gt; [1] "+ Returning local file paths."</span></code></pre></div>
+                                   LD_panels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"UKB"</span><span class="op">)</span><span class="op">)</span> </code></pre></div>
 </div>
-<div id="merge-echolocator-results" class="section level1">
-<h1 class="hasAnchor">
-<a href="#merge-echolocator-results" class="anchor"></a>Merge <code>echolocatoR</code> results</h1>
+<div class="section level2">
+<h2 id="merge-echolocator-results">Merge <code>echolocatoR</code> results<a class="anchor" aria-label="anchor" href="#merge-echolocator-results"></a>
+</h2>
 <p>Gather all of the fine-mapping results generated by <code><a href="../reference/finemap_loci.html">finemap_loci()</a></code> previously.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">merged_DT</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/merge_finemapping_results.html">merge_finemapping_results</a></span><span class="op">(</span>minimum_support<span class="op">=</span><span class="fl">0</span>,
                                        include_leadSNPs<span class="op">=</span><span class="cn">T</span>,
-                                       dataset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">results_dir</span>,
+                                       dataset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">results_dir</span>,
                                                            <span class="st">"GWAS/Nalls23andMe_2019"</span><span class="op">)</span>,  
                                        from_storage<span class="op">=</span><span class="cn">T</span>,
                                        consensus_threshold <span class="op">=</span> <span class="fl">2</span>,
@@ -162,274 +151,67 @@
                                        haploreg_annotation<span class="op">=</span><span class="cn">F</span>,
                                        biomart_annotation<span class="op">=</span><span class="cn">F</span>, 
                                        verbose <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>    
-<span class="fu"><a href="../reference/results_report.html">results_report</a></span><span class="op">(</span><span class="va">merged_DT</span><span class="op">)</span>
-<span class="co">#&gt; echolocatoR results report (all loci):</span>
-<span class="co">#&gt; [1] "+ Overall report:"</span>
-<span class="co">#&gt; [1] "++ 83 Loci."</span>
-<span class="co">#&gt; [1] "++ 416920 SNPs."</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [1] "+ Lead SNP report:"</span>
-<span class="co">#&gt; [1] "++ 83 lead SNPs."</span>
-<span class="co">#&gt; [1] "++ Lead SNP mean PP = 0.41"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [1] "+ Union Credible Set report:"</span>
-<span class="co">#&gt; [1] "++ 465 UCS SNPs."</span>
-<span class="co">#&gt; [1] "++ UCS mean PP = 0.34"</span>
-<span class="co">#&gt; [1] "++ 69 UCS SNPs that are also lead SNPs"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [1] "+ Consensus SNP report:"</span>
-<span class="co">#&gt; [1] "++ 59 Consensus SNPs."</span>
-<span class="co">#&gt; [1] "++ Consensus SNP mean PP = 0.58"</span>
-<span class="co">#&gt; [1] "++ 13 Consensus SNPs that are also lead SNPs"</span></code></pre></div>
+<span class="fu"><a href="../reference/results_report.html">results_report</a></span><span class="op">(</span><span class="va">merged_DT</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="summarise" class="section level1">
-<h1 class="hasAnchor">
-<a href="#summarise" class="anchor"></a>Summarise</h1>
-<div id="summarise-get_snpgroup_counts" class="section level2">
-<h2 class="hasAnchor">
-<a href="#summarise-get_snpgroup_counts" class="anchor"></a><code>SUMMARISE.get_SNPgroup_counts()</code>
+<div class="section level2">
+<h2 id="summarise">Summarise<a class="anchor" aria-label="anchor" href="#summarise"></a>
 </h2>
+<div class="section level3">
+<h3 id="summarise-get_snpgroup_counts">
+<code>SUMMARISE.get_SNPgroup_counts()</code><a class="anchor" aria-label="anchor" href="#summarise-get_snpgroup_counts"></a>
+</h3>
 <p>Get the number of SNPs for each SNP group per locus.<br>
-It also prints the mean number of SNPs for each SNP group across all loci.<br><strong>NOTE</strong>: You will need to make sure to set <code><a href="../reference/merge_finemapping_results.html">merge_finemapping_results(minimum_support=1)</a></code> in the above step to get accurate counts for all SNP groups.</p>
+It also prints the mean number of SNPs for each SNP group across all loci.<br><strong>NOTE</strong>: You will need to make sure to set <code>merge_finemapping_results(minimum_support=1)</code> in the above step to get accurate counts for all SNP groups.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">snp_groups</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SUMMARISE.get_SNPgroup_counts.html">SUMMARISE.get_SNPgroup_counts</a></span><span class="op">(</span>merged_DT<span class="op">=</span><span class="va">merged_DT</span><span class="op">)</span>   
-<span class="co">#&gt; Warning: The `.dots` argument of `group_by()` is deprecated as of dplyr 1.0.0.</span>
-<span class="co">#&gt; Report:: all loci:</span>
-<span class="co">#&gt;            Total.SNPs          nom.sig.GWAS              sig.GWAS </span>
-<span class="co">#&gt;          5023.1325301           920.7469880            82.4578313 </span>
-<span class="co">#&gt;                    CS             Consensus          topConsensus </span>
-<span class="co">#&gt;             5.6024096             0.7108434             0.4216867 </span>
-<span class="co">#&gt; topConsensus.leadGWAS </span>
-<span class="co">#&gt;             0.1566265</span>
-<span class="co">#&gt; Report:: loci with at least one Consensus SNP:</span>
-<span class="co">#&gt;            Total.SNPs          nom.sig.GWAS              sig.GWAS </span>
-<span class="co">#&gt;          4986.3620690           937.6379310            86.7413793 </span>
-<span class="co">#&gt;                    CS             Consensus          topConsensus </span>
-<span class="co">#&gt;             5.5000000             1.0172414             0.6034483 </span>
-<span class="co">#&gt; topConsensus.leadGWAS </span>
-<span class="co">#&gt;             0.2241379</span>
 <span class="fu"><a href="../reference/createDT.html">createDT</a></span><span class="op">(</span><span class="va">snp_groups</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-029716f8229d4198acb5" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-029716f8229d4198acb5">{"x":{"filter":"none","extensions":["Buttons"],"caption":"<caption><\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83"],["ASXL3","ATG14","ATP6V0A1","BIN3","BRIP1","BST1","C5orf24","CAB39L","CAMK2D","CASC16","CD19","CHD9","CHRNB1","CLCN3","CRHR1","CRLS1","CTSB","DLG2","DNAH17","DYRK1A","ELOVL7","FAM171A2","FAM47E-STBD1","FAM49B","FBRSL1","FCGR2A","FGF20","FYN","GALC","GBF1","GCH1","GPNMB","GS1-124K5.11","HIP1R","HLA-DRB5","IGSF9B","INPP5F","IP6K2","ITGA8","ITPKB","KCNIP3","KCNS3","KPNA1","KRTCAP2","LCORL","LINC00693","LMNB1","LOC100131289","LRRK2","MAP4K4","MBNL2","MCCC1","MED12L","MEX3C","MIPOL1","NOD2","NUCKS1","PAM","RETREG3","RIMS1","RIT2","RNF141","RPS12","RPS6KL1","SATB1","SCAF11","SETD1A","SH3GL2","SIPA1L2","SLC2A13","SNCA","SP1","SPPL2B","SPTSSB","STK39","SYT17","TMEM163","TMEM175","TRIM40","UBAP2","VAMP4","VPS13C","WNT3"],[4319,2177,3854,6286,3444,6238,4779,4853,5449,5252,2759,5256,5622,5514,2322,6823,5923,5230,7861,5878,4575,4289,6214,6232,5012,5940,9328,4886,5790,3903,5238,6146,5619,4501,3178,6710,6212,2511,6430,5674,1310,6321,5430,3350,6030,6109,184,4071,3844,5262,4861,4743,5204,5372,5155,4873,4369,5207,3772,6237,5388,7084,5695,4767,4509,4612,2750,7291,6448,2757,5864,5235,7234,5672,5382,4405,4112,5919,2264,5145,5560,5901,2995],[902,634,350,745,560,985,481,842,576,1184,480,1077,1071,1053,1127,319,1398,931,721,803,1213,1284,1989,947,664,740,841,1097,783,1063,1491,1305,1794,1349,653,898,940,1013,719,1245,279,577,911,685,798,655,1,2110,1608,868,580,847,848,449,897,449,1064,1086,347,1511,1192,604,438,529,1633,745,787,1404,725,719,2296,530,772,1051,955,663,1254,1395,223,1190,970,673,837],[5,140,16,10,93,246,27,6,9,149,24,149,3,8,124,27,81,19,80,51,235,53,274,11,2,8,54,17,53,3,165,255,1,67,96,87,109,93,136,39,25,1,48,52,183,6,0,112,482,67,7,177,40,16,1,17,120,188,16,5,220,18,8,80,31,1,217,103,27,119,733,0,2,51,113,4,37,203,0,37,79,47,126],[5,6,6,7,7,6,6,7,5,2,6,2,6,6,5,6,6,6,7,7,5,5,1,6,6,5,5,7,7,6,6,7,6,6,5,6,5,5,6,7,7,2,6,5,7,6,1,6,5,7,7,6,6,6,7,5,6,1,6,6,6,7,6,7,1,5,6,6,6,6,5,6,5,5,6,6,7,6,10,5,2,6,6],[1,1,1,0,0,1,1,0,1,0,1,0,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,0,0,1,0,0,1,2,1,1,1,1,0,0,0,0,1,1,0,1,0,0,1,0,0,1,1,1,0,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,1,1],[1,0,0,0,0,0,0,0,1,0,0,0,0,1,1,1,1,1,0,0,1,0,1,1,1,1,1,0,0,1,0,0,1,1,1,0,1,0,0,0,0,0,0,1,0,1,0,0,1,0,0,0,1,1,0,1,0,1,0,0,0,0,0,0,1,1,0,1,0,0,1,0,1,1,0,0,0,1,1,1,0,1,0],[1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,1,1,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Locus<\/th>\n      <th>Total.SNPs<\/th>\n      <th>nom.sig.GWAS<\/th>\n      <th>sig.GWAS<\/th>\n      <th>CS<\/th>\n      <th>Consensus<\/th>\n      <th>topConsensus<\/th>\n      <th>topConsensus.leadGWAS<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","buttons":["copy","csv","excel","pdf","print"],"scrollY":400,"scrollX":true,"scrollCollapse":true,"paging":false,"columnDefs":[{"className":"dt-center","targets":"_all"},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
-<div id="summarise-get_cs_counts" class="section level2">
-<h2 class="hasAnchor">
-<a href="#summarise-get_cs_counts" class="anchor"></a><code>SUMMARISE.get_CS_counts()</code>
-</h2>
+<div class="section level3">
+<h3 id="summarise-get_cs_counts">
+<code>SUMMARISE.get_CS_counts()</code><a class="anchor" aria-label="anchor" href="#summarise-get_cs_counts"></a>
+</h3>
 <p>County the number of tool-specific and UCS Credible Set SNPs per locus.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">UCS_counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SUMMARISE.get_CS_counts.html">SUMMARISE.get_CS_counts</a></span><span class="op">(</span>merged_DT <span class="op">=</span> <span class="va">merged_DT</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">UCS_counts</span><span class="op">)</span>
-<span class="co">#&gt;           Locus ABF.CS_size SUSIE.CS_size POLYFUN_SUSIE.CS_size FINEMAP.CS_size</span>
-<span class="co">#&gt; 1        TRIM40           0            10                     0               1</span>
-<span class="co">#&gt; 2          BIN3           0             5                     5               5</span>
-<span class="co">#&gt; 3         BRIP1           0             4                     4               5</span>
-<span class="co">#&gt; 4        CAB39L           0             3                     5               5</span>
-<span class="co">#&gt; 5        DNAH17           0             5                     4               5</span>
-<span class="co">#&gt; 6        DYRK1A           0             2                     3               5</span>
-<span class="co">#&gt; 7           FYN           0             3                     2               5</span>
-<span class="co">#&gt; 8          GALC           0             3                     3               5</span>
-<span class="co">#&gt; 9         GPNMB           0             4                     5               5</span>
-<span class="co">#&gt; 10        ITPKB           0             4                     4               5</span>
-<span class="co">#&gt; 11       KCNIP3           0             3                     3               5</span>
-<span class="co">#&gt; 12        LCORL           0             4                     3               5</span>
-<span class="co">#&gt; 13       MAP4K4           0             4                     3               5</span>
-<span class="co">#&gt; 14        MBNL2           0             4                     4               5</span>
-<span class="co">#&gt; 15       MIPOL1           0             2                     4               5</span>
-<span class="co">#&gt; 16       RNF141           0             3                     4               5</span>
-<span class="co">#&gt; 17      RPS6KL1           0             2                     4               5</span>
-<span class="co">#&gt; 18      TMEM163           0             5                     5               5</span>
-<span class="co">#&gt; 19        ATG14           0             5                     5               5</span>
-<span class="co">#&gt; 20     ATP6V0A1           0             4                     4               5</span>
-<span class="co">#&gt; 21         BST1           0             3                     3               5</span>
-<span class="co">#&gt; 22      C5orf24           0             4                     4               5</span>
-<span class="co">#&gt; 23         CD19           0             5                     5               5</span>
-<span class="co">#&gt; 24       CHRNB1           0             4                     5               5</span>
-<span class="co">#&gt; 25        CLCN3           0             5                     4               5</span>
-<span class="co">#&gt; 26        CRLS1           0             3                     4               5</span>
-<span class="co">#&gt; 27         CTSB           0             3                     2               5</span>
-<span class="co">#&gt; 28         DLG2           0             3                     3               5</span>
-<span class="co">#&gt; 29       FAM49B           0             4                     4               5</span>
-<span class="co">#&gt; 30       FBRSL1           0             3                     3               5</span>
-<span class="co">#&gt; 31         GBF1           0             5                     5               5</span>
-<span class="co">#&gt; 32         GCH1           0             5                     2               4</span>
-<span class="co">#&gt; 33 GS1-124K5.11           0             2                     2               5</span>
-<span class="co">#&gt; 34        HIP1R           1             3                     3               5</span>
-<span class="co">#&gt; 35       IGSF9B           0             4                     4               5</span>
-<span class="co">#&gt; 36        ITGA8           0             4                     4               4</span>
-<span class="co">#&gt; 37        KPNA1           0             2                     2               5</span>
-<span class="co">#&gt; 38    LINC00693           0             2                     3               5</span>
-<span class="co">#&gt; 39 LOC100131289           0             5                     0               5</span>
-<span class="co">#&gt; 40        MCCC1           0             5                     5               5</span>
-<span class="co">#&gt; 41       MED12L           0             4                     4               5</span>
-<span class="co">#&gt; 42        MEX3C           0             1                     2               5</span>
-<span class="co">#&gt; 43       NUCKS1           0             5                     5               5</span>
-<span class="co">#&gt; 44      RETREG3           0             4                     4               5</span>
-<span class="co">#&gt; 45        RIMS1           0             1                     1               5</span>
-<span class="co">#&gt; 46         RIT2           0             2                     2               5</span>
-<span class="co">#&gt; 47        RPS12           0             2                     2               5</span>
-<span class="co">#&gt; 48       SETD1A           0             3                     3               5</span>
-<span class="co">#&gt; 49       SH3GL2           0             3                     3               5</span>
-<span class="co">#&gt; 50      SIPA1L2           0             3                     3               5</span>
-<span class="co">#&gt; 51      SLC2A13           0             5                     5               5</span>
-<span class="co">#&gt; 52          SP1           0             3                     3               5</span>
-<span class="co">#&gt; 53        STK39           0             5                     5               5</span>
-<span class="co">#&gt; 54        SYT17           0             3                     3               5</span>
-<span class="co">#&gt; 55      TMEM175           1             4                     4               5</span>
-<span class="co">#&gt; 56       VPS13C           0             2                     2               5</span>
-<span class="co">#&gt; 57         WNT3           0             4                     4               5</span>
-<span class="co">#&gt; 58        ASXL3           0             2                     2               5</span>
-<span class="co">#&gt; 59       CAMK2D           0             4                     4               5</span>
-<span class="co">#&gt; 60        CRHR1           0             5                     5               5</span>
-<span class="co">#&gt; 61       ELOVL7           0             2                     2               4</span>
-<span class="co">#&gt; 62     FAM171A2           0             3                     3               5</span>
-<span class="co">#&gt; 63       FCGR2A           0             3                     3               5</span>
-<span class="co">#&gt; 64        FGF20           0             2                     2               5</span>
-<span class="co">#&gt; 65     HLA-DRB5           0             5                     0               5</span>
-<span class="co">#&gt; 66       INPP5F           1             5                     5               5</span>
-<span class="co">#&gt; 67        IP6K2           0             4                     5               4</span>
-<span class="co">#&gt; 68      KRTCAP2           0             3                     3               5</span>
-<span class="co">#&gt; 69        LRRK2           0             4                     4               5</span>
-<span class="co">#&gt; 70         NOD2           0             3                     3               4</span>
-<span class="co">#&gt; 71       SCAF11           0             2                     2               5</span>
-<span class="co">#&gt; 72         SNCA           0             4                     4               5</span>
-<span class="co">#&gt; 73       SPPL2B           0             4                     3               4</span>
-<span class="co">#&gt; 74       SPTSSB           0             2                     2               5</span>
-<span class="co">#&gt; 75        UBAP2           0             2                     2               5</span>
-<span class="co">#&gt; 76       CASC16           0             3                     3               0</span>
-<span class="co">#&gt; 77         CHD9           0             3                     3               0</span>
-<span class="co">#&gt; 78        KCNS3           0             5                     4               0</span>
-<span class="co">#&gt; 79        VAMP4           0             5                     3               0</span>
-<span class="co">#&gt; 80 FAM47E-STBD1           0             3                     3               0</span>
-<span class="co">#&gt; 81        LMNB1           0             0                     0               1</span>
-<span class="co">#&gt; 82          PAM           0             2                     3               0</span>
-<span class="co">#&gt; 83        SATB1           0             3                     3               0</span>
-<span class="co">#&gt;    mean.CS_size UCS.CS_size</span>
-<span class="co">#&gt; 1             0          10</span>
-<span class="co">#&gt; 2             0           7</span>
-<span class="co">#&gt; 3             0           7</span>
-<span class="co">#&gt; 4             0           7</span>
-<span class="co">#&gt; 5             0           7</span>
-<span class="co">#&gt; 6             0           7</span>
-<span class="co">#&gt; 7             0           7</span>
-<span class="co">#&gt; 8             0           7</span>
-<span class="co">#&gt; 9             0           7</span>
-<span class="co">#&gt; 10            0           7</span>
-<span class="co">#&gt; 11            0           7</span>
-<span class="co">#&gt; 12            0           7</span>
-<span class="co">#&gt; 13            0           7</span>
-<span class="co">#&gt; 14            0           7</span>
-<span class="co">#&gt; 15            0           7</span>
-<span class="co">#&gt; 16            0           7</span>
-<span class="co">#&gt; 17            0           7</span>
-<span class="co">#&gt; 18            0           7</span>
-<span class="co">#&gt; 19            0           6</span>
-<span class="co">#&gt; 20            0           6</span>
-<span class="co">#&gt; 21            0           6</span>
-<span class="co">#&gt; 22            0           6</span>
-<span class="co">#&gt; 23            0           6</span>
-<span class="co">#&gt; 24            0           6</span>
-<span class="co">#&gt; 25            0           6</span>
-<span class="co">#&gt; 26            0           6</span>
-<span class="co">#&gt; 27            0           6</span>
-<span class="co">#&gt; 28            0           6</span>
-<span class="co">#&gt; 29            0           6</span>
-<span class="co">#&gt; 30            0           6</span>
-<span class="co">#&gt; 31            0           6</span>
-<span class="co">#&gt; 32            0           6</span>
-<span class="co">#&gt; 33            0           6</span>
-<span class="co">#&gt; 34            1           6</span>
-<span class="co">#&gt; 35            0           6</span>
-<span class="co">#&gt; 36            0           6</span>
-<span class="co">#&gt; 37            0           6</span>
-<span class="co">#&gt; 38            0           6</span>
-<span class="co">#&gt; 39            0           6</span>
-<span class="co">#&gt; 40            0           6</span>
-<span class="co">#&gt; 41            0           6</span>
-<span class="co">#&gt; 42            0           6</span>
-<span class="co">#&gt; 43            0           6</span>
-<span class="co">#&gt; 44            0           6</span>
-<span class="co">#&gt; 45            0           6</span>
-<span class="co">#&gt; 46            1           6</span>
-<span class="co">#&gt; 47            0           6</span>
-<span class="co">#&gt; 48            0           6</span>
-<span class="co">#&gt; 49            0           6</span>
-<span class="co">#&gt; 50            0           6</span>
-<span class="co">#&gt; 51            0           6</span>
-<span class="co">#&gt; 52            0           6</span>
-<span class="co">#&gt; 53            0           6</span>
-<span class="co">#&gt; 54            0           6</span>
-<span class="co">#&gt; 55            0           6</span>
-<span class="co">#&gt; 56            0           6</span>
-<span class="co">#&gt; 57            0           6</span>
-<span class="co">#&gt; 58            0           5</span>
-<span class="co">#&gt; 59            0           5</span>
-<span class="co">#&gt; 60            0           5</span>
-<span class="co">#&gt; 61            0           5</span>
-<span class="co">#&gt; 62            0           5</span>
-<span class="co">#&gt; 63            0           5</span>
-<span class="co">#&gt; 64            0           5</span>
-<span class="co">#&gt; 65            0           5</span>
-<span class="co">#&gt; 66            1           5</span>
-<span class="co">#&gt; 67            0           5</span>
-<span class="co">#&gt; 68            0           5</span>
-<span class="co">#&gt; 69            0           5</span>
-<span class="co">#&gt; 70            0           5</span>
-<span class="co">#&gt; 71            0           5</span>
-<span class="co">#&gt; 72            0           5</span>
-<span class="co">#&gt; 73            0           5</span>
-<span class="co">#&gt; 74            0           5</span>
-<span class="co">#&gt; 75            0           5</span>
-<span class="co">#&gt; 76            0           2</span>
-<span class="co">#&gt; 77            0           2</span>
-<span class="co">#&gt; 78            0           2</span>
-<span class="co">#&gt; 79            0           2</span>
-<span class="co">#&gt; 80            0           1</span>
-<span class="co">#&gt; 81            0           1</span>
-<span class="co">#&gt; 82            0           1</span>
-<span class="co">#&gt; 83            0           1</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">UCS_counts</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
-<div id="plot" class="section level1">
-<h1 class="hasAnchor">
-<a href="#plot" class="anchor"></a>Plot</h1>
+<div class="section level2">
+<h2 id="plot">Plot<a class="anchor" aria-label="anchor" href="#plot"></a>
+</h2>
 <ul>
 <li>The following functions each return a list containing both the <code>...$plot</code> and the <code>...$data</code> used to make the plot.<br>
 </li>
 <li>Where available, <code>snp_filter</code> allows user to use any filtering argument (supplied as a string) to subset the data they want to use in the plot/data.</li>
 </ul>
-<div id="summarise-cs_bin_plot" class="section level2">
-<h2 class="hasAnchor">
-<a href="#summarise-cs_bin_plot" class="anchor"></a><code>SUMMARISE.CS_bin_plot()</code>
-</h2>
+<div class="section level3">
+<h3 id="summarise-cs_bin_plot">
+<code>SUMMARISE.CS_bin_plot()</code><a class="anchor" aria-label="anchor" href="#summarise-cs_bin_plot"></a>
+</h3>
 <p>Plot the number of number that had Credible Sets of a certain size (per tool).</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">bin_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SUMMARISE.CS_bin_plot.html">SUMMARISE.CS_bin_plot</a></span><span class="op">(</span>merged_DT <span class="op">=</span> <span class="va">merged_DT</span>, 
-                                  show_plot <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> </code></pre></div>
-<p><img src="summarise_vignette_files/figure-html/SUMMARISE.CS_bin_plot()-1.png" width="960"></p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/createDT.html">createDT</a></span><span class="op">(</span><span class="va">bin_plot</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-55c6572dea62a8411c3e" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-55c6572dea62a8411c3e">{"x":{"filter":"none","extensions":["Buttons"],"caption":"<caption><\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143","144","145","146","147","148","149","150","151","152","153","154","155","156","157","158","159","160","161","162","163","164","165","166","167","168","169","170","171","172","173","174","175","176","177","178","179","180","181","182","183","184","185","186","187","188","189","190","191","192","193","194","195","196","197","198","199","200","201","202","203","204","205","206","207","208","209","210","211","212","213","214","215","216","217","218","219","220","221","222","223","224","225","226","227","228","229","230","231","232","233","234","235","236","237","238","239","240","241","242","243","244","245","246","247","248","249","250","251","252","253","254","255","256","257","258","259","260","261","262","263","264","265","266","267","268","269","270","271","272","273","274","275","276","277","278","279","280","281","282","283","284","285","286","287","288","289","290","291","292","293","294","295","296","297","298","299","300","301","302","303","304","305","306","307","308","309","310","311","312","313","314","315","316","317","318","319","320","321","322","323","324","325","326","327","328","329","330","331","332","333","334","335","336","337","338","339","340","341","342","343","344","345","346","347","348","349","350","351","352","353","354","355","356","357","358","359","360","361","362","363","364","365","366","367","368","369","370","371","372","373","374","375","376","377","378","379","380","381","382","383","384","385","386","387","388","389","390","391","392","393","394","395","396","397","398","399","400","401","402","403","404","405","406","407","408","409","410","411","412","413","414","415","416","417","418","419","420","421","422","423","424","425","426","427","428","429","430","431","432","433","434","435","436","437","438","439","440","441","442","443","444","445","446","447","448","449","450","451","452","453","454","455","456","457","458","459","460","461","462","463","464","465","466","467","468","469","470","471","472","473","474","475","476","477","478","479","480","481","482","483","484","485","486","487","488","489","490","491","492","493","494","495","496","497","498"],["TRIM40","BIN3","BRIP1","CAB39L","DNAH17","DYRK1A","FYN","GALC","GPNMB","ITPKB","KCNIP3","LCORL","MAP4K4","MBNL2","MIPOL1","RNF141","RPS6KL1","TMEM163","ATG14","ATP6V0A1","BST1","C5orf24","CD19","CHRNB1","CLCN3","CRLS1","CTSB","DLG2","FAM49B","FBRSL1","GBF1","GCH1","GS1-124K5.11","HIP1R","IGSF9B","ITGA8","KPNA1","LINC00693","LOC100131289","MCCC1","MED12L","MEX3C","NUCKS1","RETREG3","RIMS1","RIT2","RPS12","SETD1A","SH3GL2","SIPA1L2","SLC2A13","SP1","STK39","SYT17","TMEM175","VPS13C","WNT3","ASXL3","CAMK2D","CRHR1","ELOVL7","FAM171A2","FCGR2A","FGF20","HLA-DRB5","INPP5F","IP6K2","KRTCAP2","LRRK2","NOD2","SCAF11","SNCA","SPPL2B","SPTSSB","UBAP2","CASC16","CHD9","KCNS3","VAMP4","FAM47E-STBD1","LMNB1","PAM","SATB1","TRIM40","BIN3","BRIP1","CAB39L","DNAH17","DYRK1A","FYN","GALC","GPNMB","ITPKB","KCNIP3","LCORL","MAP4K4","MBNL2","MIPOL1","RNF141","RPS6KL1","TMEM163","ATG14","ATP6V0A1","BST1","C5orf24","CD19","CHRNB1","CLCN3","CRLS1","CTSB","DLG2","FAM49B","FBRSL1","GBF1","GCH1","GS1-124K5.11","HIP1R","IGSF9B","ITGA8","KPNA1","LINC00693","LOC100131289","MCCC1","MED12L","MEX3C","NUCKS1","RETREG3","RIMS1","RIT2","RPS12","SETD1A","SH3GL2","SIPA1L2","SLC2A13","SP1","STK39","SYT17","TMEM175","VPS13C","WNT3","ASXL3","CAMK2D","CRHR1","ELOVL7","FAM171A2","FCGR2A","FGF20","HLA-DRB5","INPP5F","IP6K2","KRTCAP2","LRRK2","NOD2","SCAF11","SNCA","SPPL2B","SPTSSB","UBAP2","CASC16","CHD9","KCNS3","VAMP4","FAM47E-STBD1","LMNB1","PAM","SATB1","TRIM40","BIN3","BRIP1","CAB39L","DNAH17","DYRK1A","FYN","GALC","GPNMB","ITPKB","KCNIP3","LCORL","MAP4K4","MBNL2","MIPOL1","RNF141","RPS6KL1","TMEM163","ATG14","ATP6V0A1","BST1","C5orf24","CD19","CHRNB1","CLCN3","CRLS1","CTSB","DLG2","FAM49B","FBRSL1","GBF1","GCH1","GS1-124K5.11","HIP1R","IGSF9B","ITGA8","KPNA1","LINC00693","LOC100131289","MCCC1","MED12L","MEX3C","NUCKS1","RETREG3","RIMS1","RIT2","RPS12","SETD1A","SH3GL2","SIPA1L2","SLC2A13","SP1","STK39","SYT17","TMEM175","VPS13C","WNT3","ASXL3","CAMK2D","CRHR1","ELOVL7","FAM171A2","FCGR2A","FGF20","HLA-DRB5","INPP5F","IP6K2","KRTCAP2","LRRK2","NOD2","SCAF11","SNCA","SPPL2B","SPTSSB","UBAP2","CASC16","CHD9","KCNS3","VAMP4","FAM47E-STBD1","LMNB1","PAM","SATB1","TRIM40","BIN3","BRIP1","CAB39L","DNAH17","DYRK1A","FYN","GALC","GPNMB","ITPKB","KCNIP3","LCORL","MAP4K4","MBNL2","MIPOL1","RNF141","RPS6KL1","TMEM163","ATG14","ATP6V0A1","BST1","C5orf24","CD19","CHRNB1","CLCN3","CRLS1","CTSB","DLG2","FAM49B","FBRSL1","GBF1","GCH1","GS1-124K5.11","HIP1R","IGSF9B","ITGA8","KPNA1","LINC00693","LOC100131289","MCCC1","MED12L","MEX3C","NUCKS1","RETREG3","RIMS1","RIT2","RPS12","SETD1A","SH3GL2","SIPA1L2","SLC2A13","SP1","STK39","SYT17","TMEM175","VPS13C","WNT3","ASXL3","CAMK2D","CRHR1","ELOVL7","FAM171A2","FCGR2A","FGF20","HLA-DRB5","INPP5F","IP6K2","KRTCAP2","LRRK2","NOD2","SCAF11","SNCA","SPPL2B","SPTSSB","UBAP2","CASC16","CHD9","KCNS3","VAMP4","FAM47E-STBD1","LMNB1","PAM","SATB1","TRIM40","BIN3","BRIP1","CAB39L","DNAH17","DYRK1A","FYN","GALC","GPNMB","ITPKB","KCNIP3","LCORL","MAP4K4","MBNL2","MIPOL1","RNF141","RPS6KL1","TMEM163","ATG14","ATP6V0A1","BST1","C5orf24","CD19","CHRNB1","CLCN3","CRLS1","CTSB","DLG2","FAM49B","FBRSL1","GBF1","GCH1","GS1-124K5.11","HIP1R","IGSF9B","ITGA8","KPNA1","LINC00693","LOC100131289","MCCC1","MED12L","MEX3C","NUCKS1","RETREG3","RIMS1","RIT2","RPS12","SETD1A","SH3GL2","SIPA1L2","SLC2A13","SP1","STK39","SYT17","TMEM175","VPS13C","WNT3","ASXL3","CAMK2D","CRHR1","ELOVL7","FAM171A2","FCGR2A","FGF20","HLA-DRB5","INPP5F","IP6K2","KRTCAP2","LRRK2","NOD2","SCAF11","SNCA","SPPL2B","SPTSSB","UBAP2","CASC16","CHD9","KCNS3","VAMP4","FAM47E-STBD1","LMNB1","PAM","SATB1","TRIM40","BIN3","BRIP1","CAB39L","DNAH17","DYRK1A","FYN","GALC","GPNMB","ITPKB","KCNIP3","LCORL","MAP4K4","MBNL2","MIPOL1","RNF141","RPS6KL1","TMEM163","ATG14","ATP6V0A1","BST1","C5orf24","CD19","CHRNB1","CLCN3","CRLS1","CTSB","DLG2","FAM49B","FBRSL1","GBF1","GCH1","GS1-124K5.11","HIP1R","IGSF9B","ITGA8","KPNA1","LINC00693","LOC100131289","MCCC1","MED12L","MEX3C","NUCKS1","RETREG3","RIMS1","RIT2","RPS12","SETD1A","SH3GL2","SIPA1L2","SLC2A13","SP1","STK39","SYT17","TMEM175","VPS13C","WNT3","ASXL3","CAMK2D","CRHR1","ELOVL7","FAM171A2","FCGR2A","FGF20","HLA-DRB5","INPP5F","IP6K2","KRTCAP2","LRRK2","NOD2","SCAF11","SNCA","SPPL2B","SPTSSB","UBAP2","CASC16","CHD9","KCNS3","VAMP4","FAM47E-STBD1","LMNB1","PAM","SATB1"],["ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","ABF.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","POLYFUN_SUSIE.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","FINEMAP.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","mean.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size","UCS.CS_size"],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,5,4,3,5,2,3,3,4,4,3,4,4,4,2,3,2,5,5,4,3,4,5,4,5,3,3,3,4,3,5,5,2,3,4,4,2,2,5,5,4,1,5,4,1,2,2,3,3,3,5,3,5,3,4,2,4,2,4,5,2,3,3,2,5,5,4,3,4,3,2,4,4,2,2,3,3,5,5,3,0,2,3,0,5,4,5,4,3,2,3,5,4,3,3,3,4,4,4,4,5,5,4,3,4,5,5,4,4,2,3,4,3,5,2,2,3,4,4,2,3,0,5,4,2,5,4,1,2,2,3,3,3,5,3,5,3,4,2,4,2,4,5,2,3,3,2,0,5,5,3,4,3,2,4,3,2,2,3,3,4,3,3,0,3,3,1,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,4,5,5,5,4,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,4,5,5,5,5,5,4,5,5,4,5,5,4,5,5,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,2,2,2,2,1,1,1,1],["ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","ABF","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","POLYFUN_SUSIE","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","FINEMAP","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","mean","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS","UCS"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","1","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","1","0","0","0","0","0","0","0","0","0","0","1","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","8-10","5-7","2-4","2-4","5-7","2-4","2-4","2-4","2-4","2-4","2-4","2-4","2-4","2-4","2-4","2-4","2-4","5-7","5-7","2-4","2-4","2-4","5-7","2-4","5-7","2-4","2-4","2-4","2-4","2-4","5-7","5-7","2-4","2-4","2-4","2-4","2-4","2-4","5-7","5-7","2-4","1","5-7","2-4","1","2-4","2-4","2-4","2-4","2-4","5-7","2-4","5-7","2-4","2-4","2-4","2-4","2-4","2-4","5-7","2-4","2-4","2-4","2-4","5-7","5-7","2-4","2-4","2-4","2-4","2-4","2-4","2-4","2-4","2-4","2-4","2-4","5-7","5-7","2-4","0","2-4","2-4","0","5-7","2-4","5-7","2-4","2-4","2-4","2-4","5-7","2-4","2-4","2-4","2-4","2-4","2-4","2-4","2-4","5-7","5-7","2-4","2-4","2-4","5-7","5-7","2-4","2-4","2-4","2-4","2-4","2-4","5-7","2-4","2-4","2-4","2-4","2-4","2-4","2-4","0","5-7","2-4","2-4","5-7","2-4","1","2-4","2-4","2-4","2-4","2-4","5-7","2-4","5-7","2-4","2-4","2-4","2-4","2-4","2-4","5-7","2-4","2-4","2-4","2-4","0","5-7","5-7","2-4","2-4","2-4","2-4","2-4","2-4","2-4","2-4","2-4","2-4","2-4","2-4","2-4","0","2-4","2-4","1","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","2-4","5-7","5-7","5-7","2-4","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","2-4","5-7","5-7","5-7","5-7","5-7","2-4","5-7","5-7","2-4","5-7","5-7","2-4","5-7","5-7","0","0","0","0","0","1","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","1","0","0","0","0","0","0","0","0","0","0","0","1","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","1","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","8-10","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","5-7","2-4","2-4","2-4","2-4","1","1","1","1"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Locus<\/th>\n      <th>variable<\/th>\n      <th>CS_size<\/th>\n      <th>Method<\/th>\n      <th>bin<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","buttons":["copy","csv","excel","pdf","print"],"scrollY":400,"scrollX":true,"scrollCollapse":true,"paging":false,"columnDefs":[{"className":"dt-center","targets":"_all"},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+                                  show_plot <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> 
+<span class="fu"><a href="../reference/createDT.html">createDT</a></span><span class="op">(</span><span class="va">bin_plot</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="summarise-coloc_nominated_egenes" class="section level2">
-<h2 class="hasAnchor">
-<a href="#summarise-coloc_nominated_egenes" class="anchor"></a><code>SUMMARISE.coloc_nominated_eGenes()</code>
-</h2>
+<div class="section level3">
+<h3 id="summarise-coloc_nominated_egenes">
+<code>SUMMARISE.coloc_nominated_eGenes()</code><a class="anchor" aria-label="anchor" href="#summarise-coloc_nominated_egenes"></a>
+</h3>
 <p>If you ran colocalization tests with <code>echolocatoR</code> (via <code>catalogueR</code>) you can use those results to come up with a top QTL nominated gene for each locus (potentially implicating that gene in your phenotype).</p>
-<div id="download-coloc-results-from-echolocator-fine-mapping-portal-" class="section level3">
-<h3 class="hasAnchor">
-<a href="#download-coloc-results-from-echolocator-fine-mapping-portal-" class="anchor"></a>Download COLOC results from <a href="https://rajlab.shinyapps.io/Fine_Mapping_Shiny">echolocatoR Fine-mapping Portal</a>.</h3>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="section level4">
+<h4 id="download-coloc-results-from-echolocator-fine-mapping-portal-">Download COLOC results from <a href="https://rajlab.shinyapps.io/Fine_Mapping_Shiny" class="external-link">echolocatoR Fine-mapping Portal</a>.<a class="anchor" aria-label="anchor" href="#download-coloc-results-from-echolocator-fine-mapping-portal-"></a>
+</h4>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">remote_coloc</span> <span class="op">&lt;-</span> <span class="st">"https://github.com/RajLabMSSM/Fine_Mapping_Shiny/raw/master/www/data/GWAS/Nalls23andMe_2019/_genome_wide/COLOC/coloc.eQTL_Catalogue_ALL.csv.gz"</span>
-<span class="va">local_coloc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span><span class="op">(</span><span class="st">"https://github.com/RajLabMSSM/Fine_Mapping_Shiny/raw/master/www/data"</span>,
+<span class="va">local_coloc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"https://github.com/RajLabMSSM/Fine_Mapping_Shiny/raw/master/www/data"</span>,
                     <span class="va">results_dir</span>,
                     <span class="va">remote_coloc</span><span class="op">)</span>
-<span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files.html">file.exists</a></span><span class="op">(</span><span class="va">local_coloc</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/basename.html">dirname</a></span><span class="op">(</span><span class="va">local_coloc</span><span class="op">)</span>, showWarnings <span class="op">=</span> <span class="cn">F</span>, recursive <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
-  <span class="fu"><a href="https://rdrr.io/r/utils/download.file.html">download.file</a></span><span class="op">(</span><span class="va">remote_coloc</span>, destfile <span class="op">=</span> <span class="va">local_coloc</span><span class="op">)</span>
+<span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">local_coloc</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">dirname</a></span><span class="op">(</span><span class="va">local_coloc</span><span class="op">)</span>, showWarnings <span class="op">=</span> <span class="cn">F</span>, recursive <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="va">remote_coloc</span>, destfile <span class="op">=</span> <span class="va">local_coloc</span><span class="op">)</span>
 <span class="op">}</span> </code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">gg_egene</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SUMMARISE.coloc_nominated_eGenes.html">SUMMARISE.coloc_nominated_eGenes</a></span><span class="op">(</span>coloc_results <span class="op">=</span> <span class="va">local_coloc</span>,
                                              merged_DT <span class="op">=</span> <span class="va">merged_DT</span>,
@@ -440,56 +222,43 @@ It also prints the mean number of SNPs for each SNP group across all loci.<br><s
                                              x_lab <span class="op">=</span> <span class="cn">NULL</span>,
                                              label_yaxis <span class="op">=</span> <span class="cn">T</span>, 
                                              show_plot <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
-<span class="co">#&gt; [1] "+ SUMMARISE:: Nominating genes by top colocalized eQTL eGenes"</span></code></pre></div>
-<p><img src="summarise_vignette_files/figure-html/SUMMARISE.coloc_nominated_eGenes(-1.png" width="960"></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/createDT.html">createDT</a></span><span class="op">(</span><span class="va">gg_egene</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-855c7aa1e95ea7e59a7a" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-855c7aa1e95ea7e59a7a">{"x":{"filter":"none","extensions":["Buttons"],"caption":"<caption><\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47"],["BIN3","BRIP1","BST1","C5orf24","CAB39L","CD19","CHRNB1","CRHR1","CTSB","DNAH17","DYRK1A","FAM171A2","FAM47E-STBD1","FBRSL1","FCGR2A","FYN","GALC","GCH1","GPNMB","GS1-124K5.11","HIP1R","IP6K2","KCNIP3","KPNA1","LCORL","LOC100131289","LRRK2","MAP4K4","MED12L","MEX3C","NOD2","NUCKS1","PAM","RETREG3","RNF141","RPS6KL1","SCAF11","SETD1A","SPPL2B","SPTSSB","STK39","SYT17","TMEM175","TRIM40","UBAP2","VAMP4","WNT3"],["Kasela_2017.T-cell_CD4","TwinsUK.fat","CEDAR.neutrophil_CD15","BrainSeq.brain","BrainSeq.brain","BrainSeq.brain","BLUEPRINT.monocyte","Lepik_2017.blood","BLUEPRINT.monocyte","TwinsUK.fat","BrainSeq.brain","TwinsUK.LCL","CEDAR.transverse_colon","CEDAR.T-cell_CD8","GEUVADIS.LCL","ROSMAP.brain_naive","BLUEPRINT.neutrophil","Schmiedel_2018.CD4_T-cell_anti-CD3-CD28","Fairfax_2014.monocyte_LPS24","TwinsUK.fat","BLUEPRINT.T-cell","Lepik_2017.blood","ROSMAP.brain_naive","Kasela_2017.T-cell_CD4","TwinsUK.LCL","BLUEPRINT.T-cell","BLUEPRINT.monocyte","BLUEPRINT.T-cell","TwinsUK.fat","GEUVADIS.LCL","Kasela_2017.T-cell_CD4","ROSMAP.brain_naive","GEUVADIS.LCL","BLUEPRINT.monocyte","Quach_2016.monocyte_R848","GEUVADIS.LCL","Nedelec_2016.macrophage_Salmonella","CEDAR.transverse_colon","ROSMAP.brain_naive","HipSci.iPSC","HipSci.iPSC","Fairfax_2012.B-cell_CD19","CEDAR.monocyte_CD14","Lepik_2017.blood","TwinsUK.LCL","Quach_2016.monocyte_IAV","Quach_2016.monocyte_LPS"],["BIN3","MED13","BST1","CAMLG","CAB39L","EIF3C","CHRNB1","KANSL1-AS1","CTSB","DNAH17","DYRK1A","ARHGAP27","FAM47E-STBD1","POLE","ARHGAP30","FYN","LINC01146","FBXO34","AC005082.12","ZNF138","HIP1R","NCKIPSD","KCNIP3","KPNA1","DCAF16","HIST1H4J","LRRK2","MAP4K4","P2RY12","MEX3C","NOD2","RAB7L1","PAM","PSMC3IP","RNF141","PROX2","SCAF11","HSD3B7","LSM7","SPTSSB","STK39","SYT17","LETM1","PSORS1C3","UBAP1","VAMP4","NSF"],["rs2280104","rs61169879","rs4698412","rs76945664","rs9535211","rs2904880","rs9217","rs62053943","rs1692821","rs666463","rs11088398","rs17686238","rs6854006","rs11614702","rs4657041","rs7749147","rs1561758","rs8018800","rs1637221","rs62469882","rs10847864","rs12497850","rs3772044","rs55961674","rs6841793","rs9468206","rs76904798","rs4851487","rs3732765","rs11082860","rs34133110","rs823118","rs7731395","rs12951632","rs73411920","rs13391","rs6582588","rs4889514","rs12976273","rs1450522","rs1474055","rs6497339","rs34311866","rs1265096","rs1785511","rs112293138","rs199453"],[1.61852e-12,2.79548e-06,5.9219e-14,2.72642e-43,1.07283e-12,1.97308e-08,1.39928e-25,7.28818e-91,1.18269e-30,3.0846e-21,3.53977e-07,7.07904e-23,7.16652e-08,1.19215e-05,4.84291e-05,3.14104e-06,6.47607e-27,5.31672e-07,1.85707e-27,1.37837e-09,6.36722e-06,8.1433e-28,5.51656e-07,1.77661e-10,2.04599e-11,3.85206e-08,5.32566e-16,1.02592e-08,1.17041e-41,7.28849e-10,4.40893e-11,6.11653e-12,1.04089e-15,4.63716e-14,1.11457e-16,2.47335e-05,5.50381e-07,1.04284e-08,5.17338e-28,2.75583e-06,5.96808e-12,1.67872e-07,7.91743e-05,2.28989e-34,3.54315e-07,1.53874e-16,1.97571e-12],[0.391844,0.158793,0.435714,0.0555556,0.213992,0.154321,0.324607,0.104034,0.277487,0.169291,0.245885,0.100478,0.368881,0.49278,0.497753,0.137083,0.433673,0.320225,0.426154,0.0485564,0.293413,0.343949,0.239895,0.132979,0.157895,0.257485,0.157068,0.392216,0.355643,0.394382,0.393617,0.428823,0.28427,0.267016,0.235602,0.3,0.42515,0.353147,0.328647,0.322981,0.110248,0.397163,0.178322,0.081741,0.2811,0.20202,0.339674],[0.00744033858127595,0.00982450769168514,0.00726291870290788,0.0196078283737143,0.00611658803750482,0.00788321116325861,0.0119404914229635,0.011388912879732,0.013057148090296,0.00933173167547613,0.00554835345662187,0.0132346040014327,0.00750942060096526,0.00722172243384108,0.00449447279300624,0.00742856816451744,0.0103868600790098,0.0258083104847718,0.00629107286617206,0.0284063542744037,0.014441374766033,0.00470454302055469,0.00481906686581797,0.0153782960274984,0.00899619993886272,0.0156601662307516,0.0197722631639753,0.0125596912639184,0.0057266971000947,0.00470429051207065,0.00742848125358271,0.00358764081460794,0.00552242393517824,0.0133753408035495,0.0145357726675859,0.00535045478865704,0.0122505846078051,0.00765319630717351,0.00398269576031876,0.00710127450275421,0.0158297639949186,0.00740546295186878,0.0119315642905783,0.0141430786700037,0.00591921879544432,0.0156645686608844,0.012115224831372],[7.06393540926026,4.68530158274938,7.50979726639446,13.7951350019743,7.12082492127438,5.61434517620403,10.4543683694945,20.2145671409056,11.5094215612158,9.45982466396592,5.09217614981861,9.84675833159133,5.38694538226933,4.37901852297799,4.0630815526369,4.66137487901128,10.7418119707679,5.01451574161318,10.8565122906407,6.05798528699765,4.51381354614722,10.931563600813,5.00741604742869,6.37950524587606,6.70270303399432,5.49750334974163,8.10382750508695,5.72638706961438,13.5213296764837,6.15969561329975,6.58964044338102,6.87690865886374,8.02193880178057,7.54174720904184,8.29189638871287,4.21721785167492,5.00786155098286,5.72360998736022,10.9726495708637,4.68822643128992,6.88040938267328,5.23179484994393,3.9468857924714,12.2248553285084,5.09199524065984,8.25345952733314,7.0361875266553],[0.751494507616257,0.696066285513381,0.755974245153642,0.534342445787244,0.786257256473468,0.740540553106793,0.653300782607241,0.663933956213054,0.63278415757254,0.706841846663796,0.802186125998353,0.629641789205162,0.749764558909087,0.757022075355281,0.833503961071221,0.75179005812498,0.684163825489705,0.465758371059006,0.781492239090412,0.441988044924939,0.60907316369526,0.827067743170686,0.823600605046739,0.594007713115335,0.714371893868935,0.589620073034908,0.532263908197247,0.641762639340633,0.797117704569286,0.827075419960563,0.751792241288774,0.862477376160476,0.802928399486327,0.627171742373354,0.607520739527928,0.807886268671053,0.647471121822405,0.746189550546826,0.849611391666313,0.760102407006378,0.58701118021449,0.752370897458185,0.653470165053082,0.614031375546474,0.791717751355178,0.589552058086293,0.650003000402532],[18.0533359889221,7.04456844919827,20.6121197812785,50.4620674884983,19.1625471731353,10.9966644715765,35.1712195766294,135.106019114529,41.4105386344197,31.0135099681141,9.5902322214828,30.0279665171617,10.1861000331001,6.55086083441379,5.98361307828476,7.47086329903787,38.8953771595162,5.54237932144204,45.2943787115049,7.81861323124067,5.73516703545157,48.5394906739726,9.45806723423207,11.6367782889308,15.4204849555031,8.46457308057631,17.0974975497388,10.0089028936826,72.0694980557051,14.8129359149392,15.6259284368949,19.4021017218235,25.0227302277632,17.3428031043567,20.4175742002209,6.35926505154377,7.59754829900946,11.5368933445225,50.1989310658306,7.63955134142922,13.4523970229785,9.59891512382158,4.55995569898796,45.4066008492234,9.47956284292103,19.6347703820548,15.5652377691439],[9.604e-05,0.00017956,8.836e-05,0.00026244,0.00012321,0.00011236,9.409e-05,0.00024025,0.00011664,0.00016384,0.00011664,0.00031329,9.409e-05,8.836e-05,8.836e-05,0.00018225,8.836e-05,0.00010404,9.801e-05,0.00112225,0.00013225,9.801e-05,0.00012321,0.00015876,0.000169,0.00011881,0.000169,9.025e-05,9.409e-05,0.0001,9.604e-05,8.836e-05,0.00010609,0.00011236,0.00020736,0.00013924,9.409e-05,9.801e-05,9.801e-05,9.801e-05,0.00018769,9.025e-05,0.000144,0.000441,0.00011236,0.00014161,0.00013924],[5.6734693877551,6.11940298507463,11.0106382978723,-5.62962962962963,-5.48648648648649,-6.13207547169811,-5.62886597938144,-17.4193548387097,-7.91666666666667,5.9375,6.52777777777778,-10.7118644067797,-9.4020618556701,6.37234042553192,-6.84042553191489,-5.94074074074074,6.54255319148936,8.2156862745098,10.5656565656566,4.69253731343284,12.8521739130435,6.42424242424242,-5.51351351351351,6.83333333333333,6.25384615384615,6.78899082568807,11.0692307692308,6.92631578947368,-6.31958762886598,5.57,-5.93877551020408,11.3404255319149,-5.86407766990291,6.05660377358491,-5.95138888888889,-5.96610169491525,-5.05154639175258,-9.16161616161616,-5.02020202020202,-6.22222222222222,13.1094890510949,6.63157894736842,-17.7166666666667,-4.27619047619048,5.72641509433962,5.66386554621849,-17.3305084745763],[0.997604750992866,0.995531061066871,0.997795868925543,0.993481766132405,0.99692920880458,0.997198868378724,0.997653270095418,0.994029609656998,0.99709247833318,0.99592070877685,0.99709247833318,0.99222861741128,0.997653270095418,0.997795868925543,0.997795868925543,0.995464415257981,0.997795868925543,0.997405747650361,0.997555739050392,0.972709421298689,0.996704645266587,0.997555739050392,0.99692920880458,0.996046690684673,0.995792775523413,0.997038546257977,0.995792775523413,0.997748829204108,0.997653270095418,0.997506234413965,0.997604750992866,0.997795868925543,0.997354765822348,0.997198868378724,0.99484273526041,0.996531075326788,0.997653270095418,0.997555739050392,0.997555739050392,0.997555739050392,0.995329664382302,0.997748829204108,0.996412913511359,0.989095225142801,0.997198868378724,0.99647223915533,0.996531075326788],[13.0384439621353,15.9345699243507,57.42475891918,13.2264986616701,12.1116392043587,15.8096443335685,12.7775228317014,148.250680531825,28.3254660036566,14.8041316370897,18.3237667611169,54.4975060253826,41.068293328804,17.199899020843,20.2854325566648,14.8682638056688,18.2966162547729,30.6839692474682,52.673112883904,8.90887835472497,79.4594057474036,17.5780007135167,12.2598313840459,20.4883223063841,16.7375462796472,20.0659134260726,58.2707077257917,20.8847741200587,16.8943667780676,12.4767848723816,14.5751541543665,61.1021832480046,14.1807242464877,15.3509825543071,14.9845077322552,14.9034923111087,9.70175218031142,38.858019331573,9.56340727020334,16.3037023916199,82.8447705074807,18.8912664316145,153.56197355264,6.7839239384021,13.4111219041124,13.1595563194924,146.820366947145],[31.0917799510573,22.979138373549,78.0368787004585,63.6885661501684,31.274186377494,26.806308805145,47.9487424083308,283.356699646354,69.7360046380762,45.8176416052037,27.9139989825997,84.5254725425443,51.2543933619041,23.7507598552568,26.2690456349495,22.3391271047067,57.1919934142891,36.2263485689102,97.9674915954088,16.7274915859656,85.1945727828551,66.1174913874893,21.7178986182779,32.1251005953149,32.1580312351503,28.5304865066489,75.3682052755304,30.8936770137413,88.9638648337727,27.2897207873208,30.2010825912614,80.5042849698281,39.2034544742509,32.6937856586638,35.4020819324761,21.2627573626525,17.2993004793209,50.3949126760954,59.762338336034,23.9432537330491,96.2971675304592,28.4901815554361,158.121929251628,52.1905247876255,22.8906847470334,32.7943267015472,162.385604716289],[0.385117289472973,0.0413259279311765,0.385569939437019,0.268737460267035,0.898882144642571,0.311108522398175,0.859717357218273,1,0.315119016940828,0.0441035342054302,0.188617205957846,0.999874105562445,0.334659885559897,0.726667493591205,0.505629174427366,0.223295143243187,0.400823432924399,0.171651349342673,0.318070933855477,0.104254577424734,0.999999999851127,0.458493796063232,0.0665597811630014,0.0828770422217594,0.0174578958453076,0.157314170529497,0.999999999986827,0.0896205054489246,0.0981283372151753,0.291894519558585,0.143645021319765,0.544291003153875,0.451400435841174,0.115201120795734,0.106333488877981,0.161060976272681,0.0498548566564513,0.057735415252501,0.713508030745399,0.0914991753367603,0.383205646166663,0.665214360285719,1,0.999998133855521,0.155388005202463,0.168864594995146,0.479911893212201],[1.17511579700471e-09,3.85539665417121e-07,4.93717019562596e-30,5.73353674499451e-24,2.31236514919412e-09,6.92559308841559e-08,1.28582621382805e-16,8.70460229232275e-119,1.55028579101457e-26,5.16123748836864e-17,1.36787903057698e-08,1.95418443276673e-32,1.81813356403369e-18,3.39446551272715e-06,1.85364984327726e-07,4.06486260342368e-06,5.75763217862097e-21,2.67591403066075e-12,8.8133555311567e-39,0.000550531077145818,9.51601408689831e-33,8.71886809094398e-25,2.12341361922872e-06,8.78353366800571e-11,1.55769368863882e-11,5.70965351674122e-09,1.85223109584247e-28,3.2615671219147e-10,2.18279673576121e-35,3.95318448381059e-08,1.07919125972008e-09,5.9161412974361e-31,3.56695564264386e-13,7.18338933296526e-11,4.40035008892917e-12,7.61218731345935e-06,0.000123008631235036,7.19955427188234e-19,7.87746548028897e-22,3.43558250561558e-07,5.74873458047582e-38,2.72663754186753e-08,1.83965677292639e-64,2.10540271308415e-18,1.68520989433941e-06,8.93963603970678e-11,1.42448552524482e-66],[6.36777954421425e-05,4.86904996570981e-06,2.12057828117449e-24,1.91925701375981e-05,6.30502564961063e-05,5.38598498812121e-06,3.17461525068464e-05,4.12617370057556e-64,5.8102027007313e-12,8.06594148079298e-06,1.97139811601005e-07,2.15116288958327e-23,6.32567388403434e-17,2.30783697025587e-06,8.63897152791719e-08,2.4467246112128e-05,1.49821161674714e-07,5.32776643253015e-12,3.32930450454727e-22,0.00311087636235007,6.09422707306518e-33,7.41708976172921e-07,0.000133506323973521,7.88492704369117e-08,8.86834983809238e-07,1.20656721670317e-07,8.44281202974593e-25,6.06629393101832e-09,3.0434264169205e-07,5.36345263298131e-05,8.76575821878928e-06,5.46685616632591e-26,1.36331828314548e-05,3.6133133387482e-06,4.11831237300231e-06,2.90007534756729e-05,0.00111748116938916,2.42171320603134e-16,0.00111394657236615,3.92131368540895e-06,2.18083022981656e-35,9.38908549427979e-07,9.59524681287225e-65,0.0110588349200846,2.73724635717906e-05,1.90042334964993e-05,8.5426037111589e-63],[5.41310908615176e-07,0.00811037704216273,1.10908236702002e-08,7.96653833662643e-21,6.56632389377975e-07,0.000319082245985878,1.6008000047494e-14,2.10960636269591e-58,1.34921635896456e-16,4.79134529349629e-13,0.00250114255031642,9.78362152735931e-13,0.000377765870637765,0.0217594692331384,0.0422021787461513,0.0120843678474132,4.37847775629474e-16,0.0528369166978449,6.66604007512129e-19,0.00391401494320161,0.0307069391034599,1.83845380823376e-20,0.00216323125869659,5.84781702711573e-05,3.085175104999e-06,0.00490990626171603,3.75268405046228e-07,0.00257183320052139,2.70556320073876e-30,2.81329121844594e-05,2.37455012270742e-06,4.1294675425382e-08,4.24316482561279e-09,3.10177476371877e-07,2.11593032499801e-08,0.0395348651277495,0.0193991608772849,0.000122557797103437,4.06920645299061e-21,0.00492989023116299,1.78922069383862e-05,0.000935445831594132,0.0903346877638431,2.67389852950596e-18,0.00310366309960824,3.5671531618646e-07,1.81960276301677e-06],[0.0283612668950257,0.101537067051267,0.00376741925182513,0.0256930822734836,0.0169210950562048,0.0238389651364443,0.0029552505714757,0,0.0496159087701478,0.0739527293827184,0.0350842505600146,7.70564450079027e-05,0.0121558127603386,0.013829472313573,0.0187293401432966,0.0718222367913006,0.0104037789041321,0.104355920432905,0.0242056216795441,0.0211455770210771,0.0187146993383686,0.0146542733419138,0.135147242139999,0.0515471187193048,0.174821760315566,0.102864191581271,0.000711254451087459,0.0468838112005742,0.0367598444051702,0.0372064003616232,0.0183056600471987,0.00281868517786225,0.161338423061854,0.0146168436289045,0.0188219368783195,0.149808489830922,0.175429206033041,0.0402651391939897,0.00476010883040919,0.055329166773985,0.005793368630748,0.0312439457767003,0.0462531825315373,0.0130690430132171,0.0494646590574287,0.0749068855173207,0.00992203566033788],[0.971574512823507,0.890347301316939,0.996232569657346,0.97428772515638,0.983015195742544,0.97583649737665,0.997013003275999,1,0.950384091224043,0.926039204675324,0.962414396071069,0.999922943554009,0.987466421369024,0.964405356150806,0.939068209355853,0.91606486325257,0.989596071274707,0.842807162861248,0.975794378320452,0.971279000596225,0.950578361558169,0.985344984949107,0.862553896863712,0.948394324173319,0.825174267658768,0.892225775790637,0.999288370280508,0.950544349206454,0.963239851252185,0.962711792668017,0.981683198565268,0.997181273527462,0.838647939511793,0.985379232808445,0.981173923645603,0.810620032100539,0.80393114328905,0.959612303008908,0.994125944597228,0.939736678122916,0.994188739162318,0.967819642216782,0.863412129704613,0.975872122066695,0.947402620169497,0.925073753444469,0.990076144736899],["BIN3","BRIP1","BST1","C5orf24","CAB39L","CD19","CHRNB1","CRHR1","CTSB","DNAH17","DYRK1A","FAM171A2","FAM47E-STBD1","FBRSL1","FCGR2A","FYN","GALC","GCH1","GPNMB","GS1-124K5.11","HIP1R","IP6K2","KCNIP3","KPNA1","LCORL","LOC100131289","LRRK2","MAP4K4","MED12L","MEX3C","NOD2","NUCKS1","PAM","RETREG3","RNF141","RPS6KL1","SCAF11","SETD1A","SPPL2B","SPTSSB","STK39","SYT17","TMEM175","TRIM40","UBAP2","VAMP4","WNT3"],["Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene","Top\ncolocalized\neGene"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Locus.GWAS<\/th>\n      <th>qtl.id<\/th>\n      <th>eGene<\/th>\n      <th>snp<\/th>\n      <th>pvalues.df1<\/th>\n      <th>MAF.df1<\/th>\n      <th>V.df1<\/th>\n      <th>z.df1<\/th>\n      <th>r.df1<\/th>\n      <th>lABF.df1<\/th>\n      <th>V.df2<\/th>\n      <th>z.df2<\/th>\n      <th>r.df2<\/th>\n      <th>lABF.df2<\/th>\n      <th>internal.sum.lABF<\/th>\n      <th>SNP.PP.H4<\/th>\n      <th>PP.H0<\/th>\n      <th>PP.H1<\/th>\n      <th>PP.H2<\/th>\n      <th>PP.H3<\/th>\n      <th>PP.H4<\/th>\n      <th>Locus<\/th>\n      <th>dummy<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","buttons":["copy","csv","excel","pdf","print"],"scrollY":400,"scrollX":true,"scrollCollapse":true,"paging":false,"columnDefs":[{"className":"dt-center","targets":"_all"},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<span class="fu"><a href="../reference/createDT.html">createDT</a></span><span class="op">(</span><span class="va">gg_egene</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
-<div id="summarise-cs_counts_plot" class="section level2">
-<h2 class="hasAnchor">
-<a href="#summarise-cs_counts_plot" class="anchor"></a><code>SUMMARISE.CS_counts_plot()</code>
-</h2>
+<div class="section level3">
+<h3 id="summarise-cs_counts_plot">
+<code>SUMMARISE.CS_counts_plot()</code><a class="anchor" aria-label="anchor" href="#summarise-cs_counts_plot"></a>
+</h3>
 <p>An extension of <code><a href="../reference/SUMMARISE.get_CS_counts.html">SUMMARISE.get_CS_counts()</a></code> that plots these results.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">gg_CS</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SUMMARISE.CS_counts_plot.html">SUMMARISE.CS_counts_plot</a></span><span class="op">(</span>merged_DT <span class="op">=</span> <span class="va">merged_DT</span>, 
                                   show_numbers<span class="op">=</span><span class="cn">T</span>,
                                   label_yaxis<span class="op">=</span><span class="cn">T</span>, 
                                   ylabel<span class="op">=</span><span class="cn">NULL</span>, 
                                   show_plot <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
-<span class="co">#&gt; Warning: Removed 92 rows containing missing values (position_stack).</span>
-
-<span class="co">#&gt; Warning: Removed 92 rows containing missing values (position_stack).</span>
-<span class="co">#&gt; Warning: Removed 415 rows containing missing values (position_stack).</span></code></pre></div>
-<p><img src="summarise_vignette_files/figure-html/SUMMARISE.CS_counts_plot()-1.png" width="960"></p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/createDT.html">createDT</a></span><span class="op">(</span><span class="va">gg_CS</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-87c6a61e912bac328ea6" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-87c6a61e912bac328ea6">{"x":{"filter":"none","extensions":["Buttons"],"caption":"<caption><\/caption>","data":[["1","2","4","5","6","7","8","10","11","12","13","14","16","17","18","19","20","22","23","24","25","26","28","29","30","31","32","34","35","36","37","38","40","41","42","43","44","46","47","48","49","50","52","53","54","55","56","58","59","60","61","62","64","65","66","67","68","70","71","72","73","74","76","77","78","79","80","82","83","84","85","86","88","89","90","91","92","94","95","96","97","98","100","101","102","103","104","106","107","108","109","110","112","113","114","115","116","118","119","120","121","122","124","125","126","127","128","130","131","132","133","134","136","137","138","139","140","142","143","144","145","146","148","149","150","151","152","154","155","156","157","158","160","161","162","163","164","166","167","168","169","170","172","173","174","175","176","178","179","180","181","182","184","185","186","187","188","190","191","192","193","194","196","197","198","199","200","202","203","204","205","206","208","209","210","211","212","214","215","216","217","218","220","221","222","223","224","226","227","228","229","230","232","233","234","235","236","238","239","240","241","242","244","245","246","247","248","250","251","252","253","254","256","257","258","259","260","262","263","264","265","266","268","269","270","271","272","274","275","276","277","278","280","281","282","283","284","286","287","288","289","290","292","293","294","295","296","298","299","300","301","302","304","305","306","307","308","310","311","312","313","314","316","317","318","319","320","322","323","324","325","326","328","329","330","331","332","334","335","336","337","338","340","341","342","343","344","346","347","348","349","350","352","353","354","355","356","358","359","360","361","362","364","365","366","367","368","370","371","372","373","374","376","377","378","379","380","382","383","384","385","386","388","389","390","391","392","394","395","396","397","398","400","401","402","403","404","406","407","408","409","410","412","413","414","415","416","418","419","420","421","422","424","425","426","427","428","430","431","432","433","434","436","437","438","439","440","442","443","444","445","446","448","449","450","451","452","454","455","456","457","458","460","461","462","463","464","466","467","468","469","470","472","473","474","475","476","478","479","480","481","482","484","485","486","487","488","490","491","492","493","494","496","497","498"],["TRIM40","TRIM40","TRIM40","TRIM40","TRIM40","BIN3","BIN3","BIN3","BIN3","BIN3","BRIP1","BRIP1","BRIP1","BRIP1","BRIP1","CAB39L","CAB39L","CAB39L","CAB39L","CAB39L","DNAH17","DNAH17","DNAH17","DNAH17","DNAH17","DYRK1A","DYRK1A","DYRK1A","DYRK1A","DYRK1A","FYN","FYN","FYN","FYN","FYN","GALC","GALC","GALC","GALC","GALC","GPNMB","GPNMB","GPNMB","GPNMB","GPNMB","ITPKB","ITPKB","ITPKB","ITPKB","ITPKB","KCNIP3","KCNIP3","KCNIP3","KCNIP3","KCNIP3","LCORL","LCORL","LCORL","LCORL","LCORL","MAP4K4","MAP4K4","MAP4K4","MAP4K4","MAP4K4","MBNL2","MBNL2","MBNL2","MBNL2","MBNL2","MIPOL1","MIPOL1","MIPOL1","MIPOL1","MIPOL1","RNF141","RNF141","RNF141","RNF141","RNF141","RPS6KL1","RPS6KL1","RPS6KL1","RPS6KL1","RPS6KL1","TMEM163","TMEM163","TMEM163","TMEM163","TMEM163","ATG14","ATG14","ATG14","ATG14","ATG14","ATP6V0A1","ATP6V0A1","ATP6V0A1","ATP6V0A1","ATP6V0A1","BST1","BST1","BST1","BST1","BST1","C5orf24","C5orf24","C5orf24","C5orf24","C5orf24","CD19","CD19","CD19","CD19","CD19","CHRNB1","CHRNB1","CHRNB1","CHRNB1","CHRNB1","CLCN3","CLCN3","CLCN3","CLCN3","CLCN3","CRLS1","CRLS1","CRLS1","CRLS1","CRLS1","CTSB","CTSB","CTSB","CTSB","CTSB","DLG2","DLG2","DLG2","DLG2","DLG2","FAM49B","FAM49B","FAM49B","FAM49B","FAM49B","FBRSL1","FBRSL1","FBRSL1","FBRSL1","FBRSL1","GBF1","GBF1","GBF1","GBF1","GBF1","GCH1","GCH1","GCH1","GCH1","GCH1","GS1-124K5.11","GS1-124K5.11","GS1-124K5.11","GS1-124K5.11","GS1-124K5.11","HIP1R","HIP1R","HIP1R","HIP1R","HIP1R","IGSF9B","IGSF9B","IGSF9B","IGSF9B","IGSF9B","ITGA8","ITGA8","ITGA8","ITGA8","ITGA8","KPNA1","KPNA1","KPNA1","KPNA1","KPNA1","LINC00693","LINC00693","LINC00693","LINC00693","LINC00693","LOC100131289","LOC100131289","LOC100131289","LOC100131289","LOC100131289","MCCC1","MCCC1","MCCC1","MCCC1","MCCC1","MED12L","MED12L","MED12L","MED12L","MED12L","MEX3C","MEX3C","MEX3C","MEX3C","MEX3C","NUCKS1","NUCKS1","NUCKS1","NUCKS1","NUCKS1","RETREG3","RETREG3","RETREG3","RETREG3","RETREG3","RIMS1","RIMS1","RIMS1","RIMS1","RIMS1","RIT2","RIT2","RIT2","RIT2","RIT2","RPS12","RPS12","RPS12","RPS12","RPS12","SETD1A","SETD1A","SETD1A","SETD1A","SETD1A","SH3GL2","SH3GL2","SH3GL2","SH3GL2","SH3GL2","SIPA1L2","SIPA1L2","SIPA1L2","SIPA1L2","SIPA1L2","SLC2A13","SLC2A13","SLC2A13","SLC2A13","SLC2A13","SP1","SP1","SP1","SP1","SP1","STK39","STK39","STK39","STK39","STK39","SYT17","SYT17","SYT17","SYT17","SYT17","TMEM175","TMEM175","TMEM175","TMEM175","TMEM175","VPS13C","VPS13C","VPS13C","VPS13C","VPS13C","WNT3","WNT3","WNT3","WNT3","WNT3","ASXL3","ASXL3","ASXL3","ASXL3","ASXL3","CAMK2D","CAMK2D","CAMK2D","CAMK2D","CAMK2D","CRHR1","CRHR1","CRHR1","CRHR1","CRHR1","ELOVL7","ELOVL7","ELOVL7","ELOVL7","ELOVL7","FAM171A2","FAM171A2","FAM171A2","FAM171A2","FAM171A2","FCGR2A","FCGR2A","FCGR2A","FCGR2A","FCGR2A","FGF20","FGF20","FGF20","FGF20","FGF20","HLA-DRB5","HLA-DRB5","HLA-DRB5","HLA-DRB5","HLA-DRB5","INPP5F","INPP5F","INPP5F","INPP5F","INPP5F","IP6K2","IP6K2","IP6K2","IP6K2","IP6K2","KRTCAP2","KRTCAP2","KRTCAP2","KRTCAP2","KRTCAP2","LRRK2","LRRK2","LRRK2","LRRK2","LRRK2","NOD2","NOD2","NOD2","NOD2","NOD2","SCAF11","SCAF11","SCAF11","SCAF11","SCAF11","SNCA","SNCA","SNCA","SNCA","SNCA","SPPL2B","SPPL2B","SPPL2B","SPPL2B","SPPL2B","SPTSSB","SPTSSB","SPTSSB","SPTSSB","SPTSSB","UBAP2","UBAP2","UBAP2","UBAP2","UBAP2","CASC16","CASC16","CASC16","CASC16","CASC16","CHD9","CHD9","CHD9","CHD9","CHD9","KCNS3","KCNS3","KCNS3","KCNS3","KCNS3","VAMP4","VAMP4","VAMP4","VAMP4","VAMP4","FAM47E-STBD1","FAM47E-STBD1","FAM47E-STBD1","FAM47E-STBD1","FAM47E-STBD1","LMNB1","LMNB1","LMNB1","LMNB1","LMNB1","PAM","PAM","PAM","PAM","PAM","SATB1","SATB1","SATB1","SATB1","SATB1"],["TRIM40  (10)","TRIM40  (10)","TRIM40  (10)","TRIM40  (10)","TRIM40  (10)","BIN3  (7)","BIN3  (7)","BIN3  (7)","BIN3  (7)","BIN3  (7)","BRIP1  (7)","BRIP1  (7)","BRIP1  (7)","BRIP1  (7)","BRIP1  (7)","CAB39L  (7)","CAB39L  (7)","CAB39L  (7)","CAB39L  (7)","CAB39L  (7)","DNAH17  (7)","DNAH17  (7)","DNAH17  (7)","DNAH17  (7)","DNAH17  (7)","DYRK1A  (7)","DYRK1A  (7)","DYRK1A  (7)","DYRK1A  (7)","DYRK1A  (7)","FYN  (7)","FYN  (7)","FYN  (7)","FYN  (7)","FYN  (7)","GALC  (7)","GALC  (7)","GALC  (7)","GALC  (7)","GALC  (7)","GPNMB  (7)","GPNMB  (7)","GPNMB  (7)","GPNMB  (7)","GPNMB  (7)","ITPKB  (7)","ITPKB  (7)","ITPKB  (7)","ITPKB  (7)","ITPKB  (7)","KCNIP3  (7)","KCNIP3  (7)","KCNIP3  (7)","KCNIP3  (7)","KCNIP3  (7)","LCORL  (7)","LCORL  (7)","LCORL  (7)","LCORL  (7)","LCORL  (7)","MAP4K4  (7)","MAP4K4  (7)","MAP4K4  (7)","MAP4K4  (7)","MAP4K4  (7)","MBNL2  (7)","MBNL2  (7)","MBNL2  (7)","MBNL2  (7)","MBNL2  (7)","MIPOL1  (7)","MIPOL1  (7)","MIPOL1  (7)","MIPOL1  (7)","MIPOL1  (7)","RNF141  (7)","RNF141  (7)","RNF141  (7)","RNF141  (7)","RNF141  (7)","RPS6KL1  (7)","RPS6KL1  (7)","RPS6KL1  (7)","RPS6KL1  (7)","RPS6KL1  (7)","TMEM163  (7)","TMEM163  (7)","TMEM163  (7)","TMEM163  (7)","TMEM163  (7)","ATG14  (6)","ATG14  (6)","ATG14  (6)","ATG14  (6)","ATG14  (6)","ATP6V0A1  (6)","ATP6V0A1  (6)","ATP6V0A1  (6)","ATP6V0A1  (6)","ATP6V0A1  (6)","BST1  (6)","BST1  (6)","BST1  (6)","BST1  (6)","BST1  (6)","C5orf24  (6)","C5orf24  (6)","C5orf24  (6)","C5orf24  (6)","C5orf24  (6)","CD19  (6)","CD19  (6)","CD19  (6)","CD19  (6)","CD19  (6)","CHRNB1  (6)","CHRNB1  (6)","CHRNB1  (6)","CHRNB1  (6)","CHRNB1  (6)","CLCN3  (6)","CLCN3  (6)","CLCN3  (6)","CLCN3  (6)","CLCN3  (6)","CRLS1  (6)","CRLS1  (6)","CRLS1  (6)","CRLS1  (6)","CRLS1  (6)","CTSB  (6)","CTSB  (6)","CTSB  (6)","CTSB  (6)","CTSB  (6)","DLG2  (6)","DLG2  (6)","DLG2  (6)","DLG2  (6)","DLG2  (6)","FAM49B  (6)","FAM49B  (6)","FAM49B  (6)","FAM49B  (6)","FAM49B  (6)","FBRSL1  (6)","FBRSL1  (6)","FBRSL1  (6)","FBRSL1  (6)","FBRSL1  (6)","GBF1  (6)","GBF1  (6)","GBF1  (6)","GBF1  (6)","GBF1  (6)","GCH1  (6)","GCH1  (6)","GCH1  (6)","GCH1  (6)","GCH1  (6)","GS1-124K5.11  (6)","GS1-124K5.11  (6)","GS1-124K5.11  (6)","GS1-124K5.11  (6)","GS1-124K5.11  (6)","HIP1R  (6)","HIP1R  (6)","HIP1R  (6)","HIP1R  (6)","HIP1R  (6)","IGSF9B  (6)","IGSF9B  (6)","IGSF9B  (6)","IGSF9B  (6)","IGSF9B  (6)","ITGA8  (6)","ITGA8  (6)","ITGA8  (6)","ITGA8  (6)","ITGA8  (6)","KPNA1  (6)","KPNA1  (6)","KPNA1  (6)","KPNA1  (6)","KPNA1  (6)","LINC00693  (6)","LINC00693  (6)","LINC00693  (6)","LINC00693  (6)","LINC00693  (6)","LOC100131289  (6)","LOC100131289  (6)","LOC100131289  (6)","LOC100131289  (6)","LOC100131289  (6)","MCCC1  (6)","MCCC1  (6)","MCCC1  (6)","MCCC1  (6)","MCCC1  (6)","MED12L  (6)","MED12L  (6)","MED12L  (6)","MED12L  (6)","MED12L  (6)","MEX3C  (6)","MEX3C  (6)","MEX3C  (6)","MEX3C  (6)","MEX3C  (6)","NUCKS1  (6)","NUCKS1  (6)","NUCKS1  (6)","NUCKS1  (6)","NUCKS1  (6)","RETREG3  (6)","RETREG3  (6)","RETREG3  (6)","RETREG3  (6)","RETREG3  (6)","RIMS1  (6)","RIMS1  (6)","RIMS1  (6)","RIMS1  (6)","RIMS1  (6)","RIT2  (6)","RIT2  (6)","RIT2  (6)","RIT2  (6)","RIT2  (6)","RPS12  (6)","RPS12  (6)","RPS12  (6)","RPS12  (6)","RPS12  (6)","SETD1A  (6)","SETD1A  (6)","SETD1A  (6)","SETD1A  (6)","SETD1A  (6)","SH3GL2  (6)","SH3GL2  (6)","SH3GL2  (6)","SH3GL2  (6)","SH3GL2  (6)","SIPA1L2  (6)","SIPA1L2  (6)","SIPA1L2  (6)","SIPA1L2  (6)","SIPA1L2  (6)","SLC2A13  (6)","SLC2A13  (6)","SLC2A13  (6)","SLC2A13  (6)","SLC2A13  (6)","SP1  (6)","SP1  (6)","SP1  (6)","SP1  (6)","SP1  (6)","STK39  (6)","STK39  (6)","STK39  (6)","STK39  (6)","STK39  (6)","SYT17  (6)","SYT17  (6)","SYT17  (6)","SYT17  (6)","SYT17  (6)","TMEM175  (6)","TMEM175  (6)","TMEM175  (6)","TMEM175  (6)","TMEM175  (6)","VPS13C  (6)","VPS13C  (6)","VPS13C  (6)","VPS13C  (6)","VPS13C  (6)","WNT3  (6)","WNT3  (6)","WNT3  (6)","WNT3  (6)","WNT3  (6)","ASXL3  (5)","ASXL3  (5)","ASXL3  (5)","ASXL3  (5)","ASXL3  (5)","CAMK2D  (5)","CAMK2D  (5)","CAMK2D  (5)","CAMK2D  (5)","CAMK2D  (5)","CRHR1  (5)","CRHR1  (5)","CRHR1  (5)","CRHR1  (5)","CRHR1  (5)","ELOVL7  (5)","ELOVL7  (5)","ELOVL7  (5)","ELOVL7  (5)","ELOVL7  (5)","FAM171A2  (5)","FAM171A2  (5)","FAM171A2  (5)","FAM171A2  (5)","FAM171A2  (5)","FCGR2A  (5)","FCGR2A  (5)","FCGR2A  (5)","FCGR2A  (5)","FCGR2A  (5)","FGF20  (5)","FGF20  (5)","FGF20  (5)","FGF20  (5)","FGF20  (5)","HLA-DRB5  (5)","HLA-DRB5  (5)","HLA-DRB5  (5)","HLA-DRB5  (5)","HLA-DRB5  (5)","INPP5F  (5)","INPP5F  (5)","INPP5F  (5)","INPP5F  (5)","INPP5F  (5)","IP6K2  (5)","IP6K2  (5)","IP6K2  (5)","IP6K2  (5)","IP6K2  (5)","KRTCAP2  (5)","KRTCAP2  (5)","KRTCAP2  (5)","KRTCAP2  (5)","KRTCAP2  (5)","LRRK2  (5)","LRRK2  (5)","LRRK2  (5)","LRRK2  (5)","LRRK2  (5)","NOD2  (5)","NOD2  (5)","NOD2  (5)","NOD2  (5)","NOD2  (5)","SCAF11  (5)","SCAF11  (5)","SCAF11  (5)","SCAF11  (5)","SCAF11  (5)","SNCA  (5)","SNCA  (5)","SNCA  (5)","SNCA  (5)","SNCA  (5)","SPPL2B  (5)","SPPL2B  (5)","SPPL2B  (5)","SPPL2B  (5)","SPPL2B  (5)","SPTSSB  (5)","SPTSSB  (5)","SPTSSB  (5)","SPTSSB  (5)","SPTSSB  (5)","UBAP2  (5)","UBAP2  (5)","UBAP2  (5)","UBAP2  (5)","UBAP2  (5)","CASC16  (2)","CASC16  (2)","CASC16  (2)","CASC16  (2)","CASC16  (2)","CHD9  (2)","CHD9  (2)","CHD9  (2)","CHD9  (2)","CHD9  (2)","KCNS3  (2)","KCNS3  (2)","KCNS3  (2)","KCNS3  (2)","KCNS3  (2)","VAMP4  (2)","VAMP4  (2)","VAMP4  (2)","VAMP4  (2)","VAMP4  (2)","FAM47E-STBD1  (1)","FAM47E-STBD1  (1)","FAM47E-STBD1  (1)","FAM47E-STBD1  (1)","FAM47E-STBD1  (1)","LMNB1  (1)","LMNB1  (1)","LMNB1  (1)","LMNB1  (1)","LMNB1  (1)","PAM  (1)","PAM  (1)","PAM  (1)","PAM  (1)","PAM  (1)","SATB1  (1)","SATB1  (1)","SATB1  (1)","SATB1  (1)","SATB1  (1)"],["ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size","ABF.CS_size","FINEMAP.CS_size","POLYFUN_SUSIE.CS_size","SUSIE.CS_size","UCS.CS_size"],[null,1,null,10,10,null,5,5,5,7,null,5,4,4,7,null,5,5,3,7,null,5,4,5,7,null,5,3,2,7,null,5,2,3,7,null,5,3,3,7,null,5,5,4,7,null,5,4,4,7,null,5,3,3,7,null,5,3,4,7,null,5,3,4,7,null,5,4,4,7,null,5,4,2,7,null,5,4,3,7,null,5,4,2,7,null,5,5,5,7,null,5,5,5,6,null,5,4,4,6,null,5,3,3,6,null,5,4,4,6,null,5,5,5,6,null,5,5,4,6,null,5,4,5,6,null,5,4,3,6,null,5,2,3,6,null,5,3,3,6,null,5,4,4,6,null,5,3,3,6,null,5,5,5,6,null,4,2,5,6,null,5,2,2,6,1,5,3,3,6,null,5,4,4,6,null,4,4,4,6,null,5,2,2,6,null,5,3,2,6,null,5,null,5,6,null,5,5,5,6,null,5,4,4,6,null,5,2,1,6,null,5,5,5,6,null,5,4,4,6,null,5,1,1,6,null,5,2,2,6,null,5,2,2,6,null,5,3,3,6,null,5,3,3,6,null,5,3,3,6,null,5,5,5,6,null,5,3,3,6,null,5,5,5,6,null,5,3,3,6,1,5,4,4,6,null,5,2,2,6,null,5,4,4,6,null,5,2,2,5,null,5,4,4,5,null,5,5,5,5,null,4,2,2,5,null,5,3,3,5,null,5,3,3,5,null,5,2,2,5,null,5,null,5,5,1,5,5,5,5,null,4,5,4,5,null,5,3,3,5,null,5,4,4,5,null,4,3,3,5,null,5,2,2,5,null,5,4,4,5,null,4,3,4,5,null,5,2,2,5,null,5,2,2,5,null,null,3,3,2,null,null,3,3,2,null,null,4,5,2,null,null,3,5,2,null,null,3,3,1,null,1,null,null,1,null,null,3,2,1,null,null,3,3,1],["ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS","ABF","FINEMAP","POLYFUN_SUSIE","SUSIE","UCS"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Locus<\/th>\n      <th>Locus_UCS<\/th>\n      <th>CS<\/th>\n      <th>Credible Set size<\/th>\n      <th>Method<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","buttons":["copy","csv","excel","pdf","print"],"scrollY":400,"scrollX":true,"scrollCollapse":true,"paging":false,"columnDefs":[{"className":"dt-center","targets":"_all"},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<span class="fu"><a href="../reference/createDT.html">createDT</a></span><span class="op">(</span><span class="va">gg_CS</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="annotate-plot_missense" class="section level2">
-<h2 class="hasAnchor">
-<a href="#annotate-plot_missense" class="anchor"></a><code>ANNOTATE.plot_missense()</code>
-</h2>
+<div class="section level3">
+<h3 id="annotate-plot_missense">
+<code>ANNOTATE.plot_missense()</code><a class="anchor" aria-label="anchor" href="#annotate-plot_missense"></a>
+</h3>
 <p>Query <em>biomart</em> for SNP-level annotations, and then return only those that contain missense mutations.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Run this in case you don't want to wait to ANNOTATE.plot_missense() to finish querying.</span>
-<span class="va">gg_missense</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>plot<span class="op">=</span><span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_spacer.html">plot_spacer</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<span class="va">gg_missense</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>plot<span class="op">=</span><span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_spacer.html" class="external-link">plot_spacer</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">gg_missense</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ANNOTATE.plot_missense.html">ANNOTATE.plot_missense</a></span><span class="op">(</span>merged_DT <span class="op">=</span> <span class="va">merged_DT</span>, 
                                       snp_filter<span class="op">=</span><span class="st">"Support&gt;0"</span>, 
                                       label_yaxis <span class="op">=</span> <span class="cn">T</span>,
                                       show_plot <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>  
 <span class="fu"><a href="../reference/createDT.html">createDT</a></span><span class="op">(</span><span class="va">gg_missense</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="summarise-peak_overlap_plot" class="section level2">
-<h2 class="hasAnchor">
-<a href="#summarise-peak_overlap_plot" class="anchor"></a><code>SUMMARISE.peak_overlap_plot()</code>
-</h2>
+<div class="section level3">
+<h3 id="summarise-peak_overlap_plot">
+<code>SUMMARISE.peak_overlap_plot()</code><a class="anchor" aria-label="anchor" href="#summarise-peak_overlap_plot"></a>
+</h3>
 <p>Plot the overlap between some SNP group and cell-type-specific epigenomic peaks / interactome anchors.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">gg_peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SUMMARISE.peak_overlap_plot.html">SUMMARISE.peak_overlap_plot</a></span><span class="op">(</span><span class="va">merged_DT</span>, 
                                         snp_filter<span class="op">=</span><span class="st">"Consensus_SNP==T"</span>,
                                         include.NOTT_2019_peaks<span class="op">=</span><span class="cn">T</span>,
@@ -507,274 +276,151 @@ It also prints the mean number of SNPs for each SNP group across all loci.<br><s
                                         x_strip_angle <span class="op">=</span> <span class="fl">90</span>,
                                         drop_empty_cols <span class="op">=</span> <span class="cn">T</span>,
                                         fill_title<span class="op">=</span><span class="st">"Consensus SNPs\nin epigenomic peaks"</span>,
-                                        save_path<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">results_dir</span>,<span class="st">"GWAS/Nalls23andMe_2019/_genome_wide"</span>,
+                                        save_path<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">results_dir</span>,<span class="st">"GWAS/Nalls23andMe_2019/_genome_wide"</span>,
                                                             <span class="st">"peak_plot.consensus.png"</span><span class="op">)</span>,
                                         verbose<span class="op">=</span><span class="cn">T</span><span class="op">)</span>  
-<span class="co">#&gt; [1] "++ NOTT_2019:: Downloading and merging 12 peaks BED files."</span>
-<span class="co">#&gt; Warning in parallel::mclapply(file_names, function(f, .verbose = verbose) {:</span>
-<span class="co">#&gt; scheduled core 4 encountered error in user code, all values of the job will be</span>
-<span class="co">#&gt; affected</span>
-<span class="co">#&gt; Error in data.table::rbindlist(.) : </span>
-<span class="co">#&gt;   Item 4 of input is not a data.frame, data.table or list</span>
-<span class="co">#&gt; [1] "Importing Astrocyte enhancers ..."</span>
-<span class="co">#&gt; [1] "Importing Astrocyte promoters ..."</span>
-<span class="co">#&gt; [1] "Importing Neuronal enhancers ..."</span>
-<span class="co">#&gt; [1] "Importing Neuronal promoters ..."</span>
-<span class="co">#&gt; [1] "Importing Oligo enhancers ..."</span>
-<span class="co">#&gt; [1] "Importing Oligo promoters ..."</span>
-<span class="co">#&gt; [1] "Importing Microglia enhancers ..."</span>
-<span class="co">#&gt; [1] "Importing Microglia promoters ..."</span>
-<span class="co">#&gt; [1] "++ Converting to GRanges."</span>
-<span class="co">#&gt; 26 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; [1] "Importing Microglia interactome ..."</span>
-<span class="co">#&gt; [1] "Importing Neuronal interactome ..."</span>
-<span class="co">#&gt; [1] "Importing Oligo interactome ..."</span>
-<span class="co">#&gt; 73 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; 43 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; Error in h(simpleError(msg, call)) : </span>
-<span class="co">#&gt;   error in evaluating the argument 'args' in selecting a method for function 'do.call': GRanges objects don't support [[, as.list(), lapply(), or unlist() at</span>
-<span class="co">#&gt;   the moment</span>
-<span class="co">#&gt; [1] "CORCES_2020:: Extracting overlapping cell-type-specific scATAC-seq peaks"</span>
-<span class="co">#&gt; Start at 2021-06-22 17:15:32</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; End at 2021-06-22 17:15:34</span>
-<span class="co">#&gt; Runtime in total is: 2 secs</span>
-<span class="co">#&gt; 4 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; [1] "+ CORCES_2020:: Cicero coaccessibility scores identified for 2 / 4 peak hits."</span>
-<span class="co">#&gt; [1] "CORCES_2020:: Annotating peaks by cell-type-specific target genes"</span>
-<span class="co">#&gt; [1] "CORCES_2020:: Extracting overlapping bulkATAC-seq peaks from brain tissue"</span>
-<span class="co">#&gt; Start at 2021-06-22 17:15:35</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; End at 2021-06-22 17:15:38</span>
-<span class="co">#&gt; Runtime in total is: 3 secs</span>
-<span class="co">#&gt; 4 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; [1] "CORCES_2020:: Annotating peaks by bulk brain target genes"</span>
-<span class="co">#&gt; Start at 2021-06-22 17:15:38</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; End at 2021-06-22 17:15:39</span>
-<span class="co">#&gt; Runtime in total is: 1 secs</span>
-<span class="co">#&gt; 136 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; Start at 2021-06-22 17:15:40</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; End at 2021-06-22 17:15:41</span>
-<span class="co">#&gt; Runtime in total is: 1 secs</span>
-<span class="co">#&gt; 103 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; [1] "+ CORCES_2020:: Found 239 hits with HiChIP_FitHiChIP coaccessibility loop anchors."</span>
-<span class="co">#&gt; [1] "+ Saving plot ==&gt; /var/folders/zq/h7mtybc533b1qzkys_ttgpth0000gn/T//RtmpgDxqHP/results/GWAS/Nalls23andMe_2019/_genome_wide/peak_plot.consensus.png"</span></code></pre></div>
-<p><img src="summarise_vignette_files/figure-html/SUMMARISE.peak_overlap_plot()-1.png" width="960"></p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/createDT.html">createDT</a></span><span class="op">(</span><span class="va">gg_peaks</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-0088a06226069ee73c5a" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-0088a06226069ee73c5a">{"x":{"filter":"none","extensions":["Buttons"],"caption":"<caption><\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69"],["CAMK2D","CRHR1","FCGR2A","TMEM175","UBAP2","CTSB","CTSB","HIP1R","HIP1R","HIP1R","HIP1R","HIP1R","HIP1R","HIP1R","HLA-DRB5","IP6K2","IP6K2","IP6K2","SH3GL2","SH3GL2","SH3GL2","SP1","SP1","SYT17","TRIM40","TRIM40","SIPA1L2","SIPA1L2","FCGR2A","FCGR2A","HIP1R","HIP1R","VPS13C","HIP1R","CAMK2D","IP6K2","SIPA1L2","TRIM40","CAMK2D","CRHR1","FCGR2A","LRRK2","TMEM175","UBAP2","CHRNB1","CLCN3","CRLS1","CTSB","HIP1R","IGSF9B","IP6K2","MED12L","MEX3C","NOD2","NUCKS1","RIT2","SETD1A","SH3GL2","SIPA1L2","SLC2A13","WNT3","INPP5F","FAM171A2","KRTCAP2","ATP6V0A1","BST1","DLG2","LINC00693","RETREG3"],["oligo","neurons","microglia","neurons","astrocytes","astrocytes","neurons","astrocytes","neurons","oligo","astrocytes","neurons","oligo","microglia","microglia","astrocytes","neurons","oligo","astrocytes","neurons","oligo","astrocytes","oligo","neurons","neurons","microglia","neurons (+)","neurons (+)","microglia","microglia","oligo","astrocytes","astrocytes","OPCs","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain","brain"],["enhancers","enhancers","enhancers","enhancers","enhancers","enhancers","enhancers","enhancers","enhancers","enhancers","promoters","promoters","promoters","promoters","enhancers","enhancers","enhancers","enhancers","promoters","promoters","promoters","enhancers","enhancers","enhancers","promoters","enhancers","scATAC","Cicero","scATAC","Cicero","scATAC","scATAC","scATAC","scATAC","bulkATAC","bulkATAC","bulkATAC","bulkATAC","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP","HiChIP_FitHiChIP"],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],["oligo_enhancers","neurons_enhancers","microglia_enhancers","neurons_enhancers","astrocytes_enhancers","astrocytes_enhancers","neurons_enhancers","astrocytes_enhancers","neurons_enhancers","oligo_enhancers","astrocytes_promoters","neurons_promoters","oligo_promoters","microglia_promoters","microglia_enhancers","astrocytes_enhancers","neurons_enhancers","oligo_enhancers","astrocytes_promoters","neurons_promoters","oligo_promoters","astrocytes_enhancers","oligo_enhancers","neurons_enhancers","neurons_promoters","microglia_enhancers","ExcitatoryNeurons_scATAC","ExcitatoryNeurons_Cicero","Microglia_scATAC","Microglia_Cicero","Oligodendrocytes_scATAC","Astrocytes_scATAC","Astrocytes_scATAC","OPCs_scATAC","brain_bulkATAC","brain_bulkATAC","brain_bulkATAC","brain_bulkATAC","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP","brain_HiChIP_FitHiChIP"],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],["Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Nott et al. (2019)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)","Corces et al. (2020)"],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"SIPA1L2","SIPA1L2","FCGR2A","FCGR2A","UTS2B","UTS2B","LINC01950","UTS2B","CAMK2D","IP6K2","SIPA1L2","NA",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,false,false,false,false,false,false,true,false,false,false,false,true,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,-6198,-6198,-6041,-6041,-8041,-8041,711340,-8041,62460,502,-6240,-1125267,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"Intron","Intron","Distal","Distal","Intron","Intron","Distal","Intron","3' UTR","Promoter","Intron","5' UTR",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Locus<\/th>\n      <th>Cell_type<\/th>\n      <th>Assay<\/th>\n      <th>Count<\/th>\n      <th>Celltype_Assay<\/th>\n      <th>background<\/th>\n      <th>Study<\/th>\n      <th>Gene_Symbol<\/th>\n      <th>CTCF<\/th>\n      <th>Distance_To_TSS<\/th>\n      <th>Annotation<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","buttons":["copy","csv","excel","pdf","print"],"scrollY":400,"scrollX":true,"scrollCollapse":true,"paging":false,"columnDefs":[{"className":"dt-center","targets":"_all"},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<span class="fu"><a href="../reference/createDT.html">createDT</a></span><span class="op">(</span><span class="va">gg_peaks</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="multi-plot" class="section level2">
-<h2 class="hasAnchor">
-<a href="#multi-plot" class="anchor"></a>Multi-plot</h2>
+<div class="section level3">
+<h3 id="multi-plot">Multi-plot<a class="anchor" aria-label="anchor" href="#multi-plot"></a>
+</h3>
 <p>Now for the grand finale, put them all together by calling a single function,<code><a href="../reference/super_summary_plot.html">super_summary_plot()</a></code>!</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">super_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/super_summary_plot.html">super_summary_plot</a></span><span class="op">(</span>merged_DT <span class="op">=</span> <span class="va">merged_DT</span>,
                                   snp_filter<span class="op">=</span><span class="st">"Consensus_SNP==T"</span>,
                                   coloc_results<span class="op">=</span><span class="va">local_coloc</span>,
                                   plot_missense<span class="op">=</span><span class="cn">F</span>,
                                   show_plot<span class="op">=</span><span class="cn">T</span>, 
                                   
-                                  save_plot<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">results_dir</span>,
+                                  save_plot<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">results_dir</span>,
                                                       <span class="st">"GWAS/Nalls23andMe_2019/_genome_wide"</span>,
                                                       <span class="st">"PD_summary.studies.png"</span><span class="op">)</span>,
                                   height<span class="op">=</span><span class="fl">15</span>,
                                   width<span class="op">=</span><span class="fl">12</span>,
-                                  dpi<span class="op">=</span><span class="fl">500</span><span class="op">)</span>
-<span class="co">#&gt; [1] "+ SUMMARISE:: Nominating genes by top colocalized eQTL eGenes"</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: Downloading and merging 12 peaks BED files."</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: Converting merged BED files to GRanges."</span>
-<span class="co">#&gt; [1] "++ NOTT_2019:: 634540 ranges retrieved."</span>
-<span class="co">#&gt; 28 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; [1] "Importing Astrocyte enhancers ..."</span>
-<span class="co">#&gt; [1] "Importing Astrocyte promoters ..."</span>
-<span class="co">#&gt; [1] "Importing Neuronal enhancers ..."</span>
-<span class="co">#&gt; [1] "Importing Neuronal promoters ..."</span>
-<span class="co">#&gt; [1] "Importing Oligo enhancers ..."</span>
-<span class="co">#&gt; [1] "Importing Oligo promoters ..."</span>
-<span class="co">#&gt; [1] "Importing Microglia enhancers ..."</span>
-<span class="co">#&gt; [1] "Importing Microglia promoters ..."</span>
-<span class="co">#&gt; [1] "++ Converting to GRanges."</span>
-<span class="co">#&gt; 26 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; [1] "Importing Microglia interactome ..."</span>
-<span class="co">#&gt; [1] "Importing Neuronal interactome ..."</span>
-<span class="co">#&gt; [1] "Importing Oligo interactome ..."</span>
-<span class="co">#&gt; 73 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; 43 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; Error in h(simpleError(msg, call)) : </span>
-<span class="co">#&gt;   error in evaluating the argument 'args' in selecting a method for function 'do.call': GRanges objects don't support [[, as.list(), lapply(), or unlist() at</span>
-<span class="co">#&gt;   the moment</span>
-<span class="co">#&gt; [1] "CORCES_2020:: Extracting overlapping cell-type-specific scATAC-seq peaks"</span>
-<span class="co">#&gt; Start at 2021-06-22 17:15:53</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; End at 2021-06-22 17:15:55</span>
-<span class="co">#&gt; Runtime in total is: 2 secs</span>
-<span class="co">#&gt; 4 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; [1] "CORCES_2020:: Annotating peaks by cell-type-specific target genes"</span>
-<span class="co">#&gt; [1] "CORCES_2020:: Extracting overlapping bulkATAC-seq peaks from brain tissue"</span>
-<span class="co">#&gt; Start at 2021-06-22 17:15:55</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; End at 2021-06-22 17:15:57</span>
-<span class="co">#&gt; Runtime in total is: 2 secs</span>
-<span class="co">#&gt; 4 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; [1] "CORCES_2020:: Annotating peaks by bulk brain target genes"</span>
-<span class="co">#&gt; Start at 2021-06-22 17:15:57</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; End at 2021-06-22 17:15:58</span>
-<span class="co">#&gt; Runtime in total is: 1 secs</span>
-<span class="co">#&gt; 136 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; Start at 2021-06-22 17:15:59</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; End at 2021-06-22 17:16:00</span>
-<span class="co">#&gt; Runtime in total is: 1 secs</span>
-<span class="co">#&gt; 103 query SNP(s) detected with reference overlap.</span>
-<span class="co">#&gt; [1] "+ CORCES_2020:: Found 239 hits with HiChIP_FitHiChIP coaccessibility loop anchors."</span>
-<span class="co">#&gt; Warning: Removed 92 rows containing missing values (position_stack).</span>
-
-<span class="co">#&gt; Warning: Removed 92 rows containing missing values (position_stack).</span></code></pre></div>
-<p><img src="summarise_vignette_files/figure-html/super_summary_plot()-1.png" width="960"></p>
+                                  dpi<span class="op">=</span><span class="fl">500</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="manual-multi-plot" class="section level2">
-<h2 class="hasAnchor">
-<a href="#manual-multi-plot" class="anchor"></a>Manual multi-plot</h2>
+<div class="section level3">
+<h3 id="manual-multi-plot">Manual multi-plot<a class="anchor" aria-label="anchor" href="#manual-multi-plot"></a>
+</h3>
 <p>Alternatively, you can gain more customizability by merging your plots together manually with <code>patchwork</code>.</p>
 <p>Make sure to set <code>label_yaxis=F</code> for some of the plots to avoid redundancy and save space.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com">patchwork</a></span><span class="op">)</span>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span>
 
 <span class="co"># Merge</span>
-<span class="va">row1</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_spacer.html">plot_spacer</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
-           <span class="va">bin_plot</span><span class="op">$</span><span class="va">plot</span> <span class="op">)</span> <span class="op">+</span><span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html">plot_layout</a></span><span class="op">(</span>widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.4</span>,<span class="fl">.6</span><span class="op">)</span><span class="op">)</span>
+<span class="va">row1</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_spacer.html" class="external-link">plot_spacer</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+           <span class="va">bin_plot</span><span class="op">$</span><span class="va">plot</span> <span class="op">)</span> <span class="op">+</span><span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.4</span>,<span class="fl">.6</span><span class="op">)</span><span class="op">)</span>
 <span class="va">row2</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">gg_egene</span><span class="op">$</span><span class="va">plot</span> <span class="op">+</span> 
            <span class="va">gg_CS</span><span class="op">$</span><span class="va">plot</span> <span class="op">+</span> 
            <span class="va">gg_missense</span><span class="op">$</span><span class="va">plot</span> <span class="op">+</span>
            <span class="va">gg_peaks</span><span class="op">$</span><span class="va">plot</span>   
-           <span class="op">)</span> <span class="op">+</span> <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html">plot_layout</a></span><span class="op">(</span>widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.125</span>,<span class="fl">.3</span>,<span class="fl">.05</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+           <span class="op">)</span> <span class="op">+</span> <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.125</span>,<span class="fl">.3</span>,<span class="fl">.05</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span>
 
-<span class="va">gg_merged</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">row1</span>  <span class="op">/</span> <span class="va">row2</span><span class="op">)</span>  <span class="op">+</span> <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html">plot_layout</a></span><span class="op">(</span>heights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.15</span>,<span class="fl">1</span><span class="op">)</span>,ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> 
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">gg_merged</span><span class="op">)</span></code></pre></div>
+<span class="va">gg_merged</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">row1</span>  <span class="op">/</span> <span class="va">row2</span><span class="op">)</span>  <span class="op">+</span> <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>heights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.15</span>,<span class="fl">1</span><span class="op">)</span>,ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> 
+<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">gg_merged</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
-<div id="session-info" class="section level1">
-<h1 class="hasAnchor">
-<a href="#session-info" class="anchor"></a>Session info</h1>
-<details><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; R version 4.1.0 (2021-05-18)</span>
-<span class="co">#&gt; Platform: x86_64-apple-darwin17.0 (64-bit)</span>
-<span class="co">#&gt; Running under: macOS Big Sur 10.16</span>
+<div class="section level2">
+<h2 id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
+</h2>
+<details><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; R version 4.1.2 (2021-11-01)</span>
+<span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span>
+<span class="co">#&gt; Running under: Ubuntu 20.04.3 LTS</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Matrix products: default</span>
-<span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.dylib</span>
-<span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib</span>
+<span class="co">#&gt; BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; locale:</span>
-<span class="co">#&gt; [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8</span>
+<span class="co">#&gt;  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span>
+<span class="co">#&gt;  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span>
+<span class="co">#&gt;  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=C             </span>
+<span class="co">#&gt;  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span>
+<span class="co">#&gt;  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span>
+<span class="co">#&gt; [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; attached base packages:</span>
 <span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; other attached packages:</span>
-<span class="co">#&gt; [1] patchwork_1.1.1   echolocatoR_0.1.2</span>
+<span class="co">#&gt; [1] echolocatoR_0.2.2 BiocStyle_2.22.0 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; loaded via a namespace (and not attached):</span>
-<span class="co">#&gt;   [1] utf8_1.2.1                  R.utils_2.10.1             </span>
-<span class="co">#&gt;   [3] tidyselect_1.1.1            RSQLite_2.2.7              </span>
-<span class="co">#&gt;   [5] AnnotationDbi_1.54.1        htmlwidgets_1.5.3          </span>
-<span class="co">#&gt;   [7] grid_4.1.0                  BiocParallel_1.26.0        </span>
-<span class="co">#&gt;   [9] XGR_1.1.8                   munsell_0.5.0              </span>
-<span class="co">#&gt;  [11] ragg_1.1.3                  DT_0.18                    </span>
-<span class="co">#&gt;  [13] colorspace_2.0-1            Biobase_2.52.0             </span>
-<span class="co">#&gt;  [15] filelock_1.0.2              OrganismDbi_1.34.0         </span>
-<span class="co">#&gt;  [17] highr_0.9                   knitr_1.33                 </span>
-<span class="co">#&gt;  [19] supraHex_1.30.0             rstudioapi_0.13            </span>
-<span class="co">#&gt;  [21] stats4_4.1.0                DescTools_0.99.42          </span>
-<span class="co">#&gt;  [23] MatrixGenerics_1.4.0        labeling_0.4.2             </span>
-<span class="co">#&gt;  [25] GenomeInfoDbData_1.2.6      bit64_4.0.5                </span>
-<span class="co">#&gt;  [27] farver_2.1.0                rprojroot_2.0.2            </span>
-<span class="co">#&gt;  [29] vctrs_0.3.8                 generics_0.1.0             </span>
-<span class="co">#&gt;  [31] xfun_0.24                   biovizBase_1.40.0          </span>
-<span class="co">#&gt;  [33] BiocFileCache_2.0.0         R6_2.5.0                   </span>
-<span class="co">#&gt;  [35] GenomeInfoDb_1.28.0         AnnotationFilter_1.16.0    </span>
-<span class="co">#&gt;  [37] bitops_1.0-7                cachem_1.0.5               </span>
-<span class="co">#&gt;  [39] reshape_0.8.8               DelayedArray_0.18.0        </span>
-<span class="co">#&gt;  [41] assertthat_0.2.1            BiocIO_1.2.0               </span>
-<span class="co">#&gt;  [43] scales_1.1.1                nnet_7.3-16                </span>
-<span class="co">#&gt;  [45] rootSolve_1.8.2.1           gtable_0.3.0               </span>
-<span class="co">#&gt;  [47] lmom_2.8                    ggbio_1.40.0               </span>
-<span class="co">#&gt;  [49] ensembldb_2.16.0            rlang_0.4.11               </span>
-<span class="co">#&gt;  [51] systemfonts_1.0.2           splines_4.1.0              </span>
-<span class="co">#&gt;  [53] rtracklayer_1.52.0          lazyeval_0.2.2             </span>
-<span class="co">#&gt;  [55] dichromat_2.0-0             hexbin_1.28.2              </span>
-<span class="co">#&gt;  [57] checkmate_2.0.0             BiocManager_1.30.16        </span>
-<span class="co">#&gt;  [59] yaml_2.2.1                  reshape2_1.4.4             </span>
-<span class="co">#&gt;  [61] GenomicFeatures_1.44.0      ggnetwork_0.5.9            </span>
-<span class="co">#&gt;  [63] crosstalk_1.1.1             backports_1.2.1            </span>
-<span class="co">#&gt;  [65] Hmisc_4.5-0                 RBGL_1.68.0                </span>
-<span class="co">#&gt;  [67] tools_4.1.0                 ggplot2_3.3.4              </span>
-<span class="co">#&gt;  [69] ellipsis_0.3.2              jquerylib_0.1.4            </span>
-<span class="co">#&gt;  [71] RColorBrewer_1.1-2          proxy_0.4-26               </span>
-<span class="co">#&gt;  [73] BiocGenerics_0.38.0         Rcpp_1.0.6                 </span>
-<span class="co">#&gt;  [75] plyr_1.8.6                  base64enc_0.1-3            </span>
-<span class="co">#&gt;  [77] progress_1.2.2              zlibbioc_1.38.0            </span>
-<span class="co">#&gt;  [79] purrr_0.3.4                 RCurl_1.98-1.3             </span>
-<span class="co">#&gt;  [81] prettyunits_1.1.1           rpart_4.1-15               </span>
-<span class="co">#&gt;  [83] S4Vectors_0.30.0            SummarizedExperiment_1.22.0</span>
-<span class="co">#&gt;  [85] ggrepel_0.9.1               cluster_2.1.2              </span>
-<span class="co">#&gt;  [87] fs_1.5.0                    crul_1.1.0                 </span>
-<span class="co">#&gt;  [89] magrittr_2.0.1              data.table_1.14.0          </span>
-<span class="co">#&gt;  [91] dnet_1.1.7                  mvtnorm_1.1-2              </span>
-<span class="co">#&gt;  [93] ProtGenerics_1.24.0         matrixStats_0.59.0         </span>
-<span class="co">#&gt;  [95] hms_1.1.0                   evaluate_0.14              </span>
-<span class="co">#&gt;  [97] XML_3.99-0.6                jpeg_0.1-8.1               </span>
-<span class="co">#&gt;  [99] IRanges_2.26.0              gridExtra_2.3              </span>
-<span class="co">#&gt; [101] compiler_4.1.0              biomaRt_2.48.1             </span>
-<span class="co">#&gt; [103] tibble_3.1.2                crayon_1.4.1               </span>
-<span class="co">#&gt; [105] R.oo_1.24.0                 htmltools_0.5.1.1          </span>
-<span class="co">#&gt; [107] Formula_1.2-4               tidyr_1.1.3                </span>
-<span class="co">#&gt; [109] expm_0.999-6                Exact_2.1                  </span>
-<span class="co">#&gt; [111] DBI_1.1.1                   dbplyr_2.1.1               </span>
-<span class="co">#&gt; [113] MASS_7.3-54                 rappdirs_0.3.3             </span>
-<span class="co">#&gt; [115] boot_1.3-28                 Matrix_1.3-4               </span>
-<span class="co">#&gt; [117] readr_1.4.0                 R.methodsS3_1.8.1          </span>
-<span class="co">#&gt; [119] parallel_4.1.0              igraph_1.2.6               </span>
-<span class="co">#&gt; [121] GenomicRanges_1.44.0        pkgconfig_2.0.3            </span>
-<span class="co">#&gt; [123] pkgdown_1.6.1               GenomicAlignments_1.28.0   </span>
-<span class="co">#&gt; [125] RCircos_1.2.1               foreign_0.8-81             </span>
-<span class="co">#&gt; [127] osfr_0.2.8                  xml2_1.3.2                 </span>
-<span class="co">#&gt; [129] bslib_0.2.5.1               XVector_0.32.0             </span>
-<span class="co">#&gt; [131] stringr_1.4.0               VariantAnnotation_1.38.0   </span>
-<span class="co">#&gt; [133] digest_0.6.27               graph_1.70.0               </span>
-<span class="co">#&gt; [135] httpcode_0.3.0              Biostrings_2.60.1          </span>
-<span class="co">#&gt; [137] rmarkdown_2.9               htmlTable_2.2.1            </span>
-<span class="co">#&gt; [139] gld_2.6.2                   restfulr_0.0.13            </span>
-<span class="co">#&gt; [141] curl_4.3.1                  Rsamtools_2.8.0            </span>
-<span class="co">#&gt; [143] rjson_0.2.20                lifecycle_1.0.0            </span>
-<span class="co">#&gt; [145] nlme_3.1-152                jsonlite_1.7.2             </span>
-<span class="co">#&gt; [147] viridisLite_0.4.0           desc_1.3.0                 </span>
-<span class="co">#&gt; [149] BSgenome_1.60.0             fansi_0.5.0                </span>
-<span class="co">#&gt; [151] pillar_1.6.1                lattice_0.20-44            </span>
-<span class="co">#&gt; [153] GGally_2.1.2                KEGGREST_1.32.0            </span>
-<span class="co">#&gt; [155] fastmap_1.1.0               httr_1.4.2                 </span>
-<span class="co">#&gt; [157] survival_3.2-11             glue_1.4.2                 </span>
-<span class="co">#&gt; [159] png_0.1-7                   bit_4.0.4                  </span>
-<span class="co">#&gt; [161] Rgraphviz_2.36.0            class_7.3-19               </span>
-<span class="co">#&gt; [163] stringi_1.6.2               sass_0.4.0                 </span>
-<span class="co">#&gt; [165] blob_1.2.1                  textshaping_0.3.5          </span>
-<span class="co">#&gt; [167] latticeExtra_0.6-29         memoise_2.0.0              </span>
-<span class="co">#&gt; [169] dplyr_1.0.7                 e1071_1.7-7                </span>
-<span class="co">#&gt; [171] ape_5.5</span></code></pre></div>
+<span class="co">#&gt;   [1] backports_1.4.1             Hmisc_4.6-0                </span>
+<span class="co">#&gt;   [3] BiocFileCache_2.2.1         systemfonts_1.0.4          </span>
+<span class="co">#&gt;   [5] plyr_1.8.6                  lazyeval_0.2.2             </span>
+<span class="co">#&gt;   [7] splines_4.1.2               BiocParallel_1.28.3        </span>
+<span class="co">#&gt;   [9] GenomeInfoDb_1.30.1         ggplot2_3.3.5              </span>
+<span class="co">#&gt;  [11] digest_0.6.29               ensembldb_2.18.3           </span>
+<span class="co">#&gt;  [13] htmltools_0.5.2             fansi_1.0.2                </span>
+<span class="co">#&gt;  [15] magrittr_2.0.2              checkmate_2.0.0            </span>
+<span class="co">#&gt;  [17] memoise_2.0.1               BSgenome_1.62.0            </span>
+<span class="co">#&gt;  [19] cluster_2.1.2               Biostrings_2.62.0          </span>
+<span class="co">#&gt;  [21] matrixStats_0.61.0          ggbio_1.42.0               </span>
+<span class="co">#&gt;  [23] pkgdown_2.0.2               prettyunits_1.1.1          </span>
+<span class="co">#&gt;  [25] jpeg_0.1-9                  colorspace_2.0-3           </span>
+<span class="co">#&gt;  [27] rappdirs_0.3.3              blob_1.2.2                 </span>
+<span class="co">#&gt;  [29] textshaping_0.3.6           xfun_0.30                  </span>
+<span class="co">#&gt;  [31] dplyr_1.0.8                 crayon_1.5.0               </span>
+<span class="co">#&gt;  [33] RCurl_1.98-1.6              jsonlite_1.8.0             </span>
+<span class="co">#&gt;  [35] graph_1.72.0                Exact_3.1                  </span>
+<span class="co">#&gt;  [37] VariantAnnotation_1.40.0    survival_3.2-13            </span>
+<span class="co">#&gt;  [39] glue_1.6.2                  gtable_0.3.0               </span>
+<span class="co">#&gt;  [41] zlibbioc_1.40.0             XVector_0.34.0             </span>
+<span class="co">#&gt;  [43] DelayedArray_0.20.0         BiocGenerics_0.40.0        </span>
+<span class="co">#&gt;  [45] scales_1.1.1                mvtnorm_1.1-3              </span>
+<span class="co">#&gt;  [47] DBI_1.1.2                   GGally_2.1.2               </span>
+<span class="co">#&gt;  [49] Rcpp_1.0.8                  progress_1.2.2             </span>
+<span class="co">#&gt;  [51] htmlTable_2.4.0             foreign_0.8-81             </span>
+<span class="co">#&gt;  [53] bit_4.0.4                   proxy_0.4-26               </span>
+<span class="co">#&gt;  [55] OrganismDbi_1.36.0          Formula_1.2-4              </span>
+<span class="co">#&gt;  [57] stats4_4.1.2                htmlwidgets_1.5.4          </span>
+<span class="co">#&gt;  [59] httr_1.4.2                  RColorBrewer_1.1-2         </span>
+<span class="co">#&gt;  [61] ellipsis_0.3.2              pkgconfig_2.0.3            </span>
+<span class="co">#&gt;  [63] reshape_0.8.8               XML_3.99-0.9               </span>
+<span class="co">#&gt;  [65] dbplyr_2.1.1                nnet_7.3-16                </span>
+<span class="co">#&gt;  [67] sass_0.4.0                  utf8_1.2.2                 </span>
+<span class="co">#&gt;  [69] tidyselect_1.1.2            rlang_1.0.1                </span>
+<span class="co">#&gt;  [71] reshape2_1.4.4              AnnotationDbi_1.56.2       </span>
+<span class="co">#&gt;  [73] munsell_0.5.0               tools_4.1.2                </span>
+<span class="co">#&gt;  [75] cachem_1.0.6                cli_3.2.0                  </span>
+<span class="co">#&gt;  [77] generics_0.1.2              RSQLite_2.2.10             </span>
+<span class="co">#&gt;  [79] evaluate_0.15               stringr_1.4.0              </span>
+<span class="co">#&gt;  [81] fastmap_1.1.0               yaml_2.3.5                 </span>
+<span class="co">#&gt;  [83] ragg_1.2.2                  knitr_1.37                 </span>
+<span class="co">#&gt;  [85] bit64_4.0.5                 fs_1.5.2                   </span>
+<span class="co">#&gt;  [87] purrr_0.3.4                 KEGGREST_1.34.0            </span>
+<span class="co">#&gt;  [89] AnnotationFilter_1.18.0     rootSolve_1.8.2.3          </span>
+<span class="co">#&gt;  [91] RBGL_1.70.0                 xml2_1.3.3                 </span>
+<span class="co">#&gt;  [93] biomaRt_2.50.3              compiler_4.1.2             </span>
+<span class="co">#&gt;  [95] rstudioapi_0.13             filelock_1.0.2             </span>
+<span class="co">#&gt;  [97] curl_4.3.2                  png_0.1-7                  </span>
+<span class="co">#&gt;  [99] e1071_1.7-9                 tibble_3.1.6               </span>
+<span class="co">#&gt; [101] bslib_0.3.1                 DescTools_0.99.44          </span>
+<span class="co">#&gt; [103] stringi_1.7.6               GenomicFeatures_1.46.5     </span>
+<span class="co">#&gt; [105] desc_1.4.0                  lattice_0.20-45            </span>
+<span class="co">#&gt; [107] ProtGenerics_1.26.0         Matrix_1.3-4               </span>
+<span class="co">#&gt; [109] vctrs_0.3.8                 pillar_1.7.0               </span>
+<span class="co">#&gt; [111] lifecycle_1.0.1             BiocManager_1.30.16        </span>
+<span class="co">#&gt; [113] jquerylib_0.1.4             data.table_1.14.2          </span>
+<span class="co">#&gt; [115] bitops_1.0-7                lmom_2.8                   </span>
+<span class="co">#&gt; [117] rtracklayer_1.54.0          GenomicRanges_1.46.1       </span>
+<span class="co">#&gt; [119] R6_2.5.1                    BiocIO_1.4.0               </span>
+<span class="co">#&gt; [121] latticeExtra_0.6-29         bookdown_0.24              </span>
+<span class="co">#&gt; [123] gridExtra_2.3               IRanges_2.28.0             </span>
+<span class="co">#&gt; [125] gld_2.6.4                   dichromat_2.0-0            </span>
+<span class="co">#&gt; [127] boot_1.3-28                 MASS_7.3-54                </span>
+<span class="co">#&gt; [129] assertthat_0.2.1            SummarizedExperiment_1.24.0</span>
+<span class="co">#&gt; [131] rprojroot_2.0.2             rjson_0.2.21               </span>
+<span class="co">#&gt; [133] GenomicAlignments_1.30.0    Rsamtools_2.10.0           </span>
+<span class="co">#&gt; [135] S4Vectors_0.32.3            GenomeInfoDbData_1.2.7     </span>
+<span class="co">#&gt; [137] expm_0.999-6                parallel_4.1.2             </span>
+<span class="co">#&gt; [139] hms_1.1.1                   grid_4.1.2                 </span>
+<span class="co">#&gt; [141] rpart_4.1-15                class_7.3-19               </span>
+<span class="co">#&gt; [143] rmarkdown_2.12              MatrixGenerics_1.6.0       </span>
+<span class="co">#&gt; [145] biovizBase_1.42.0           Biobase_2.54.0             </span>
+<span class="co">#&gt; [147] base64enc_0.1-3             restfulr_0.0.13</span></code></pre></div>
 </details>
 </div>
   </div>
@@ -790,11 +436,13 @@ It also prints the mean number of SNPs for each SNP group across all loci.<br><s
 
 
       <footer><div class="copyright">
-  <p>Developed by Brian Schilder.</p>
+  <p></p>
+<p>Developed by Brian Schilder, Jack Humphrey, Towfique Raj.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -802,6 +450,8 @@ It also prints the mean number of SNPs for each SNP group across all loci.<br><s
 
   
 
+
+  
 
   </body>
 </html>

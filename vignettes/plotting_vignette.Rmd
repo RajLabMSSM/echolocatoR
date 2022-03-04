@@ -1,23 +1,13 @@
 ---
-title: "Plotting vignette"
-author: "Brian M. Schilder"
-date: "Most recent update:<br> `r Sys.Date()`"
-output: 
-  rmarkdown::html_document: 
-    theme: spacelab
-    highlight: zenburn 
-    code_folding: show 
-    toc: true 
-    toc_float: true
-    smooth_scroll: true
-    number_sections: false 
-    self_contained: true
-editor_options: 
-  chunk_output_type: inline
+title: "Plotting vignette" 
+author: "<h4>Author: <i>Brian M. Schilder</i></h4>" 
+date: "<h4>Updated: <i>`r format( Sys.Date(), '%b-%d-%Y')`</i></h4>"
+output:
+  BiocStyle::html_document
 vignette: >
-  %\VignetteIndexEntry{plotting_vignette}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+    %\VignetteIndexEntry{plotting_vignette} 
+    %\usepackage[utf8]{inputenc}
+    %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r, include = T, error = T, dpi=300}
@@ -36,7 +26,7 @@ knitr::opts_knit$set(
 # devtools::build_vignettes(quiet = F)
 ```
 
-```{r setup, dpi=300}
+```{r setup}
 library(echolocatoR) 
 ```
 
@@ -66,7 +56,7 @@ The plot is centered on the lead/index SNP. If a list is supplied to plot.xoom
 Load example dataset of the results from fine-mapping the BST1 locus with `finemap_loci()`.
 Original data comes from the recent Nalls et al. (2019) Parkinson's disease GWAS (see `?BST1` for details).
 
-```{r Load example data}
+```{r Load example data, eval=F}
 library(ggplot2)
 data("BST1"); data("LD_matrix"); data("locus_dir");
 locus_dir <- file.path(root.dir,locus_dir)
@@ -88,7 +78,7 @@ show_plot <- F
 
 ## Full window
 
-```{r trk_plot, attr.output='style="max-height: 200px;"'}
+```{r trk_plot, attr.output='style="max-height: 200px;"', eval=F}
 trk_plot <- PLOT.locus(finemap_dat=finemap_DT, 
                        LD_matrix=LD_matrix, 
                        LD_reference=LD_reference,
@@ -98,7 +88,7 @@ trk_plot <- PLOT.locus(finemap_dat=finemap_DT,
                        plot.zoom=plot.zoom) 
 ```
 
-```{r}
+```{r, eval=F}
 print(trk_plot)
 ```
 
@@ -109,7 +99,7 @@ print(trk_plot)
 * Each zoom view will be saved individually with its respective scale as the suffix (e.g. `multiview.BST1.UKB.4x.jpg`).  
 * Each zoom view is stored as a named item within the returned list.  
 
-```{r trk_plot_zoom, attr.output='style="max-height: 200px;"'}
+```{r trk_plot_zoom, attr.output='style="max-height: 200px;"', eval=F}
 trk_plot_zooms <- PLOT.locus(finemap_dat=finemap_DT, 
                              LD_matrix=LD_matrix, 
                              LD_reference=LD_reference,
@@ -120,7 +110,7 @@ trk_plot_zooms <- PLOT.locus(finemap_dat=finemap_DT,
 names(trk_plot_zooms) # Get zoom view names
 ```
 
-```{r}
+```{r, eval=F}
 print(trk_plot_zooms)
 ```
 
@@ -130,7 +120,7 @@ print(trk_plot_zooms)
 * For even further control over each track of the multi-view plot, specify `PLOT.locus(..., return_list=T)` to instead return a named list (nested within each zoom view list item) of `ggplot` objects which can each be modified individually. 
 * Once you've made your modifications, you can then bind this list of plots back together with `patchwork::wrap_plots(tracks_list, ncol = 1)`.  
 
-```{r trk_plot_list, attr.output='style="max-height: 200px;"'}
+```{r trk_plot_list, attr.output='style="max-height: 200px;"', eval=F}
 trk_plot_list <- PLOT.locus(finemap_dat=finemap_DT, 
                              LD_matrix=LD_matrix, 
                              LD_reference=LD_reference,
@@ -141,14 +131,14 @@ trk_plot_list <- PLOT.locus(finemap_dat=finemap_DT,
                              return_list=T)  
 ```
 
-```{r extract view}
+```{r extract view, eval=F}
 view1_list <- trk_plot_list[[plot.zoom]]
 names(view1_list) # Get track names from a particular zoom view
 ```
 
 Modify a specific tracks within a view. 
 
-```{r modify track} 
+```{r modify track, eval=F} 
 # Modify your selected track
 modified_track <- view1_list$GWAS + 
                       labs(title = "Modified GWAS") + 
@@ -176,7 +166,7 @@ the annotations that overlap with your locus will automatically be saved as `GRa
 *results/<dataset_type>/<dataset_name>/<locus>/annotation* 
 * If a selected annotation has previously been downloaded and stored for that locus, `PLOT.locus()` will automatically detect and import it to save time.   
 
-```{r trk_plot.xgr, attr.output='style="max-height: 200px;"'}
+```{r trk_plot.xgr, attr.output='style="max-height: 200px;"', eval=F}
 trk_plot.xgr <- PLOT.locus(finemap_dat=finemap_DT, 
                            LD_matrix=LD_matrix, 
                            LD_reference=LD_reference,
@@ -188,7 +178,7 @@ trk_plot.xgr <- PLOT.locus(finemap_dat=finemap_DT,
                            plot.zoom=plot.zoom)
 ```
 
-```{r}
+```{r, eval=F}
 print(trk_plot.xgr)
 ```
 
@@ -198,7 +188,7 @@ print(trk_plot.xgr)
 * Note that Roadmap queries requires `tabix` to be installed on your machine, or within a conda environment (`conda_env = "echoR"`). 
 * Parallelizing these queries across multiple thredas speeds up this process (`nThread=<n_cores_available>`), as does reusing previously stored data which is automatically saved to the locus-specific subfolder (`<dataset_type>/<dataset_name>/<locus>/annotations/Roadmap.ChromatinMarks_CellTypes.RDS`) .
 
-```{r trk_plot.roadmap, attr.output='style="max-height: 200px;"'} 
+```{r trk_plot.roadmap, attr.output='style="max-height: 200px;"', eval=F} 
 trk_plot.roadmap <- PLOT.locus(finemap_dat=finemap_DT, 
                                LD_matrix=LD_matrix, 
                                LD_reference=LD_reference,
@@ -214,7 +204,7 @@ trk_plot.roadmap <- PLOT.locus(finemap_dat=finemap_DT,
                                conda_env = "echoR")
 ```
 
-```{r}
+```{r, eval=F}
 print(trk_plot.roadmap)
 ```
 
@@ -224,7 +214,7 @@ print(trk_plot.roadmap)
 [Nott et al. (Science, 2019)](https://science.sciencemag.org/content/366/6469/1134.abstract)  
 (see `?NOTT_2019.bigwig_metadata` for details).
 
-```{r trk_plot.nott_2019, attr.output='style="max-height: 200px;"'} 
+```{r trk_plot.nott_2019, attr.output='style="max-height: 200px;"', eval=F} 
 trk_plot.nott_2019 <- PLOT.locus(finemap_dat=finemap_DT,  
                                  LD_matrix=LD_matrix, 
                                  LD_reference=LD_reference,
@@ -240,7 +230,7 @@ trk_plot.nott_2019 <- PLOT.locus(finemap_dat=finemap_DT,
                                  plot.zoom=plot.zoom) 
 ```
 
-```{r}
+```{r, eval=F}
 print(trk_plot.nott_2019)
 ```
 
@@ -249,7 +239,7 @@ print(trk_plot.nott_2019)
 * Plot multiple QTL p-value columns (or really P-value columns from any kind of datset).  
 * Each QTL dataset will be plotted as a new track.
 
-```{r trk_plot.QTL, attr.output='style="max-height: 200px;"'}
+```{r trk_plot.QTL, attr.output='style="max-height: 200px;"', eval=F}
 # Make fake QTL P-values for the sake a demonstration
 finemap_DT$fake_eQTL.P <- finemap_DT$P  * c(1,.9,.7)
 finemap_DT$fake_sQTL.P <- finemap_DT$P  * c(1,.8,.5)
@@ -266,7 +256,7 @@ trk_plot.qtl <- PLOT.locus(finemap_dat=finemap_DT,
                            plot.zoom=plot.zoom)
 ```
 
-```{r}
+```{r, eval=F}
 print(trk_plot.qtl)
 ```
 
