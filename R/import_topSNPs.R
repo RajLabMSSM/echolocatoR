@@ -22,6 +22,7 @@
 #' such that each grouping_var combination has its own index SNP.
 #' For example, if you want one index SNP per QTL eGene - GWAS locus pair, you could supply:
 #' \code{grouping_vars=c("Locus","Gene")}.
+#' @import dplyr data.table ggplot2
 #' @inheritParams finemap_pipeline
 #' @export
 import_topSNPs <- function(topSS,

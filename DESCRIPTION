@@ -31,11 +31,9 @@ biocViews:
 Imports: 
     devtools, 
     remotes,
-    magrittr,
     R.utils, 
     BiocManager, 
     tidyverse, 
-    knitr,
     rmarkdown,
     data.table, 
     mvtnorm,
@@ -65,6 +63,7 @@ Imports:
 Remotes:
   github::stephenslab/susieR
 Suggests:
+    knitr,
     pbmcapply,
     gaston, 
     lattice,
