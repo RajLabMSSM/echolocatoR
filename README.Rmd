@@ -62,9 +62,10 @@ fine-mapping pipeline rapid, robust and scalable.
 
 ### Bugs/requests
 
-Please report any bugs/requests on [GitHub Issues](https://github.com/RajLabMSSM/echolocatoR/issues):
+Please report any bugs/requests on 
+[GitHub Issues](https://github.com/RajLabMSSM/echolocatoR/issues).
 
-[Contributions](https://github.com/RajLabMSSM/echolocatoR/pulls) are welcome!:
+[Contributions](https://github.com/RajLabMSSM/echolocatoR/pulls) are welcome!
 
 ## Literature
  

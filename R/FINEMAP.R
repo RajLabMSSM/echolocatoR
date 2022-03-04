@@ -22,7 +22,7 @@
 #' @source
 #' \url{http://www.christianbenner.com}
 #' @family FINEMAP
-#' @keywords internal
+#' @export
 #' @examples
 #' data("locus_dir"); data("BST1"); data("BST1_LD_matrix");
 #' finemap_DT <- BST1

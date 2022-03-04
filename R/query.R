@@ -137,6 +137,7 @@ extract_SNP_subset <- function(locus=NULL,
 
 #' Generate a named list of [e]gene-locus pairs
 #'
+#' @export
 gene_locus_list <- function(top_SNPs){
   setNames(top_SNPs$Locus, top_SNPs$Gene)
 }

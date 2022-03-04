@@ -48,4 +48,3 @@ Other polyfun:
 \code{\link{POLYFUN.run_ldsc}()}
 }
 \concept{polyfun}
-\keyword{internal}

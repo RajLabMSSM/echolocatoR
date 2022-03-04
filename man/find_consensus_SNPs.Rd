@@ -37,4 +37,3 @@ Other finemapping functions:
 \code{\link{multi_finemap}()}
 }
 \concept{finemapping functions}
-\keyword{internal}

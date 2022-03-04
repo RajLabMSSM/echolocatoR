@@ -401,6 +401,7 @@ leadSNP_comparison <- function(top_SNPs, merged_results){
 #' Tally tool-specific and union CS sizes
 #'
 #' @family summarise
+#' @export
 #' @examples
 #' data("merged_DT");
 #' locus_order <- SUMMARISE.get_CS_counts(merged_dat=merged_DT)
@@ -469,6 +470,7 @@ SUMMARISE.get_CS_bins <- function(merged_dat){
 #' Plot CS bin counts
 #'
 #' @family summarise
+#' @export
 #' @examples
 #' data("merged_DT");
 #' bin_plot <- SUMMARISE.CS_bin_plot(merged_dat=merged_DT)
@@ -508,6 +510,7 @@ SUMMARISE.CS_bin_plot <- function(merged_dat,
 #' Tally locus-specific SNP group sizes
 #'
 #' @family summarise
+#' @export
 #' @examples
 #' data("merged_DT");
 #' snp_groups <- SUMMARISE.get_SNPgroup_counts(merged_dat=merged_DT)
@@ -537,6 +540,7 @@ SUMMARISE.get_SNPgroup_counts <- function(merged_dat,
 #' Bar plot of tool-specific CS sizes
 #'
 #' Loci ordered by UCS size (smallest to largest).
+#' @export
 #' @family summarise
 #' @examples
 #' data("merged_DT")
@@ -707,7 +711,7 @@ SUMMARISE.peak_overlap <- function(merged_dat,
 #' cell-type-specific scATAC-seq peaks.
 #' @param include.CORCES_2020_Cicero_coaccess Plot SNP subset overlap with
 #' Cicero coaccessibility peaks (derived from scATACseq).
-#' @keywords internal
+#' @export
 #' @family summarise
 #' @source
 #' \href{https://science.sciencemag.org/content/366/6469/1134}{Nott et al. (2019)}
@@ -992,7 +996,7 @@ SUMMARISE.cell_type_specificity <- function(plot_dat,
 #' and assign it as the most likely causal gene in that locus.
 #'
 #' eQTL queries and colocalization test done with \pkg{catalogueR}.
-#'
+#' @export
 #' @examples
 #' \dontrun{
 #' data("merged_DT")
@@ -1131,6 +1135,7 @@ results_report <- function(merged_dat){
 #' Merge all summary plots into one super plot
 #'
 #' @family summarise
+#' @export
 super_summary_plot <- function(merged_dat,
                                snp_filter="Consensus_SNP==T",
                                coloc_results=NULL,

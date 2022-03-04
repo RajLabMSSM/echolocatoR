@@ -30,6 +30,8 @@
 #' \strong{mean.CS} and \strong{Consensus_SNP}.
 #' @param verbose Print messages.
 #' @family annotatate
+#'
+#' @export
 #' @examples
 #' dataset_dir <- "~/Desktop/Fine_Mapping/Data/GWAS/Nalls23andMe_2019"
 #' # UCS and lead SNPs: No annotation
@@ -584,6 +586,7 @@ ANNOTATE.annotate_missense <- function(merged_dat,
 #' Plot any missense variants
 #'
 #' @family annotate
+#' @export
 #' @examples
 #' \dontrun{
 #' data("merged_DT");

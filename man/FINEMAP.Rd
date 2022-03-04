@@ -71,4 +71,3 @@ Other FINEMAP:
 \code{\link{FINEMAP.process_results}()}
 }
 \concept{FINEMAP}
-\keyword{internal}

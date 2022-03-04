@@ -35,4 +35,3 @@ Other general:
 \code{\link{tryFunc}()}
 }
 \concept{general}
-\keyword{internal}

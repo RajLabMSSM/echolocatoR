@@ -88,6 +88,7 @@ Suggests:
     LDlinkR, 
     coin,
     badger,
-    BiocStyle
+    BiocStyle,
+    MungeSumstats
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr

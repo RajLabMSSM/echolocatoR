@@ -71,4 +71,3 @@ Other summarise:
 \code{\link{super_summary_plot}()}
 }
 \concept{summarise}
-\keyword{internal}

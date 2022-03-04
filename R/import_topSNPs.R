@@ -23,6 +23,7 @@
 #' For example, if you want one index SNP per QTL eGene - GWAS locus pair, you could supply:
 #' \code{grouping_vars=c("Locus","Gene")}.
 #' @inheritParams finemap_pipeline
+#' @export
 import_topSNPs <- function(topSS,
                            show_table=T,
                            sheet = 1,
@@ -69,6 +70,7 @@ import_topSNPs <- function(topSS,
     top_SNPs <- MUNGESUMSTATS.check_syn(top_SNPs, col_name=effect_col, col_type = "BETA")
     printer("+ Munging top_SNPs",v=verbose)
     top_SNPs <- suppressMessages( MungeSumstats:::standardise_sumstats_column_headers_crossplatform(sumstats_dt = top_SNPs)$sumstats_dt)
+    # top_SNPs <- MUNGESUMSTATS.to_echolocatoR(top_SNPs)
     map <- column_map(package = "MungeSumstats")
     chrom_col <- map$chrom_col; position_col <- map$position_col; snp_col <- map$snp_col;
     pval_col <- map$pval_col; effect_col <- map$effect_col;

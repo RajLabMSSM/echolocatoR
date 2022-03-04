@@ -8,6 +8,7 @@
 #' Generate a locus-specific plot with multiple selectable tracks.
 #' Users can also generate multiple zoomed in views of the plot at multiple resolutions.
 #'
+#' @export
 #' @examples
 #' library(echolocatoR)
 #' finemap_dat<- echolocatoR::BST1; LD_matrix <- echolocatoR::BST1_LD_matrix;
@@ -640,7 +641,9 @@ PLOT.guess_genomic_units <- function(gg,
   return(genomic_units)
 }
 
-
+#' Plot heights dictionary
+#'
+#' @export
 PLOT.heights_dict <- function(keys=NULL,
                               default_height=1){
   heights_dict <- c(

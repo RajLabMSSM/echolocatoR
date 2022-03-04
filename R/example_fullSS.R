@@ -2,7 +2,7 @@
 #'
 #' @inheritParams finemap_pipeline
 #' @family general
-#' @keywords internal
+#' @export
 #' @examples
 #' \dontrun{
 #' data("fullSS_dat")

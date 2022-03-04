@@ -194,7 +194,7 @@ plot_zoom_list <- FCGR2A
 mod_plot <- function(plot_zoom_list, locus, zoom){
   # deparse(substitute(FCGR2A))
   TRKS <- plot_zoom_list[[zoom]]
-  finemap_dat <- fread(data_dict$finemap[[locus]])
+  finemap_dat <- data.table::fread(data_dict$finemap[[locus]])
   
   n_snps <- if(data_dict$dataset_type %in% names(TRKS)){
           paste0("n SNPs: ",

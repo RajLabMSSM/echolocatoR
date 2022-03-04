@@ -1,5 +1,5 @@
 
-
+#' echolocatoR Fine-mapping portal: metadata
 GITHUB.portal_metadata <- function(verbose=T){
   printer("Fetching echolocatoR Fine-mapping Portal study metadata.",v=verbose)
   meta <- data.table::fread("https://github.com/RajLabMSSM/Fine_Mapping_Shiny/raw/master/www/metadata/study_metadata.csv.gz")
@@ -14,6 +14,7 @@ GITHUB.portal_metadata <- function(verbose=T){
 #'
 #' Search the \href{https://github.com/RajLabMSSM/Fine_Mapping_Shiny}{echolocatoR Fine-mapping Portal}
 #' for fine-mapping results, LD, and locus plots.
+#' @export
 #' @examples
 #' local_finemap <- GITHUB.portal_query(dataset_types="GWAS",
 #'                                      phenotypes = c("schizophrenia","parkinson"),
@@ -125,7 +126,9 @@ GITHUB.download_files <- function(filelist,
 }
 
 
-
+#' echolocatoR Fine-mapping portal: data dictionary
+#'
+#' @export
 GITHUB.make_data_dict <- function(named_lists){
   data_dict <- list()
   for(x in names(named_list)){

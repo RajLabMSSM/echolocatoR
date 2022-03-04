@@ -620,7 +620,7 @@ POLYFUN.run_ldsc <- function(polyfun=NULL,
 #' function which uses a python script provided with PolyFun.
 #' @source
 #' https://www.biorxiv.org/content/10.1101/807792v3
-#' @keywords internal
+#' @export
 #' @family polyfun
 POLYFUN_SUSIE <- function(locus_dir,
                           polyfun=NULL,

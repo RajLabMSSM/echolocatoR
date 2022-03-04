@@ -3,6 +3,7 @@
 #' Generate an interactive data table with download buttons.
 #'
 #' @family general
+#' @export
 #' @keywords internal
 createDT <- function(DF, caption="", scrollY=400){
   data <- DT::datatable(DF, caption=caption,

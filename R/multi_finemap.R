@@ -62,7 +62,7 @@ check_necessary_cols <- function(subset_DT,
 #' @family finemapping functions
 #' @param consensus_thresh Threshold for determining \strong{Consensus_SNP} status.
 #' @inheritParams finemap_pipeline
-#' @keywords internal
+#' @export
 #' @examples
 #' data("merged_DT")
 #' merged_DT <- find_consensus_SNPs(finemap_dat=merged_DT, top_CS_only=F)
