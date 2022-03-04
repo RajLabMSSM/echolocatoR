@@ -1,9 +1,17 @@
-README
-================
-\<img
-src=‘<https://github.com/neurogenomics/echolocatoR/raw/main/inst/hex/echolocatoR.png>’,
-height=‘400’\> Brian M. Schilder
-Most recent update:<br> 2022-03-04
+<img src='https://github.com/RajLabMSSM/echolocatoR/raw/  dev/inst/hex/echolocatoR.png' height='300'><br><br>
+[![](https://img.shields.io/badge/devel%20version-0.2.2-black.svg)](https://github.com/RajLabMSSM/echolocatoR)
+[![R build
+status](https://github.com/RajLabMSSM/echolocatoR/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/RajLabMSSM/echolocatoR/actions)
+[![](https://img.shields.io/github/last-commit/RajLabMSSM/echolocatoR.svg)](https://github.com/RajLabMSSM/echolocatoR/commits/master)
+[![](https://codecov.io/gh/RajLabMSSM/echolocatoR/branch/master/graph/badge.svg)](https://codecov.io/gh/RajLabMSSM/echolocatoR)
+[![License:
+MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://cran.r-project.org/web/licenses/MIT)
+<h5>
+Author: <i>Brian M. Schilder</i>
+</h5>
+<h5>
+README updated: <i>Mar-04-2022</i>
+</h5>
 
 <!-- badges: start -->
 

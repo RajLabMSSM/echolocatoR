@@ -86,6 +86,7 @@ Suggests:
     ComplexHeatmap,
     SummarizedExperiment,
     LDlinkR, 
-    coin
+    coin,
+    badger
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr
