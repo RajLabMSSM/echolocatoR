@@ -22,8 +22,7 @@ Other general:
 \code{\link{example_fullSS}()},
 \code{\link{fillNA_CS_PP}()},
 \code{\link{get_os}()},
-\code{\link{get_sample_size}()},
-\code{\link{startup_image}()}
+\code{\link{get_sample_size}()}
 }
 \concept{general}
 \keyword{internal}

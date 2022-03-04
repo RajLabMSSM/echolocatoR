@@ -723,7 +723,7 @@ SUMMARISE.peak_overlap <- function(merged_dat,
 #' gg_peaks <- SUMMARISE.peak_overlap_plot(merged_dat=merged_DT, snp_filter="Consensus_SNP==T", fill_title="Consensus SNPs in epigenomic peaks")
 #' ... UCS SNPs ...
 #' gg_peaks <- SUMMARISE.peak_overlap_plot(merged_dat=merged_DT, snp_filter="Support>0", fill_title="UCS SNPs in epigenomic peaks")
-SUMMARISE.peak_overlap_plot <- function(merged_DT,
+SUMMARISE.peak_overlap_plot <- function(merged_dat,
                                         snp_filter="Consensus_SNP==T",
                                         include.NOTT_2019_peaks=T,
                                         include.NOTT_2019_enhancers_promoters=T,

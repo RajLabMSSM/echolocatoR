@@ -23,7 +23,6 @@ Other general:
 \code{\link{example_fullSS}()},
 \code{\link{get_os}()},
 \code{\link{get_sample_size}()},
-\code{\link{startup_image}()},
 \code{\link{tryFunc}()}
 }
 \concept{general}

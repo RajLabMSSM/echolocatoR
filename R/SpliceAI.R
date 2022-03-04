@@ -115,7 +115,7 @@ SPLICEAI.subset_precomputed_tsv <- function(subset_DT,
                                             merge_data=T,
                                             drop_na=T,
                                             filtered=T){
-  dat <- TABIX.query(fullSS.gz = precomputed_path,
+  dat <- TABIX.query(fullSS_tabix = precomputed_path,
                      chrom = subset_DT$CHR[1],
                      start_pos = min(subset_DT$POS),
                      end_pos = max(subset_DT$POS))

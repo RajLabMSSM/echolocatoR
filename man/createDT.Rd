@@ -17,7 +17,6 @@ Other general:
 \code{\link{fillNA_CS_PP}()},
 \code{\link{get_os}()},
 \code{\link{get_sample_size}()},
-\code{\link{startup_image}()},
 \code{\link{tryFunc}()}
 }
 \concept{general}

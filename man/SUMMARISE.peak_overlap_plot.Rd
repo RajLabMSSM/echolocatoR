@@ -9,7 +9,7 @@
 }
 \usage{
 SUMMARISE.peak_overlap_plot(
-  merged_DT,
+  merged_dat,
   snp_filter = "Consensus_SNP==T",
   include.NOTT_2019_peaks = T,
   include.NOTT_2019_enhancers_promoters = T,

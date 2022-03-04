@@ -502,10 +502,10 @@ NOTT_2019.get_epigenomic_peaks <- function(assays=c("ATAC","H3K27ac","H3K4me3"),
 
 
 
-NOTT_2019.prepare_placseq_overlap <- function(merged_DT,
+NOTT_2019.prepare_placseq_overlap <- function(merged_dat,
                                               snp_filter="!is.na(SNP)",
                                               return_counts=T){
-  finemap_dat <- subset(merged_DT, eval(parse(text=snp_filter)), .drop=F)
+  finemap_dat <- subset(merged_dat, eval(parse(text=snp_filter)), .drop=F)
 
   if(return_counts){
     interactome <- NOTT_2019.get_interactions(finemap_dat = finemap_dat)
@@ -527,12 +527,12 @@ NOTT_2019.prepare_placseq_overlap <- function(merged_DT,
 
 
 
-NOTT_2019.prepare_peak_overlap <- function(merged_DT,
+NOTT_2019.prepare_peak_overlap <- function(merged_dat,
                                            snp_filter="!is.na(SNP)",
                                            return_counts=T){
   PEAKS <- NOTT_2019.get_epigenomic_peaks()
   # Get SNP groups
-  finemap_dat <- subset(merged_DT, eval(parse(text=snp_filter)), .drop=F)
+  finemap_dat <- subset(merged_dat, eval(parse(text=snp_filter)), .drop=F)
   # Get overlap with PEAKS
   gr.hits <- GRanges_overlap(dat1 = finemap_dat,
                              chrom_col.1 = "CHR",
@@ -557,11 +557,11 @@ NOTT_2019.prepare_peak_overlap <- function(merged_DT,
 
 
 
-NOTT_2019.prepare_regulatory_overlap <- function(merged_DT,
+NOTT_2019.prepare_regulatory_overlap <- function(merged_dat,
                                                  snp_filter="!is.na(SNP)",
                                                  return_counts=T){
   gr.reg <- NOTT_2019.get_regulatory_regions(as.granges = T)
-  finemap_sub <- subset(merged_DT, eval(parse(text=snp_filter)), .drop=F)
+  finemap_sub <- subset(merged_dat, eval(parse(text=snp_filter)), .drop=F)
   gr.hits.reg <- GRanges_overlap(dat1 = finemap_sub,
                                  chrom_col.1 = "CHR",
                                  start_col.1 = "POS",
