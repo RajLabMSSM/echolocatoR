@@ -1,4 +1,4 @@
-<img src='https://github.com/RajLabMSSM/echolocatoR/raw/  dev/inst/hex/hex.png' height='300'><br><br>
+<img src='https://github.com/RajLabMSSM/echolocatoR/raw/master/inst/hex/hex.png' height='300'><br><br>
 [![](https://img.shields.io/badge/devel%20version-0.2.2-black.svg)](https://github.com/RajLabMSSM/echolocatoR)
 [![R build
 status](https://github.com/RajLabMSSM/echolocatoR/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/RajLabMSSM/echolocatoR/actions)
