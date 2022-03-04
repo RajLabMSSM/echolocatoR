@@ -238,7 +238,7 @@ ggbio.add_fgwas_annnotations <- function(ggb, top_annot=10){
   fgwas_results <- data.table::fread("./Data/GWAS/Nalls23andMe_2019/_genome_wide/fGWAS/fGWAS_summary.Nalls23andMe_2019.txt")
   top_annot.names <- (subset(fgwas_results, SNP.Group=="Consensus") %>%
                         dplyr::rename(AIC="AIC:") %>%
-                        arrange(desc(estimate), desc(AIC)))[1:top_annot,]$parameter %>%  gsub("_ln","", x=.)
+                       dplyr::arrange(desc(estimate),dplyr::desc(AIC)))[1:top_annot,]$parameter %>%  gsub("_ln","", x=.)
 
   # col.sums <- colSums(fgwas_annots[,4:ncol(fgwas_annots)])
   annot.cols <- top_annot.names#colnames(fgwas_annots)[4:ncol(fgwas_annots)]
@@ -691,7 +691,7 @@ OmicCircos.finemapping_circos <- function(){
 #                             id.vars=c("Locus","CHR","POS"),
 #                             variable.name="SNP.Group",
 #                             value.name="SNPs")
-#   melt.df <- melt.df %>% arrange(CHR, POS)
+#   melt.df <- melt.df %>%dplyr::arrange(CHR, POS)
 #   # melt.df[is.na(melt.df)] <- 0
 #   return(melt.df)
 # }

@@ -43,17 +43,17 @@ IMPACT.get_annotation_key <- function(URL="https://github.com/immunogenomics/IMP
 #' Unfortunately, you have to download the entire chromosome file at once,
 #'  because they aren't Tabix indexed. To minimize the memory load,
 #'  this function only keeps the portion of the \emph{IMPACT} file that overlaps with the
-#'  coordinates in \code{subset_DT}.
+#'  coordinates in \code{dat}.
 #' @keywords internal
 #' @family IMPACT
 #' @examples
 #' \dontrun{
 #' BST1 <- echodata::BST1
-#' annot_melt <- IMPACT.get_annotations(subset_DT=BST1)
+#' annot_melt <- IMPACT.get_annotations(dat=BST1)
 #' }
 IMPACT.get_annotations <- function(baseURL="https://github.com/immunogenomics/IMPACT/raw/master/IMPACT707/Annotations",
                                    chrom=NULL,
-                                   subset_DT=NULL,
+                                   dat=NULL,
                                    nThread=1,
                                    all_snps_in_range=FALSE,
                                    verbose=TRUE){
@@ -62,9 +62,9 @@ IMPACT.get_annotations <- function(baseURL="https://github.com/immunogenomics/IM
   # Getting started with LFS: https://www.atlassian.com/git/tutorials/git-lfs
   # Download metadata / raw data for specific files with curl:  https://docs.gitlab.com/ee/api/repository_files.html#get-file-from-repository
 
-  if(!is.null(subset_DT)){
-    subset_DT$CHR <- gsub("chr","",subset_DT$CHR)
-    chrom <- subset_DT$CHR[1]
+  if(!is.null(dat)){
+    dat$CHR <- gsub("chr","",dat$CHR)
+    chrom <- dat$CHR[1]
   }
   # https://github.com/immunogenomics/IMPACT.git
   # "curl --header 'https://git-lfs.github.com/spec/v1/projects/13083/repository/files/app%2Fmodels%2Fkey%2Erb/raw?ref=master'"
@@ -74,15 +74,15 @@ IMPACT.get_annotations <- function(baseURL="https://github.com/immunogenomics/IM
   messager("IMPACT:: Importing",URL, v=verbose)
   annot <- data.table::fread(URL, nThread = nThread)
 
-  if(!is.null(subset_DT)){
-    annot_merge <- data.table::merge.data.table(data.table::data.table(subset_DT),
+  if(!is.null(dat)){
+    annot_merge <- data.table::merge.data.table(data.table::data.table(dat),
                                                  annot,
                                                  by.x = c("SNP","CHR","POS"),
                                                  by.y = c("SNP","CHR","BP"),
                                                  all.x = TRUE,
                                                  all.y = all_snps_in_range)
   } else {annot_merge <- annot}
-  annot_merge <- subset(annot_merge, POS>=min(subset_DT$POS) & POS<=max(subset_DT$POS))
+  annot_merge <- subset(annot_merge, POS>=min(dat$POS) & POS<=max(dat$POS))
   # Merge with metadata
   annot.key <- IMPACT.get_annotation_key()
   annot_cols <- grep("^Annot*",colnames(annot_merge), value = TRUE)
@@ -126,10 +126,10 @@ IMPACT.iterate_get_annotations <- function(merged_DT,
   ANNOT_MELT <- lapply(sort(unique(merged_DT$CHR)), function(chrom, .merged_DT=merged_DT){
     messager("+ IMPACT:: Gathering annotations for chrom = ",chrom, v=verbose)
     try({
-      subset_DT <- subset(.merged_DT, CHR==chrom)
+      dat <- subset(.merged_DT, CHR==chrom)
       annot_melt <- IMPACT.get_annotations(baseURL = baseURL,
                                            # baseURL = "../../data/IMPACT/IMPACT707/Annotations",
-                                           subset_DT = subset_DT,
+                                           dat = dat,
                                            all_snps_in_range = all_snps_in_range,
                                            nThread = nThread,
                                            verbose = verbose)
@@ -288,7 +288,7 @@ prepare_mat_meta <- function(TOP_IMPACT,
     dplyr::mutate(Tissue=gsub("STEMCELL","STEM CELL",Tissue)) %>%
     dplyr::mutate(Tissue = ifelse(Tissue=="GI","GI",
                                   stringr::str_to_sentence(Tissue))) %>%
-    arrange(Tissue, CellDeriv, Cell, TF)  %>%
+   dplyr::arrange(Tissue, CellDeriv, Cell, TF)  %>%
     `rownames<-`(.[["Locus"]]) %>%
     subset(select=-Locus)
   return(mat_meta)
@@ -912,13 +912,13 @@ IMPACT.iterate_enrichment <- function(gwas_paths,
   #   message(locus)
   #   enrich <- NULL
   #   try({
-  #     subset_DT <- data.table::fread(x, nThread = 4)
-  #     if(!"Locus" %in% colnames(subset_DT)){
-  #       subset_DT <- cbind(Locus=locus, subset_DT)
+  #     dat <- data.table::fread(x, nThread = 4)
+  #     if(!"Locus" %in% colnames(dat)){
+  #       dat <- cbind(Locus=locus, dat)
   #     }
-  #     subset_DT <- echodata::find_consensus_snps(dat = subset_DT)
+  #     dat <- echodata::find_consensus_snps(dat = dat)
   #     annot_melt <- IMPACT.get_annotations(baseURL = annot_baseURL,
-  #                                          subset_DT = subset_DT,
+  #                                          dat = dat,
   #                                          nThread = 4)
   #     enrich <- IMPACT.compute_enrichment(annot_melt = annot_melt,
   #                                         locus = locus)
@@ -998,10 +998,10 @@ IMPACT.plot_impact_score <- function(annot_melt,
                                      save_path=FALSE,
                                      show_plot=TRUE){
 
-  # subset_DT <- data.table::fread("Data/GWAS/Nalls23andMe_2019/CD19/Multi-finemap/Multi-finemap_results.txt")
-  # subset_DT <- echodata::find_consensus_snps(subset_DT)
-  # subset_DT$Locus <- "CD19"
-  # annot_melt <- IMPACT.get_annotations(baseURL = "/Volumes/Steelix/IMPACT/IMPACT707/Annotations", subset_DT = subset_DT)
+  # dat <- data.table::fread("Data/GWAS/Nalls23andMe_2019/CD19/Multi-finemap/Multi-finemap_results.txt")
+  # dat <- echodata::find_consensus_snps(dat)
+  # dat$Locus <- "CD19"
+  # annot_melt <- IMPACT.get_annotations(baseURL = "/Volumes/Steelix/IMPACT/IMPACT707/Annotations", dat = dat)
 
   library(patchwork)
   library(ggridges)
@@ -1020,7 +1020,7 @@ IMPACT.plot_impact_score <- function(annot_melt,
   finemap_cols <- grep("*.PP$|*.CS$",colnames(annot_melt),value=TRUE)
   annot_snp <- subset(annot_melt, select=c("SNP","CHR","POS","Mb","P","Consensus_SNP","leadSNP","Support",finemap_cols)) %>% unique()
   annot_snp <- dplyr::mutate(annot_snp, SNP.Group = ifelse(Consensus_SNP,"Consensus SNP",ifelse(leadSNP,"Lead GWAS SNP",ifelse(Support>0,"Credible Set SNP",NA))))
-  labelSNPs <- construct_SNPs_labels(subset_DT = annot_snp, labels_subset = c("Lead","UCS","Consensus"))
+  labelSNPs <- construct_SNPs_labels(dat = annot_snp, labels_subset = c("Lead","UCS","Consensus"))
   leader_SNP <- subset(labelSNPs, type=="Lead SNP")
   CS_set <- subset(labelSNPs, type=="Credible Set")
   # ggb <- GGBIO.plot(finemap_dat = annot_snp, LD_matrix = LD_matrix,
@@ -1126,18 +1126,18 @@ IMPACT.plot_impact_score <- function(annot_melt,
 #' @importFrom data.table rbindlist
 IMPACT.plot_impact_score_compare <- function(loci=c("CD19","TRIM40","NUCKS1","LRRK2","MED12L","MEX3C")){
 
-  subset_DT <- lapply(loci, function(locus){
+  dat <- lapply(loci, function(locus){
      dat <- data.table::fread(file.path("Data/GWAS/Nalls23andMe_2019", locus,
                                  "Multi-finemap/Multi-finemap_results.txt"))
      dat$Locus <- locus
      dat <- echodata::assign_lead_snp(dat)
      return(dat)
   }) %>% data.table::rbindlist(fill = TRUE)
-  subset_DT <- echodata::find_consensus_snps(subset_DT)
-  subset_DT <- find_topConsensus(subset_DT)
+  dat <- echodata::find_consensus_snps(dat)
+  dat <- find_topConsensus(dat)
 
 
-  annot_melt <- IMPACT.iterate_get_annotations(subset_DT,
+  annot_melt <- IMPACT.iterate_get_annotations(dat,
                                                IMPACT_score_thresh=0,
                                                baseURL = "../../data/IMPACT/IMPACT707/Annotations",
                                                # baseURL="/Volumes/Steelix/IMPACT/IMPACT707/Annotations",
@@ -1153,7 +1153,7 @@ IMPACT.plot_impact_score_compare <- function(loci=c("CD19","TRIM40","NUCKS1","LR
                                            force_one_annot_per_locus = TRUE)
   # top_impact <- subset(top_impact, Locus %in% c("CD19","NUCKS1","MEX3C"))
 
-  # When data was originally merged, kept all subset_DT rows
+  # When data was originally merged, kept all dat rows
   annot_sub <- subset(annot_melt,
                        Locus %in% top_impact$Locus & # somehow this happens sometimes...
                        Tissue %in% top_impact$Tissue &
@@ -1165,7 +1165,7 @@ IMPACT.plot_impact_score_compare <- function(loci=c("CD19","TRIM40","NUCKS1","LR
 
 
   # Convert to GRange object
-  # gr.snp_CHR <- biovizBase::transformDfToGr(subset_DT, seqnames = "CHR", start = "POS", end = "POS")
+  # gr.snp_CHR <- biovizBase::transformDfToGr(dat, seqnames = "CHR", start = "POS", end = "POS")
   # gene_model <- GGBIO.transcript_model_track(gr.snp_CHR,
   #                                      max_transcripts=1,
   #                                      show.legend=TRUE)
@@ -1188,9 +1188,9 @@ IMPACT.plot_impact_score_compare <- function(loci=c("CD19","TRIM40","NUCKS1","LR
   #          color=guide_legend(override.aes = list(size=1), ncol=4),
   #          size=.5)
   add_snp_labels <- function(p, annot_sub, y_var="-log10(P)"){
-    label_tags <- construct_SNPs_labels(subset_DT = annot_sub, labels_subset = c("Lead","UCS","Consensus"),
+    label_tags <- construct_SNPs_labels(dat = annot_sub, labels_subset = c("Lead","UCS","Consensus"),
                                         remove_duplicates  = FALSE)
-    label_tags_unique <- construct_SNPs_labels(subset_DT = annot_sub, labels_subset = c("Lead","UCS","Consensus"),
+    label_tags_unique <- construct_SNPs_labels(dat = annot_sub, labels_subset = c("Lead","UCS","Consensus"),
                                         remove_duplicates = TRUE)
     p <- p +
       # Circles
@@ -1286,19 +1286,19 @@ IMPACT.plot_impact_score_compare <- function(loci=c("CD19","TRIM40","NUCKS1","LR
 #' T Amariuta et al., IMPACT: Genomic Annotation of Cell-State-Specific Regulatory Elements Inferred from the Epigenome of Bound Transcription Factors. The American Journal of Human Genetics, 1–17 (2019).
 #' @keywords internal
 IMPACT.get_ldscores <- function(chrom=NULL,
-                                subset_DT=NULL,
+                                dat=NULL,
                                 nThread=1){
   warning("LDSCores do not include any SNPs with MAF<0.5%, as they are restricted to HapMap3 SNPs. \
 This may affect subsequent analyses (e.g. fine-mapping).")
-  if(!is.null(subset_DT)){
-    chrom <- subset_DT$CHR[1]
+  if(!is.null(dat)){
+    chrom <- dat$CHR[1]
   }
   baseURL <- "https://github.com/immunogenomics/IMPACT/raw/master/IMPACT707/LDscores"
   URL <- file.path(baseURL, paste0("IMPACT707_EAS_chr",chrom,".l2.ldscore.gz"))
   ldscore <- data.table::fread(URL, nThread = nThread)
 
-  if(!is.null(subset_DT)){
-    ldscore_merge <- data.table:::merge.data.table(data.table::data.table(subset_DT),
+  if(!is.null(dat)){
+    ldscore_merge <- data.table:::merge.data.table(data.table::data.table(dat),
                                                    ldscore,
                                                    by.x = c("SNP","CHR","POS"),
                                                    by.y = c("SNP","CHR","BP"),

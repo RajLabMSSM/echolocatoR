@@ -15,7 +15,7 @@ construct_SNPs_labels <- function(subset_DT,
 
   ## BEFORE fine-mapping
   if(lead){
-    before <- subset( subset_DT %>% arrange(P), leadSNP == T)
+    before <- subset( subset_DT %>%dplyr::arrange(P), leadSNP == T)
     before$type <- "Lead"
     before$color <- "red"
     before$shape <- 18
@@ -77,13 +77,13 @@ construct_SNPs_labels <- function(subset_DT,
 #   ind_SNPs <- cbind(ind_SNPs, type="Independent",color="purple")
 #   labelSNPs <- ind_SNPs#rbind(labelSNPs, ind_SNPs)
 #
-#   effect_SNPs <- cojo_DT %>% arrange(desc(abs(COJO.Conditioned_Effect)))
+#   effect_SNPs <- cojo_DT %>%dplyr::arrange(desc(abs(COJO.Conditioned_Effect)))
 #   effect_SNPs <- effect_SNPs[1:5,]
 #   effect_SNPs$type <- "effect_SNPs"
 #   effect_SNPs$color <- "blue3"
 #   labelSNPs <- rbind(labelSNPs, effect_SNPs, fill=TRUE)
 #
-#   # topEffect_snps <- cojo_DT %>% arrange(desc(COJO.Conditioned_Effect))
+#   # topEffect_snps <- cojo_DT %>%dplyr::arrange(desc(COJO.Conditioned_Effect))
 #   # topEffect_snps <- topEffect_snps$SNP[1:5]
 #   # cojo_DT <- cojo_DT %>% dplyr::mutate(color = ifelse(COJO.CS | COJO.Conditioned_Effect %in% topEffect_snps,
 #   #                                                     ifelse(COJO.CS & COJO.Conditioned_Effect %in% topEffect_snps, "purple",
@@ -350,7 +350,7 @@ construct_SNPs_labels <- function(subset_DT,
 #
 #   fulldat <- data.table::fread(file.path(results_path, "LRRK2_Nalls23andMe_2019_subset.txt"))
 #   # Prepare data
-#   pp.dat <- gene_DT %>% arrange(desc(mean.PP)) %>% unique() %>% head(top_snps)
+#   pp.dat <- gene_DT %>%dplyr::arrange(desc(mean.PP)) %>% unique() %>% head(top_snps)
 #   pp.dat$SNP <- factor(pp.dat$SNP, levels = pp.dat$SNP)
 #
 #   # Plot

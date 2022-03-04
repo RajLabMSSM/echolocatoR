@@ -5,7 +5,7 @@
 \title{Convert a dataframe to a vcf}
 \usage{
 dataframe_2_vcf(
-  subset_DT,
+  dat,
   samplename = "GWAS",
   reference_fasta = "/pd-omics/tools/polyfun/reference_fasta/hg19.fa.gz",
   output_vcf = "./GWAS_converted.vcf",

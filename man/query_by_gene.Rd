@@ -16,9 +16,6 @@ It is usually best to provide the absolute path rather than the relative path.}
 \item{gene}{Gene symbol (e.g. FOXP2) of the gene you want to query.}
 
 \item{gene_col}{Name of the column that contains the gene name.}
-
-\item{file_sep}{The separator in the full summary stats file.
-This parameter is only necessary if \code{query_by!="tabix"}.}
 }
 \description{
 To be used when gene name is a column in the full summary stats file.

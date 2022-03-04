@@ -9,7 +9,7 @@ check_tools <- function(check_tabix=FALSE,
                         conda_env=NULL){
   if(check_tabix){
     messager("Checking for tabix installation...")
-    tabix <- echoconda::find_package("tabix", conda_env=conda_env, verbose  = FALSE)
+    tabix <- echoconda::find_packages("tabix", conda_env=conda_env, verbose  = FALSE)
     if(tabix=="tabix"){
       tabix.out <- system("which tabix",intern = TRUE)
       if(length(tabix.out)==0){
@@ -30,7 +30,7 @@ check_tools <- function(check_tabix=FALSE,
   }
     if(check_bcftools){
       messager("Checking for bcftools installation...")
-      bcftools <- echoconda::find_package("bcftools", conda_env=conda_env, verbose  = FALSE)
+      bcftools <- echoconda::find_packages("bcftools", conda_env=conda_env, verbose  = FALSE)
       if(bcftools=="bcftools"){
         bcftools.out <- system("which bcftools",intern = TRUE)
         if(length(bcftools.out)==0){

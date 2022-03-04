@@ -63,9 +63,6 @@ stats file.
 Must be in units of basepairs.
 (\emph{default: ="POS"})}
 
-\item{file_sep}{The separator in the full summary stats file.
-This parameter is only necessary if \code{query_by!="tabix"}.}
-
 \item{query_by}{Choose which method you want to use to extract
  locus subsets from the full summary stats file.
 Methods include:

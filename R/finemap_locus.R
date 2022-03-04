@@ -28,8 +28,6 @@
 #' \strong{IMPORTANT!:} It is usually best to provide the absolute path
 #' rather than the relative path.
 #' This is especially important for \emph{FINEMAP}.
-#' @param file_sep The separator in the full summary stats file.
-#' This parameter is only necessary if \code{query_by!="tabix"}.
 #' @param query_by Choose which method you want to use to extract
 #'  locus subsets from the full summary stats file.
 #' Methods include:
@@ -237,12 +235,13 @@
 #' @importFrom echoplot plot_locus
 #' @importFrom echodata filter_snps
 #' @importFrom echoLD load_or_create filter_LD subset_common_snps
+#' @importFrom echofinemap multifinemap
 #' @export
 #' @examples
 #' top_SNPs <- echodata::topSNPs_Nalls2019
 #' fullSS_path <- echodata::example_fullSS(dataset = "Nalls2019")
 #'
-#' Nalls23andMe_2019.results <- echolocatoR::finemap_locus(
+#' res <- echolocatoR::finemap_locus(
 #'   fullSS_path = fullSS_path,
 #'   top_SNPs = top_SNPs,
 #'   locus = "BST1",
@@ -310,7 +309,6 @@ finemap_locus <- function(#### Main args ####
                           remove_variants=FALSE,
                           remove_correlates=FALSE,
                           #### Misc args ####
-                          file_sep="\t",
                           query_by="tabix",
                           PAINTOR_QTL_datasets=NULL,
                           case_control=TRUE,
@@ -325,6 +323,7 @@ finemap_locus <- function(#### Main args ####
                           xgr_libnames=NULL,
                           roadmap=FALSE,
                           roadmap_query=NULL,
+                          show_plot=TRUE,
                           #### General args ####
                           remove_tmps=TRUE,
                           conda_env="echoR",
@@ -343,7 +342,8 @@ finemap_locus <- function(#### Main args ####
                           plot.zoom = deprecated(),
                           QTL_prefixes = deprecated(),
                           vcf_folder = deprecated(),
-                          probe_path = deprecated()
+                          probe_path = deprecated(),
+                          file_sep=deprecated()
                           ){
   #### Map columns from MungeSumstats ####
   if(munged){
@@ -372,7 +372,7 @@ finemap_locus <- function(#### Main args ####
   locus_dir <- get_locus_dir(subset_path = subset_path)
 
   ####  Query ####
-  subset_DT <- extract_snp_subset(locus = locus,
+  dat <- extract_snp_subset(locus = locus,
                                   results_dir = results_dir,
                                   locus_dir = locus_dir,
                                   top_SNPs = top_SNPs,
@@ -409,15 +409,14 @@ finemap_locus <- function(#### Main args ####
                                   min_POS = min_POS,
                                   max_POS = max_POS,
 
-                                  file_sep = file_sep,
                                   query_by = query_by,
-                                  qtl_prefixes=qtl_prefixes,
+                                  qtl_prefixes = qtl_prefixes,
 
                                   remove_tmps = remove_tmps,
                                   conda_env = conda_env,
                                   verbose = verbose)
   #### Extract LD ####
-  LD_list <- echoLD::load_or_create(dat=subset_DT,
+  LD_list <- echoLD::load_or_create(dat=dat,
                                     locus_dir=locus_dir,
                                     LD_reference=LD_reference,
                                     force_new_LD=force_new_LD,
@@ -438,10 +437,10 @@ finemap_locus <- function(#### Main args ####
                                min_r2=min_r2,
                                verbose=verbose)
   LD_matrix <- LD_list$LD
-  subset_DT <- LD_list$DT
+  dat <- LD_list$DT
 
-  subset_DT <- echodata::filter_snps(
-    dat=subset_DT,
+  dat <- echodata::filter_snps(
+    dat=dat,
     min_MAF=min_MAF,
     bp_distance=bp_distance,
     remove_variants=remove_variants,
@@ -452,18 +451,18 @@ finemap_locus <- function(#### Main args ####
     verbose=verbose)
   # Subset LD and df to only overlapping SNPs
   LD_list <- echoLD::subset_common_snps(LD_matrix = LD_matrix,
-                                        dat = subset_DT,
+                                        dat = dat,
                                         fillNA = fillNA,
                                         verbose = verbose)
   LD_matrix <- LD_list$LD
-  subset_DT <- LD_list$DT
+  dat <- LD_list$DT
 
   #### Fine-map ####
-  finemap_dat <- finemap_handler(locus_dir = locus_dir,
+  finemap_dat <- echofinemap::multifinemap(locus_dir = locus_dir,
                                  fullSS_path = fullSS_path,
                                  LD_reference = LD_reference,
                                  LD_matrix = LD_matrix,
-                                 subset_DT = subset_DT,
+                                 dat = dat,
                                  sample_size = sample_size,
                                  # General args (with defaults)
                                  finemap_methods = finemap_methods,
@@ -480,73 +479,70 @@ finemap_locus <- function(#### Main args ####
                                  # Optional args
                                  conda_env = conda_env,
                                  verbose = verbose)
-  #### Visualize ####
-  locus_plots <- list()
-  if("simple" %in% plot_types){
-    try({
-      TRKS_simple <- echoplot::plot_locus(dat = finemap_dat,
-                                          LD_matrix = LD_matrix,
-                                          LD_reference = LD_reference,
-                                          locus_dir = locus_dir,
-                                          dataset_type = dataset_type,
-                                          finemap_methods = finemap_methods,
-                                          PP_threshold = PP_threshold,
-                                          consensus_threshold = consensus_threshold,
-                                          qtl_prefixes = qtl_prefixes,
-                                          nott_epigenome = FALSE,
-                                          plot_full_window = FALSE,
-                                          mean.PP = TRUE,
-                                          xgr_libnames = NULL,
-                                          zoom = zoom,
-                                          save_plot = TRUE,
-                                          show_plot = TRUE,
-
-                                          conda_env = conda_env,
-                                          nThread = nThread,
-                                          verbose = verbose)
-      locus_plots[["simple"]] <- TRKS_simple
-    })
-  };
-
-  if("fancy" %in% plot_types){
-    try({
-      TRKS_fancy <- echoplot::plot_locus(dat = finemap_dat,
-                                         LD_matrix = LD_matrix,
-                                         LD_reference = LD_reference,
-                                         locus_dir = locus_dir,
-                                         dataset_type = dataset_type,
-                                         finemap_methods = finemap_methods,
-                                         PP_threshold = PP_threshold,
-                                         consensus_threshold = consensus_threshold,
-                                         qtl_prefixes = qtl_prefixes,
-                                         zoom = zoom,
-                                         save_plot = TRUE,
-                                         show_plot = TRUE,
-
-                                         xgr_libnames = xgr_libnames,
-
-                                         Roadmap = roadmap,
-                                         Roadmap_query = roadmap_query,
-
-                                         Nott_epigenome = nott_epigenome,
-                                         Nott_show_placseq = nott_show_placseq,
-                                         Nott_binwidth = nott_binwidth,
-                                         Nott_bigwig_dir = nott_bigwig_dir,
-
-                                         conda_env = conda_env,
-                                         nThread = nThread,
-                                         verbose = verbose)
-      locus_plots[["fancy"]] <- TRKS_fancy
-    })
-  };
-  #### Plot LD ####
-  ld_plot <- if("LD" %in% toupper(plot_types)){
+  #### LD plot ####
+  ld_plot <- if("ld" %in% tolower(plot_types)){
     try({
       echoLD::plot_LD(LD_matrix=LD_matrix,
                       dat=finemap_dat,
                       span=10)
     })
   } else {NULL};
+  #### Locus plots ####
+  locus_plots <- list()
+  if("simple" %in% tolower(plot_types)){
+    try({
+      TRKS_simple <- echoplot::plot_locus(
+        dat = finemap_dat,
+        LD_matrix = LD_matrix,
+        LD_reference = LD_reference,
+        locus_dir = locus_dir,
+        dataset_type = dataset_type,
+        finemap_methods = finemap_methods,
+        PP_threshold = PP_threshold,
+        consensus_threshold = consensus_threshold,
+        qtl_prefixes = qtl_prefixes,
+        nott_epigenome = FALSE,
+        plot_full_window = FALSE,
+        mean.PP = TRUE,
+        xgr_libnames = NULL,
+        zoom = zoom,
+        save_plot = TRUE,
+        show_plot = show_plot,
+        conda_env = conda_env,
+        nThread = nThread,
+        verbose = verbose)
+      locus_plots[["simple"]] <- TRKS_simple
+    })
+  };
+
+  if("fancy" %in% tolower(plot_types)){
+    try({
+      TRKS_fancy <- echoplot::plot_locus(
+        dat = finemap_dat,
+        LD_matrix = LD_matrix,
+        LD_reference = LD_reference,
+        locus_dir = locus_dir,
+        dataset_type = dataset_type,
+        finemap_methods = finemap_methods,
+        PP_threshold = PP_threshold,
+        consensus_threshold = consensus_threshold,
+        qtl_prefixes = qtl_prefixes,
+        zoom = zoom,
+        save_plot = TRUE,
+        show_plot = show_plot,
+        xgr_libnames = xgr_libnames,
+        roadmap = roadmap,
+        roadmap_query = roadmap_query,
+        nott_epigenome = nott_epigenome,
+        nott_show_placseq = nott_show_placseq,
+        nott_binwidth = nott_binwidth,
+        nott_bigwig_dir = nott_bigwig_dir,
+        conda_env = conda_env,
+        nThread = nThread,
+        verbose = verbose)
+      locus_plots[["fancy"]] <- TRKS_fancy
+    })
+  };
   #### Cleanup ####
   if(remove_tmps){
     roadmap_tbi <- list.files(locus_dir,pattern=".bgz.tbi",

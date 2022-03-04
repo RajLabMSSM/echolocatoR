@@ -9,7 +9,7 @@
 }
 \usage{
 SPLICEAI.subset_precomputed_vcf(
-  subset_DT,
+  dat,
  
     precomputed_path = "/pd-omics/data/spliceAI/whole_genome_filtered_spliceai_scores.vcf.gz",
   subset_vcf = "subset.vcf"

@@ -37,31 +37,31 @@ getmode <- function(v) {
 
 
 
-COLOC.construct_dataset <- function(subset_DT,
+COLOC.construct_dataset <- function(dat,
                                     sample_size=NULL,
                                     proportion_cases=NA, # Doesn't allow actual 0, so use smallest number R allows
                                     MAF=NA,
                                     type="cc"){
   # Sample size
-  sample_size <- max(subset_DT$N)
+  sample_size <- max(dat$N)
   # Proportion cases
   if(is.na(proportion_cases)){
-    if("proportion_cases" %in% colnames(subset_DT)){
+    if("proportion_cases" %in% colnames(dat)){
       messager("++ Extracting Proportion of Cases...")
-      proportion_cases <- getmode(subset_DT$proportion_cases)
+      proportion_cases <- getmode(dat$proportion_cases)
     }
   }
   # MAF
   if(length(MAF)==1){
     messager("++ Extracting MAF...")
-    if(is.na(MAF) & "MAF" %in% colnames(subset_DT)){
-      MAF <- subset_DT$MAF
+    if(is.na(MAF) & "MAF" %in% colnames(dat)){
+      MAF <- dat$MAF
     }
   }
   # List form
-  dataset <- list(pvalues = subset_DT$P,
-                  beta = subset_DT$Effect,
-                  varbeta = subset_DT$StdErr^2, # MUST be squared
+  dataset <- list(pvalues = dat$P,
+                  beta = dat$Effect,
+                  varbeta = dat$StdErr^2, # MUST be squared
                   snp = subset_DT$SNP,
 
                   N = sample_size, # [optional]
@@ -145,10 +145,10 @@ COLOC <- function(data1,
   coloc_DT <- coloc.res$results
   # Find the causal SNP that coloc.abf identified in each dataset via finemap.abf
   # DT1
-  causal_DT1 <- coloc_DT %>% arrange(desc(lABF.df1))
+  causal_DT1 <- coloc_DT %>%dplyr::arrange(desc(lABF.df1))
   causal_DT1 <- causal_DT1$snp[1]
   # DT2
-  causal_DT2 <- coloc_DT %>% arrange(desc(lABF.df2))
+  causal_DT2 <- coloc_DT %>%dplyr::arrange(desc(lABF.df2))
   causal_DT2 <- causal_DT2$snp[1]
 
   # Process results
@@ -289,10 +289,10 @@ COLOC.report_summary <- function(coloc.res, PP_threshold=.8){
 # COLOC.plot_results <- function(coloc_DT){
 #   # Find the causal SNP that coloc.abf identified in each dataset via finemap.abf
 #   # DT1
-#   causal_DT1 <- coloc_DT %>% arrange(desc(lABF.df1))
+#   causal_DT1 <- coloc_DT %>%dplyr::arrange(desc(lABF.df1))
 #   causal_DT1 <- causal_DT1$snp[1]
 #   # DT2
-#   causal_DT2 <- coloc_DT %>% arrange(desc(lABF.df2))
+#   causal_DT2 <- coloc_DT %>%dplyr::arrange(desc(lABF.df2))
 #   causal_DT2 <- causal_DT2$snp[1]
 #   coloc_datasets <- coloc_plot_data(coloc.res, data1, data2)
 #   # Plot

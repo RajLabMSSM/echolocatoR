@@ -187,7 +187,7 @@ return(snpmap)
 #'
 #' @family GOSHIFTER
 #' @importFrom data.table fread merge.data.table
-#' @importFrom echoconda find_package
+#' @importFrom echoconda find_packages
 #' @examples
 #' BST1 <- echodata::BST1; locus_dir <- echodata::locus_dir
 #' LD_folder <- GOSHIFTER.create_LD(locus_dir=locus_dir, dat=subset(BST1, P<5e-8))
@@ -256,9 +256,9 @@ for(chr in unique(ld_file$chrA)){
                      col.names = FALSE,
                      nThread=nThread)
   # gzip(ld_path, destname = gz_path)
-  bgzip <- echoconda::find_package(package = "bgzip",
+  bgzip <- echoconda::find_packages(package = "bgzip",
                                    conda_env = conda_env)
-  tabix <- echoconda::find_package(package = "tabix",
+  tabix <- echoconda::find_packages(package = "tabix",
                                    conda_env = conda_env)
   system(paste(bgzip,ld_path))
   cmd <- paste(tabix,
@@ -555,7 +555,7 @@ sig_results <- GS_results %>%
   # Apply bonferonni correction
   # subset(enrichment <= 0.05/nrow(GS_results) ) %>%
   subset(enrichment <= 0.05) %>%
-  arrange(desc(enrichment), desc(nSnpOverlap)) %>%
+ dplyr::arrange(desc(enrichment),dplyr::desc(nSnpOverlap)) %>%
   dplyr::mutate(enrichment = formatC(enrichment,format="e", digits=7) )
 echodata::createDT(sig_results) %>% print()
 

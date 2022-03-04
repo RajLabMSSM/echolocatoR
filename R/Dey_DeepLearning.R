@@ -13,15 +13,15 @@
 #' Query deep learning annotations and LDscores
 #'
 #' Query deep learning annotations and LDscores, and
-#' then merge with \code{subset_DT} by \emph{SNP}.
+#' then merge with \code{dat} by \emph{SNP}.
 #'
 #' @family DEEPLEARNING
 #' @examples
 #' \dontrun{
 #' BST1 <- echodata::BST1
-#' annot.dat <- DEEPLEARNING.query_one_chr(subset_DT=BST1, tissue="NTS", model="Basenji", type="annot")
+#' annot.dat <- DEEPLEARNING.query_one_chr(dat=BST1, tissue="NTS", model="Basenji", type="annot")
 #' }
-DEEPLEARNING.query_one_chr <- function(subset_DT,
+DEEPLEARNING.query_one_chr <- function(dat,
                                        base_url="/sc/arion/projects/pd-omics/data/Dey_DeepLearning",
                                        level=c("Variant_Level","Allelic_Effect"),
                                        tissue=c("NTS","Blood","Brain"),
@@ -37,8 +37,8 @@ DEEPLEARNING.query_one_chr <- function(subset_DT,
     messager("DEEPLEARNING:: Only the following models are available when 'level=Variant_Level': Basenji and DeepSEA",v=verbose)
     model <- model[model %in% c("Basenji","DeepSEA")]
   }
-  subset_DT$CHR <- gsub("chr","",subset_DT$CHR)
-  chrom <- subset_DT$CHR[1]
+  dat$CHR <- gsub("chr","",dat$CHR)
+  chrom <- dat$CHR[1]
 
   messager("DEEPLEARNING:: Searching",base_url,"for matching files",v=verbose)
   # Naming and file formats are inconsistent across folders,
@@ -55,7 +55,7 @@ DEEPLEARNING.query_one_chr <- function(subset_DT,
 
   if(length(search_files)==0)stop("DEEPLEARNING:: No files meeting criterion were found.");
   messager("DEEPLEARNING:: Importing file <<=",search_files,v=verbose)
-  annot.dat  <- data.frame(subset_DT)
+  annot.dat  <- data.frame(dat)
   for(x in search_files){
     # Get assay
     ## Assign here bc diff tissue-model combinations have somewhat different assays
@@ -65,7 +65,7 @@ DEEPLEARNING.query_one_chr <- function(subset_DT,
     # print(new_col_name)
     annot <- data.table::fread(x, nThread = 1)
     if("L2" %in% colnames(annot)) annot <- dplyr::rename(AN=L2)
-    merged <- data.table::merge.data.table(subset_DT,
+    merged <- data.table::merge.data.table(dat,
                                               subset(annot, select=-c(SNP,AN)),
                                               all.x = TRUE,
                                               by="SNP") %>% data.frame()
@@ -81,7 +81,7 @@ DEEPLEARNING.query_one_chr <- function(subset_DT,
 #' Query deep learning annotations and LDscores (iterate)
 #'
 #' Query deep learning annotations and LDscores, and
-#' then merge with \code{subset_DT} by \emph{SNP}.
+#' then merge with \code{dat} by \emph{SNP}.
 #'  Repeat for each locus,
 #'
 #' @family DEEPLEARNING
@@ -102,7 +102,7 @@ DEEPLEARNING.query_multi_chr <- function(merged_dat,
                                         verbose=TRUE){
   ANNOT.DAT <- parallel::mclapply(unique(merged_dat$CHR), function(chrom){
     messager("Chromosome:",chrom)
-    DEEPLEARNING.query_one_chr(subset_DT=subset(merged_dat, CHR==chrom),
+    DEEPLEARNING.query_one_chr(dat=subset(merged_dat, CHR==chrom),
                                 base_url=base_url,
                                 level=level,
                                 tissue=tissue,

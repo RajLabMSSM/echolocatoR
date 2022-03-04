@@ -20,7 +20,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = F, message=F, error = T} 
+```{r, include = FALSE, message=FALSE, error = TRUE} 
 root.dir <- tempdir()
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -85,7 +85,7 @@ fullSS_path <- MungeSumstats::format_sumstats(path = fullSS_path, ref_genome = "
 We have already munged the following example summary stats for you.
 
 ```{r fullSS} 
-fullSS_path <- echolocatoR::example_fullSS(dataset = "Nalls2019")
+fullSS_path <- echodata::example_fullSS(dataset = "Nalls2019")
 ```
 
 ## Run fine-mapping pipeline  
@@ -104,66 +104,18 @@ You can adjust this separately from `bp_distance` so that you don't have rerun t
 
 **WARNING**: Please use the full absolute paths (instead of relative paths) wherever possible (e.g. `results_dir`). This is especially important for the tool *FINEMAP*.
 
-```{r Run fine-mapping pipeline, eval=F}
-
-Nalls23andMe_2019.results <- echolocatoR:: finemap_loci(# GENERAL ARGUMENTS 
-                                          top_SNPs = top_SNPs,  
-                                          #  It's best to give absolute paths
-                                          results_dir = file.path(root.dir,"results"),
-                                          loci = c("BST1","MEX3C"),# top_SNPs$Locus,
-                                          dataset_name = "Nalls2019",
-                                          dataset_type = "GWAS",  
-                                          force_new_subset = TRUE,
-                                          force_new_LD = FALSE,
-                                          force_new_finemap = TRUE,
-                                          remove_tmps = FALSE,
-                                          
-                                          # Munge full sumstats first
-                                          munged = TRUE,
-                                          
-                                          # SUMMARY STATS ARGUMENTS
-                                          fullSS_path = fullSS_path,
-                                          fullSS_genome_build = "hg19",
-                                          query_by ="tabix",  
-                                          MAF_col = "calculate",   
-                                         
-                                          # FILTERING ARGUMENTS
-                                          ## It's often desirable to use a larger window size 
-                                          ## (e.g. 2Mb which is bp_distance=500000*2), 
-                                          ## but we use a small window here to speed up the process. 
-                                          bp_distance = 10000,#500000*2,
-                                          min_MAF = 0.001,  
-                                          trim_gene_limits = FALSE,
-                                         
-                                          # FINE-MAPPING ARGUMENTS
-                                          ## General
-                                          finemap_methods = c("ABF","FINEMAP","SUSIE","POLYFUN_SUSIE"), 
-                                          n_causal = 5,
-                                          PP_threshold = .95, 
-                                         
-                                          # LD ARGUMENTS 
-                                          LD_reference = "1KGphase1",#"UKB",
-                                          superpopulation = "EUR",
-                                          download_method = "axel",
-                                         
-                                          # PLOT ARGUMENTS 
-                                          ## general   
-                                          plot.types = c("fancy"),
-                                          ## Generate multiple plots of different window sizes; 
-                                          ### all SNPs, 4x zoomed-in, and a 50000bp window
-                                          plot.zoom = c("all","4x","10x"),
-                                          ## XGR
-                                          # plot.XGR_libnames=c("ENCODE_TFBS_ClusteredV3_CellTypes"), 
-                                          ## Roadmap
-                                          plot.Roadmap = FALSE,
-                                          plot.Roadmap_query = NULL,
-                                          # Nott et al. (2019)
-                                          plot.Nott_epigenome = TRUE, 
-                                          plot.Nott_show_placseq = TRUE, 
-                                         
-                                          verbose = TRUE
-                                          )
+```{r Run fine-mapping pipeline}
+Nalls23andMe_2019.results <- echolocatoR::finemap_loci(
+ fullSS_path = fullSS_path,
+ top_SNPs = top_SNPs,
+ loci = c("BST1","MEX3C"),
+ dataset_name = "Nalls23andMe_2019",
+ fullSS_genome_build = "hg19",
+ bp_distance = 250000,
+ munged = TRUE)
 ```
+
+<hr>
 
 # Session info  
 
@@ -175,4 +127,5 @@ utils::sessionInfo()
 
 </details>
 
+<br>
 

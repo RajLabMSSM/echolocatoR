@@ -18,7 +18,7 @@ DEEPLEARNING.query_multi_chr(
 }
 \description{
 Query deep learning annotations and LDscores, and
-then merge with \code{subset_DT} by \emph{SNP}.
+then merge with \code{dat} by \emph{SNP}.
  Repeat for each locus,
 }
 \examples{

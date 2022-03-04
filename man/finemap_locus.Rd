@@ -57,7 +57,6 @@ finemap_locus(
   min_r2 = 0,
   remove_variants = FALSE,
   remove_correlates = FALSE,
-  file_sep = "\\t",
   query_by = "tabix",
   PAINTOR_QTL_datasets = NULL,
   case_control = TRUE,
@@ -71,6 +70,7 @@ finemap_locus(
   xgr_libnames = NULL,
   roadmap = FALSE,
   roadmap_query = NULL,
+  show_plot = TRUE,
   remove_tmps = TRUE,
   conda_env = "echoR",
   nThread = 1,
@@ -87,7 +87,8 @@ finemap_locus(
   plot.zoom = deprecated(),
   QTL_prefixes = deprecated(),
   vcf_folder = deprecated(),
-  probe_path = deprecated()
+  probe_path = deprecated(),
+  file_sep = deprecated()
 )
 }
 \arguments{
@@ -349,9 +350,6 @@ as the lead SNP (the SNP with the smallest p-value).}
 If provided, all SNPs that correlates with these SNPs (at r2>=\code{min_r2})
 will be removed from both \code{DT} and \code{LD} list items..}
 
-\item{file_sep}{The separator in the full summary stats file.
-This parameter is only necessary if \code{query_by!="tabix"}.}
-
 \item{query_by}{Choose which method you want to use to extract
  locus subsets from the full summary stats file.
 Methods include:
@@ -406,6 +404,8 @@ from the \emph{UCSC Genome Browser}, use a set of local bigwig files.}
 metadata contains a string or any items from  a list of strings
 (e.g. \code{"brain"} or \code{c("brain","liver","monocytes")}).}
 
+\item{show_plot}{Print plot to screen.}
+
 \item{remove_tmps}{Whether to remove any temporary files
 (e.g. FINEMAP output files) after the pipeline is done running.}
 
@@ -457,7 +457,7 @@ The primary functions of \pkg{echolocatoR} that expedite fine-mapping
 top_SNPs <- echodata::topSNPs_Nalls2019
 fullSS_path <- echodata::example_fullSS(dataset = "Nalls2019")
 
-Nalls23andMe_2019.results <- echolocatoR::finemap_locus(
+res <- echolocatoR::finemap_locus(
   fullSS_path = fullSS_path,
   top_SNPs = top_SNPs,
   locus = "BST1",

@@ -15,9 +15,8 @@ README updated: <i>Mar-01-2022</i>
 
 ## `echolocatoR`: Automated statistical and functional fine-mapping with extensive access to genome-wide datasets.
 
-This R package is part of the *echoverse* suite that supports
-[`echolocatoR`](https://github.com/RajLabMSSM/echolocatoR): an automated
-genomic fine-mapping pipeline.
+This R package is part of the
+[*echoverse*](https://github.com/topics/echoverse) suite.
 
 If you use `echolocatoR`, please cite:
 
@@ -65,13 +64,13 @@ library(echolocatoR)
 
 ### [Getting started](https://rajlabmssm.github.io/echolocatoR/articles/echolocatoR)
 
-### \[Bugs/requests\]
+### Bugs/requests
 
 Please report any bugs/requests on [GitHub
 Issues](https://github.com/RajLabMSSM/echolocatoR/issues):
 
-\[Contributions\])(<https://github.com/RajLabMSSM/echolocatoR/pulls>)
-are welcome!:
+[Contributions](https://github.com/RajLabMSSM/echolocatoR/pulls) are
+welcome!:
 
 ## Literature
 

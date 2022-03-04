@@ -33,6 +33,7 @@
 #'   loci = c("BST1","MEX3C"),
 #'   dataset_name = "Nalls23andMe_2019",
 #'   fullSS_genome_build = "hg19",
+#'   bp_distance = 250000,
 #'   munged = TRUE)
 finemap_loci <- function(#### Main args ####
                          loci,
@@ -94,7 +95,6 @@ finemap_loci <- function(#### Main args ####
                          remove_variants=FALSE,
                          remove_correlates=FALSE,
                          #### Misc args ####
-                         file_sep="\t",
                          query_by="tabix",
                          PAINTOR_QTL_datasets=NULL,
                          case_control=TRUE,
@@ -112,6 +112,7 @@ finemap_loci <- function(#### Main args ####
                          #### General args ####
                          remove_tmps=TRUE,
                          conda_env="echoR",
+                         return_all=TRUE,
                          nThread=1,
                          verbose=TRUE,
                          #### Deprecated args ####
@@ -127,9 +128,18 @@ finemap_loci <- function(#### Main args ####
                          plot.zoom = deprecated(),
                          QTL_prefixes = deprecated(),
                          vcf_folder = deprecated(),
-                         probe_path = deprecated()){
+                         probe_path = deprecated(),
+                         file_sep=deprecated()){
+  #### Conda env setup ####
+  if(tolower(conda_env)=="echor"){
+    conda_env <- echoconda::yaml_to_env(yaml_path = conda_env,
+                                        verbose = FALSE)
+  }
   echoconda::activate_env(conda_env = conda_env,
                           verbose = verbose)
+  #### Check if CLI tools available ####
+  ## These CLI tools are no longer essential as I've replaced
+  ## them all with R-native alternatives.
   check_tools(check_tabix=TRUE,
               stop_for_tabix=FALSE,
               check_bcftools=TRUE,
@@ -209,7 +219,6 @@ finemap_loci <- function(#### Main args ####
 
                                    trim_gene_limits=gene_limits,
                                    max_snps=max_snps,
-                                   file_sep=file_sep,
                                    min_r2=min_r2,
                                    leadSNP_LD_block=leadSNP_LD_block,
                                    query_by=query_by,
@@ -244,6 +253,7 @@ finemap_loci <- function(#### Main args ####
       #     LD_plot
       #     locus_dir
       #     arguments)
+      if(return_all) return(out_list)
       finemap_dat <- out_list$finemap_dat
       if(!"Locus" %in% colnames(finemap_dat)){
         finemap_dat <- data.table::data.table(Locus=locus,
@@ -256,12 +266,10 @@ finemap_loci <- function(#### Main args ####
     print(round(end_gene-start_gene,1))
     return(finemap_dat)
   }) # end for loop
-  FINEMAP_DAT <- data.table::rbindlist(FINEMAP_DAT, fill = TRUE)
-  try({
-    FINEMAP_DAT <- echodata::find_consensus_snps(dat = FINEMAP_DAT,
-                                       credset_thresh = PP_threshold,
-                                       consensus_thresh = consensus_threshold,
-                                       verbose = verbose)
-  })
+  #### Prepare results to return ####
+  FINEMAP_DAT <- postprocess_data(FINEMAP_DAT=FINEMAP_DAT,
+                                  loci=loci,
+                                  return_all=return_all,
+                                  verbose=verbose)
   return(FINEMAP_DAT)
 }

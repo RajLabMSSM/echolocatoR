@@ -350,7 +350,7 @@ MOTIFBREAKR.summarize <- function(){
   db_tally <- mb.merge %>%
     dplyr::group_by(effect, dataSource) %>%
     dplyr::tally() %>%
-    dplyr::arrange(effect, desc(n)) %>%
+    dplyr::arrange(effect,dplyr::desc(n)) %>%
     data.frame()
   print(db_tally)
 

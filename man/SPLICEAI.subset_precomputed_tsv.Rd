@@ -9,7 +9,7 @@
 }
 \usage{
 SPLICEAI.subset_precomputed_tsv(
-  subset_DT,
+  dat,
  
     precomputed_path = "/pd-omics/data/spliceAI/whole_genome_filtered_spliceai_scores.tsv.gz",
   merge_data = TRUE,

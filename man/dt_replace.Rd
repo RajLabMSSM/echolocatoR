@@ -14,8 +14,7 @@ Annoyingly, there is no native function to do simple find-and-replace in the `DT
 }
 \seealso{
 Other general: 
-\code{\link{get_os}()},
-\code{\link{get_sample_size}()}
+\code{\link{get_os}()}
 }
 \concept{general}
 \keyword{internal}

@@ -1,11 +1,11 @@
 #' Convert a dataframe to a vcf
 #'
 #' @family utils
-#' @importFrom echoconda find_package
+#' @importFrom echoconda find_packages
 #' @examples
 #' data("merge_DT")
 #'
-dataframe_2_vcf <- function(subset_DT,
+dataframe_2_vcf <- function(dat,
                             samplename="GWAS",
                             reference_fasta="/pd-omics/tools/polyfun/reference_fasta/hg19.fa.gz",
                             output_vcf="./GWAS_converted.vcf",
@@ -25,13 +25,13 @@ dataframe_2_vcf <- function(subset_DT,
 
   # STEP 1
   ## Save df as tsv w/ ID,CHROM,POS,AA
-  dat_mod <- subset_DT %>%
+  dat_mod <- dat %>%
     dplyr::mutate(AA = paste0(A1,A2), CHROM=paste0("chr",CHR)) %>%
     dplyr::select(ID=SNP, CHROM, POS, AA)
   data.table::fwrite(x = dat_mod, file="./tmp.tsv",sep = "\t")
 
   # STEP 2
-  bcftools <- echoconda::find_package(package = "bcftools",
+  bcftools <- echoconda::find_packages(package = "bcftools",
                                  conda_env = conda_env)
   ## Convert tsv to vcf with bcftools
   cmd <- paste(bcftools,

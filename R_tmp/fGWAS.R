@@ -189,7 +189,7 @@ fGWAS.prepare_input <- function(FM_annot,
                     NCASE=N_cases,
                     NCONTROL=N_controls,
                     Gene=Gene) %>%
-      arrange(POS)
+     dplyr::arrange(POS)
     # Assign each locus a segment ID
     if(!is.na(Locus)){ dat.fgwas <- subset(dat.fgwas, Gene==Locus)}
     seg.table <- data.table::data.table(Gene = unique(FM_annot$Gene),
@@ -197,7 +197,7 @@ fGWAS.prepare_input <- function(FM_annot,
     dat.fgwas <- data.table:::merge.data.table(dat.fgwas,
                                                seg.table,
                                                by = "Gene")
-    dat.fgwas <- unique(dat.fgwas) %>% arrange(SEGNUMBER, CHR, POS)
+    dat.fgwas <- unique(dat.fgwas) %>%dplyr::arrange(SEGNUMBER, CHR, POS)
     dat.fgwas$SEGNUMBER <- as.numeric(dat.fgwas$SEGNUMBER)
 
 
@@ -409,7 +409,7 @@ fGWAS.boxplot <- function(results.DF,
                      labels = c("Enriched","Depleted","None"),
                      ordered = T)
   # counts <- DF %>% dplyr::group_by(SNP.Group, Enrichment, .drop=FALSE) %>% count() %>%
-  #   arrange(Enrichment, SNP.Group) %>%
+  #  dplyr::arrange(Enrichment, SNP.Group) %>%
   #   subset(Enrichment!="None")
   # x.ticks <- paste0(counts$SNP.Group,"\n(n=",counts$n,")")
 
@@ -487,7 +487,7 @@ fGWAS.line_plot <- function(RESULTS.DF,
   annot.SORT <- annot.df %>%
     subset(SNP.Group == "Multi-finemap") %>%
     dplyr::group_by(Type) %>%
-    arrange(estimate, desc(AIC))
+   dplyr::arrange(estimate,dplyr::desc(AIC))
 
 
   # Make variable ordered factors
@@ -495,14 +495,14 @@ fGWAS.line_plot <- function(RESULTS.DF,
                                        levels = unique(annot.SORT$Short_Description))
   annot.df$description <- factor(annot.df$description,
                                        levels = unique(annot.SORT$description))
-  annot.df <- arrange(annot.df, estimate, desc(AIC))
+  annot.df <-dplyr::arrange(annot.df, estimate,dplyr::desc(AIC))
 
   # if(top_annots != F){
   #   annot.df <- annot.df %>% dplyr::group_by(factor(SNP.Group)) %>%
   #                             top_n(n=5, wt=estimate) %>%
   #                             data.table::data.table()
   #   ( subset(annot.df, SNP.Group %in% c("Consensus")) %>%
-  #       arrange(desc(estimate), desc(AIC)) )[1:top_annots,]
+  #      dplyr::arrange(desc(estimate),dplyr::desc(AIC)) )[1:top_annots,]
   # }
 
   # annot.df <- annot.df %>% dplyr::group_by(Type, Short_Description, SNP.Group, Direction) %>%

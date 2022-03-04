@@ -57,7 +57,6 @@ finemap_loci(
   min_r2 = 0,
   remove_variants = FALSE,
   remove_correlates = FALSE,
-  file_sep = "\\t",
   query_by = "tabix",
   PAINTOR_QTL_datasets = NULL,
   case_control = TRUE,
@@ -73,6 +72,7 @@ finemap_loci(
   roadmap_query = NULL,
   remove_tmps = TRUE,
   conda_env = "echoR",
+  return_all = TRUE,
   nThread = 1,
   verbose = TRUE,
   plot.Nott_epigenome = deprecated(),
@@ -87,7 +87,8 @@ finemap_loci(
   plot.zoom = deprecated(),
   QTL_prefixes = deprecated(),
   vcf_folder = deprecated(),
-  probe_path = deprecated()
+  probe_path = deprecated(),
+  file_sep = deprecated()
 )
 }
 \arguments{
@@ -355,9 +356,6 @@ as the lead SNP (the SNP with the smallest p-value).}
 If provided, all SNPs that correlates with these SNPs (at r2>=\code{min_r2})
 will be removed from both \code{DT} and \code{LD} list items..}
 
-\item{file_sep}{The separator in the full summary stats file.
-This parameter is only necessary if \code{query_by!="tabix"}.}
-
 \item{query_by}{Choose which method you want to use to extract
  locus subsets from the full summary stats file.
 Methods include:
@@ -438,6 +436,7 @@ Nalls23andMe_2019.results <- echolocatoR::finemap_loci(
   loci = c("BST1","MEX3C"),
   dataset_name = "Nalls23andMe_2019",
   fullSS_genome_build = "hg19",
+  bp_distance = 250000,
   munged = TRUE)
 }
 \seealso{

@@ -73,7 +73,7 @@ mergeQTL.psychENCODE <- function(FM_all=merge_finemapping_results(minimum_suppor
     ## Pick only the best one (lowest FDR and highest Effect) keep each row as a unique genomic position:
     QTL.sub <- QTL.sub %>%
       dplyr::group_by(SNP_id) %>%
-      arrange(FDR, desc(regression_slope)) %>%
+     dplyr::arrange(FDR,dplyr::desc(regression_slope)) %>%
       dplyr::slice(1) %>%
       data.table::data.table()
     # Select and rename columns
@@ -89,7 +89,7 @@ mergeQTL.psychENCODE <- function(FM_all=merge_finemapping_results(minimum_suppor
                     QTL.SampleSize=1866, #Assuming same size for each (not sure if true)
                     QTL.Gene=gene_id) %>%
       dplyr::select(SNP, QTL.Effect, QTL.StdErr, QTL.P, QTL.FDR, QTL.MAF, QTL.A1, QTL.A2, QTL.SampleSize, QTL.Gene) %>%
-      arrange(QTL.FDR, desc(QTL.Effect)) ) %>%
+     dplyr::arrange(QTL.FDR,dplyr::desc(QTL.Effect)) ) %>%
       data.table::data.table()
     FM_all <- data.table:::merge.data.table(FM_all,
                                             QTL.sub,
@@ -214,7 +214,7 @@ mergeQTL.Fairfax <- function(FM_all, CONDITIONS=c("CD14","IFN","LPS2","LPS24"), 
                              QTL.Gene=QTL.Gene) %>%
       dplyr::select(SNP_id, QTL.Effect, QTL.StdErr, QTL.P, QTL.FDR, QTL.MAF, QTL.A1, QTL.A2, QTL.SampleSize, QTL.Gene) %>%
       dplyr::group_by(SNP_id) %>%
-      arrange(QTL.FDR, desc(QTL.Effect)) )%>%
+     dplyr::arrange(QTL.FDR,dplyr::desc(QTL.Effect)) )%>%
       dplyr::slice(1) %>%
       data.table::data.table()
     FM_all <- data.table:::merge.data.table(FM_all, dat.sub,
@@ -274,7 +274,7 @@ mergeQTL.MESA <- function(FM_all, force_new_subset=FALSE, POPULATIONS=c("AFA","C
                              QTL.Gene=gene_name) %>%
       dplyr::select(SNP, QTL.Effect, QTL.StdErr, QTL.P, QTL.FDR, QTL.MAF, QTL.A1, QTL.A2, QTL.SampleSize, QTL.Gene) %>%
       dplyr::group_by(SNP) %>%
-      arrange(QTL.FDR, desc(QTL.Effect)) ) %>%
+     dplyr::arrange(QTL.FDR,dplyr::desc(QTL.Effect)) ) %>%
       dplyr::slice(1) %>%
       data.table::data.table()
     FM_all <- data.table:::merge.data.table(FM_all, dat.sub,
@@ -325,7 +325,7 @@ mergeQTL.Cardiogenics <- function(FM_all,
                              QTL.Gene=reporterID) %>%
       dplyr::select(SNP, QTL.Effect, QTL.StdErr, QTL.P, QTL.FDR, QTL.MAF, QTL.A1, QTL.A2, QTL.SampleSize, QTL.Gene) %>%
       dplyr::group_by(SNP) %>%
-      arrange(QTL.FDR, desc(QTL.Effect)) ) %>%
+     dplyr::arrange(QTL.FDR,dplyr::desc(QTL.Effect)) ) %>%
       dplyr::slice(1) %>%
       data.table::data.table()
     FM_all <- data.table:::merge.data.table(FM_all, dat.sub,
@@ -423,7 +423,7 @@ mergeQTL.GTEx <- function(FM_all, fuzzy_search="Brain", GTEx_version="GTEx_V7", 
                     QTL.A2=A2,
                     QTL.SampleSize=ma_samples, # 1000?
                     QTL.Gene=gene_id) %>%
-        arrange(QTL.FDR, desc(QTL.Effect))) %>%
+       dplyr::arrange(QTL.FDR,dplyr::desc(QTL.Effect))) %>%
       data.table::data.table()
     FM_all <- data.table:::merge.data.table(FM_all, dat.sub,
                                             by=c("CHR","POS"),
@@ -460,7 +460,7 @@ mergeQTL.Brain_xQTL_Serve <- function(FM_all,
         QTL <- data.table::fread(server_file, nThread = 4)
         fullSS_nrows <- nrow(QTL)
         QTL <- subset(QTL, SNPid %in% unique(FM_all$SNP))
-        QTL <- (QTL %>% dplyr::group_by(SNPid) %>% arrange(pValue, desc(SpearmanRho))) %>%
+        QTL <- (QTL %>% dplyr::group_by(SNPid) %>%dplyr::arrange(pValue,dplyr::desc(SpearmanRho))) %>%
           dplyr::slice(1) %>% data.table()
         data.table::fwrite(QTL, output_path, nThread=1, sep="\t")
       } else {
@@ -500,7 +500,7 @@ mergeQTL.Brain_xQTL_Serve <- function(FM_all,
                                             # QTL.CellType=cell_type,
                                             QTL.Gene=Gene) %>%
                     dplyr::select(SNP, QTL.Effect, QTL.StdErr, QTL.P, QTL.FDR, QTL.MAF, QTL.A1, QTL.A2, QTL.SampleSize, QTL.Gene) %>%
-        arrange(QTL.FDR, desc(QTL.Effect))) %>%
+       dplyr::arrange(QTL.FDR,dplyr::desc(QTL.Effect))) %>%
         data.table::data.table()
     } else {
       dat.sub <- (dat.sub %>%
@@ -515,7 +515,7 @@ mergeQTL.Brain_xQTL_Serve <- function(FM_all,
                       QTL.SampleSize=NA,
                       QTL.Gene=featureName) %>%
           dplyr::select(SNP, QTL.Effect, QTL.StdErr, QTL.P, QTL.FDR, QTL.MAF, QTL.A1, QTL.A2, QTL.SampleSize, QTL.Gene) %>%
-        arrange(QTL.FDR, desc(QTL.Effect))) %>%
+       dplyr::arrange(QTL.FDR,dplyr::desc(QTL.Effect))) %>%
         data.table::data.table()
     }
     FM_all <- data.table:::merge.data.table(FM_all, dat.sub,
@@ -562,7 +562,7 @@ mergeQTL.count_overlap <- function(){
     count.df <- subset(SNP.subset, (FDR<0.05), drop=FALSE) %>%
       dplyr::group_by(QTL.Source, .drop=FALSE) %>%
       tally(sort = F) %>%
-      arrange(QTL.Source)
+     dplyr::arrange(QTL.Source)
     count.df$all.SNPs <- nrow(SNP.subset)
     count.df$Proportion <- count.df$n / count.df$all.SNPs
     return(count.df)
@@ -619,7 +619,7 @@ mergeQTL.QTL_distributions_plot <- function(){
 
 
   plot.QTL_distributions.subset <- function(SNP.Group="Consensus_SNP", cardiogenics=FALSE){
-    FM_melt <-  FM_melt %>% arrange(QTL.Source, FDR)
+    FM_melt <-  FM_melt %>%dplyr::arrange(QTL.Source, FDR)
     if(cardiogenics==FALSE){
       FM_melt <- subset(FM_melt, !(QTL.Source %in% c("Cardiogenics_macrophages","Cardiogenics_monocytes")))
     }

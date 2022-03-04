@@ -5,10 +5,10 @@
 \title{Standardize the locus subset}
 \usage{
 standardize_subset(
+  subset_path,
   locus,
   top_SNPs = NULL,
   fullSS_genome_build = "hg19",
-  subset_path = "./Data",
   chrom_col = "CHR",
   position_col = "POS",
   snp_col = "SNP",
@@ -203,16 +203,17 @@ that the rest of \emph{echolocatoR} can work with.
 }
 \examples{
 BST1 <- echodata::BST1
-... Screw up Freq to see if function can fix it and infer MAF ...
+#### Screw up Freq to see if function can fix it and infer MAF ####
 BST1$rsid <- BST1$SNP
 BST1 <- data.frame(BST1)[,!colnames(BST1) \%in\% c("MAF","SNP")]
 BST1[c(10,30,55),"Freq"] <- 0
 BST1[c(12,22),"Freq"] <- NA
-data.table::fwrite(BST1, "~/Desktop/results/GWAS/Nalls23andMe_2019/BST1/BST1.tsv")
-query_mod <- standardize_subset(locus="BST1", subset_path="~/Desktop/results/GWAS/Nalls23andMe_2019/BST1/BST1.tsv", MAF_col="calculate", snp_col="rsid")
-}
-\seealso{
-Other standardizing functions: 
-\code{\link{get_UKB_MAF}()}
+
+subset_path <- file.path(tempdir(),"BST1.tsv")
+data.table::fwrite(BST1, subset_path)
+query_mod <- echolocatoR:::standardize_subset(subset_path=subset_path,
+                                              locus="BST1",
+                                              snp_col = "rsid",
+                                              MAF_col="calculate")
 }
 \concept{standardizing functions}

@@ -11,8 +11,7 @@ Identify current operating system (OS).
 }
 \seealso{
 Other general: 
-\code{\link{dt_replace}()},
-\code{\link{get_sample_size}()}
+\code{\link{dt_replace}()}
 }
 \concept{general}
 \keyword{internal}

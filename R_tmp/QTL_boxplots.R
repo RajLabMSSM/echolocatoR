@@ -286,7 +286,7 @@ eQTL_boxplots <- function(snp_list,
     #                 P = paste("P =",formatC(P, format = "e", digits = 2)),
     #                 FDR = paste("FDR =",formatC(FDR, format = "e", digits = 2))
     #                             ) %>%
-    #   arrange(SNP, Condition) %>%
+    #  dplyr::arrange(SNP, Condition) %>%
     #   unique()
 
     bp <- ggplot(data = DAT, aes(x = genotype, y = Expression, fill=Risk.level)) +

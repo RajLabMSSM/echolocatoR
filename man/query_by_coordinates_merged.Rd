@@ -42,9 +42,6 @@ file.
 Can be "chr1" or "1" format.
 (\emph{default: ="CHR"})}
 
-\item{file_sep}{The separator in the full summary stats file.
-This parameter is only necessary if \code{query_by!="tabix"}.}
-
 \item{location_sep}{The separator character when \strong{CHR} and \strong{POS} are merged into one column (e.g. ":" when formatted like chr12:12209944).}
 
 \item{min_POS}{Minimum genomic position to include.}

@@ -83,12 +83,12 @@ SPLICEAI.run <- function(vcf_path="./GWAS_converted.vcf",
 #' @source
 #' \href{https://github.com/Illumina/SpliceAI}{GitHub}
 #' \href{https://www.sciencedirect.com/science/article/pii/S0092867418316295}{Publication}
-SPLICEAI.subset_precomputed_vcf <- function(subset_DT,
+SPLICEAI.subset_precomputed_vcf <- function(dat,
                                             precomputed_path="/pd-omics/data/spliceAI/whole_genome_filtered_spliceai_scores.vcf.gz",
                                             subset_vcf="subset.vcf"){
-  chrom = gsub("chr","",subset_DT$CHR[1] )
-  min_POS = min(subset_DT$POS)
-  max_POS = max(subset_DT$POS)
+  chrom = gsub("chr","",dat$CHR[1] )
+  min_POS = min(dat$POS)
+  max_POS = max(dat$POS)
 
   cmd <- paste("bcftools query",precomputed_path,
                "-i",paste0("'CHROM=\"",chrom,"\" & (POS>=",min_POS," & ", "POS<=",max_POS,")'"),
@@ -109,16 +109,16 @@ SPLICEAI.subset_precomputed_vcf <- function(subset_DT,
 #' @source
 #' \href{https://github.com/Illumina/SpliceAI}{GitHub}
 #' \href{https://www.sciencedirect.com/science/article/pii/S0092867418316295}{Publication}
-SPLICEAI.subset_precomputed_tsv <- function(subset_DT,
+SPLICEAI.subset_precomputed_tsv <- function(dat,
                                             # precomputed_path="/pd-omics/data/spliceAI/spliceai_scores.raw.snv.hg19.tsv.gz",
                                             precomputed_path="/pd-omics/data/spliceAI/whole_genome_filtered_spliceai_scores.tsv.gz",
                                             merge_data=TRUE,
                                             drop_na=TRUE,
                                             filtered=TRUE){
   dat <- TABIX.query(fullSS.gz = precomputed_path,
-                     chrom = subset_DT$CHR[1],
-                     start_pos = min(subset_DT$POS),
-                     end_pos = max(subset_DT$POS))
+                     chrom = dat$CHR[1],
+                     start_pos = min(dat$POS),
+                     end_pos = max(dat$POS))
   if(filtered){
     colnames(dat) <- c("CHROM","POS","ID","REF","ALT","QUAL","FILTER","SYMBOL","STRAND","TYPE","DIST","DS_AG","DS_AL","DS_DG","DS_DL","DP_AG","DP_AL","DP_DG","DP_DL")
     dat <- subset(dat, select=-c(ID,QUAL,FILTER))
@@ -134,7 +134,7 @@ SPLICEAI.subset_precomputed_tsv <- function(subset_DT,
   # summary(dat, na.rm=TRUE)
   # hist(dat$DS_DG, breaks = 100)
   if(merge_data){
-    dat_merged <- data.table:::merge.data.table(x = subset_DT,
+    dat_merged <- data.table:::merge.data.table(x = dat,
                                                 y = dat,
                                                 by.x = by.x,
                                                 by.y = by.y,
@@ -170,8 +170,8 @@ SPLICEAI.subset_precomputed_tsv_iterate <- function(sumstats_paths,
   # no_no_loci <- c("HLA-DRB5","MAPT","ATG14","SP1","LMNB1","ATP6V0A1")
   # sumstats_paths <- sumstats_paths[!basename(dirname(dirname(sumstats_paths))) %in% no_no_loci]
   DAT <- parallel::mclapply(sumstats_paths, function(x){
-    subset_DT <- data.table::fread(x)
-    dat_merged <- SPLICEAI.subset_precomputed_tsv(subset_DT,
+    dat <- data.table::fread(x)
+    dat_merged <- SPLICEAI.subset_precomputed_tsv(dat,
                                                   precomputed_path=precomputed_path,
                                                   merge_data=merge_data,
                                                   drop_na=drop_na,

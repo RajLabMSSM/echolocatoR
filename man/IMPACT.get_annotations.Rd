@@ -7,7 +7,7 @@
 IMPACT.get_annotations(
   baseURL = "https://github.com/immunogenomics/IMPACT/raw/master/IMPACT707/Annotations",
   chrom = NULL,
-  subset_DT = NULL,
+  dat = NULL,
   nThread = 1,
   all_snps_in_range = FALSE,
   verbose = TRUE
@@ -21,12 +21,12 @@ as well as per-SNP \emph{IMPACT} scores for each annotation.
 Unfortunately, you have to download the entire chromosome file at once,
  because they aren't Tabix indexed. To minimize the memory load,
  this function only keeps the portion of the \emph{IMPACT} file that overlaps with the
- coordinates in \code{subset_DT}.
+ coordinates in \code{dat}.
 }
 \examples{
 \dontrun{
 BST1 <- echodata::BST1
-annot_melt <- IMPACT.get_annotations(subset_DT=BST1)
+annot_melt <- IMPACT.get_annotations(dat=BST1)
 }
 }
 \seealso{

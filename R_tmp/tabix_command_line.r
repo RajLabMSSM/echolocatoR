@@ -14,7 +14,7 @@ construct_tabix_path <- function(fullSS_path,
 #' Convert summary stats file to tabix format
 #'
 #' @family query functions
-#' @importFrom echoconda find_package
+#' @importFrom echoconda find_packages
 #' @inheritParams finemap_locus
 #' @examples
 #' \dontrun{
@@ -45,7 +45,7 @@ TABIX.convert_file <- function(fullSS_path,
                paste0("-k",cDict[[position_col]],",",cDict[[position_col]],"n"),
                ")",
                # Compress with bgzip
-               "|",echoconda::find_package(package="bgzip", conda_env=conda_env),"-f",
+               "|",echoconda::find_packages(package="bgzip", conda_env=conda_env),"-f",
                ">",
                tabix_out)
   printer(cmd, v=verbose)
@@ -58,7 +58,7 @@ TABIX.convert_file <- function(fullSS_path,
                           skip_lines=1,
                           conda_env="echoR",
                           verbose=T){
-    tabix <- echoconda::find_package(package="tabix",
+    tabix <- echoconda::find_packages(package="tabix",
                                 conda_env=conda_env,
                                 verbose = verbose)
     printer("TABIX:: Indexing",v=verbose)
@@ -95,7 +95,7 @@ TABIX.query <- function(fullSS.gz,
                         end_pos,
                         conda_env="echoR",
                         verbose=T){
-  tabix <- echoconda::find_package(package="tabix",
+  tabix <- echoconda::find_packages(package="tabix",
                               conda_env=conda_env,
                               verbose = verbose)
   coords <- paste0(chrom,":",start_pos,"-",end_pos)

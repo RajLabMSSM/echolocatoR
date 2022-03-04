@@ -136,7 +136,7 @@ psychENCODE.assay_summary <- function(){
         ASSAY_sub <- subset(ASSAY., SNP_chr == paste0("chr",unique(FM_sub$CHR)) &
                             SNP_start >= min(FM_sub$POS) & SNP_end <= max(FM_sub$POS))
         # Subset by FDR
-        ASSAY_sub <- subset(ASSAY_sub, FDR<=0.05) %>% arrange(FDR)
+        ASSAY_sub <- subset(ASSAY_sub, FDR<=0.05) %>%dplyr::arrange(FDR)
         # ASSAY_sub <- subset(QTL, SNP_id %in% FM_sub$SNP_id)
         dat <- summarise_SNPgroup_overlap(FM_sub, ASSAY_sub, assay_type=assay_type, gene=gene)
       }

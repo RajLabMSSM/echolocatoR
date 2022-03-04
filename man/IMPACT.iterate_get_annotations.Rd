@@ -25,7 +25,7 @@ have ample memory and storage on your computer for best results.
 Unfortunately, you have to download the entire chromosome file at once,
  because they aren't Tabix indexed. To minimize the memory load,
  this function only keeps the portion of the \emph{IMPACT} file that overlaps with the
- coordinates in \code{subset_DT}.
+ coordinates in \code{dat}.
 }
 \examples{
 \dontrun{

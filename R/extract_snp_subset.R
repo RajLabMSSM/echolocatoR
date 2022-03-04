@@ -50,10 +50,11 @@ extract_snp_subset <- function(locus=NULL,
                                conda_env = "echoR",
                                verbose=TRUE){
   if(is.null(locus)) locus <- basename(locus_dir)
-  multi_path <- create_method_path(locus_dir = locus_dir,
-                                   LD_reference = LD_reference,
-                                   finemap_method = "Multi-finemap",
-                                   compress = TRUE)
+  multi_path <- echofinemap::create_method_path(
+    locus_dir = locus_dir,
+    LD_reference = LD_reference,
+    finemap_method = "Multi-finemap",
+    compress = TRUE)
 
   if(file.exists(subset_path) & force_new_subset==FALSE){
     messager("+ Importing pre-existing file:",subset_path, v=verbose)

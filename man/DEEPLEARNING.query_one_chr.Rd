@@ -5,7 +5,7 @@
 \title{Query deep learning annotations and LDscores}
 \usage{
 DEEPLEARNING.query_one_chr(
-  subset_DT,
+  dat,
   base_url = "/sc/arion/projects/pd-omics/data/Dey_DeepLearning",
   level = c("Variant_Level", "Allelic_Effect"),
   tissue = c("NTS", "Blood", "Brain"),
@@ -18,12 +18,12 @@ DEEPLEARNING.query_one_chr(
 }
 \description{
 Query deep learning annotations and LDscores, and
-then merge with \code{subset_DT} by \emph{SNP}.
+then merge with \code{dat} by \emph{SNP}.
 }
 \examples{
 \dontrun{
 BST1 <- echodata::BST1
-annot.dat <- DEEPLEARNING.query_one_chr(subset_DT=BST1, tissue="NTS", model="Basenji", type="annot")
+annot.dat <- DEEPLEARNING.query_one_chr(dat=BST1, tissue="NTS", model="Basenji", type="annot")
 }
 }
 \seealso{

@@ -19,8 +19,8 @@ description <- read.dcf("DESCRIPTION", fields = "Description")[1]
  
 ## ``r pkg``: `r gsub("echoverse module: ","", description)`
 
-This R package is part of the *echoverse* suite that supports [`echolocatoR`](https://github.com/RajLabMSSM/echolocatoR):
-an automated genomic fine-mapping pipeline. 
+This R package is part of the [*echoverse*](https://github.com/topics/echoverse)
+suite. 
 
 If you use ``r pkg``, please cite: 
 
