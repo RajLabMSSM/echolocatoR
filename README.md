@@ -65,10 +65,10 @@ fine-mapping pipeline rapid, robust and scalable.
 ### Bugs/requests
 
 Please report any bugs/requests on [GitHub
-Issues](https://github.com/RajLabMSSM/echolocatoR/issues):
+Issues](https://github.com/RajLabMSSM/echolocatoR/issues).
 
 [Contributions](https://github.com/RajLabMSSM/echolocatoR/pulls) are
-welcome!:
+welcome!
 
 ## Literature
 
@@ -145,13 +145,6 @@ to create a [*conda*](https://docs.conda.io/en/latest/) environment.
     this env (esp. if using from RStudio), you can then supply the env
     name to the `finemap_loci()` function (and many other
     ***echolocatoR*** functions) using `conda_env="echoR"`.
-
-### Binary installation
-
-You can also install ***echolocatoR*** using the compressed binary file
-available on [Google
-Drive](https://drive.google.com/drive/folders/1oS6DIBcHWkDULAh_KHudvpzVab5NkWI9?usp=sharing).
-See the README within the folder for further instructions.
 
 ### Clone installation (*Rstudio*)
 
