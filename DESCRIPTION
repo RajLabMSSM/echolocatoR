@@ -34,9 +34,9 @@ Imports:
     echoannot,
     echoconda,
     echoLD,
-    echoplot,
-    catalogueR,
+    echoplot, 
     echofinemap,
+    catalogueR,
     devtools, 
     remotes,
     magrittr,
@@ -69,7 +69,11 @@ Suggests:
     BSgenome.Hsapiens.UCSC.hg19,
     ComplexHeatmap,
     coin,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    badger,
+    pkgnet,
+    igraph,
+    visNetwork
 Remotes:
   github::RajLabMSSM/echodata,
   github::RajLabMSSM/echotabix,

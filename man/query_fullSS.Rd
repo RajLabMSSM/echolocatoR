@@ -9,7 +9,8 @@ query_fullSS(fullSS_path, subset_path)
 \arguments{
 \item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL)
 that you want to fine-map.
-It is usually best to provide the absolute path rather than the relative path.}
+It is usually best to provide the absolute path rather
+than the relative path.}
 }
 \description{
 Read in a standardize the entire full summary stats file at once.

@@ -1,4 +1,5 @@
 .conda
+^inst/tools$
 
 ./Roadmap/
 ./ROADMAP/

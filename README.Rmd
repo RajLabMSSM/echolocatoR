@@ -1,11 +1,12 @@
 ---
 title: ""  
-author: "<img src='https://github.com/RajLabMSSM/`r read.dcf('DESCRIPTION', fields = 'Package')[1]`/raw/`r gsub('[*] ','',system('git branch', intern = TRUE)[1])`/inst/hex/hex.png' height='300'><br><br>
+author: "<img src='https://github.com/RajLabMSSM/`r read.dcf('DESCRIPTION', fields = 'Package')[1]`/raw/`r gsub('[*] ','',grep('\\*',system('git branch', intern = TRUE), value = TRUE))[1]`/inst/hex/hex.png' height='300'><br><br>
         `r badger::badge_github_version(color = 'black')` 
         `r badger::badge_github_actions(action = 'R-CMD-check-bioc')`
         `r badger::badge_last_commit()`
         `r badger::badge_codecov()` 
-        `r badger::badge_license()` 
+        `r badger::badge_license()`
+        `r badger::badge_doi('10.1093/bioinformatics/btab658', 'blue')`
         <h5>Author: <i>Brian M. Schilder</i></h5>" 
 date: "<h5>README updated: <i>`r format( Sys.Date(), '%b-%d-%Y')`</i></h5>"
 output:

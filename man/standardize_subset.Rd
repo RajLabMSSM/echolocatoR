@@ -73,7 +73,8 @@ Effect size is preferred, but if not available other metrics like Beta for
 Odds Ratio can be used instead.
 (\emph{default: ="Effect"})}
 
-\item{stderr_col}{Name of the standard error  column in the full summary stats file.
+\item{stderr_col}{Name of the standard error
+column in the full summary stats file.
 You can also set \code{stderr_col="calculate"} to infer standard error
 using: \code{effect / tstat}.
 (\emph{default: ="StdErr"})}

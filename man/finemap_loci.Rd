@@ -100,15 +100,18 @@ Multi-finemap/<locus>_<dataset_name>_Multi-finemap.tsv.gz}}
 
 \item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL)
 that you want to fine-map.
-It is usually best to provide the absolute path rather than the relative path.}
+It is usually best to provide the absolute path rather
+than the relative path.}
 
 \item{results_dir}{Where to store all results.
 \strong{IMPORTANT!:} It is usually best to provide the absolute path
 rather than the relative path.
 This is especially important for \emph{FINEMAP}.}
 
-\item{dataset_name}{The name you want to assign to the dataset being fine-mapped,
-This will be used to name the subdirectory where your results will be stored
+\item{dataset_name}{The name you want to assign to the dataset
+being fine-mapped,
+This will be used to name the subdirectory where your
+results will be stored
 (e.g. \emph{Data/GWAS/<dataset_name>}).
 Don't use special characters (e.g.".", "/").}
 
@@ -198,7 +201,8 @@ Effect size is preferred, but if not available other metrics like Beta for
 Odds Ratio can be used instead.
 (\emph{default: ="Effect"})}
 
-\item{stderr_col}{Name of the standard error  column in the full summary stats file.
+\item{stderr_col}{Name of the standard error
+column in the full summary stats file.
 You can also set \code{stderr_col="calculate"} to infer standard error
 using: \code{effect / tstat}.
 (\emph{default: ="StdErr"})}
@@ -363,8 +367,8 @@ Methods include:
 \item{"tabix"}{Convert the full summary stats file in an indexed tabix file.
  Makes querying lightning fast after the initial conversion is done.
   (\emph{default})}
-\item{"coordinates"}{Extract locus subsets using min/max genomic c
-oordinates with \emph{awk}.}
+\item{"coordinates"}{Extract locus subsets using min/max genomic
+coordinates with \emph{awk}.}
 }}
 
 \item{PAINTOR_QTL_datasets}{A list of QTL datasets to be used when

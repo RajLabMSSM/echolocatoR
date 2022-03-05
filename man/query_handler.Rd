@@ -25,7 +25,8 @@ query_handler(
 \arguments{
 \item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL)
 that you want to fine-map.
-It is usually best to provide the absolute path rather than the relative path.}
+It is usually best to provide the absolute path rather
+than the relative path.}
 
 \item{top_SNPs}{A data.frame with the genomic coordinates of the lead SNP
 for each locus.
@@ -70,8 +71,8 @@ Methods include:
 \item{"tabix"}{Convert the full summary stats file in an indexed tabix file.
  Makes querying lightning fast after the initial conversion is done.
   (\emph{default})}
-\item{"coordinates"}{Extract locus subsets using min/max genomic c
-oordinates with \emph{awk}.}
+\item{"coordinates"}{Extract locus subsets using min/max genomic
+coordinates with \emph{awk}.}
 }}
 
 \item{conda_env}{Conda environment to use.}
