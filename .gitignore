@@ -9,7 +9,6 @@ Meta
 doc
 docs/reference/Data/
 
-
 # R project files
 *.Rproj
 .Rproj.user
