@@ -75,4 +75,3 @@ dependencies:
   - bioconductor-biomart
   - radian
   - pip
-    - bgen==1.2.10
