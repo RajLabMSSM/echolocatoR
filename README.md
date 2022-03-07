@@ -11,15 +11,34 @@ GPL-3](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://cran.r-pro
 Author: <i>Brian M. Schilder</i>
 </h5>
 <h5>
-README updated: <i>Mar-05-2022</i>
+README updated: <i>Mar-07-2022</i>
 </h5>
 
 ## `echolocatoR`: Automated statistical and functional fine-mapping with extensive access to genome-wide datasets.
 
-This R package is part of the
-[*echoverse*](https://github.com/topics/echoverse) suite.
+### The *echoverse*
 
-If you use `echolocatoR`, please cite:
+`echolocatoR` is part of the
+[***echoverse***](https://github.com/topics/echoverse), a suite of R
+packages designed to facilitate different steps in genetic fine-mapping.
+
+`echolocatoR` calls each of these other packages (i.e. “modules”)
+internally to create a unified pipeline. However, you can also use each
+module independently to create your own custom workflows.
+
+#### ***echoverse*** dependency graph
+
+<img src="./images/echoverse.png" height="400px">
+
+> Made with [`echodeps`](https://github.com/RajLabMSSM/echodeps), yet
+> another ***echoverse*** module. See [here for the interactive
+> version](https://rajlabmssm.github.io/Fine_Mapping/echolocatoR.dep_graph.html)
+> with package descriptions and links to each GitHub repo.
+
+### Citation
+
+If you use `echolocatoR`, or any of the **echoverse** subpackages,
+please cite:
 
 > Brian M Schilder, Jack Humphrey, Towfique Raj (2021) echolocatoR: an
 > automated end-to-end statistical and functional genomic fine-mapping
@@ -55,7 +74,7 @@ fine-mapping pipeline rapid, robust and scalable.
 ``` r
 if(!require("remotes")) install.packages("remotes")
 
-remotes::install_github("RajLabMSSM/echolocatoR")
+remotes::install_github("RajLabMSSM/echolocatoR@echoverse")
 library(echolocatoR)
 ```
 
@@ -68,10 +87,10 @@ library(echolocatoR)
 ### Bugs/requests
 
 Please report any bugs/requests on [GitHub
-Issues](https://github.com/RajLabMSSM/echolocatoR/issues):
+Issues](https://github.com/RajLabMSSM/echolocatoR/issues).
 
 [Contributions](https://github.com/RajLabMSSM/echolocatoR/pulls) are
-welcome!:
+welcome!
 
 ## Literature
 

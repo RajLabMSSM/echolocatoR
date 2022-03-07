@@ -20,10 +20,23 @@ description <- read.dcf("DESCRIPTION", fields = "Description")[1]
  
 ## ``r pkg``: `r gsub("echoverse module: ","", description)`
 
-This R package is part of the [*echoverse*](https://github.com/topics/echoverse)
-suite. 
 
-If you use ``r pkg``, please cite: 
+### The *echoverse* 
+
+``r pkg`` is part of the [__*echoverse*__](https://github.com/topics/echoverse), a suite of R packages designed to facilitate different steps in genetic fine-mapping. 
+
+``r pkg`` calls each of these other packages (i.e. "modules") internally to create a unified pipeline. However, you can also use each module independently to create your own custom workflows. 
+
+#### __*echoverse*__ dependency graph 
+
+<img src="./images/echoverse.png" height="400px"> 
+
+> Made with [`echodeps`](https://github.com/RajLabMSSM/echodeps), yet another __*echoverse*__ module. See [here for the interactive version](https://rajlabmssm.github.io/Fine_Mapping/echolocatoR.dep_graph.html) with package descriptions and links to each GitHub repo.  
+
+
+### Citation 
+
+If you use ``r pkg``, or any of the _*echoverse*_ subpackages, please cite: 
 
 > `r citation(pkg)$textVersion`
 
@@ -58,7 +71,7 @@ fine-mapping pipeline rapid, robust and scalable.
 ```R
 if(!require("remotes")) install.packages("remotes")
 
-remotes::install_github("RajLabMSSM/`r pkg`")
+remotes::install_github("RajLabMSSM/`r pkg`@echoverse")
 library(`r pkg`)
 ```
 
@@ -70,9 +83,9 @@ library(`r pkg`)
 
 ### Bugs/requests
 
-Please report any bugs/requests on [GitHub Issues](https://github.com/RajLabMSSM/echolocatoR/issues):
+Please report any bugs/requests on [GitHub Issues](https://github.com/RajLabMSSM/echolocatoR/issues).
 
-[Contributions](https://github.com/RajLabMSSM/echolocatoR/pulls) are welcome!:
+[Contributions](https://github.com/RajLabMSSM/echolocatoR/pulls) are welcome!
 
 ## Literature
  

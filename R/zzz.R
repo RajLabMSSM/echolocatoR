@@ -3,7 +3,9 @@
   indent <- ">>>>    "
   ref <- gsub("\\[|\\*","",
               strsplit(citation("echolocatoR")$textVersion,"\\]")[[1]][1])
-  batty <- readLines("inst/extdata/ascii_batty.txt")
+  batty <- readLines(
+    system.file(package = "echolocatoR","extdata/ascii_batty.txt")
+  )
 
   txt <- paste(
     banner,

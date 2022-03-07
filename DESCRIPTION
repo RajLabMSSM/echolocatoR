@@ -58,6 +58,7 @@ Imports:
     lifecycle
 Suggests:
     downloadR,
+    echodeps,
     rmarkdown,
     shades,
     pals,
@@ -70,10 +71,7 @@ Suggests:
     ComplexHeatmap,
     coin,
     testthat (>= 3.0.0),
-    badger,
-    pkgnet,
-    igraph,
-    visNetwork
+    badger
 Remotes:
   github::RajLabMSSM/echodata,
   github::RajLabMSSM/echotabix,
@@ -83,7 +81,8 @@ Remotes:
   github::RajLabMSSM/echoLD,
   github::RajLabMSSM/echoplot,
   github::RajLabMSSM/catalogueR,
-  github::RajLabMSSM/echofinemap
+  github::RajLabMSSM/echofinemap,
+  github::RajLabMSSM/echodeps
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr
 Config/testthat/edition: 3
