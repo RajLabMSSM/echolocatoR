@@ -1,4 +1,6 @@
 .onLoad <- function(libname, pkgname){
+  .datatable.aware <- TRUE
+
   banner <- paste(rep("~",100), collapse = "")
   indent <- ">>>>    "
   ref <- gsub("\\[|\\*","",

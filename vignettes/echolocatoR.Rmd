@@ -1,36 +1,15 @@
 ---
-title: "echolocatoR: full pipeline vignette" 
-author: "Brian M. Schilder"
-date: "Most recent update:<br> `r Sys.Date()`"
-output: 
-  rmarkdown::html_document: 
-    theme: spacelab
-    highlight: zenburn 
-    code_folding: show 
-    toc: true 
-    toc_float: true
-    smooth_scroll: true
-    number_sections: false 
-    self_contained: true
-editor_options: 
-  chunk_output_type: inline
+title: "Getting Started" 
+author: "<h4>Author: <i>Brian M. Schilder</i></h4>" 
+date: "<h4>Updated: <i>`r format( Sys.Date(), '%b-%d-%Y')`</i></h4>"
+output:
+  BiocStyle::html_document
 vignette: >
-  %\VignetteIndexEntry{echolocatoR}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+    %\VignetteIndexEntry{echolocatoR} 
+    %\usepackage[utf8]{inputenc}
+    %\VignetteEngine{knitr::rmarkdown}
 ---
 
-```{r, include = FALSE, message=FALSE, error = TRUE} 
-root.dir <- tempdir()
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  root.dir = root.dir,
-  fig.height = 12,
-  fig.width = 10
-)  
-knitr::opts_knit$set(root.dir = root.dir)  
-```
 
 ```{r setup}
 library(echolocatoR) 
@@ -105,7 +84,7 @@ You can adjust this separately from `bp_distance` so that you don't have rerun t
 **WARNING**: Please use the full absolute paths (instead of relative paths) wherever possible (e.g. `results_dir`). This is especially important for the tool *FINEMAP*.
 
 ```{r Run fine-mapping pipeline}
-Nalls23andMe_2019.results <- echolocatoR::finemap_loci(
+results <- echolocatoR::finemap_loci(
  fullSS_path = fullSS_path,
  top_SNPs = top_SNPs,
  loci = c("BST1","MEX3C"),

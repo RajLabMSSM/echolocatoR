@@ -36,7 +36,7 @@ description <- read.dcf("DESCRIPTION", fields = "Description")[1]
 
 ### Citation 
 
-If you use ``r pkg``, or any of the _*echoverse*_ subpackages, please cite: 
+If you use ``r pkg``, or any of the _*echoverse*_ modules, please cite: 
 
 > `r citation(pkg)$textVersion`
 
@@ -45,7 +45,7 @@ If you use ``r pkg``, or any of the _*echoverse*_ subpackages, please cite:
 
 Fine-mapping methods are a powerful means of identifying causal variants
 underlying a given phenotype, but are underutilized due to the technical
-challenges of implementation. ***echolocatoR*** is an R package that
+challenges of implementation. ``r pkg`` is an R package that
 automates end-to-end genomics fine-mapping, annotation, and plotting in
 order to identify the most probable causal variants associated with a
 given phenotype.
@@ -59,7 +59,7 @@ The elimination of data gathering and preprocessing steps enables rapid
 fine-mapping of many loci in any phenotype, complete with locus-specific
 publication-ready figure generation. All results are merged into a
 single per-SNP summary file for additional downstream analysis and
-results sharing. Therefore ***echolocatoR*** drastically reduces the
+results sharing. Therefore ``r pkg`` drastically reduces the
 barriers to identifying causal variants by making the entire
 fine-mapping pipeline rapid, robust and scalable.
 
@@ -91,7 +91,7 @@ Please report any bugs/requests on [GitHub Issues](https://github.com/RajLabMSSM
 
 ## Literature
  
-### For applications of ***echolocatoR*** in the literature, please see:
+### For applications of ``r pkg`` in the literature, please see:
 
 > 1.	E Navarro, E Udine, K de Paiva Lopes, M Parks, G Riboldi, BM Schilder…T Raj (2020) Dysregulation of mitochondrial and proteo-lysosomal genes in Parkinson's disease myeloid cells. Nature Genetics. https://doi.org/10.1101/2020.07.20.212407 
 > 2.	BM Schilder, T Raj (2021) Fine-Mapping of Parkinson’s Disease Susceptibility Loci Identifies Putative Causal Variants. Human Molecular Genetics, ddab294, https://doi.org/10.1093/hmg/ddab294   
@@ -99,9 +99,9 @@ Please report any bugs/requests on [GitHub Issues](https://github.com/RajLabMSSM
 
 
 
-## `echofinemap`: Fine-mapping tools
+## Fine-mapping tools
 
-***echolocatoR*** will automatically check whether you have the
+``r pkg`` will automatically check whether you have the
 necessary columns to run each tool you selected in
 `echolocatoR::finemap_loci(finemap_methods=...)`.
 It will remove any tools that for
