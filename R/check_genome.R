@@ -5,7 +5,7 @@ check_genome <- function(gbuild=NULL,
     if(munged & (!is.null(fullSS_path))){
       messager("+ Inferring genome build")
       sumstats <- data.table::fread(fullSS_path, nThread = 1, nrows = 1000)
-      gbuild <- MungeSumstats:::get_genome_build(sumstats = sumstats)
+      gbuild <- MungeSumstats::get_genome_build(sumstats = sumstats)
       return(gbuild)
     } else {
       message("WARNING:: fullSS_genome_build not provided. Assuming hg19.")

@@ -58,6 +58,7 @@ Imports:
     lifecycle
 Suggests:
     downloadR,
+    MungeSumstats (<= 1.3.9),
     echodeps,
     rmarkdown,
     shades,
@@ -82,7 +83,8 @@ Remotes:
   github::RajLabMSSM/echoplot,
   github::RajLabMSSM/catalogueR,
   github::RajLabMSSM/echofinemap,
-  github::RajLabMSSM/echodeps
+  github::RajLabMSSM/echodeps,
+  github::neurogenomics/MungeSumstats
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr
 Config/testthat/edition: 3

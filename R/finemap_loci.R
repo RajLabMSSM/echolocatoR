@@ -20,7 +20,7 @@
 #' @return A merged data.frame with all fine-mapping results from all loci.
 #'
 #' @export
-#' @importFrom echodata MUNGESUMSTATS.col_map find_consensus_snps
+#' @importFrom echodata find_consensus_snps
 #' @importFrom stats setNames
 #' @importFrom data.table rbindlist data.table
 #'

@@ -238,7 +238,7 @@
 #' @inheritParams echoplot::plot_locus
 #' @inheritParams echofinemap::multifinemap
 #' @importFrom echoplot plot_locus
-#' @importFrom echodata filter_snps
+#' @importFrom echodata filter_snps mungesumstats_col_map
 #' @importFrom echoLD load_or_create filter_LD subset_common_snps
 #' @importFrom echofinemap multifinemap
 #' @export
@@ -355,7 +355,7 @@ finemap_locus <- function(#### Main args ####
     messager(
       "+ Assuming sumstats have already been processed with MungeSumstats",
       v=verbose)
-    map <- echodata::MUNGESUMSTATS.col_map()
+    map <- echodata::mungesumstats_col_map()
     chrom_col <- map$chrom_col;
     position_col <- map$position_col;
     snp_col <- map$snp_col;
