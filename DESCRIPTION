@@ -58,7 +58,7 @@ Imports:
     lifecycle
 Suggests:
     downloadR,
-    MungeSumstats (<= 1.3.9),
+    MungeSumstats (>= 1.3.9),
     echodeps,
     rmarkdown,
     shades,
