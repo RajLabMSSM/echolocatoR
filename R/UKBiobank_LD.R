@@ -60,7 +60,8 @@ LD.UKBiobank <- function(subset_DT=NULL,
                                   locus_dir = locus_dir,
                                   background = F,
                                   force_overwrite = force_new_LD,
-                                  download_method = download_method)
+                                  download_method = download_method,
+                                  nThread = nThread)
         server <- F
       } else {
         if(chimera){
@@ -104,7 +105,7 @@ LD.UKBiobank <- function(subset_DT=NULL,
                                                       "Reference/UKB_MAF"),
                               force_new_maf = F,
                               nThread = nThread,
-                              download_method = "axel",
+                              download_method = download_method,
                               verbose = verbose)
    }
     # Save LD matrix as RDS
