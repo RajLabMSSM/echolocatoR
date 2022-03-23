@@ -1,17 +1,21 @@
+#' Startup messages
+#'
+#' Startup messages with info on package name, version, citation, GitHub, etc.
+#' @keywords internal
+#' @import cli
 startup <- function(package="echolocatoR",
                     add_batty=FALSE){
 
-  requireNamespace("cli")
-
   ref <- gsub("\\[|\\*","",
               strsplit(citation("echolocatoR")$textVersion,"\\]")[[1]][1])
-  bat_icon <- function(n=1, sep="\ \ "){
-    paste(rep("\U0001F987",n), collapse = sep)
-    }
-
   indent <- 5
   exdent <- 5
   width <- (cli::console_width()*.75) - indent - exdent
+
+  bat_icon <- function(n=1, sep="\ \ "){
+    paste(rep("\U0001F987",n), collapse = sep)
+  }
+
   #### Make waves function #####
   make_waves <- function(frequency=50,
                          width=cli::console_width(),
@@ -28,17 +32,17 @@ startup <- function(package="echolocatoR",
   }
 
   #### Make padding ####
-  pad <- function(x,
-                  filler="⣀",
+  add_pad <- function(txt,
+                      pad=" ",
                   width=cli::console_width()#nchar(make_waves(cat_now = FALSE), type="width")
                   ){
-    extra_space <- width - nchar(x, type="width")
-    filler_str <- paste(rep(filler,as.integer(extra_space/6)), collapse = "")
-    padded_x <- paste(filler_str, x, filler_str)
-    return(padded_x)
+    extra_space <- width - utf8::utf8_width(txt) #nchar(x, type="width")
+    padded_txt <- stringr::str_pad(txt, width = extra_space,
+                                   pad = pad, side = "right")
+    return(padded_txt)
   }
 
-  border <- cli::col_br_cyan(cli::cli_h1(""))
+  # border <- cli::col_br_cyan(cli::cli_h1(""))
 
   if(add_batty){
     batty <- readLines(
@@ -59,25 +63,15 @@ startup <- function(package="echolocatoR",
         make_waves(x, align=align)
       }
       #### Package name ####
-      cli::cat_line(
-                  cli::ansi_align(
-                    pad(x = bat_title),
-                    align = "left",
-                    width = cli::console_width()*.95)
-      )
+      cli::cli_h1(cli::col_br_cyan(bat_title))
       #### Package version ####
-      cli::cat_line(
-        cli::ansi_align(
-          pad(paste0("v ",utils::packageVersion(package))),
-          align = "left",width = cli::console_width()*.95
-        )
-      )
+      cli::cli_h1(cli::col_br_cyan(paste0("v",utils::packageVersion(package))))
     ##### Waves out ####
     for(x in rev(freqs)){
       make_waves(x,align=align)
     }
   }
-
+  ##### Additional text #####
   {
     #### Citation
     cli::cat_line(
@@ -107,7 +101,9 @@ startup <- function(package="echolocatoR",
       cli::col_br_magenta(
         cli::ansi_strwrap(
           paste(cli::symbol$play,
-                file.path("https://github.com/RajLabMSSM",package,"issues")),
+                cli::style_hyperlink(text = file.path("https://github.com/RajLabMSSM",package,"issues"),
+                                     url = file.path("https://github.com/RajLabMSSM",package,"issues"))
+                ) ,
           width = width, indent = indent, exdent = exdent)
       )
     )
@@ -120,7 +116,11 @@ startup <- function(package="echolocatoR",
     cli::cat_line(
       cli::col_br_magenta(
         cli::ansi_strwrap(
-          paste(cli::symbol$play,file.path("https://github.com/RajLabMSSM",package,"pulls")),
+          paste(cli::symbol$play,
+                cli::style_hyperlink(text = file.path("https://github.com/RajLabMSSM",package,"pulls"),
+                                     url = file.path("https://github.com/RajLabMSSM",package,"pulls"))
+
+                ),
           width = width, indent = indent, exdent = exdent)
       )
     )

@@ -12,13 +12,33 @@ vignette: >
 
 
 ```{r setup}
+#### Install echolocatoR >= v2.0 ####
+if(!require("echolocatoR")){
+  remotes::install_github("RajLabMSSM/echolocatoR@echoverse", 
+                          upgrade = TRUE, dependencies = TRUE)    
+} else if (packageVersion("echolocatoR")<"2.0.0"){
+  remotes::install_github("RajLabMSSM/echolocatoR@echoverse",
+                          upgrade = TRUE, dependencies = TRUE)
+}
 library(echolocatoR) 
+
+save_dir <- "/Desktop"
 ```
+
+### [Optional] Docker
+
+`echolocatoR` doesn't yet have it's own Docker container, 
+but in the meantime you can use the official `MAGMA.Celltyping` Docker container which includes an Rstudio interface (see [vignette here](https://neurogenomics.github.io/MAGMA_Celltyping/articles/docker)).  
+
+Then, simply install `echolocatoR` from within the container 
+using the same instructions as above.
+
  
 ## Prepare `top_SNPs` data.frame   
  
 ```{r  Prepare `top_SNPs` data.frame}  
-top_SNPs <- echodata::import_topSNPs(topSS = "~/Downloads/my_loci.xlsx") 
+top_SNPs <- echodata::import_topSNPs(topSS = file.path(save_dir,
+                                                       "my_loci.xlsx"))
 head(top_SNPs)
 ```
 
@@ -32,7 +52,7 @@ To prepare the data for use with `echolocatoR`
 
 ```{r fullSS}  
 #### Set up paths ####
-fullSS_path_vcf <- "~/Downloads/pgc-bip2021-all.vcf.tsv.gz"  
+fullSS_path_vcf <- file.path(save_dir,"pgc-bip2021-all.vcf.tsv.gz"  )
 target_path <- echotabix::construct_tabix_path(gsub(".vcf","",fullSS_path_vcf))
 
 #### Download file #####
@@ -40,8 +60,8 @@ if(!file.exists(fullSS_path_vcf)){
   utils::download.file("https://figshare.com/ndownloader/files/26603681",
                        fullSS_path_vcf)
 }
+#### Munge ####
 if(!file.exists(target_path)){ 
-  #### Munge ####
   ## [Option 1]: MungeSumstats::format_sumstats
   ## Run the complete munging pipeline with additional QC
   ## Run with tabix_index=TRUE to index as well
@@ -54,8 +74,8 @@ if(!file.exists(target_path)){
   #                                           tabix_index = TRUE)
   # target_path <- mss_out$sumstats
   
-  ## Run just the column header mapping and write back to disk
   ## [Option 2] MungeSumstats::write_sumstats
+  ## Run just the column header mapping and write back to disk
   dat <- MungeSumstats::read_sumstats(path = fullSS_path_vcf, 
                                       standardise_headers = TRUE)
   target_path <- MungeSumstats::write_sumstats(sumstats_dt = dat,
@@ -103,10 +123,13 @@ echodata::createDT(head(dat_locus))
 
 ## Get LD
 
-Using stored LD example data instead.
+`echoLD::get_LD` uses the coordinates from you locus-specific data to retrieve a subset of whole-sequencing sequencing data from the 1000 Genomes Project (in VCF format).
+
+It then computes pairwise linkage disequilibrium (LD) between all SNPs in that 
+subset.
 
 ```{r}
-locus_dir <- file.path("~/Desktop/", top_SNPs_locus$Locus) 
+locus_dir <- file.path(save_dir, top_SNPs_locus$Locus) 
 
 LD_list  <- echoLD::get_LD(query_dat = dat_locus,
                            locus_dir = locus_dir,
@@ -125,16 +148,28 @@ the results from each fine-mapping method that was run.
 dat2 <- echofinemap::multifinemap(dat = LD_list$DT,
                                   locus_dir = locus_dir,  
                                   LD_matrix = LD_list$LD, 
-                                  finemap_methods=c("ABF","SUSIE","FINEMAP"), 
+                                  finemap_methods=c("ABF","SUSIE","FINEMAP"),
+                                  n_causal = 2,
                                   force_new_finemap = TRUE)
 knitr::kable(head(dat2))
 ```
 ## Plot locus results
 
 ```{r}
+if(!require("pals")) install.packages("pals")
+
+#### We'll need this column to color SNPs by LD with the lead SNP ####
+dat2 <- echodata::assign_lead_snp(dat = dat2)
+
 plot_list <- echoplot::plot_locus(dat = dat2, 
                                   LD_matrix = LD_list$LD,
-                                  locus_dir = locus_dir)
+                                  locus_dir = locus_dir,
+                                  zoom = "4x"
+                                  ## These args aren't working atm
+                                  # nott_epigenome = TRUE,
+                                  # nott_regulatory_rects = TRUE,
+                                  # nott_show_placseq = TRUE
+                                  )
 
 ```
 
