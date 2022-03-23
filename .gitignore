@@ -1,9 +1,11 @@
-.conda
-^inst/tools$
+vignettes/BD_finemapping.Rmd
 
-./Roadmap/
-./ROADMAP/
-^results$
+.conda
+inst/tools
+
+Roadmap
+ROADMAP
+results
 #doc
 Meta
 doc

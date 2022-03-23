@@ -53,11 +53,6 @@ Use either \emph{tabix} or \emph{awk} to extract a locus subset
 }
 \seealso{
 Other query functions: 
-\code{\link{query_by_coordinates_merged}()},
-\code{\link{query_by_coordinates}()},
-\code{\link{query_by_gene}()},
-\code{\link{query_by_probe}()},
-\code{\link{query_fullSS}()},
 \code{\link{query_handler}()}
 }
 \concept{query functions}

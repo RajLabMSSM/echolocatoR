@@ -12,7 +12,7 @@
 #' @inheritParams finemap_locus
 #' @inheritParams echoconda::activate_env
 #' @inheritParams echodata::filter_snps
-#' @inheritParams echoLD::load_or_create
+#' @inheritParams echoLD::get_LD
 #' @inheritParams echoLD::filter_LD
 #' @inheritParams echoplot::plot_locus
 #' @inheritParams echofinemap::multifinemap
@@ -130,7 +130,8 @@ finemap_loci <- function(#### Main args ####
                          QTL_prefixes = deprecated(),
                          vcf_folder = deprecated(),
                          probe_path = deprecated(),
-                         file_sep=deprecated()){
+                         file_sep=deprecated()
+                         ){
   #### Conda env setup ####
   if(tolower(conda_env)=="echor"){
     conda_env <- echoconda::yaml_to_env(yaml_path = conda_env,
@@ -138,15 +139,15 @@ finemap_loci <- function(#### Main args ####
   }
   echoconda::activate_env(conda_env = conda_env,
                           verbose = verbose)
-  #### Check if CLI tools available ####
-  ## These CLI tools are no longer essential as I've replaced
-  ## them all with R-native alternatives.
-  check_tools(check_tabix=TRUE,
-              stop_for_tabix=FALSE,
-              check_bcftools=TRUE,
-              #stop_for_bcftools = LD_reference %in% c("1KGphase1","1KGphase3"),
-              stop_for_bcftools=FALSE,
-              conda_env=conda_env)
+  # #### Check if CLI tools available ####
+  # ## These CLI tools are no longer essential as I've replaced
+  # ## them all with R-native alternatives.
+  # echotabix::check_tools(check_tabix=TRUE,
+  #             stop_for_tabix=FALSE,
+  #             check_bcftools=TRUE,
+  #             #stop_for_bcftools = LD_reference %in% c("1KGphase1","1KGphase3"),
+  #             stop_for_bcftools=FALSE,
+  #             conda_env=conda_env)
   fullSS_genome_build <- check_genome(gbuild=fullSS_genome_build,
                                       munged=munged,
                                       fullSS_path=fullSS_path)

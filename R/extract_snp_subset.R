@@ -82,10 +82,11 @@ extract_snp_subset <- function(locus=NULL,
                   max_POS=max_POS,
                   bp_distance=bp_distance,
                   query_by=query_by,
+                  force_new_subset=force_new_subset,
                   conda_env = conda_env,
                   verbose=verbose)
     # Clean file
-    query <- standardize_subset(locus=locus,
+    query <- echodata::standardize_subset(locus=locus,
                                 top_SNPs=top_SNPs,
                                 fullSS_genome_build=fullSS_genome_build,
                                 subset_path=subset_path,

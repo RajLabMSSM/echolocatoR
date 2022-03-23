@@ -12,9 +12,5 @@ data.frame
 \description{
 Annoyingly, there is no native function to do simple find-and-replace in the `DT` library.
 }
-\seealso{
-Other general: 
-\code{\link{get_os}()}
-}
 \concept{general}
 \keyword{internal}

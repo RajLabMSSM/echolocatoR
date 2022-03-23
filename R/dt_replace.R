@@ -6,6 +6,8 @@
 #' @return data.frame
 #' @keywords internal
 dt_replace <- function(DT, target, replacement){
-  for(col in names(DT)) set(DT, i=which(DT[[col]]==target), j=col, value=replacement)
+  for(col in names(DT)) {
+    data.table::set(DT, i=which(DT[[col]]==target), j=col, value=replacement)
+  }
   return(DT)
 }

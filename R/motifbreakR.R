@@ -58,7 +58,10 @@ MOTIFBREAKR <- function(rsid_list,
   # library(echolocatoR); library(motifbreakR); library(BSgenome); save_rds=T; dataset_dir <- "./results/motifbreakR"; force_new=F;
   # pwmList=NULL; organism=NULL;  method = "default"; verbose=T; show.neutral = F; calculate_all_pval=T; threshold=1e-4;
 
-  library(BSgenome)
+  requireNamespace("BSgenome")
+  requireNamespace("SNPlocs.Hsapiens.dbSNP142.GRCh37")
+  requireNamespace("BSgenome.Hsapiens.UCSC.hg19")
+
   rds_path <- file.path(dataset_dir,'_genome_wide','motifbreakR','motifbreakR_results.rds');
   # rds_path <- file.path(dataset_dir,'_genome_wide','motifbreakR','motifbreakR_results.p_values.rds');
 
@@ -85,6 +88,7 @@ MOTIFBREAKR <- function(rsid_list,
                                            show.neutral = show.neutral,
                                            verbose = verbose);
     # Save tmp results
+    tmp_path <- tempfile()
     if(save_rds){
       dir.create(dirname(tmp_path),showWarnings = FALSE, recursive = TRUE);
       messager("+ MOTIFBREAKR:: Saving tmp results ==>", tmp_path);

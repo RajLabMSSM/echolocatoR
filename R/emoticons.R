@@ -1,8 +1,5 @@
-
-
-
 # Keep separate bc the emojis can mess up the scripts....
-messages <- function(name){
+emoticons <- function(name){
   message_list <- list(locus=     "🦇 🦇 🦇 🦇 🦇 🦇",
                        query=     "\n------------------ Step 1: Query 🔍 ---------------",
                        LD =       "\n---- Step 2: Extract Linkage Disequilibrium 🔺 ----",

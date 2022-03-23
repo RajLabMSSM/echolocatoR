@@ -19,6 +19,7 @@ query_handler(
   file_sep = "\\t",
   query_by = "coordinates",
   conda_env = "echoR",
+  force_new_subset = FALSE,
   verbose = TRUE
 )
 }
@@ -51,19 +52,6 @@ At minimum, \code{top_SNPs} should include the following columns:
 
 \item{bp_distance}{Distance around the lead SNP to include.}
 
-\item{locus_col}{Name of the locus column in the full summary stats file.
-(\emph{default: ="Locus"})}
-
-\item{chrom_col}{Name of the chromosome column in the full summary stats
-file.
-Can be "chr1" or "1" format.
-(\emph{default: ="CHR"})}
-
-\item{position_col}{Name of the genomic position column in the full summary
-stats file.
-Must be in units of basepairs.
-(\emph{default: ="POS"})}
-
 \item{query_by}{Choose which method you want to use to extract
  locus subsets from the full summary stats file.
 Methods include:
@@ -77,6 +65,14 @@ coordinates with \emph{awk}.}
 
 \item{conda_env}{Conda environment to use.}
 
+\item{force_new_subset}{By default, if a subset of the full
+ summary stats file for a given locus is already present,
+then \pkg{echolocatoR} will just use the pre-existing file.
+Set \code{force_new_subset=T} to override this and extract a new subset.
+Subsets are saved in the following path structure:
+\emph{Data/\<dataset_type\>/\<dataset_name\>/\<locus\>/Multi-finemap/
+\<locus\>_\<dataset_name\>_Multi-finemap.tsv.gz}}
+
 \item{verbose}{Print messages.}
 }
 \description{
@@ -84,12 +80,7 @@ Handles which query method to use
 }
 \seealso{
 Other query functions: 
-\code{\link{extract_snp_subset}()},
-\code{\link{query_by_coordinates_merged}()},
-\code{\link{query_by_coordinates}()},
-\code{\link{query_by_gene}()},
-\code{\link{query_by_probe}()},
-\code{\link{query_fullSS}()}
+\code{\link{extract_snp_subset}()}
 }
 \concept{query functions}
 \keyword{internal}

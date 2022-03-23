@@ -1,11 +1,9 @@
-
-
-
-
 REPLICATION.compare_LD_panels <- function(root="/sc/arion/projects/pd-omics/brian/Fine_Mapping",
                                            dataset="Data/GWAS/Nalls23andMe_2019",
                                            no_no_loci = c("HLA-DRB5","MAPT","ATG14","SP1","LMNB1","ATP6V0A1",
                                                           "RETREG3","UBTF","FAM171A2","MAP3K14","CRHR1","MAPT-AS1","KANSL1","NSF","WNT3")){
+  requireNamespace("ggplot2")
+  requireNamespace("patchwork")
   # merged_UKB <- data.table::fread(file.path(root,"Data/GWAS/Nalls23andMe_2019/_genome_wide/merged_UKB.csv.gz"))
   merged_UKB <- merge_finemapping_results(dataset = file.path(root,dataset),
                                           LD_reference = "UKB",
@@ -74,7 +72,6 @@ REPLICATION.compare_LD_panels <- function(root="/sc/arion/projects/pd-omics/bria
                                        title = "Paired plot: mean.PP")
   pp_list$paired_meanPP <- bp
 
-  library(patchwork)
   pp_wrap <- patchwork::wrap_plots(pp_list, ncol = 2) +
     patchwork::plot_annotation(tag_levels = "a", title = "UKB LD vs. 1KG LD")
   print(pp_wrap)
@@ -94,6 +91,9 @@ REPLICATION.compare_LD_panels <- function(root="/sc/arion/projects/pd-omics/bria
 REPLICATION.compare_singleton_results <- function(singleton_url="/pd-omics/data/Singleton_FINEMAP_PD/pd_meta5_sum_stats_fm_results.csv.gz",
                                                   results_dir="/sc/arion/projects/pd-omics/brian/Fine_Mapping/Data",
                                                   save_path=file.path(results_dir,"GWAS/Nalls23andMe_2019/_genome_wide/Singleton_comparison/Schilder_vs_Grenn.png")){
+
+  requireNamespace("ggplot2")
+  requireNamespace("patchwork")
   # Originally from: https://storage.googleapis.com/nihnialng-share-f23bef932184/pd_meta5_sum_stats_fm_results.csv.gz
   singleton <- data.table::fread(singleton_url, nThread=1)
   # Merging by SNP yields waaaaaay more hits than CHR/POS, even after liftover.
@@ -136,7 +136,7 @@ REPLICATION.compare_singleton_results <- function(singleton_url="/pd-omics/data/
                                           show_plot  = FALSE)
   pp_list$paired_FINEMAP.PP <- bp
 
-  library(patchwork)
+
   pp_wrap <- patchwork::wrap_plots(pp_list, ncol = 2) +
     patchwork::plot_annotation(tag_levels = "a",
                                title = "Fine-mapping: Schilder et al. vs. Grenn et al.")
@@ -164,7 +164,7 @@ REPLICATION.compare_PP_scatterplot <- function(merged_PD,
                                               ylabel=col2,
                                               show_count=TRUE,
                                               show_plot=TRUE){
-  library(ggplot2)
+  requireNamespace("ggplot2")
   #### Scatter plot ####
   label_snps <- subset(merged_PD, eval(parse(text=col1))>.75 &  eval(parse(text=col2))>.75) %>%
     dplyr::mutate(label=paste(Locus,SNP, sep = "\n"))
@@ -208,6 +208,7 @@ REPLICATION.compare_PP_pairedplot <- function(merged_PD,
                                                xlabel=NULL,
                                                ylabel=NULL,
                                                show_plot=TRUE){
+  requireNamespace("ggplot2")
   melt_PD <- data.table::melt.data.table(data = subset(merged_PD, eval(parse(text = filter_str))),
                                          id.vars = c("SNP","Locus","P"),
                                          measure.vars = c(col1,col2),
@@ -244,6 +245,7 @@ REPLICATION.compare_PP_pairedplot <- function(merged_PD,
 
 REPLICATION.compare_PP_heatmap <- function(merged_PD,
                                            PP_cols= grep("\\.PP\\.UKB$|\\.PP\\.1KG$", colnames(merged_PD), value = TRUE)){
+  requireNamespace("heatmaply")
   sources <- lapply(PP_cols, function(x) rev(strsplit(x,"\\.")[[1]])[1]) %>% unlist()
   corr_dat <- data.frame(merged_PD, row.names = merged_PD$SNP)[,PP_cols]
   corr_dat[is.na(corr_dat)] <- 0
@@ -253,8 +255,8 @@ REPLICATION.compare_PP_heatmap <- function(merged_PD,
   corr_mat <- cor(corr_dat,
                   use="na.or.complete",
                   method = "spearman")
-  library(heatmaply)
-  heat <- heatmaply(x = corr_mat,
+
+  heat <- heatmaply::heatmaply(x = corr_mat,
                     col = viridis::magma(10), #rev(RColorBrewer::brewer.pal(10,"magma")),
                     # plot_method="ggplot",
                     # return_ppxpy = TRUE,

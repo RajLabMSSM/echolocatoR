@@ -1,7 +1,3 @@
-
-
-
-
 check_tools <- function(check_tabix=FALSE,
                         stop_for_tabix=FALSE,
                         check_bcftools=FALSE,
