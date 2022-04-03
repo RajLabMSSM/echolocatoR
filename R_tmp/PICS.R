@@ -1,6 +1,6 @@
 
 # PICS
-top_sub <- top_SNPs[Gene=="LRRK2"][1]
+top_sub <- topSNPs[Gene=="LRRK2"][1]
 
 lead_snp = top_sub$SNP
 neg_log_pval =  -log10(top_sub$P)

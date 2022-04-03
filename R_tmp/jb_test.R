@@ -1,9 +1,9 @@
 library(echolocatoR)
 stopifnot(packageVersion("echolocatoR") == "0.1.2")
 
-data("Nalls_top_SNPs")
-top_SNPs <- import_topSNPs(
-  topSS = Nalls_top_SNPs,
+data("Nalls_topSNPs")
+topSNPs <- import_topSNPs(
+  topSS = Nalls_topSNPs,
   position_col = "BP",
   pval_col = "P, all studies",
   effect_col = "Beta, all studies",
@@ -14,7 +14,7 @@ top_SNPs <- import_topSNPs(
 fullSS_path <- example_fullSS()
 
 Nalls23andMe_2019.results <- finemap_loci(
-  top_SNPs = top_SNPs,
+  topSNPs = topSNPs,
   results_dir = file.path(getwd(), "results"),
   loci = "BST1",
   dataset_name = "Nalls23andMe_2019",

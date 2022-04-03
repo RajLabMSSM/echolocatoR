@@ -1,7 +1,7 @@
 #' Fine-map multiple loci
 #'
 #' \pkg{echolocatoR} will automatically fine-map each locus.
-#' Uses the \code{top_SNPs} data.frame to define locus coordinates.
+#' Uses the \code{topSNPs} data.frame to define locus coordinates.
 #'
 #' @family MAIN
 #' @param loci The list of loci you want to fine-map.
@@ -20,17 +20,17 @@
 #' @return A merged data.frame with all fine-mapping results from all loci.
 #'
 #' @export
-#' @importFrom echodata find_consensus_snps
+#' @importFrom echodata find_consensus_snps construct_colmap
 #' @importFrom stats setNames
 #' @importFrom data.table rbindlist data.table
 #'
 #' @examples
-#' top_SNPs <- echodata::topSNPs_Nalls2019
+#' topSNPs <- echodata::topSNPs_Nalls2019
 #' fullSS_path <- echodata::example_fullSS(dataset = "Nalls2019")
 #'
 #' Nalls23andMe_2019.results <- echolocatoR::finemap_loci(
 #'   fullSS_path = fullSS_path,
-#'   top_SNPs = top_SNPs,
+#'   topSNPs = topSNPs,
 #'   loci = c("BST1","MEX3C"),
 #'   dataset_name = "Nalls23andMe_2019",
 #'   fullSS_genome_build = "hg19",
@@ -43,7 +43,7 @@ finemap_loci <- function(#### Main args ####
                          results_dir=file.path(tempdir(),"results"),
                          dataset_name="dataset_name",
                          dataset_type="GWAS",
-                         top_SNPs="auto",
+                         topSNPs="auto",
                          #### Force new args ####
                          force_new_subset=FALSE,
                          force_new_LD=FALSE,
@@ -59,26 +59,7 @@ finemap_loci <- function(#### Main args ####
                          conditioned_snps = "auto",
                          #### Colname mapping args ####
                          munged = FALSE,
-                         chrom_col="CHR",
-                         chrom_type=NULL,
-                         position_col="POS",
-                         snp_col="SNP",
-                         pval_col="P",
-                         effect_col="Effect",
-                         stderr_col="StdErr",
-                         tstat_col="t-stat",
-                         locus_col="Locus",
-                         freq_col="Freq",
-                         MAF_col="MAF",
-                         A1_col = "A1",
-                         A2_col = "A2",
-                         gene_col="Gene",
-                         N_cases_col="N_cases",
-                         N_controls_col="N_controls",
-                         N_cases=NULL,
-                         N_controls=NULL,
-                         proportion_cases="calculate",
-                         sample_size=NULL,
+                         colmap = echodata::construct_colmap(munged = munged),
                          #### LD args ####
                          LD_reference="1KGphase1",
                          LD_genome_build="hg19",
@@ -117,6 +98,7 @@ finemap_loci <- function(#### Main args ####
                          nThread=1,
                          verbose=TRUE,
                          #### Deprecated args ####
+                         top_SNPs = deprecated(),
                          plot.Nott_epigenome = deprecated(),
                          plot.Nott_show_placseq = deprecated(),
                          plot.Nott_binwidth = deprecated(),
@@ -130,8 +112,32 @@ finemap_loci <- function(#### Main args ####
                          QTL_prefixes = deprecated(),
                          vcf_folder = deprecated(),
                          probe_path = deprecated(),
-                         file_sep=deprecated()
+                         file_sep=deprecated(),
+                         ## Deprecated colmap args
+                         chrom_col=deprecated(),
+                         chrom_type=deprecated(),
+                         position_col=deprecated(),
+                         snp_col=deprecated(),
+                         pval_col=deprecated(),
+                         effect_col=deprecated(),
+                         stderr_col=deprecated(),
+                         tstat_col=deprecated(),
+                         locus_col=deprecated(),
+                         freq_col=deprecated(),
+                         MAF_col=deprecated(),
+                         A1_col = deprecated(),
+                         A2_col = deprecated(),
+                         gene_col=deprecated(),
+                         N_cases_col=deprecated(),
+                         N_controls_col=deprecated(),
+                         N_cases=deprecated(),
+                         N_controls=deprecated(),
+                         proportion_cases=deprecated(),
+                         sample_size=deprecated()
                          ){
+  # echoverseTemplate:::source_all();
+  # echoverseTemplate:::args2vars(finemap_loci);
+
   #### Conda env setup ####
   if(tolower(conda_env)=="echor"){
     conda_env <- echoconda::yaml_to_env(yaml_path = conda_env,
@@ -139,22 +145,13 @@ finemap_loci <- function(#### Main args ####
   }
   echoconda::activate_env(conda_env = conda_env,
                           verbose = verbose)
-  # #### Check if CLI tools available ####
-  # ## These CLI tools are no longer essential as I've replaced
-  # ## them all with R-native alternatives.
-  # echotabix::check_tools(check_tabix=TRUE,
-  #             stop_for_tabix=FALSE,
-  #             check_bcftools=TRUE,
-  #             #stop_for_bcftools = LD_reference %in% c("1KGphase1","1KGphase3"),
-  #             stop_for_bcftools=FALSE,
-  #             conda_env=conda_env)
   fullSS_genome_build <- check_genome(gbuild=fullSS_genome_build,
-                                      munged=munged,
+                                      munged=colmap$munged,
                                       fullSS_path=fullSS_path)
   data.table::setDTthreads(threads = nThread);
-  conditioned_snps <- snps_to_condition(conditioned_snps, top_SNPs, loci);
+  conditioned_snps <- snps_to_condition(conditioned_snps, topSNPs, loci);
 
-  if(detect_genes(loci = loci, verbose  = FALSE)){
+  if(echodata::detect_genes(loci = loci)){
     messager("Reassigning gene-specific locus names",v=verbose)
     loci <- stats::setNames(paste(unname(loci),names(loci),sep="_"),
                             names(loci))
@@ -164,11 +161,10 @@ finemap_loci <- function(#### Main args ####
     start_gene <- Sys.time()
     finemap_dat <- NULL
     locus <- loci[i]
-    messager("\n)   )  ) ))))))}}}}}}}}",
+    messager("\n)  )) )))>",bat_icon(),
              locus," (",i ," / ",length(loci),")",
-             "{{{{{{{{{(((((( (  (   (");
+             bat_icon(),"<((( ((  (");
     try({
-      # lead_SNP <- arg_list_handler(conditioned_snps, i)
       gene_limits <- arg_list_handler(trim_gene_limits, i)
       conditioned_snp <- arg_list_handler(conditioned_snps, i)
       min_pos <- arg_list_handler(min_POS, i)
@@ -176,7 +172,7 @@ finemap_loci <- function(#### Main args ####
       LD_ref <- arg_list_handler(LD_reference, i)
 
       out_list <- finemap_locus(locus=locus,
-                                   top_SNPs=top_SNPs,
+                                   topSNPs=topSNPs,
                                    fullSS_path=fullSS_path,
                                    fullSS_genome_build=fullSS_genome_build,
                                    LD_genome_build=LD_genome_build,
@@ -190,27 +186,6 @@ finemap_loci <- function(#### Main args ####
                                    dataset_type=dataset_type,
                                    n_causal=n_causal,
                                    bp_distance=bp_distance,
-
-                                   chrom_col=chrom_col,
-                                   chrom_type=chrom_type,
-                                   position_col=position_col,
-                                   snp_col=snp_col,
-                                   pval_col=pval_col,
-                                   effect_col=effect_col,
-                                   stderr_col=stderr_col,
-                                   tstat_col=tstat_col,
-                                   locus_col=locus_col,
-                                   MAF_col=MAF_col,
-                                   freq_col=freq_col,
-                                   A1_col=A1_col,
-                                   A2_col=A2_col,
-                                   gene_col=gene_col,
-                                   N_cases_col=N_cases_col,
-                                   N_controls_col=N_controls_col,
-                                   N_cases=N_cases,
-                                   N_controls=N_controls,
-                                   proportion_cases=proportion_cases,
-                                   sample_size=sample_size,
 
                                    LD_reference=LD_ref,
                                    superpopulation=superpopulation,
@@ -244,7 +219,6 @@ finemap_loci <- function(#### Main args ####
                                    roadmap=roadmap,
                                    roadmap_query=roadmap_query,
 
-                                   munged=munged,
                                    conda_env=conda_env,
                                    nThread=nThread,
                                    verbose=verbose)
@@ -264,8 +238,9 @@ finemap_loci <- function(#### Main args ####
       cat('  \n')
     }) ## end try()
     end_gene <- Sys.time()
-    message("Fine-mapping complete in:")
-    print(round(end_gene-start_gene,1))
+    messager("Locus",locus,"complete in:",
+             round(end_gene-start_gene,1),
+             v=verbose)
     return(finemap_dat)
   }) # end for loop
   #### Prepare results to return ####

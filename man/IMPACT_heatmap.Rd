@@ -39,7 +39,6 @@ Other IMPACT:
 \code{\link{IMPACT.iterate_get_annotations}()},
 \code{\link{IMPACT.postprocess_annotations}()},
 \code{\link{IMPACT.snp_group_boxplot}()},
-\code{\link{IMPACT_annotation_key}},
 \code{\link{prepare_mat_meta}()}
 }
 \concept{IMPACT}

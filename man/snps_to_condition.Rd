@@ -4,7 +4,7 @@
 \alias{snps_to_condition}
 \title{Identify SNPs to condition on}
 \usage{
-snps_to_condition(conditioned_snps, top_SNPs, loci)
+snps_to_condition(conditioned_snps, topSNPs, loci)
 }
 \description{
 When running conditional analyses (e.g. \emph{GCTA-COJO}),

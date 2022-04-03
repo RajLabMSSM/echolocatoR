@@ -12,7 +12,7 @@ finemap_locus(
   dataset_name = "dataset_name",
   dataset_type = "GWAS",
   case_control = TRUE,
-  top_SNPs = "auto",
+  topSNPs = "auto",
   force_new_subset = FALSE,
   force_new_LD = FALSE,
   force_new_finemap = TRUE,
@@ -24,6 +24,7 @@ finemap_locus(
   fillNA = 0,
   conditioned_snps = NULL,
   munged = FALSE,
+  colmap = echodata::construct_colmap(munged = munged),
   LD_reference = "1KGphase1",
   LD_genome_build = "hg19",
   leadSNP_LD_block = FALSE,
@@ -115,12 +116,12 @@ This will also be used when creating the subdirectory where your results
 will be stored
 (e.g. \emph{Data/<dataset_type>/Kunkle_2019}).}
 
-\item{top_SNPs}{A data.frame with the genomic coordinates of the lead SNP
+\item{topSNPs}{A data.frame with the genomic coordinates of the lead SNP
 for each locus.
 The lead SNP will be used as the center of the window when extracting
 subset from the full GWAS/QTL summary statistics file.
 Only one SNP per \strong{Locus} should be included.
-At minimum, \code{top_SNPs} should include the following columns:
+At minimum, \code{topSNPs} should include the following columns:
 \describe{
 \item{\emph{Locus}}{A unique name for each locus. Often,
  loci are named after a relevant gene (e.g. LRRK2) or based on
@@ -148,7 +149,7 @@ Set \code{force_new_finemap=T} to override this and re-run fine-mapping.}
 \item{finemap_methods}{Which fine-mapping methods you want to use.}
 
 \item{n_causal}{The maximum number of potential causal SNPs per locus.
-This parameter is used somewhat differntly by different fine-mapping tools.
+This parameter is used somewhat differently by different fine-mapping tools.
 See tool-specific functions for details.}
 
 \item{PP_threshold}{The minimum fine-mapped posterior probability
@@ -167,10 +168,25 @@ that include a SNP
 with \emph{COJO}.}
 
 \item{munged}{Whether \code{fullSS_path} have already been
-standardised/filtered  full summary stats
+standardised/filtered full summary stats
 with \link[MungeSumstats]{format_sumstats}.
 If \code{munged=FALSE} you'll need to provide the necessary
- column name arguments.}
+ column names to the \code{colmap} argument.}
+
+\item{colmap}{Column name mappings in in \code{fullSS_path}. Must be a named
+list. Can use \link[echolocatoR]{construct_colmap} to assist with this. This
+function can be used in two different ways:
+\itemize{
+\item{\code{munged=FALSE} : }{When \code{munged=FALSE},
+ you will need to provide the necessary column names to the
+ \code{colmap} argument (\emph{default}).}
+ \item{\code{munged=TRUE} : }{ Alternatively, instead of filling out
+ each argument in
+\link[echolocatoR]{construct_colmap}, you can simply set \code{munged=TRUE}
+ if  \code{fullSS_path} has already been munged with
+ \link[MungeSumstats]{format_sumstats}.
+ }
+}}
 
 \item{LD_reference}{LD reference to use:
 \itemize{
@@ -289,10 +305,10 @@ metadata contains a string or any items from  a list of strings
 
 \item{verbose}{Print messages.}
 
-\item{loci}{Character list of loci in \strong{Locus} col of \code{top_SNPs}.}
+\item{loci}{Character list of loci in \strong{Locus} col of \code{topSNPs}.}
 }
 \description{
-Unlike \code{finemap_loci}, you don't need to provide a \code{top_SNPs}
+Unlike \code{finemap_loci}, you don't need to provide a \code{topSNPs}
 data.frame. Instead, just manually provide the coordinates of the locus
 you want to fine-map.
 }
@@ -324,12 +340,12 @@ The primary functions of \pkg{echolocatoR} that expedite fine-mapping
 }
 
 \examples{
-top_SNPs <- echodata::topSNPs_Nalls2019
+topSNPs <- echodata::topSNPs_Nalls2019
 fullSS_path <- echodata::example_fullSS(dataset = "Nalls2019")
 
 res <- echolocatoR::finemap_locus(
   fullSS_path = fullSS_path,
-  top_SNPs = top_SNPs,
+  topSNPs = topSNPs,
   locus = "BST1",
   dataset_name = "Nalls23andMe_2019",
   fullSS_genome_build = "hg19",

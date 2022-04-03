@@ -4,9 +4,9 @@
 #' this functions automatically identifies SNP to condition on.
 #'
 #' @family SNP filters
-snps_to_condition <- function(conditioned_snps, top_SNPs, loci){
+snps_to_condition <- function(conditioned_snps, topSNPs, loci){
   if(conditioned_snps=="auto"){
-    lead_SNPs_DT <- subset(top_SNPs, Locus %in% loci)
+    lead_SNPs_DT <- subset(topSNPs, Locus %in% loci)
     # Reorder
     lead_SNPs_DT[order(factor(lead_SNPs_DT$Locus,levels= loci)),]
     return(lead_SNPs_DT$SNP)

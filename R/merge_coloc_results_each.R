@@ -60,8 +60,8 @@ merge_coloc_results_each <- function(coloc_rda_files,
       merged_coloc$Study <- basename(dirname(f))
       merged_coloc$Dataset <- gsub("_COLOC.tsv|_COLOC.RData","",basename(f))
       merged_coloc$Path <- f
-      merged_coloc <- standardize_gene(dat = merged_coloc,
-                                       gene_col = "gene")
+      merged_coloc <- echodata::standardize_gene(dat = merged_coloc,
+                                                 Gene = "gene")
       merged_coloc <- subset(merged_coloc, !is.na(Gene))
       # Give each Comparison-Locus-Gene combination a unique ID
       merged_coloc <- mutate(merged_coloc, id=paste(Dataset,Locus,Gene,sep="."))

@@ -1,6 +1,6 @@
 #' Run \pkg{echolocatoR} pipeline on a single locus
 #'
-#' Unlike \code{finemap_loci}, you don't need to provide a \code{top_SNPs}
+#' Unlike \code{finemap_loci}, you don't need to provide a \code{topSNPs}
 #' data.frame. Instead, just manually provide the coordinates of the locus
 #' you want to fine-map.
 #'
@@ -20,7 +20,7 @@
 #'
 #' @section input file parameters:
 #'
-#' @param loci Character list of loci in \strong{Locus} col of \code{top_SNPs}.
+#' @param loci Character list of loci in \strong{Locus} col of \code{topSNPs}.
 #' @param fullSS_path Path to the full summary statistics file (GWAS or QTL)
 #' that you want to fine-map.
 #' It is usually best to provide the absolute path rather
@@ -50,12 +50,12 @@
 #' This will also be used when creating the subdirectory where your results
 #' will be stored
 #' (e.g. \emph{Data/<dataset_type>/Kunkle_2019}).
-#' @param top_SNPs A data.frame with the genomic coordinates of the lead SNP
+#' @param topSNPs A data.frame with the genomic coordinates of the lead SNP
 #' for each locus.
 #' The lead SNP will be used as the center of the window when extracting
 #' subset from the full GWAS/QTL summary statistics file.
 #' Only one SNP per \strong{Locus} should be included.
-#' At minimum, \code{top_SNPs} should include the following columns:
+#' At minimum, \code{topSNPs} should include the following columns:
 #' \describe{
 #' \item{\emph{Locus}}{A unique name for each locus. Often,
 #'  loci are named after a relevant gene (e.g. LRRK2) or based on
@@ -83,13 +83,28 @@
 #'
 #' @param finemap_methods Which fine-mapping methods you want to use.
 #' @param n_causal The maximum number of potential causal SNPs per locus.
-#' This parameter is used somewhat differntly by different fine-mapping tools.
+#' This parameter is used somewhat differently by different fine-mapping tools.
 #' See tool-specific functions for details.
+#'
 #' @param munged Whether \code{fullSS_path} have already been
-#' standardised/filtered  full summary stats
+#' standardised/filtered full summary stats
 #' with \link[MungeSumstats]{format_sumstats}.
 #' If \code{munged=FALSE} you'll need to provide the necessary
-#'  column name arguments.
+#'  column names to the \code{colmap} argument.
+#' @param colmap Column name mappings in in \code{fullSS_path}. Must be a named
+#' list. Can use \link[echolocatoR]{construct_colmap} to assist with this. This
+#' function can be used in two different ways:
+#' \itemize{
+#' \item{\code{munged=FALSE} : }{When \code{munged=FALSE},
+#'  you will need to provide the necessary column names to the
+#'  \code{colmap} argument (\emph{default}).}
+#'  \item{\code{munged=TRUE} : }{ Alternatively, instead of filling out
+#'  each argument in
+#' \link[echolocatoR]{construct_colmap}, you can simply set \code{munged=TRUE}
+#'  if  \code{fullSS_path} has already been munged with
+#'  \link[MungeSumstats]{format_sumstats}.
+#'  }
+#' }
 #' @param conditioned_snps Which SNPs to conditions on when fine-mapping
 #' with \emph{COJO}.
 #' @param PAINTOR_QTL_datasets A list of QTL datasets to be used when
@@ -122,17 +137,19 @@
 #' @inheritParams echoLD::filter_LD
 #' @inheritParams echoplot::plot_locus
 #' @inheritParams echofinemap::multifinemap
+#'
+#' @importFrom echodata construct_colmap
 #' @importFrom echoplot plot_locus
 #' @importFrom echoLD get_LD filter_LD subset_common_snps
 #' @importFrom echofinemap multifinemap
 #' @export
 #' @examples
-#' top_SNPs <- echodata::topSNPs_Nalls2019
+#' topSNPs <- echodata::topSNPs_Nalls2019
 #' fullSS_path <- echodata::example_fullSS(dataset = "Nalls2019")
 #'
 #' res <- echolocatoR::finemap_locus(
 #'   fullSS_path = fullSS_path,
-#'   top_SNPs = top_SNPs,
+#'   topSNPs = topSNPs,
 #'   locus = "BST1",
 #'   dataset_name = "Nalls23andMe_2019",
 #'   fullSS_genome_build = "hg19",
@@ -146,7 +163,7 @@ finemap_locus <- function(#### Main args ####
                           dataset_name="dataset_name",
                           dataset_type="GWAS",
                           case_control=TRUE,
-                          top_SNPs="auto",
+                          topSNPs="auto",
                           #### Force new args ####
                           force_new_subset=FALSE,
                           force_new_LD=FALSE,
@@ -162,6 +179,7 @@ finemap_locus <- function(#### Main args ####
                           conditioned_snps=NULL,
                           #### Colname mapping args ####
                           munged = FALSE,
+                          colmap = echodata::construct_colmap(munged = munged),
                           #### LD args ####
                           LD_reference="1KGphase1",
                           LD_genome_build="hg19",
@@ -199,6 +217,7 @@ finemap_locus <- function(#### Main args ####
                           nThread=1,
                           verbose=TRUE,
                           #### Deprecated args ####
+                          top_SNPs = deprecated(),
                           plot.Nott_epigenome = deprecated(),
                           plot.Nott_show_placseq = deprecated(),
                           plot.Nott_binwidth = deprecated(),
@@ -235,63 +254,31 @@ finemap_locus <- function(#### Main args ####
                           proportion_cases=deprecated(),
                           sample_size=deprecated()
                           ){
-  #### Map columns from MungeSumstats ####
-  if(munged){
-    messager(
-      "+ Assuming sumstats have already been processed with MungeSumstats.",
-      v=verbose)
-  }
+  # echoverseTemplate:::source_all();
+  # echoverseTemplate:::args2vars(finemap_locus);
+
   #### Create paths ####
-  subset_path <- get_subset_path(results_dir = results_dir,
+  subset_path <- construct_subset_path(results_dir = results_dir,
                                  dataset_type = dataset_type,
                                  dataset_name = dataset_name,
                                  locus = locus)
   locus_dir <- get_locus_dir(subset_path = subset_path)
-
   ####  Query ####
-  dat <- extract_snp_subset(locus = locus,
-                                  results_dir = results_dir,
-                                  locus_dir = locus_dir,
-                                  top_SNPs = top_SNPs,
-                                  fullSS_path = fullSS_path,
-                                  fullSS_genome_build = fullSS_genome_build,
-                                  subset_path  =  subset_path,
-                                  LD_reference = LD_reference,
-                                  force_new_subset = force_new_subset,
-
-                                  chrom_col = chrom_col,
-                                  chrom_type = chrom_type,
-                                  position_col = position_col,
-                                  snp_col = snp_col,
-                                  pval_col = pval_col,
-                                  effect_col = effect_col,
-                                  stderr_col = stderr_col,
-                                  locus_col = locus_col,
-                                  tstat_col = tstat_col,
-                                  MAF_col = MAF_col,
-                                  freq_col = freq_col,
-                                  A1_col = A1_col,
-                                  A2_col = A2_col,
-                                  gene_col = gene_col,
-
-                                  N_cases_col = N_cases_col,
-                                  N_controls_col = N_controls_col,
-                                  N_cases = N_cases,
-                                  N_controls = N_controls,
-                                  proportion_cases = proportion_cases,
-                                  sample_size = sample_size,
-
-                                  bp_distance = bp_distance,
-                                  superpopulation = superpopulation,
-                                  min_POS = min_POS,
-                                  max_POS = max_POS,
-
-                                  query_by = query_by,
-                                  qtl_prefixes = qtl_prefixes,
-
-                                  remove_tmps = remove_tmps,
-                                  conda_env = conda_env,
-                                  verbose = verbose)
+  dat <- extract_snp_subset(subset_path = subset_path,
+                            topSNPs = topSNPs,
+                            fullSS_path = fullSS_path,
+                            LD_reference = LD_reference,
+                            force_new_subset = force_new_subset,
+                            colmap = colmap,
+                            bp_distance = bp_distance,
+                            superpopulation = superpopulation,
+                            min_POS = min_POS,
+                            max_POS = max_POS,
+                            query_by = query_by,
+                            remove_tmps = remove_tmps,
+                            nThread = nThread,
+                            conda_env = conda_env,
+                            verbose = verbose)
   #### Extract LD ####
   LD_list <- echoLD::get_LD(query_dat=dat,
                             locus_dir=locus_dir,
@@ -315,7 +302,7 @@ finemap_locus <- function(#### Main args ####
                                verbose=verbose)
   LD_matrix <- LD_list$LD
   dat <- LD_list$DT
-
+  #### Filter SNPs ####
   dat <- echodata::filter_snps(
     dat=dat,
     min_MAF=min_MAF,
@@ -333,7 +320,6 @@ finemap_locus <- function(#### Main args ####
                                         verbose = verbose)
   LD_matrix <- LD_list$LD
   dat <- LD_list$DT
-
   #### Fine-map ####
   finemap_dat <- echofinemap::multifinemap(locus_dir = locus_dir,
                                  fullSS_path = fullSS_path,
@@ -354,6 +340,7 @@ finemap_locus <- function(#### Main args ####
                                  conditioned_snps = conditioned_snps,
                                  PAINTOR_QTL_datasets = PAINTOR_QTL_datasets,
                                  # Optional args
+                                 nThread = nThread,
                                  conda_env = conda_env,
                                  verbose = verbose)
   #### LD plot ####

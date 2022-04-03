@@ -124,15 +124,15 @@ TABIX.query <- function(fullSS.gz,
 #' @return data.table of locus subset summary statistics
 #' @examples
 #' \dontrun{
-#' locus_dir <- echodata::locus_dir; data("Nalls_top_SNPs")
+#' locus_dir <- echodata::locus_dir; data("Nalls_topSNPs")
 #' fullSS_path <- "./results/GWAS/Nalls23andMe_2019/_genome_wide/nallsEtAl2019_allSamples_allVariants.mod.txt.gz"
-#' top_SNPs <- import_topSNPs(topSS = Nalls_top_SNPs, chrom_col = "CHR", position_col = "BP", snp_col="SNP", pval_col="P, all studies", effect_col="Beta, all studies", gene_col="Nearest Gene", group_by_locus = T,locus_col = "Nearest Gene")
-#' top_SNPs_BST1 <- subset(top_SNPs, Locus=='BST1')
+#' topSNPs <- import_topSNPs(topSS = Nalls_topSNPs, chrom_col = "CHR", position_col = "BP", snp_col="SNP", pval_col="P, all studies", effect_col="Beta, all studies", gene_col="Nearest Gene", group_by_locus = T,locus_col = "Nearest Gene")
+#' topSNPs_BST1 <- subset(topSNPs, Locus=='BST1')
 #' bp_distance <- 1e+06
-#' min_POS <- top_SNPs_BST1$POS - bp_distance
-#' max_POS <- top_SNPs_BST1$POS + bp_distance
+#' min_POS <- topSNPs_BST1$POS - bp_distance
+#' max_POS <- topSNPs_BST1$POS + bp_distance
 #' subset_file <- file.path(results_path,"BST1_Nalls23andMe_2019_subset.tsv.gz")
-#' dat <- TABIX(fullSS_path=fullSS_path, subset_path="auto", min_POS=min_POS, max_POS=max_POS, chrom=top_SNPs_BST1$CHR)
+#' dat <- TABIX(fullSS_path=fullSS_path, subset_path="auto", min_POS=min_POS, max_POS=max_POS, chrom=topSNPs_BST1$CHR)
 #' }
 TABIX <- function(fullSS_path,
                   study_dir=NULL,

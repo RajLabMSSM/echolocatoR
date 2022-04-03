@@ -5,50 +5,106 @@
 \title{Extract a subset of the summary stats}
 \usage{
 extract_snp_subset(
-  locus = NULL,
-  locus_dir,
-  results_dir = NULL,
-  fullSS_path,
-  fullSS_genome_build = "hg19",
   subset_path,
+  colmap = echodata::construct_colmap(),
+  fullSS_path,
+  topSNPs,
   LD_reference,
   force_new_subset = FALSE,
-  top_SNPs = "auto",
   bp_distance = 5e+05,
-  chrom_col = "CHR",
-  chrom_type = NULL,
-  position_col = "POS",
-  snp_col = "SNP",
-  locus_col = "Locus",
-  pval_col = "P",
-  effect_col = "Effect",
-  stderr_col = "StdErr",
-  MAF_col = "MAF",
-  freq_col = "Freq",
-  tstat_col = "t-stat",
-  A1_col = "A1",
-  A2_col = "A2",
-  gene_col = "gene",
-  N_cases_col = "N_cases",
-  N_controls_col = "N_controls",
-  N_cases = NULL,
-  N_controls = NULL,
-  proportion_cases = "calculate",
-  sample_size = NULL,
   superpopulation = "",
   min_POS = NA,
   max_POS = NA,
-  genes_detected = FALSE,
-  file_sep = "\\t",
-  query_by = "coordinates",
-  qtl_prefixes = NULL,
+  query_by = "tabix",
   remove_tmps = TRUE,
+  nThread = 1,
   conda_env = "echoR",
   verbose = TRUE
 )
 }
+\arguments{
+\item{colmap}{Column name mappings in in \code{fullSS_path}. Must be a named
+list. Can use \link[echolocatoR]{construct_colmap} to assist with this. This
+function can be used in two different ways:
+\itemize{
+\item{\code{munged=FALSE} : }{When \code{munged=FALSE},
+ you will need to provide the necessary column names to the
+ \code{colmap} argument (\emph{default}).}
+ \item{\code{munged=TRUE} : }{ Alternatively, instead of filling out
+ each argument in
+\link[echolocatoR]{construct_colmap}, you can simply set \code{munged=TRUE}
+ if  \code{fullSS_path} has already been munged with
+ \link[MungeSumstats]{format_sumstats}.
+ }
+}}
+
+\item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL)
+that you want to fine-map.
+It is usually best to provide the absolute path rather
+than the relative path.}
+
+\item{topSNPs}{A data.frame with the genomic coordinates of the lead SNP
+for each locus.
+The lead SNP will be used as the center of the window when extracting
+subset from the full GWAS/QTL summary statistics file.
+Only one SNP per \strong{Locus} should be included.
+At minimum, \code{topSNPs} should include the following columns:
+\describe{
+\item{\emph{Locus}}{A unique name for each locus. Often,
+ loci are named after a relevant gene (e.g. LRRK2) or based on
+  the name/coordinates of the lead SNP (e.g. locus_chr12_40734202) }
+\item{\emph{CHR}}{The chromosome that the SNP is on.
+ Can be "chr12" or "12" format.}
+\item{\emph{POS}}{The genomic position of the SNP (in basepairs)}
+}}
+
+\item{LD_reference}{LD reference to use:
+\itemize{
+\item{"1KGphase1" : }{1000 Genomes Project Phase 1}
+\item{"1KGphase3" : }{1000 Genomes Project Phase 3}
+\item{"UKB" : }{Pre-computed LD from a British
+European-decent subset of UK Biobank.}
+}}
+
+\item{force_new_subset}{By default, if a subset of the full
+ summary stats file for a given locus is already present,
+then \pkg{echolocatoR} will just use the pre-existing file.
+Set \code{force_new_subset=T} to override this and extract a new subset.
+Subsets are saved in the following path structure:
+\emph{Data/\<dataset_type\>/\<dataset_name\>/\<locus\>/Multi-finemap/
+\<locus\>_\<dataset_name\>_Multi-finemap.tsv.gz}}
+
+\item{bp_distance}{Distance around the lead SNP to include.}
+
+\item{superpopulation}{Superpopulation to subset LD panel by
+(used only if \code{LD_reference} is "1KGphase1" or "1KGphase3".)}
+
+\item{min_POS}{Minimum genomic position to include.}
+
+\item{max_POS}{Maximum genomic position to include.}
+
+\item{query_by}{Choose which method you want to use to extract
+ locus subsets from the full summary stats file.
+Methods include:
+\describe{
+\item{"tabix"}{Convert the full summary stats file in an indexed tabix file.
+ Makes querying lightning fast after the initial conversion is done.
+  (\emph{default})}
+\item{"coordinates"}{Extract locus subsets using min/max genomic
+coordinates with \emph{awk}.}
+}}
+
+\item{remove_tmps}{Whether to remove any temporary files
+(e.g. FINEMAP output files) after the pipeline is done running.}
+
+\item{nThread}{Number of threads to parallelize over.}
+
+\item{conda_env}{Conda environment to use.}
+
+\item{verbose}{Print messages.}
+}
 \description{
-Use either \emph{tabix} or \emph{awk} to extract a locus subset
+Use \emph{tabix} to extract a locus subset
  from the full summary statistics file.
 }
 \seealso{

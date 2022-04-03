@@ -183,7 +183,7 @@ merge_QTL_data <- function(snp_list,
     for(i in 1:length(unique(SS_geno_exp$Condition))){
       results_path <- dirname(eQTL_SS_paths[i])
       QTL.condition <- basename(dirname(results_path))
-      subset_path <- get_subset_path(dataset_type = "QTL",
+      subset_path <- construct_subset_path(dataset_type = "QTL",
                                      dataset_name = QTL.condition,
                                      locus = locus)
       c_sub <- subset(SS_geno_exp, Condition==QTL.condition)

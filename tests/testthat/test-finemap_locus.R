@@ -1,14 +1,14 @@
 test_that("finemap_locus works", {
 
-  top_SNPs <- echodata::topSNPs_Nalls2019
+  topSNPs <- echodata::topSNPs_Nalls2019
   fullSS_path <- echodata::example_fullSS(dataset = "Nalls2019")
 
   res <- echolocatoR::finemap_locus(
     fullSS_path = fullSS_path,
-    top_SNPs = top_SNPs,
-    results_dir = "/Desktop/res",
+    topSNPs = topSNPs,
+    # results_dir = "/Desktop/res",
     locus = "BST1",
-    dataset_name = "Nalls23andMe_2019",
+    dataset_name = "Nalls2019",
     fullSS_genome_build = "hg19",
     zoom = c("1x","4x"),
     bp_distance = 25000,
