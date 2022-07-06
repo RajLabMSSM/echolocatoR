@@ -1123,9 +1123,9 @@ get_transcripts <- function(gr.snp,
     dplyr::group_by(symbol) %>%
     # This operation does not involve huge datasets
     # group & arrange & filter should be fine in terms of speed
-    arrange(desc(width)) %>% 
+    dplyr::arrange(desc(width)) %>% 
     dplyr::filter(row_number()==1) %>%
-    ungroup() %>%
+    dplyr::ungroup() %>%
     data.table::as.data.table()
 
   #### remove_pseudogenes ####
