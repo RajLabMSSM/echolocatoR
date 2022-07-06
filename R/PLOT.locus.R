@@ -1124,7 +1124,7 @@ get_transcripts <- function(gr.snp,
     # This operation does not involve huge datasets
     # group & arrange & filter should be fine in terms of speed
     arrange(desc(width)) %>% 
-    dplyr::filter(row_number()==1)
+    dplyr::filter(row_number()==1) %>%
     ungroup() %>%
     data.table::as.data.table()
 
