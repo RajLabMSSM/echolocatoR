@@ -301,7 +301,7 @@ psychENCODE.ENS_to_HGNC <- function(QTL, reference_genome="grch37"){
 #
 #   # QTL_type <- names(ASSAY_files)[1]
 #   QTL.results <- lapply(names(ASSAY_files)[1], function(QTL_type){
-#     printer("Summarizing fine-mapping vs.",QTL_type,"results")
+#     messager("Summarizing fine-mapping vs.",QTL_type,"results")
 #     # Import QTL data
 #     eQTL <- data.table::fread(ASSAY_files[QTL_type])
 #     merge.HIT.all <- data.table:::merge.data.table(eQTL,
@@ -309,7 +309,7 @@ psychENCODE.ENS_to_HGNC <- function(QTL, reference_genome="grch37"){
 #                                                by = "SNP_id",
 #                                                all.y = T)
 #     all.fractions <- lapply(unique(merged.dat$Gene), function(gene){
-#       printer("+ Gene",gene)
+#       messager("+ Gene",gene)
 #       merge.HIT <- subset(merge.HIT.all, Gene==gene)
 #
 #

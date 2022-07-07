@@ -4,6 +4,8 @@
 #'  from the full summary statistics file.
 #'
 #' @inheritParams finemap_locus
+#' @inheritParams echodata::standardize
+#'
 #' @family query functions
 #' @keywords internal
 #' @importFrom echodata check_if_empty standardize
@@ -15,13 +17,11 @@ extract_snp_subset <- function(subset_path,
                                force_new_subset=FALSE,
                                bp_distance=500000,
                                superpopulation="",
-                               min_POS=NA,
-                               max_POS=NA,
+                               compute_n="ldsc",
 
                                query_by="tabix",
-                               remove_tmps=TRUE,
                                nThread=1,
-                               conda_env="echoR",
+                               conda_env="echoR_mini",
                                verbose=TRUE){
 
   # echoverseTemplate:::source_all();
@@ -55,8 +55,6 @@ extract_snp_subset <- function(subset_path,
                            subset_path=subset_path,
                            topSNPs=topSNPs,
                            colmap=colmap,
-                           min_POS=min_POS,
-                           max_POS=max_POS,
                            bp_distance=bp_distance,
                            query_by=query_by,
                            force_new_subset=force_new_subset,
@@ -68,6 +66,7 @@ extract_snp_subset <- function(subset_path,
                                    subset_path=subset_path,
                                    colmap=colmap,
                                    locus=locus,
+                                   compute_n=compute_n,
                                    nThread=nThread,
                                    verbose=verbose)
   }

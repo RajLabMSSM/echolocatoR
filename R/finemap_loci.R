@@ -16,6 +16,8 @@
 #' @inheritParams echoLD::filter_LD
 #' @inheritParams echoplot::plot_locus
 #' @inheritParams echofinemap::multifinemap
+#' @inheritParams echodata::standardize
+#' @inheritParams echodata::find_consensus_snps
 #'
 #' @return A merged data.frame with all fine-mapping results from all loci.
 #'
@@ -28,16 +30,17 @@
 #' topSNPs <- echodata::topSNPs_Nalls2019
 #' fullSS_path <- echodata::example_fullSS(dataset = "Nalls2019")
 #'
-#' Nalls23andMe_2019.results <- echolocatoR::finemap_loci(
+#' res <- echolocatoR::finemap_loci(
 #'   fullSS_path = fullSS_path,
 #'   topSNPs = topSNPs,
 #'   loci = c("BST1","MEX3C"),
+#'   LD_reference = "1KGphase1",
 #'   dataset_name = "Nalls23andMe_2019",
 #'   fullSS_genome_build = "hg19",
 #'   bp_distance = 250000,
 #'   munged = TRUE)
 finemap_loci <- function(#### Main args ####
-                         loci,
+                         loci=NULL,
                          fullSS_path,
                          fullSS_genome_build=NULL,
                          results_dir=file.path(tempdir(),"results"),
@@ -53,15 +56,16 @@ finemap_loci <- function(#### Main args ####
                                            "SUSIE","POLYFUN_SUSIE"),
                          finemap_args=NULL,
                          n_causal=5,
-                         PP_threshold=.95,
-                         consensus_threshold=2,
+                         credset_thresh=.95,
+                         consensus_thresh=2,
                          fillNA=0,
                          conditioned_snps = "auto",
                          #### Colname mapping args ####
                          munged = FALSE,
                          colmap = echodata::construct_colmap(munged = munged),
+                         compute_n = "ldsc",
                          #### LD args ####
-                         LD_reference="1KGphase1",
+                         LD_reference="1KGphase3",
                          LD_genome_build="hg19",
                          leadSNP_LD_block=FALSE,
                          superpopulation="EUR",
@@ -93,12 +97,14 @@ finemap_loci <- function(#### Main args ####
                          roadmap_query=NULL,
                          #### General args ####
                          remove_tmps=TRUE,
-                         conda_env="echoR",
+                         conda_env="echoR_mini",
                          return_all=TRUE,
                          nThread=1,
                          verbose=TRUE,
                          #### Deprecated args ####
                          top_SNPs = deprecated(),
+                         PP_threshold = deprecated(),
+                         consensus_threshold = deprecated(),
                          plot.Nott_epigenome = deprecated(),
                          plot.Nott_show_placseq = deprecated(),
                          plot.Nott_binwidth = deprecated(),
@@ -138,32 +144,37 @@ finemap_loci <- function(#### Main args ####
   # echoverseTemplate:::source_all();
   # echoverseTemplate:::args2vars(finemap_loci);
 
-  #### Conda env setup ####
-  if(tolower(conda_env)=="echor"){
-    conda_env <- echoconda::yaml_to_env(yaml_path = conda_env,
-                                        verbose = FALSE)
+  #### Check if PolyFun is installed early on (if needed) ####
+  if(any(grepl("polyfun",finemap_methods, ignore.case = TRUE))){
+    echofinemap:::POLYFUN_install()
   }
-  echoconda::activate_env(conda_env = conda_env,
-                          verbose = verbose)
+  #### Parallise data.table functions ####
+  data.table::setDTthreads(threads = nThread);
+  #### Get loci (if not suppplied) ####
+  if(is.null(loci)) loci <- topSNPs$Locus
+  loci <- unique(loci)
+  #### Validate fullSS genome build ####
   fullSS_genome_build <- check_genome(gbuild=fullSS_genome_build,
                                       munged=colmap$munged,
                                       fullSS_path=fullSS_path)
-  data.table::setDTthreads(threads = nThread);
-  conditioned_snps <- snps_to_condition(conditioned_snps, topSNPs, loci);
-
+  #### Select SNPs to condition on (for COJO) ####
+  conditioned_snps <- snps_to_condition(conditioned_snps=conditioned_snps,
+                                        topSNPs=topSNPs,
+                                        loci=loci)
+  #### Determine whether loci also contain gene names (for QTLs) ####
   if(echodata::detect_genes(loci = loci)){
     messager("Reassigning gene-specific locus names",v=verbose)
     loci <- stats::setNames(paste(unname(loci),names(loci),sep="_"),
                             names(loci))
   }
-  #### Iterate over loci ####
-  FINEMAP_DAT <- lapply(seq_len(length(unique(loci))), function(i){
+  #### Iterate fine-mapping over loci ####
+  FINEMAP_DAT <- lapply(seq_len(length(loci)), function(i){
     start_gene <- Sys.time()
     finemap_dat <- NULL
     locus <- loci[i]
-    messager("\n)  )) )))>",bat_icon(),
-             locus," (",i ," / ",length(loci),")",
-             bat_icon(),"<((( ((  (");
+    messager("\n)))>",bat_icon(), locus,
+             paste0("[",i,"/",length(loci),"]"),
+             bat_icon(),"<(((");
     try({
       gene_limits <- arg_list_handler(trim_gene_limits, i)
       conditioned_snp <- arg_list_handler(conditioned_snps, i)
@@ -172,56 +183,61 @@ finemap_loci <- function(#### Main args ####
       LD_ref <- arg_list_handler(LD_reference, i)
 
       out_list <- finemap_locus(locus=locus,
-                                   topSNPs=topSNPs,
-                                   fullSS_path=fullSS_path,
-                                   fullSS_genome_build=fullSS_genome_build,
-                                   LD_genome_build=LD_genome_build,
-                                   results_dir=results_dir,
-                                   finemap_methods=finemap_methods,
-                                   finemap_args=finemap_args,
-                                   force_new_subset=force_new_subset,
-                                   force_new_LD=force_new_LD,
-                                   force_new_finemap=force_new_finemap,
-                                   dataset_name=dataset_name,
-                                   dataset_type=dataset_type,
-                                   n_causal=n_causal,
-                                   bp_distance=bp_distance,
+                                topSNPs=topSNPs,
+                                fullSS_path=fullSS_path,
+                                fullSS_genome_build=fullSS_genome_build,
+                                munged=munged,
+                                colmap=colmap,
+                                compute_n=compute_n,
 
-                                   LD_reference=LD_ref,
-                                   superpopulation=superpopulation,
-                                   download_method=download_method,
-                                   min_POS=min_pos,
-                                   max_POS=max_pos,
-                                   min_MAF=min_MAF,
+                                LD_genome_build=LD_genome_build,
+                                results_dir=results_dir,
+                                finemap_methods=finemap_methods,
+                                finemap_args=finemap_args,
+                                force_new_subset=force_new_subset,
+                                force_new_LD=force_new_LD,
+                                force_new_finemap=force_new_finemap,
+                                dataset_name=dataset_name,
+                                dataset_type=dataset_type,
+                                n_causal=n_causal,
+                                bp_distance=bp_distance,
 
-                                   trim_gene_limits=gene_limits,
-                                   max_snps=max_snps,
-                                   min_r2=min_r2,
-                                   leadSNP_LD_block=leadSNP_LD_block,
-                                   query_by=query_by,
-                                   remove_variants=remove_variants,
-                                   remove_correlates=remove_correlates,
-                                   conditioned_snps=conditioned_snps,
-                                   remove_tmps=remove_tmps,
-                                   plot.types=plot.types,
-                                   PAINTOR_QTL_datasets=PAINTOR_QTL_datasets,
-                                   PP_threshold=PP_threshold,
-                                   consensus_threshold=consensus_threshold,
-                                   case_control=case_control,
-                                   qtl_prefixes=qtl_prefixes,
+                                 LD_reference=LD_ref,
+                                 superpopulation=superpopulation,
+                                 download_method=download_method,
+                                 min_POS=min_pos,
+                                 max_POS=max_pos,
+                                 min_MAF=min_MAF,
 
-                                   zoom=zoom,
-                                   nott_epigenome=nott_epigenome,
-                                   nott_show_placseq=nott_show_placseq,
-                                   nott_binwidth=nott_binwidth,
-                                   nott_bigwig_dir=nott_bigwig_dir,
-                                   xgr_libnames=xgr_libnames,
-                                   roadmap=roadmap,
-                                   roadmap_query=roadmap_query,
+                                 trim_gene_limits=gene_limits,
+                                 max_snps=max_snps,
+                                 min_r2=min_r2,
+                                 leadSNP_LD_block=leadSNP_LD_block,
+                                 query_by=query_by,
+                                 remove_variants=remove_variants,
+                                 remove_correlates=remove_correlates,
+                                 conditioned_snps=conditioned_snps,
+                                 remove_tmps=remove_tmps,
+                                 plot.types=plot.types,
+                                 PAINTOR_QTL_datasets=PAINTOR_QTL_datasets,
+                                 credset_thresh=credset_thresh,
+                                 consensus_thresh=consensus_thresh,
+                                 case_control=case_control,
+                                 qtl_prefixes=qtl_prefixes,
 
-                                   conda_env=conda_env,
-                                   nThread=nThread,
-                                   verbose=verbose)
+                                 plot_types=plot_types,
+                                 zoom=zoom,
+                                 nott_epigenome=nott_epigenome,
+                                 nott_show_placseq=nott_show_placseq,
+                                 nott_binwidth=nott_binwidth,
+                                 nott_bigwig_dir=nott_bigwig_dir,
+                                 xgr_libnames=xgr_libnames,
+                                 roadmap=roadmap,
+                                 roadmap_query=roadmap_query,
+
+                                 conda_env=conda_env,
+                                 nThread=nThread,
+                                 verbose=verbose)
       #### Output list reminder ####
       # list(finemap_dat
       #     locus_plot
@@ -242,7 +258,7 @@ finemap_loci <- function(#### Main args ####
              round(end_gene-start_gene,1),
              v=verbose)
     return(finemap_dat)
-  }) # end for loop
+  }) # end loop
   #### Prepare results to return ####
   FINEMAP_DAT <- postprocess_data(FINEMAP_DAT=FINEMAP_DAT,
                                   loci=loci,

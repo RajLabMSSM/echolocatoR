@@ -38,8 +38,8 @@ Imports:
     echofinemap,
     catalogueR,
     R.utils, 
-    BiocManager, 
-    tidyverse,  
+    tidyr,  
+    dplyr,
     data.table, 
     DescTools,
     ggplot2,  
@@ -83,6 +83,6 @@ Remotes:
   github::RajLabMSSM/echofinemap,
   github::RajLabMSSM/echodeps,
   github::neurogenomics/MungeSumstats
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 VignetteBuilder: knitr
 Config/testthat/edition: 3

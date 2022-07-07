@@ -109,15 +109,6 @@
 #' with \emph{COJO}.
 #' @param PAINTOR_QTL_datasets A list of QTL datasets to be used when
 #' conducting joint functional fine-mapping with \emph{PAINTOR}.
-#' @param PP_threshold The minimum fine-mapped posterior probability
-#'  for a SNP to be considered part of a Credible Set.
-#' For example, \code{PP_threshold=.95} means that all Credible Set SNPs
-#' will be 95\% Credible Set SNPs.
-#' @param consensus_threshold The minimum number of fine-mapping tools
-#' that include a SNP
-#'  in their 95\% Credible Sets to consider that it a "Consensus SNP"
-#'  (\emph{default=2}).
-#'
 #' @param plot_types Which kinds of plots to include.
 #' Options:
 #' \itemize{
@@ -137,6 +128,8 @@
 #' @inheritParams echoLD::filter_LD
 #' @inheritParams echoplot::plot_locus
 #' @inheritParams echofinemap::multifinemap
+#' @inheritParams echodata::standardize
+#' @inheritParams echodata::find_consensus_snps
 #'
 #' @importFrom echodata construct_colmap
 #' @importFrom echoplot plot_locus
@@ -152,6 +145,7 @@
 #'   topSNPs = topSNPs,
 #'   locus = "BST1",
 #'   dataset_name = "Nalls23andMe_2019",
+#'   LD_reference="1KGphase1",
 #'   fullSS_genome_build = "hg19",
 #'   bp_distance=10000,
 #'   munged = TRUE)
@@ -173,15 +167,16 @@ finemap_locus <- function(#### Main args ####
                                             "SUSIE","POLYFUN_SUSIE"),
                           finemap_args=NULL,
                           n_causal=5,
-                          PP_threshold=.95,
-                          consensus_threshold=2,
+                          credset_thresh=.95,
+                          consensus_thresh=2,
                           fillNA=0,
                           conditioned_snps=NULL,
                           #### Colname mapping args ####
                           munged = FALSE,
                           colmap = echodata::construct_colmap(munged = munged),
+                          compute_n = "ldsc",
                           #### LD args ####
-                          LD_reference="1KGphase1",
+                          LD_reference="1KGphase3",
                           LD_genome_build="hg19",
                           leadSNP_LD_block=FALSE,
                           superpopulation="EUR",
@@ -213,11 +208,13 @@ finemap_locus <- function(#### Main args ####
                           show_plot=TRUE,
                           #### General args ####
                           remove_tmps=TRUE,
-                          conda_env="echoR",
+                          conda_env="echoR_mini",
                           nThread=1,
                           verbose=TRUE,
                           #### Deprecated args ####
                           top_SNPs = deprecated(),
+                          PP_threshold = deprecated(),
+                          consensus_threshold = deprecated(),
                           plot.Nott_epigenome = deprecated(),
                           plot.Nott_show_placseq = deprecated(),
                           plot.Nott_binwidth = deprecated(),
@@ -272,10 +269,8 @@ finemap_locus <- function(#### Main args ####
                             colmap = colmap,
                             bp_distance = bp_distance,
                             superpopulation = superpopulation,
-                            min_POS = min_POS,
-                            max_POS = max_POS,
+                            compute_n = compute_n,
                             query_by = query_by,
-                            remove_tmps = remove_tmps,
                             nThread = nThread,
                             conda_env = conda_env,
                             verbose = verbose)
@@ -326,14 +321,13 @@ finemap_locus <- function(#### Main args ####
                                  LD_reference = LD_reference,
                                  LD_matrix = LD_matrix,
                                  dat = dat,
-                                 sample_size = sample_size,
                                  # General args (with defaults)
                                  finemap_methods = finemap_methods,
                                  finemap_args = finemap_args,
                                  force_new_finemap = force_new_finemap,
                                  dataset_type = dataset_type,
-                                 PP_threshold = PP_threshold,
-                                 consensus_threshold = consensus_threshold,
+                                 credset_thresh = credset_thresh,
+                                 consensus_thresh = consensus_thresh,
                                  case_control = case_control,
                                  n_causal = n_causal,
                                  # Tool-specific args
@@ -355,18 +349,18 @@ finemap_locus <- function(#### Main args ####
   locus_plots <- list()
   if("simple" %in% tolower(plot_types)){
     try({
-      TRKS_simple <- echoplot::plot_locus(
+      locus_plots[["simple"]] <- echoplot::plot_locus(
         dat = finemap_dat,
         LD_matrix = LD_matrix,
         LD_reference = LD_reference,
         locus_dir = locus_dir,
         dataset_type = dataset_type,
         finemap_methods = finemap_methods,
-        PP_threshold = PP_threshold,
-        consensus_threshold = consensus_threshold,
+        credset_thresh = credset_thresh,
+        consensus_thresh = consensus_thresh,
         qtl_prefixes = qtl_prefixes,
         nott_epigenome = FALSE,
-        plot_full_window = FALSE,
+        plot_full_window = TRUE,
         mean.PP = TRUE,
         xgr_libnames = NULL,
         zoom = zoom,
@@ -375,21 +369,20 @@ finemap_locus <- function(#### Main args ####
         conda_env = conda_env,
         nThread = nThread,
         verbose = verbose)
-      locus_plots[["simple"]] <- TRKS_simple
     })
   };
 
   if("fancy" %in% tolower(plot_types)){
     try({
-      TRKS_fancy <- echoplot::plot_locus(
+      locus_plots[["fancy"]] <- echoplot::plot_locus(
         dat = finemap_dat,
         LD_matrix = LD_matrix,
         LD_reference = LD_reference,
         locus_dir = locus_dir,
         dataset_type = dataset_type,
         finemap_methods = finemap_methods,
-        PP_threshold = PP_threshold,
-        consensus_threshold = consensus_threshold,
+        credset_thresh = credset_thresh,
+        consensus_thresh = consensus_thresh,
         qtl_prefixes = qtl_prefixes,
         zoom = zoom,
         save_plot = TRUE,
@@ -404,24 +397,9 @@ finemap_locus <- function(#### Main args ####
         conda_env = conda_env,
         nThread = nThread,
         verbose = verbose)
-      locus_plots[["fancy"]] <- TRKS_fancy
     })
   };
-  #### Cleanup ####
-  if(remove_tmps){
-    roadmap_tbi <- list.files(locus_dir,pattern=".bgz.tbi",
-                              recursive = TRUE, full.names = TRUE)
-    tmp_files <- file.path(locus_dir,"LD",
-                           c("plink.bed",
-                             "plink.bim",
-                             "plink.fam",
-                             "plink.ld",
-                             "plink.ld.bin",
-                             "plink.log",
-                             "plink.nosex",
-                             "SNPs.txt") )
-    out <- suppressWarnings(file.remove(tmp_files, roadmap_tbi))
-  }
+  #### Return ####
   return(list(finemap_dat=finemap_dat,
               locus_plot=locus_plots,
               LD_matrix=LD_matrix,

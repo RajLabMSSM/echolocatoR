@@ -13,17 +13,15 @@ vignette: >
 
 ```{r setup}
 #### Install echolocatoR >= v2.0 ####
-if(!require("echolocatoR")){
+if(!require("echolocatoR") || 
+   packageVersion("echolocatoR")<"2.0.0"){
   remotes::install_github("RajLabMSSM/echolocatoR@echoverse", 
                           upgrade = TRUE, dependencies = TRUE)    
-} else if (packageVersion("echolocatoR")<"2.0.0"){
-  remotes::install_github("RajLabMSSM/echolocatoR@echoverse",
-                          upgrade = TRUE, dependencies = TRUE)
-}
+}  
 library(echolocatoR) 
 
 ### Set to wherever you want to store your data 
-save_dir <- "~/Desktop"
+save_dir <- "/Desktop/BD_finemapping"
 ```
 
 ### [Optional] Docker
@@ -40,9 +38,10 @@ using the same instructions as above.
 Import the data.frame of containing lead/proxy SNPs to indicate where each GWAS locus is. 
  
 ```{r  Prepare `top_SNPs` data.frame}  
-top_SNPs <- echodata::import_topSNPs(topSS = file.path(save_dir,
-                                                       "my_loci.xlsx"))
-head(top_SNPs)
+topSNPs <- echodata::import_topSNPs(
+  topSS = file.path(save_dir,"my_loci.xlsx")
+)
+head(topSNPs)
 ```
 
 ## Path to full summary stats file  
@@ -52,7 +51,7 @@ To prepare the data for use with `echolocatoR`
 
 ```{r fullSS}  
 #### Set up paths ####
-fullSS_path_vcf <- file.path(save_dir,"pgc-bip2021-all.vcf.tsv.gz"  )
+fullSS_path_vcf <- file.path(save_dir,"pgc-bip2021-all.vcf.tsv.gz")
 target_path <- echotabix::construct_tabix_path(gsub(".vcf","",fullSS_path_vcf))
 #### Look at the header of the pre-munged file ####
 # MungeSumstats:::read_header(fullSS_path_vcf, n=3)
@@ -85,20 +84,18 @@ if(!file.exists(target_path)){
   #                                           mapping_file = mapping_file)
   # target_path <- mss_out$sumstats
   
-  ## [Option 2] MungeSumstats::write_sumstats
+  ## [Option 2] MungeSumstats::write_sumstats 
+  dat <- data.table::fread(fullSS_path_vcf, 
+                           skip = "#CHROM") 
   ## Run just the column header mapping and write back to disk 
-  
-  ## Correct the NGT column in the mapping file.
-  ## Otherwise, NGT will be incorrectly be interpreted as N.
-  mapping_file <- subset(MungeSumstats:::sumstatsColHeaders,
-                         Uncorrected!="NGT")
-  dat <- MungeSumstats::read_sumstats(path = fullSS_path_vcf, 
-                                      standardise_headers = TRUE, 
-                                      mapping_file = mapping_file)
-  #### Add N column (necessary for most fine-mapping methods) ####
+  dat <- echodata::mungesumstats_to_echolocatoR(dat = dat, 
+                                                standardise_colnames = TRUE) 
+  ## Add N column (necessary for most fine-mapping methods)
   dat[,N:=(NCAS+NCON)]
-  #### Add "proportion_cases" column (needed for ABF) ####
+  ## Add "proportion_cases" column (needed for ABF)
   dat[,proportion_cases:=(NCAS/(NCAS+NCON))]
+  ## Write and bgzip compress
+  dat[,BP:=POS]
   target_path <- MungeSumstats::write_sumstats(sumstats_dt = dat,
                                                save_path = target_path,
                                                tabix_index = TRUE,
@@ -122,16 +119,16 @@ if(!file.exists(target_path)){
 ## Query subset
 
 ```{r}
-loci <- top_SNPs$Locus
+loci <- topSNPs$Locus
 #### Select one locus ####
-top_SNPs_locus <- top_SNPs[loci[1],]
+topSNPs_locus <- topSNPs[loci[1],]
 
 #### Construct a query to extract a single locus ####
 window_size <- 1000000/2
 query_granges <- echotabix::construct_query(
-  query_chrom = top_SNPs_locus$CHR, 
-  query_start_pos = top_SNPs_locus$POS - window_size, 
-  query_end_pos = top_SNPs_locus$POS + window_size)
+  query_chrom = topSNPs_locus$CHR, 
+  query_start_pos = topSNPs_locus$POS - window_size, 
+  query_end_pos = topSNPs_locus$POS + window_size)
 
 #### Extract subset #####
 dat_locus <- echotabix::query(target_path = target_path, 
@@ -148,7 +145,7 @@ It then computes pairwise linkage disequilibrium (LD) between all SNPs in that
 subset.
 
 ```{r}
-locus_dir <- file.path(save_dir, top_SNPs_locus$Locus) 
+locus_dir <- file.path(save_dir, topSNPs_locus$Locus) 
 
 LD_list  <- echoLD::get_LD(query_dat = dat_locus,
                            locus_dir = locus_dir,
@@ -167,30 +164,27 @@ the results from each fine-mapping method that was run.
 dat2 <- echofinemap::multifinemap(dat = LD_list$DT,
                                   locus_dir = locus_dir,  
                                   LD_matrix = LD_list$LD, 
-                                  finemap_methods=c("ABF","SUSIE","FINEMAP"),
-                                  n_causal = 2,
+                                  finemap_methods=c("ABF","SUSIE","FINEMAP",
+                                                    "POLYFUN_SUSIE","POLYFUN_FINEMAP"),
+                                  n_causal = 5,
                                   force_new_finemap = TRUE)
-knitr::kable(head(dat2))
+# knitr::kable(head(dat2))
 ```
 
 ## Plot locus results
 
-```{r}
-if(!require("pals")) install.packages("pals")
-
+```{r} 
 #### We'll need this column to color SNPs by LD with the lead SNP ####
 dat2 <- echodata::assign_lead_snp(dat = dat2)
 
 plot_list <- echoplot::plot_locus(dat = dat2, 
                                   LD_matrix = LD_list$LD,
                                   locus_dir = locus_dir,
-                                  zoom = "4x"
-                                  ## These args aren't working atm
-                                  # nott_epigenome = TRUE,
-                                  # nott_regulatory_rects = TRUE,
-                                  # nott_show_placseq = TRUE
-                                  )
-
+                                  zoom = "4x",
+                                  nott_epigenome = TRUE,
+                                  nott_regulatory_rects = TRUE,
+                                  nott_show_placseq = TRUE
+                                  ) 
 ```
 
 
@@ -198,19 +192,53 @@ plot_list <- echoplot::plot_locus(dat = dat2,
 
 ## Run full fine-mapping pipeline   
 
-*UNDER CONSTRUCTION* 
-
 ```{r Run fine-mapping pipeline, eval=FALSE}
-# results <- echolocatoR::finemap_loci(
-#  fullSS_path = mss_out$sumstats,
-#  top_SNPs = top_SNPs,
-#  loci = top_SNPs$Locus[1],
-#  dataset_name = "BD_PGC2021",
-#  fullSS_genome_build = "hg19",
-#  bp_distance = 250000,
-#  munged = TRUE,
-#  results_dir = "~/Downloads/BD_finemapping")
+
+t1 <- Sys.time()
+results <- echolocatoR::finemap_loci(
+ fullSS_path = target_path,
+ topSNPs = topSNPs[11:30,],
+ dataset_name = "BD_PGC2021",
+ fullSS_genome_build = "hg19",
+ bp_distance = 5e5L,
+ # min_POS = topSNPs$min_pos,
+ # max_POS = topSNPs$max_pos,
+ n_causal = 5,
+ finemap_methods=c("ABF","SUSIE","FINEMAP",
+                   "POLYFUN_SUSIE","POLYFUN_FINEMAP"),
+ munged = TRUE,
+ LD_reference = "UKB",
+ zoom = c("1x","4x"),
+ plot_types = "fancy",
+ nott_epigenome = TRUE, 
+ nott_show_placseq = TRUE,
+ results_dir = save_dir,
+ conda_env="echoR_mini")
+t2 <- Sys.time()
+difftime(t2,t1)
+
 ```
+
+### Summary plot
+
+Make a plot summarising the fine-mapping results across all loci, 
+and how they overlap with cell-type-specific epigenomic signatures
+from Nott2019 and Corces2020.
+
+```{r}
+merged_dat <- echoannot::merge_finemapping_results(
+  dataset = file.path(save_dir,"GWAS","BD_PGC2021"), 
+  minimum_support = 0, 
+  save_path = file.path(save_dir,"multifinemap_merged.csv.gz"))
+
+gg_summary <- echoannot::super_summary_plot(
+  merged_DT = merged_dat,
+  snp_filter = "Support>0",
+  save_plot = file.path(save_dir,"summary_plot.png"), 
+  height = 10,
+  width = 12)
+```
+
 
 <hr>
 

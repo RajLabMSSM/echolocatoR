@@ -118,7 +118,7 @@ Kunkle_2019.microgliaQTL <- finemap_loci(# GENERAL ARGUMENTS
                  # FINE-MAPPING ARGUMENTS
                  finemap_methods = c("ABF","FINEMAP","SUSIE","POLYFUN_SUSIE"),
                  n_causal = 5,
-                 PP_threshold = .95,
+                 credset_thresh = .95,
                  
                  # LD ARGUMENTS 
                  LD_reference = "1KGphase1",

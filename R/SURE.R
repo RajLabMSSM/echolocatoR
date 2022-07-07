@@ -17,15 +17,16 @@
 SURE.download_annotations <- function(URL="https://osf.io/vxfk3/download",
                                       output_dir=".",
                                       nThread=1,
-                                      v=verbose,
-                                      conda_env="echoR"){
+                                      verbose=TRUE,
+                                      conda_env="echoR_mini"){
   echolocatoR::downloader(input_url = URL,
                           output_path = output_dir,
                           nThread = nThread,
-                          conda_env=conda_env)
+                          conda_env=conda_env,
+                          verbose=verbose)
   out_file <- file.path(output_dir, "SuRE_SNP_table_LP190708.txt.gz")
   messager("SURE:: Data downloaded ==>",out_file,v=verbose)
-  return(output_path)
+  return(out_file)
 }
 
 

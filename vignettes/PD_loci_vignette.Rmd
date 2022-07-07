@@ -105,7 +105,7 @@ locus <- "LRRK2"
 track_order <- names(PLOT.heights_dict())
 track_order <- R.utils::insert(track_order[track_order!="Genes"], 1, "Genes")
 
-LRRK2 <- PLOT.locus(finemap_dat=fread(data_dict$finemap[[locus]]),   
+LRRK2 <- echoplot::plot_locus(finemap_dat=fread(data_dict$finemap[[locus]]),   
                     LD_matrix=fread(data_dict$LD[[locus]]),
                     LD_reference="UKB",
                     locus_dir=data_dict$locus_dir[[locus]], 
@@ -130,7 +130,7 @@ track_order <- names(PLOT.heights_dict())
 track_order <- R.utils::insert(track_order[track_order!="Genes"], 1, "Genes")
 
 
-MBNL2 <- PLOT.locus(finemap_dat=fread(data_dict$finemap[[locus]]),   
+MBNL2 <- echoplot::plot_locus(finemap_dat=fread(data_dict$finemap[[locus]]),   
                     LD_matrix=fread(data_dict$LD[[locus]]),
                     LD_reference="UKB",
                     locus_dir=data_dict$locus_dir[[locus]], 
@@ -152,7 +152,7 @@ MBNL2 <- PLOT.locus(finemap_dat=fread(data_dict$finemap[[locus]]),
 ```{r DYRK1A, attr.output='style="max-height: 200px;"'} 
 locus <- "DYRK1A"
 
-DYRK1A <- PLOT.locus(finemap_dat=fread(data_dict$finemap[[locus]]),   
+DYRK1A <- echoplot::plot_locus(finemap_dat=fread(data_dict$finemap[[locus]]),   
                     LD_matrix=fread(data_dict$LD[[locus]]),
                     LD_reference="UKB",
                     locus_dir=data_dict$locus_dir[[locus]], 
@@ -178,7 +178,7 @@ locus <- "FCGR2A"
 #                                 plot.zoom = "3x")
 # finemap_dat <- subset(finemap_dat, Mb>xlims[1] & Mb<xlims[2] )
 
-FCGR2A <- PLOT.locus(finemap_dat=fread(data_dict$finemap[[locus]]),   
+FCGR2A <- echoplot::plot_locus(finemap_dat=fread(data_dict$finemap[[locus]]),   
                     LD_matrix=fread(data_dict$LD[[locus]]),
                     LD_reference="UKB",
                     locus_dir=data_dict$locus_dir[[locus]], 

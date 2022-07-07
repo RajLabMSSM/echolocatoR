@@ -7,7 +7,11 @@
 DEEPLEARNING.plot(
   annot.melt,
   snp_groups = c("GWAS lead", "UCS", "Consensus (-POLYFUN)", "Consensus"),
-  comparisons_filter = function(x) {     if ("Consensus" \%in\% x)          return(x) },
+  comparisons_filter = function(x) {
+     if ("Consensus" \%in\% x) 
+        
+    return(x)
+ },
   model_metric = c("MAX"),
   facet_formula = ". ~ Model",
   remove_outliers = TRUE,

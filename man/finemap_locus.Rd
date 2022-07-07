@@ -19,13 +19,14 @@ finemap_locus(
   finemap_methods = c("ABF", "FINEMAP", "SUSIE", "POLYFUN_SUSIE"),
   finemap_args = NULL,
   n_causal = 5,
-  PP_threshold = 0.95,
-  consensus_threshold = 2,
+  credset_thresh = 0.95,
+  consensus_thresh = 2,
   fillNA = 0,
   conditioned_snps = NULL,
   munged = FALSE,
   colmap = echodata::construct_colmap(munged = munged),
-  LD_reference = "1KGphase1",
+  compute_n = "ldsc",
+  LD_reference = "1KGphase3",
   LD_genome_build = "hg19",
   leadSNP_LD_block = FALSE,
   superpopulation = "EUR",
@@ -53,9 +54,12 @@ finemap_locus(
   roadmap_query = NULL,
   show_plot = TRUE,
   remove_tmps = TRUE,
-  conda_env = "echoR",
+  conda_env = "echoR_mini",
   nThread = 1,
   verbose = TRUE,
+  top_SNPs = deprecated(),
+  PP_threshold = deprecated(),
+  consensus_threshold = deprecated(),
   plot.Nott_epigenome = deprecated(),
   plot.Nott_show_placseq = deprecated(),
   plot.Nott_binwidth = deprecated(),
@@ -93,6 +97,8 @@ finemap_locus(
 )
 }
 \arguments{
+\item{locus}{Locus name.}
+
 \item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL)
 that you want to fine-map.
 It is usually best to provide the absolute path rather
@@ -152,15 +158,14 @@ Set \code{force_new_finemap=T} to override this and re-run fine-mapping.}
 This parameter is used somewhat differently by different fine-mapping tools.
 See tool-specific functions for details.}
 
-\item{PP_threshold}{The minimum fine-mapped posterior probability
+\item{credset_thresh}{The minimum fine-mapped posterior probability
  for a SNP to be considered part of a Credible Set.
-For example, \code{PP_threshold=.95} means that all Credible Set SNPs
+For example, \code{credset_thresh=.95} means that all Credible Set SNPs
 will be 95\% Credible Set SNPs.}
 
-\item{consensus_threshold}{The minimum number of fine-mapping tools
-that include a SNP
- in their 95\% Credible Sets to consider that it a "Consensus SNP"
- (\emph{default=2}).}
+\item{consensus_thresh}{The minimum number of fine-mapping tools 
+in which a SNP is in the Credible Set in order to be included in the 
+"Consensus_SNP" column.}
 
 \item{fillNA}{Value to fill LD matrix NAs with.}
 
@@ -188,19 +193,40 @@ function can be used in two different ways:
  }
 }}
 
+\item{compute_n}{How to compute per-SNP sample size (new column "N").
+\itemize{
+\item{\code{0}: }{N will not be computed.}
+\item{\code{>0}: }{If any number >0 is provided,
+that value will be set as N for every row.
+\strong{Note}: Computing N this way is incorrect and should be avoided
+if at all possible.}
+\item{\code{"sum"}: }{N will be computed as:
+cases (N_CAS) + controls (N_CON), so long as both columns are present}.
+\item{\code{"ldsc"}: }{N will be computed as effective sample size:
+Neff =(N_CAS+N_CON)*(N_CAS/(N_CAS+N_CON)) / mean((N_CAS/(N_CAS+N_CON))(N_CAS+N_CON)==max(N_CAS+N_CON))}
+\item{\code{"giant"}: }{N will be computed as effective sample size:
+Neff = 2 / (1/N_CAS + 1/N_CON)}.
+\item{\code{"metal"}: }{N will be computed as effective sample size:
+Neff = 4 / (1/N_CAS + 1/N_CON)}.
+}}
+
 \item{LD_reference}{LD reference to use:
 \itemize{
 \item{"1KGphase1" : }{1000 Genomes Project Phase 1}
 \item{"1KGphase3" : }{1000 Genomes Project Phase 3}
 \item{"UKB" : }{Pre-computed LD from a British
 European-decent subset of UK Biobank.}
+\item{"<vcf_path>" : }{User-supplied path to a custom VCF file 
+to compute LD matrix from.}
 }}
 
 \item{leadSNP_LD_block}{Only return SNPs within the same LD block
 as the lead SNP (the SNP with the smallest p-value).}
 
 \item{superpopulation}{Superpopulation to subset LD panel by
-(used only if \code{LD_reference} is "1KGphase1" or "1KGphase3".)}
+(used only if \code{LD_reference} is "1KGphase1" or "1KGphase3").
+See \link[echoLD]{popDat_1KGphase1} and \link[echoLD]{popDat_1KGphase3}
+for full tables of their respective samples.}
 
 \item{download_method}{\itemize{
 \item{\code{"axel"} : }{Multi-threaded}
@@ -214,9 +240,7 @@ as the lead SNP (the SNP with the smallest p-value).}
 (passed to \link[utils]{download.file})}
 \item{\code{"curl"} : }{Single-threaded 
 (passed to \link[utils]{download.file})}
-}
- or
-\code{"download.file"} (single-threaded) .}
+}}
 
 \item{bp_distance}{Distance around the lead SNP to include.}
 
@@ -254,6 +278,9 @@ coordinates with \emph{awk}.}
 \item{PAINTOR_QTL_datasets}{A list of QTL datasets to be used when
 conducting joint functional fine-mapping with \emph{PAINTOR}.}
 
+\item{qtl_prefixes}{If columns with QTL data is included in \code{dat},
+you can indicate which columns those are with one or more string prefixes.}
+
 \item{plot_types}{Which kinds of plots to include.
 Options:
 \itemize{
@@ -280,6 +307,13 @@ multiple views of each locus.
 This can even be a mix of different style inputs: e.g.
  \code{c("1x","4.5x",25000)}.}
 
+\item{nott_epigenome}{Include tracks showing brain cell-type-specific 
+epigenomic data from 
+\href{https://doi.org/10.1126/science.aay0793}{Nott et al. (2019)}.}
+
+\item{nott_show_placseq}{Include track generated by
+\link[echoannot]{NOTT2019_plac_seq_plot}.}
+
 \item{nott_binwidth}{When including Nott et al. (2019)
 epigenomic data in the track plots,
 adjust the bin width of the histograms.}
@@ -287,6 +321,13 @@ adjust the bin width of the histograms.}
 \item{nott_bigwig_dir}{Instead of pulling Nott et al. (2019)
  epigenomic data
 from the \emph{UCSC Genome Browser}, use a set of local bigwig files.}
+
+\item{xgr_libnames}{Passed to \link[echoannot]{XGR_plot}.
+Which XGR annotations to check overlap with.
+For full list of libraries see
+\href{http://XGR_r-forge.r-project.org/#annotations-at-the-genomic-region-level}{
+ here}.
+ Passed to the \code{RData.customised} argument in \link[XGR]{xRDataLoader}.}
 
 \item{roadmap}{Find and plot annotations from Roadmap.}
 
@@ -348,6 +389,7 @@ res <- echolocatoR::finemap_locus(
   topSNPs = topSNPs,
   locus = "BST1",
   dataset_name = "Nalls23andMe_2019",
+  LD_reference="1KGphase1",
   fullSS_genome_build = "hg19",
   bp_distance=10000,
   munged = TRUE)

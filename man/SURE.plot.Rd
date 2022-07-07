@@ -13,7 +13,11 @@
 SURE.plot(
   sure.melt,
   snp_groups = c("GWAS lead", "UCS", "Consensus"),
-  comparisons_filter = function(x) {     if ("Consensus" \%in\% x)          return(x) },
+  comparisons_filter = function(x) {
+     if ("Consensus" \%in\% x) 
+        
+    return(x)
+ },
   title = "SuRE MPRA",
   xlabel = "SNP Group",
   facet_formula = ". ~ Cell_type",

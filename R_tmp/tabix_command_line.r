@@ -26,16 +26,16 @@ TABIX.convert_file <- function(fullSS_path,
                                study_dir=NULL,
                                chrom_col="CHR",
                                position_col="POS",
-                               conda_env="echoR",
+                               conda_env="echoR_mini",
                                verbose=T){
-  printer("TABIX:: Converting full summary stats file to tabix format for fast querying...",v=verbose)
+  messager("TABIX:: Converting full summary stats file to tabix format for fast querying...",v=verbose)
   z_grep <- if(endsWith(fullSS_path,".gz")) "zgrep" else "grep"
   cDict <-  echodata::column_dictionary(file_path = fullSS_path) # header.path
   tabix_out <- construct_tabix_path(fullSS_path = fullSS_path,
                                        study_dir = study_dir)
   # Make sure input file isn't empty
   if(file.size(fullSS_path)==0){
-    printer("TABIX:: Removing empty file =",fullSS_path);
+    messager("TABIX:: Removing empty file =",fullSS_path);
     file.remove(fullSS_path)
   }
   cmd <- paste("(",
@@ -48,7 +48,7 @@ TABIX.convert_file <- function(fullSS_path,
                "|",echoconda::find_packages(packages="bgzip", conda_env=conda_env),"-f",
                ">",
                tabix_out)
-  printer(cmd, v=verbose)
+  messager(cmd, v=verbose)
   system(cmd)
 
   # Index
@@ -56,12 +56,12 @@ TABIX.convert_file <- function(fullSS_path,
                           chrom_i=1,
                           pos_i=2,
                           skip_lines=1,
-                          conda_env="echoR",
+                          conda_env="echoR_mini",
                           verbose=T){
     tabix <- echoconda::find_packages(package="tabix",
                                 conda_env=conda_env,
                                 verbose = verbose)
-    printer("TABIX:: Indexing",v=verbose)
+    messager("TABIX:: Indexing",v=verbose)
     cmd2 <- paste(tabix,
                   "-f", # Force overwrite of .tbi index file
                   "-S",skip_lines,#--skip-lines
@@ -69,7 +69,7 @@ TABIX.convert_file <- function(fullSS_path,
                   "-b",pos_i,
                   "-e",pos_i,
                   tabix_out)
-    printer(cmd2, v=verbose)
+    messager(cmd2, v=verbose)
     system(cmd2)
   }
   TABIX.index(tabix_out=tabix_out,
@@ -93,18 +93,18 @@ TABIX.query <- function(fullSS.gz,
                         chrom,
                         start_pos,
                         end_pos,
-                        conda_env="echoR",
+                        conda_env="echoR_mini",
                         verbose=T){
   tabix <- echoconda::find_packages(package="tabix",
                               conda_env=conda_env,
                               verbose = verbose)
   coords <- paste0(chrom,":",start_pos,"-",end_pos)
   # cmd4 <- paste("tabix -h",fullSS.gz,coords,">",subset_path)
-  printer("TABIX:: Extracting subset of sum stats", v=verbose)
+  messager("TABIX:: Extracting subset of sum stats", v=verbose)
   tabix_cmd <- paste(tabix,"-h",fullSS.gz,coords)
-  printer("+ TABIX::",tabix_cmd, v=verbose)
+  messager("+ TABIX::",tabix_cmd, v=verbose)
   dat <- data.table::fread(cmd=tabix_cmd, nThread = 1)
-  printer("+ TABIX:: Returning",paste(dim(dat),collapse=" x "),"data.table", v=verbose)
+  messager("+ TABIX:: Returning",paste(dim(dat),collapse=" x "),"data.table", v=verbose)
   return(dat)
 }
 
@@ -146,7 +146,7 @@ TABIX <- function(fullSS_path,
                   chrom,
                   save_subset=T,
                   nThread=1,
-                  conda_env="echoR",
+                  conda_env="echoR_mini",
                   verbose=T){
   # Check if it's already an indexed tabix file
   # fullSS.gz <- ifelse(endsWith(fullSS_path,".gz"), fullSS_path, paste0(fullSS_path,".gz"))
@@ -155,11 +155,11 @@ TABIX <- function(fullSS_path,
   if(infer_if_tabix(tabix_out)){
     # Checks if the file (in the study dir) already exists,
     # and whether it is a tabix-indexed file.
-    printer("TABIX:: Using existing tabix file:",tabix_out,v=verbose)
+    messager("TABIX:: Using existing tabix file:",tabix_out,v=verbose)
     # Jump ahead and query tabix_out file
   } else {
     if(infer_if_tabix(fullSS_path)){
-      printer("TABIX:: Copying existing tabix file ==>",fullSS_path,v=verbose)
+      messager("TABIX:: Copying existing tabix file ==>",fullSS_path,v=verbose)
       file.copy(fullSS_path, tabix_out, overwrite = T)
       tabix_out <- fullSS_path
     } else {
@@ -189,7 +189,7 @@ TABIX <- function(fullSS_path,
                      verbose=verbose)
   colnames(dat) <- names(cDict)
   if(save_subset){
-    printer("++ Saving query ==>", subset_path, v=verbose)
+    messager("++ Saving query ==>", subset_path, v=verbose)
     data.table::fwrite(dat, file = subset_path, nThread = nThread, sep="\t")
   }
   return(dat)

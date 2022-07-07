@@ -13,16 +13,17 @@ extract_snp_subset(
   force_new_subset = FALSE,
   bp_distance = 5e+05,
   superpopulation = "",
-  min_POS = NA,
-  max_POS = NA,
+  compute_n = "ldsc",
   query_by = "tabix",
-  remove_tmps = TRUE,
   nThread = 1,
-  conda_env = "echoR",
+  conda_env = "echoR_mini",
   verbose = TRUE
 )
 }
 \arguments{
+\item{subset_path}{Path where the \code{query} should be 
+saved after standardization.}
+
 \item{colmap}{Column name mappings in in \code{fullSS_path}. Must be a named
 list. Can use \link[echolocatoR]{construct_colmap} to assist with this. This
 function can be used in two different ways:
@@ -64,6 +65,8 @@ At minimum, \code{topSNPs} should include the following columns:
 \item{"1KGphase3" : }{1000 Genomes Project Phase 3}
 \item{"UKB" : }{Pre-computed LD from a British
 European-decent subset of UK Biobank.}
+\item{"<vcf_path>" : }{User-supplied path to a custom VCF file 
+to compute LD matrix from.}
 }}
 
 \item{force_new_subset}{By default, if a subset of the full
@@ -77,11 +80,26 @@ Subsets are saved in the following path structure:
 \item{bp_distance}{Distance around the lead SNP to include.}
 
 \item{superpopulation}{Superpopulation to subset LD panel by
-(used only if \code{LD_reference} is "1KGphase1" or "1KGphase3".)}
+(used only if \code{LD_reference} is "1KGphase1" or "1KGphase3").
+See \link[echoLD]{popDat_1KGphase1} and \link[echoLD]{popDat_1KGphase3}
+for full tables of their respective samples.}
 
-\item{min_POS}{Minimum genomic position to include.}
-
-\item{max_POS}{Maximum genomic position to include.}
+\item{compute_n}{How to compute per-SNP sample size (new column "N").
+\itemize{
+\item{\code{0}: }{N will not be computed.}
+\item{\code{>0}: }{If any number >0 is provided,
+that value will be set as N for every row.
+\strong{Note}: Computing N this way is incorrect and should be avoided
+if at all possible.}
+\item{\code{"sum"}: }{N will be computed as:
+cases (N_CAS) + controls (N_CON), so long as both columns are present}.
+\item{\code{"ldsc"}: }{N will be computed as effective sample size:
+Neff =(N_CAS+N_CON)*(N_CAS/(N_CAS+N_CON)) / mean((N_CAS/(N_CAS+N_CON))(N_CAS+N_CON)==max(N_CAS+N_CON))}
+\item{\code{"giant"}: }{N will be computed as effective sample size:
+Neff = 2 / (1/N_CAS + 1/N_CON)}.
+\item{\code{"metal"}: }{N will be computed as effective sample size:
+Neff = 4 / (1/N_CAS + 1/N_CON)}.
+}}
 
 \item{query_by}{Choose which method you want to use to extract
  locus subsets from the full summary stats file.
@@ -93,9 +111,6 @@ Methods include:
 \item{"coordinates"}{Extract locus subsets using min/max genomic
 coordinates with \emph{awk}.}
 }}
-
-\item{remove_tmps}{Whether to remove any temporary files
-(e.g. FINEMAP output files) after the pipeline is done running.}
 
 \item{nThread}{Number of threads to parallelize over.}
 

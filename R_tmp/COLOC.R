@@ -82,7 +82,7 @@ COLOC <- function(data1,
                   data2_proportion_cases=5e-324,
                   data1_MAF="MAF",
                   data2_MAF=NA,
-                  PP_threshold=0.8,
+                  credset_thresh=0.8,
                   save_results=TRUE,
                   results_path=NULL,
                   show_plot=TRUE,
@@ -130,10 +130,10 @@ COLOC <- function(data1,
      "Both traits are associated and share a single causal variant.") ,
    c("PP.H0.abf","PP.H1.abf","PP.H2.abf","PP.H3.abf","PP.H4.abf"))
  # Report hypothess results
-  messager("\n Hypothesis Results @ PP_threshold =",PP_threshold,":")
+  messager("\n Hypothesis Results @ credset_thresh =",credset_thresh,":")
   true_hyp <-""
   for(h in names(hypothesis_key)){
-    if(coloc.res$summary[h]>=PP_threshold){
+    if(coloc.res$summary[h]>=credset_thresh){
       hyp <- hypothesis_key[h]
       messager("    ",h,"== TRUE: **",hyp )
       true_hyp <- paste0(names(hyp),": ", hyp)
@@ -152,18 +152,18 @@ COLOC <- function(data1,
   causal_DT2 <- causal_DT2$snp[1]
 
   # Process results
-  coloc_DT$Colocalized <- ifelse(coloc_DT$SNP.PP.H4 >= PP_threshold, T, F)
+  coloc_DT$Colocalized <- ifelse(coloc_DT$SNP.PP.H4 >= credset_thresh, T, F)
   colocalized_snps <- subset(coloc_DT, Colocalized==TRUE)$snp# subset(coloc_DT, Colocalized==1)$SNP
   coloc_datasets <- coloc_plot_data(coloc.res, data1, data2)
   subtitle2 <- paste0("Colocalized SNPs: ", paste(colocalized_snps,sep=", "))
-  if((coloc.res$summary["PP.H3.abf"] + coloc.res$summary["PP.H4.abf"] >= PP_threshold) &
+  if((coloc.res$summary["PP.H3.abf"] + coloc.res$summary["PP.H4.abf"] >= credset_thresh) &
      (coloc.res$summary["PP.H4.abf"]/coloc.res$summary["PP.H3.abf"] >= 2)){
     # "We called the signals colocalized when (coloc H3+H4 ≥ 0.8 and H4∕H3 ≥ 2)" -Yi et al. (2019)
     report <- paste("Datasets colocalized")
   } else {
     report <- paste("Datasets NOT colocalized")
   }
-  messager("\n++",report,"at PP.H3 + PP.H4 >=",PP_threshold," and PP.H3 / PP.H4 >= 2.","\n")
+  messager("\n++",report,"at PP.H3 + PP.H4 >=",credset_thresh," and PP.H3 / PP.H4 >= 2.","\n")
 
 
   # Plot
@@ -244,7 +244,7 @@ COLOC.plot <- function(locus,
 
 
 
-COLOC.report_summary <- function(coloc.res, PP_threshold=.8){
+COLOC.report_summary <- function(coloc.res, credset_thresh=.8){
   # MAF = dataset1$MAF)
   hypothesis_key <- setNames(
     c("Neither trait has a genetic association in the region.",
@@ -254,11 +254,11 @@ COLOC.report_summary <- function(coloc.res, PP_threshold=.8){
       "Both traits are associated and share a single causal variant.") ,
     c("PP.H0.abf","PP.H1.abf","PP.H2.abf","PP.H3.abf","PP.H4.abf"))
   # Report hypothess results
-  messager("Hypothesis Results @ PP_threshold =",PP_threshold,":")
+  messager("Hypothesis Results @ credset_thresh =",credset_thresh,":")
   true_hyp <-""
   for(h in names(hypothesis_key)){
     if(!is.na(coloc.res$summary[h])){
-      if(coloc.res$summary[h]>=PP_threshold){
+      if(coloc.res$summary[h]>=credset_thresh){
         hyp <- hypothesis_key[h]
         messager("    ",h,"== TRUE: **",hyp )
         true_hyp <- paste0(names(hyp),": ", hyp)
@@ -271,17 +271,17 @@ COLOC.report_summary <- function(coloc.res, PP_threshold=.8){
   # Save raw results
   coloc_DT <- coloc.res$results
   # Process results
-  coloc_DT$Colocalized <- ifelse(coloc_DT$SNP.PP.H4 >= PP_threshold, T, F)
+  coloc_DT$Colocalized <- ifelse(coloc_DT$SNP.PP.H4 >= credset_thresh, T, F)
   colocalized_snps <- subset(coloc_DT, Colocalized==TRUE)$snp# subset(coloc_DT, Colocalized==1)$SNP
   subtitle2 <- paste0("Colocalized SNPs: ", paste(colocalized_snps,sep=", "))
   if(!is.na(coloc.res$summary)["PP.H4.abf"] ){
-    if((coloc.res$summary["PP.H3.abf"] + coloc.res$summary["PP.H4.abf"] >= PP_threshold) &
+    if((coloc.res$summary["PP.H3.abf"] + coloc.res$summary["PP.H4.abf"] >= credset_thresh) &
        (coloc.res$summary["PP.H4.abf"]/coloc.res$summary["PP.H3.abf"] >= 2)){
       # "We called the signals colocalized when (coloc H3+H4 ≥ 0.8 and H4∕H3 ≥ 2)" -Yi et al. (2019)
       report <- paste("Datasets colocalized")
     } else {report <- paste("Datasets NOT colocalized") }
   } else { report <- paste("Datasets NOT colocalized")}
-  messager("+ COLOC::",report,"at: PP.H3 + PP.H4 >=",PP_threshold," and PP.H3 / PP.H4 >= 2.")
+  messager("+ COLOC::",report,"at: PP.H3 + PP.H4 >=",credset_thresh," and PP.H3 / PP.H4 >= 2.")
   return(coloc_DT)
 }
 
@@ -311,12 +311,12 @@ COLOC.report_summary <- function(coloc.res, PP_threshold=.8){
 # }
 
 
-COLOC.PP4_plot <- function(COLOC_DT=NULL, coloc.results_path=NULL, PP_threshold=.8){
+COLOC.PP4_plot <- function(COLOC_DT=NULL, coloc.results_path=NULL, credset_thresh=.8){
   if(is.null(COLOC_DT)){
     if(is.null(coloc.results_path)){coloc.results_path <- "./Data/GWAS/Nalls23andMe_2019/_genome_wide/COLOC/COLOC_results_noFlip-gwasEffect.txt"}
     COLOC_DT <- data.table::fread(coloc.results_path)
   }
-  COLOC_DT$coloc <- (COLOC_DT$PP.H3.abf + COLOC_DT$PP.H4.abf >= PP_threshold) &  (COLOC_DT$PP.H4.abf/COLOC_DT$PP.H3.abf >= 2)
+  COLOC_DT$coloc <- (COLOC_DT$PP.H3.abf + COLOC_DT$PP.H4.abf >= credset_thresh) &  (COLOC_DT$PP.H4.abf/COLOC_DT$PP.H3.abf >= 2)
   COLOC_DT <- COLOC_DT %>% dplyr::rename(QTL.Dataset=Dataset2)
 
   cp <- ggplot(subset(COLOC_DT, coloc==TRUE), aes(x=QTL.Dataset, y=PP.H4.abf, fill=QTL.Dataset)) +
@@ -404,7 +404,7 @@ COLOC.iterate_QTL <- function(GTEx_version="GTEx_V7",
           ## in imputation. Regression coefficients should be used if available.
             coloc.res <- coloc::coloc.abf(dataset1 = dataset.gwas,
                                           dataset2 = dataset.qtl)
-            COLOC.report_summary(coloc.res, PP_threshold = .8)
+            COLOC.report_summary(coloc.res, credset_thresh = .8)
             # dat <- data.table::data.table(coloc.res$results)
             dat <- data.table::data.table(t(coloc.res$summary))
             dat <- cbind(Locus=locus,
@@ -428,7 +428,7 @@ COLOC.iterate_QTL <- function(GTEx_version="GTEx_V7",
     dir.create(coloc_path, recursive = TRUE, showWarnings  = FALSE)
     data.table::fwrite(COLOC_DT, file.path(coloc_path,"COLOC_results_noFlip-gwasEffect.txt"), sep="\t")
   }
-  COLOC.PP4_plot(COLOC_DT, PP_threshold = .95)
+  COLOC.PP4_plot(COLOC_DT, credset_thresh = .95)
   return(COLOC_DT)
 }
 

@@ -14,12 +14,10 @@ query_handler <- function(fullSS_path,
                           locus_dir=NULL,
                           topSNPs,
                           subset_path,
-                          min_POS=NA,
-                          max_POS=NA,
                           bp_distance=500000,
                           query_by=c("tabix","fullSS"),
                           force_new_subset = FALSE,
-                          conda_env="echoR",
+                          conda_env="echoR_mini",
                           nThread=1,
                           verbose=TRUE){
 

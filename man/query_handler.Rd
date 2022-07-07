@@ -10,12 +10,10 @@ query_handler(
   locus_dir = NULL,
   topSNPs,
   subset_path,
-  min_POS = NA,
-  max_POS = NA,
   bp_distance = 5e+05,
   query_by = c("tabix", "fullSS"),
   force_new_subset = FALSE,
-  conda_env = "echoR",
+  conda_env = "echoR_mini",
   nThread = 1,
   verbose = TRUE
 )
@@ -57,10 +55,6 @@ At minimum, \code{topSNPs} should include the following columns:
 }}
 
 \item{subset_path}{Path of the resulting locus subset file.}
-
-\item{min_POS}{Minimum genomic position to include.}
-
-\item{max_POS}{Maximum genomic position to include.}
 
 \item{bp_distance}{Distance around the lead SNP to include.}
 
