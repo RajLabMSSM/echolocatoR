@@ -269,6 +269,10 @@ library(echodata)
 
 ### [1000 Genomes Phase 3](https://www.internationalgenome.org)
 
+### Custom LD panel: from user-supplied VCFs
+
+### Custom LD panel: from user-supplied precomputed LD matrices
+
 
 <hr>
 

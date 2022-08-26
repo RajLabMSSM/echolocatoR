@@ -25,25 +25,25 @@ All examples below use data from the Parkinson's disease GWAS by Nalls et al. (2
 which contains the position of the lead/index SNP within each locus.
 * `finemap_loci()` (see next step) will then use this info to extract subsets of the   
 full GWAS/QTL summary statistics using windows centered on each lead/index SNP.
-* The `topSS` argument can either be a data.frame, or a path to a topSS file saved somehwere. Most common tabular data formats (e.g. .tsv, .csv, .xlsx) are accepted.  
-
+* The `topSS` argument can either be a data.frame, or a path to a topSS file saved somehwere.
+Most common tabular data formats (e.g. .tsv, .csv, .xlsx) are accepted.  
 
 
 ```{r  Prepare `top_SNPs` data.frame} 
+#### Load example top SNPs (pre-formatted) ####
 topSS <- echodata::topSNPs_Nalls2019_raw
-top_SNPs <- echodata::import_topSNPs( 
-  topSS = topSS,
-  munge = TRUE,
-  pval_col="P, all studies", 
-  effect_col="Beta, all studies", 
-  gene_col="Nearest Gene", 
-  locus_col = "Nearest Gene",
-  grouping_vars = c("Locus"),
-  remove_variants = "rs34637584") 
-head(top_SNPs)
+#### construct a column mapping object ####
+colmap <- echodata::construct_colmap(P = "P, all studies",
+                                     Effect = "Beta, all studies",
+                                     Locus = "Nearest Gene",
+                                     Gene = "QTL Nominated Gene (nearest QTL)")
+#### Import top SNPs ####
+topSNPs <- echodata::import_topSNPs(
+    topSS = echodata::topSNPs_Nalls2019_raw,
+    colmap = colmap,
+    grouping_vars = "Locus Number")
+head(topSNPs)
 ```
-
-
 
 ## Path to full summary stats file  
 
@@ -74,23 +74,23 @@ For a full description of all arguments, see `?finemap_loci`.
 Here are some key arguments:  
 
 * *results_dir*: Where you want to store all of your results.  
-* *finemap_methods*: Which fine-mapping methods you want to run (currently includes ABF, FINEMAP, SUSIE, POLYFUN_SUSIE, and COJO).  
+* *finemap_methods*: Which fine-mapping methods you want to run. For a full list of currently supported methods, run the function `echofinemap::lfm()`.  
 * *bp_distance*: Controls window size. Specifically, `bp_distance` is the number of basepairs upstream/downstream you want to extract for each locus. For example, if you want a 2Mb window (+/- 1Mb from the lead/index SNP in `top_SNPs`), set `bp_distance=1e+06`.  
 * *plot.zoom*: Zoom in/out from the center of each locus when producing the multiview plot.  
 You can adjust this separately from `bp_distance` so that you don't have rerun the whole pipeline each time (locus subsets, LD matrices, and fine-mapping results are all automatically saved in locus-specific folders).  
-
-**NOTE**: This example assumes you have already installed tabix (via htslib) and bcftoools.
-
-**WARNING**: Please use the full absolute paths (instead of relative paths) wherever possible (e.g. `results_dir`). This is especially important for the tool *FINEMAP*.
+ 
+**Note**: Please use the full absolute paths (instead of relative paths) wherever possible (e.g. `results_dir`). This is especially important for the tool *FINEMAP*.
 
 ```{r Run fine-mapping pipeline}
 results <- echolocatoR::finemap_loci(
  fullSS_path = fullSS_path,
- top_SNPs = top_SNPs,
+ topSNPs = topSNPs,
  loci = c("BST1","MEX3C"),
+ LD_reference = "1KGphase3",
  dataset_name = "Nalls23andMe_2019",
  fullSS_genome_build = "hg19",
  bp_distance = 250000,
+ finemap_methods = c("ABF","SUSIE","FINEMAP"),
  munged = TRUE)
 ```
 

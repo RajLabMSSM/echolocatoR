@@ -4,6 +4,7 @@
 ^\.github$
 ^doc$
 ^Meta$
+^R_tmp$
 ^codecov\.yml$
 ^_pkgdown\.yml$
 ^docs$

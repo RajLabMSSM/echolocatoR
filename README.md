@@ -3,7 +3,7 @@
 [![R build
 status](https://github.com/RajLabMSSM/echolocatoR/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/RajLabMSSM/echolocatoR/actions)
 [![](https://img.shields.io/github/last-commit/RajLabMSSM/echolocatoR.svg)](https://github.com/RajLabMSSM/echolocatoR/commits/master)
-[![](https://codecov.io/gh/RajLabMSSM/echolocatoR/branch/master/graph/badge.svg)](https://codecov.io/gh/RajLabMSSM/echolocatoR)
+[![](https://app.codecov.io/gh/RajLabMSSM/echolocatoR/branch/master/graph/badge.svg)](https://app.codecov.io/gh/RajLabMSSM/echolocatoR)
 [![License:
 GPL-3](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://cran.r-project.org/web/licenses/GPL-3)
 [![](https://img.shields.io/badge/doi-10.1093/bioinformatics/btab658-blue.svg)](https://doi.org/10.1093/bioinformatics/btab658)
@@ -11,10 +11,12 @@ GPL-3](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://cran.r-pro
 Author: <i>Brian M. Schilder</i>
 </h5>
 <h5>
-README updated: <i>Mar-07-2022</i>
+README updated: <i>Aug-26-2022</i>
 </h5>
 
-## `echolocatoR`: Automated statistical and functional fine-mapping with extensive access to genome-wide datasets.
+## `echolocatoR`: Automated statistical and functional fine-mapping
+
+with extensive access to genome-wide datasets.
 
 ### The *echoverse*
 
@@ -37,8 +39,8 @@ module independently to create your own custom workflows.
 
 ### Citation
 
-If you use `echolocatoR`, or any of the **echoverse** subpackages,
-please cite:
+If you use `echolocatoR`, or any of the **echoverse** modules, please
+cite:
 
 > Brian M Schilder, Jack Humphrey, Towfique Raj (2021) echolocatoR: an
 > automated end-to-end statistical and functional genomic fine-mapping
@@ -49,7 +51,7 @@ please cite:
 
 Fine-mapping methods are a powerful means of identifying causal variants
 underlying a given phenotype, but are underutilized due to the technical
-challenges of implementation. ***echolocatoR*** is an R package that
+challenges of implementation. `echolocatoR` is an R package that
 automates end-to-end genomics fine-mapping, annotation, and plotting in
 order to identify the most probable causal variants associated with a
 given phenotype.
@@ -63,7 +65,7 @@ The elimination of data gathering and preprocessing steps enables rapid
 fine-mapping of many loci in any phenotype, complete with locus-specific
 publication-ready figure generation. All results are merged into a
 single per-SNP summary file for additional downstream analysis and
-results sharing. Therefore ***echolocatoR*** drastically reduces the
+results sharing. Therefore `echolocatoR` drastically reduces the
 barriers to identifying causal variants by making the entire
 fine-mapping pipeline rapid, robust and scalable.
 
@@ -94,7 +96,7 @@ welcome!
 
 ## Literature
 
-### For applications of ***echolocatoR*** in the literature, please see:
+### For applications of `echolocatoR` in the literature, please see:
 
 > 1.  E Navarro, E Udine, K de Paiva Lopes, M Parks, G Riboldi, BM
 >     Schilder…T Raj (2020) Dysregulation of mitochondrial and
@@ -110,10 +112,10 @@ welcome!
 >     pathologies. Nature Genetics,
 >     <https://doi.org/10.1038/s41588-021-00976-y>
 
-## `echofinemap`: Fine-mapping tools
+## Fine-mapping tools
 
-***echolocatoR*** will automatically check whether you have the
-necessary columns to run each tool you selected in
+`echolocatoR` will automatically check whether you have the necessary
+columns to run each tool you selected in
 `echolocatoR::finemap_loci(finemap_methods=...)`. It will remove any
 tools that for which there are missing necessary columns, and produces a
 message letting you know which columns are missing. Note that some
@@ -129,15 +131,16 @@ Additional required columns:
 knitr::kable(echofinemap::required_cols())
 ```
 
-| method        | required                                                 | suggested        |
-|:--------------|:---------------------------------------------------------|:-----------------|
-| ABF           | SNP , CHR , POS , Effect , StdErr , N , proportion_cases | MAF              |
-| COJO          | SNP , CHR , POS , Effect, StdErr, A1 , A2                | Freq, P , N      |
-| COLOC         | SNP , CHR , POS , Effect, StdErr                         | NULL             |
-| FINEMAP       | SNP , CHR , POS , Effect, StdErr                         | A1 , A2 , MAF, N |
-| PAINTOR       | SNP , CHR , POS , Effect, StdErr                         | MAF              |
-| POLYFUN_SUSIE | SNP , CHR , POS , Effect, StdErr, P , A1 , A2            | MAF, N           |
-| SUSIE         | SNP , CHR , POS , Effect, StdErr                         | N                |
+| method          | required                                                 | suggested        |
+|:----------------|:---------------------------------------------------------|:-----------------|
+| ABF             | SNP , CHR , POS , Effect , StdErr , N , proportion_cases | MAF              |
+| COJO            | SNP , CHR , POS , Effect, StdErr, A1 , A2                | Freq, P , N      |
+| COLOC           | SNP , CHR , POS , Effect, StdErr                         | NULL             |
+| FINEMAP         | SNP , CHR , POS , Effect, StdErr                         | A1 , A2 , MAF, N |
+| PAINTOR         | SNP , CHR , POS , Effect, StdErr                         | MAF              |
+| POLYFUN_FINEMAP | SNP , CHR , POS , Effect, StdErr, P , A1 , A2            | MAF, N           |
+| POLYFUN_SUSIE   | SNP , CHR , POS , Effect, StdErr, P , A1 , A2            | MAF, N           |
+| SUSIE           | SNP , CHR , POS , Effect, StdErr                         | N                |
 
 ### [ABF](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)
 
@@ -311,91 +314,97 @@ utils::sessionInfo()
 ```
 
 ```
-## R version 4.1.0 (2021-05-18)
-## Platform: x86_64-apple-darwin17.0 (64-bit)
-## Running under: macOS Big Sur 10.16
+## R Under development (unstable) (2022-03-03 r81847)
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Ubuntu 20.04.4 LTS
 ## 
 ## Matrix products: default
-## BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib
+## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so
 ## 
 ## locale:
-## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
+##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## loaded via a namespace (and not attached):
-##   [1] BiocFileCache_2.2.1         coloc_5.1.1                
-##   [3] plyr_1.8.6                  splines_4.1.0              
-##   [5] BiocParallel_1.28.3         usethis_2.1.5              
-##   [7] GenomeInfoDb_1.30.1         ggplot2_3.3.5              
-##   [9] digest_0.6.29               yulab.utils_0.0.4          
-##  [11] htmltools_0.5.2             viridis_0.6.2              
-##  [13] echofinemap_0.99.0          fansi_1.0.2                
-##  [15] magrittr_2.0.2              memoise_2.0.1              
-##  [17] BSgenome_1.62.0             gert_1.5.0                 
-##  [19] openxlsx_4.2.5              credentials_1.3.2          
-##  [21] Biostrings_2.62.0           matrixStats_0.61.0         
-##  [23] R.utils_2.11.0              askpass_1.1                
-##  [25] prettyunits_1.1.1           colorspace_2.0-3           
-##  [27] blob_1.2.2                  rappdirs_0.3.3             
-##  [29] gitcreds_0.1.1              xfun_0.29                  
-##  [31] dplyr_1.0.8                 crayon_1.5.0               
-##  [33] RCurl_1.98-1.6              dlstats_0.1.4              
-##  [35] echodata_0.99.6             jsonlite_1.8.0             
-##  [37] survival_3.3-0              VariantAnnotation_1.40.0   
-##  [39] glue_1.6.2                  gtable_0.3.0               
-##  [41] zlibbioc_1.40.0             XVector_0.34.0             
-##  [43] DelayedArray_0.20.0         BiocGenerics_0.40.0        
-##  [45] scales_1.1.1                DBI_1.1.2                  
-##  [47] Rcpp_1.0.8                  viridisLite_0.4.0          
-##  [49] progress_1.2.2              reticulate_1.24-9000       
-##  [51] bit_4.0.4                   clisymbols_1.2.0           
-##  [53] stats4_4.1.0                DT_0.21                    
-##  [55] htmlwidgets_1.5.4           httr_1.4.2                 
-##  [57] badger_0.1.0                RColorBrewer_1.1-2         
-##  [59] ellipsis_0.3.2              pkgconfig_2.0.3            
-##  [61] reshape_0.8.8               XML_3.99-0.9               
-##  [63] R.methodsS3_1.8.1           seqminer_8.4               
-##  [65] dbplyr_2.1.1                utf8_1.2.2                 
-##  [67] tidyselect_1.1.2            rlang_1.0.2                
-##  [69] AnnotationDbi_1.56.2        munsell_0.5.0              
-##  [71] tools_4.1.0                 cachem_1.0.6               
-##  [73] cli_3.2.0                   generics_0.1.2             
-##  [75] RSQLite_2.2.10              evaluate_0.15              
-##  [77] stringr_1.4.0               fastmap_1.1.0              
-##  [79] yaml_2.3.5                  sys_3.4                    
-##  [81] knitr_1.37                  bit64_4.0.5                
-##  [83] fs_1.5.2                    zip_2.2.0                  
-##  [85] purrr_0.3.4                 KEGGREST_1.34.0            
-##  [87] gh_1.3.0                    R.oo_1.24.0                
-##  [89] xml2_1.3.3                  biomaRt_2.50.3             
-##  [91] compiler_4.1.0              rstudioapi_0.13            
-##  [93] filelock_1.0.2              curl_4.3.2                 
-##  [95] susieR_0.11.92              png_0.1-7                  
-##  [97] tibble_3.1.6                stringi_1.7.6              
-##  [99] highr_0.9                   GenomicFeatures_1.46.5     
-## [101] desc_1.4.0                  lattice_0.20-45            
-## [103] Matrix_1.4-0                vctrs_0.3.8                
-## [105] pillar_1.7.0                lifecycle_1.0.1            
-## [107] BiocManager_1.30.16         snpStats_1.44.0            
-## [109] data.table_1.14.2           bitops_1.0-7               
-## [111] irlba_2.3.5                 rtracklayer_1.54.0         
-## [113] GenomicRanges_1.46.1        R6_2.5.1                   
-## [115] BiocIO_1.4.0                gridExtra_2.3              
-## [117] IRanges_2.28.0              assertthat_0.2.1           
-## [119] SummarizedExperiment_1.24.0 openssl_1.4.6              
-## [121] rprojroot_2.0.2             rjson_0.2.21               
-## [123] GenomicAlignments_1.30.0    Rsamtools_2.10.0           
-## [125] S4Vectors_0.32.3            GenomeInfoDbData_1.2.7     
-## [127] parallel_4.1.0              hms_1.1.1                  
-## [129] grid_4.1.0                  tidyr_1.2.0                
-## [131] rmarkdown_2.11              rvcheck_0.2.1              
-## [133] MatrixGenerics_1.6.0        echotabix_0.99.2           
-## [135] echoLD_0.99.1               mixsqp_0.3-43              
-## [137] piggyback_0.1.1             Biobase_2.54.0             
-## [139] lubridate_1.8.0             restfulr_0.0.13
+##   [1] BiocFileCache_2.5.0         coloc_5.2.0                
+##   [3] plyr_1.8.7                  splines_4.2.0              
+##   [5] BiocParallel_1.31.3         usethis_2.1.6              
+##   [7] GenomeInfoDb_1.33.3         ggplot2_3.3.6              
+##   [9] digest_0.6.29               yulab.utils_0.0.5          
+##  [11] htmltools_0.5.3             viridis_0.6.2              
+##  [13] echofinemap_0.99.2          fansi_1.0.3                
+##  [15] magrittr_2.0.3              memoise_2.0.1              
+##  [17] BSgenome_1.65.1             gert_1.7.1                 
+##  [19] tzdb_0.3.0                  openxlsx_4.2.5             
+##  [21] credentials_1.3.2           Biostrings_2.65.0          
+##  [23] readr_2.1.2                 echoconda_0.99.6           
+##  [25] matrixStats_0.62.0          R.utils_2.12.0             
+##  [27] askpass_1.1                 prettyunits_1.1.1          
+##  [29] colorspace_2.0-3            blob_1.2.3                 
+##  [31] rappdirs_0.3.3              gitcreds_0.1.1             
+##  [33] xfun_0.32                   dplyr_1.0.9                
+##  [35] crayon_1.5.1                RCurl_1.98-1.8             
+##  [37] dlstats_0.1.5               echodata_0.99.11           
+##  [39] jsonlite_1.8.0              survival_3.3-1             
+##  [41] VariantAnnotation_1.43.2    glue_1.6.2                 
+##  [43] gtable_0.3.0                zlibbioc_1.43.0            
+##  [45] XVector_0.37.0              DelayedArray_0.23.0        
+##  [47] BiocGenerics_0.43.0         scales_1.2.1               
+##  [49] DBI_1.1.3                   Rcpp_1.0.9                 
+##  [51] viridisLite_0.4.1           progress_1.2.2             
+##  [53] reticulate_1.25             bit_4.0.4                  
+##  [55] stats4_4.2.0                DT_0.23                    
+##  [57] htmlwidgets_1.5.4           httr_1.4.4                 
+##  [59] badger_0.2.1                dir.expiry_1.5.0           
+##  [61] RColorBrewer_1.1-3          ellipsis_0.3.2             
+##  [63] pkgconfig_2.0.3             reshape_0.8.9              
+##  [65] XML_3.99-0.10               R.methodsS3_1.8.2          
+##  [67] dbplyr_2.2.1                utf8_1.2.2                 
+##  [69] tidyselect_1.1.2            rlang_1.0.4                
+##  [71] AnnotationDbi_1.59.0        munsell_0.5.0              
+##  [73] tools_4.2.0                 cachem_1.0.6               
+##  [75] cli_3.3.0                   generics_0.1.3             
+##  [77] RSQLite_2.2.16              evaluate_0.16              
+##  [79] stringr_1.4.1               fastmap_1.1.0              
+##  [81] yaml_2.3.5                  sys_3.4                    
+##  [83] knitr_1.40                  bit64_4.0.5                
+##  [85] fs_1.5.2                    zip_2.2.0                  
+##  [87] purrr_0.3.4                 KEGGREST_1.37.0            
+##  [89] gh_1.3.0                    R.oo_1.25.0                
+##  [91] xml2_1.3.3                  biomaRt_2.53.1             
+##  [93] compiler_4.2.0              rstudioapi_0.14            
+##  [95] filelock_1.0.2              curl_4.3.2                 
+##  [97] susieR_0.12.19              png_0.1-7                  
+##  [99] tibble_3.1.8                stringi_1.7.8              
+## [101] highr_0.9                   basilisk.utils_1.9.0       
+## [103] GenomicFeatures_1.49.1      desc_1.4.1                 
+## [105] lattice_0.20-45             Matrix_1.4-1               
+## [107] vctrs_0.4.1                 pillar_1.8.1               
+## [109] lifecycle_1.0.1             BiocManager_1.30.18        
+## [111] downloadR_0.99.3            snpStats_1.47.0            
+## [113] data.table_1.14.2           bitops_1.0-7               
+## [115] irlba_2.3.5                 rtracklayer_1.57.0         
+## [117] GenomicRanges_1.49.0        R6_2.5.1                   
+## [119] BiocIO_1.7.1                gridExtra_2.3              
+## [121] IRanges_2.31.0              assertthat_0.2.1           
+## [123] SummarizedExperiment_1.27.1 openssl_2.0.2              
+## [125] rprojroot_2.0.3             rjson_0.2.21               
+## [127] GenomicAlignments_1.33.0    Rsamtools_2.13.2           
+## [129] S4Vectors_0.35.0            GenomeInfoDbData_1.2.8     
+## [131] parallel_4.2.0              hms_1.1.2                  
+## [133] grid_4.2.0                  tidyr_1.2.0                
+## [135] basilisk_1.9.0              rmarkdown_2.16             
+## [137] rvcheck_0.2.1               MatrixGenerics_1.9.0       
+## [139] echotabix_0.99.7            echoLD_0.99.5              
+## [141] mixsqp_0.3-43               piggyback_0.1.4            
+## [143] Biobase_2.57.0              restfulr_0.0.15
 ```
 
 </details>
