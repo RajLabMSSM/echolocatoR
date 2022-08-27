@@ -19,7 +19,6 @@
 #'  }
 #'
 #' @section input file parameters:
-#'
 #' @param loci Character list of loci in \strong{Locus} col of \code{topSNPs}.
 #' @param fullSS_path Path to the full summary statistics file (GWAS or QTL)
 #' that you want to fine-map.
@@ -66,7 +65,6 @@
 #' }
 #'
 #' @section overwrite existing files:
-#'
 #' @param force_new_subset By default, if a subset of the full
 #'  summary stats file for a given locus is already present,
 #' then \pkg{echolocatoR} will just use the pre-existing file.
@@ -80,7 +78,6 @@
 #' Set \code{force_new_finemap=T} to override this and re-run fine-mapping.
 #'
 #' @section fine-mapping parameters:
-#'
 #' @param finemap_methods Which fine-mapping methods you want to use.
 #' @param n_causal The maximum number of potential causal SNPs per locus.
 #' This parameter is used somewhat differently by different fine-mapping tools.
