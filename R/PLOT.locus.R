@@ -1121,13 +1121,11 @@ get_transcripts <- function(gr.snp,
     unique() %>%
     subset((!is.na(symbol)) & (!is.na(tx_name))) %>%
     dplyr::group_by(symbol) %>%
-    # slice_max does not behave as expected.
-    # If you don't explicitly group by the group var,
-    ## you will only return the top n transcripts overall,
-    ## regardless of genes (really dumb...)
-    dplyr::slice_max(order_by = c(symbol,width),
-                     n = max_transcripts,
-                     with_ties = F) %>%
+    # This operation does not involve huge datasets
+    # group & arrange & filter should be fine in terms of speed
+    dplyr::arrange(desc(width)) %>% 
+    dplyr::filter(row_number()==1) %>%
+    dplyr::ungroup() %>%
     data.table::as.data.table()
 
   #### remove_pseudogenes ####
