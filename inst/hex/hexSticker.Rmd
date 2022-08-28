@@ -12,40 +12,112 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
-knitr::opts_chunk$set(echo = T, fig.width = 7, fig.height = 5, root.dir=here::here())
-knitr::opts_knit$set(root.dir=here::here())
+pkg <- read.dcf(here::here("DESCRIPTION"), fields = "Package")[1]
+description <- read.dcf(here::here("DESCRIPTION"), fields = "Description")[1]
 ```
 
-```{r setup, include=TRUE, message=FALSE} 
+```{r} 
 library(hexSticker)
-
 library(dplyr)
 library(ggplot2)
+library(ggimage)
+```
+
+## File path
+
+Create file path.
+
+```{r}
+filename <- here::here("inst/hex/hex.png")
+dir.create(dirname(filename), showWarnings = FALSE, recursive = TRUE)
 ```
 
 You can make awesome hex stickers for your R packages using [hexSticker](https://github.com/GuangchuangYu/hexSticker). 
 
-# phenomix
+## `echolocatoR` logo
+
+```{r}
+echoR_logo <- here::here("images/echolocatoR_logo2.png")
+```
+
+## Bat logo
+
+Download bat logo from the 
+[*echoverseTemplate*](https://github.com/RajLabMSSM/echoverseTemplate/releases/tag/latest)
+GitHub Release.
+
+```{r}
+tmp <- tempfile()
+#### Side view ####
+URL <- "https://github.com/RajLabMSSM/echoverseTemplate/releases/download/latest/bat_silhouette.png"   
+#### Front view ####
+# URL <- "https://github.com/RajLabMSSM/echoverseTemplate/releases/download/latest/bat_silhouette_front.png"   
+download.file(URL, tmp)
+```
+
+## Background 
+
+Create background with `ggplot2`.
+
+```{r, eval=FALSE}
+set.seed(1234)
+n_bats <- 20
+d <- data.frame(x = -rexp(n_bats, rate = 3),
+                y = rexp(n_bats, rate = 3)
+                ) %>%
+  dplyr::mutate(image = URL,
+                bsize = abs(x*y^2)) %>%
+  dplyr::arrange(dplyr::desc(x), dplyr::desc(y))
+qplot(d$x, d$y, size=d$bsize)
+```
+
+Import data points for reproducibility.
+
+```{r}
+d <- data.table::fread("https://github.com/RajLabMSSM/echoverseTemplate/releases/download/latest/echoverse_points.csv.gz")
+d <- rbind(d,
+  data.frame(x= -.9, 
+             y=max(d$y)*.9, 
+             image= echoR_logo, 
+             bsize=2.2)
+  )
+d$image <- factor(d$image, unique(d$image), ordered = TRUE)
+```
+
+ 
+```{r}
+gg_bats <- ggplot(d, aes(x = x, y = y, color=log(bsize,1.0001), image=image)) + 
+  geom_image(aes(size=I(bsize)), alpha=1) + # image_fun=magick::image_flop
+  scale_color_gradient(low = "#194f68", high = "#56ffff") +   
+  coord_cartesian(clip = "off") +
+  labs(title = "echoverse") +  
+  theme_void() +
+  theme(plot.title = element_text(color = "#56ffff", 
+                                  margin = margin(b=15),
+                                  size = 25,
+                                  hjust = .5, vjust = -.9, family = "Aller_Rg"), 
+        legend.position = "none") 
+# print(gg_bats)
+```
 
 
-```{r}   
-img1 <- here::here("images/echolocatoR_logo.png")
-# img2 <- "../images/phoenix_pixel.png"
+# hexSticker
 
+```{r}
+s_size = 1
 stick <- hexSticker::sticker(
-        subplot = img1, 
-        url = tolower("https://github.com/RajLabMSSM/echolocatoR"), u_color = "#56ffff", u_size = 3.5,
-        #### Package name ####
-        package="echoverse",p_color = "white",p_size=10, p_y = .5, 
-        #### Subplot #####
-        s_x=1, s_y=1,  s_width = .9,
-        #### Fill & border ####
-        h_fill = "#25355c", h_color = "#41c6c8", 
-        #### Spotlight ####
-        spotlight = TRUE, l_alpha = .3, l_width = 10,  
-        #### File output ####
-        filename= here::here("inst/hex/hex.png"), dpi = 300)
-
+  subplot = gg_bats, 
+  #### Package name ####
+  package = pkg, p_size=14, p_y = 1.5,
+  #### Subplot #####
+  s_x=1, s_y=.84,  s_height = s_size*1.15, s_width = s_size,
+  #### Fill & border ####
+  h_fill = "#25355c", h_color = "#41c6c8", #56ffff
+  #### Spotlight ####
+  spotlight = TRUE, l_alpha = .3, l_width = 10,
+  #### File output ####
+  filename = filename, dpi = 300)
+# print(stick)
 ```
 
 

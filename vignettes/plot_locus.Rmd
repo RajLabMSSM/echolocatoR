@@ -38,13 +38,13 @@ The plot is centered on the lead/index SNP. If a list is supplied to plot.xoom
 ## Load example data   
 
 Load example dataset of the results from fine-mapping the BST1 locus with `finemap_loci()`.
-Original data comes from the recent Nalls et al. (2019) Parkinson's disease GWAS (see `?BST1` for details).
+Original data comes from the recent Nalls et al. (2019) Parkinson's disease GWAS 
+(see `?BST1` for details).
 
 ```{r Load example data}
 dat <- echodata::BST1
 LD_matrix <- echodata::BST1_LD_matrix
 locus_dir <- file.path(tempdir(), echodata::locus_dir)
-
 LD_reference <- "UKB" # Used for naming saved plots 
 ```
 
@@ -148,9 +148,9 @@ trk_plot.xgr <- echoplot::plot_locus(dat = dat,
 
 * Using the `Roadmap=T` and `Roadmap_query="<query>"` arguments searches the Roadmap for chromatin mark data across various cell-types, cell-lines and tissues.  
 * Note that Roadmap queries requires `tabix` to be installed on your machine, or within a conda environment (`conda_env = "echoR"`). 
-* Parallelizing these queries across multiple thredas speeds up this process (`nThread=<n_cores_available>`), as does reusing previously stored data which is automatically saved to the locus-specific subfolder (`<dataset_type>/<dataset_name>/<locus>/annotations/Roadmap.ChromatinMarks_CellTypes.RDS`) .
+* Parallelizing these queries across multiple threads speeds up this process (`nThread=<n_cores_available>`), as does reusing previously stored data which is automatically saved to the locus-specific subfolder (`<dataset_type>/<dataset_name>/<locus>/annotations/Roadmap.ChromatinMarks_CellTypes.RDS`).
 
-```{r trk_plot.roadmap, attr.output='style="max-height: 200px;"'} 
+```{r trk_plot.roadmap, eval=FALSE} 
 trk_plot.roadmap <- echoplot::plot_locus(dat = dat, 
                                          LD_matrix = LD_matrix, 
                                          LD_reference = LD_reference,
@@ -206,7 +206,7 @@ trk_plot.qtl <- echoplot::plot_locus(dat = qtl_dat,
 
 <details>  
 
-```{r Session Info, attr.output='style="max-height: 200px;"'}
+```{r Session Info, attr.output='style="max-height: 400px;"'}
 utils::sessionInfo()
 ```
 

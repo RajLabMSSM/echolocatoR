@@ -10,23 +10,15 @@ vignette: >
     %\VignetteEngine{knitr::rmarkdown}
 ---
 
-
-```{r setup}
-#### Install echolocatoR >= v2.0 ####
-if(!require("echolocatoR") || 
-   packageVersion("echolocatoR")<"2.0.0"){
-  remotes::install_github("RajLabMSSM/echolocatoR@echoverse", 
-                          upgrade = TRUE, dependencies = TRUE)    
-}  
-library(echolocatoR) 
-
+```{r setup, eval=FALSE} 
+library(echolocatoR)  
 ### Set to wherever you want to store your data 
 save_dir <- "/Desktop/BD_finemapping"
 ```
 
 ### [Optional] Docker
 
-`echolocatoR` doesn't yet have it's own Docker container, 
+`echolocatoR` doesn't yet have its own Docker container, 
 but in the meantime you can use the official `MAGMA.Celltyping` Docker container which includes an Rstudio interface (see [vignette here](https://neurogenomics.github.io/MAGMA_Celltyping/articles/docker)).  
 
 Then, simply install `echolocatoR` from within the container 
@@ -35,9 +27,10 @@ using the same instructions as above.
  
 ## Prepare `top_SNPs` data.frame   
 
-Import the data.frame of containing lead/proxy SNPs to indicate where each GWAS locus is. 
+Import the data.frame of containing lead/proxy SNPs 
+to indicate where each GWAS locus is. 
  
-```{r  Prepare `top_SNPs` data.frame}  
+```{r  Prepare `top_SNPs` data.frame, eval=FALSE}  
 topSNPs <- echodata::import_topSNPs(
   topSS = file.path(save_dir,"my_loci.xlsx")
 )
@@ -49,7 +42,7 @@ head(topSNPs)
 To prepare the data for use with `echolocatoR` 
 (without the need for manual column mapping) we must first munge the sumstats.
 
-```{r fullSS}  
+```{r fullSS, eval=FALSE}  
 #### Set up paths ####
 fullSS_path_vcf <- file.path(save_dir,"pgc-bip2021-all.vcf.tsv.gz")
 target_path <- echotabix::construct_tabix_path(gsub(".vcf","",fullSS_path_vcf))
@@ -97,6 +90,7 @@ if(!file.exists(target_path)){
   ## Write and bgzip compress
   dat[,BP:=POS]
   target_path <- MungeSumstats::write_sumstats(sumstats_dt = dat,
+                                               ref_genome = "hg19",
                                                save_path = target_path,
                                                tabix_index = TRUE,
                                                return_path = TRUE)  
@@ -118,7 +112,7 @@ if(!file.exists(target_path)){
 
 ## Query subset
 
-```{r}
+```{r, eval=FALSE}
 loci <- topSNPs$Locus
 #### Select one locus ####
 topSNPs_locus <- topSNPs[loci[1],]
@@ -144,7 +138,7 @@ echodata::createDT(head(dat_locus))
 It then computes pairwise linkage disequilibrium (LD) between all SNPs in that 
 subset.
 
-```{r}
+```{r, eval=FALSE}
 locus_dir <- file.path(save_dir, topSNPs_locus$Locus) 
 
 LD_list  <- echoLD::get_LD(query_dat = dat_locus,
@@ -160,7 +154,7 @@ We can now run fine-mapping on the locus subset. You'll notice the the output
 is the same `dat` object that was fed in, but with some new columns containing 
 the results from each fine-mapping method that was run.
 
-```{r}
+```{r, eval=FALSE}
 dat2 <- echofinemap::multifinemap(dat = LD_list$DT,
                                   locus_dir = locus_dir,  
                                   LD_matrix = LD_list$LD, 
@@ -173,7 +167,7 @@ dat2 <- echofinemap::multifinemap(dat = LD_list$DT,
 
 ## Plot locus results
 
-```{r} 
+```{r, eval=FALSE} 
 #### We'll need this column to color SNPs by LD with the lead SNP ####
 dat2 <- echodata::assign_lead_snp(dat = dat2)
 
@@ -186,8 +180,6 @@ plot_list <- echoplot::plot_locus(dat = dat2,
                                   nott_show_placseq = TRUE
                                   ) 
 ```
-
-
 
 
 ## Run full fine-mapping pipeline   
@@ -225,7 +217,7 @@ Make a plot summarising the fine-mapping results across all loci,
 and how they overlap with cell-type-specific epigenomic signatures
 from Nott2019 and Corces2020.
 
-```{r}
+```{r, eval=FALSE}
 merged_dat <- echoannot::merge_finemapping_results(
   dataset = file.path(save_dir,"GWAS","BD_PGC2021"), 
   minimum_support = 0, 
@@ -246,7 +238,7 @@ gg_summary <- echoannot::super_summary_plot(
 
 <details>
 
-```{r Session Info, attr.output='style="max-height: 200px;"'}
+```{r Session Info, attr.output='style="max-height: 400px;"'}
 utils::sessionInfo()
 ```
 

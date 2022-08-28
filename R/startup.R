@@ -3,11 +3,14 @@
 #' Startup messages with info on package name, version, citation, GitHub, etc.
 #' @keywords internal
 #' @import cli
+#' @importFrom utils citation
 startup <- function(package="echolocatoR",
                     add_batty=FALSE){
 
   ref <- gsub("\\[|\\*","",
-              strsplit(citation("echolocatoR")$textVersion,"\\]")[[1]][1])
+              strsplit(
+                utils::citation("echolocatoR")$textVersion,"\\]"
+                )[[1]][1])
   indent <- 5
   exdent <- 5
   width <- (cli::console_width()*.75) - indent - exdent
