@@ -11,24 +11,35 @@
 #' @importFrom echotabix convert_and_query construct_query
 query_handler <- function(fullSS_path,
                           colmap,
-                          locus_dir=NULL,
+                          locus_dir = NULL,
+                          locus = NULL,
                           topSNPs,
                           subset_path,
-                          bp_distance=500000,
-                          query_by=c("tabix","fullSS"),
+                          bp_distance = 500000,
+                          query_by = c("tabix","fullSS"),
                           force_new_subset = FALSE,
-                          conda_env="echoR_mini",
-                          nThread=1,
-                          verbose=TRUE){
+                          conda_env = "echoR_mini",
+                          nThread = 1,
+                          verbose = TRUE){
 
   query_by <- tolower(query_by)[1]
   messager("+ Query Method:",query_by, v=verbose)
-  locus <- basename(locus_dir)
-
-  #### Subset topSNPs to query with ####
+  if(is.null(locus)){
+    locus <- basename(locus_dir)
+  }
+  #### Subset Locus ####
   topSNP_sub <- topSNPs[topSNPs$Locus==locus & !is.na(topSNPs$Locus),]
+  #### Subset to only one gene ####
   if(echodata::detect_genes(loci = locus)){
-    topSNP_sub <- subset(topSNP_sub, Gene==names(locus))
+    if(!"Gene" %in% colnames(topSNP_sub)){
+      messager("QTL locus detected, but Gene col not present in topSNPs.",
+               "Skipping Gene filtering step.",
+               v=verbose)
+    } else {
+      messager("QTL locus detected, subsetting to data Gene:",names(locus),
+               v=verbose)
+      topSNP_sub <- subset(topSNP_sub, Gene==names(locus))
+    }
   }
   #### Create query GRanges ####
   query_granges <- echotabix::construct_query(

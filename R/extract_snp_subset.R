@@ -10,13 +10,14 @@
 #' @keywords internal
 #' @importFrom echodata check_if_empty standardize
 extract_snp_subset <- function(subset_path,
+                               locus = NULL,
                                colmap=echodata::construct_colmap(),
                                fullSS_path,
                                topSNPs,
                                LD_reference,
                                force_new_subset=FALSE,
                                bp_distance=500000,
-                               superpopulation="",
+                               superpopulation="EUR",
                                compute_n="ldsc",
 
                                query_by="tabix",
@@ -29,28 +30,33 @@ extract_snp_subset <- function(subset_path,
 
   #### Set up paths ####
   locus_dir <- get_locus_dir(subset_path = subset_path)
-  locus <- basename(locus_dir)
+  if(is.null(locus)){
+    locus <- basename(locus_dir)
+  }
   multi_path <- echofinemap::create_method_path(
     locus_dir = locus_dir,
     LD_reference = LD_reference,
     finemap_method = "Multi-finemap",
     compress = TRUE)
 
-  #### Check is subset exists ####
-  if(file.exists(subset_path) & isFALSE(force_new_subset)){
-    messager("+ Importing pre-existing file:",subset_path, v=verbose)
-    echodata::check_if_empty(subset_path)
-    query <- data.table::fread(subset_path)
-
-  #### Check if multi-finemap results exists ####
-  } else if (file.exists(multi_path) & isFALSE(force_new_subset)){
-    messager("+ Importing  pre-existing file:",multi_path, v=verbose)
+  #### Priority 1: Check if multi-finemap results exists ####
+  if (file.exists(multi_path) & isFALSE(force_new_subset)){
+    messager("+ Importing pre-existing file:",multi_path, v=verbose)
     echodata::check_if_empty(multi_path)
     query <- data.table::fread(multi_path)
+    return(query)
+
+    #### Priority 2: Check is subset exists ####
+  } else if(file.exists(subset_path) & isFALSE(force_new_subset)){
+      messager("+ Importing pre-existing file:",subset_path, v=verbose)
+      echodata::check_if_empty(subset_path)
+      query <- data.table::fread(subset_path)
+      return(query)
 
   } else {
-    #### Convert and query ####
+    #### Priority 3: Convert and query ####
     query <- query_handler(locus_dir=locus_dir,
+                           locus = locus,
                            fullSS_path=fullSS_path,
                            subset_path=subset_path,
                            topSNPs=topSNPs,
@@ -70,5 +76,6 @@ extract_snp_subset <- function(subset_path,
                                    nThread=nThread,
                                    verbose=verbose)
   }
+  #### Return ####
   return(query)
 }

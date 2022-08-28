@@ -8,6 +8,7 @@ query_handler(
   fullSS_path,
   colmap,
   locus_dir = NULL,
+  locus = NULL,
   topSNPs,
   subset_path,
   bp_distance = 5e+05,
@@ -38,6 +39,10 @@ function can be used in two different ways:
  \link[MungeSumstats]{format_sumstats}.
  }
 }}
+
+\item{locus}{Locus name to fine-map (e.g. \code{"BIN1"}).
+Can be named to indicate a specific gene within a QTL locus
+(e.g. \code{c(ENSG00000136731="BIN1")}).}
 
 \item{topSNPs}{A data.frame with the genomic coordinates of the lead SNP
 for each locus.

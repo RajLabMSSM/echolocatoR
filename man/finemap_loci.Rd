@@ -14,7 +14,7 @@ finemap_loci(
   topSNPs = "auto",
   force_new_subset = FALSE,
   force_new_LD = FALSE,
-  force_new_finemap = TRUE,
+  force_new_finemap = FALSE,
   finemap_methods = c("ABF", "FINEMAP", "SUSIE", "POLYFUN_SUSIE"),
   finemap_args = NULL,
   n_causal = 5,
@@ -97,11 +97,7 @@ finemap_loci(
 )
 }
 \arguments{
-\item{loci}{The list of loci you want to fine-map.
-If \code{subset_path="auto"} (\emph{default}),
- a locus subset file name is automatically constructed as:
-\emph{Data/<dataset_type>/<dataset_name>/<locus>/
-Multi-finemap/<locus>_<dataset_name>_Multi-finemap.tsv.gz}}
+\item{loci}{Character list of loci in \strong{Locus} col of \code{topSNPs}.}
 
 \item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL)
 that you want to fine-map.
@@ -149,7 +145,7 @@ Subsets are saved in the following path structure:
 \emph{Data/\<dataset_type\>/\<dataset_name\>/\<locus\>/Multi-finemap/
 \<locus\>_\<dataset_name\>_Multi-finemap.tsv.gz}}
 
-\item{force_new_LD}{If LD file exists, create a new one.}
+\item{force_new_LD}{Force new LD subset.}
 
 \item{force_new_finemap}{By default, if an fine-mapping results file for
  a given locus is already present,
@@ -216,12 +212,13 @@ Neff = 4 / (1/N_CAS + 1/N_CON)}.
 
 \item{LD_reference}{LD reference to use:
 \itemize{
-\item{"1KGphase1" : }{1000 Genomes Project Phase 1}
-\item{"1KGphase3" : }{1000 Genomes Project Phase 3}
+\item{"1KGphase1" : }{1000 Genomes Project Phase 1 (genome build: hg19).}
+\item{"1KGphase3" : }{1000 Genomes Project Phase 3 (genome build: hg19).}
 \item{"UKB" : }{Pre-computed LD from a British
-European-decent subset of UK Biobank.}
+European-decent subset of UK Biobank (genome build: hg19).}
 \item{"<vcf_path>" : }{User-supplied path to a custom VCF file 
-to compute LD matrix from.}
+to compute LD matrix from 
+(genome build: defined by user with \code{target_genome}).}
 }}
 
 \item{leadSNP_LD_block}{Only return SNPs within the same LD block
@@ -363,10 +360,10 @@ res <- echolocatoR::finemap_loci(
   fullSS_path = fullSS_path,
   topSNPs = topSNPs,
   loci = c("BST1","MEX3C"),
-  LD_reference = "1KGphase1",
+  finemap_methods = c("ABF","FINEMAP","SUSIE"),
   dataset_name = "Nalls23andMe_2019",
   fullSS_genome_build = "hg19",
-  bp_distance = 250000,
+  bp_distance = 10000,
   munged = TRUE)
 }
 \seealso{

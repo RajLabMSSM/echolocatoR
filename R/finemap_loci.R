@@ -9,6 +9,7 @@
 #'  a locus subset file name is automatically constructed as:
 #' \emph{Data/<dataset_type>/<dataset_name>/<locus>/
 #' Multi-finemap/<locus>_<dataset_name>_Multi-finemap.tsv.gz}
+#' @param loci Character list of loci in \strong{Locus} col of \code{topSNPs}.
 #' @inheritParams finemap_locus
 #' @inheritParams echoconda::activate_env
 #' @inheritParams echodata::filter_snps
@@ -22,8 +23,7 @@
 #' @return A merged data.frame with all fine-mapping results from all loci.
 #'
 #' @export
-#' @importFrom echodata find_consensus_snps construct_colmap
-#' @importFrom stats setNames
+#' @importFrom echodata find_consensus_snps construct_colmap gene_locus_list
 #' @importFrom data.table rbindlist data.table
 #'
 #' @examples
@@ -34,10 +34,10 @@
 #'   fullSS_path = fullSS_path,
 #'   topSNPs = topSNPs,
 #'   loci = c("BST1","MEX3C"),
-#'   LD_reference = "1KGphase1",
+#'   finemap_methods = c("ABF","FINEMAP","SUSIE"),
 #'   dataset_name = "Nalls23andMe_2019",
 #'   fullSS_genome_build = "hg19",
-#'   bp_distance = 250000,
+#'   bp_distance = 10000,
 #'   munged = TRUE)
 finemap_loci <- function(#### Main args ####
                          loci=NULL,
@@ -50,7 +50,7 @@ finemap_loci <- function(#### Main args ####
                          #### Force new args ####
                          force_new_subset=FALSE,
                          force_new_LD=FALSE,
-                         force_new_finemap=TRUE,
+                         force_new_finemap=FALSE,
                          #### Fine-mapping args ####
                          finemap_methods=c("ABF","FINEMAP",
                                            "SUSIE","POLYFUN_SUSIE"),
@@ -150,29 +150,25 @@ finemap_loci <- function(#### Main args ####
   }
   #### Parallise data.table functions ####
   data.table::setDTthreads(threads = nThread);
-  #### Get loci (if not suppplied) ####
-  if(is.null(loci)) loci <- topSNPs$Locus
-  loci <- unique(loci)
+  #### Get loci (if not supplied) ####
+  loci <- echodata::gene_locus_list(loci = loci,
+                                    topSNPs = topSNPs,
+                                    dataset_type = dataset_type,
+                                    verbose = verbose)
   #### Validate fullSS genome build ####
-  fullSS_genome_build <- check_genome(gbuild=fullSS_genome_build,
-                                      munged=colmap$munged,
-                                      fullSS_path=fullSS_path)
+  fullSS_genome_build <- check_genome(gbuild = fullSS_genome_build,
+                                      munged = colmap$munged,
+                                      fullSS_path = fullSS_path)
   #### Select SNPs to condition on (for COJO) ####
-  conditioned_snps <- snps_to_condition(conditioned_snps=conditioned_snps,
-                                        topSNPs=topSNPs,
-                                        loci=loci)
-  #### Determine whether loci also contain gene names (for QTLs) ####
-  if(echodata::detect_genes(loci = loci)){
-    messager("Reassigning gene-specific locus names",v=verbose)
-    loci <- stats::setNames(paste(unname(loci),names(loci),sep="_"),
-                            names(loci))
-  }
+  conditioned_snps <- snps_to_condition(conditioned_snps = conditioned_snps,
+                                        topSNPs = topSNPs,
+                                        loci = loci)
   #### Iterate fine-mapping over loci ####
   FINEMAP_DAT <- lapply(seq_len(length(loci)), function(i){
     start_gene <- Sys.time()
     finemap_dat <- NULL
     locus <- loci[i]
-    messager("\n)))>",bat_icon(), locus,
+    messager("\n\n)))>",bat_icon(), locus,
              paste0("[",i,"/",length(loci),"]"),
              bat_icon(),"<(((");
     try({

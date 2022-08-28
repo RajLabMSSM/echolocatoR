@@ -1,0 +1,94 @@
+---
+title: "QTLs" 
+author: "<h4>Author: <i>Brian M. Schilder</i></h4>" 
+date: "<h4>Updated: <i>`r format( Sys.Date(), '%b-%d-%Y')`</i></h4>"
+output:
+  BiocStyle::html_document
+vignette: >
+    %\VignetteIndexEntry{QTLs} 
+    %\usepackage[utf8]{inputenc}
+    %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r setup, include=TRUE}
+library(echolocatoR) 
+```
+
+ 
+# QTL pipeline
+
+- Here, we will use GWAS-eQTL colocalization results provided via the [*echolocatoR Fine-mapping Portal*](https://github.com/RajLabMSSM/Fine_Mapping_Shiny), 
+from the publication: 
+
+> Lopes, K.d.P., Snijders, G.J.L., Humphrey, J. et al. Genetic analysis of the human microglial transcriptome across brain regions, aging and disease pathologies. Nat Genet 54, 4–17 (2022). [https://doi.org/10.1038/s41588-021-00976-y](https://doi.org/10.1038/s41588-021-00976-y) 
+
+## Import QTL data
+
+This data is actually merged GWAS-QTL colocalization results,
+but it contains all of the necessary columns from the original eQTL
+summary stats that we need to perform eQTL fine-mapping.
+
+```{r}
+coloc_res <- echodata::get_Kunkle2019_coloc(return_path = TRUE)
+```
+
+## Prepare `colmap`
+
+Prepare a column mapping object for the summary statistics.
+We'll reuse this for both the `import_topSNPs` and `finemap_loci` steps.
+
+```{r}
+colmap <- echodata::construct_colmap( 
+      CHR = "chr",
+      POS = "pos",
+      sample_size = "qtl.N",
+      SNP = "snp",
+      P = "qtl.pvalues",
+      Effect = "qtl.beta",
+      StdErr = "qtl.varbeta",
+      MAF = "qtl.MAF",
+      Locus = "Locus",
+      Gene = "gene")
+```
+
+
+## Prepare `top_SNPs` data.frame   
+
+- In this case, we don't have a top SNPs file ready.
+So we're just going to make one directly from the full summary stats file itself 
+(*NOTE*: You can only use this approach if you can fit the entire file in memory).  
+- In this case, you'll want to make sure to set `grouping_vars=c("Locus","Gene")` so that you get top SNPs for each eGene-locus pair (not just one SNP per locus).  
+
+```{r  Prepare `top_SNPs` data.frame} 
+topSNPs <- echodata::import_topSNPs(
+  topSS = coloc_res$path,
+  colmap = colmap,
+  ## Important for QTLs: group by both Locus and Gene
+  grouping_vars = c("Locus","Gene"))
+head(topSNPs)
+```
+ 
+## Run fine-mapping pipeline  
+ 
+```{r}
+res <- echolocatoR::finemap_loci(topSNPs = topSNPs,
+                                 ## Let's just fine-map 2 loci for demo purposes
+                                 loci = topSNPs$Locus[1:2],
+                                 dataset_name = "Kunkle_2019.microgliaQTL",
+                                 dataset_type = "QTL",     
+                                 bp_distance = 25000,
+                                 fullSS_path = coloc_res$path,
+                                 colmap = colmap,
+                                 finemap_methods = c("ABF","FINEMAP","SUSIE")
+                                 )
+```
+
+# Session info
+
+<details> 
+
+```{r Session Info, attr.output='style="max-height: 200px;"'}
+utils::sessionInfo()
+```
+
+</details>

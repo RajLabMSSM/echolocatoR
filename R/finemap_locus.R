@@ -19,7 +19,9 @@
 #'  }
 #'
 #' @section input file parameters:
-#' @param loci Character list of loci in \strong{Locus} col of \code{topSNPs}.
+#' @param locus Locus name to fine-map (e.g. \code{"BIN1"}).
+#' Can be named to indicate a specific gene within a QTL locus
+#' (e.g. \code{c(ENSG00000136731="BIN1")}).
 #' @param fullSS_path Path to the full summary statistics file (GWAS or QTL)
 #' that you want to fine-map.
 #' It is usually best to provide the absolute path rather
@@ -141,8 +143,8 @@
 #'   fullSS_path = fullSS_path,
 #'   topSNPs = topSNPs,
 #'   locus = "BST1",
+#'   finemap_methods = c("ABF","FINEMAP","SUSIE"),
 #'   dataset_name = "Nalls23andMe_2019",
-#'   LD_reference="1KGphase1",
 #'   fullSS_genome_build = "hg19",
 #'   bp_distance=10000,
 #'   munged = TRUE)
@@ -158,7 +160,7 @@ finemap_locus <- function(#### Main args ####
                           #### Force new args ####
                           force_new_subset=FALSE,
                           force_new_LD=FALSE,
-                          force_new_finemap=TRUE,
+                          force_new_finemap=FALSE,
                           #### Fine-mapping args ####
                           finemap_methods=c("ABF","FINEMAP",
                                             "SUSIE","POLYFUN_SUSIE"),
@@ -259,6 +261,7 @@ finemap_locus <- function(#### Main args ####
   locus_dir <- get_locus_dir(subset_path = subset_path)
   ####  Query ####
   dat <- extract_snp_subset(subset_path = subset_path,
+                            locus = locus,
                             topSNPs = topSNPs,
                             fullSS_path = fullSS_path,
                             LD_reference = LD_reference,

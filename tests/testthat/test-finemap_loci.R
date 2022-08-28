@@ -10,6 +10,7 @@ test_that("finemap_loci works", {
     loci = loci,
     dataset_name = "Nalls23andMe_2019",
     fullSS_genome_build = "hg19",
+    finemap_methods = c("ABF","FINEMAP","SUSIE"),
     zoom = c("1x","4x"),
     bp_distance = 250000,
     munged = TRUE)

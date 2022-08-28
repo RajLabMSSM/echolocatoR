@@ -1,17 +1,17 @@
 ---
-title: "Getting Started" 
+title: "Getting started" 
 author: "<h4>Author: <i>Brian M. Schilder</i></h4>" 
 date: "<h4>Updated: <i>`r format( Sys.Date(), '%b-%d-%Y')`</i></h4>"
 output:
   BiocStyle::html_document
 vignette: >
-    %\VignetteIndexEntry{echolocatoR} 
+    %\VignetteIndexEntry{Getting started} 
     %\usepackage[utf8]{inputenc}
     %\VignetteEngine{knitr::rmarkdown}
 ---
 
 
-```{r setup}
+```{r setup, include=TRUE}
 library(echolocatoR) 
 ```
 

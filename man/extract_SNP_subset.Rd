@@ -6,13 +6,14 @@
 \usage{
 extract_snp_subset(
   subset_path,
+  locus = NULL,
   colmap = echodata::construct_colmap(),
   fullSS_path,
   topSNPs,
   LD_reference,
   force_new_subset = FALSE,
   bp_distance = 5e+05,
-  superpopulation = "",
+  superpopulation = "EUR",
   compute_n = "ldsc",
   query_by = "tabix",
   nThread = 1,
@@ -23,6 +24,10 @@ extract_snp_subset(
 \arguments{
 \item{subset_path}{Path where the \code{query} should be 
 saved after standardization.}
+
+\item{locus}{Locus name to fine-map (e.g. \code{"BIN1"}).
+Can be named to indicate a specific gene within a QTL locus
+(e.g. \code{c(ENSG00000136731="BIN1")}).}
 
 \item{colmap}{Column name mappings in in \code{fullSS_path}. Must be a named
 list. Can use \link[echolocatoR]{construct_colmap} to assist with this. This
@@ -61,12 +66,13 @@ At minimum, \code{topSNPs} should include the following columns:
 
 \item{LD_reference}{LD reference to use:
 \itemize{
-\item{"1KGphase1" : }{1000 Genomes Project Phase 1}
-\item{"1KGphase3" : }{1000 Genomes Project Phase 3}
+\item{"1KGphase1" : }{1000 Genomes Project Phase 1 (genome build: hg19).}
+\item{"1KGphase3" : }{1000 Genomes Project Phase 3 (genome build: hg19).}
 \item{"UKB" : }{Pre-computed LD from a British
-European-decent subset of UK Biobank.}
+European-decent subset of UK Biobank (genome build: hg19).}
 \item{"<vcf_path>" : }{User-supplied path to a custom VCF file 
-to compute LD matrix from.}
+to compute LD matrix from 
+(genome build: defined by user with \code{target_genome}).}
 }}
 
 \item{force_new_subset}{By default, if a subset of the full

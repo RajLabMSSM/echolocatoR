@@ -15,7 +15,7 @@ finemap_locus(
   topSNPs = "auto",
   force_new_subset = FALSE,
   force_new_LD = FALSE,
-  force_new_finemap = TRUE,
+  force_new_finemap = FALSE,
   finemap_methods = c("ABF", "FINEMAP", "SUSIE", "POLYFUN_SUSIE"),
   finemap_args = NULL,
   n_causal = 5,
@@ -97,7 +97,9 @@ finemap_locus(
 )
 }
 \arguments{
-\item{locus}{Locus name.}
+\item{locus}{Locus name to fine-map (e.g. \code{"BIN1"}).
+Can be named to indicate a specific gene within a QTL locus
+(e.g. \code{c(ENSG00000136731="BIN1")}).}
 
 \item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL)
 that you want to fine-map.
@@ -145,7 +147,7 @@ Subsets are saved in the following path structure:
 \emph{Data/\<dataset_type\>/\<dataset_name\>/\<locus\>/Multi-finemap/
 \<locus\>_\<dataset_name\>_Multi-finemap.tsv.gz}}
 
-\item{force_new_LD}{If LD file exists, create a new one.}
+\item{force_new_LD}{Force new LD subset.}
 
 \item{force_new_finemap}{By default, if an fine-mapping results file for
  a given locus is already present,
@@ -212,12 +214,13 @@ Neff = 4 / (1/N_CAS + 1/N_CON)}.
 
 \item{LD_reference}{LD reference to use:
 \itemize{
-\item{"1KGphase1" : }{1000 Genomes Project Phase 1}
-\item{"1KGphase3" : }{1000 Genomes Project Phase 3}
+\item{"1KGphase1" : }{1000 Genomes Project Phase 1 (genome build: hg19).}
+\item{"1KGphase3" : }{1000 Genomes Project Phase 3 (genome build: hg19).}
 \item{"UKB" : }{Pre-computed LD from a British
-European-decent subset of UK Biobank.}
+European-decent subset of UK Biobank (genome build: hg19).}
 \item{"<vcf_path>" : }{User-supplied path to a custom VCF file 
-to compute LD matrix from.}
+to compute LD matrix from 
+(genome build: defined by user with \code{target_genome}).}
 }}
 
 \item{leadSNP_LD_block}{Only return SNPs within the same LD block
@@ -345,8 +348,6 @@ metadata contains a string or any items from  a list of strings
 \item{nThread}{Number of threads to parallelize over.}
 
 \item{verbose}{Print messages.}
-
-\item{loci}{Character list of loci in \strong{Locus} col of \code{topSNPs}.}
 }
 \description{
 Unlike \code{finemap_loci}, you don't need to provide a \code{topSNPs}
@@ -388,8 +389,8 @@ res <- echolocatoR::finemap_locus(
   fullSS_path = fullSS_path,
   topSNPs = topSNPs,
   locus = "BST1",
+  finemap_methods = c("ABF","FINEMAP","SUSIE"),
   dataset_name = "Nalls23andMe_2019",
-  LD_reference="1KGphase1",
   fullSS_genome_build = "hg19",
   bp_distance=10000,
   munged = TRUE)

@@ -1,11 +1,11 @@
 ---
-title: "Bipolar Disorder: fine-mapping" 
+title: "Bipolar Disorder GWAS: fine-mapping" 
 author: "<h4>Author: <i>Brian M. Schilder</i></h4>" 
 date: "<h4>Updated: <i>`r format( Sys.Date(), '%b-%d-%Y')`</i></h4>"
 output:
   BiocStyle::html_document
 vignette: >
-    %\VignetteIndexEntry{BD_finemapping} 
+    %\VignetteIndexEntry{BD GWAS} 
     %\usepackage[utf8]{inputenc}
     %\VignetteEngine{knitr::rmarkdown}
 ---

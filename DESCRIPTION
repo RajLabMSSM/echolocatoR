@@ -67,6 +67,6 @@ Remotes:
   github::RajLabMSSM/catalogueR,
   github::RajLabMSSM/echofinemap,
   github::RajLabMSSM/echodeps
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.1.9000
 VignetteBuilder: knitr 
 Config/testthat/edition: 3
