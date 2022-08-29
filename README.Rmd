@@ -41,6 +41,15 @@ If you use ``r pkg``, or any of the _*echoverse*_ modules, please cite:
 > `r citation(pkg)$textVersion`
 
 
+## Installation 
+
+```R
+if(!require("remotes")) install.packages("remotes")
+
+remotes::install_github("RajLabMSSM/`r pkg`")
+library(`r pkg`)
+```
+
 ## Introduction
 
 Fine-mapping methods are a powerful means of identifying causal variants
@@ -65,18 +74,6 @@ fine-mapping pipeline rapid, robust and scalable.
 
 
 <img src="./images/echolocatoR_Fig1.png" style="border-radius: 10px;">
-
-
-
-## Installation 
-
-```R
-if(!require("remotes")) install.packages("remotes")
-
-remotes::install_github("RajLabMSSM/`r pkg`@echoverse")
-library(`r pkg`)
-```
-
 
 ## Documentation 
 

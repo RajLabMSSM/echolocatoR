@@ -1,4 +1,4 @@
-<img src='https://github.com/RajLabMSSM/echolocatoR/raw/echoverse/inst/hex/hex.png' height='300'><br><br>
+<img src='https://github.com/RajLabMSSM/echolocatoR/raw/master/inst/hex/hex.png' height='300'><br><br>
 [![](https://img.shields.io/badge/devel%20version-2.0.0-black.svg)](https://github.com/RajLabMSSM/echolocatoR)
 [![R build
 status](https://github.com/RajLabMSSM/echolocatoR/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/RajLabMSSM/echolocatoR/actions)
@@ -11,7 +11,7 @@ GPL-3](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://cran.r-pro
 Author: <i>Brian M. Schilder</i>
 </h5>
 <h5>
-README updated: <i>Aug-26-2022</i>
+README updated: <i>Aug-29-2022</i>
 </h5>
 
 ## `echolocatoR`: Automated statistical and functional fine-mapping
@@ -47,6 +47,15 @@ cite:
 > pipeline, *Bioinformatics*; btab658,
 > <https://doi.org/10.1093/bioinformatics/btab658>
 
+## Installation
+
+``` r
+if(!require("remotes")) install.packages("remotes")
+
+remotes::install_github("RajLabMSSM/echolocatoR")
+library(echolocatoR)
+```
+
 ## Introduction
 
 Fine-mapping methods are a powerful means of identifying causal variants
@@ -70,15 +79,6 @@ barriers to identifying causal variants by making the entire
 fine-mapping pipeline rapid, robust and scalable.
 
 <img src="./images/echolocatoR_Fig1.png" style="border-radius: 10px;">
-
-## Installation
-
-``` r
-if(!require("remotes")) install.packages("remotes")
-
-remotes::install_github("RajLabMSSM/echolocatoR@echoverse")
-library(echolocatoR)
-```
 
 ## Documentation
 
@@ -293,6 +293,10 @@ library(echodata)
 
 ### [1000 Genomes Phase 3](https://www.internationalgenome.org)
 
+### Custom LD panel: from user-supplied VCFs
+
+### Custom LD panel: from user-supplied precomputed LD matrices
+
 <hr>
 
 ## Contact
@@ -314,36 +318,32 @@ utils::sessionInfo()
 ```
 
 ```
-## R Under development (unstable) (2022-03-03 r81847)
-## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 20.04.4 LTS
+## R version 4.2.1 (2022-06-23)
+## Platform: x86_64-apple-darwin17.0 (64-bit)
+## Running under: macOS Big Sur ... 10.16
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
-##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
-##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
-##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
-##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
-## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## loaded via a namespace (and not attached):
-##   [1] BiocFileCache_2.5.0         coloc_5.2.0                
-##   [3] plyr_1.8.7                  splines_4.2.0              
-##   [5] BiocParallel_1.31.3         usethis_2.1.6              
-##   [7] GenomeInfoDb_1.33.3         ggplot2_3.3.6              
+##   [1] BiocFileCache_2.4.0         coloc_5.1.0.1              
+##   [3] plyr_1.8.7                  splines_4.2.1              
+##   [5] BiocParallel_1.30.3         usethis_2.1.6              
+##   [7] GenomeInfoDb_1.32.3         ggplot2_3.3.6              
 ##   [9] digest_0.6.29               yulab.utils_0.0.5          
 ##  [11] htmltools_0.5.3             viridis_0.6.2              
 ##  [13] echofinemap_0.99.2          fansi_1.0.3                
 ##  [15] magrittr_2.0.3              memoise_2.0.1              
-##  [17] BSgenome_1.65.1             gert_1.7.1                 
+##  [17] BSgenome_1.64.0             gert_1.7.1                 
 ##  [19] tzdb_0.3.0                  openxlsx_4.2.5             
-##  [21] credentials_1.3.2           Biostrings_2.65.0          
+##  [21] credentials_1.3.2           Biostrings_2.64.1          
 ##  [23] readr_2.1.2                 echoconda_0.99.6           
 ##  [25] matrixStats_0.62.0          R.utils_2.12.0             
 ##  [27] askpass_1.1                 prettyunits_1.1.1          
@@ -351,60 +351,61 @@ utils::sessionInfo()
 ##  [31] rappdirs_0.3.3              gitcreds_0.1.1             
 ##  [33] xfun_0.32                   dplyr_1.0.9                
 ##  [35] crayon_1.5.1                RCurl_1.98-1.8             
-##  [37] dlstats_0.1.5               echodata_0.99.11           
-##  [39] jsonlite_1.8.0              survival_3.3-1             
-##  [41] VariantAnnotation_1.43.2    glue_1.6.2                 
-##  [43] gtable_0.3.0                zlibbioc_1.43.0            
-##  [45] XVector_0.37.0              DelayedArray_0.23.0        
-##  [47] BiocGenerics_0.43.0         scales_1.2.1               
+##  [37] dlstats_0.1.5               echodata_0.99.12           
+##  [39] jsonlite_1.8.0              survival_3.4-0             
+##  [41] VariantAnnotation_1.42.1    glue_1.6.2                 
+##  [43] gtable_0.3.0                zlibbioc_1.42.0            
+##  [45] XVector_0.36.0              DelayedArray_0.22.0        
+##  [47] BiocGenerics_0.42.0         scales_1.2.1               
 ##  [49] DBI_1.1.3                   Rcpp_1.0.9                 
 ##  [51] viridisLite_0.4.1           progress_1.2.2             
 ##  [53] reticulate_1.25             bit_4.0.4                  
-##  [55] stats4_4.2.0                DT_0.23                    
+##  [55] stats4_4.2.1                DT_0.24                    
 ##  [57] htmlwidgets_1.5.4           httr_1.4.4                 
-##  [59] badger_0.2.1                dir.expiry_1.5.0           
+##  [59] badger_0.2.1                dir.expiry_1.4.0           
 ##  [61] RColorBrewer_1.1-3          ellipsis_0.3.2             
 ##  [63] pkgconfig_2.0.3             reshape_0.8.9              
 ##  [65] XML_3.99-0.10               R.methodsS3_1.8.2          
 ##  [67] dbplyr_2.2.1                utf8_1.2.2                 
 ##  [69] tidyselect_1.1.2            rlang_1.0.4                
-##  [71] AnnotationDbi_1.59.0        munsell_0.5.0              
-##  [73] tools_4.2.0                 cachem_1.0.6               
+##  [71] AnnotationDbi_1.58.0        munsell_0.5.0              
+##  [73] tools_4.2.1                 cachem_1.0.6               
 ##  [75] cli_3.3.0                   generics_0.1.3             
 ##  [77] RSQLite_2.2.16              evaluate_0.16              
 ##  [79] stringr_1.4.1               fastmap_1.1.0              
 ##  [81] yaml_2.3.5                  sys_3.4                    
 ##  [83] knitr_1.40                  bit64_4.0.5                
 ##  [85] fs_1.5.2                    zip_2.2.0                  
-##  [87] purrr_0.3.4                 KEGGREST_1.37.0            
+##  [87] purrr_0.3.4                 KEGGREST_1.36.3            
 ##  [89] gh_1.3.0                    R.oo_1.25.0                
-##  [91] xml2_1.3.3                  biomaRt_2.53.1             
-##  [93] compiler_4.2.0              rstudioapi_0.14            
+##  [91] xml2_1.3.3                  biomaRt_2.52.0             
+##  [93] compiler_4.2.1              rstudioapi_0.14            
 ##  [95] filelock_1.0.2              curl_4.3.2                 
 ##  [97] susieR_0.12.19              png_0.1-7                  
 ##  [99] tibble_3.1.8                stringi_1.7.8              
-## [101] highr_0.9                   basilisk.utils_1.9.0       
-## [103] GenomicFeatures_1.49.1      desc_1.4.1                 
+## [101] highr_0.9                   basilisk.utils_1.8.0       
+## [103] GenomicFeatures_1.48.3      desc_1.4.1                 
 ## [105] lattice_0.20-45             Matrix_1.4-1               
 ## [107] vctrs_0.4.1                 pillar_1.8.1               
 ## [109] lifecycle_1.0.1             BiocManager_1.30.18        
-## [111] downloadR_0.99.3            snpStats_1.47.0            
+## [111] downloadR_0.99.3            snpStats_1.46.0            
 ## [113] data.table_1.14.2           bitops_1.0-7               
 ## [115] irlba_2.3.5                 rtracklayer_1.57.0         
-## [117] GenomicRanges_1.49.0        R6_2.5.1                   
-## [119] BiocIO_1.7.1                gridExtra_2.3              
-## [121] IRanges_2.31.0              assertthat_0.2.1           
-## [123] SummarizedExperiment_1.27.1 openssl_2.0.2              
-## [125] rprojroot_2.0.3             rjson_0.2.21               
-## [127] GenomicAlignments_1.33.0    Rsamtools_2.13.2           
-## [129] S4Vectors_0.35.0            GenomeInfoDbData_1.2.8     
-## [131] parallel_4.2.0              hms_1.1.2                  
-## [133] grid_4.2.0                  tidyr_1.2.0                
-## [135] basilisk_1.9.0              rmarkdown_2.16             
-## [137] rvcheck_0.2.1               MatrixGenerics_1.9.0       
-## [139] echotabix_0.99.7            echoLD_0.99.5              
-## [141] mixsqp_0.3-43               piggyback_0.1.4            
-## [143] Biobase_2.57.0              restfulr_0.0.15
+## [117] GenomicRanges_1.48.0        R6_2.5.1                   
+## [119] BiocIO_1.6.0                gridExtra_2.3              
+## [121] IRanges_2.30.1              codetools_0.2-18           
+## [123] assertthat_0.2.1            SummarizedExperiment_1.26.1
+## [125] openssl_2.0.2               rprojroot_2.0.3            
+## [127] rjson_0.2.21                GenomicAlignments_1.32.1   
+## [129] Rsamtools_2.12.0            S4Vectors_0.34.0           
+## [131] GenomeInfoDbData_1.2.8      parallel_4.2.1             
+## [133] hms_1.1.2                   grid_4.2.1                 
+## [135] tidyr_1.2.0                 basilisk_1.8.1             
+## [137] rmarkdown_2.16              rvcheck_0.2.1              
+## [139] MatrixGenerics_1.8.1        echotabix_0.99.7           
+## [141] echoLD_0.99.6               mixsqp_0.3-43              
+## [143] piggyback_0.1.4             Biobase_2.56.0             
+## [145] restfulr_0.0.15
 ```
 
 </details>
