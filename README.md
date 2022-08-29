@@ -1,9 +1,9 @@
-<img src='https://github.com/RajLabMSSM/echolocatoR/raw/master/inst/hex/hex.png' height='300'><br><br>
-[![](https://img.shields.io/badge/devel%20version-0.2.2-black.svg)](https://github.com/RajLabMSSM/echolocatoR)
+<img src='https://github.com/RajLabMSSM/echolocatoR/raw/v1/inst/hex/hex.png' height='300'><br><br>
+[![](https://img.shields.io/badge/devel%20version-0.2.3-black.svg)](https://github.com/RajLabMSSM/echolocatoR)
 [![R build
 status](https://github.com/RajLabMSSM/echolocatoR/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/RajLabMSSM/echolocatoR/actions)
 [![](https://img.shields.io/github/last-commit/RajLabMSSM/echolocatoR.svg)](https://github.com/RajLabMSSM/echolocatoR/commits/master)
-[![](https://codecov.io/gh/RajLabMSSM/echolocatoR/branch/master/graph/badge.svg)](https://codecov.io/gh/RajLabMSSM/echolocatoR)
+[![](https://app.codecov.io/gh/RajLabMSSM/echolocatoR/branch/master/graph/badge.svg)](https://app.codecov.io/gh/RajLabMSSM/echolocatoR)
 [![License:
 MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://cran.r-project.org/web/licenses/MIT)
 [![](https://img.shields.io/badge/doi-10.1093/bioinformatics/btab658-blue.svg)](https://doi.org/10.1093/bioinformatics/btab658)
@@ -11,7 +11,7 @@ MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://cran.r-project.
 Author: <i>Brian M. Schilder</i>
 </h5>
 <h5>
-README updated: <i>Mar-04-2022</i>
+README updated: <i>Aug-29-2022</i>
 </h5>
 
 <center>
@@ -94,9 +94,9 @@ welcome!
 
 ### General tips
 
--   We generally recommend users upgrading to R>=4.0.0 before trying to
+-   We generally recommend users upgrading to R\>=4.0.0 before trying to
     install *echolocatoR.* While *echolocatoR* should technically be
-    able to run in R>=3.6.0, some additional challenges with getting
+    able to run in R\>=3.6.0, some additional challenges with getting
     dependency versions not to conflict with one another.
 
 ### Quick installation
@@ -304,12 +304,12 @@ example, `data("BST1")`). They are stored in the locus-specific
     descriptions of each.  
 -   **leadSNP**: The designated proxy SNP per locus, which is the SNP
     with the smallest p-value by default.
--   **\<tool>.CS**: The 95% probability Credible Set (CS) to which a SNP
-    belongs within a given fine-mapping tool’s results. If a SNP is not
-    in any of the tool’s CS, it is assigned `NA` (or `0` for the
+-   **\<tool\>.CS**: The 95% probability Credible Set (CS) to which a
+    SNP belongs within a given fine-mapping tool’s results. If a SNP is
+    not in any of the tool’s CS, it is assigned `NA` (or `0` for the
     purposes of plotting).  
--   **\<tool>.PP**: The posterior probability that a SNP is causal for a
-    given GWAS/QTL trait.  
+-   **\<tool\>.PP**: The posterior probability that a SNP is causal for
+    a given GWAS/QTL trait.  
 -   **Support**: The total number of fine-mapping tools that include the
     SNP in its CS.
 -   **Consensus_SNP**: By default, defined as a SNP that is included in
