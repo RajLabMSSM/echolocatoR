@@ -75,6 +75,7 @@ Import data points for reproducibility.
 
 ```{r}
 d <- data.table::fread("https://github.com/RajLabMSSM/echoverseTemplate/releases/download/latest/echoverse_points.csv.gz")
+# d$bsize <- d$bsize*d$y
 d <- rbind(d,
   data.frame(x= -.9, 
              y=max(d$y)*.9, 

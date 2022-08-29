@@ -18,7 +18,6 @@
 #'  \item{Plot}{Summarise the results in a multi-track plot for each locus.}
 #'  }
 #'
-#' @section input file parameters:
 #' @param locus Locus name to fine-map (e.g. \code{"BIN1"}).
 #' Can be named to indicate a specific gene within a QTL locus
 #' (e.g. \code{c(ENSG00000136731="BIN1")}).
@@ -66,7 +65,6 @@
 #' \item{\emph{POS}}{The genomic position of the SNP (in basepairs)}
 #' }
 #'
-#' @section overwrite existing files:
 #' @param force_new_subset By default, if a subset of the full
 #'  summary stats file for a given locus is already present,
 #' then \pkg{echolocatoR} will just use the pre-existing file.
@@ -79,7 +77,6 @@
 #' then \pkg{echolocatoR} will just use the preexisting file.
 #' Set \code{force_new_finemap=T} to override this and re-run fine-mapping.
 #'
-#' @section fine-mapping parameters:
 #' @param finemap_methods Which fine-mapping methods you want to use.
 #' @param n_causal The maximum number of potential causal SNPs per locus.
 #' This parameter is used somewhat differently by different fine-mapping tools.
@@ -260,6 +257,7 @@ finemap_locus <- function(#### Main args ####
                                  locus = locus)
   locus_dir <- get_locus_dir(subset_path = subset_path)
   ####  Query ####
+  steps("query")
   dat <- extract_snp_subset(subset_path = subset_path,
                             locus = locus,
                             topSNPs = topSNPs,
@@ -275,6 +273,7 @@ finemap_locus <- function(#### Main args ####
                             conda_env = conda_env,
                             verbose = verbose)
   #### Extract LD ####
+  steps("ld")
   LD_list <- echoLD::get_LD(query_dat=dat,
                             locus_dir=locus_dir,
                             LD_reference=LD_reference,
@@ -298,6 +297,7 @@ finemap_locus <- function(#### Main args ####
   LD_matrix <- LD_list$LD
   dat <- LD_list$DT
   #### Filter SNPs ####
+  steps("filter")
   dat <- echodata::filter_snps(
     dat=dat,
     min_MAF=min_MAF,
@@ -316,6 +316,7 @@ finemap_locus <- function(#### Main args ####
   LD_matrix <- LD_list$LD
   dat <- LD_list$DT
   #### Fine-map ####
+  steps("finemap")
   finemap_dat <- echofinemap::multifinemap(locus_dir = locus_dir,
                                  fullSS_path = fullSS_path,
                                  LD_reference = LD_reference,
@@ -338,6 +339,7 @@ finemap_locus <- function(#### Main args ####
                                  conda_env = conda_env,
                                  verbose = verbose)
   #### LD plot ####
+  steps("plot")
   ld_plot <- if("ld" %in% tolower(plot_types)){
     try({
       echoLD::plot_LD(LD_matrix=LD_matrix,
@@ -400,12 +402,14 @@ finemap_locus <- function(#### Main args ####
     })
   };
   #### Return ####
+  # arguments <- as.list(match.call(expand.dots=FALSE))
+  arguments <- lapply(as.list(match.call(expand.dots=FALSE)),eval)
   return(list(finemap_dat=finemap_dat,
               locus_plot=locus_plots,
               LD_matrix=LD_matrix,
               LD_plot=ld_plot,
               locus_dir=locus_dir,
-              arguments=as.list(match.call(expand.dots=FALSE))
+              arguments=arguments
   ))
 }
 

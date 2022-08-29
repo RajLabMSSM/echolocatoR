@@ -163,15 +163,22 @@ finemap_loci <- function(#### Main args ####
   conditioned_snps <- snps_to_condition(conditioned_snps = conditioned_snps,
                                         topSNPs = topSNPs,
                                         loci = loci)
+  t1 <- Sys.time()
   #### Iterate fine-mapping over loci ####
-  FINEMAP_DAT <- lapply(seq_len(length(loci)), function(i){
-    start_gene <- Sys.time()
+  FINEMAP_DAT <- lapply(seq_len(length(loci)),
+                          function(i){
+    t1_locus <- Sys.time()
     finemap_dat <- NULL
     locus <- loci[i]
-    messager("\n\n)))>",bat_icon(), locus,
-             paste0("[",i,"/",length(loci),"]"),
-             bat_icon(),"<(((");
-    try({
+    #### Locus header ####
+    cli::cat_boxx(
+      cli::col_br_cyan(
+        paste(")))>",bat_icon(), locus,
+              paste0("[locus ",i," / ",length(loci),"]"),
+              bat_icon(),"<(((")
+      )
+    )
+    tryCatch({
       gene_limits <- arg_list_handler(trim_gene_limits, i)
       conditioned_snp <- arg_list_handler(conditioned_snps, i)
       min_pos <- arg_list_handler(min_POS, i)
@@ -248,17 +255,18 @@ finemap_loci <- function(#### Main args ####
                                               finemap_dat)
       }
       cat('  \n')
-    }) ## end try()
-    end_gene <- Sys.time()
-    messager("Locus",locus,"complete in:",
-             round(end_gene-start_gene,1),
-             v=verbose)
+    }, error = function(x){message(e);NULL}) ## end tryCatch()
+    report_time(t1 = t1_locus,
+                prefix = paste("Locus",locus,"complete in:"))
     return(finemap_dat)
   }) # end loop
   #### Prepare results to return ####
+  steps("postprocess")
   FINEMAP_DAT <- postprocess_data(FINEMAP_DAT=FINEMAP_DAT,
                                   loci=loci,
                                   return_all=return_all,
                                   verbose=verbose)
+  report_time(t1 = t1,
+              prefix = "All loci done in:")
   return(FINEMAP_DAT)
 }

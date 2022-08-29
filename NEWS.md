@@ -7,3 +7,5 @@
 * Added a `NEWS.md` file to track changes to the package.
 * QTL studies now supported by `finemap_loci`.
 * Remove *inst/tools* and moved to `echofinemap` as git submodules.
+* Add startup message.
+* Add messages with icons for each step. 

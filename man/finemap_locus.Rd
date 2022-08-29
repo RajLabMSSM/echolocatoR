@@ -369,18 +369,6 @@ The primary functions of \pkg{echolocatoR} that expedite fine-mapping
  \item{Plot}{Summarise the results in a multi-track plot for each locus.}
  }
 }
-\section{input file parameters}{
-
-}
-
-\section{overwrite existing files}{
-
-}
-
-\section{fine-mapping parameters}{
-
-}
-
 \examples{
 topSNPs <- echodata::topSNPs_Nalls2019
 fullSS_path <- echodata::example_fullSS(dataset = "Nalls2019")
