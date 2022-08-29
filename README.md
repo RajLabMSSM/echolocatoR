@@ -56,6 +56,18 @@ remotes::install_github("RajLabMSSM/echolocatoR")
 library(echolocatoR)
 ```
 
+### \[Optional\] Docker/Singularity
+
+`echolocatoR` doesn’t yet have its own container, but in the meantime
+you can use the official
+[`MAGMA.Celltyping`](https://github.com/neurogenomics/MAGMA_Celltyping)
+Docker/Singularity container which includes an Rstudio interface (see
+[vignette
+here](https://neurogenomics.github.io/MAGMA_Celltyping/articles/docker)).
+
+Then, simply install `echolocatoR` from within the container using the
+same instructions as above.
+
 ## Introduction
 
 Fine-mapping methods are a powerful means of identifying causal variants

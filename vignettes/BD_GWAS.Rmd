@@ -16,15 +16,6 @@ library(echolocatoR)
 save_dir <- "/Desktop/BD_finemapping"
 ```
 
-### [Optional] Docker
-
-`echolocatoR` doesn't yet have its own Docker container, 
-but in the meantime you can use the official `MAGMA.Celltyping` Docker container which includes an Rstudio interface (see [vignette here](https://neurogenomics.github.io/MAGMA_Celltyping/articles/docker)).  
-
-Then, simply install `echolocatoR` from within the container 
-using the same instructions as above.
-
- 
 ## Prepare `top_SNPs` data.frame   
 
 Import the data.frame of containing lead/proxy SNPs 

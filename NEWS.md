@@ -9,3 +9,12 @@
 * Remove *inst/tools* and moved to `echofinemap` as git submodules.
 * Add startup message.
 * Add messages with icons for each step. 
+* Record arguments as a named list and include it in the results list. 
+* Add (interim) Docker/Singularity instructions to README.
+
+## Bug fixes
+
+- FINEMAP:
+  - File parsing issues, esp across FINEMAP versions. 
+  - dylib errors
+  - Multiple CS per SNP
