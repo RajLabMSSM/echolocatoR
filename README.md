@@ -131,9 +131,9 @@ v2.0. Here are some of the most notable ones:
 
 -   ***echoverse* subpackages**: `echolocatoR` has been broken into
     separate subpackages, making it much easier to edit/debug each step
-    of the full `finemap_loci` pipeline. It also provides greater
-    flexibility for users to construct their own custom pipelines from
-    these modules.
+    of the full `finemap_loci` pipeline, and improving robustness
+    throughout. It also provides greater flexibility for users to
+    construct their own custom pipelines from these modules.
 -   **`GITHUB_TOKEN`**: GitHub now requires users to create Personal
     Authentication Tokens (PAT) to avoid download limits. This is
     essential for installing `echolocatoR` as many resources from GitHub
