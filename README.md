@@ -148,10 +148,10 @@ v2.0. Here are some of the most notable ones:
     without having to write out each mapping argument again (and helps
     reduce an already crowded list of arguments).
 -   **`MungeSumstats`**: `finemap_loci` now accepts the output of
-    `MungeSumstats::format_sumstats`/`import_sumstats` as-is (without
-    requiring `colmap=`). Standardizing your GWAS/QTL summary stats this
-    way greatly reduces (or eliminates) the time taken to do manual
-    formatting.
+    [`MungeSumstats::format_sumstats`/`import_sumstats`](https://github.com/neurogenomics/MungeSumstats)
+    as-is (without requiring `colmap=`, so long as `munged=TRUE`).
+    Standardizing your GWAS/QTL summary stats this way greatly reduces
+    (or eliminates) the time taken to do manual formatting.
 -   **`echolocatoR::finemap_loci` arguments**: Several arguments have
     been deprecated or had their names changed to be harmonized across
     all the subpackages and use a unified naming convention. See
