@@ -100,7 +100,7 @@ if at all possible.}
 \item{\code{"sum"}: }{N will be computed as:
 cases (N_CAS) + controls (N_CON), so long as both columns are present}.
 \item{\code{"ldsc"}: }{N will be computed as effective sample size:
-Neff =(N_CAS+N_CON)*(N_CAS/(N_CAS+N_CON)) / mean((N_CAS/(N_CAS+N_CON))(N_CAS+N_CON)==max(N_CAS+N_CON))}
+Neff =(N_CAS+N_CON)*(N_CAS/(N_CAS+N_CON)) / mean((N_CAS/(N_CAS+N_CON))(N_CAS+N_CON)==max(N_CAS+N_CON))}.
 \item{\code{"giant"}: }{N will be computed as effective sample size:
 Neff = 2 / (1/N_CAS + 1/N_CON)}.
 \item{\code{"metal"}: }{N will be computed as effective sample size:

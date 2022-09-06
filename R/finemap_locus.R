@@ -103,8 +103,6 @@
 #' }
 #' @param conditioned_snps Which SNPs to conditions on when fine-mapping
 #' with \emph{COJO}.
-#' @param PAINTOR_QTL_datasets A list of QTL datasets to be used when
-#' conducting joint functional fine-mapping with \emph{PAINTOR}.
 #' @param plot_types Which kinds of plots to include.
 #' Options:
 #' \itemize{
@@ -116,6 +114,7 @@
 #' }
 #' @param remove_tmps Whether to remove any temporary files
 #'  (e.g. FINEMAP output files) after the pipeline is done running.
+#' @param seed Set the seed for all functions where this is possible.
 #'
 #' @family MAIN
 #' @inheritParams echoconda::activate_env
@@ -148,65 +147,65 @@
 finemap_locus <- function(#### Main args ####
                           locus,
                           fullSS_path,
-                          fullSS_genome_build=NULL,
-                          results_dir=file.path(tempdir(),"results"),
-                          dataset_name="dataset_name",
-                          dataset_type="GWAS",
-                          case_control=TRUE,
-                          topSNPs="auto",
+                          fullSS_genome_build = NULL,
+                          results_dir = file.path(tempdir(),"results"),
+                          dataset_name = "dataset_name",
+                          dataset_type = "GWAS",
+                          case_control = TRUE,
+                          topSNPs = "auto",
                           #### Force new args ####
-                          force_new_subset=FALSE,
-                          force_new_LD=FALSE,
-                          force_new_finemap=FALSE,
+                          force_new_subset = FALSE,
+                          force_new_LD = FALSE,
+                          force_new_finemap = FALSE,
                           #### Fine-mapping args ####
-                          finemap_methods=c("ABF","FINEMAP",
-                                            "SUSIE","POLYFUN_SUSIE"),
+                          finemap_methods = c("ABF","FINEMAP","SUSIE"),
                           finemap_args=NULL,
                           n_causal=5,
                           credset_thresh=.95,
                           consensus_thresh=2,
                           fillNA=0,
                           conditioned_snps=NULL,
+                          priors_col = NULL,
                           #### Colname mapping args ####
                           munged = FALSE,
                           colmap = echodata::construct_colmap(munged = munged),
                           compute_n = "ldsc",
                           #### LD args ####
-                          LD_reference="1KGphase3",
-                          LD_genome_build="hg19",
-                          leadSNP_LD_block=FALSE,
-                          superpopulation="EUR",
-                          download_method="axel",
+                          LD_reference = "1KGphase3",
+                          LD_genome_build = "hg19",
+                          leadSNP_LD_block = FALSE,
+                          superpopulation = "EUR",
+                          download_method = "axel",
                           #### SNP filter args ####
-                          bp_distance=500000,
-                          min_POS=NA,
-                          max_POS=NA,
-                          min_MAF=NA,
-                          trim_gene_limits=FALSE,
-                          max_snps=NULL,
-                          min_r2=0,
-                          remove_variants=FALSE,
-                          remove_correlates=FALSE,
+                          bp_distance = 500000,
+                          min_POS = NA,
+                          max_POS = NA,
+                          min_MAF = NA,
+                          trim_gene_limits = FALSE,
+                          max_snps = NULL,
+                          min_r2 = 0,
+                          remove_variants = FALSE,
+                          remove_correlates = FALSE,
                           #### Misc args ####
-                          query_by="tabix",
-                          PAINTOR_QTL_datasets=NULL,
-                          qtl_prefixes=NULL,
+                          query_by = "tabix",
+                          qtl_prefixes = NULL,
                           #### PLotting args ####
-                          plot_types=c("simple"),
-                          zoom="1x",
-                          nott_epigenome=FALSE,
-                          nott_show_placseq=FALSE,
-                          nott_binwidth=200,
-                          nott_bigwig_dir=NULL,
-                          xgr_libnames=NULL,
-                          roadmap=FALSE,
-                          roadmap_query=NULL,
-                          show_plot=TRUE,
+                          plot_types = c("simple"),
+                          zoom = "1x",
+                          nott_epigenome = FALSE,
+                          nott_show_placseq = FALSE,
+                          nott_binwidth = 200,
+                          nott_bigwig_dir = NULL,
+                          xgr_libnames = NULL,
+                          roadmap = FALSE,
+                          roadmap_query = NULL,
+                          show_plot = TRUE,
                           #### General args ####
-                          remove_tmps=TRUE,
-                          conda_env="echoR_mini",
-                          nThread=1,
-                          verbose=TRUE,
+                          remove_tmps = TRUE,
+                          seed = 2022,
+                          conda_env = "echoR_mini",
+                          nThread = 1,
+                          verbose = TRUE,
                           #### Deprecated args ####
                           top_SNPs = deprecated(),
                           PP_threshold = deprecated(),
@@ -245,7 +244,8 @@ finemap_locus <- function(#### Main args ####
                           N_cases=deprecated(),
                           N_controls=deprecated(),
                           proportion_cases=deprecated(),
-                          sample_size=deprecated()
+                          sample_size=deprecated(),
+                          PAINTOR_QTL_datasets=deprecated()
                           ){
   # echoverseTemplate:::source_all();
   # echoverseTemplate:::args2vars(finemap_locus);
@@ -331,10 +331,12 @@ finemap_locus <- function(#### Main args ####
                                  consensus_thresh = consensus_thresh,
                                  case_control = case_control,
                                  n_causal = n_causal,
+                                 compute_n = compute_n,
+                                 priors_col = priors_col,
                                  # Tool-specific args
                                  conditioned_snps = conditioned_snps,
-                                 PAINTOR_QTL_datasets = PAINTOR_QTL_datasets,
                                  # Optional args
+                                 seed = seed,
                                  nThread = nThread,
                                  conda_env = conda_env,
                                  verbose = verbose)
@@ -402,8 +404,13 @@ finemap_locus <- function(#### Main args ####
     })
   };
   #### Return ####
-  # arguments <- as.list(match.call(expand.dots=FALSE))
-  arguments <- lapply(as.list(match.call(expand.dots=FALSE)),eval)
+  #### Record args ####
+  messager("Recording all `finemap_locus` arguments.",v=verbose)
+  # arguments <- tryCatch({
+  #   lapply(as.list(match.call(expand.dots=FALSE)),eval)
+  # }, error = function(e){message(e);NULL})
+  arguments <- NULL
+  #### Make list ####
   return(list(finemap_dat=finemap_dat,
               locus_plot=locus_plots,
               LD_matrix=LD_matrix,

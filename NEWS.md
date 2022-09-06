@@ -1,3 +1,20 @@
+# echolocatoR 2.0.1
+
+## New features
+
+* New args in `finemap_loci`: 
+  - `seed`
+  - `priors_col`
+* Pass `compute_n` to `echofinemap::multifinemap`.
+
+## Bug fixes
+
+* Fix typo in `tryCatch` in `finemap_loci`. 
+* Deprecate `PAINTOR_QTL_datasets` arg.
+* `finemap_locus`: Recording args causing an error every time 
+  (`object 'locus' not found`) even when wrapped in `tryCatch`. 
+  Setting `arguments <-NULL` for now.
+
 # echolocatoR 2.0.0
 
 ## New features

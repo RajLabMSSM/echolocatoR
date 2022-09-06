@@ -15,13 +15,14 @@ finemap_loci(
   force_new_subset = FALSE,
   force_new_LD = FALSE,
   force_new_finemap = FALSE,
-  finemap_methods = c("ABF", "FINEMAP", "SUSIE", "POLYFUN_SUSIE"),
+  finemap_methods = c("ABF", "FINEMAP", "SUSIE"),
   finemap_args = NULL,
   n_causal = 5,
   credset_thresh = 0.95,
   consensus_thresh = 2,
   fillNA = 0,
   conditioned_snps = "auto",
+  priors_col = NULL,
   munged = FALSE,
   colmap = echodata::construct_colmap(munged = munged),
   compute_n = "ldsc",
@@ -40,7 +41,6 @@ finemap_loci(
   remove_variants = FALSE,
   remove_correlates = FALSE,
   query_by = "tabix",
-  PAINTOR_QTL_datasets = NULL,
   case_control = TRUE,
   qtl_prefixes = NULL,
   plot_types = c("simple"),
@@ -55,6 +55,7 @@ finemap_loci(
   remove_tmps = TRUE,
   conda_env = "echoR_mini",
   return_all = TRUE,
+  seed = 2022,
   nThread = 1,
   verbose = TRUE,
   top_SNPs = deprecated(),
@@ -93,7 +94,8 @@ finemap_loci(
   N_cases = deprecated(),
   N_controls = deprecated(),
   proportion_cases = deprecated(),
-  sample_size = deprecated()
+  sample_size = deprecated(),
+  PAINTOR_QTL_datasets = deprecated()
 )
 }
 \arguments{
@@ -172,6 +174,9 @@ in which a SNP is in the Credible Set in order to be included in the
 \item{conditioned_snps}{Which SNPs to conditions on when fine-mapping
 with \emph{COJO}.}
 
+\item{priors_col}{[Optional] Name of the a column in 
+\code{dat} to extract SNP-wise prior probabilities from.}
+
 \item{munged}{Whether \code{fullSS_path} have already been
 standardised/filtered full summary stats
 with \link[MungeSumstats]{format_sumstats}.
@@ -203,7 +208,7 @@ if at all possible.}
 \item{\code{"sum"}: }{N will be computed as:
 cases (N_CAS) + controls (N_CON), so long as both columns are present}.
 \item{\code{"ldsc"}: }{N will be computed as effective sample size:
-Neff =(N_CAS+N_CON)*(N_CAS/(N_CAS+N_CON)) / mean((N_CAS/(N_CAS+N_CON))(N_CAS+N_CON)==max(N_CAS+N_CON))}
+Neff =(N_CAS+N_CON)*(N_CAS/(N_CAS+N_CON)) / mean((N_CAS/(N_CAS+N_CON))(N_CAS+N_CON)==max(N_CAS+N_CON))}.
 \item{\code{"giant"}: }{N will be computed as effective sample size:
 Neff = 2 / (1/N_CAS + 1/N_CON)}.
 \item{\code{"metal"}: }{N will be computed as effective sample size:
@@ -276,9 +281,6 @@ Methods include:
 coordinates with \emph{awk}.}
 }}
 
-\item{PAINTOR_QTL_datasets}{A list of QTL datasets to be used when
-conducting joint functional fine-mapping with \emph{PAINTOR}.}
-
 \item{qtl_prefixes}{If columns with QTL data is included in \code{dat},
 you can indicate which columns those are with one or more string prefixes.}
 
@@ -340,6 +342,8 @@ metadata contains a string or any items from  a list of strings
 (e.g. FINEMAP output files) after the pipeline is done running.}
 
 \item{conda_env}{Conda environment to use.}
+
+\item{seed}{Set the seed for all functions where this is possible.}
 
 \item{nThread}{Number of threads to parallelize over.}
 

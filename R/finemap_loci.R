@@ -40,67 +40,67 @@
 #'   bp_distance = 10000,
 #'   munged = TRUE)
 finemap_loci <- function(#### Main args ####
-                         loci=NULL,
+                         loci = NULL,
                          fullSS_path,
-                         fullSS_genome_build=NULL,
-                         results_dir=file.path(tempdir(),"results"),
-                         dataset_name="dataset_name",
-                         dataset_type="GWAS",
-                         topSNPs="auto",
+                         fullSS_genome_build = NULL,
+                         results_dir = file.path(tempdir(),"results"),
+                         dataset_name = "dataset_name",
+                         dataset_type = "GWAS",
+                         topSNPs = "auto",
                          #### Force new args ####
-                         force_new_subset=FALSE,
-                         force_new_LD=FALSE,
-                         force_new_finemap=FALSE,
+                         force_new_subset = FALSE,
+                         force_new_LD = FALSE,
+                         force_new_finemap = FALSE,
                          #### Fine-mapping args ####
-                         finemap_methods=c("ABF","FINEMAP",
-                                           "SUSIE","POLYFUN_SUSIE"),
-                         finemap_args=NULL,
-                         n_causal=5,
-                         credset_thresh=.95,
-                         consensus_thresh=2,
-                         fillNA=0,
+                         finemap_methods = c("ABF","FINEMAP","SUSIE"),
+                         finemap_args = NULL,
+                         n_causal = 5,
+                         credset_thresh = .95,
+                         consensus_thresh = 2,
+                         fillNA = 0,
                          conditioned_snps = "auto",
+                         priors_col = NULL,
                          #### Colname mapping args ####
                          munged = FALSE,
                          colmap = echodata::construct_colmap(munged = munged),
                          compute_n = "ldsc",
                          #### LD args ####
-                         LD_reference="1KGphase3",
-                         LD_genome_build="hg19",
-                         leadSNP_LD_block=FALSE,
-                         superpopulation="EUR",
-                         download_method="axel",
+                         LD_reference = "1KGphase3",
+                         LD_genome_build = "hg19",
+                         leadSNP_LD_block = FALSE,
+                         superpopulation = "EUR",
+                         download_method = "axel",
                          #### SNP filter args ####
-                         bp_distance=500000,
-                         min_POS=NA,
-                         max_POS=NA,
-                         min_MAF=NA,
-                         trim_gene_limits=FALSE,
-                         max_snps=NULL,
-                         min_r2=0,
-                         remove_variants=FALSE,
-                         remove_correlates=FALSE,
+                         bp_distance = 500000,
+                         min_POS = NA,
+                         max_POS = NA,
+                         min_MAF = NA,
+                         trim_gene_limits = FALSE,
+                         max_snps = NULL,
+                         min_r2 = 0,
+                         remove_variants = FALSE,
+                         remove_correlates = FALSE,
                          #### Misc args ####
-                         query_by="tabix",
-                         PAINTOR_QTL_datasets=NULL,
-                         case_control=TRUE,
-                         qtl_prefixes=NULL,
+                         query_by = "tabix",
+                         case_control = TRUE,
+                         qtl_prefixes = NULL,
                          #### PLotting args ####
-                         plot_types=c("simple"),
-                         zoom="1x",
-                         nott_epigenome=FALSE,
-                         nott_show_placseq=FALSE,
-                         nott_binwidth=200,
-                         nott_bigwig_dir=NULL,
-                         xgr_libnames=NULL,
-                         roadmap=FALSE,
-                         roadmap_query=NULL,
+                         plot_types = c("simple"),
+                         zoom = "1x",
+                         nott_epigenome = FALSE,
+                         nott_show_placseq = FALSE,
+                         nott_binwidth = 200,
+                         nott_bigwig_dir = NULL,
+                         xgr_libnames = NULL,
+                         roadmap = FALSE,
+                         roadmap_query = NULL,
                          #### General args ####
-                         remove_tmps=TRUE,
-                         conda_env="echoR_mini",
-                         return_all=TRUE,
-                         nThread=1,
-                         verbose=TRUE,
+                         remove_tmps = TRUE,
+                         conda_env = "echoR_mini",
+                         return_all = TRUE,
+                         seed = 2022,
+                         nThread = 1,
+                         verbose = TRUE,
                          #### Deprecated args ####
                          top_SNPs = deprecated(),
                          PP_threshold = deprecated(),
@@ -139,7 +139,8 @@ finemap_loci <- function(#### Main args ####
                          N_cases=deprecated(),
                          N_controls=deprecated(),
                          proportion_cases=deprecated(),
-                         sample_size=deprecated()
+                         sample_size=deprecated(),
+                         PAINTOR_QTL_datasets=deprecated()
                          ){
   # echoverseTemplate:::source_all();
   # echoverseTemplate:::args2vars(finemap_loci);
@@ -192,6 +193,7 @@ finemap_loci <- function(#### Main args ####
                                 munged=munged,
                                 colmap=colmap,
                                 compute_n=compute_n,
+                                priors_col=priors_col,
 
                                 LD_genome_build=LD_genome_build,
                                 results_dir=results_dir,
@@ -222,7 +224,6 @@ finemap_loci <- function(#### Main args ####
                                  conditioned_snps=conditioned_snps,
                                  remove_tmps=remove_tmps,
                                  plot.types=plot.types,
-                                 PAINTOR_QTL_datasets=PAINTOR_QTL_datasets,
                                  credset_thresh=credset_thresh,
                                  consensus_thresh=consensus_thresh,
                                  case_control=case_control,
@@ -238,6 +239,7 @@ finemap_loci <- function(#### Main args ####
                                  roadmap=roadmap,
                                  roadmap_query=roadmap_query,
 
+                                 seed=seed,
                                  conda_env=conda_env,
                                  nThread=nThread,
                                  verbose=verbose)
@@ -248,6 +250,7 @@ finemap_loci <- function(#### Main args ####
       #     LD_plot
       #     locus_dir
       #     arguments)
+      messager("Formatting locus results.",v=verbose)
       if(return_all) return(out_list)
       finemap_dat <- out_list$finemap_dat
       if(!"Locus" %in% colnames(finemap_dat)){
@@ -255,7 +258,7 @@ finemap_loci <- function(#### Main args ####
                                               finemap_dat)
       }
       cat('  \n')
-    }, error = function(x){message(e);NULL}) ## end tryCatch()
+    }, error = function(e){message(e);NULL}) ## end tryCatch()
     report_time(t1 = t1_locus,
                 prefix = paste("Locus",locus,"complete in:"))
     return(finemap_dat)
