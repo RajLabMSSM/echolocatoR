@@ -28,6 +28,7 @@ test_that("finemap_locus works", {
 
   testthat::expect_equal(nrow(res$finemap_dat), 210)
   testthat::expect_equal(nrow(res$LD_matrix), 210)
+  # failing atm (due to roadmap error in fancy plot)
   testthat::expect_equal(names(res$locus_plot),c("simple","fancy"))
   testthat::expect_equal(names(res$locus_plot$simple),c("1x","4x"))
   testthat::expect_gte(
@@ -36,8 +37,6 @@ test_that("finemap_locus works", {
   )
   testthat::expect_true(
     all(c("FINEMAP","LD","Multi-finemap",
-          "multiview.BST1.1KGphase1.1x.jpg") %in% list.files(res$locus_dir))
+          "multiview.BST1.1KGphase3.1x.png") %in% list.files(res$locus_dir))
   )
-  # library(ggplot2)
-  # ggplot(res$finemap_dat, aes(x=log(ABF.PP),y=log(SUSIE.PP))) + geom_point()
 })

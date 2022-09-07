@@ -55,6 +55,7 @@ finemap_loci(
   remove_tmps = TRUE,
   conda_env = "echoR_mini",
   return_all = TRUE,
+  use_tryCatch = TRUE,
   seed = 2022,
   nThread = 1,
   verbose = TRUE,
@@ -105,6 +106,12 @@ finemap_loci(
 that you want to fine-map.
 It is usually best to provide the absolute path rather
 than the relative path.}
+
+\item{fullSS_genome_build}{Genome build of the full summary statistics
+ (\code{fullSS_path}). Can be "GRCH37" or "GRCH38" or one of their synonyms..
+If \code{fullSS_genome_build==NULL} and \code{munged=TRUE},
+infers genome build (hg19 vs. hg38)
+from summary statistics using \link[MungeSumstats]{get_genome_builds}.}
 
 \item{results_dir}{Where to store all results.
 \strong{IMPORTANT!:} It is usually best to provide the absolute path
@@ -184,7 +191,7 @@ If \code{munged=FALSE} you'll need to provide the necessary
  column names to the \code{colmap} argument.}
 
 \item{colmap}{Column name mappings in in \code{fullSS_path}. Must be a named
-list. Can use \link[echolocatoR]{construct_colmap} to assist with this. This
+list. Can use \link[echodata]{construct_colmap} to assist with this. This
 function can be used in two different ways:
 \itemize{
 \item{\code{munged=FALSE} : }{When \code{munged=FALSE},
@@ -225,6 +232,10 @@ European-decent subset of UK Biobank (genome build: hg19).}
 to compute LD matrix from 
 (genome build: defined by user with \code{target_genome}).}
 }}
+
+\item{LD_genome_build}{Genome build of the LD panel.
+This is automatically assigned to the correct genome build for each
+LD panel except when the user supplies custom vcf/LD files.}
 
 \item{leadSNP_LD_block}{Only return SNPs within the same LD block
 as the lead SNP (the SNP with the smallest p-value).}
@@ -280,6 +291,8 @@ Methods include:
 \item{"coordinates"}{Extract locus subsets using min/max genomic
 coordinates with \emph{awk}.}
 }}
+
+\item{case_control}{[deprecated]}
 
 \item{qtl_prefixes}{If columns with QTL data is included in \code{dat},
 you can indicate which columns those are with one or more string prefixes.}
@@ -343,11 +356,98 @@ metadata contains a string or any items from  a list of strings
 
 \item{conda_env}{Conda environment to use.}
 
+\item{return_all}{Return a nested list of various the pipeline's outputs
+including plots, tables, and file paths (default: \code{TRUE}).
+If \code{FALSE}, instead only returns a single merged
+ \link[data.table]{data.table} containing the results from all loci.}
+
+\item{use_tryCatch}{If an error is encountered in one locus,
+the pipeline will continue to try running the rest of the loci
+ (default: \code{use_tryCatch=TRUE}). This avoid stopping all analyses due
+ to errors that only affect some loci,
+ but currently prevents debugging via traceback.}
+
 \item{seed}{Set the seed for all functions where this is possible.}
 
 \item{nThread}{Number of threads to parallelize over.}
 
 \item{verbose}{Print messages.}
+
+\item{top_SNPs}{[deprecated]}
+
+\item{PP_threshold}{[deprecated]}
+
+\item{consensus_threshold}{[deprecated]}
+
+\item{plot.Nott_epigenome}{[deprecated]}
+
+\item{plot.Nott_show_placseq}{[deprecated]}
+
+\item{plot.Nott_binwidth}{[deprecated]}
+
+\item{plot.Nott_bigwig_dir}{[deprecated]}
+
+\item{plot.Roadmap}{[deprecated]}
+
+\item{plot.Roadmap_query}{[deprecated]}
+
+\item{plot.XGR_libnames}{[deprecated]}
+
+\item{server}{[deprecated]}
+
+\item{plot.types}{[deprecated]}
+
+\item{plot.zoom}{[deprecated]}
+
+\item{QTL_prefixes}{[deprecated]}
+
+\item{vcf_folder}{[deprecated]}
+
+\item{probe_path}{[deprecated]}
+
+\item{file_sep}{[deprecated]}
+
+\item{chrom_col}{[deprecated]}
+
+\item{chrom_type}{[deprecated]}
+
+\item{position_col}{[deprecated]}
+
+\item{snp_col}{[deprecated]}
+
+\item{pval_col}{[deprecated]}
+
+\item{effect_col}{[deprecated]}
+
+\item{stderr_col}{[deprecated]}
+
+\item{tstat_col}{[deprecated]}
+
+\item{locus_col}{[deprecated]}
+
+\item{freq_col}{[deprecated]}
+
+\item{MAF_col}{[deprecated]}
+
+\item{A1_col}{[deprecated]}
+
+\item{A2_col}{[deprecated]}
+
+\item{gene_col}{[deprecated]}
+
+\item{N_cases_col}{[deprecated]}
+
+\item{N_controls_col}{[deprecated]}
+
+\item{N_cases}{[deprecated]}
+
+\item{N_controls}{[deprecated]}
+
+\item{proportion_cases}{[deprecated]}
+
+\item{sample_size}{[deprecated]}
+
+\item{PAINTOR_QTL_datasets}{[deprecated]}
 }
 \value{
 A merged data.frame with all fine-mapping results from all loci.

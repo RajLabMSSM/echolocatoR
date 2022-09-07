@@ -1,4 +1,4 @@
-citHeader("To cite this echoverse package, please use:")
+citHeader("If you use echolocatoR or any of the echoverse subpackages, please cite:")
 
 citEntry(
   entry    = "Article",

@@ -67,7 +67,8 @@ query_handler <- function(fullSS_path,
        verbose = verbose
     )
   ## Remove extra query column
-  query$query <- NULL
+  if("query" %in% colnames(query)) query$query <- NULL
+
   #### Munge the full summary stats file ####
   } else if(query_by=="fullss"){
     ## Read in a standardize the entire

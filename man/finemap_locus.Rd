@@ -108,6 +108,12 @@ that you want to fine-map.
 It is usually best to provide the absolute path rather
 than the relative path.}
 
+\item{fullSS_genome_build}{Genome build of the full summary statistics
+ (\code{fullSS_path}). Can be "GRCH37" or "GRCH38" or one of their synonyms..
+If \code{fullSS_genome_build==NULL} and \code{munged=TRUE},
+infers genome build (hg19 vs. hg38)
+from summary statistics using \link[MungeSumstats]{get_genome_builds}.}
+
 \item{results_dir}{Where to store all results.
 \strong{IMPORTANT!:} It is usually best to provide the absolute path
 rather than the relative path.
@@ -125,6 +131,8 @@ Don't use special characters (e.g.".", "/").}
 This will also be used when creating the subdirectory where your results
 will be stored
 (e.g. \emph{Data/<dataset_type>/Kunkle_2019}).}
+
+\item{case_control}{[deprecated]}
 
 \item{topSNPs}{A data.frame with the genomic coordinates of the lead SNP
 for each locus.
@@ -186,7 +194,7 @@ If \code{munged=FALSE} you'll need to provide the necessary
  column names to the \code{colmap} argument.}
 
 \item{colmap}{Column name mappings in in \code{fullSS_path}. Must be a named
-list. Can use \link[echolocatoR]{construct_colmap} to assist with this. This
+list. Can use \link[echodata]{construct_colmap} to assist with this. This
 function can be used in two different ways:
 \itemize{
 \item{\code{munged=FALSE} : }{When \code{munged=FALSE},
@@ -227,6 +235,10 @@ European-decent subset of UK Biobank (genome build: hg19).}
 to compute LD matrix from 
 (genome build: defined by user with \code{target_genome}).}
 }}
+
+\item{LD_genome_build}{Genome build of the LD panel.
+This is automatically assigned to the correct genome build for each
+LD panel except when the user supplies custom vcf/LD files.}
 
 \item{leadSNP_LD_block}{Only return SNPs within the same LD block
 as the lead SNP (the SNP with the smallest p-value).}
@@ -352,6 +364,82 @@ metadata contains a string or any items from  a list of strings
 \item{nThread}{Number of threads to parallelize over.}
 
 \item{verbose}{Print messages.}
+
+\item{top_SNPs}{[deprecated]}
+
+\item{PP_threshold}{[deprecated]}
+
+\item{consensus_threshold}{[deprecated]}
+
+\item{plot.Nott_epigenome}{[deprecated]}
+
+\item{plot.Nott_show_placseq}{[deprecated]}
+
+\item{plot.Nott_binwidth}{[deprecated]}
+
+\item{plot.Nott_bigwig_dir}{[deprecated]}
+
+\item{plot.Roadmap}{[deprecated]}
+
+\item{plot.Roadmap_query}{[deprecated]}
+
+\item{plot.XGR_libnames}{[deprecated]}
+
+\item{server}{[deprecated]}
+
+\item{plot.types}{[deprecated]}
+
+\item{plot.zoom}{[deprecated]}
+
+\item{QTL_prefixes}{[deprecated]}
+
+\item{vcf_folder}{[deprecated]}
+
+\item{probe_path}{[deprecated]}
+
+\item{file_sep}{[deprecated]}
+
+\item{chrom_col}{[deprecated]}
+
+\item{chrom_type}{[deprecated]}
+
+\item{position_col}{[deprecated]}
+
+\item{snp_col}{[deprecated]}
+
+\item{pval_col}{[deprecated]}
+
+\item{effect_col}{[deprecated]}
+
+\item{stderr_col}{[deprecated]}
+
+\item{tstat_col}{[deprecated]}
+
+\item{locus_col}{[deprecated]}
+
+\item{freq_col}{[deprecated]}
+
+\item{MAF_col}{[deprecated]}
+
+\item{A1_col}{[deprecated]}
+
+\item{A2_col}{[deprecated]}
+
+\item{gene_col}{[deprecated]}
+
+\item{N_cases_col}{[deprecated]}
+
+\item{N_controls_col}{[deprecated]}
+
+\item{N_cases}{[deprecated]}
+
+\item{N_controls}{[deprecated]}
+
+\item{proportion_cases}{[deprecated]}
+
+\item{sample_size}{[deprecated]}
+
+\item{PAINTOR_QTL_datasets}{[deprecated]}
 }
 \description{
 Unlike \code{finemap_loci}, you don't need to provide a \code{topSNPs}

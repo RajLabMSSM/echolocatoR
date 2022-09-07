@@ -6,8 +6,33 @@
 \usage{
 snps_to_condition(conditioned_snps, topSNPs, loci)
 }
+\arguments{
+\item{conditioned_snps}{Which SNPs to conditions on when fine-mapping
+with \emph{COJO}.}
+
+\item{topSNPs}{A data.frame with the genomic coordinates of the lead SNP
+for each locus.
+The lead SNP will be used as the center of the window when extracting
+subset from the full GWAS/QTL summary statistics file.
+Only one SNP per \strong{Locus} should be included.
+At minimum, \code{topSNPs} should include the following columns:
+\describe{
+\item{\emph{Locus}}{A unique name for each locus. Often,
+ loci are named after a relevant gene (e.g. LRRK2) or based on
+  the name/coordinates of the lead SNP (e.g. locus_chr12_40734202) }
+\item{\emph{CHR}}{The chromosome that the SNP is on.
+ Can be "chr12" or "12" format.}
+\item{\emph{POS}}{The genomic position of the SNP (in basepairs)}
+}}
+
+\item{loci}{Character list of loci in \strong{Locus} col of \code{topSNPs}.}
+}
+\value{
+Vector of SNPs
+}
 \description{
 When running conditional analyses (e.g. \emph{GCTA-COJO}),
 this functions automatically identifies SNP to condition on.
 }
 \concept{SNP filters}
+\keyword{internal}

@@ -30,7 +30,7 @@ Can be named to indicate a specific gene within a QTL locus
 (e.g. \code{c(ENSG00000136731="BIN1")}).}
 
 \item{colmap}{Column name mappings in in \code{fullSS_path}. Must be a named
-list. Can use \link[echolocatoR]{construct_colmap} to assist with this. This
+list. Can use \link[echodata]{construct_colmap} to assist with this. This
 function can be used in two different ways:
 \itemize{
 \item{\code{munged=FALSE} : }{When \code{munged=FALSE},

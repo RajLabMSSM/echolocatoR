@@ -4,7 +4,27 @@
 \alias{startup}
 \title{Startup messages}
 \usage{
-startup(package = "echolocatoR", add_batty = FALSE)
+startup(
+  package = "echolocatoR",
+  add_batty = FALSE,
+  color1 = cli::col_br_cyan,
+  color2 = cli::col_br_magenta,
+  color3 = cli::col_cyan
+)
+}
+\arguments{
+\item{package}{R package name.}
+
+\item{add_batty}{Add an ASCII bat.}
+
+\item{color1}{First color to use in the palette.}
+
+\item{color2}{Second color to use in the palette.}
+
+\item{color3}{Second color to use in the palette.}
+}
+\value{
+Null
 }
 \description{
 Startup messages with info on package name, version, citation, GitHub, etc.

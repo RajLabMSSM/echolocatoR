@@ -2,9 +2,15 @@
 #'
 #' When running conditional analyses (e.g. \emph{GCTA-COJO}),
 #' this functions automatically identifies SNP to condition on.
-#'
+#' @inheritParams finemap_locus
+#' @inheritParams finemap_loci
 #' @family SNP filters
-snps_to_condition <- function(conditioned_snps, topSNPs, loci){
+#'
+#' @keywords internal
+#' @returns Vector of SNPs
+snps_to_condition <- function(conditioned_snps,
+                              topSNPs,
+                              loci){
   if(conditioned_snps=="auto"){
     lead_SNPs_DT <- subset(topSNPs, Locus %in% loci)
     # Reorder

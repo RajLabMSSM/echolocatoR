@@ -7,15 +7,15 @@
 batapply(
   X,
   FUN = function(l) Sys.sleep(5/100),
-  ...,
   apply_func = lapply,
   total = length(X),
   name = NULL,
   .envir = parent.frame(),
   cli.progress_show_after = 0,
-  style = c("bar", "squares", "dot", "fillsquares", "classic"),
-  type = c("iterator", "tasks", "download", "custom"),
-  clear = FALSE
+  clear = FALSE,
+  color1 = cli::col_br_cyan,
+  color2 = cli::col_br_magenta,
+  ...
 )
 }
 \arguments{
@@ -27,8 +27,6 @@ batapply(
     see \sQuote{Details}.  In the case of functions like
     \code{+}, \code{\%*\%}, the function name must be backquoted or quoted.}
 
-\item{...}{optional arguments to \code{FUN}.}
-
 \item{apply_func}{Iterator function to use (default: \link[base]{lapply}).}
 
 \item{total}{Passed to \code{\link[cli:cli_progress_bar]{cli_progress_bar()}}.}
@@ -37,6 +35,19 @@ batapply(
 \code{\link[cli:cli_progress_bar]{cli_progress_bar()}}.}
 
 \item{.envir}{Passed to \code{\link[cli:cli_progress_bar]{cli_progress_bar()}}.}
+
+\item{cli.progress_show_after}{How long to wait
+before showing the progress bar.}
+
+\item{clear}{Whether to remove the progress bar from the screen after
+it has terminated. Defaults to the \code{cli.progress_clear} option, or
+\code{TRUE} if unset.}
+
+\item{color1}{First color to use in the palette.}
+
+\item{color2}{Second color to use in the palette.}
+
+\item{...}{Additional arguments passed to \code{apply_func}.}
 }
 \value{
 A (named) list.

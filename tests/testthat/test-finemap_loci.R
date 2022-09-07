@@ -23,4 +23,31 @@ test_that("finemap_loci works", {
             "LD_plot","locus_dir","arguments") %in% names(res[[l]]))
     )
   }
+
+  #### When use_tryCatch=TRUE ####
+  res <- echolocatoR::finemap_loci(
+    fullSS_path = fullSS_path,
+    topSNPs = topSNPs,
+    loci = c("typoooo","MEX3C"),
+    finemap_methods = c("ABF","FINEMAP","SUSIE"),
+    dataset_name = "Nalls23andMe_2019",
+    fullSS_genome_build = "hg19",
+    bp_distance = 10000,
+    use_tryCatch = TRUE,
+    munged = TRUE)
+  testthat::expect_null(res$typoooo)
+  testthat::expect_true(methods::is(res$MEX3C$finemap_dat,"data.table"))
+  #### When use_tryCatch=FALSE ####
+  testthat::expect_error(
+    res <- echolocatoR::finemap_loci(
+      fullSS_path = fullSS_path,
+      topSNPs = topSNPs,
+      loci = c("typoooo","MEX3C"),
+      finemap_methods = c("ABF","FINEMAP","SUSIE"),
+      dataset_name = "Nalls23andMe_2019",
+      fullSS_genome_build = "hg19",
+      bp_distance = 10000,
+      use_tryCatch = FALSE,
+      munged = TRUE)
+  )
 })

@@ -1,5 +1,7 @@
 postprocess_data <- function(FINEMAP_DAT,
                              loci,
+                             credset_thresh,
+                             consensus_thresh,
                              return_all,
                              verbose){
   if(return_all){
@@ -14,13 +16,11 @@ postprocess_data <- function(FINEMAP_DAT,
   } else {
     messager("Returning results as a merged data.table only.",v=verbose)
     FINEMAP_DAT <- data.table::rbindlist(FINEMAP_DAT, fill = TRUE)
-    try({
-      FINEMAP_DAT <- echodata::find_consensus_snps(
-        dat = FINEMAP_DAT,
-        credset_thresh = credset_thresh,
-        consensus_thresh = consensus_thresh,
-        verbose = verbose)
-    })
+    FINEMAP_DAT <- echodata::find_consensus_snps(
+      dat = FINEMAP_DAT,
+      credset_thresh = credset_thresh,
+      consensus_thresh = consensus_thresh,
+      verbose = verbose)
   }
   return(FINEMAP_DAT)
 }

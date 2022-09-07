@@ -5,11 +5,11 @@
 ##' @name echodata
 NULL
 
-##' echoannot
+##' lfm
 ##'
-##' echoannot
-##' @import echoannot
-##' @name echoannot
+##' lfm
+##' @importFrom echofinemap lfm
+##' @name lfm
 NULL
 
 ##' deprecated

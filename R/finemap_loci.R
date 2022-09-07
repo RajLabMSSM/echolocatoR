@@ -10,6 +10,15 @@
 #' \emph{Data/<dataset_type>/<dataset_name>/<locus>/
 #' Multi-finemap/<locus>_<dataset_name>_Multi-finemap.tsv.gz}
 #' @param loci Character list of loci in \strong{Locus} col of \code{topSNPs}.
+#' @param return_all Return a nested list of various the pipeline's outputs
+#' including plots, tables, and file paths (default: \code{TRUE}).
+#' If \code{FALSE}, instead only returns a single merged
+#'  \link[data.table]{data.table} containing the results from all loci.
+#' @param use_tryCatch If an error is encountered in one locus,
+#' the pipeline will continue to try running the rest of the loci
+#'  (default: \code{use_tryCatch=TRUE}). This avoid stopping all analyses due
+#'  to errors that only affect some loci,
+#'  but currently prevents debugging via traceback.
 #' @inheritParams finemap_locus
 #' @inheritParams echoconda::activate_env
 #' @inheritParams echodata::filter_snps
@@ -25,6 +34,7 @@
 #' @export
 #' @importFrom echodata find_consensus_snps construct_colmap gene_locus_list
 #' @importFrom data.table rbindlist data.table
+#' @importFrom echofinemap POLYFUN_install
 #'
 #' @examples
 #' topSNPs <- echodata::topSNPs_Nalls2019
@@ -98,6 +108,7 @@ finemap_loci <- function(#### Main args ####
                          remove_tmps = TRUE,
                          conda_env = "echoR_mini",
                          return_all = TRUE,
+                         use_tryCatch = TRUE,
                          seed = 2022,
                          nThread = 1,
                          verbose = TRUE,
@@ -145,9 +156,14 @@ finemap_loci <- function(#### Main args ####
   # echoverseTemplate:::source_all();
   # echoverseTemplate:::args2vars(finemap_loci);
 
-  #### Check if PolyFun is installed early on (if needed) ####
+  check_deprecated(fun="finemap_loci",
+                   args=match.call(call = sys.call(sys.parent(2))))
+  #### Check PolyFun/PAINTOR are installed early on (if needed) ####
   if(any(grepl("polyfun",finemap_methods, ignore.case = TRUE))){
-    echofinemap:::POLYFUN_install()
+    echofinemap::POLYFUN_install()
+  }
+  if(any(grepl("PAINTOR",finemap_methods, ignore.case = TRUE))){
+    echofinemap:::PAINTOR_install()
   }
   #### Parallise data.table functions ####
   data.table::setDTthreads(threads = nThread);
@@ -157,15 +173,16 @@ finemap_loci <- function(#### Main args ####
                                     dataset_type = dataset_type,
                                     verbose = verbose)
   #### Validate fullSS genome build ####
-  fullSS_genome_build <- check_genome(gbuild = fullSS_genome_build,
+  fullSS_genome_build <- check_genome(fullSS_genome_build = fullSS_genome_build,
                                       munged = colmap$munged,
                                       fullSS_path = fullSS_path)
   #### Select SNPs to condition on (for COJO) ####
   conditioned_snps <- snps_to_condition(conditioned_snps = conditioned_snps,
                                         topSNPs = topSNPs,
                                         loci = loci)
-  t1 <- Sys.time()
+
   #### Iterate fine-mapping over loci ####
+  t1 <- Sys.time()
   FINEMAP_DAT <- lapply(seq_len(length(loci)),
                           function(i){
     t1_locus <- Sys.time()
@@ -174,9 +191,12 @@ finemap_loci <- function(#### Main args ####
     #### Locus header ####
     cli::cat_boxx(
       cli::col_br_cyan(
-        paste(")))>",bat_icon(), locus,
+        paste(cli::col_br_white(cli::style_blurred(")))>")),
+              bat_icon(), locus,
               paste0("[locus ",i," / ",length(loci),"]"),
-              bat_icon(),"<(((")
+              bat_icon(),
+              cli::col_br_white(cli::style_blurred("<((("))
+              )
       )
     )
     tryCatch({
@@ -258,7 +278,7 @@ finemap_loci <- function(#### Main args ####
                                               finemap_dat)
       }
       cat('  \n')
-    }, error = function(e){message(e);NULL}) ## end tryCatch()
+    }, error = set_tryCatch(use_tryCatch = use_tryCatch)) ## end tryCatch()
     report_time(t1 = t1_locus,
                 prefix = paste("Locus",locus,"complete in:"))
     return(finemap_dat)
@@ -267,6 +287,8 @@ finemap_loci <- function(#### Main args ####
   steps("postprocess")
   FINEMAP_DAT <- postprocess_data(FINEMAP_DAT=FINEMAP_DAT,
                                   loci=loci,
+                                  credset_thresh=credset_thresh,
+                                  consensus_thresh=consensus_thresh,
                                   return_all=return_all,
                                   verbose=verbose)
   report_time(t1 = t1,

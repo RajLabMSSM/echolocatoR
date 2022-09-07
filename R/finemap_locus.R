@@ -25,6 +25,14 @@
 #' that you want to fine-map.
 #' It is usually best to provide the absolute path rather
 #' than the relative path.
+#' @param fullSS_genome_build Genome build of the full summary statistics
+#'  (\code{fullSS_path}). Can be "GRCH37" or "GRCH38" or one of their synonyms..
+#' If \code{fullSS_genome_build==NULL} and \code{munged=TRUE},
+#' infers genome build (hg19 vs. hg38)
+#' from summary statistics using \link[MungeSumstats]{get_genome_builds}.
+#' @param LD_genome_build Genome build of the LD panel.
+#' This is automatically assigned to the correct genome build for each
+#' LD panel except when the user supplies custom vcf/LD files.
 #' @param results_dir Where to store all results.
 #' \strong{IMPORTANT!:} It is usually best to provide the absolute path
 #' rather than the relative path.
@@ -88,7 +96,7 @@
 #' If \code{munged=FALSE} you'll need to provide the necessary
 #'  column names to the \code{colmap} argument.
 #' @param colmap Column name mappings in in \code{fullSS_path}. Must be a named
-#' list. Can use \link[echolocatoR]{construct_colmap} to assist with this. This
+#' list. Can use \link[echodata]{construct_colmap} to assist with this. This
 #' function can be used in two different ways:
 #' \itemize{
 #' \item{\code{munged=FALSE} : }{When \code{munged=FALSE},
@@ -115,6 +123,47 @@
 #' @param remove_tmps Whether to remove any temporary files
 #'  (e.g. FINEMAP output files) after the pipeline is done running.
 #' @param seed Set the seed for all functions where this is possible.
+#'
+#' @param case_control [deprecated]
+#' @param top_SNPs [deprecated]
+#' @param PP_threshold [deprecated]
+#' @param top_SNPs [deprecated]
+#' @param consensus_threshold [deprecated]
+#' @param plot.Nott_epigenome [deprecated]
+#' @param plot.Nott_show_placseq [deprecated]
+#' @param plot.Nott_binwidth [deprecated]
+#' @param plot.Nott_bigwig_dir [deprecated]
+#' @param plot.XGR_libnames [deprecated]
+#' @param plot.Roadmap [deprecated]
+#' @param plot.Roadmap_query [deprecated]
+#' @param server [deprecated]
+#' @param plot.types [deprecated]
+#' @param plot.zoom [deprecated]
+#' @param QTL_prefixes [deprecated]
+#' @param vcf_folder [deprecated]
+#' @param probe_path [deprecated]
+#' @param file_sep [deprecated]
+#' @param chrom_col [deprecated]
+#' @param chrom_type [deprecated]
+#' @param position_col [deprecated]
+#' @param freq_col [deprecated]
+#' @param snp_col [deprecated]
+#' @param pval_col [deprecated]
+#' @param effect_col [deprecated]
+#' @param stderr_col [deprecated]
+#' @param tstat_col [deprecated]
+#' @param locus_col [deprecated]
+#' @param MAF_col [deprecated]
+#' @param A1_col [deprecated]
+#' @param A2_col [deprecated]
+#' @param gene_col [deprecated]
+#' @param N_cases_col [deprecated]
+#' @param N_controls_col [deprecated]
+#' @param N_cases [deprecated]
+#' @param N_controls [deprecated]
+#' @param proportion_cases [deprecated]
+#' @param sample_size [deprecated]
+#' @param PAINTOR_QTL_datasets [deprecated]
 #'
 #' @family MAIN
 #' @inheritParams echoconda::activate_env
@@ -250,6 +299,8 @@ finemap_locus <- function(#### Main args ####
   # echoverseTemplate:::source_all();
   # echoverseTemplate:::args2vars(finemap_locus);
 
+  check_deprecated(fun="finemap_locus",
+                   args=match.call(call = sys.call(sys.parent(2))))
   #### Create paths ####
   subset_path <- construct_subset_path(results_dir = results_dir,
                                  dataset_type = dataset_type,
@@ -352,8 +403,8 @@ finemap_locus <- function(#### Main args ####
   #### Locus plots ####
   locus_plots <- list()
   if("simple" %in% tolower(plot_types)){
-    try({
-      locus_plots[["simple"]] <- echoplot::plot_locus(
+    locus_plots[["simple"]] <- tryCatch({
+       echoplot::plot_locus(
         dat = finemap_dat,
         LD_matrix = LD_matrix,
         LD_reference = LD_reference,
@@ -373,12 +424,12 @@ finemap_locus <- function(#### Main args ####
         conda_env = conda_env,
         nThread = nThread,
         verbose = verbose)
-    })
+    }, error = function(e){message(e);NULL})
   };
 
   if("fancy" %in% tolower(plot_types)){
-    try({
-      locus_plots[["fancy"]] <- echoplot::plot_locus(
+    locus_plots[["fancy"]] <- tryCatch({
+      echoplot::plot_locus(
         dat = finemap_dat,
         LD_matrix = LD_matrix,
         LD_reference = LD_reference,
@@ -401,7 +452,7 @@ finemap_locus <- function(#### Main args ####
         conda_env = conda_env,
         nThread = nThread,
         verbose = verbose)
-    })
+    }, error = function(e){message(e);NULL})
   };
   #### Return ####
   #### Record args ####
