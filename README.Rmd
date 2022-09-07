@@ -14,7 +14,7 @@ output:
 ---
 
 ```{r, echo=FALSE, include=FALSE}
-pkg <- read.dcf("DESCRIPTION", fields = "Package")[1]
+pkg <- read.dcf("DESCRIPTION", fields = "Package")[1] 
 description <- read.dcf("DESCRIPTION", fields = "Description")[1]
 ```
  
