@@ -78,7 +78,7 @@ knitr::kable(head(ld_matrices$ASXL3))
 
 Now let's plot one locus as an example. 
 
-```{r LRRK2, attr.output='style="max-height: 200px;"'} 
+```{r LRRK2, eval=FALSE} 
 locus <- unique(merged_DT$Locus)[1] # Pick the first locus
 dat <- merged_DT[Locus==locus,] 
 LD_matrix = ld_matrices[[locus]]

@@ -42,9 +42,11 @@ finemap_loci(
   remove_correlates = FALSE,
   query_by = "tabix",
   case_control = TRUE,
-  qtl_prefixes = NULL,
+  qtl_suffixes = NULL,
   plot_types = c("simple"),
+  show_plot = TRUE,
   zoom = "1x",
+  tx_biotypes = NULL,
   nott_epigenome = FALSE,
   nott_show_placseq = FALSE,
   nott_binwidth = 200,
@@ -199,7 +201,7 @@ function can be used in two different ways:
  \code{colmap} argument (\emph{default}).}
  \item{\code{munged=TRUE} : }{ Alternatively, instead of filling out
  each argument in
-\link[echolocatoR]{construct_colmap}, you can simply set \code{munged=TRUE}
+\link[echodata]{construct_colmap}, you can simply set \code{munged=TRUE}
  if  \code{fullSS_path} has already been munged with
  \link[MungeSumstats]{format_sumstats}.
  }
@@ -294,8 +296,10 @@ coordinates with \emph{awk}.}
 
 \item{case_control}{[deprecated]}
 
-\item{qtl_prefixes}{If columns with QTL data is included in \code{dat},
-you can indicate which columns those are with one or more string prefixes.}
+\item{qtl_suffixes}{If columns with QTL data is included in \code{dat},
+you can indicate which columns those are with one or more string suffixes
+(e.g. \code{qtl_suffixes=c(".eQTL1",".eQTL2")} to use the columns 
+"P.QTL1", "Effect.QTL1", "P.QTL2", "Effect.QTL2").}
 
 \item{plot_types}{Which kinds of plots to include.
 Options:
@@ -306,6 +310,8 @@ fine-mapping, gene models}
 (XGR, Roadmap, Nott2019).}
 ' \item{"LD"}{LD heatmap showing the 10 SNPs surrounding the lead SNP.}
 }}
+
+\item{show_plot}{Print plot to screen.}
 
 \item{zoom}{Zoom into the center of the locus when plotting
 (without editing the fine-mapping results file).
@@ -322,6 +328,11 @@ to automatically generate
 multiple views of each locus.
 This can even be a mix of different style inputs: e.g.
  \code{c("1x","4.5x",25000)}.}
+
+\item{tx_biotypes}{Transcript biotypes to include in the gene model track. 
+By default (\code{NULL}), all transcript biotypes will be included.
+See \link[echoplot]{get_transcripts_biotypes} for a full list of 
+all available biotypes}
 
 \item{nott_epigenome}{Include tracks showing brain cell-type-specific 
 epigenomic data from 
@@ -467,7 +478,7 @@ res <- echolocatoR::finemap_loci(
   finemap_methods = c("ABF","FINEMAP","SUSIE"),
   dataset_name = "Nalls23andMe_2019",
   fullSS_genome_build = "hg19",
-  bp_distance = 10000,
+  bp_distance = 1000,
   munged = TRUE)
 }
 \seealso{

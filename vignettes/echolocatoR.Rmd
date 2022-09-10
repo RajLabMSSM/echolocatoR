@@ -76,7 +76,7 @@ Here are some key arguments:
 * *results_dir*: Where you want to store all of your results.  
 * *finemap_methods*: Which fine-mapping methods you want to run. For a full list of currently supported methods, run the function `echofinemap::lfm()`.  
 * *bp_distance*: Controls window size. Specifically, `bp_distance` is the number of basepairs upstream/downstream you want to extract for each locus. For example, if you want a 2Mb window (+/- 1Mb from the lead/index SNP in `top_SNPs`), set `bp_distance=1e+06`.  
-* *plot.zoom*: Zoom in/out from the center of each locus when producing the multiview plot.  
+* *plot_zoom*: Zoom in/out from the center of each locus when producing the multiview plot.  
 You can adjust this separately from `bp_distance` so that you don't have rerun the whole pipeline each time (locus subsets, LD matrices, and fine-mapping results are all automatically saved in locus-specific folders).  
  
 **Note**: Please use the full absolute paths (instead of relative paths) wherever possible (e.g. `results_dir`). This is especially important for the tool *FINEMAP*.
@@ -89,7 +89,7 @@ results <- echolocatoR::finemap_loci(
  LD_reference = "1KGphase3",
  dataset_name = "Nalls23andMe_2019",
  fullSS_genome_build = "hg19",
- bp_distance = 250000,
+ bp_distance = 1000,
  finemap_methods = c("ABF","SUSIE","FINEMAP"),
  munged = TRUE)
 ```

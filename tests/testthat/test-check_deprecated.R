@@ -23,7 +23,11 @@ test_that("check_deprecated works", {
       fullSS_genome_build = "hg19",
       bp_distance=10000,
       PAINTOR_QTL_datasets = c("test"),
-      server = TRUE
-      )
+      server = TRUE,
+      use_tryCatch = FALSE)
   )
+
+  fun <- function(){
+    match.call()
+  }
 })

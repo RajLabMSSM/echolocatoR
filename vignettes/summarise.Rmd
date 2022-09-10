@@ -53,27 +53,31 @@ used to make the plot.
 to subset the data they want to use in the plot/data.  
 
 
-## `SUMMARISE.coloc_nominated_eGenes()`  
+## Colocalization results
 
-If you ran colocalization tests with `echolocatoR` (via `catalogueR`) you can use those results to 
-come up with a top QTL nominated gene for each locus (potentially implicating that gene in your phenotype).  
-
-### Download COLOC results from [echolocatoR Fine-mapping Portal](https://rajlab.shinyapps.io/Fine_Mapping_Shiny).    
+If you ran colocalization tests with `echolocatoR` (via `catalogueR`) 
+you can use those results to 
+come up with a top QTL nominated gene for each locus 
+(potentially implicating that gene in your phenotype).   
 
 ```{r}
 coloc_res <- echodata::get_Nalls2019_coloc() 
 ```
 
 
-## Multi-plot  
- 
+## Super summary plot
 
-```{r super_summary_plot(), fig.height=12,, fig.width=7}
+```{r super_summary_plot(), fig.height=15, fig.width=15}
 super_plot <- echoannot::super_summary_plot(merged_DT = merged_DT, 
                                             coloc_results = coloc_res,
                                             plot_missense = FALSE)
 ```
 
+<!-- Pre-render to reduce vignette runtime  -->
+<!-- ```r -->
+<!-- ggplot2::ggsave("~/Downloads/super_plot.png",super_plot$plot, height = 15, width = 15) -->
+<!-- ``` -->
+<!-- ![super_plot](https://github.com/RajLabMSSM/echolocatoR/raw/master/images/super_plot.png) -->
 
 # Session info 
 

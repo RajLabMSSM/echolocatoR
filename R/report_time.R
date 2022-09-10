@@ -6,6 +6,7 @@ report_time <- function(t1,
   cat(
     cli::col_br_cyan(paste(
       prefix,cli::col_br_white(out," min")
-    ))
+    ),"\n"
+    )
   )
 }

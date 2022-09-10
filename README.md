@@ -1,5 +1,5 @@
 <img src='https://github.com/RajLabMSSM/echolocatoR/raw/master/inst/hex/hex.png' height='300'><br><br>
-[![](https://img.shields.io/badge/devel%20version-2.0.0-black.svg)](https://github.com/RajLabMSSM/echolocatoR)
+[![](https://img.shields.io/badge/devel%20version-2.0.1-black.svg)](https://github.com/RajLabMSSM/echolocatoR)
 [![R build
 status](https://github.com/RajLabMSSM/echolocatoR/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/RajLabMSSM/echolocatoR/actions)
 [![](https://img.shields.io/github/last-commit/RajLabMSSM/echolocatoR.svg)](https://github.com/RajLabMSSM/echolocatoR/commits/master)
@@ -11,7 +11,7 @@ GPL-3](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://cran.r-pro
 Author: <i>Brian M. Schilder</i>
 </h5>
 <h5>
-README updated: <i>Sep-03-2022</i>
+README updated: <i>Sep-07-2022</i>
 </h5>
 
 ## `echolocatoR`: Automated statistical and functional fine-mapping
@@ -193,16 +193,18 @@ Additional required columns:
 knitr::kable(echofinemap::required_cols())
 ```
 
-| method          | required                                                 | suggested        |
-|:----------------|:---------------------------------------------------------|:-----------------|
-| ABF             | SNP , CHR , POS , Effect , StdErr , N , proportion_cases | MAF              |
-| COJO            | SNP , CHR , POS , Effect, StdErr, A1 , A2                | Freq, P , N      |
-| COLOC           | SNP , CHR , POS , Effect, StdErr                         | NULL             |
-| FINEMAP         | SNP , CHR , POS , Effect, StdErr                         | A1 , A2 , MAF, N |
-| PAINTOR         | SNP , CHR , POS , Effect, StdErr                         | MAF              |
-| POLYFUN_FINEMAP | SNP , CHR , POS , Effect, StdErr, P , A1 , A2            | MAF, N           |
-| POLYFUN_SUSIE   | SNP , CHR , POS , Effect, StdErr, P , A1 , A2            | MAF, N           |
-| SUSIE           | SNP , CHR , POS , Effect, StdErr                         | N                |
+| method           | required                                                 | suggested        |
+|:-----------------|:---------------------------------------------------------|:-----------------|
+| ABF              | SNP , CHR , POS , Effect , StdErr , N , proportion_cases | MAF              |
+| COJO_conditional | SNP , CHR , POS , Effect, StdErr, A1 , A2                | Freq, P , N      |
+| COJO_joint       | SNP , CHR , POS , Effect, StdErr, A1 , A2                | Freq, P , N      |
+| COJO_stepwise    | SNP , CHR , POS , Effect, StdErr, A1 , A2                | Freq, P , N      |
+| COLOC            | SNP , CHR , POS , Effect, StdErr                         | NULL             |
+| FINEMAP          | SNP , CHR , POS , Effect, StdErr                         | A1 , A2 , MAF, N |
+| PAINTOR          | SNP , CHR , POS , Effect, StdErr, ZSCORE                 | MAF              |
+| POLYFUN_FINEMAP  | SNP , CHR , POS , Effect, StdErr, P , A1 , A2            | MAF, N           |
+| POLYFUN_SUSIE    | SNP , CHR , POS , Effect, StdErr, P , A1 , A2            | MAF, N           |
+| SUSIE            | SNP , CHR , POS , Effect, StdErr                         | N                |
 
 ### [ABF](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)
 
@@ -401,12 +403,12 @@ utils::sessionInfo()
 ##   [7] GenomeInfoDb_1.32.3         ggplot2_3.3.6              
 ##   [9] digest_0.6.29               yulab.utils_0.0.5          
 ##  [11] htmltools_0.5.3             viridis_0.6.2              
-##  [13] echofinemap_0.99.2          fansi_1.0.3                
+##  [13] echofinemap_0.99.3          fansi_1.0.3                
 ##  [15] magrittr_2.0.3              memoise_2.0.1              
 ##  [17] BSgenome_1.64.0             gert_1.7.1                 
 ##  [19] tzdb_0.3.0                  openxlsx_4.2.5             
 ##  [21] credentials_1.3.2           Biostrings_2.64.1          
-##  [23] readr_2.1.2                 echoconda_0.99.6           
+##  [23] readr_2.1.2                 echoconda_0.99.7           
 ##  [25] matrixStats_0.62.0          R.utils_2.12.0             
 ##  [27] askpass_1.1                 prettyunits_1.1.1          
 ##  [29] colorspace_2.0-3            blob_1.2.3                 
@@ -450,7 +452,7 @@ utils::sessionInfo()
 ## [105] lattice_0.20-45             Matrix_1.4-1               
 ## [107] vctrs_0.4.1                 pillar_1.8.1               
 ## [109] lifecycle_1.0.1             BiocManager_1.30.18        
-## [111] downloadR_0.99.3            snpStats_1.46.0            
+## [111] downloadR_0.99.4            snpStats_1.46.0            
 ## [113] data.table_1.14.2           bitops_1.0-7               
 ## [115] irlba_2.3.5                 rtracklayer_1.57.0         
 ## [117] GenomicRanges_1.48.0        R6_2.5.1                   

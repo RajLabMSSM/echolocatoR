@@ -1,20 +1,22 @@
-.*\.Rproj$
+^.*\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
 ^\.Rproj\.user$
 ^README.Rmd
 ^\.github$
 ^doc$
 ^Meta$
-^R_tmp$
 ^codecov\.yml$
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+.dockerignore
 Dockerfile
-^LICENSE\.md$
+DOCKERFILE
 
-node_modules$
-package-lock\.json$
-package\.json$
+^node_modules$
+package-lock.json
+package.json
 
 ^images$
-.*\.html$
+^R_tmp$

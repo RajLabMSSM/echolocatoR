@@ -11,6 +11,8 @@
 snps_to_condition <- function(conditioned_snps,
                               topSNPs,
                               loci){
+  Locus <- NULL;
+
   if(conditioned_snps=="auto"){
     lead_SNPs_DT <- subset(topSNPs, Locus %in% loci)
     # Reorder

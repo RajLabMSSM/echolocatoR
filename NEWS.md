@@ -6,6 +6,11 @@
   - `seed`
   - `priors_col`
 * Pass `compute_n` to `echofinemap::multifinemap`.
+* `echoplot` updates:
+  - Passed up new arg from `echoplot::plot_locus(tx_biotypes=)`. 
+  - Changed arg `qtl_prefixes` --> `qtl_suffixes`.
+  - Passed up `show_plot` to `finemap_loci`.
+  - Fixed 0 transcripts bug.
 
 ## Bug fixes
 
@@ -13,7 +18,8 @@
 * Deprecate `PAINTOR_QTL_datasets` arg.
 * `finemap_locus`: Recording args causing an error every time 
   (`object 'locus' not found`) even when wrapped in `tryCatch`. 
-  Setting `arguments <-NULL` for now.
+  Setting `arguments <- NULL` for now.
+* Fix old arg in: `plot.types` --> `plot_types`
 
 # echolocatoR 2.0.0
 

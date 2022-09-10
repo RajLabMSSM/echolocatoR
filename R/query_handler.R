@@ -21,9 +21,10 @@ query_handler <- function(fullSS_path,
                           conda_env = "echoR_mini",
                           nThread = 1,
                           verbose = TRUE){
+  Gene <- NULL;
 
-  query_by <- tolower(query_by)[1]
   messager("+ Query Method:",query_by, v=verbose)
+  query_by <- tolower(query_by)[1]
   if(is.null(locus)){
     locus <- basename(locus_dir)
   }

@@ -34,7 +34,7 @@ function can be used in two different ways:
  \code{colmap} argument (\emph{default}).}
  \item{\code{munged=TRUE} : }{ Alternatively, instead of filling out
  each argument in
-\link[echolocatoR]{construct_colmap}, you can simply set \code{munged=TRUE}
+\link[echodata]{construct_colmap}, you can simply set \code{munged=TRUE}
  if  \code{fullSS_path} has already been munged with
  \link[MungeSumstats]{format_sumstats}.
  }

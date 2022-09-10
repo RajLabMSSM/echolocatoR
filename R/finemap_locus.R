@@ -104,7 +104,7 @@
 #'  \code{colmap} argument (\emph{default}).}
 #'  \item{\code{munged=TRUE} : }{ Alternatively, instead of filling out
 #'  each argument in
-#' \link[echolocatoR]{construct_colmap}, you can simply set \code{munged=TRUE}
+#' \link[echodata]{construct_colmap}, you can simply set \code{munged=TRUE}
 #'  if  \code{fullSS_path} has already been munged with
 #'  \link[MungeSumstats]{format_sumstats}.
 #'  }
@@ -191,7 +191,7 @@
 #'   finemap_methods = c("ABF","FINEMAP","SUSIE"),
 #'   dataset_name = "Nalls23andMe_2019",
 #'   fullSS_genome_build = "hg19",
-#'   bp_distance=10000,
+#'   bp_distance = 1000,
 #'   munged = TRUE)
 finemap_locus <- function(#### Main args ####
                           locus,
@@ -237,10 +237,12 @@ finemap_locus <- function(#### Main args ####
                           remove_correlates = FALSE,
                           #### Misc args ####
                           query_by = "tabix",
-                          qtl_prefixes = NULL,
+                          qtl_suffixes = NULL,
                           #### PLotting args ####
                           plot_types = c("simple"),
                           zoom = "1x",
+                          show_plot = TRUE,
+                          tx_biotypes = NULL,
                           nott_epigenome = FALSE,
                           nott_show_placseq = FALSE,
                           nott_binwidth = 200,
@@ -248,7 +250,6 @@ finemap_locus <- function(#### Main args ####
                           xgr_libnames = NULL,
                           roadmap = FALSE,
                           roadmap_query = NULL,
-                          show_plot = TRUE,
                           #### General args ####
                           remove_tmps = TRUE,
                           seed = 2022,
@@ -298,14 +299,17 @@ finemap_locus <- function(#### Main args ####
                           ){
   # echoverseTemplate:::source_all();
   # echoverseTemplate:::args2vars(finemap_locus);
-
+  #### Check for required args ####
+  force(locus)
+  force(fullSS_path)
+  ### Check for deprecated args ####
   check_deprecated(fun="finemap_locus",
-                   args=match.call(call = sys.call(sys.parent(2))))
+                   args=match.call())
   #### Create paths ####
   subset_path <- construct_subset_path(results_dir = results_dir,
-                                 dataset_type = dataset_type,
-                                 dataset_name = dataset_name,
-                                 locus = locus)
+                                       dataset_type = dataset_type,
+                                       dataset_name = dataset_name,
+                                       locus = locus)
   locus_dir <- get_locus_dir(subset_path = subset_path)
   ####  Query ####
   steps("query")
@@ -413,7 +417,8 @@ finemap_locus <- function(#### Main args ####
         finemap_methods = finemap_methods,
         credset_thresh = credset_thresh,
         consensus_thresh = consensus_thresh,
-        qtl_prefixes = qtl_prefixes,
+        tx_biotypes = tx_biotypes,
+        qtl_suffixes = qtl_suffixes,
         nott_epigenome = FALSE,
         plot_full_window = TRUE,
         mean.PP = TRUE,
@@ -438,8 +443,9 @@ finemap_locus <- function(#### Main args ####
         finemap_methods = finemap_methods,
         credset_thresh = credset_thresh,
         consensus_thresh = consensus_thresh,
-        qtl_prefixes = qtl_prefixes,
+        qtl_suffixes = qtl_suffixes,
         zoom = zoom,
+        tx_biotypes = tx_biotypes,
         save_plot = TRUE,
         show_plot = show_plot,
         xgr_libnames = xgr_libnames,

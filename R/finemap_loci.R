@@ -47,7 +47,7 @@
 #'   finemap_methods = c("ABF","FINEMAP","SUSIE"),
 #'   dataset_name = "Nalls23andMe_2019",
 #'   fullSS_genome_build = "hg19",
-#'   bp_distance = 10000,
+#'   bp_distance = 1000,
 #'   munged = TRUE)
 finemap_loci <- function(#### Main args ####
                          loci = NULL,
@@ -93,10 +93,12 @@ finemap_loci <- function(#### Main args ####
                          #### Misc args ####
                          query_by = "tabix",
                          case_control = TRUE,
-                         qtl_prefixes = NULL,
+                         qtl_suffixes = NULL,
                          #### PLotting args ####
                          plot_types = c("simple"),
+                         show_plot = TRUE,
                          zoom = "1x",
+                         tx_biotypes = NULL,
                          nott_epigenome = FALSE,
                          nott_show_placseq = FALSE,
                          nott_binwidth = 200,
@@ -156,8 +158,11 @@ finemap_loci <- function(#### Main args ####
   # echoverseTemplate:::source_all();
   # echoverseTemplate:::args2vars(finemap_loci);
 
+  #### Check for required args ####
+  force(fullSS_path)
+  ### Check for deprecated args ####
   check_deprecated(fun="finemap_loci",
-                   args=match.call(call = sys.call(sys.parent(2))))
+                   args=match.call())
   #### Check PolyFun/PAINTOR are installed early on (if needed) ####
   if(any(grepl("polyfun",finemap_methods, ignore.case = TRUE))){
     echofinemap::POLYFUN_install()
@@ -243,14 +248,15 @@ finemap_loci <- function(#### Main args ####
                                  remove_correlates=remove_correlates,
                                  conditioned_snps=conditioned_snps,
                                  remove_tmps=remove_tmps,
-                                 plot.types=plot.types,
                                  credset_thresh=credset_thresh,
                                  consensus_thresh=consensus_thresh,
                                  case_control=case_control,
-                                 qtl_prefixes=qtl_prefixes,
+                                 qtl_suffixes=qtl_suffixes,
 
                                  plot_types=plot_types,
+                                 show_plot=show_plot,
                                  zoom=zoom,
+                                 tx_biotypes=tx_biotypes,
                                  nott_epigenome=nott_epigenome,
                                  nott_show_placseq=nott_show_placseq,
                                  nott_binwidth=nott_binwidth,

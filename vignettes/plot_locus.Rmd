@@ -51,7 +51,7 @@ LD_reference <- "UKB" # Used for naming saved plots
 
 ## Full window
 
-```{r trk_plot, attr.output='style="max-height: 200px;"'}
+```{r trk_plot}
 trk_plot <- echoplot::plot_locus(dat = dat, 
                                  LD_matrix = LD_matrix, 
                                  LD_reference = LD_reference,
@@ -66,7 +66,7 @@ trk_plot <- echoplot::plot_locus(dat = dat,
 * Each zoom view will be saved individually with its respective scale as the suffix (e.g. `multiview.BST1.UKB.4x.jpg`).  
 * Each zoom view is stored as a named item within the returned list.  
 
-```{r trk_plot_zoom, attr.output='style="max-height: 200px;"'}
+```{r trk_plot_zoom, eval=FALSE}
 trk_plot_zooms <- echoplot::plot_locus(dat = dat, 
                                        LD_matrix = LD_matrix, 
                                        LD_reference = LD_reference,
@@ -75,17 +75,12 @@ trk_plot_zooms <- echoplot::plot_locus(dat = dat,
 names(trk_plot_zooms) # Get zoom view names
 ```
 
-```{r}
-print(trk_plot_zooms)
-```
-
-
 ## Return as list  
 
 * For even further control over each track of the multi-view plot, specify `echoplot::plot_locus(..., return_list=T)` to instead return a named list (nested within each zoom view list item) of `ggplot` objects which can each be modified individually. 
 * Once you've made your modifications, you can then bind this list of plots back together with `patchwork::wrap_plots(tracks_list, ncol = 1)`.  
 
-```{r trk_plot_list, attr.output='style="max-height: 200px;"'}
+```{r trk_plot_list}
 trk_plot_list <- echoplot::plot_locus(dat = dat, 
                                       LD_matrix = LD_matrix, 
                                       LD_reference = LD_reference,
@@ -135,7 +130,7 @@ the annotations that overlap with your locus will automatically be saved as `GRa
 *results/<dataset_type>/<dataset_name>/<locus>/annotation* 
 * If a selected annotation has previously been downloaded and stored for that locus, `echoplot::plot_locus()` will automatically detect and import it to save time.   
 
-```{r trk_plot.xgr, attr.output='style="max-height: 200px;"'}
+```{r trk_plot.xgr}
 trk_plot.xgr <- echoplot::plot_locus(dat = dat, 
                                      LD_matrix = LD_matrix, 
                                      LD_reference = LD_reference,
@@ -167,14 +162,14 @@ trk_plot.roadmap <- echoplot::plot_locus(dat = dat,
 [Nott et al. (Science, 2019)](https://science.sciencemag.org/content/366/6469/1134.abstract)  
 (see `?NOTT_2019.bigwig_metadata` for details).
 
-```{r trk_plot.nott_2019, attr.output='style="max-height: 200px;"'} 
+```{r trk_plot.nott_2019, eval=FALSE} 
 trk_plot.nott_2019 <- echoplot::plot_locus(dat = dat,  
                                  LD_matrix = LD_matrix, 
                                  LD_reference = LD_reference,
                                  locus_dir = locus_dir, 
                                  zoom = "10x",
                                  
-                                 nott_epigenome=TRUE,  
+                                 nott_epigenome = TRUE,  
                                  nott_binwidth = 200,
                                  nott_regulatory_rects = TRUE, 
                                  nott_show_placseq = TRUE) 
@@ -185,7 +180,7 @@ trk_plot.nott_2019 <- echoplot::plot_locus(dat = dat,
 * Plot multiple QTL p-value columns (or really P-value columns from any kind of datset).  
 * Each QTL dataset will be plotted as a new track.
 
-```{r trk_plot.QTL, attr.output='style="max-height: 200px;"'}
+```{r trk_plot.QTL}
 qtl_dat <- data.table::copy(dat)
 # Make fake QTL P-values for the sake a demonstration
 qtl_dat$fake_eQTL.P <- abs(jitter(qtl_dat$P, amount = 1e-15))
