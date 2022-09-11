@@ -69,10 +69,16 @@ At minimum, \code{topSNPs} should include the following columns:
 \item{"1KGphase1" : }{1000 Genomes Project Phase 1 (genome build: hg19).}
 \item{"1KGphase3" : }{1000 Genomes Project Phase 3 (genome build: hg19).}
 \item{"UKB" : }{Pre-computed LD from a British
-European-decent subset of UK Biobank (genome build: hg19).}
+European-decent subset of UK Biobank.
+\emph{Genome build} : hg19}
 \item{"<vcf_path>" : }{User-supplied path to a custom VCF file 
-to compute LD matrix from 
-(genome build: defined by user with \code{target_genome}).}
+to compute LD matrix from.\cr
+\emph{Accepted formats}: \emph{.vcf} / \emph{.vcf.gz} / \emph{.vcf.bgz}\cr
+\emph{Genome build} : defined by user with \code{target_genome}.}
+\item{"<matrix_path>" : }{User-supplied path to a pre-computed LD matrix   
+\emph{Accepted formats}:  \emph{.rds} / \emph{.rda} / \emph{.csv} / 
+\emph{.tsv} / \emph{.txt}\cr
+\emph{Genome build} : defined by user with \code{target_genome}.}
 }}
 
 \item{force_new_subset}{By default, if a subset of the full

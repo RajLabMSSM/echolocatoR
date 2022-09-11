@@ -11,6 +11,8 @@
   - Changed arg `qtl_prefixes` --> `qtl_suffixes`.
   - Passed up `show_plot` to `finemap_loci`.
   - Fixed 0 transcripts bug.
+* Can now supply `LD_references` with vcf/csv/tsv/txt 
+  (and their compressed versions),as well as rda/rds files. 
 
 ## Bug fixes
 

@@ -205,12 +205,23 @@ finemap_loci <- function(#### Main args ####
       )
     )
     tryCatch({
-      gene_limits <- arg_list_handler(trim_gene_limits, i)
-      conditioned_snp <- arg_list_handler(conditioned_snps, i)
-      min_pos <- arg_list_handler(min_POS, i)
-      max_pos <- arg_list_handler(max_POS, i)
-      LD_ref <- arg_list_handler(LD_reference, i)
-
+      #### Check iterative arg lengths #####
+      gene_limits <- arg_list_handler(arg = "trim_gene_limits",
+                                      i = i,
+                                      loci = loci)
+      conditioned_snp <- arg_list_handler(arg = "conditioned_snps",
+                                          i = i,
+                                          loci = loci)
+      min_pos <- arg_list_handler(arg = "min_POS",
+                                  i = i,
+                                  loci = loci)
+      max_pos <- arg_list_handler(arg = "max_POS",
+                                  i = i,
+                                  loci = loci)
+      LD_ref <- arg_list_handler(arg = "LD_reference",
+                                 i = i,
+                                 loci = loci)
+      #### Run pipeline ####
       out_list <- finemap_locus(locus=locus,
                                 topSNPs=topSNPs,
                                 fullSS_path=fullSS_path,

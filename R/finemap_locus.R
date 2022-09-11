@@ -333,6 +333,7 @@ finemap_locus <- function(#### Main args ####
                             locus_dir=locus_dir,
                             LD_reference=LD_reference,
                             force_new_LD=force_new_LD,
+                            query_genome=fullSS_genome_build,
                             target_genome=LD_genome_build,
                             superpopulation=superpopulation,
                             download_method=download_method,
