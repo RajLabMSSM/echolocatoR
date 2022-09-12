@@ -496,19 +496,54 @@ Plotting functions are now implemented via:
 locus plots with GWAS, fine-mapping results, and functional annotations
 (`plot_locus()`). Can also plot multi-GWAS/QTL and multi-ancestry
 results (`plot_locus_multi()`).  
-- [`echoannot`](https://github.com/RajLabMSSM/echoplot): Study-level
+- [`echoannot`](https://github.com/RajLabMSSM/echoannot): Study-level
 summary plots showing aggregted info across many loci at once
-(`super_summary_plot()`).
+(`super_summary_plot()`).  
+- [`echoLD`](https://github.com/RajLabMSSM/echoLD): Plot an LD matrix
+using one of several differnt plotting methods (`plot_LD()`).
+
+## Tabix queries
+
+All queries of [`tabix`](http://www.htslib.org/doc/tabix.html)-indexed
+files (for rapid data subset extraction) are implemented via
+[`echotabix`](https://github.com/RajLabMSSM/echotabix).
+
+<details>
+
+-   `echotabix::convert_and_query()` detects whether the GWAS summary
+    statistics file you provided is already `tabix`-indexed, and it not,
+    automatically performs all steps necessary to convert it (sorting,
+    `bgzip`-compression, indexing) across a wide variety of scenarios.  
+-   `echotabix::query()` contains many different methods for making
+    tabix queries
+    (e.g. `Rtracklayer`,`echoconda`,`VariantAnnotation`,`seqminer`),
+    each of which fail in certain circumstances. To avoid this,
+    `query()` automatically selects the method that will work for the
+    particular file being queried and your machine’s particular versions
+    of R/Bioconductor/OS, taking the guesswork and troubleshooting out
+    of `tabix` queries.
+
+</details>
 
 ## Downloads
 
 Single- and multi-threaded downloads are now implemented via
-[`downloadR`](https://github.com/RajLabMSSM/downloadR). This is
-particularly useful for speeding up downloads of large files.
+[`downloadR`](https://github.com/RajLabMSSM/downloadR).
 
+<details>
+
+-   Multi-threaded downloading is performed using
+    [`axel`](https://github.com/axel-download-accelerator/axel), and is
+    particularly useful for speeding up downloads of large files.
+-   `axel` is installed via the official *echoverse*
+    [conda](https://docs.conda.io/en/latest/) environment: “echoR_mini”.
+    This environment is automatically created by the function
+    `echoconda::yaml_to_env()` when needed.
+
+</details>
 <hr>
 
-## Developer
+# Developer
 
 <a href="https://bschilder.github.io/BMSchilder/" target="_blank">Brian
 M. Schilder, Bioinformatician II</a>  
