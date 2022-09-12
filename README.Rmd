@@ -209,7 +209,6 @@ example, `echodata::BST1`). They are stored in the locus-specific
 
 Fine-mapping functions are now implemented via [`echofinemap`](https://github.com/RajLabMSSM/echofinemap): 
 
-
 <details>
 
 - ``r pkg`` will automatically check whether you have the
@@ -225,9 +224,13 @@ See `?echodata::construct_colmap()` for descriptions of these columns.
 All methods require the columns: `SNP`,`CHR`,`POS`,`Effect`,`StdErr`
 
 </details>
+<br>
  
 ```{r}
-knitr::kable(echofinemap::required_cols(add_versions = TRUE))
+methods <- echofinemap::required_cols(add_versions = TRUE, 
+                                      embed_links = TRUE,
+                                      verbose = FALSE)
+knitr::kable(x = methods)
 ```
 
 ## Datasets

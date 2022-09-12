@@ -303,29 +303,31 @@ Fine-mapping functions are now implemented via
 
 </details>
 
-``` r
-knitr::kable(echofinemap::required_cols(add_versions = TRUE))
-```
+<br>
 
-    ## Gathering method versions.
+``` r
+methods <- echofinemap::required_cols(add_versions = TRUE, 
+                                      embed_links = TRUE,
+                                      verbose = FALSE)
+```
 
     ## Loading required namespace: genetics.binaRies
 
-    ## Gathering method sources.
+``` r
+knitr::kable(x = methods)
+```
 
-    ## Gathering method citations.
-
-| method           | required   | suggested  | version | source       | citation                                            |
-|:-----------------|:-----------|:-----------|:--------|:-------------|:----------------------------------------------------|
-| ABF              | SNP, CHR…. |            | 5.1.0.1 | <https://>…. | <https://doi.org/10.1086%2F519024>                  |
-| COJO_conditional | SNP, CHR…. | Freq, P, N | 1.93.2  | <https://>…. | <https://doi.org/10.1038/ng.2213>                   |
-| COJO_joint       | SNP, CHR…. | Freq, P, N | 1.93.2  | <https://>…. | <https://doi.org/10.1038/ng.2213>                   |
-| COJO_stepwise    | SNP, CHR…. | Freq, P, N | 1.93.2  | <https://>…. | <https://doi.org/10.1038/ng.2213>                   |
-| FINEMAP          | SNP, CHR…. | A1, A2, …. | 1.4.1   | <http://w>…. | <https://doi.org/10.1093%2Fbioinformatics%2Fbtw018> |
-| PAINTOR          | SNP, CHR…. | MAF        | 3.0     | <https://>…. | <https://doi.org/10.1093/bioinformatics/btw615>     |
-| POLYFUN_FINEMAP  | SNP, CHR…. | MAF, N     | 1.0.0   | <https://>…. | <https://doi.org/10.1038/s41588-022-01036-9>        |
-| POLYFUN_SUSIE    | SNP, CHR…. | MAF, N     | 1.0.0   | <https://>…. | <https://doi.org/10.1038/s41588-022-01036-9>        |
-| SUSIE            | SNP, CHR…. | N          | 0.12.27 | <https://>…. | <https://doi.org/10.1371/journal.pgen.1010299>      |
+| method           | required   | suggested  | version | source                                             | citation                                                  |
+|:-----------------|:-----------|:-----------|:--------|:---------------------------------------------------|:----------------------------------------------------------|
+| ABF              | SNP, CHR…. |            | 5.1.0.1 | [source](https://github.com/chr1swallace/coloc)    | [cite](https://doi.org/10.1086%2F519024)                  |
+| COJO_conditional | SNP, CHR…. | Freq, P, N | 1.93.2  | [source](https://github.com/jianyangqt/gcta)       | [cite](https://doi.org/10.1038/ng.2213)                   |
+| COJO_joint       | SNP, CHR…. | Freq, P, N | 1.93.2  | [source](https://github.com/jianyangqt/gcta)       | [cite](https://doi.org/10.1038/ng.2213)                   |
+| COJO_stepwise    | SNP, CHR…. | Freq, P, N | 1.93.2  | [source](https://github.com/jianyangqt/gcta)       | [cite](https://doi.org/10.1038/ng.2213)                   |
+| FINEMAP          | SNP, CHR…. | A1, A2, …. | 1.4.1   | [source](http://www.christianbenner.com/)          | [cite](https://doi.org/10.1093%2Fbioinformatics%2Fbtw018) |
+| PAINTOR          | SNP, CHR…. | MAF        | 3.0     | [source](https://github.com/gkichaev/PAINTOR_V3.0) | [cite](https://doi.org/10.1093/bioinformatics/btw615)     |
+| POLYFUN_FINEMAP  | SNP, CHR…. | MAF, N     | 1.0.0   | [source](https://github.com/omerwe/polyfun)        | [cite](https://doi.org/10.1038/s41588-022-01036-9)        |
+| POLYFUN_SUSIE    | SNP, CHR…. | MAF, N     | 1.0.0   | [source](https://github.com/omerwe/polyfun)        | [cite](https://doi.org/10.1038/s41588-022-01036-9)        |
+| SUSIE            | SNP, CHR…. | N          | 0.12.27 | [source](https://github.com/stephenslab/susieR)    | [cite](https://doi.org/10.1371/journal.pgen.1010299)      |
 
 ## Datasets
 
