@@ -31,15 +31,15 @@ SystemRequirements: Python (>= 3.7.0)
 biocViews:
     Genetics, FunctionalGenomics, SystemsBiology
 Imports: 
+    echoconda,
+    downloadR,
     echodata,
     echotabix,
     echoannot,
-    echoconda,
-    echoLD,
-    echoplot, 
-    echofinemap,
     catalogueR,
-    downloadR,
+    echoLD,
+    echofinemap,
+    echoplot, 
     data.table,
     methods,
     stringr,
@@ -57,15 +57,15 @@ Suggests:
     testthat (>= 3.0.0),
     badger
 Remotes:
+  github::RajLabMSSM/echoconda,
+  github::RajLabMSSM/downloadR,
   github::RajLabMSSM/echodata,
   github::RajLabMSSM/echotabix,
-  github::RajLabMSSM/downloadR,
   github::RajLabMSSM/echoannot,
-  github::RajLabMSSM/echoconda,
-  github::RajLabMSSM/echoLD,
-  github::RajLabMSSM/echoplot,
   github::RajLabMSSM/catalogueR,
+  github::RajLabMSSM/echoLD,
   github::RajLabMSSM/echofinemap,
+  github::RajLabMSSM/echoplot,
   github::RajLabMSSM/echodeps
 RoxygenNote: 7.2.1.9000
 VignetteBuilder: knitr 

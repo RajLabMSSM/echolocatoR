@@ -50,6 +50,22 @@ remotes::install_github("RajLabMSSM/`r pkg`")
 library(`r pkg`)
 ```
 
+#### Installation troubleshooting
+
+<details>
+
+- Because `echolocatoR` now relies on many subpackages that rely on one another, 
+  sometimes errors can occur when R tries to update one R package before 
+  updating its *echoverse* dependencies (and thus is unable to find new functions). 
+  As *echoverse* stabilizes over time, this should happen less frequently. However, 
+  in the meantime the solution is to simply rerun
+  `remotes::install_github("RajLabMSSM/echolocatoR")`
+  until all subpackages are fully updates. 
+- System dependencies can sometimes cause issues when using different packages. I've tried to     account for as many of these as possible automatically within the code, but using the
+  __Docker/Singularity__ provided below can further mitigate these issues.
+
+</details>
+
 ### [Optional] Docker/Singularity
 
 `echolocatoR` doesn't yet have its own container, 
@@ -106,7 +122,9 @@ Please report any bugs/requests on [GitHub Issues](https://github.com/RajLabMSSM
 
 ## `echolocatoR` v1.0 vs. v2.0
 
-There have been a series of major updates between `echolocatoR` v1.0 and v2.0. Here are some of the most notable ones:
+There have been a series of major updates between `echolocatoR` v1.0 and v2.0. Here are some of the most notable ones (see **Details**):
+
+<details>
 
 - __*echoverse* subpackages__: `echolocatoR` has been broken into separate subpackages, making it much easier to edit/debug each step of the full `finemap_loci` pipeline, and improving  robustness throughout. It also provides greater flexibility for users to construct their own custom pipelines from these modules.
 - __`GITHUB_TOKEN`__: GitHub now requires users to create Personal Authentication Tokens (PAT) to avoid download limits. This is essential for installing `echolocatoR` as many resources from GitHub need to be downloaded. See [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) for further instructions. 
@@ -126,32 +144,35 @@ There have been a series of major updates between `echolocatoR` v1.0 and v2.0. H
 - __`FINEMAP` fixed__: There were a number of issues with `FINEMAP` due to differing output formats across different versions, system dependency conflicts, and the fact that it can produce multiple Credible Sets. All of these have been fixed and the latest version of `FINEMAP` can be run on all OS platforms.  
 - __Debug mode__: Within `finemap_loci()` I use a `tryCatch()` when iterating across loci so that if one locus fails, the rest can continue. However this prevents using traceback feature in R, making debugging hard. Thus I now enabled debugging mode via a new argument: `use_tryCatch=FALSE`.  
 
+</details>
+
 ## Fine-mapping tools
 
-``r pkg`` will automatically check whether you have the
+Fine-mapping functions are now implemented via `echofinemap`: 
+
+
+<details>
+
+- ``r pkg`` will automatically check whether you have the
 necessary columns to run each tool you selected in
 `echolocatoR::finemap_loci(finemap_methods=...)`.
 It will remove any tools that for
 which there are missing necessary columns, and produces a message
-letting you know which columns are missing. Note that some columns (e.g.
-`MAF`,`N`,`t-stat`) can be automatically inferred if missing.  
-For easy reference, we list the necessary columns here as well.  
-See `?finemap_loci()` for descriptions of these columns.  
+letting you know which columns are missing.
+- Note that some columns (e.g.
+`MAF`,`N`,`t-stat`) will be automatically inferred if missing.  
+- For easy reference, we list the necessary columns here as well.  
+See `?echodata::construct_colmap()` for descriptions of these columns.  
 All methods require the columns: `SNP`,`CHR`,`POS`,`Effect`,`StdErr`
 
-Additional required columns:
 
-```{r}
-knitr::kable(echofinemap::required_cols(add_versions = TRUE))
-```
+### Multi-finemap results files
 
-## Multi-finemap results files
-
-The main output of ***echolocatoR*** are the multi-finemap files (for
+The main output of `echolocatoR` are the multi-finemap files (for
 example, `echodata::BST1`). They are stored in the locus-specific
 *Multi-finemap* subfolders.
 
-### Column descriptions
+#### Column descriptions
 
 -   **Standardized GWAS/QTL summary statistics**: e.g.
     `SNP`,`CHR`,`POS`,`Effect`,`StdErr`. See `?finemap_loci()` for
@@ -180,73 +201,84 @@ example, `echodata::BST1`). They are stored in the locus-specific
 
 -   Separate multi-finemap files are generated for each LD reference
     panel used, which is included in the file name (e.g.
-    *UKB_LD.Multi-finemap.tsv.gz*).
-
+    *UKB_LD.Multi-finemap.tsv.gz*). 
 -   Each fine-mapping tool defines its CS and PP slightly differently,
     so please refer to the associated original publications for the
     exact details of how these are calculated (links provided above).
 
+</details>
+
+ 
+```{r}
+knitr::kable(echofinemap::required_cols(add_versions = TRUE))
+```
 
 ## Datasets
 
-Datasets are now stored/retrieved via the following **echoverse** sub-packages.
+Precomputed fine-mapping results and annotation datasets
+are now stored/retrieved via the following **echoverse** subpackages:  
+  - [`echodata`](https://github.com/RajLabMSSM/echodata) 
+  - [`echoannot`](https://github.com/RajLabMSSM/echoannot)  
+  - [`catalogueR`](https://github.com/RajLabMSSM/catalogueR)  
 
 For more detailed information about each dataset, use `?`:  
+
 ```R  
+### Examples ###
+
 library(echoannot)   
 ?NOTT_2019.interactome # epigenomic annotations
-
 library(echodata) 
 ?BST1 # fine-mapping results 
 ```
 
-### `catalogueR`: QTLs
+<details> 
 
-#### [eQTL Catalogue](https://www.ebi.ac.uk/eqtl/)
+### [`catalogueR`](https://github.com/RajLabMSSM/catalogueR): QTLs
 
+#### [eQTL Catalogue](https://www.ebi.ac.uk/eqtl/)  
 -   API access to full summary statistics from many standardized
     e/s/t-QTL datasets.  
 -   Data access and colocalization tests facilitated through the
     [catalogueR](https://github.com/RajLabMSSM/catalogueR) R package.
 
-### `echoannot`: Epigenomic & genome-wide annotations
+### [`echoannot`](https://github.com/RajLabMSSM/echoannot): Epigenomic & genome-wide annotations
 
-#### [Nott et al. (2019)](https://science.sciencemag.org/content/366/6469/1134.abstract)
-
+#### [Nott et al. (2019)](https://science.sciencemag.org/content/366/6469/1134.abstract)  
 -   Data from this publication contains results from cell type-specific
     (neurons, oligodendrocytes, astrocytes, microglia, & peripheral
     myeloid cells) epigenomic assays (H3K27ac, ATAC, H3K4me3) from human
     brain tissue.
 
-#### [XGR](http://xgr.r-forge.r-project.org)
-
+#### [XGR](http://xgr.r-forge.r-project.org)  
 -   API access to a diverse library of cell type/line-specific
     epigenomic (e.g. ENCODE) and other genome-wide annotations.
 
-#### [Roadmap](http://www.roadmapepigenomics.org)
-
+#### [Roadmap](http://www.roadmapepigenomics.org)  
 -   API access to cell type-specific epigenomic data.
 
-#### [biomaRt](https://bioconductor.org/packages/release/bioc/html/biomaRt.html)
-
+#### [biomaRt](https://bioconductor.org/packages/release/bioc/html/biomaRt.html)  
 -   API access to various genome-wide SNP annotations (e.g. missense,
     nonsynonmous, intronic, enhancer).
 
-#### [HaploR](https://cran.r-project.org/web/packages/haploR/vignettes/haplor-vignette.html)
-
+#### [HaploR](https://cran.r-project.org/web/packages/haploR/vignettes/haplor-vignette.html)  
 -   API access to known per-SNP QTL and epigenomic data hits.
 
-## `echoannot`: Enrichment tools
+</details> 
+
+## Enrichment tools
+
+Annotation enrichment functions are now implemented via [`echoannot`](https://github.com/RajLabMSSM/echoannot): 
+
+<details> 
 
 ### Implemented
 
-#### [XGR](http://xgr.r-forge.r-project.org)
-
+#### [XGR](http://xgr.r-forge.r-project.org)  
 -   Binomial enrichment tests between customisable foreground and
     background SNPs.
     
-#### [motifbreakR](https://github.com/Simon-Coetzee/motifBreakR)
-
+#### [motifbreakR](https://github.com/Simon-Coetzee/motifBreakR)  
 -   Identification of transcript factor binding motifs (TFBM) and
     prediction of SNP disruption to said motifs.
 -   Includes a comprehensive list of TFBM databases via
@@ -256,23 +288,25 @@ library(echodata)
 
 ### Under construction
 
-### [GARFIELD](https://www.bioconductor.org/packages/release/bioc/html/garfield.html) 
-
+#### [GARFIELD](https://www.bioconductor.org/packages/release/bioc/html/garfield.html)  
 -   Genomic enrichment with LD-informed heuristics.
 
-#### [GoShifter](https://github.com/immunogenomics/goshifter)
-
+#### [GoShifter](https://github.com/immunogenomics/goshifter)  
 -   LD-informed iterative enrichment analysis.
 
-#### [S-LDSC](https://www.nature.com/articles/ng.3954)
-
+#### [S-LDSC](https://www.nature.com/articles/ng.3954)  
 -   Genome-wide stratified LD score regression.
 -   Inlccles 187-annotation baseline model from [Gazal et al.
     2018](https://www.nature.com/articles/s41588-018-0231-8).  
 -   You can alternatively supply a custom annotations matrix.
 
+</details> 
 
-## `echoLD`: LD reference panels
+## LD reference panels
+
+LD reference panels are now queried/processed by [`echoLD`](https://github.com/RajLabMSSM/echoLD): 
+
+<details> 
 
 ### [UK Biobank](https://www.ukbiobank.ac.uk)
 
@@ -288,6 +322,7 @@ library(echodata)
 
 - From user-supplied precomputed LD matrices
 
+</details> 
 
 <hr>
 

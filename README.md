@@ -56,6 +56,25 @@ remotes::install_github("RajLabMSSM/echolocatoR")
 library(echolocatoR)
 ```
 
+#### Installation troubleshooting
+
+<details>
+
+-   Because `echolocatoR` now relies on many subpackages that rely on
+    one another, sometimes errors can occur when R tries to update one R
+    package before updating its *echoverse* dependencies (and thus is
+    unable to find new functions). As *echoverse* stabilizes over time,
+    this should happen less frequently. However, in the meantime the
+    solution is to simply rerun
+    `remotes::install_github("RajLabMSSM/echolocatoR")` until all
+    subpackages are fully updates.
+-   System dependencies can sometimes cause issues when using different
+    packages. I’ve tried to account for as many of these as possible
+    automatically within the code, but using the **Docker/Singularity**
+    provided below can further mitigate these issues.
+
+</details>
+
 ### \[Optional\] Docker/Singularity
 
 `echolocatoR` doesn’t yet have its own container, but in the meantime
@@ -127,7 +146,9 @@ welcome!
 ## `echolocatoR` v1.0 vs. v2.0
 
 There have been a series of major updates between `echolocatoR` v1.0 and
-v2.0. Here are some of the most notable ones:
+v2.0. Here are some of the most notable ones (see **Details**):
+
+<details>
 
 -   ***echoverse* subpackages**: `echolocatoR` has been broken into
     separate subpackages, making it much easier to edit/debug each step
@@ -194,52 +215,33 @@ v2.0. Here are some of the most notable ones:
     debugging hard. Thus I now enabled debugging mode via a new
     argument: `use_tryCatch=FALSE`.
 
+</details>
+
 ## Fine-mapping tools
 
-`echolocatoR` will automatically check whether you have the necessary
-columns to run each tool you selected in
-`echolocatoR::finemap_loci(finemap_methods=...)`. It will remove any
-tools that for which there are missing necessary columns, and produces a
-message letting you know which columns are missing. Note that some
-columns (e.g. `MAF`,`N`,`t-stat`) can be automatically inferred if
-missing.  
-For easy reference, we list the necessary columns here as well.  
-See `?finemap_loci()` for descriptions of these columns.  
-All methods require the columns: `SNP`,`CHR`,`POS`,`Effect`,`StdErr`
+Fine-mapping functions are now implemented via `echofinemap`:
 
-Additional required columns:
+<details>
 
-``` r
-knitr::kable(echofinemap::required_cols(add_versions = TRUE))
-```
+-   `echolocatoR` will automatically check whether you have the
+    necessary columns to run each tool you selected in
+    `echolocatoR::finemap_loci(finemap_methods=...)`. It will remove any
+    tools that for which there are missing necessary columns, and
+    produces a message letting you know which columns are missing.
+-   Note that some columns (e.g. `MAF`,`N`,`t-stat`) will be
+    automatically inferred if missing.  
+-   For easy reference, we list the necessary columns here as well.  
+    See `?echodata::construct_colmap()` for descriptions of these
+    columns.  
+    All methods require the columns: `SNP`,`CHR`,`POS`,`Effect`,`StdErr`
 
-    ## Gathering method versions.
+### Multi-finemap results files
 
-    ## Loading required namespace: genetics.binaRies
-
-    ## Gathering method sources.
-
-    ## Gathering method citations.
-
-| method           | required   | suggested  | version | source       | citation                                            |
-|:-----------------|:-----------|:-----------|:--------|:-------------|:----------------------------------------------------|
-| ABF              | SNP, CHR…. |            | 5.1.0.1 | <https://>…. | <https://doi.org/10.1086%2F519024>                  |
-| COJO_conditional | SNP, CHR…. | Freq, P, N | 1.93.2  | <https://>…. | <https://doi.org/10.1038/ng.2213>                   |
-| COJO_joint       | SNP, CHR…. | Freq, P, N | 1.93.2  | <https://>…. | <https://doi.org/10.1038/ng.2213>                   |
-| COJO_stepwise    | SNP, CHR…. | Freq, P, N | 1.93.2  | <https://>…. | <https://doi.org/10.1038/ng.2213>                   |
-| FINEMAP          | SNP, CHR…. | A1, A2, …. | 1.4.1   | <http://w>…. | <https://doi.org/10.1093%2Fbioinformatics%2Fbtw018> |
-| PAINTOR          | SNP, CHR…. | MAF        | 3.0     | <https://>…. | <https://doi.org/10.1093/bioinformatics/btw615>     |
-| POLYFUN_FINEMAP  | SNP, CHR…. | MAF, N     | 1.0.0   | <https://>…. | <https://doi.org/10.1038/s41588-022-01036-9>        |
-| POLYFUN_SUSIE    | SNP, CHR…. | MAF, N     | 1.0.0   | <https://>…. | <https://doi.org/10.1038/s41588-022-01036-9>        |
-| SUSIE            | SNP, CHR…. | N          | 0.12.27 | <https://>…. | <https://doi.org/10.1371/journal.pgen.1010299>      |
-
-## Multi-finemap results files
-
-The main output of ***echolocatoR*** are the multi-finemap files (for
+The main output of `echolocatoR` are the multi-finemap files (for
 example, `echodata::BST1`). They are stored in the locus-specific
 *Multi-finemap* subfolders.
 
-### Column descriptions
+#### Column descriptions
 
 -   **Standardized GWAS/QTL summary statistics**: e.g.
     `SNP`,`CHR`,`POS`,`Effect`,`StdErr`. See `?finemap_loci()` for
@@ -269,27 +271,58 @@ example, `echodata::BST1`). They are stored in the locus-specific
 -   Separate multi-finemap files are generated for each LD reference
     panel used, which is included in the file name (e.g.
     *UKB_LD.Multi-finemap.tsv.gz*).
-
 -   Each fine-mapping tool defines its CS and PP slightly differently,
     so please refer to the associated original publications for the
     exact details of how these are calculated (links provided above).
 
+</details>
+
+``` r
+knitr::kable(echofinemap::required_cols(add_versions = TRUE))
+```
+
+    ## Gathering method versions.
+
+    ## Loading required namespace: genetics.binaRies
+
+    ## Gathering method sources.
+
+    ## Gathering method citations.
+
+| method           | required   | suggested  | version | source       | citation                                            |
+|:-----------------|:-----------|:-----------|:--------|:-------------|:----------------------------------------------------|
+| ABF              | SNP, CHR…. |            | 5.1.0.1 | <https://>…. | <https://doi.org/10.1086%2F519024>                  |
+| COJO_conditional | SNP, CHR…. | Freq, P, N | 1.93.2  | <https://>…. | <https://doi.org/10.1038/ng.2213>                   |
+| COJO_joint       | SNP, CHR…. | Freq, P, N | 1.93.2  | <https://>…. | <https://doi.org/10.1038/ng.2213>                   |
+| COJO_stepwise    | SNP, CHR…. | Freq, P, N | 1.93.2  | <https://>…. | <https://doi.org/10.1038/ng.2213>                   |
+| FINEMAP          | SNP, CHR…. | A1, A2, …. | 1.4.1   | <http://w>…. | <https://doi.org/10.1093%2Fbioinformatics%2Fbtw018> |
+| PAINTOR          | SNP, CHR…. | MAF        | 3.0     | <https://>…. | <https://doi.org/10.1093/bioinformatics/btw615>     |
+| POLYFUN_FINEMAP  | SNP, CHR…. | MAF, N     | 1.0.0   | <https://>…. | <https://doi.org/10.1038/s41588-022-01036-9>        |
+| POLYFUN_SUSIE    | SNP, CHR…. | MAF, N     | 1.0.0   | <https://>…. | <https://doi.org/10.1038/s41588-022-01036-9>        |
+| SUSIE            | SNP, CHR…. | N          | 0.12.27 | <https://>…. | <https://doi.org/10.1371/journal.pgen.1010299>      |
+
 ## Datasets
 
-Datasets are now stored/retrieved via the following **echoverse**
-sub-packages.
+Precomputed fine-mapping results and annotation datasets are now
+stored/retrieved via the following **echoverse** subpackages:  
+- [`echodata`](https://github.com/RajLabMSSM/echodata) -
+[`echoannot`](https://github.com/RajLabMSSM/echoannot)  
+- [`catalogueR`](https://github.com/RajLabMSSM/catalogueR)
 
 For more detailed information about each dataset, use `?`:
 
 ``` r
+### Examples ###
+
 library(echoannot)   
 ?NOTT_2019.interactome # epigenomic annotations
-
 library(echodata) 
 ?BST1 # fine-mapping results 
 ```
 
-### `catalogueR`: QTLs
+<details>
+
+### [`catalogueR`](https://github.com/RajLabMSSM/catalogueR): QTLs
 
 #### [eQTL Catalogue](https://www.ebi.ac.uk/eqtl/)
 
@@ -298,7 +331,7 @@ library(echodata)
 -   Data access and colocalization tests facilitated through the
     [catalogueR](https://github.com/RajLabMSSM/catalogueR) R package.
 
-### `echoannot`: Epigenomic & genome-wide annotations
+### [`echoannot`](https://github.com/RajLabMSSM/echoannot): Epigenomic & genome-wide annotations
 
 #### [Nott et al. (2019)](https://science.sciencemag.org/content/366/6469/1134.abstract)
 
@@ -325,7 +358,14 @@ library(echodata)
 
 -   API access to known per-SNP QTL and epigenomic data hits.
 
-## `echoannot`: Enrichment tools
+</details>
+
+## Enrichment tools
+
+Annotation enrichment functions are now implemented via
+[`echoannot`](https://github.com/RajLabMSSM/echoannot):
+
+<details>
 
 ### Implemented
 
@@ -345,7 +385,7 @@ library(echodata)
 
 ### Under construction
 
-### [GARFIELD](https://www.bioconductor.org/packages/release/bioc/html/garfield.html)
+#### [GARFIELD](https://www.bioconductor.org/packages/release/bioc/html/garfield.html)
 
 -   Genomic enrichment with LD-informed heuristics.
 
@@ -360,7 +400,14 @@ library(echodata)
     2018](https://www.nature.com/articles/s41588-018-0231-8).  
 -   You can alternatively supply a custom annotations matrix.
 
-## `echoLD`: LD reference panels
+</details>
+
+## LD reference panels
+
+LD reference panels are now queried/processed by
+[`echoLD`](https://github.com/RajLabMSSM/echoLD):
+
+<details>
 
 ### [UK Biobank](https://www.ukbiobank.ac.uk)
 
@@ -376,6 +423,7 @@ library(echodata)
 
 -   From user-supplied precomputed LD matrices
 
+</details>
 <hr>
 
 ## Developer
