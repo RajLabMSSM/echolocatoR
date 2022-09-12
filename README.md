@@ -217,23 +217,28 @@ v2.0. Here are some of the most notable ones (see **Details**):
 
 </details>
 
-## Fine-mapping tools
+## Output descriptions
 
-Fine-mapping functions are now implemented via `echofinemap`:
+By default, `echolocatoR::finemap_loci()` returns a nested list
+containing grouped by locus names (e.g. `$BST1`, `$MEX3C`). Within each
+locus’s results are the following elements:
 
 <details>
 
--   `echolocatoR` will automatically check whether you have the
-    necessary columns to run each tool you selected in
-    `echolocatoR::finemap_loci(finemap_methods=...)`. It will remove any
-    tools that for which there are missing necessary columns, and
-    produces a message letting you know which columns are missing.
--   Note that some columns (e.g. `MAF`,`N`,`t-stat`) will be
-    automatically inferred if missing.  
--   For easy reference, we list the necessary columns here as well.  
-    See `?echodata::construct_colmap()` for descriptions of these
-    columns.  
-    All methods require the columns: `SNP`,`CHR`,`POS`,`Effect`,`StdErr`
+-   `finemap_dat`: Fine-mapping results from all selected methods merged
+    with the original summary statistics (i.e. **Multi-finemap
+    results**).
+-   `locus_plot`: A nested list containing one or more zoomed views of
+    locus plots.  
+-   `LD_matrix`: The post-processed LD matrix used for fine-mapping.
+-   `LD_plot`: An LD plot (if used).
+-   `locus_dir`: Locus directory results are saved in.
+-   `arguments`: A record of the arguments supplied to `finemap_loci`.
+
+In addition, the following object summarizes the results from the
+locus-specific elements:  
+- `merged_dat`: A merged `data.table` with all fine-mapping results from
+all loci.
 
 ### Multi-finemap results files
 
@@ -277,6 +282,27 @@ example, `echodata::BST1`). They are stored in the locus-specific
 
 </details>
 
+## Fine-mapping tools
+
+Fine-mapping functions are now implemented via
+[`echofinemap`](https://github.com/RajLabMSSM/echofinemap):
+
+<details>
+
+-   `echolocatoR` will automatically check whether you have the
+    necessary columns to run each tool you selected in
+    `echolocatoR::finemap_loci(finemap_methods=...)`. It will remove any
+    tools that for which there are missing necessary columns, and
+    produces a message letting you know which columns are missing.
+-   Note that some columns (e.g. `MAF`,`N`,`t-stat`) will be
+    automatically inferred if missing.  
+-   For easy reference, we list the necessary columns here as well.  
+    See `?echodata::construct_colmap()` for descriptions of these
+    columns.  
+    All methods require the columns: `SNP`,`CHR`,`POS`,`Effect`,`StdErr`
+
+</details>
+
 ``` r
 knitr::kable(echofinemap::required_cols(add_versions = TRUE))
 ```
@@ -303,10 +329,15 @@ knitr::kable(echofinemap::required_cols(add_versions = TRUE))
 
 ## Datasets
 
-Precomputed fine-mapping results and annotation datasets are now
-stored/retrieved via the following **echoverse** subpackages:  
-- [`echodata`](https://github.com/RajLabMSSM/echodata) -
-[`echoannot`](https://github.com/RajLabMSSM/echoannot)  
+Datasets are now stored/retrieved via the following **echoverse**
+subpackages:  
+- [`echodata`](https://github.com/RajLabMSSM/echodata): Pre-computed
+fine-mapping results. Also handles the semi-automated standardization of
+summary statistics. -
+[`echoannot`](https://github.com/RajLabMSSM/echoannot): Annotates
+GWAS/QTL summary statistics using epigenomics, pre-compiled annotation
+matrices, and machine learning model predictions of variant-specific
+functional impacts.  
 - [`catalogueR`](https://github.com/RajLabMSSM/catalogueR)
 
 For more detailed information about each dataset, use `?`:
@@ -322,39 +353,63 @@ library(echodata)
 
 <details>
 
+### [**`MungeSumstats`**](https://github.com/neurogenomics/MungeSumstats):
+
+-   You can search, import, and standardize any GWAS in the [*Open
+    GWAS*](https://gwas.mrcieu.ac.uk/) database via
+    [`MungeSumstats`](https://github.com/neurogenomics/MungeSumstats),
+    specifically the functions `find_sumstats` and `import_sumstats`.
+
 ### [`catalogueR`](https://github.com/RajLabMSSM/catalogueR): QTLs
 
-#### [eQTL Catalogue](https://www.ebi.ac.uk/eqtl/)
+#### [eQTL Catalogue](https://www.ebi.ac.uk/eqtl/): `catalogueR::eQTL_Catalogue.query()`
 
 -   API access to full summary statistics from many standardized
     e/s/t-QTL datasets.  
 -   Data access and colocalization tests facilitated through the
-    [catalogueR](https://github.com/RajLabMSSM/catalogueR) R package.
+    [`catalogueR`](https://github.com/RajLabMSSM/catalogueR) R package.
+
+### [`echodata`](https://github.com/RajLabMSSM/catalogueR): fine-mapping results
+
+#### [***echolocatoR Fine-mapping Portal***](https://rajlab.shinyapps.io/Fine_Mapping_Shiny): pre-computed fine-mapping results
+
+-   You can visit the *echolocatoR Fine-mapping Portal* to interactively
+    visualize and download pre-computed fine-mapping results across a
+    variety of phenotypes.
+-   This data can be searched and imported programmatically using
+    `echodata::portal_query()`.
 
 ### [`echoannot`](https://github.com/RajLabMSSM/echoannot): Epigenomic & genome-wide annotations
 
-#### [Nott et al. (2019)](https://science.sciencemag.org/content/366/6469/1134.abstract)
+#### [Nott et al. (2019)](https://science.sciencemag.org/content/366/6469/1134.abstract): `echoannot::NOTT2019_*()`
 
 -   Data from this publication contains results from cell type-specific
     (neurons, oligodendrocytes, astrocytes, microglia, & peripheral
-    myeloid cells) epigenomic assays (H3K27ac, ATAC, H3K4me3) from human
-    brain tissue.
+    myeloid cells) epigenomic assays (H3K27ac, ATAC, H3K4me3) from *ex
+    vivo* pediatric human brain tissue.
 
-#### [XGR](http://xgr.r-forge.r-project.org)
+#### [Corces et al.2020](https://doi.org/10.1038/s41588-020-00721-x): `echoannot::CORCES2020_*()`
+
+-   Data from this publication contains results from single-cell and
+    bulk chromatin accessibility assays (\[sc\]ATAC-seq) and chromatin
+    interactions ( [`FitHiChIP`](https://ay-lab.github.io/FitHiChIP/))
+    from *postmortem* adult human brain tissue.
+
+#### [XGR](http://xgr.r-forge.r-project.org): `echoannot::XGR_download_and_standardize()`
 
 -   API access to a diverse library of cell type/line-specific
-    epigenomic (e.g. ENCODE) and other genome-wide annotations.
+    epigenomic (e.g. **ENCODE**) and other genome-wide annotations.
 
-#### [Roadmap](http://www.roadmapepigenomics.org)
+#### [Roadmap](http://www.roadmapepigenomics.org): `echoannot::ROADMAP_query()`
 
 -   API access to cell type-specific epigenomic data.
 
-#### [biomaRt](https://bioconductor.org/packages/release/bioc/html/biomaRt.html)
+#### [biomaRt](https://bioconductor.org/packages/release/bioc/html/biomaRt.html): `echoannot::annotate_snps()`
 
 -   API access to various genome-wide SNP annotations (e.g. missense,
     nonsynonmous, intronic, enhancer).
 
-#### [HaploR](https://cran.r-project.org/web/packages/haploR/vignettes/haplor-vignette.html)
+#### [HaploR](https://cran.r-project.org/web/packages/haploR/vignettes/haplor-vignette.html): `echoannot::annotate_snps()`
 
 -   API access to known per-SNP QTL and epigenomic data hits.
 
@@ -369,12 +424,12 @@ Annotation enrichment functions are now implemented via
 
 ### Implemented
 
-#### [XGR](http://xgr.r-forge.r-project.org)
+#### [XGR](http://xgr.r-forge.r-project.org): `echoannot::XGR_enrichment()`
 
 -   Binomial enrichment tests between customisable foreground and
     background SNPs.
 
-#### [motifbreakR](https://github.com/Simon-Coetzee/motifBreakR)
+#### [motifbreakR](https://github.com/Simon-Coetzee/motifBreakR): `echoannot::MOTIFBREAKR()`
 
 -   Identification of transcript factor binding motifs (TFBM) and
     prediction of SNP disruption to said motifs.
@@ -382,6 +437,13 @@ Annotation enrichment functions are now implemented via
     [MotifDB](https://bioconductor.org/packages/release/bioc/html/MotifDb.html)
     (9,900+ annotated position frequency matrices from 14 public
     sources, for multiple organisms).
+
+#### [regioneR](http://bioconductor.org/packages/release/bioc/html/regioneR.html): `echoannot::test_enrichment()`
+
+-   Iterative pairwise permutation testing of overlap between all
+    combinations of two
+    [`GRangesList`](https://biodatascience.github.io/compbio/bioc/GRL.html)
+    objects.
 
 ### Under construction
 
@@ -405,7 +467,8 @@ Annotation enrichment functions are now implemented via
 ## LD reference panels
 
 LD reference panels are now queried/processed by
-[`echoLD`](https://github.com/RajLabMSSM/echoLD):
+[`echoLD`](https://github.com/RajLabMSSM/echoLD), specifically the
+function `get_LD()`:
 
 <details>
 
@@ -424,6 +487,24 @@ LD reference panels are now queried/processed by
 -   From user-supplied precomputed LD matrices
 
 </details>
+
+## Plotting
+
+Plotting functions are now implemented via:  
+- [`echoplot`](https://github.com/RajLabMSSM/echoplot): Multi-track
+locus plots with GWAS, fine-mapping results, and functional annotations
+(`plot_locus()`). Can also plot multi-GWAS/QTL and multi-ancestry
+results (`plot_locus_multi()`).  
+- [`echoannot`](https://github.com/RajLabMSSM/echoplot): Study-level
+summary plots showing aggregted info across many loci at once
+(`super_summary_plot()`).
+
+## Downloads
+
+Single- and multi-threaded downloads are now implemented via
+[`downloadR`](https://github.com/RajLabMSSM/downloadR). This is
+particularly useful for speeding up downloads of large files.
+
 <hr>
 
 ## Developer

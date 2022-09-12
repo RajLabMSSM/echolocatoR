@@ -29,7 +29,29 @@
 #' @inheritParams echodata::standardize
 #' @inheritParams echodata::find_consensus_snps
 #'
-#' @return A merged data.frame with all fine-mapping results from all loci.
+#' @returns
+#' By default, returns a nested list containing grouped by locus names
+#' (e.g. \code{BST1}, \code{MEX3C}). Within each locus's results are the
+#' following elements:
+#' \itemize{
+#' \item{\code{finemap_dat}}{ :  Fine-mapping results from all selected methods
+#'  merged with the original summary statistics
+#'  (i.e. \strong{Multi-finemap results}). }
+#' \item{\code{locus_plot}}{ :  A nested list containing one or more
+#' zoomed views of locus plots.}
+#' \item{\code{LD_matrix}}{ :  The post-processed LD matrix used
+#' for fine-mapping.}
+#' \item{\code{LD_plot}}{ :  An LD plot (if used).}
+#' \item{\code{locus_dir}}{ :  Locus directory results are saved in.}
+#' \item{\code{arguments}}{ : A record of the arguments supplied to
+#' \link[echolocatoR]{finemap_loci}.}
+#'}
+#'In addition, the following object summarizes the results
+#'from all the locus-specific results:
+#' \itemize{
+#' \item{\code{merged_dat}}{ : A merged \link[data.table]{data.table}
+#'  with all fine-mapping results from all loci.}
+#'}
 #'
 #' @export
 #' @importFrom echodata find_consensus_snps construct_colmap gene_locus_list
