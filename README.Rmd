@@ -226,11 +226,11 @@ All methods require the columns: `SNP`,`CHR`,`POS`,`Effect`,`StdErr`
 </details>
 <br>
  
-```{r}
-methods <- echofinemap::required_cols(add_versions = TRUE, 
-                                      embed_links = TRUE,
-                                      verbose = FALSE)
-knitr::kable(x = methods)
+```{r, fig.width=12}
+fm_methods <- echofinemap::required_cols(add_versions = TRUE, 
+                                         embed_links = TRUE,
+                                         verbose = FALSE)
+knitr::kable(x = fm_methods)
 ```
 
 ## Datasets

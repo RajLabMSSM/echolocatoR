@@ -306,15 +306,15 @@ Fine-mapping functions are now implemented via
 <br>
 
 ``` r
-methods <- echofinemap::required_cols(add_versions = TRUE, 
-                                      embed_links = TRUE,
-                                      verbose = FALSE)
+fm_methods <- echofinemap::required_cols(add_versions = TRUE, 
+                                         embed_links = TRUE,
+                                         verbose = FALSE)
 ```
 
     ## Loading required namespace: genetics.binaRies
 
 ``` r
-knitr::kable(x = methods)
+knitr::kable(x = fm_methods)
 ```
 
 | method           | required   | suggested  | version | source                                             | citation                                                  |
