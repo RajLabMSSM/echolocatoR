@@ -116,6 +116,15 @@ There have been a series of major updates between `echolocatoR` v1.0 and v2.0. H
 - __`echoconda`__: The *echoverse* subpackage `echoconda` now handles all conda environment creation/use internally and automatically, without the need for users to create the conda environment themselves as a separate step. Also, the default conda env `echoR` has been replaced by `echoR_mini`, which reduces the number of dependencies to just the bare minimum (thus greatly speeding up build time and reducing potential version conflicts). 
 - __`FINEMAP`__: More outputs from the tool `FINEMAP` are now recorded in the `echolocatoR` results (see `?echofinemap::FINEMAP` or [this Issue](https://github.com/RajLabMSSM/echofinemap/issues/7) for details). Also, a common dependency conflict between `FINEMAP`>=1.4 and MacOS has been resolved (see [this Issue](https://github.com/RajLabMSSM/echofinemap/issues/9) for details. 
 - __`echodata`__: All example data and data transformation functions have been moved to the *echoverse* subpackage [`echodata`](https://github.com/RajLabMSSM/echodata). 
+- __`LD_reference=`__: In addition to the *UKB*, *1KGphase1/3* LD reference panels, 
+  `finemap_loci()` can now take custom LD panels by supplying
+  `finemap_loci(LD_reference=)` with a
+  list of paths to VCF files (.vcf / vcf.gz / vcf.bgz) or 
+    pre-computed LD matrices with RSIDs as the row/col names
+      (.rda / .rds / .csv / .tsv. / .txt / .csv.gz / tsv.gz / txt.gz).
+- __Expanded fine-mapping methods__: "ABF”, "COJO_conditional", "COJO_joint"       "COJO_stepwise","FINEMAP","PAINTOR" (including multi-GWAS and multi-ancestry fine-mapping),"POLYFUN_FINEMAP" ,"POLYFUN_SUSIE","SUSIE" 
+- __`FINEMAP` fixed__: There were a number of issues with `FINEMAP` due to differing output formats across different versions, system dependency conflicts, and the fact that it can produce multiple Credible Sets. All of these have been fixed and the latest version of `FINEMAP` can be run on all OS platforms.  
+- __Debug mode__: Within `finemap_loci()` I use a `tryCatch()` when iterating across loci so that if one locus fails, the rest can continue. However this prevents using traceback feature in R, making debugging hard. Thus I now enabled debugging mode via a new argument: `use_tryCatch=FALSE`.  
 
 ## Fine-mapping tools
 
@@ -133,25 +142,8 @@ All methods require the columns: `SNP`,`CHR`,`POS`,`Effect`,`StdErr`
 Additional required columns:
 
 ```{r}
-knitr::kable(echofinemap::required_cols())
+knitr::kable(echofinemap::required_cols(add_versions = TRUE))
 ```
-
-
-### [ABF](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)
-
-### [FINEMAP](http://www.christianbenner.com)
-
-### [SuSiE](https://github.com/stephenslab/susieR)
-
-### [PolyFun](https://github.com/omerwe/polyfun)
-
-### [PAINTOR](https://github.com/gkichaev/PAINTOR_V3.0)
-
-### [GCTA-COJO](https://cnsgenomics.com/software/gcta/#COJO)
-
-### [coloc](https://cran.r-project.org/web/packages/coloc/vignettes/vignette.html)
-
-<br>
 
 ## Multi-finemap results files
 
@@ -208,6 +200,15 @@ library(echodata)
 ?BST1 # fine-mapping results 
 ```
 
+### `catalogueR`: QTLs
+
+#### [eQTL Catalogue](https://www.ebi.ac.uk/eqtl/)
+
+-   API access to full summary statistics from many standardized
+    e/s/t-QTL datasets.  
+-   Data access and colocalization tests facilitated through the
+    [catalogueR](https://github.com/RajLabMSSM/catalogueR) R package.
+
 ### `echoannot`: Epigenomic & genome-wide annotations
 
 #### [Nott et al. (2019)](https://science.sciencemag.org/content/366/6469/1134.abstract)
@@ -235,36 +236,16 @@ library(echodata)
 
 -   API access to known per-SNP QTL and epigenomic data hits.
 
-### `catalogueR`: QTLs
+## `echoannot`: Enrichment tools
 
-#### [eQTL Catalogue](https://www.ebi.ac.uk/eqtl/)
+### Implemented
 
--   API access to full summary statistics from many standardized
-    e/s/t-QTL datasets.  
--   Data access and colocalization tests facilitated through the
-    [catalogueR](https://github.com/RajLabMSSM/catalogueR) R package.
-
-<br>
-
-## Enrichment tools
-
-### [XGR](http://xgr.r-forge.r-project.org)
+#### [XGR](http://xgr.r-forge.r-project.org)
 
 -   Binomial enrichment tests between customisable foreground and
     background SNPs.
-
-### [GoShifter](https://github.com/immunogenomics/goshifter)
-
--   LD-informed iterative enrichment analysis.
-
-### [S-LDSC](https://www.nature.com/articles/ng.3954)
-
--   Genome-wide stratified LD score regression.
--   Inlccles 187-annotation baseline model from [Gazal et al.
-    2018](https://www.nature.com/articles/s41588-018-0231-8).  
--   You can alternatively supply a custom annotations matrix.
-
-### [motifbreakR](https://github.com/Simon-Coetzee/motifBreakR)
+    
+#### [motifbreakR](https://github.com/Simon-Coetzee/motifBreakR)
 
 -   Identification of transcript factor binding motifs (TFBM) and
     prediction of SNP disruption to said motifs.
@@ -273,11 +254,23 @@ library(echodata)
     (9,900+ annotated position frequency matrices from 14 public
     sources, for multiple organisms).
 
-### [GARFIELD](https://www.bioconductor.org/packages/release/bioc/html/garfield.html) (**under construction**)
+### Under construction
+
+### [GARFIELD](https://www.bioconductor.org/packages/release/bioc/html/garfield.html) 
 
 -   Genomic enrichment with LD-informed heuristics.
 
-<br>
+#### [GoShifter](https://github.com/immunogenomics/goshifter)
+
+-   LD-informed iterative enrichment analysis.
+
+#### [S-LDSC](https://www.nature.com/articles/ng.3954)
+
+-   Genome-wide stratified LD score regression.
+-   Inlccles 187-annotation baseline model from [Gazal et al.
+    2018](https://www.nature.com/articles/s41588-018-0231-8).  
+-   You can alternatively supply a custom annotations matrix.
+
 
 ## `echoLD`: LD reference panels
 
@@ -287,14 +280,18 @@ library(echodata)
 
 ### [1000 Genomes Phase 3](https://www.internationalgenome.org)
 
-### Custom LD panel: from user-supplied VCFs
+### Custom LD panel: 
 
-### Custom LD panel: from user-supplied precomputed LD matrices
+- From user-supplied VCFs
+
+### Custom LD panel
+
+- From user-supplied precomputed LD matrices
 
 
 <hr>
 
-## Contact
+## Developer
 
 <a href="https://bschilder.github.io/BMSchilder/" target="_blank">Brian
 M. Schilder, Bioinformatician II</a>  
@@ -302,7 +299,7 @@ M. Schilder, Bioinformatician II</a>
 <a href="https://icahn.mssm.edu/about/departments/neuroscience" target="_blank">Department
 of Neuroscience, Icahn School of Medicine at Mount Sinai</a>  
 
-<br>
+<hr>
 
 # Session info  
 
@@ -313,4 +310,6 @@ utils::sessionInfo()
 ```
 
 </details>
+
+<br>
 
