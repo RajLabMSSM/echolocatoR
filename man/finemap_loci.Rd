@@ -468,8 +468,8 @@ the pipeline will continue to try running the rest of the loci
 }
 \value{
 By default, returns a nested list containing grouped by locus names
-(e.g. \code{BST1}, \code{MEX3C}). Within each locus's results are the
-following elements:
+(e.g. \code{BST1}, \code{MEX3C}). The results of each locus contain
+ the following elements:
 \itemize{
 \item{\code{finemap_dat}}{ :  Fine-mapping results from all selected methods
  merged with the original summary statistics

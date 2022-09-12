@@ -220,8 +220,8 @@ v2.0. Here are some of the most notable ones (see **Details**):
 ## Output descriptions
 
 By default, `echolocatoR::finemap_loci()` returns a nested list
-containing grouped by locus names (e.g. `$BST1`, `$MEX3C`). Within each
-locus’s results are the following elements:
+containing grouped by locus names (e.g. `$BST1`, `$MEX3C`). The results
+of each locus contain the following elements:
 
 <details>
 
@@ -333,12 +333,13 @@ Datasets are now stored/retrieved via the following **echoverse**
 subpackages:  
 - [`echodata`](https://github.com/RajLabMSSM/echodata): Pre-computed
 fine-mapping results. Also handles the semi-automated standardization of
-summary statistics. -
-[`echoannot`](https://github.com/RajLabMSSM/echoannot): Annotates
+summary statistics.  
+- [`echoannot`](https://github.com/RajLabMSSM/echoannot): Annotates
 GWAS/QTL summary statistics using epigenomics, pre-compiled annotation
 matrices, and machine learning model predictions of variant-specific
 functional impacts.  
-- [`catalogueR`](https://github.com/RajLabMSSM/catalogueR)
+- [`catalogueR`](https://github.com/RajLabMSSM/catalogueR): Large
+compendium of fully standardized e/s/t-QTL summary statistics.
 
 For more detailed information about each dataset, use `?`:
 
