@@ -42,7 +42,7 @@ Only works if \code{sumstats_list} is a list of paths.}
 
 \item{dbSNP}{version of dbSNP to be used (144 or 155). Default is 155.}
 
-\item{nThread}{Number of threads to parallelize over.}
+\item{nThread}{Number of threads to parallelise saving across.}
 
 \item{verbose}{Print messages.}
 }

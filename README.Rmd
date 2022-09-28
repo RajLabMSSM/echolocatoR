@@ -63,6 +63,11 @@ library(`r pkg`)
   until all subpackages are fully updates. 
 - System dependencies can sometimes cause issues when using different packages. I've tried to account for as many of these as possible automatically within the code, but using the
   __Docker/Singularity__ provided below can further mitigate these issues.
+- The R package `XML` (which some *echoverse* subpackages depend on) has     some additional system dependencies that must be installed beforehand.
+  If `XML` does not install automatically, try installing `lbxml` on your     system using `brew install libxml2` (MacOS), 
+  `sudo apt-get install libxml2` (Linux) or 
+  `conda install r-xml` if you are running `echolocatoR` from within a
+  conda environment. 
 
 </details>
 

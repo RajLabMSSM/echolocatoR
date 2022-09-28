@@ -20,13 +20,13 @@
 #'  to errors that only affect some loci,
 #'  but currently prevents debugging via traceback.
 #' @inheritParams finemap_locus
+#' @inheritParams echodata::standardize
 #' @inheritParams echoconda::activate_env
 #' @inheritParams echodata::filter_snps
 #' @inheritParams echoLD::get_LD
 #' @inheritParams echoLD::filter_LD
 #' @inheritParams echoplot::plot_locus
 #' @inheritParams echofinemap::multifinemap
-#' @inheritParams echodata::standardize
 #' @inheritParams echodata::find_consensus_snps
 #'
 #' @returns

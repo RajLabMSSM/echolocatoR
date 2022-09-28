@@ -11,7 +11,7 @@ GPL-3](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://cran.r-pro
 Author: <i>Brian M. Schilder</i>
 </h5>
 <h5>
-README updated: <i>Sep-12-2022</i>
+README updated: <i>Sep-28-2022</i>
 </h5>
 
 ## `echolocatoR`: Automated statistical and functional fine-mapping
@@ -72,6 +72,12 @@ library(echolocatoR)
     packages. I’ve tried to account for as many of these as possible
     automatically within the code, but using the **Docker/Singularity**
     provided below can further mitigate these issues.
+-   The R package `XML` (which some *echoverse* subpackages depend on)
+    has some additional system dependencies that must be installed
+    beforehand. If `XML` does not install automatically, try installing
+    `lbxml` on your system using `brew install libxml2` (MacOS),
+    `sudo apt-get install libxml2` (Linux) or `conda install r-xml` if
+    you are running `echolocatoR` from within a conda environment.
 
 </details>
 
@@ -587,36 +593,36 @@ utils::sessionInfo()
 ##  [11] htmltools_0.5.3              viridis_0.6.2               
 ##  [13] echofinemap_0.99.3           fansi_1.0.3                 
 ##  [15] magrittr_2.0.3               memoise_2.0.1               
-##  [17] BSgenome_1.65.2              gert_1.8.0                  
+##  [17] BSgenome_1.65.2              gert_1.9.0                  
 ##  [19] tzdb_0.3.0                   openxlsx_4.2.5              
-##  [21] credentials_1.3.2            Biostrings_2.65.3           
+##  [21] credentials_1.3.2            Biostrings_2.65.6           
 ##  [23] readr_2.1.2                  echoconda_0.99.7            
 ##  [25] matrixStats_0.62.0           R.utils_2.12.0              
 ##  [27] askpass_1.1                  prettyunits_1.1.1           
 ##  [29] colorspace_2.0-3             blob_1.2.3                  
 ##  [31] rappdirs_0.3.3               gitcreds_0.1.2              
-##  [33] xfun_0.32                    dplyr_1.0.10                
+##  [33] xfun_0.33                    dplyr_1.0.10                
 ##  [35] crayon_1.5.1                 RCurl_1.98-1.8              
-##  [37] dlstats_0.1.5                echodata_0.99.12            
+##  [37] dlstats_0.1.5                echodata_0.99.14            
 ##  [39] jsonlite_1.8.0               survival_3.4-0              
 ##  [41] VariantAnnotation_1.43.3     glue_1.6.2                  
 ##  [43] gtable_0.3.1                 zlibbioc_1.43.0             
-##  [45] XVector_0.37.1               DelayedArray_0.23.1         
-##  [47] BiocGenerics_0.43.2          scales_1.2.1                
+##  [45] XVector_0.37.1               DelayedArray_0.23.2         
+##  [47] BiocGenerics_0.43.4          scales_1.2.1                
 ##  [49] DBI_1.1.3                    Rcpp_1.0.9                  
 ##  [51] viridisLite_0.4.1            progress_1.2.2              
 ##  [53] reticulate_1.26              bit_4.0.4                   
-##  [55] stats4_4.2.1                 DT_0.24                     
+##  [55] stats4_4.2.1                 DT_0.25                     
 ##  [57] htmlwidgets_1.5.4            httr_1.4.4                  
 ##  [59] badger_0.2.1                 dir.expiry_1.5.1            
 ##  [61] RColorBrewer_1.1-3           ellipsis_0.3.2              
 ##  [63] pkgconfig_2.0.3              reshape_0.8.9               
 ##  [65] XML_3.99-0.10                R.methodsS3_1.8.2           
 ##  [67] dbplyr_2.2.1                 utf8_1.2.2                  
-##  [69] tidyselect_1.1.2             rlang_1.0.5                 
+##  [69] tidyselect_1.1.2             rlang_1.0.6                 
 ##  [71] AnnotationDbi_1.59.1         munsell_0.5.0               
 ##  [73] tools_4.2.1                  cachem_1.0.6                
-##  [75] cli_3.4.0                    generics_0.1.3              
+##  [75] cli_3.4.1                    generics_0.1.3              
 ##  [77] RSQLite_2.2.17               evaluate_0.16               
 ##  [79] stringr_1.4.1                fastmap_1.1.0               
 ##  [81] yaml_2.3.5                   sys_3.4                     
@@ -630,9 +636,9 @@ utils::sessionInfo()
 ##  [97] curl_4.3.2                   susieR_0.12.27              
 ##  [99] png_0.1-7                    tibble_3.1.8                
 ## [101] stringi_1.7.8                highr_0.9                   
-## [103] basilisk.utils_1.9.3         GenomicFeatures_1.49.6      
+## [103] basilisk.utils_1.9.4         GenomicFeatures_1.49.7      
 ## [105] desc_1.4.2                   lattice_0.20-45             
-## [107] Matrix_1.4-1                 vctrs_0.4.1                 
+## [107] Matrix_1.5-1                 vctrs_0.4.1                 
 ## [109] pillar_1.8.1                 lifecycle_1.0.2             
 ## [111] BiocManager_1.30.18          downloadR_0.99.4            
 ## [113] snpStats_1.47.1              data.table_1.14.2           
@@ -641,13 +647,13 @@ utils::sessionInfo()
 ## [119] R6_2.5.1                     BiocIO_1.7.1                
 ## [121] gridExtra_2.3                IRanges_2.31.2              
 ## [123] codetools_0.2-18             assertthat_0.2.1            
-## [125] SummarizedExperiment_1.27.2  openssl_2.0.2               
+## [125] SummarizedExperiment_1.27.3  openssl_2.0.3               
 ## [127] rprojroot_2.0.3              rjson_0.2.21                
 ## [129] GenomicAlignments_1.33.1     Rsamtools_2.13.4            
-## [131] S4Vectors_0.35.3             GenomeInfoDbData_1.2.8      
+## [131] S4Vectors_0.35.4             GenomeInfoDbData_1.2.8      
 ## [133] parallel_4.2.1               hms_1.1.2                   
 ## [135] grid_4.2.1                   tidyr_1.2.1                 
-## [137] basilisk_1.9.6               rmarkdown_2.16              
+## [137] basilisk_1.9.11              rmarkdown_2.16              
 ## [139] rvcheck_0.2.1                MatrixGenerics_1.9.1        
 ## [141] echotabix_0.99.8             echoLD_0.99.7               
 ## [143] mixsqp_0.3-43                piggyback_0.1.4             

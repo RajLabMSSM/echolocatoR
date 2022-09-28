@@ -84,7 +84,7 @@ Subsets are saved in the following path structure:
 
 \item{conda_env}{Conda environment to use.}
 
-\item{nThread}{Number of threads to parallelize over.}
+\item{nThread}{Number of threads to parallelise saving across.}
 
 \item{verbose}{Print messages.}
 }

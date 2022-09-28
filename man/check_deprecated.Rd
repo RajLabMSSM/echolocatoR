@@ -14,16 +14,16 @@ check_deprecated(
   map = list(A1_col = "colmap", A2_col = "colmap", chrom_col = "colmap", position_col =
     "colmap", effect_col = "colmap", freq_col = "colmap", gene_col = "colmap", locus_col
     = "colmap", MAF_col = "colmap", N_cases = "colmap", N_controls = "colmap",
-    N_cases_col = "colmap", N_controls_col = "colmap", MAF_col = "colmap", pval_col =
-    "colmap", stderr_col = "colmap", tstat_col = "colmap", snp_col = "colmap", file_sep =
-    NULL, probe_path = NULL, chrom_type = NULL, PAINTOR_QTL_datasets = NULL, QTL_prefixes
-    = "qtl_suffixes", 
-     proportion_cases = NULL, server = NULL, vcf_folder = NULL,
-    top_SNPs = "topSNPs", PP_threshold = "credset_thresh", consensus_threshold =
-    "consensus_thresh", sample_size = "compute_n", plot.types = "plot_types",
-    plot.Roadmap = "roadmap", plot.Roadmap_query = "roadmap_query", plot.XGR_libnames =
-    "xgr_libnames", plot.zoom = "zoom", plot.zoom = "zoom", plot.Nott_epigenome =
-    "nott_epigenome", plot.Nott_show_placseq = "nott_show_placseq")
+    N_cases_col = "colmap", N_controls_col = "colmap", sample_size = "colmap", MAF_col =
+    "colmap", pval_col = "colmap", stderr_col = "colmap", tstat_col = "colmap", snp_col =
+    "colmap", file_sep = NULL, probe_path = NULL, chrom_type = NULL, PAINTOR_QTL_datasets
+    = NULL, 
+     QTL_prefixes = "qtl_suffixes", proportion_cases = NULL, server = NULL,
+    vcf_folder = NULL, top_SNPs = "topSNPs", PP_threshold = "credset_thresh",
+    consensus_threshold = "consensus_thresh", plot.types = "plot_types", plot.Roadmap =
+    "roadmap", plot.Roadmap_query = "roadmap_query", plot.XGR_libnames = "xgr_libnames",
+    plot.zoom = "zoom", plot.zoom = "zoom", plot.Nott_epigenome = "nott_epigenome",
+    plot.Nott_show_placseq = "nott_show_placseq")
 )
 }
 \arguments{
