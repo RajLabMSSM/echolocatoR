@@ -4,7 +4,7 @@
 \alias{arg_list_handler}
 \title{Argument list handler}
 \usage{
-arg_list_handler(arg, i, loci)
+arg_list_handler(arg, i, loci, use_names = FALSE, error = TRUE)
 }
 \arguments{
 \item{arg}{Name of the argument to evaluate.}
@@ -12,6 +12,12 @@ arg_list_handler(arg, i, loci)
 \item{i}{Iterator index.}
 
 \item{loci}{A vector of loci that are being iterated over.}
+
+\item{use_names}{Whether to identify locus-specific value
+by name instead of index.}
+
+\item{error}{Throw an error (\code{TRUE})
+instead of a warning (\code{FALSE}).}
 }
 \value{
 Selected argument value.

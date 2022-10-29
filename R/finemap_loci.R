@@ -233,7 +233,9 @@ finemap_loci <- function(#### Main args ####
                                       loci = loci)
       conditioned_snp <- arg_list_handler(arg = "conditioned_snps",
                                           i = i,
-                                          loci = loci)
+                                          loci = loci,
+                                          use_names = TRUE,
+                                          error = FALSE)
       min_pos <- arg_list_handler(arg = "min_POS",
                                   i = i,
                                   loci = loci)

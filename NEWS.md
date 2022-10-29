@@ -1,3 +1,11 @@
+# echolocatoR 2.0.2
+
+## New features
+
+## Bug fixes
+
+* Improve handling of `conditioned_snps` in various scenarios.
+
 # echolocatoR 2.0.1
 
 ## New features
