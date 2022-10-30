@@ -5,22 +5,26 @@
 #'
 #' @inheritParams finemap_locus
 #' @inheritParams echodata::standardize
+#' @inheritParams echoLD::get_MAF_UKB
 #'
 #' @family query functions
 #' @keywords internal
-#' @importFrom echodata check_if_empty standardize
+#' @importFrom echodata is_empty standardize
+#' @importFrom echoLD get_MAF_UKB
 extract_snp_subset <- function(subset_path,
-                               locus = NULL,
+                               locus=NULL,
                                colmap=echodata::construct_colmap(),
                                fullSS_path,
                                topSNPs,
                                LD_reference,
                                force_new_subset=FALSE,
+                               force_new_maf=FALSE,
                                bp_distance=500000,
                                superpopulation="EUR",
                                compute_n="ldsc",
 
                                query_by="tabix",
+                               download_method="axel",
                                nThread=1,
                                conda_env="echoR_mini",
                                verbose=TRUE){
@@ -42,14 +46,14 @@ extract_snp_subset <- function(subset_path,
   #### Priority 1: Check if multi-finemap results exists ####
   if (file.exists(multi_path) & isFALSE(force_new_subset)){
     messager("+ Importing pre-existing file:",multi_path, v=verbose)
-    echodata::check_if_empty(multi_path)
+    echodata::is_empty(multi_path)
     query <- data.table::fread(multi_path)
     return(query)
 
     #### Priority 2: Check is subset exists ####
   } else if(file.exists(subset_path) & isFALSE(force_new_subset)){
       messager("+ Importing pre-existing file:",subset_path, v=verbose)
-      echodata::check_if_empty(subset_path)
+      echodata::is_empty(subset_path)
       query <- data.table::fread(subset_path)
       return(query)
 
@@ -75,6 +79,16 @@ extract_snp_subset <- function(subset_path,
                                    compute_n=compute_n,
                                    nThread=nThread,
                                    verbose=verbose)
+    #### Impute MAF from reference panel ####
+    ## UKBiobank
+    if(any(tolower(colmap$MAF)=="ukb")){
+      query <- echoLD::get_MAF_UKB(query_dat = query,
+                                   force_new_maf = force_new_maf,
+                                   download_method=download_method,
+                                   verbose = verbose,
+                                   conda_env = conda_env,
+                                   nThread = nThread)
+    }
   }
   #### Return ####
   return(query)

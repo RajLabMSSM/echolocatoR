@@ -8,7 +8,7 @@ snps_to_condition(conditioned_snps, topSNPs, loci)
 }
 \arguments{
 \item{conditioned_snps}{Which SNPs to conditions on when fine-mapping
-with \emph{COJO}.}
+with (e.g. \emph{COJO}).}
 
 \item{topSNPs}{A data.frame with the genomic coordinates of the lead SNP
 for each locus.

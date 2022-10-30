@@ -109,8 +109,6 @@
 #'  \link[MungeSumstats]{format_sumstats}.
 #'  }
 #' }
-#' @param conditioned_snps Which SNPs to conditions on when fine-mapping
-#' with \emph{COJO}.
 #' @param plot_types Which kinds of plots to include.
 #' Options:
 #' \itemize{
@@ -124,7 +122,6 @@
 #'  (e.g. FINEMAP output files) after the pipeline is done running.
 #' @param seed Set the seed for all functions where this is possible.
 #'
-#' @param case_control [deprecated]
 #' @param top_SNPs [deprecated]
 #' @param PP_threshold [deprecated]
 #' @param top_SNPs [deprecated]
@@ -324,6 +321,7 @@ finemap_locus <- function(#### Main args ####
                             superpopulation = superpopulation,
                             compute_n = compute_n,
                             query_by = query_by,
+                            download_method = download_method,
                             nThread = nThread,
                             conda_env = conda_env,
                             verbose = verbose)

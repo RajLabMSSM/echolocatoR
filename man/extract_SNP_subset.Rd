@@ -12,10 +12,12 @@ extract_snp_subset(
   topSNPs,
   LD_reference,
   force_new_subset = FALSE,
+  force_new_maf = FALSE,
   bp_distance = 5e+05,
   superpopulation = "EUR",
   compute_n = "ldsc",
   query_by = "tabix",
+  download_method = "axel",
   nThread = 1,
   conda_env = "echoR_mini",
   verbose = TRUE
@@ -89,6 +91,8 @@ Subsets are saved in the following path structure:
 \emph{Data/\<dataset_type\>/\<dataset_name\>/\<locus\>/Multi-finemap/
 \<locus\>_\<dataset_name\>_Multi-finemap.tsv.gz}}
 
+\item{force_new_maf}{Download UKB_MAF file again.}
+
 \item{bp_distance}{Distance around the lead SNP to include.}
 
 \item{superpopulation}{Superpopulation to subset LD panel by
@@ -127,6 +131,20 @@ Methods include:
   (\emph{default})}
 \item{"coordinates"}{Extract locus subsets using min/max genomic
 coordinates with \emph{awk}.}
+}}
+
+\item{download_method}{\itemize{
+\item{\code{"axel"} : }{Multi-threaded}
+\item{\code{"wget"} : }{Single-threaded}
+\item{\code{"download.file"} : }{Single-threaded}
+\item{\code{"internal"} : }{Single-threaded 
+(passed to \link[utils]{download.file})}
+\item{\code{"wininet"} : }{Single-threaded 
+(passed to \link[utils]{download.file})}
+\item{\code{"libcurl"} : }{Single-threaded 
+(passed to \link[utils]{download.file})}
+\item{\code{"curl"} : }{Single-threaded 
+(passed to \link[utils]{download.file})}
 }}
 
 \item{nThread}{Number of threads to parallelise saving across.}

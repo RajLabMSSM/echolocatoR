@@ -165,6 +165,10 @@ Set \code{force_new_finemap=T} to override this and re-run fine-mapping.}
 
 \item{finemap_methods}{Which fine-mapping methods you want to use.}
 
+\item{finemap_args}{A named nested list containing additional arguments 
+for each fine-mapping method. e.g.
+\code{finemap_args = list(FINEMAP=list(), PAINTOR=list(method=""))}}
+
 \item{n_causal}{The maximum number of potential causal SNPs per locus.
 This parameter is used somewhat differently by different fine-mapping tools.
 See tool-specific functions for details.}
@@ -181,7 +185,7 @@ in which a SNP is in the Credible Set in order to be included in the
 \item{fillNA}{Value to fill LD matrix NAs with.}
 
 \item{conditioned_snps}{Which SNPs to conditions on when fine-mapping
-with \emph{COJO}.}
+with (e.g. \emph{COJO}).}
 
 \item{priors_col}{[Optional] Name of the a column in 
 \code{dat} to extract SNP-wise prior probabilities from.}
@@ -305,7 +309,9 @@ Methods include:
 coordinates with \emph{awk}.}
 }}
 
-\item{case_control}{[deprecated]}
+\item{case_control}{Whether the summary statistics come from a case-control
+study (e.g. a GWAS of having Alzheimer's Disease or not) (\code{TRUE})
+or a quantitative study (e.g. a GWAS of height, or an eQTL) (\code{FALSE}).}
 
 \item{qtl_suffixes}{If columns with QTL data is included in \code{dat},
 you can indicate which columns those are with one or more string suffixes
@@ -342,7 +348,7 @@ This can even be a mix of different style inputs: e.g.
 
 \item{tx_biotypes}{Transcript biotypes to include in the gene model track. 
 By default (\code{NULL}), all transcript biotypes will be included.
-See \link[echoplot]{get_transcripts_biotypes} for a full list of 
+See \link[echoplot]{get_tx_biotypes} for a full list of 
 all available biotypes}
 
 \item{nott_epigenome}{Include tracks showing brain cell-type-specific 
@@ -360,7 +366,7 @@ adjust the bin width of the histograms.}
  epigenomic data
 from the \emph{UCSC Genome Browser}, use a set of local bigwig files.}
 
-\item{xgr_libnames}{Passed to \link[echoannot]{XGR_plot}.
+\item{xgr_libnames}{Passed to \link[echoplot]{XGR_plot}.
 Which XGR annotations to check overlap with.
 For full list of libraries see
 \href{http://XGR_r-forge.r-project.org/#annotations-at-the-genomic-region-level}{

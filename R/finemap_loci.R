@@ -194,6 +194,10 @@ finemap_loci <- function(#### Main args ####
   }
   #### Parallise data.table functions ####
   data.table::setDTthreads(threads = nThread);
+  #### Validate topSNPs ####
+  topSNPs <- check_topSNPs(topSNPs = topSNPs,
+                           fullSS_path = fullSS_path,
+                           verbose = verbose)
   #### Get loci (if not supplied) ####
   loci <- echodata::gene_locus_list(loci = loci,
                                     topSNPs = topSNPs,

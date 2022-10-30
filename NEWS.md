@@ -2,9 +2,14 @@
 
 ## New features
 
+* Add new internal function: `check_topSNPs`
+* Impute MAF when.
+* Fully documented all functions.
+
 ## Bug fixes
 
 * Improve handling of `conditioned_snps` in various scenarios.
+* Fix GHA: @master --> @v2  
 
 # echolocatoR 2.0.1
 
