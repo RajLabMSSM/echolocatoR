@@ -232,7 +232,7 @@ All methods require the columns: `SNP`,`CHR`,`POS`,`Effect`,`StdErr`
 <br>
  
 ```{r, fig.width=12}
-fm_methods <- echofinemap::required_cols(add_versions = TRUE, 
+fm_methods <- echofinemap::required_cols(add_versions = FALSE, 
                                          embed_links = TRUE,
                                          verbose = FALSE)
 knitr::kable(x = fm_methods)

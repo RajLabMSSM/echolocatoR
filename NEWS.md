@@ -23,7 +23,11 @@
 * `check_genome`:
   - Omit tests that require large optional databases to be installed.
   - Update dbSNP default to 155.
-
+* README
+  - Set `echofinemap::required_cols(add_versions = FALSE,...)` 
+  to avoid issues with not being able to find PolyFun/PAINTOR 
+  installations during rendering.
+  
 # echolocatoR 2.0.1
 
 ## New features
