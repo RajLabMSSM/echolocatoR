@@ -10,7 +10,7 @@ check_genome(
   fullSS_path = NULL,
   sampled_snps = 10000,
   names_from_paths = TRUE,
-  dbSNP = 144,
+  dbSNP = 155,
   nThread = 1,
   verbose = TRUE
 )

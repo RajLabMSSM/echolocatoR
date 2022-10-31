@@ -6,6 +6,8 @@
 * Impute MAF when.
 * Fully documented all functions.
 * Updated manual.
+* `finemap_loci`:
+  - Throw an error when no `loci` are available to fine-map after locus filtering.
 * Passing all CRAN checks for the first time!!
 
 ## Bug fixes
@@ -15,9 +17,12 @@
 * Fix vignettes:
   - *plot_locus*
 * Fix `Error in .new_IRanges_from_start_end(start, end): 'start' or 'end' cannot contain NAs`
-  - Was due to loci not present in topSNPs being included. 
+  - Was due to `loci` not present in `topSNPs` being included. 
   Now handled by `echodata::gene_locus_list`.
-
+* Add Suggests used in vignettes: `ggplot2`,`patchwork`
+* `check_genome`:
+  - Omit tests that require large optional databases to be installed.
+  - Update dbSNP default to 155.
 
 # echolocatoR 2.0.1
 

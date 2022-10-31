@@ -55,7 +55,9 @@ Suggests:
     rmarkdown,
     knitr,
     testthat (>= 3.0.0),
-    badger
+    badger,
+    ggplot2,
+    patchwork
 Remotes:
   github::RajLabMSSM/echoconda,
   github::RajLabMSSM/downloadR,
