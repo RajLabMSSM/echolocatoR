@@ -14,6 +14,9 @@
   - `n_causal_i`
   - `bp_distance_i`
   - `LD_genome_build_i`
+* Create dedicated `echolocatoR` *docker/singualarit* container:
+  - Add *docker* vignette
+  - Update README
 
 ## Bug fixes
 
