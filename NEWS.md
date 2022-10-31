@@ -9,6 +9,11 @@
 * `finemap_loci`:
   - Throw an error when no `loci` are available to fine-map after locus filtering.
 * Passing all CRAN checks for the first time!!
+* Allow more args to have >1 input 
+  (and make these vars more consistently named):
+  - `n_causal_i`
+  - `bp_distance_i`
+  - `LD_genome_build_i`
 
 ## Bug fixes
 

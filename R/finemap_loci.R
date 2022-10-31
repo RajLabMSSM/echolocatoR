@@ -236,23 +236,32 @@ finemap_loci <- function(#### Main args ####
     )
     tryCatch({
       #### Check iterative arg lengths #####
-      gene_limits <- arg_list_handler(arg = "trim_gene_limits",
+      n_causal_i <- arg_list_handler(arg = "n_causal",
+                                   i = i,
+                                   loci = loci)
+      trim_gene_limits_i <- arg_list_handler(arg = "trim_gene_limits",
                                       i = i,
                                       loci = loci)
-      conditioned_snp <- arg_list_handler(arg = "conditioned_snps",
+      conditioned_snps_i <- arg_list_handler(arg = "conditioned_snps",
+                                            i = i,
+                                            loci = loci,
+                                            use_names = TRUE,
+                                            error = FALSE)
+      bp_distance_i <- arg_list_handler(arg = "bp_distance",
+                                        i = i,
+                                        loci = loci)
+      min_POS_i <- arg_list_handler(arg = "min_POS",
+                                    i = i,
+                                    loci = loci)
+      max_POS_i <- arg_list_handler(arg = "max_POS",
+                                    i = i,
+                                    loci = loci)
+      LD_reference_i <- arg_list_handler(arg = "LD_reference",
+                                         i = i,
+                                         loci = loci)
+      LD_genome_build_i <- arg_list_handler(arg = "LD_genome_build",
                                           i = i,
-                                          loci = loci,
-                                          use_names = TRUE,
-                                          error = FALSE)
-      min_pos <- arg_list_handler(arg = "min_POS",
-                                  i = i,
-                                  loci = loci)
-      max_pos <- arg_list_handler(arg = "max_POS",
-                                  i = i,
-                                  loci = loci)
-      LD_ref <- arg_list_handler(arg = "LD_reference",
-                                 i = i,
-                                 loci = loci)
+                                          loci = loci)
       #### Run pipeline ####
       out_list <- finemap_locus(locus=locus,
                                 topSNPs=topSNPs,
@@ -263,7 +272,7 @@ finemap_loci <- function(#### Main args ####
                                 compute_n=compute_n,
                                 priors_col=priors_col,
 
-                                LD_genome_build=LD_genome_build,
+                                LD_genome_build=LD_genome_build_i,
                                 results_dir=results_dir,
                                 finemap_methods=finemap_methods,
                                 finemap_args=finemap_args,
@@ -272,24 +281,24 @@ finemap_loci <- function(#### Main args ####
                                 force_new_finemap=force_new_finemap,
                                 dataset_name=dataset_name,
                                 dataset_type=dataset_type,
-                                n_causal=n_causal,
-                                bp_distance=bp_distance,
+                                n_causal=n_causal_i,
+                                bp_distance=bp_distance_i,
 
-                                 LD_reference=LD_ref,
+                                 LD_reference=LD_reference_i,
                                  superpopulation=superpopulation,
                                  download_method=download_method,
-                                 min_POS=min_pos,
-                                 max_POS=max_pos,
+                                 min_POS=min_POS_i,
+                                 max_POS=max_POS_i,
                                  min_MAF=min_MAF,
 
-                                 trim_gene_limits=gene_limits,
+                                 trim_gene_limits=trim_gene_limits_i,
                                  max_snps=max_snps,
                                  min_r2=min_r2,
                                  leadSNP_LD_block=leadSNP_LD_block,
                                  query_by=query_by,
                                  remove_variants=remove_variants,
                                  remove_correlates=remove_correlates,
-                                 conditioned_snps=conditioned_snps,
+                                 conditioned_snps=conditioned_snps_i,
                                  remove_tmps=remove_tmps,
                                  credset_thresh=credset_thresh,
                                  consensus_thresh=consensus_thresh,

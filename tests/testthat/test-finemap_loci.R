@@ -82,7 +82,8 @@ test_that("finemap_loci works", {
     dataset_name = "Nalls23andMe_2019",
     fullSS_genome_build = "hg19",
     LD_reference = LD_reference,
-    bp_distance = 10000,
+    n_causal = c(6,3),
+    bp_distance = c(10000,5000),
     munged = TRUE,
     show_plot = FALSE)
   run_tests(res = res)
