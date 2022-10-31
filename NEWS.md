@@ -5,11 +5,19 @@
 * Add new internal function: `check_topSNPs`
 * Impute MAF when.
 * Fully documented all functions.
+* Updated manual.
+* Passing all CRAN checks for the first time!!
 
 ## Bug fixes
 
 * Improve handling of `conditioned_snps` in various scenarios.
 * Fix GHA: @master --> @v2  
+* Fix vignettes:
+  - *plot_locus*
+* Fix `Error in .new_IRanges_from_start_end(start, end): 'start' or 'end' cannot contain NAs`
+  - Was due to loci not present in topSNPs being included. 
+  Now handled by `echodata::gene_locus_list`.
+
 
 # echolocatoR 2.0.1
 

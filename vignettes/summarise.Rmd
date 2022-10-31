@@ -73,11 +73,6 @@ super_plot <- echoannot::super_summary_plot(merged_DT = merged_DT,
                                             plot_missense = FALSE)
 ```
 
-<!-- Pre-render to reduce vignette runtime  -->
-<!-- ```r -->
-<!-- ggplot2::ggsave("~/Downloads/super_plot.png",super_plot$plot, height = 15, width = 15) -->
-<!-- ``` -->
-<!-- ![super_plot](https://github.com/RajLabMSSM/echolocatoR/raw/master/images/super_plot.png) -->
 
 # Session info 
 

@@ -203,6 +203,10 @@ finemap_loci <- function(#### Main args ####
                                     topSNPs = topSNPs,
                                     dataset_type = dataset_type,
                                     verbose = verbose)
+  if(length(loci)==0){
+    stp <- '0 loci available to fine-map.'
+    stop(stp)
+  }
   #### Validate fullSS genome build ####
   fullSS_genome_build <- check_genome(fullSS_genome_build = fullSS_genome_build,
                                       munged = colmap$munged,

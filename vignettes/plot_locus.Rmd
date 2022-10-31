@@ -181,18 +181,18 @@ trk_plot.nott_2019 <- echoplot::plot_locus(dat = dat,
 * Each QTL dataset will be plotted as a new track.
 
 ```{r trk_plot.QTL}
-qtl_dat <- data.table::copy(dat)
+dat1 <- data.table::copy(dat)
+dat2 <- data.table::copy(dat)
 # Make fake QTL P-values for the sake a demonstration
-qtl_dat$fake_eQTL.P <- abs(jitter(qtl_dat$P, amount = 1e-15))
-qtl_dat$fake_sQTL.P <- abs(jitter(qtl_dat$P, amount = 1e-16))
+dat1$P <- abs(jitter(dat1$P, amount = 1e-15))
+dat2$P <- abs(jitter(dat2$P, amount = 1e-16))
+dat_list <- list("fake_eQTL"=dat1, 
+                 "fake_sQTL"=dat2)
 
-trk_plot.qtl <- echoplot::plot_locus(dat = qtl_dat, 
-                                     LD_matrix = LD_matrix, 
-                                     LD_reference = LD_reference,
-                                     locus_dir = locus_dir,
-                                     zoom = "10x",
-                                     
-                                     qtl_prefixes = c("fake_eQTL.","fake_sQTL."))
+trk_plot.qtl <- echoplot::plot_locus_multi(dat_ls = dat_list, 
+                                           LD_ls = list(LD_matrix,LD_matrix),  
+                                           locus_dir = locus_dir,
+                                           zoom = "10x")
 ```
 
 <hr>

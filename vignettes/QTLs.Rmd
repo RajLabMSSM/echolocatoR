@@ -41,7 +41,7 @@ We'll reuse this for both the `import_topSNPs` and `finemap_loci` steps.
 colmap <- echodata::construct_colmap( 
       CHR = "chr",
       POS = "pos",
-      sample_size = "qtl.N",
+      N = "qtl.N",
       SNP = "snp",
       P = "qtl.pvalues",
       Effect = "qtl.beta",
@@ -74,14 +74,12 @@ head(topSNPs)
 res <- echolocatoR::finemap_loci(fullSS_path = coloc_res$path,
                                  topSNPs = topSNPs,
                                  ## Let's just fine-map 2 loci for demo purposes
-                                 loci = topSNPs$Locus[1:2],
+                                 loci = topSNPs$Locus[1],
                                  dataset_name = "Kunkle_2019.microgliaQTL",
                                  # dataset_type = "QTL",     
                                  bp_distance = 1000, 
                                  colmap = colmap,
-                                 finemap_methods = c("ABF","FINEMAP","SUSIE"),
-                                 use_tryCatch = FALSE
-                                 )
+                                 finemap_methods = c("ABF","FINEMAP","SUSIE") )
 ```
 
 # Session info

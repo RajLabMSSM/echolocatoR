@@ -21,11 +21,12 @@ test_that("finemap_loci works", {
     fullSS_genome_build = "hg19",
     finemap_methods = c("ABF","FINEMAP","SUSIE"),
     zoom = c("1x","4x"),
-    bp_distance = 250000,
-    munged = TRUE)
+    bp_distance = 10000,
+    munged = TRUE,
+    show_plot = FALSE)
 
   testthat::expect_equal(names(res),c(loci,"merged_dat"))
-  testthat::expect_gte(nrow(res$merged_dat), 2300)
+  testthat::expect_gte(nrow(res$merged_dat), 150)
   run_tests(res = res)
 
   #### When use_tryCatch=TRUE ####
@@ -38,8 +39,10 @@ test_that("finemap_loci works", {
     fullSS_genome_build = "hg19",
     bp_distance = 10000,
     use_tryCatch = TRUE,
-    munged = TRUE)
+    munged = TRUE,
+    show_plot = FALSE)
   testthat::expect_null(res$typoooo)
+  testthat::expect_equal(unique(res$merged_dat$Locus),"MEX3C")
   testthat::expect_true(methods::is(res$MEX3C$finemap_dat,"data.table"))
 
   #### When use_tryCatch=FALSE ####
@@ -47,20 +50,20 @@ test_that("finemap_loci works", {
     res <- echolocatoR::finemap_loci(
       fullSS_path = fullSS_path,
       topSNPs = topSNPs,
-      loci = c("typoooo","MEX3C"),
+      loci = c("typooo","typooooooo"),
       finemap_methods = c("ABF","FINEMAP","SUSIE"),
       dataset_name = "Nalls23andMe_2019",
       fullSS_genome_build = "hg19",
       bp_distance = 10000,
       use_tryCatch = FALSE,
-      munged = TRUE)
+      munged = TRUE,
+      show_plot = FALSE)
   )
 
 
   #### Using custom LD: rds + vcf ####
   ## BST1
-  ld1 <- system.file("extdata", "BST1.1KGphase3.vcf.bgz",
-      package = "echodata")
+  ld1 <- system.file("extdata", "BST1.1KGphase3.vcf.bgz",package = "echodata")
   ## MEX3C (fake)
   ld2 <- tempfile(fileext = ".tsv.gz")
   ld_mat <- echodata::BST1_LD_matrix
@@ -80,6 +83,7 @@ test_that("finemap_loci works", {
     fullSS_genome_build = "hg19",
     LD_reference = LD_reference,
     bp_distance = 10000,
-    munged = TRUE)
+    munged = TRUE,
+    show_plot = FALSE)
   run_tests(res = res)
 })
