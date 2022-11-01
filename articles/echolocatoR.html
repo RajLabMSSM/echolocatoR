@@ -98,7 +98,7 @@
 <i>Brian M. Schilder</i> ¶ </h4></h4>
             
             <h4 data-toc-skip class="date"><h4> ¶ Updated:
-<i>Oct-31-2022</i> ¶ </h4></h4>
+<i>Nov-01-2022</i> ¶ </h4></h4>
       
       <small class="dont-index">Source: <a href="https://github.com/RajLabMSSM/echolocatoR/blob/HEAD/vignettes/echolocatoR.Rmd" class="external-link"><code>vignettes/echolocatoR.Rmd</code></a></small>
       <div class="hidden name"><code>echolocatoR.Rmd</code></div>
@@ -265,7 +265,7 @@ provide most column mapping arguments in <code>finemap_loci</code> when
 you.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fullSS_path</span> <span class="op">&lt;-</span> <span class="fu">echodata</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/echodata/man/example_fullSS.html" class="external-link">example_fullSS</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="st">"Nalls2019"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Writing file to ==&gt; /tmp/RtmpGtyNnR/nalls2019.fullSS_subset.tsv</span></span></code></pre>
+<pre><code><span><span class="co">## Writing file to ==&gt; /tmp/RtmpNZN6sB/nalls2019.fullSS_subset.tsv</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="run-fine-mapping-pipeline">Run fine-mapping pipeline<a class="anchor" aria-label="anchor" href="#run-fine-mapping-pipeline"></a>
@@ -347,7 +347,7 @@ is especially important for the tool <em>FINEMAP</em>.</p>
 <pre><code><span><span class="co">## ( grep ^'SNP' .../nalls2019.fullSS_subset.tsv; grep</span></span>
 <span><span class="co">##     -v ^'SNP' .../nalls2019.fullSS_subset.tsv | sort</span></span>
 <span><span class="co">##     -k2,2n</span></span>
-<span><span class="co">##     -k3,3n ) &gt; .../file613521ce8c1e_sorted.tsv</span></span></code></pre>
+<span><span class="co">##     -k3,3n ) &gt; .../filec01314a380_sorted.tsv</span></span></code></pre>
 <pre><code><span><span class="co">## Constructing outputs</span></span></code></pre>
 <pre><code><span><span class="co">## bgzipping file with Rsamtools.</span></span></code></pre>
 <pre><code><span><span class="co">## Reading bgzipped file using: data.table</span></span></code></pre>
@@ -371,7 +371,7 @@ is especially important for the tool <em>FINEMAP</em>.</p>
 <pre><code><span><span class="co">## Processing query: 4:15736348-15738348</span></span></code></pre>
 <pre><code><span><span class="co">## Adding 'query' column to results.</span></span></code></pre>
 <pre><code><span><span class="co">## Retrieved data with 17 rows</span></span></code></pre>
-<pre><code><span><span class="co">## Saving query ==&gt; /tmp/RtmpGtyNnR/results/GWAS/Nalls23andMe_2019/BST1/BST1_Nalls23andMe_2019_subset.tsv.gz</span></span></code></pre>
+<pre><code><span><span class="co">## Saving query ==&gt; /tmp/RtmpNZN6sB/results/GWAS/Nalls23andMe_2019/BST1/BST1_Nalls23andMe_2019_subset.tsv.gz</span></span></code></pre>
 <pre><code><span><span class="co">## + Query: 17 SNPs x 11 columns.</span></span></code></pre>
 <pre><code><span><span class="co">## Standardizing summary statistics subset.</span></span></code></pre>
 <pre><code><span><span class="co">## Standardizing main column names.</span></span></code></pre>
@@ -391,7 +391,7 @@ is especially important for the tool <em>FINEMAP</em>.</p>
 <pre><code><span><span class="co">## ++ Ensuring 1 SNP per row and per genomic coordinate.</span></span></code></pre>
 <pre><code><span><span class="co">## ++ Removing extra whitespace</span></span></code></pre>
 <pre><code><span><span class="co">## + Standardized query: 17 SNPs x 15 columns.</span></span></code></pre>
-<pre><code><span><span class="co">## ++ Saving standardized query ==&gt; /tmp/RtmpGtyNnR/results/GWAS/Nalls23andMe_2019/BST1/BST1_Nalls23andMe_2019_subset.tsv.gz</span></span></code></pre>
+<pre><code><span><span class="co">## ++ Saving standardized query ==&gt; /tmp/RtmpNZN6sB/results/GWAS/Nalls23andMe_2019/BST1/BST1_Nalls23andMe_2019_subset.tsv.gz</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">────────────────────────────────────────────────────────────────────────────────</span></span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
@@ -414,9 +414,9 @@ is especially important for the tool <em>FINEMAP</em>.</p>
 <pre><code><span><span class="co">## Chromosome format: 1</span></span></code></pre>
 <pre><code><span><span class="co">## Filtering query to 503 samples and returning ScanVcfParam object.</span></span></code></pre>
 <pre><code><span><span class="co">## Retrieving data.</span></span></code></pre>
-<pre><code><span><span class="co">## Time difference of 3.9 secs</span></span></code></pre>
+<pre><code><span><span class="co">## Time difference of 1.5 secs</span></span></code></pre>
 <pre><code><span><span class="co">## Removing 17 / 66 non-overlapping SNPs.</span></span></code></pre>
-<pre><code><span><span class="co">## Saving VCF subset ==&gt; /tmp/RtmpGtyNnR/VCF/RtmpGtyNnR.chr4-15736493-15738253.ALL.chr4.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.bgz</span></span></code></pre>
+<pre><code><span><span class="co">## Saving VCF subset ==&gt; /tmp/RtmpNZN6sB/VCF/RtmpNZN6sB.chr4-15736493-15738253.ALL.chr4.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.bgz</span></span></code></pre>
 <pre><code><span><span class="co">## Warning in .Call(.make_vcf_geno, filename, fixed, names(geno), as.list(geno), :</span></span>
 <span><span class="co">## converting NULL pointer to R NULL</span></span></code></pre>
 <pre><code><span><span class="co">## Time difference of 0.4 secs</span></span></code></pre>
@@ -426,7 +426,7 @@ is especially important for the tool <em>FINEMAP</em>.</p>
 <pre><code><span><span class="co">## Time difference of 0 secs</span></span></code></pre>
 <pre><code><span><span class="co">## 17 x 17 LD_matrix (sparse)</span></span></code></pre>
 <pre><code><span><span class="co">## Converting obj to sparseMatrix.</span></span></code></pre>
-<pre><code><span><span class="co">## Saving sparse LD matrix ==&gt; /tmp/RtmpGtyNnR/results/GWAS/Nalls23andMe_2019/BST1/LD/BST1.1KGphase3_LD.RDS</span></span></code></pre>
+<pre><code><span><span class="co">## Saving sparse LD matrix ==&gt; /tmp/RtmpNZN6sB/results/GWAS/Nalls23andMe_2019/BST1/LD/BST1.1KGphase3_LD.RDS</span></span></code></pre>
 <pre><code><span><span class="co">## Removing 1 temp files.</span></span></code></pre>
 <pre><code><span><span class="co">## + FILTER:: Filtering by LD features.</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
@@ -582,69 +582,70 @@ is especially important for the tool <em>FINEMAP</em>.</p>
 ## 0 configurations evaluated (0.000/100%)
 - 17 configurations evaluated (0.000/100%)
 - 31 configurations evaluated (0.000/100%)
-- 253 configurations evaluated (0.050/100%)
-- 420 configurations evaluated (0.100/100%)
-- 465 configurations evaluated (0.150/100%)
-- 626 configurations evaluated (0.200/100%)
-- 634 configurations evaluated (0.250/100%)
-- 634 configurations evaluated (0.274/100%) : converged after 274 iterations
+- 362 configurations evaluated (0.050/100%)
+- 496 configurations evaluated (0.100/100%)
+- 566 configurations evaluated (0.150/100%)
+- 615 configurations evaluated (0.200/100%)
+- 615 configurations evaluated (0.243/100%) : converged after 243 iterations
 ## 
-- Computing causal SNP statistics  : 0.158%
-- Computing causal SNP statistics  : 8.044%
-- Computing causal SNP statistics  : 15.931%
-- Computing causal SNP statistics  : 23.817%
-- Computing causal SNP statistics  : 31.703%
-- Computing causal SNP statistics  : 39.590%
-- Computing causal SNP statistics  : 47.476%
-- Computing causal SNP statistics  : 55.363%
-- Computing causal SNP statistics  : 63.249%
-- Computing causal SNP statistics  : 71.136%
-- Computing causal SNP statistics  : 79.022%
-- Computing causal SNP statistics  : 86.909%
-- Computing causal SNP statistics  : 94.795%
+- Computing causal SNP statistics  : 0.163%
+- Computing causal SNP statistics  : 8.293%
+- Computing causal SNP statistics  : 16.423%
+- Computing causal SNP statistics  : 24.553%
+- Computing causal SNP statistics  : 32.683%
+- Computing causal SNP statistics  : 40.813%
+- Computing causal SNP statistics  : 48.943%
+- Computing causal SNP statistics  : 57.073%
+- Computing causal SNP statistics  : 65.203%
+- Computing causal SNP statistics  : 73.333%
+- Computing causal SNP statistics  : 81.463%
+- Computing causal SNP statistics  : 89.593%
+- Computing causal SNP statistics  : 97.724%
 - Computing causal SNP statistics  : done!   
-## - Regional SNP heritability        : 9.7e-05 (SD: 1.7e-05 ; 95% CI: [6.56e-05,0.000133])
-## - Log10-BF of &gt;= one causal SNP    : 62.1
-## - Post-expected # of causal SNPs   : 5
+## - Regional SNP heritability        : 0.000104 (SD: 1.66e-05 ; 95% CI: [7.35e-05,0.000138])
+## - Log10-BF of &gt;= one causal SNP    : 25.4
+## - Post-expected # of causal SNPs   : 3.01
 ## - Post-Pr(# of causal SNPs is k)   : 
 ##   (0 -&gt; 0)
-##    1 -&gt; 2.28e-39
-##    2 -&gt; 7.42e-38
-##    3 -&gt; 3.98e-38
-##    4 -&gt; 6.55e-38
-##    5 -&gt; 1
+##    1 -&gt; 0.012
+##    2 -&gt; 0.391
+##    3 -&gt; 0.211
+##    4 -&gt; 0.345
+##    5 -&gt; 0.0411
 ## - Computing credible sets          : 
-- Writing causal configurations    : 0.158%
-- Writing causal configurations    : 8.044%
-- Writing causal configurations    : 15.931%
-- Writing causal configurations    : 23.817%
-- Writing causal configurations    : 31.703%
-- Writing causal configurations    : 39.590%
-- Writing causal configurations    : 47.476%
-- Writing causal configurations    : 55.363%
-- Writing causal configurations    : 63.249%
-- Writing causal configurations    : 71.136%
-- Writing causal configurations    : 79.022%
-- Writing causal configurations    : 86.909%
-- Writing causal configurations    : 94.795%
+- Writing causal configurations    : 0.163%
+- Writing causal configurations    : 8.293%
+- Writing causal configurations    : 16.423%
+- Writing causal configurations    : 24.553%
+- Writing causal configurations    : 32.683%
+- Writing causal configurations    : 40.813%
+- Writing causal configurations    : 48.943%
+- Writing causal configurations    : 57.073%
+- Writing causal configurations    : 65.203%
+- Writing causal configurations    : 73.333%
+- Writing causal configurations    : 81.463%
+- Writing causal configurations    : 89.593%
+- Writing causal configurations    : 97.724%
 - Writing causal SNP statistics    : 5.882%
 - Writing causal SNP statistics    : 64.706%
 - Writing output                   : done!   
 ## - Run time                         : 0 hours, 0 minutes, 0 seconds</code></pre>
-<pre><code><span><span class="co">## 1 data.cred* file(s) found in the same subfolder.</span></span></code></pre>
-<pre><code><span><span class="co">## Selected file based on postPr_k: data.cred5</span></span></code></pre>
+<pre><code><span><span class="co">## 4 data.cred* file(s) found in the same subfolder.</span></span></code></pre>
+<pre><code><span><span class="co">## Selected file based on postPr_k: data.cred2</span></span></code></pre>
 <pre><code><span><span class="co">## Importing conditional probabilities (.cred file).</span></span></code></pre>
+<pre><code><span><span class="co">## No configurations were causal at PP&gt;=0.95.</span></span></code></pre>
 <pre><code><span><span class="co">## Importing marginal probabilities (.snp file).</span></span></code></pre>
 <pre><code><span><span class="co">## Importing configuration probabilities (.config file).</span></span></code></pre>
-<pre><code><span><span class="co">## ++ Credible Set SNPs identified = 12</span></span></code></pre>
+<pre><code><span><span class="co">## FINEMAP was unable to identify any credible sets at PP&gt;=0.95.</span></span></code></pre>
+<pre><code><span><span class="co">## ++ Credible Set SNPs identified = 0</span></span></code></pre>
 <pre><code><span><span class="co">## ++ Merging FINEMAP results with multi-finemap data.</span></span></code></pre>
 <pre><code><span><span class="co">## Identifying Consensus SNPs...</span></span></code></pre>
 <pre><code><span><span class="co">## + support_thresh = 2</span></span></code></pre>
 <pre><code><span><span class="co">## + Calculating mean Posterior Probability (mean.PP)...</span></span></code></pre>
 <pre><code><span><span class="co">## + 3 fine-mapping methods used.</span></span></code></pre>
-<pre><code><span><span class="co">## + 12 Credible Set SNPs identified.</span></span></code></pre>
+<pre><code><span><span class="co">## + 0 Credible Set SNPs identified.</span></span></code></pre>
 <pre><code><span><span class="co">## + 0 Consensus SNPs identified.</span></span></code></pre>
-<pre><code><span><span class="co">## Saving merged finemapping results ==&gt; /tmp/RtmpGtyNnR/results/GWAS/Nalls23andMe_2019/BST1/Multi-finemap/1KGphase3_LD.Multi-finemap.tsv.gz</span></span></code></pre>
+<pre><code><span><span class="co">## Saving merged finemapping results ==&gt; /tmp/RtmpNZN6sB/results/GWAS/Nalls23andMe_2019/BST1/Multi-finemap/1KGphase3_LD.Multi-finemap.tsv.gz</span></span></code></pre>
 <pre><code><span><span class="co">## + Fine-mapping with 'ABF, SUSIE, FINEMAP' completed:</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">────────────────────────────────────────────────────────────────────────────────</span></span></span></code></pre>
@@ -656,7 +657,7 @@ is especially important for the tool <em>FINEMAP</em>.</p>
 <pre><code><span><span class="co">## + support_thresh = 2</span></span></code></pre>
 <pre><code><span><span class="co">## + Calculating mean Posterior Probability (mean.PP)...</span></span></code></pre>
 <pre><code><span><span class="co">## + 3 fine-mapping methods used.</span></span></code></pre>
-<pre><code><span><span class="co">## + 12 Credible Set SNPs identified.</span></span></code></pre>
+<pre><code><span><span class="co">## + 0 Credible Set SNPs identified.</span></span></code></pre>
 <pre><code><span><span class="co">## + 0 Consensus SNPs identified.</span></span></code></pre>
 <pre><code><span><span class="co">## + Filling NAs in CS cols with 0.</span></span></code></pre>
 <pre><code><span><span class="co">## + Filling NAs in PP cols with 0.</span></span></code></pre>
@@ -689,7 +690,7 @@ is especially important for the tool <em>FINEMAP</em>.</p>
 <pre><code><span><span class="co">## [1] "+ Ensuring last track shows genomic units..."</span></span></code></pre>
 <pre><code><span><span class="co">## + Aligning xlimits for each subplot...</span></span>
 <span><span class="co">## + Checking track heights...</span></span>
-<span><span class="co">## + echoplot:: Saving plot ==&gt; /tmp/RtmpGtyNnR/results/GWAS/Nalls23andMe_2019/BST1/multiview.BST1.1KGphase3.1x.png</span></span>
+<span><span class="co">## + echoplot:: Saving plot ==&gt; /tmp/RtmpNZN6sB/results/GWAS/Nalls23andMe_2019/BST1/multiview.BST1.1KGphase3.1x.png</span></span>
 <span><span class="co">## Found more than one class "simpleUnit" in cache; using the first, from namespace 'hexbin'</span></span>
 <span><span class="co">## Also defined by 'ggbio'</span></span>
 <span><span class="co">## Recording all `finemap_locus` arguments.</span></span>
@@ -722,9 +723,9 @@ is especially important for the tool <em>FINEMAP</em>.</p>
 <pre><code><span><span class="co">## ( grep ^'SNP' .../nalls2019.fullSS_subset.tsv; grep</span></span>
 <span><span class="co">##     -v ^'SNP' .../nalls2019.fullSS_subset.tsv | sort</span></span>
 <span><span class="co">##     -k2,2n</span></span>
-<span><span class="co">##     -k3,3n ) &gt; .../file613510ff213b_sorted.tsv</span></span></code></pre>
+<span><span class="co">##     -k3,3n ) &gt; .../filec014795d14d_sorted.tsv</span></span></code></pre>
 <pre><code><span><span class="co">## Constructing outputs</span></span>
-<span><span class="co">## Using existing bgzipped file: /tmp/RtmpGtyNnR/nalls2019.fullSS_subset.tsv.bgz </span></span>
+<span><span class="co">## Using existing bgzipped file: /tmp/RtmpNZN6sB/nalls2019.fullSS_subset.tsv.bgz </span></span>
 <span><span class="co">## Set force_new=TRUE to override this.</span></span>
 <span><span class="co">## Tabix-indexing file using: Rsamtools</span></span>
 <span><span class="co">## Data successfully converted to bgzip-compressed, tabix-indexed format.</span></span>
@@ -739,7 +740,7 @@ is especially important for the tool <em>FINEMAP</em>.</p>
 <span><span class="co">## Processing query: 18:48682589-48684589</span></span>
 <span><span class="co">## Adding 'query' column to results.</span></span>
 <span><span class="co">## Retrieved data with 7 rows</span></span>
-<span><span class="co">## Saving query ==&gt; /tmp/RtmpGtyNnR/results/GWAS/Nalls23andMe_2019/MEX3C/MEX3C_Nalls23andMe_2019_subset.tsv.gz</span></span>
+<span><span class="co">## Saving query ==&gt; /tmp/RtmpNZN6sB/results/GWAS/Nalls23andMe_2019/MEX3C/MEX3C_Nalls23andMe_2019_subset.tsv.gz</span></span>
 <span><span class="co">## + Query: 7 SNPs x 11 columns.</span></span>
 <span><span class="co">## Standardizing summary statistics subset.</span></span>
 <span><span class="co">## Standardizing main column names.</span></span>
@@ -759,7 +760,7 @@ is especially important for the tool <em>FINEMAP</em>.</p>
 <span><span class="co">## ++ Ensuring 1 SNP per row and per genomic coordinate.</span></span>
 <span><span class="co">## ++ Removing extra whitespace</span></span>
 <span><span class="co">## + Standardized query: 7 SNPs x 15 columns.</span></span>
-<span><span class="co">## ++ Saving standardized query ==&gt; /tmp/RtmpGtyNnR/results/GWAS/Nalls23andMe_2019/MEX3C/MEX3C_Nalls23andMe_2019_subset.tsv.gz</span></span>
+<span><span class="co">## ++ Saving standardized query ==&gt; /tmp/RtmpNZN6sB/results/GWAS/Nalls23andMe_2019/MEX3C/MEX3C_Nalls23andMe_2019_subset.tsv.gz</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## <span style="color: #00BBBB;">────────────────────────────────────────────────────────────────────────────────</span></span></span>
 <span><span class="co">## </span></span>
@@ -782,9 +783,9 @@ is especially important for the tool <em>FINEMAP</em>.</p>
 <span><span class="co">## Chromosome format: 1</span></span>
 <span><span class="co">## Filtering query to 503 samples and returning ScanVcfParam object.</span></span>
 <span><span class="co">## Retrieving data.</span></span>
-<span><span class="co">## Time difference of 3.8 secs</span></span>
+<span><span class="co">## Time difference of 1.2 secs</span></span>
 <span><span class="co">## Removing 7 / 38 non-overlapping SNPs.</span></span>
-<span><span class="co">## Saving VCF subset ==&gt; /tmp/RtmpGtyNnR/VCF/RtmpGtyNnR.chr18-48682662-48684103.ALL.chr18.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.bgz</span></span></code></pre>
+<span><span class="co">## Saving VCF subset ==&gt; /tmp/RtmpNZN6sB/VCF/RtmpNZN6sB.chr18-48682662-48684103.ALL.chr18.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.bgz</span></span></code></pre>
 <pre><code><span><span class="co">## Warning in .Call(.make_vcf_geno, filename, fixed, names(geno), as.list(geno), :</span></span>
 <span><span class="co">## converting NULL pointer to R NULL</span></span></code></pre>
 <pre><code><span><span class="co">## Time difference of 0.3 secs</span></span>
@@ -794,7 +795,7 @@ is especially important for the tool <em>FINEMAP</em>.</p>
 <span><span class="co">## Time difference of 0 secs</span></span>
 <span><span class="co">## 7 x 7 LD_matrix (sparse)</span></span>
 <span><span class="co">## Converting obj to sparseMatrix.</span></span>
-<span><span class="co">## Saving sparse LD matrix ==&gt; /tmp/RtmpGtyNnR/results/GWAS/Nalls23andMe_2019/MEX3C/LD/MEX3C.1KGphase3_LD.RDS</span></span>
+<span><span class="co">## Saving sparse LD matrix ==&gt; /tmp/RtmpNZN6sB/results/GWAS/Nalls23andMe_2019/MEX3C/LD/MEX3C.1KGphase3_LD.RDS</span></span>
 <span><span class="co">## Removing 1 temp files.</span></span>
 <span><span class="co">## + FILTER:: Filtering by LD features.</span></span>
 <span><span class="co">## </span></span>
@@ -946,25 +947,25 @@ is especially important for the tool <em>FINEMAP</em>.</p>
 ##    5 -&gt; 0.000476
 ## 0 configurations evaluated (0.000/100%)
 - 5 configurations evaluated (0.000/100%)
-- 7 configurations evaluated (0.000/100%)
-- 14 configurations evaluated (0.050/100%)
-- 14 configurations evaluated (0.100/100%)
-- 14 configurations evaluated (0.103/100%) : converged after 103 iterations
+- 8 configurations evaluated (0.000/100%)
+- 12 configurations evaluated (0.050/100%)
+- 13 configurations evaluated (0.100/100%)
+- 13 configurations evaluated (0.106/100%) : converged after 106 iterations
 ## 
-- Computing causal SNP statistics  : 7.143%
+- Computing causal SNP statistics  : 7.692%
 - Computing causal SNP statistics  : done!   
-## - Regional SNP heritability        : 1.93e-05 (SD: 7.18e-06 ; 95% CI: [7.23e-06,3.58e-05])
+## - Regional SNP heritability        : 1.93e-05 (SD: 7.2e-06 ; 95% CI: [7.03e-06,3.52e-05])
 ## - Log10-BF of &gt;= one causal SNP    : 3.56
 ## - Post-expected # of causal SNPs   : 1.09
 ## - Post-Pr(# of causal SNPs is k)   : 
 ##   (0 -&gt; 0)
 ##    1 -&gt; 0.914
 ##    2 -&gt; 0.0853
-##    3 -&gt; 0.000407
+##    3 -&gt; 0.000355
 ##    4 -&gt; 0
 ##    5 -&gt; 0
 ## - Computing credible sets          : 
-- Writing causal configurations    : 7.143%
+- Writing causal configurations    : 7.692%
 - Writing causal SNP statistics    : 20.000%
 - Writing output                   : done!   
 ## - Run time                         : 0 hours, 0 minutes, 0 seconds</code></pre>
@@ -983,7 +984,7 @@ is especially important for the tool <em>FINEMAP</em>.</p>
 <span><span class="co">## + 3 fine-mapping methods used.</span></span>
 <span><span class="co">## + 0 Credible Set SNPs identified.</span></span>
 <span><span class="co">## + 0 Consensus SNPs identified.</span></span>
-<span><span class="co">## Saving merged finemapping results ==&gt; /tmp/RtmpGtyNnR/results/GWAS/Nalls23andMe_2019/MEX3C/Multi-finemap/1KGphase3_LD.Multi-finemap.tsv.gz</span></span>
+<span><span class="co">## Saving merged finemapping results ==&gt; /tmp/RtmpNZN6sB/results/GWAS/Nalls23andMe_2019/MEX3C/Multi-finemap/1KGphase3_LD.Multi-finemap.tsv.gz</span></span>
 <span><span class="co">## + Fine-mapping with 'ABF, SUSIE, FINEMAP' completed:</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## <span style="color: #00BBBB;">────────────────────────────────────────────────────────────────────────────────</span></span></span>
@@ -1018,7 +1019,7 @@ is especially important for the tool <em>FINEMAP</em>.</p>
 <pre><code><span><span class="co">## [1] "+ Ensuring last track shows genomic units..."</span></span></code></pre>
 <pre><code><span><span class="co">## + Aligning xlimits for each subplot...</span></span>
 <span><span class="co">## + Checking track heights...</span></span>
-<span><span class="co">## + echoplot:: Saving plot ==&gt; /tmp/RtmpGtyNnR/results/GWAS/Nalls23andMe_2019/MEX3C/multiview.MEX3C.1KGphase3.1x.png</span></span></code></pre>
+<span><span class="co">## + echoplot:: Saving plot ==&gt; /tmp/RtmpNZN6sB/results/GWAS/Nalls23andMe_2019/MEX3C/multiview.MEX3C.1KGphase3.1x.png</span></span></code></pre>
 <pre><code><span><span class="co">## Warning: Removed 1 rows containing missing values (geom_text).</span></span></code></pre>
 <p><img src="echolocatoR_files/figure-html/Run%20fine-mapping%20pipeline-1.png" width="700"></p>
 <pre><code><span><span class="co">## Warning: Removed 1 rows containing missing values (geom_text).</span></span></code></pre>
@@ -1032,7 +1033,7 @@ is especially important for the tool <em>FINEMAP</em>.</p>
 <span><span class="co">## <span style="color: #00BBBB;">────────────────────────────────────────────────────────────────────────────────</span></span></span>
 <span><span class="co">## Returning results as nested list.</span></span></code></pre>
 <p><img src="echolocatoR_files/figure-html/Run%20fine-mapping%20pipeline-2.png" width="700"></p>
-<pre><code><span><span class="co">## <span style="color: #55FFFF;">All loci done in: </span><span style="color: #FFFFFF;">0.39 min</span></span></span>
+<pre><code><span><span class="co">## <span style="color: #55FFFF;">All loci done in: </span><span style="color: #FFFFFF;">0.28 min</span></span></span>
 <span><span class="co"><span style="color: #55FFFF;">## </span></span></span></code></pre>
 <hr>
 </div>
@@ -1040,7 +1041,7 @@ is especially important for the tool <em>FINEMAP</em>.</p>
 <div class="section level2">
 <h2 id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<details><div class="sourceCode" id="cb264"><pre class="downlit sourceCode r">
+<details><div class="sourceCode" id="cb266"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre style="max-height: 200px;"><code><span><span class="co">## R version 4.2.1 (2022-06-23)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span></span>

@@ -98,7 +98,7 @@
 <i>Brian Schilder, Jack Humphrey, Towfique Raj</i> ¶ </h4></h4>
             
             <h4 data-toc-skip class="date"><h4> ¶ Vignette updated:
-<i>Oct-31-2022</i> ¶ </h4></h4>
+<i>Nov-01-2022</i> ¶ </h4></h4>
       
       <small class="dont-index">Source: <a href="https://github.com/RajLabMSSM/echolocatoR/blob/HEAD/vignettes/docker.Rmd" class="external-link"><code>vignettes/docker.Rmd</code></a></small>
       <div class="hidden name"><code>docker.Rmd</code></div>
@@ -110,7 +110,7 @@
 <div class="section level2">
 <h2 id="dockerhub">DockerHub<a class="anchor" aria-label="anchor" href="#dockerhub"></a>
 </h2>
-<p>echolocator is now available via <a href="https://hub.docker.com/repository/docker/neurogenomicslab/echolocator" class="external-link">DockerHub</a>
+<p>echolocator is now available via <a href="https://hub.docker.com/repository/docker/bschilder/echolocator" class="external-link">DockerHub</a>
 as a containerised environment with Rstudio and all necessary
 dependencies pre-installed.</p>
 <div class="section level3">
@@ -124,7 +124,7 @@ dependencies pre-installed.</p>
 Docker</a> if you have not already.</p>
 <p>Create an image of the <a href="https://www.docker.com/" class="external-link">Docker</a>
 container in command line:</p>
-<pre><code>docker pull neurogenomicslab/echolocator</code></pre>
+<pre><code>docker pull bschilder/echolocator</code></pre>
 <p>Once the image has been created, you can launch it with:</p>
 <pre><code>docker run \
   -d \
@@ -133,7 +133,7 @@ container in command line:</p>
   -v ~/Desktop:/Desktop \
   -v /Volumes:/Volumes \
   -p 8787:8787 \
-  neurogenomicslab/echolocator</code></pre>
+  bschilder/echolocator</code></pre>
 <div class="section level4">
 <h4 id="notes">NOTES<a class="anchor" aria-label="anchor" href="#notes"></a>
 </h4>
@@ -160,7 +160,7 @@ to easily manage your containers.</li>
 <p>If you are using a system that does not allow Docker (as is the case
 for many institutional computing clusters), you can instead <a href="https://sylabs.io/guides/2.6/user-guide/singularity_and_docker.html" class="external-link">install
 Docker images via Singularity</a>.</p>
-<pre><code>singularity pull docker://neurogenomicslab/echolocator</code></pre>
+<pre><code>singularity pull docker://bschilder/echolocator</code></pre>
 </div>
 <div class="section level3">
 <h3 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
