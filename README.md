@@ -11,7 +11,7 @@ GPL-3](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://cran.r-pro
 Author: <i>Brian M. Schilder</i>
 </h5>
 <h5>
-README updated: <i>Oct-31-2022</i>
+README updated: <i>Nov-01-2022</i>
 </h5>
 
 ## `echolocatoR`: Automated statistical and functional fine-mapping
@@ -81,17 +81,27 @@ library(echolocatoR)
 
 </details>
 
-### \[Optional\] Docker/Singularity
+### \[Optional\] [Docker/Singularity](https://rajlabmssm.github.io/echolocatoR/articles/docker)
 
-`echolocatoR` doesn’t yet have its own container, but in the meantime
-you can use the official
-[`MAGMA.Celltyping`](https://github.com/neurogenomics/MAGMA_Celltyping)
-Docker/Singularity container which includes an Rstudio interface (see
-[vignette
-here](https://neurogenomics.github.io/MAGMA_Celltyping/articles/docker)).
+`echolocatoR` now how its own dedicated Docker/Singularity container!
+This greatly reduces issues related to system dependency conflicts and
+provides a containerized interface for Rstudio through your web browser.
+See [here for installation
+instructions](https://rajlabmssm.github.io/echolocatoR/articles/docker).
 
-Then, simply install `echolocatoR` from within the container using the
-same instructions as above.
+## Documentation
+
+### [Website](https://rajlabmssm.github.io/echolocatoR)
+
+### [Getting started](https://rajlabmssm.github.io/echolocatoR/articles/echolocatoR)
+
+### [Bugs/requests](https://github.com/RajLabMSSM/echolocatoR/issues)
+
+Please report any bugs/requests on [GitHub
+Issues](https://github.com/RajLabMSSM/echolocatoR/issues).
+
+[Contributions](https://github.com/RajLabMSSM/echolocatoR/pulls) are
+welcome!
 
 ## Introduction
 
@@ -116,20 +126,6 @@ barriers to identifying causal variants by making the entire
 fine-mapping pipeline rapid, robust and scalable.
 
 <img src="./images/echolocatoR_Fig1.png" style="border-radius: 10px;">
-
-## Documentation
-
-### [Website](https://rajlabmssm.github.io/echolocatoR)
-
-### [Getting started](https://rajlabmssm.github.io/echolocatoR/articles/echolocatoR)
-
-### Bugs/requests
-
-Please report any bugs/requests on [GitHub
-Issues](https://github.com/RajLabMSSM/echolocatoR/issues).
-
-[Contributions](https://github.com/RajLabMSSM/echolocatoR/pulls) are
-welcome!
 
 ## Literature
 

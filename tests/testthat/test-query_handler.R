@@ -13,7 +13,7 @@ test_that("query_handler works", {
     dataset_name = dataset_name,
     locus = locus)
 
-  query <- echolocatoR::: query_handler(fullSS_path=fullSS_path,
+  query <- echolocatoR:::query_handler(fullSS_path=fullSS_path,
                          colmap=echodata::construct_colmap(munged = TRUE),
                          locus_dir=locus_dir,
                          topSNPs=topSNPs,
