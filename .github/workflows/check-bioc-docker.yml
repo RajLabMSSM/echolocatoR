@@ -378,4 +378,4 @@ jobs:
           tag_with_ref: true
           tag_with_sha: false
           tags: ${{ env.packageVersion }},latest
-          build_args: PKG=${{ env.packageNameOrig }},BIOC=${{ env.run_bioccheck }}
+          build_args: PKG=${{ env.packageNameOrig }},BIOC=${{ env.run_bioccheck }},GITHUB_PAT=${{ secrets.PAT_GITHUB }}
