@@ -73,13 +73,13 @@ library(`r pkg`)
 
 ### [Optional] [Docker/Singularity](https://rajlabmssm.github.io/echolocatoR/articles/docker)
 
-`echolocatoR` now how its own dedicated Docker/Singularity container! This greatly reduces issues related to system dependency conflicts and provides a containerized interface for Rstudio through your web browser. See [here for installation instructions](https://rajlabmssm.github.io/echolocatoR/articles/docker).
+`echolocatoR` now has its own dedicated Docker/Singularity container! 
+This greatly reduces issues related to system dependency conflicts and provides a containerized interface for Rstudio through your web browser. See [here for installation instructions](https://rajlabmssm.github.io/echolocatoR/articles/docker).
 
 ## Documentation 
 
 ### [Website](https://rajlabmssm.github.io/`r pkg`) 
-### [Getting started](https://rajlabmssm.github.io/`r pkg`/articles/`r pkg`) 
-
+### [Get started](https://rajlabmssm.github.io/`r pkg`/articles/`r pkg`) 
 ### [Bugs/requests](https://github.com/RajLabMSSM/echolocatoR/issues)
 
 Please report any bugs/requests on [GitHub Issues](https://github.com/RajLabMSSM/echolocatoR/issues).

@@ -1,5 +1,5 @@
 <img src='https://github.com/RajLabMSSM/echolocatoR/raw/master/inst/hex/hex.png' height='300'><br><br>
-[![](https://img.shields.io/badge/devel%20version-2.0.2-black.svg)](https://github.com/RajLabMSSM/echolocatoR)
+[![](https://img.shields.io/badge/devel%20version-2.0.3-black.svg)](https://github.com/RajLabMSSM/echolocatoR)
 [![R build
 status](https://github.com/RajLabMSSM/echolocatoR/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/RajLabMSSM/echolocatoR/actions)
 [![](https://img.shields.io/github/last-commit/RajLabMSSM/echolocatoR.svg)](https://github.com/RajLabMSSM/echolocatoR/commits/master)
@@ -11,7 +11,7 @@ GPL-3](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://cran.r-pro
 Author: <i>Brian M. Schilder</i>
 </h5>
 <h5>
-README updated: <i>Nov-01-2022</i>
+README updated: <i>Nov-07-2022</i>
 </h5>
 
 ## `echolocatoR`: Automated statistical and functional fine-mapping
@@ -83,7 +83,7 @@ library(echolocatoR)
 
 ### \[Optional\] [Docker/Singularity](https://rajlabmssm.github.io/echolocatoR/articles/docker)
 
-`echolocatoR` now how its own dedicated Docker/Singularity container!
+`echolocatoR` now has its own dedicated Docker/Singularity container!
 This greatly reduces issues related to system dependency conflicts and
 provides a containerized interface for Rstudio through your web browser.
 See [here for installation
