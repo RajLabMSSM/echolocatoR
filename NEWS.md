@@ -1,3 +1,11 @@
+# echolocatoR 2.0.3
+
+## New features
+
+* Implement new `rworkflows` version of GHA.
+* Remove *Dockerfile*.
+
+
 # echolocatoR 2.0.2
 
 ## New features
