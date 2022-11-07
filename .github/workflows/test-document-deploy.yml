@@ -19,9 +19,9 @@ jobs:
           - { os: macOS-latest, r: 'latest', bioc: 'release'}
           - { os: windows-latest, r: 'latest', bioc: 'release'}
     steps:
-      - uses: neurogenomics/rworkflows/test-document-deploy
+      - uses: neurogenomics/rworkflows/test-document-deploy@v1
         with:
-          run_bioccheck: true
+          run_bioccheck: false
           run_crancheck: true
           has_testthat: true
           run_covr: true
