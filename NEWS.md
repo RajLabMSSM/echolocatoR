@@ -8,7 +8,7 @@
 
 ## Bug fixes
 
-* Push Docker.
+* Push Docker. 
 
 
 # echolocatoR 2.0.2
