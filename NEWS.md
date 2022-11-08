@@ -4,6 +4,11 @@
 
 * Implement new `rworkflows` version of GHA.
 * Remove *Dockerfile*.
+* Move "plot_locus.Rmd" vignette to `echoplot`.
+
+## Bug fixes
+
+* Push Docker.
 
 
 # echolocatoR 2.0.2
