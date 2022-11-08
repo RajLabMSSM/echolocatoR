@@ -10,7 +10,6 @@
 
 * Push Docker. 
 
-
 # echolocatoR 2.0.2
 
 ## New features
