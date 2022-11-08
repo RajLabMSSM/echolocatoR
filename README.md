@@ -11,7 +11,7 @@ GPL-3](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://cran.r-pro
 Author: <i>Brian M. Schilder</i>
 </h5>
 <h5>
-README updated: <i>Nov-07-2022</i>
+README updated: <i>Nov-08-2022</i>
 </h5>
 
 ## `echolocatoR`: Automated statistical and functional fine-mapping
@@ -68,6 +68,10 @@ library(echolocatoR)
     solution is to simply rerun
     `remotes::install_github("RajLabMSSM/echolocatoR")` until all
     subpackages are fully updates.
+-   `susieR`: Sometimes an older version of `susieR` is installed from
+    CRAN (e.g. 0.11.92), but `echofinemap` requires version \>= 0.12.0.
+    To get around this, you can install `susieR` directly from GitHub:
+    `devtools::install_github("stephenslab/susieR")`
 -   System dependencies can sometimes cause issues when using different
     packages. I’ve tried to account for as many of these as possible
     automatically within the code, but using the **Docker/Singularity**
@@ -93,7 +97,7 @@ instructions](https://rajlabmssm.github.io/echolocatoR/articles/docker).
 
 ### [Website](https://rajlabmssm.github.io/echolocatoR)
 
-### [Getting started](https://rajlabmssm.github.io/echolocatoR/articles/echolocatoR)
+### [Get started](https://rajlabmssm.github.io/echolocatoR/articles/echolocatoR)
 
 ### [Bugs/requests](https://github.com/RajLabMSSM/echolocatoR/issues)
 
