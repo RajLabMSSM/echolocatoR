@@ -73,14 +73,16 @@ head(topSNPs)
 ```{r}
 res <- echolocatoR::finemap_loci(fullSS_path = coloc_res$path,
                                  topSNPs = topSNPs,
-                                 ## Let's just fine-map 2 loci for demo purposes
+                                 ## Let's just fine-map 1 locus for demo purposes
                                  loci = topSNPs$Locus[1],
                                  dataset_name = "Kunkle_2019.microgliaQTL",
-                                 # dataset_type = "QTL",     
+                                 dataset_type = "QTL",
                                  bp_distance = 1000, 
                                  colmap = colmap,
+                                 show_plot = TRUE,
                                  finemap_methods = c("ABF","FINEMAP","SUSIE") )
 ```
+ 
 
 # Session info
 

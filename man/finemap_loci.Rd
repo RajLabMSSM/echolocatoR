@@ -371,7 +371,13 @@ Which XGR annotations to check overlap with.
 For full list of libraries see
 \href{http://XGR_r-forge.r-project.org/#annotations-at-the-genomic-region-level}{
  here}.
- Passed to the \code{RData.customised} argument in \link[XGR]{xRDataLoader}.}
+ Passed to the \code{RData.customised} argument in \link[XGR]{xRDataLoader}.
+ Examples:
+ \itemize{
+ \item{"ENCODE_TFBS_ClusteredV3_CellTypes"}
+ \item{"ENCODE_DNaseI_ClusteredV3_CellTypes"}
+ \item{"Broad_Histone"}
+ }}
 
 \item{roadmap}{Find and plot annotations from Roadmap.}
 
