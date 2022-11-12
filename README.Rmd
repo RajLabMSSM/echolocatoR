@@ -1,11 +1,6 @@
 ---
 title: ""  
-author: "<img src='https://github.com/RajLabMSSM/`r read.dcf('DESCRIPTION', fields = 'Package')[1]`/raw/master/inst/hex/hex.png' height='300'><br><br>
-        `r badger::badge_github_version(color = 'black')` 
-        `r badger::badge_github_actions(action = 'R-CMD-check-bioc')`
-        `r badger::badge_last_commit(branch = 'master')`
-        `r badger::badge_codecov(branch = 'master')` 
-        `r badger::badge_license()`
+author: "`r echogithub::readme_header(add_authors=FALSE)`
         `r badger::badge_doi('10.1093/bioinformatics/btab658', 'blue')`
         <h5>Author: <i>Brian M. Schilder</i></h5>" 
 date: "<h5>README updated: <i>`r format( Sys.Date(), '%b-%d-%Y')`</i></h5>"
@@ -87,6 +82,23 @@ Please report any bugs/requests on [GitHub Issues](https://github.com/RajLabMSSM
 
 [Contributions](https://github.com/RajLabMSSM/echolocatoR/pulls) are welcome!
 
+### All *echoverse* vignettes
+
+<details>
+
+```{r, results="asis"}
+echoverse <- c('echolocatoR','echodata','echotabix',
+               'echoannot','echoconda','echoLD',
+               'echoplot','catalogueR','downloadR',
+               # 'echofinemap','echodeps', # under construction
+               'echogithub')
+toc <- echogithub::github_pages_vignettes(owner = "RajLabMSSM",
+                                          repo = echoverse,
+                                          as_toc = TRUE,
+                                          verbose = FALSE)
+```
+
+</details>
 
 ## Introduction
 
