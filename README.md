@@ -110,7 +110,7 @@ welcome!
 echoverse <- c('echolocatoR','echodata','echotabix',
                'echoannot','echoconda','echoLD',
                'echoplot','catalogueR','downloadR',
-               # 'echofinemap','echodeps', # under construction
+               'echofinemap','echodeps', # under construction
                'echogithub')
 toc <- echogithub::github_pages_vignettes(owner = "RajLabMSSM",
                                           repo = echoverse,
@@ -242,6 +242,30 @@ type specific epigenomics</a>
 <li>
 <h3>
 <a href='https://rajlabmssm.github.io/echoplot//articles/echoplot.html' target='blank'>echoplot</a>
+</h3>
+</li>
+</ul>
+</li>
+<li>
+<h2>
+🦇 <a href='https://rajlabmssm.github.io/echofinemap/'>echofinemap</a>
+</h2>
+<ul>
+<li>
+<h3>
+<a href='https://rajlabmssm.github.io/echofinemap//articles/echoverseTemplate.html' target='blank'>echoverseTemplate</a>
+</h3>
+</li>
+</ul>
+</li>
+<li>
+<h2>
+🦇 <a href='https://rajlabmssm.github.io/echodeps/'>echodeps</a>
+</h2>
+<ul>
+<li>
+<h3>
+<a href='https://rajlabmssm.github.io/echodeps//articles/echoverseTemplate.html' target='blank'>echoverseTemplate</a>
 </h3>
 </li>
 </ul>

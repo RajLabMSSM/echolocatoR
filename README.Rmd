@@ -90,7 +90,7 @@ Please report any bugs/requests on [GitHub Issues](https://github.com/RajLabMSSM
 echoverse <- c('echolocatoR','echodata','echotabix',
                'echoannot','echoconda','echoLD',
                'echoplot','catalogueR','downloadR',
-               # 'echofinemap','echodeps', # under construction
+               'echofinemap','echodeps', # under construction
                'echogithub')
 toc <- echogithub::github_pages_vignettes(owner = "RajLabMSSM",
                                           repo = echoverse,
