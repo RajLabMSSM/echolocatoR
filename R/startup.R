@@ -27,10 +27,6 @@ startup <- function(package="echolocatoR",
   exdent <- 5
   width <- (cli::console_width()*.75) - indent - exdent
 
-  bat_icon <- function(n=1, sep="\ \ "){
-    paste(rep("\U0001F987",n), collapse = sep)
-  }
-
   #### Make waves function #####
   make_waves <- function(frequency=50,
                          width=cli::console_width(),
@@ -56,7 +52,8 @@ startup <- function(package="echolocatoR",
                   ){
     extra_space <- width - utf8::utf8_width(txt) #nchar(x, type="width")
     padded_txt <- stringr::str_pad(txt, width = extra_space,
-                                   pad = pad, side = "right")
+                                   pad = pad,
+                                   side = "right")
     return(padded_txt)
   }
 
