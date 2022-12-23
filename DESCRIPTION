@@ -54,9 +54,9 @@ Suggests:
     rmarkdown,
     knitr,
     testthat (>= 3.0.0),
-    badger,
     ggplot2,
-    patchwork
+    patchwork,
+    rworkflows
 Remotes:
   github::RajLabMSSM/echoconda,
   github::RajLabMSSM/downloadR,
@@ -68,7 +68,8 @@ Remotes:
   github::RajLabMSSM/echoLD,
   github::RajLabMSSM/echofinemap,
   github::RajLabMSSM/echoplot,
-  github::RajLabMSSM/echodeps
+  github::RajLabMSSM/echodeps,
+  github::neurogenomics/rworkflows
 RoxygenNote: 7.2.2
 VignetteBuilder: knitr 
 Config/testthat/edition: 3

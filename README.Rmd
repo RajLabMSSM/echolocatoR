@@ -1,8 +1,6 @@
 ---
 title: ""  
-author: "`r echogithub::readme_header(add_authors=FALSE)`
-        `r badger::badge_doi('10.1093/bioinformatics/btab658', 'blue')`
-        <h5>Author: <i>Brian M. Schilder</i></h5>" 
+author: "`r rworkflows::use_badges(add_doi = '10.1093/bioinformatics/btab658')`" 
 date: "<h5>README updated: <i>`r format( Sys.Date(), '%b-%d-%Y')`</i></h5>"
 output:
   github_document
