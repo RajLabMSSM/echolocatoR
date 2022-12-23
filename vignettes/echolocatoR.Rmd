@@ -1,11 +1,11 @@
 ---
-title: "Getting started" 
+title: "Get started" 
 author: "<h4>Author: <i>Brian M. Schilder</i></h4>" 
 date: "<h4>Updated: <i>`r format( Sys.Date(), '%b-%d-%Y')`</i></h4>"
 output:
   BiocStyle::html_document
 vignette: >
-    %\VignetteIndexEntry{Getting started} 
+    %\VignetteIndexEntry{Get started} 
     %\usepackage[utf8]{inputenc}
     %\VignetteEngine{knitr::rmarkdown}
 ---
