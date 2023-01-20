@@ -88,12 +88,12 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-<img src="https://github.com/RajLabMSSM/echolocatoR/raw/master/inst/hex/hex.png" height="300"><br><br><a href="https://github.com/RajLabMSSM/echolocatoR" class="external-link"><img src="https://img.shields.io/badge/devel%20version-2.0.3-black.svg"></a> <a href="https://github.com/RajLabMSSM/echolocatoR/actions" class="external-link"><img src="https://github.com/RajLabMSSM/echolocatoR/workflows/R-CMD-check-bioc/badge.svg" alt="R build status"></a> <a href="https://github.com/RajLabMSSM/echolocatoR/commits/master" class="external-link"><img src="https://img.shields.io/github/last-commit/RajLabMSSM/echolocatoR.svg"></a> <a href="https://app.codecov.io/gh/RajLabMSSM/echolocatoR" class="external-link"><img src="https://app.codecov.io/gh/RajLabMSSM/echolocatoR/branch/master/graph/badge.svg"></a> <a href="https://cran.r-project.org/web/licenses/GPL-3" class="external-link"><img src="https://img.shields.io/badge/license-GPL--3-blue.svg" alt="License: GPL-3"></a> <a href="https://doi.org/10.1093/bioinformatics/btab658" class="external-link"><img src="https://img.shields.io/badge/doi-10.1093/bioinformatics/btab658-blue.svg"></a> ¶
+<img src="https://github.com/RajLabMSSM/echolocatoR/raw/master/inst/hex/hex.png" height="600"><br><br><br><br><a href="https://github.com/RajLabMSSM/echolocatoR" class="external-link"><img src="https://img.shields.io/badge/devel%20version-2.0.3-black.svg"></a> <a href="https://github.com/RajLabMSSM/echolocatoR/actions" class="external-link"><img src="https://github.com/RajLabMSSM/echolocatoR/workflows/rworkflows/badge.svg" alt="R build status"></a> <a href="https://github.com/RajLabMSSM/echolocatoR/commits/master" class="external-link"><img src="https://img.shields.io/github/last-commit/RajLabMSSM/echolocatoR.svg"></a> <a href="https://github.com/RajLabMSSM/echolocatoR" class="external-link"><img src="https://img.shields.io/github/languages/code-size/RajLabMSSM/echolocatoR.svg"></a> <a href="https://codecov.io/gh/RajLabMSSM/echolocatoR" class="external-link"><img src="https://codecov.io/gh/RajLabMSSM/echolocatoR/branch/master/graph/badge.svg"></a> <a href="https://cran.r-project.org/web/licenses/GPL-3" class="external-link"><img src="https://img.shields.io/badge/license-GPL--3-blue.svg" alt="License: GPL-3"></a> <a href="https://doi.org/10.1093/bioinformatics/btab658" class="external-link"><img src="https://img.shields.io/badge/doi-10.1093/bioinformatics/btab658-blue.svg"></a> ¶
+<h4>
+¶ Authors: <i>Brian Schilder, Jack Humphrey, Towfique Raj</i> ¶
+</h4>
 <h5>
-¶ Author: <i>Brian M. Schilder</i> ¶
-</h5>
-<h5>
-¶ README updated: <i>Nov-12-2022</i> ¶
+¶ README updated: <i>Jan-20-2023</i> ¶
 </h5>
 <div class="section level2">
 <h2 id="echolocator-automated-statistical-and-functional-fine-mapping">
@@ -171,6 +171,165 @@
 </h3>
 <p>Please report any bugs/requests on <a href="https://github.com/RajLabMSSM/echolocatoR/issues" class="external-link">GitHub Issues</a>.</p>
 <p><a href="https://github.com/RajLabMSSM/echolocatoR/pulls" class="external-link">Contributions</a> are welcome!</p>
+</div>
+<div class="section level3">
+<h3 id="all-echoverse-vignettes">All <em>echoverse</em> vignettes<a class="anchor" aria-label="anchor" href="#all-echoverse-vignettes"></a>
+</h3>
+<details><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">echoverse</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'echolocatoR'</span>,<span class="st">'echodata'</span>,<span class="st">'echotabix'</span>,</span>
+<span>               <span class="st">'echoannot'</span>,<span class="st">'echoconda'</span>,<span class="st">'echoLD'</span>,</span>
+<span>               <span class="st">'echoplot'</span>,<span class="st">'catalogueR'</span>,<span class="st">'downloadR'</span>,</span>
+<span>               <span class="st">'echofinemap'</span>,<span class="st">'echodeps'</span>, <span class="co"># under construction</span></span>
+<span>               <span class="st">'echogithub'</span><span class="op">)</span></span>
+<span><span class="va">toc</span> <span class="op">&lt;-</span> <span class="fu">echogithub</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/echogithub/man/github_pages_vignettes.html" class="external-link">github_pages_vignettes</a></span><span class="op">(</span>owner <span class="op">=</span> <span class="st">"RajLabMSSM"</span>,</span>
+<span>                                          repo <span class="op">=</span> <span class="va">echoverse</span>,</span>
+<span>                                          as_toc <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                                          verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<ul class="toc-list">
+<li>
+<h2>
+🦇 <a href="https://rajlabmssm.github.io/echolocatoR/" class="external-link">echolocatoR</a>
+</h2>
+<ul>
+<li>
+<h3>
+<a href="https://rajlabmssm.github.io/echolocatoR//articles/QTLs.html" target="blank" class="external-link">QTLs</a>
+</h3>
+</li>
+<li>
+<h3>
+<a href="https://rajlabmssm.github.io/echolocatoR//articles/docker.html" target="blank" class="external-link">docker</a>
+</h3>
+</li>
+<li>
+<h3>
+<a href="https://rajlabmssm.github.io/echolocatoR//articles/echolocatoR.html" target="blank" class="external-link">echolocatoR</a>
+</h3>
+</li>
+<li>
+<h3>
+<a href="https://rajlabmssm.github.io/echolocatoR//articles/finemapping_portal.html" target="blank" class="external-link">finemapping portal</a>
+</h3>
+</li>
+<li>
+<h3>
+<a href="https://rajlabmssm.github.io/echolocatoR//articles/plot_locus.html" target="blank" class="external-link">plot locus</a>
+</h3>
+</li>
+<li>
+<h3>
+<a href="https://rajlabmssm.github.io/echolocatoR//articles/summarise.html" target="blank" class="external-link">summarise</a>
+</h3>
+</li>
+</ul>
+</li>
+<li>
+<h2>
+🦇 <a href="https://rajlabmssm.github.io/echodata/" class="external-link">echodata</a>
+</h2>
+<ul>
+<li>
+<h3>
+<a href="https://rajlabmssm.github.io/echodata//articles/echodata.html" target="blank" class="external-link">echodata</a>
+</h3>
+</li>
+<li>
+<h3>
+<a href="https://rajlabmssm.github.io/echodata//articles/echolocatoR_Finemapping_Portal.html" target="blank" class="external-link">echolocatoR Finemapping Portal</a>
+</h3>
+</li>
+</ul>
+</li>
+<li>
+<h2>
+🦇 <a href="https://rajlabmssm.github.io/echotabix/" class="external-link">echotabix</a>
+</h2>
+<ul>
+<li>
+<h3>
+<a href="https://rajlabmssm.github.io/echotabix//articles/echotabix.html" target="blank" class="external-link">echotabix</a>
+</h3>
+</li>
+</ul>
+</li>
+<li>
+<h2>
+🦇 <a href="https://rajlabmssm.github.io/echoannot/" class="external-link">echoannot</a>
+</h2>
+<ul>
+<li>
+<h3>
+<a href="https://rajlabmssm.github.io/echoannot//articles/cell_type_specific_epigenomics.html" target="blank" class="external-link">cell type specific epigenomics</a>
+</h3>
+</li>
+<li>
+<h3>
+<a href="https://rajlabmssm.github.io/echoannot//articles/echoannot.html" target="blank" class="external-link">echoannot</a>
+</h3>
+</li>
+</ul>
+</li>
+<li>
+<h2>
+🦇 <a href="https://rajlabmssm.github.io/echoconda/" class="external-link">echoconda</a>
+</h2>
+<ul>
+<li>
+<h3>
+<a href="https://rajlabmssm.github.io/echoconda//articles/echoconda.html" target="blank" class="external-link">echoconda</a>
+</h3>
+</li>
+</ul>
+</li>
+<li>
+<h2>
+🦇 <a href="https://rajlabmssm.github.io/echoLD/" class="external-link">echoLD</a>
+</h2>
+<ul>
+<li>
+<h3>
+<a href="https://rajlabmssm.github.io/echoLD//articles/echoLD.html" target="blank" class="external-link">echoLD</a>
+</h3>
+</li>
+</ul>
+</li>
+<li>
+<h2>
+🦇 <a href="https://rajlabmssm.github.io/echoplot/" class="external-link">echoplot</a>
+</h2>
+<ul>
+<li>
+<h3>
+<a href="https://rajlabmssm.github.io/echoplot//articles/echoplot.html" target="blank" class="external-link">echoplot</a>
+</h3>
+</li>
+</ul>
+</li>
+<li>
+<h2>
+🦇 <a href="https://rajlabmssm.github.io/echofinemap/" class="external-link">echofinemap</a>
+</h2>
+<ul>
+<li>
+<h3>
+<a href="https://rajlabmssm.github.io/echofinemap//articles/echoverseTemplate.html" target="blank" class="external-link">echoverseTemplate</a>
+</h3>
+</li>
+</ul>
+</li>
+<li>
+<h2>
+🦇 <a href="https://rajlabmssm.github.io/echodeps/" class="external-link">echodeps</a>
+</h2>
+<ul>
+<li>
+<h3>
+<a href="https://rajlabmssm.github.io/echodeps//articles/echoverseTemplate.html" target="blank" class="external-link">echoverseTemplate</a>
+</h3>
+</li>
+</ul>
+</li>
+</ul></details>
 </div>
 </div>
 <div class="section level2">
@@ -306,14 +465,14 @@ See <code>?echodata::construct_colmap()</code> for descriptions of these columns
 All methods require the columns: <code>SNP</code>,<code>CHR</code>,<code>POS</code>,<code>Effect</code>,<code>StdErr</code>
 </li>
 </ul></details><p><br></p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fm_methods</span> <span class="op">&lt;-</span> <span class="fu">echofinemap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/echofinemap/man/required_cols.html" class="external-link">required_cols</a></span><span class="op">(</span>add_versions <span class="op">=</span> <span class="cn">FALSE</span>, </span>
 <span>                                         embed_links <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                                         verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Registered S3 method overwritten by 'GGally':</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="do">##   method from   </span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">##   +.gg   ggplot2</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Registered S3 method overwritten by 'GGally':</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="do">##   method from   </span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="do">##   +.gg   ggplot2</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">fm_methods</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
@@ -405,7 +564,7 @@ All methods require the columns: <code>SNP</code>,<code>CHR</code>,<code>POS</co
 - <a href="https://github.com/RajLabMSSM/echoannot" class="external-link"><code>echoannot</code></a>: Annotates GWAS/QTL summary statistics using epigenomics, pre-compiled annotation matrices, and machine learning model predictions of variant-specific functional impacts.<br>
 - <a href="https://github.com/RajLabMSSM/catalogueR" class="external-link"><code>catalogueR</code></a>: Large compendium of fully standardized e/s/t-QTL summary statistics.</p>
 <p>For more detailed information about each dataset, use <code>?</code>:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">### Examples ###</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RajLabMSSM/echoannot" class="external-link">echoannot</a></span><span class="op">)</span>   </span>
@@ -654,15 +813,15 @@ All methods require the columns: <code>SNP</code>,<code>CHR</code>,<code>POS</co
 <div class="section level1">
 <h1 id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h1>
-<details><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<details><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## R Under development (unstable) (2022-11-10 r83330)</span></span>
+<pre><code><span><span class="co">## R Under development (unstable) (2023-01-11 r83598)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
 <span><span class="co">## Running under: Ubuntu 22.04.1 LTS</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Matrix products: default</span></span>
-<span><span class="co">## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3</span></span>
-<span><span class="co">## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so</span></span>
+<span><span class="co">## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
+<span><span class="co">## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so;  LAPACK version 3.10.0</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## locale:</span></span>
 <span><span class="co">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span></span>
@@ -679,105 +838,109 @@ All methods require the columns: <code>SNP</code>,<code>CHR</code>,<code>POS</co
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] rmarkdown_2.18</span></span>
+<span><span class="co">## [1] rmarkdown_2.20</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##   [1] fs_1.5.2                    ProtGenerics_1.31.0        </span></span>
-<span><span class="co">##   [3] matrixStats_0.62.0          bitops_1.0-7               </span></span>
+<span><span class="co">##   [1] ProtGenerics_1.31.0         fs_1.5.2                   </span></span>
+<span><span class="co">##   [3] matrixStats_0.63.0          bitops_1.0-7               </span></span>
 <span><span class="co">##   [5] httr_1.4.4                  RColorBrewer_1.1-3         </span></span>
-<span><span class="co">##   [7] Rgraphviz_2.41.2            tools_4.3.0                </span></span>
-<span><span class="co">##   [9] backports_1.4.1             utf8_1.2.2                 </span></span>
-<span><span class="co">##  [11] R6_2.5.1                    DT_0.26                    </span></span>
-<span><span class="co">##  [13] lazyeval_0.2.2              prettyunits_1.1.1          </span></span>
-<span><span class="co">##  [15] GGally_2.1.2                gridExtra_2.3              </span></span>
-<span><span class="co">##  [17] cli_3.4.1                   Biobase_2.59.0             </span></span>
-<span><span class="co">##  [19] ggbio_1.47.0                mvtnorm_1.1-3              </span></span>
-<span><span class="co">##  [21] readr_2.1.3                 proxy_0.4-27               </span></span>
-<span><span class="co">##  [23] mixsqp_0.3-43               Rsamtools_2.15.0           </span></span>
-<span><span class="co">##  [25] yulab.utils_0.0.5           foreign_0.8-83             </span></span>
-<span><span class="co">##  [27] R.utils_2.12.2              dichromat_2.0-0.1          </span></span>
-<span><span class="co">##  [29] BSgenome_1.67.1             readxl_1.4.1               </span></span>
-<span><span class="co">##  [31] susieR_0.12.27              rstudioapi_0.14            </span></span>
-<span><span class="co">##  [33] RSQLite_2.2.18              httpcode_0.3.0             </span></span>
-<span><span class="co">##  [35] badger_0.2.2                generics_0.1.3             </span></span>
-<span><span class="co">##  [37] BiocIO_1.9.0                echoconda_0.99.8           </span></span>
-<span><span class="co">##  [39] dplyr_1.0.10                zip_2.2.2                  </span></span>
-<span><span class="co">##  [41] Matrix_1.5-3                interp_1.1-3               </span></span>
-<span><span class="co">##  [43] fansi_1.0.3                 DescTools_0.99.47          </span></span>
-<span><span class="co">##  [45] S4Vectors_0.37.0            R.methodsS3_1.8.2          </span></span>
-<span><span class="co">##  [47] lifecycle_1.0.3             yaml_2.3.6                 </span></span>
-<span><span class="co">##  [49] SummarizedExperiment_1.29.1 BiocFileCache_2.7.0        </span></span>
-<span><span class="co">##  [51] grid_4.3.0                  blob_1.2.3                 </span></span>
-<span><span class="co">##  [53] crayon_1.5.2                dir.expiry_1.5.1           </span></span>
-<span><span class="co">##  [55] lattice_0.20-45             GenomicFeatures_1.51.2     </span></span>
-<span><span class="co">##  [57] KEGGREST_1.39.0             pillar_1.8.1               </span></span>
-<span><span class="co">##  [59] knitr_1.40                  GenomicRanges_1.51.1       </span></span>
-<span><span class="co">##  [61] rjson_0.2.21                osfr_0.2.9                 </span></span>
-<span><span class="co">##  [63] boot_1.3-28                 gld_2.6.6                  </span></span>
-<span><span class="co">##  [65] codetools_0.2-18            glue_1.6.2                 </span></span>
-<span><span class="co">##  [67] data.table_1.14.4           coloc_5.1.0.1              </span></span>
-<span><span class="co">##  [69] vctrs_0.5.0                 png_0.1-7                  </span></span>
-<span><span class="co">##  [71] XGR_1.1.8                   cellranger_1.1.0           </span></span>
-<span><span class="co">##  [73] gtable_0.3.1                assertthat_0.2.1           </span></span>
-<span><span class="co">##  [75] cachem_1.0.6                dnet_1.1.7                 </span></span>
-<span><span class="co">##  [77] xfun_0.34                   openxlsx_4.2.5.1           </span></span>
-<span><span class="co">##  [79] survival_3.4-0              dlstats_0.1.5              </span></span>
-<span><span class="co">##  [81] rvcheck_0.2.1               ellipsis_0.3.2             </span></span>
-<span><span class="co">##  [83] nlme_3.1-160                bit64_4.0.5                </span></span>
-<span><span class="co">##  [85] progress_1.2.2              filelock_1.0.2             </span></span>
-<span><span class="co">##  [87] GenomeInfoDb_1.35.3         rprojroot_2.0.3            </span></span>
-<span><span class="co">##  [89] irlba_2.3.5.1               rpart_4.1.19               </span></span>
-<span><span class="co">##  [91] colorspace_2.0-3            BiocGenerics_0.45.0        </span></span>
-<span><span class="co">##  [93] DBI_1.1.3                   Hmisc_4.7-1                </span></span>
-<span><span class="co">##  [95] nnet_7.3-18                 Exact_3.2                  </span></span>
-<span><span class="co">##  [97] tidyselect_1.2.0            bit_4.0.4                  </span></span>
-<span><span class="co">##  [99] compiler_4.3.0              curl_4.3.3                 </span></span>
-<span><span class="co">## [101] graph_1.77.0                htmlTable_2.4.1            </span></span>
-<span><span class="co">## [103] expm_0.999-6                basilisk.utils_1.9.4       </span></span>
-<span><span class="co">## [105] xml2_1.3.3                  desc_1.4.2                 </span></span>
-<span><span class="co">## [107] DelayedArray_0.25.0         rtracklayer_1.59.0         </span></span>
-<span><span class="co">## [109] checkmate_2.1.0             scales_1.2.1               </span></span>
-<span><span class="co">## [111] hexbin_1.28.2               RBGL_1.75.0                </span></span>
-<span><span class="co">## [113] echoLD_0.99.8               RCircos_1.2.2              </span></span>
-<span><span class="co">## [115] rappdirs_0.3.3              stringr_1.4.1              </span></span>
-<span><span class="co">## [117] supraHex_1.35.0             digest_0.6.30              </span></span>
-<span><span class="co">## [119] piggyback_0.1.4             basilisk_1.9.12            </span></span>
-<span><span class="co">## [121] XVector_0.39.0              htmltools_0.5.3            </span></span>
-<span><span class="co">## [123] pkgconfig_2.0.3             jpeg_0.1-9                 </span></span>
-<span><span class="co">## [125] base64enc_0.1-3             MatrixGenerics_1.11.0      </span></span>
-<span><span class="co">## [127] echodata_0.99.16            highr_0.9                  </span></span>
-<span><span class="co">## [129] dbplyr_2.2.1                fastmap_1.1.0              </span></span>
-<span><span class="co">## [131] ensembldb_2.23.1            rlang_1.0.6                </span></span>
-<span><span class="co">## [133] htmlwidgets_1.5.4           echofinemap_0.99.4         </span></span>
-<span><span class="co">## [135] jsonlite_1.8.3              BiocParallel_1.33.0        </span></span>
-<span><span class="co">## [137] R.oo_1.25.0                 VariantAnnotation_1.45.0   </span></span>
-<span><span class="co">## [139] RCurl_1.98-1.9              magrittr_2.0.3             </span></span>
-<span><span class="co">## [141] Formula_1.2-4               GenomeInfoDbData_1.2.9     </span></span>
-<span><span class="co">## [143] ggnetwork_0.5.10            patchwork_1.1.2            </span></span>
-<span><span class="co">## [145] munsell_0.5.0               Rcpp_1.0.9                 </span></span>
-<span><span class="co">## [147] ape_5.6-2                   viridis_0.6.2              </span></span>
-<span><span class="co">## [149] reticulate_1.26             stringi_1.7.8              </span></span>
-<span><span class="co">## [151] rootSolve_1.8.2.3           zlibbioc_1.45.0            </span></span>
-<span><span class="co">## [153] MASS_7.3-58.1               plyr_1.8.8                 </span></span>
-<span><span class="co">## [155] parallel_4.3.0              ggrepel_0.9.2              </span></span>
-<span><span class="co">## [157] snpStats_1.47.1             lmom_2.9                   </span></span>
-<span><span class="co">## [159] deldir_1.0-6                echoannot_0.99.10          </span></span>
-<span><span class="co">## [161] Biostrings_2.67.0           splines_4.3.0              </span></span>
-<span><span class="co">## [163] hms_1.1.2                   igraph_1.3.5               </span></span>
-<span><span class="co">## [165] reshape2_1.4.4              biomaRt_2.55.0             </span></span>
-<span><span class="co">## [167] stats4_4.3.0                crul_1.3                   </span></span>
-<span><span class="co">## [169] XML_3.99-0.12               evaluate_0.18              </span></span>
-<span><span class="co">## [171] latticeExtra_0.6-30         biovizBase_1.47.0          </span></span>
-<span><span class="co">## [173] BiocManager_1.30.19         tzdb_0.3.0                 </span></span>
-<span><span class="co">## [175] tidyr_1.2.1                 purrr_0.3.5                </span></span>
-<span><span class="co">## [177] reshape_0.8.9               ggplot2_3.4.0              </span></span>
-<span><span class="co">## [179] echotabix_0.99.8            restfulr_0.0.15            </span></span>
-<span><span class="co">## [181] AnnotationFilter_1.23.0     e1071_1.7-12               </span></span>
-<span><span class="co">## [183] downloadR_0.99.5            viridisLite_0.4.1          </span></span>
-<span><span class="co">## [185] class_7.3-20.1              OrganismDbi_1.41.0         </span></span>
-<span><span class="co">## [187] tibble_3.1.8                memoise_2.0.1              </span></span>
-<span><span class="co">## [189] AnnotationDbi_1.61.0        GenomicAlignments_1.35.0   </span></span>
-<span><span class="co">## [191] IRanges_2.33.0              cluster_2.1.4</span></span></code></pre>
+<span><span class="co">##   [7] gh_1.3.1                    Rgraphviz_2.43.0           </span></span>
+<span><span class="co">##   [9] tools_4.3.0                 backports_1.4.1            </span></span>
+<span><span class="co">##  [11] utf8_1.2.2                  R6_2.5.1                   </span></span>
+<span><span class="co">##  [13] DT_0.27                     lazyeval_0.2.2             </span></span>
+<span><span class="co">##  [15] prettyunits_1.1.1           GGally_2.1.2               </span></span>
+<span><span class="co">##  [17] gridExtra_2.3               cli_3.6.0                  </span></span>
+<span><span class="co">##  [19] Biobase_2.59.0              ggbio_1.47.0               </span></span>
+<span><span class="co">##  [21] mvtnorm_1.1-3               readr_2.1.3                </span></span>
+<span><span class="co">##  [23] proxy_0.4-27                mixsqp_0.3-48              </span></span>
+<span><span class="co">##  [25] Rsamtools_2.15.1            yulab.utils_0.0.6          </span></span>
+<span><span class="co">##  [27] foreign_0.8-84              R.utils_2.12.2             </span></span>
+<span><span class="co">##  [29] echogithub_0.99.1           dichromat_2.0-0.1          </span></span>
+<span><span class="co">##  [31] BSgenome_1.67.3             readxl_1.4.1               </span></span>
+<span><span class="co">##  [33] susieR_0.12.27              rstudioapi_0.14            </span></span>
+<span><span class="co">##  [35] RSQLite_2.2.20              httpcode_0.3.0             </span></span>
+<span><span class="co">##  [37] badger_0.2.2                generics_0.1.3             </span></span>
+<span><span class="co">##  [39] BiocIO_1.9.1                echoconda_0.99.9           </span></span>
+<span><span class="co">##  [41] dplyr_1.0.10                zip_2.2.2                  </span></span>
+<span><span class="co">##  [43] Matrix_1.5-3                interp_1.1-3               </span></span>
+<span><span class="co">##  [45] fansi_1.0.3                 DescTools_0.99.47          </span></span>
+<span><span class="co">##  [47] S4Vectors_0.37.3            R.methodsS3_1.8.2          </span></span>
+<span><span class="co">##  [49] lifecycle_1.0.3             yaml_2.3.6                 </span></span>
+<span><span class="co">##  [51] SummarizedExperiment_1.29.1 BiocFileCache_2.7.1        </span></span>
+<span><span class="co">##  [53] grid_4.3.0                  blob_1.2.3                 </span></span>
+<span><span class="co">##  [55] crayon_1.5.2                dir.expiry_1.7.0           </span></span>
+<span><span class="co">##  [57] lattice_0.20-45             GenomicFeatures_1.51.2     </span></span>
+<span><span class="co">##  [59] KEGGREST_1.39.0             pillar_1.8.1               </span></span>
+<span><span class="co">##  [61] knitr_1.41                  GenomicRanges_1.51.4       </span></span>
+<span><span class="co">##  [63] rjson_0.2.21                osfr_0.2.9                 </span></span>
+<span><span class="co">##  [65] boot_1.3-28.1               gld_2.6.6                  </span></span>
+<span><span class="co">##  [67] codetools_0.2-18            glue_1.6.2                 </span></span>
+<span><span class="co">##  [69] data.table_1.14.6           coloc_5.1.0.1              </span></span>
+<span><span class="co">##  [71] vctrs_0.5.1                 png_0.1-8                  </span></span>
+<span><span class="co">##  [73] XGR_1.1.8                   testthat_3.1.6             </span></span>
+<span><span class="co">##  [75] cellranger_1.1.0            gtable_0.3.1               </span></span>
+<span><span class="co">##  [77] assertthat_0.2.1            cachem_1.0.6               </span></span>
+<span><span class="co">##  [79] dnet_1.1.7                  xfun_0.36                  </span></span>
+<span><span class="co">##  [81] openxlsx_4.2.5.1            survival_3.5-0             </span></span>
+<span><span class="co">##  [83] dlstats_0.1.6               rvcheck_0.2.1              </span></span>
+<span><span class="co">##  [85] ellipsis_0.3.2              nlme_3.1-161               </span></span>
+<span><span class="co">##  [87] bit64_4.0.5                 progress_1.2.2             </span></span>
+<span><span class="co">##  [89] filelock_1.0.2              GenomeInfoDb_1.35.12       </span></span>
+<span><span class="co">##  [91] rprojroot_2.0.3             irlba_2.3.5.1              </span></span>
+<span><span class="co">##  [93] rpart_4.1.19                colorspace_2.0-3           </span></span>
+<span><span class="co">##  [95] BiocGenerics_0.45.0         DBI_1.1.3                  </span></span>
+<span><span class="co">##  [97] Hmisc_4.7-2                 nnet_7.3-18                </span></span>
+<span><span class="co">##  [99] Exact_3.2                   tidyselect_1.2.0           </span></span>
+<span><span class="co">## [101] bit_4.0.5                   compiler_4.3.0             </span></span>
+<span><span class="co">## [103] curl_5.0.0                  graph_1.77.1               </span></span>
+<span><span class="co">## [105] htmlTable_2.4.1             expm_0.999-7               </span></span>
+<span><span class="co">## [107] basilisk.utils_1.11.1       xml2_1.3.3                 </span></span>
+<span><span class="co">## [109] desc_1.4.2                  DelayedArray_0.25.0        </span></span>
+<span><span class="co">## [111] rtracklayer_1.59.1          checkmate_2.1.0            </span></span>
+<span><span class="co">## [113] scales_1.2.1                hexbin_1.28.2              </span></span>
+<span><span class="co">## [115] RBGL_1.75.0                 echoLD_0.99.9              </span></span>
+<span><span class="co">## [117] RCircos_1.2.2               rappdirs_0.3.3             </span></span>
+<span><span class="co">## [119] stringr_1.5.0               supraHex_1.37.0            </span></span>
+<span><span class="co">## [121] digest_0.6.31               piggyback_0.1.4            </span></span>
+<span><span class="co">## [123] basilisk_1.11.2             XVector_0.39.0             </span></span>
+<span><span class="co">## [125] htmltools_0.5.4             pkgconfig_2.0.3            </span></span>
+<span><span class="co">## [127] jpeg_0.1-10                 base64enc_0.1-3            </span></span>
+<span><span class="co">## [129] MatrixGenerics_1.11.0       echodata_0.99.16           </span></span>
+<span><span class="co">## [131] highr_0.10                  ensembldb_2.23.1           </span></span>
+<span><span class="co">## [133] dbplyr_2.3.0                fastmap_1.1.0              </span></span>
+<span><span class="co">## [135] rlang_1.0.6                 htmlwidgets_1.6.1          </span></span>
+<span><span class="co">## [137] echofinemap_0.99.5          jsonlite_1.8.4             </span></span>
+<span><span class="co">## [139] BiocParallel_1.33.9         R.oo_1.25.0                </span></span>
+<span><span class="co">## [141] VariantAnnotation_1.45.0    RCurl_1.98-1.9             </span></span>
+<span><span class="co">## [143] magrittr_2.0.3              Formula_1.2-4              </span></span>
+<span><span class="co">## [145] GenomeInfoDbData_1.2.9      ggnetwork_0.5.10           </span></span>
+<span><span class="co">## [147] patchwork_1.1.2             munsell_0.5.0              </span></span>
+<span><span class="co">## [149] Rcpp_1.0.9                  ape_5.6-2                  </span></span>
+<span><span class="co">## [151] viridis_0.6.2               reticulate_1.27            </span></span>
+<span><span class="co">## [153] stringi_1.7.12              rootSolve_1.8.2.3          </span></span>
+<span><span class="co">## [155] brio_1.1.3                  zlibbioc_1.45.0            </span></span>
+<span><span class="co">## [157] MASS_7.3-58.1               plyr_1.8.8                 </span></span>
+<span><span class="co">## [159] parallel_4.3.0              ggrepel_0.9.2              </span></span>
+<span><span class="co">## [161] snpStats_1.49.0             lmom_2.9                   </span></span>
+<span><span class="co">## [163] deldir_1.0-6                echoannot_0.99.10          </span></span>
+<span><span class="co">## [165] Biostrings_2.67.0           splines_4.3.0              </span></span>
+<span><span class="co">## [167] hms_1.1.2                   igraph_1.3.5               </span></span>
+<span><span class="co">## [169] rworkflows_0.99.5           reshape2_1.4.4             </span></span>
+<span><span class="co">## [171] biomaRt_2.55.0              stats4_4.3.0               </span></span>
+<span><span class="co">## [173] crul_1.3                    XML_3.99-0.13              </span></span>
+<span><span class="co">## [175] evaluate_0.20               biovizBase_1.47.0          </span></span>
+<span><span class="co">## [177] latticeExtra_0.6-30         BiocManager_1.30.19        </span></span>
+<span><span class="co">## [179] tzdb_0.3.0                  tidyr_1.2.1                </span></span>
+<span><span class="co">## [181] purrr_1.0.1                 reshape_0.8.9              </span></span>
+<span><span class="co">## [183] ggplot2_3.4.0               echotabix_0.99.9           </span></span>
+<span><span class="co">## [185] AnnotationFilter_1.23.0     restfulr_0.0.15            </span></span>
+<span><span class="co">## [187] e1071_1.7-12                gitcreds_0.1.2             </span></span>
+<span><span class="co">## [189] downloadR_0.99.6            viridisLite_0.4.1          </span></span>
+<span><span class="co">## [191] class_7.3-20.1              OrganismDbi_1.41.0         </span></span>
+<span><span class="co">## [193] tibble_3.1.8                memoise_2.0.1              </span></span>
+<span><span class="co">## [195] AnnotationDbi_1.61.0        GenomicAlignments_1.35.0   </span></span>
+<span><span class="co">## [197] IRanges_2.33.0              cluster_2.1.4              </span></span>
+<span><span class="co">## [199] here_1.0.1</span></span></code></pre>
 </details><p><br></p>
 </div>
 
@@ -829,7 +992,7 @@ All methods require the columns: <code>SNP</code>,<code>CHR</code>,<code>POS</co
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

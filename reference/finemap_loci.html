@@ -765,7 +765,7 @@ from all the locus-specific results:</p><ul><li><p><code>merged_dat</code> : A m
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">topSNPs</span> <span class="op">&lt;-</span> <span class="fu">echodata</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/echodata/man/topSNPs_Nalls2019.html" class="external-link">topSNPs_Nalls2019</a></span></span></span>
 <span class="r-in"><span><span class="va">fullSS_path</span> <span class="op">&lt;-</span> <span class="fu">echodata</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/echodata/man/example_fullSS.html" class="external-link">example_fullSS</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="st">"Nalls2019"</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Writing file to ==&gt; /tmp/Rtmp7rpVnL/nalls2019.fullSS_subset.tsv</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Writing file to ==&gt; /tmp/Rtmp0dbVNr/nalls2019.fullSS_subset.tsv</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">echolocatoR</span><span class="fu">::</span><span class="fu">finemap_loci</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  fullSS_path <span class="op">=</span> <span class="va">fullSS_path</span>,</span></span>
@@ -811,7 +811,7 @@ from all the locus-specific results:</p><ul><li><p><code>merged_dat</code> : A m
 <span class="r-out co"><span class="r-pr">#&gt;</span> ( grep ^'SNP' .../nalls2019.fullSS_subset.tsv; grep</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     -v ^'SNP' .../nalls2019.fullSS_subset.tsv | sort</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     -k2,2n</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     -k3,3n ) &gt; .../file110351ba1dc1_sorted.tsv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     -k3,3n ) &gt; .../file132597ef28cad_sorted.tsv</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Constructing outputs</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> bgzipping file with Rsamtools.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Reading bgzipped file using: data.table</span>
@@ -835,7 +835,7 @@ from all the locus-specific results:</p><ul><li><p><code>merged_dat</code> : A m
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Processing query: 4:15736348-15738348</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Adding 'query' column to results.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Retrieved data with 17 rows</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving query ==&gt; /tmp/Rtmp7rpVnL/results/GWAS/Nalls23andMe_2019/BST1/BST1_Nalls23andMe_2019_subset.tsv.gz</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving query ==&gt; /tmp/Rtmp0dbVNr/results/GWAS/Nalls23andMe_2019/BST1/BST1_Nalls23andMe_2019_subset.tsv.gz</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + Query: 17 SNPs x 11 columns.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Standardizing summary statistics subset.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Standardizing main column names.</span>
@@ -855,7 +855,7 @@ from all the locus-specific results:</p><ul><li><p><code>merged_dat</code> : A m
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ++ Ensuring 1 SNP per row and per genomic coordinate.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ++ Removing extra whitespace</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + Standardized query: 17 SNPs x 15 columns.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ++ Saving standardized query ==&gt; /tmp/Rtmp7rpVnL/results/GWAS/Nalls23andMe_2019/BST1/BST1_Nalls23andMe_2019_subset.tsv.gz</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ++ Saving standardized query ==&gt; /tmp/Rtmp0dbVNr/results/GWAS/Nalls23andMe_2019/BST1/BST1_Nalls23andMe_2019_subset.tsv.gz</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────────────────────────────</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
@@ -878,9 +878,9 @@ from all the locus-specific results:</p><ul><li><p><code>merged_dat</code> : A m
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Chromosome format: 1</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Filtering query to 503 samples and returning ScanVcfParam object.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Retrieving data.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Time difference of 2.1 secs</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Time difference of 3.7 secs</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Removing 17 / 66 non-overlapping SNPs.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving VCF subset ==&gt; /tmp/Rtmp7rpVnL/VCF/Rtmp7rpVnL.chr4-15736493-15738253.ALL.chr4.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.bgz</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving VCF subset ==&gt; /tmp/Rtmp0dbVNr/VCF/Rtmp0dbVNr.chr4-15736493-15738253.ALL.chr4.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.bgz</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>converting NULL pointer to R NULL</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Time difference of 0.4 secs</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Retrieved data with 17 rows across 503 samples.</span>
@@ -889,7 +889,7 @@ from all the locus-specific results:</p><ul><li><p><code>merged_dat</code> : A m
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Time difference of 0 secs</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> 17 x 17 LD_matrix (sparse)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Converting obj to sparseMatrix.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving sparse LD matrix ==&gt; /tmp/Rtmp7rpVnL/results/GWAS/Nalls23andMe_2019/BST1/LD/BST1.1KGphase3_LD.RDS</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving sparse LD matrix ==&gt; /tmp/Rtmp0dbVNr/results/GWAS/Nalls23andMe_2019/BST1/LD/BST1.1KGphase3_LD.RDS</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Removing 1 temp files.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + FILTER:: Filtering by LD features.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
@@ -917,8 +917,6 @@ from all the locus-specific results:</p><ul><li><p><code>merged_dat</code> : A m
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Gathering method citations.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Preparing sample size column (N).</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using existing 'N' column.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Gathering method sources.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Gathering method citations.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Gathering method sources.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Gathering method citations.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="background-color: #FF55FF;">ABF</span></span>
@@ -1017,35 +1015,31 @@ from all the locus-specific results:</p><ul><li><p><code>merged_dat</code> : A m
 <span class="r-out co"><span class="r-pr">#&gt;</span>    3 -&gt; 0.0921</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    4 -&gt; 0.0202</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    5 -&gt; 0.00327</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0 configurations evaluated (0.000/100%)- 17 configurations evaluated (0.000/100%)- 30 configurations evaluated (0.000/100%)- 290 configurations evaluated (0.050/100%)- 379 configurations evaluated (0.100/100%)- 539 configurations evaluated (0.150/100%)- 626 configurations evaluated (0.200/100%)- 626 configurations evaluated (0.250/100%)- 638 configurations evaluated (0.277/100%) : converged after 277 iterations</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Computing causal SNP statistics  : 0.157%- Computing causal SNP statistics  : 7.994%- Computing causal SNP statistics  : 15.831%- Computing causal SNP statistics  : 23.668%- Computing causal SNP statistics  : 31.505%- Computing causal SNP statistics  : 39.342%- Computing causal SNP statistics  : 47.179%- Computing causal SNP statistics  : 55.016%- Computing causal SNP statistics  : 62.853%- Computing causal SNP statistics  : 70.690%- Computing causal SNP statistics  : 78.527%- Computing causal SNP statistics  : 86.364%- Computing causal SNP statistics  : 94.201%- Computing causal SNP statistics  : done!   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Regional SNP heritability        : 0.000104 (SD: 1.71e-05 ; 95% CI: [7.3e-05,0.00014])</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Log10-BF of &gt;= one causal SNP    : 25.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Post-expected # of causal SNPs   : 3.02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0 configurations evaluated (0.000/100%)- 17 configurations evaluated (0.000/100%)- 31 configurations evaluated (0.000/100%)- 260 configurations evaluated (0.050/100%)- 370 configurations evaluated (0.100/100%)- 670 configurations evaluated (0.150/100%)- 686 configurations evaluated (0.200/100%)- 701 configurations evaluated (0.225/100%) : converged after 225 iterations</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Computing causal SNP statistics  : 0.143%- Computing causal SNP statistics  : 7.275%- Computing causal SNP statistics  : 14.408%- Computing causal SNP statistics  : 21.541%- Computing causal SNP statistics  : 28.673%- Computing causal SNP statistics  : 35.806%- Computing causal SNP statistics  : 42.939%- Computing causal SNP statistics  : 50.071%- Computing causal SNP statistics  : 57.204%- Computing causal SNP statistics  : 64.337%- Computing causal SNP statistics  : 71.469%- Computing causal SNP statistics  : 78.602%- Computing causal SNP statistics  : 85.735%- Computing causal SNP statistics  : 92.867%- Computing causal SNP statistics  : 100.000%- Computing causal SNP statistics  : done!   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Regional SNP heritability        : 9.66e-05 (SD: 1.54e-05 ; 95% CI: [6.86e-05,0.000129])</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Log10-BF of &gt;= one causal SNP    : 187</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Post-expected # of causal SNPs   : 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Post-Pr(# of causal SNPs is k)   : </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   (0 -&gt; 0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1 -&gt; 0.012</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2 -&gt; 0.39</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3 -&gt; 0.209</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4 -&gt; 0.346</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5 -&gt; 0.0427</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Computing credible sets          : - Writing causal configurations    : 0.157%- Writing causal configurations    : 7.994%- Writing causal configurations    : 15.831%- Writing causal configurations    : 23.668%- Writing causal configurations    : 31.505%- Writing causal configurations    : 39.342%- Writing causal configurations    : 47.179%- Writing causal configurations    : 55.016%- Writing causal configurations    : 62.853%- Writing causal configurations    : 70.690%- Writing causal configurations    : 78.527%- Writing causal configurations    : 86.364%- Writing causal configurations    : 94.201%- Writing causal SNP statistics    : 5.882%- Writing causal SNP statistics    : 64.706%- Writing output                   : done!   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1 -&gt; 1.38e-164</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2 -&gt; 4.49e-163</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3 -&gt; 2.41e-163</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4 -&gt; 3.98e-163</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5 -&gt; 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Computing credible sets          : - Writing causal configurations    : 0.143%- Writing causal configurations    : 7.275%- Writing causal configurations    : 14.408%- Writing causal configurations    : 21.541%- Writing causal configurations    : 28.673%- Writing causal configurations    : 35.806%- Writing causal configurations    : 42.939%- Writing causal configurations    : 50.071%- Writing causal configurations    : 57.204%- Writing causal configurations    : 64.337%- Writing causal configurations    : 71.469%- Writing causal configurations    : 78.602%- Writing causal configurations    : 85.735%- Writing causal configurations    : 92.867%- Writing causal configurations    : 100.000%- Writing causal SNP statistics    : 5.882%- Writing causal SNP statistics    : 64.706%- Writing output                   : done!   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Run time                         : 0 hours, 0 minutes, 0 seconds</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 4 data.cred* file(s) found in the same subfolder.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Selected file based on postPr_k: data.cred2</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 1 data.cred* file(s) found in the same subfolder.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Selected file based on postPr_k: data.cred5</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Importing conditional probabilities (.cred file).</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> No configurations were causal at PP&gt;=0.95.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Importing marginal probabilities (.snp file).</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Importing configuration probabilities (.config file).</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> FINEMAP was unable to identify any credible sets at PP&gt;=0.95.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ++ Credible Set SNPs identified = 0</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ++ Credible Set SNPs identified = 12</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ++ Merging FINEMAP results with multi-finemap data.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +++ Multi-finemap:: SUSIE +++</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using all default values for finemap_args$SUSIE</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: Rfast</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Install Rfast to speed up susieR even further:</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>    install.packages('Rfast')</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Preparing sample size column (N).</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using existing 'N' column.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + SUSIE:: sample_size=1,474,097</span>
@@ -1064,9 +1058,9 @@ from all the locus-specific results:</p><ul><li><p><code>merged_dat</code> : A m
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + support_thresh = 2</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + Calculating mean Posterior Probability (mean.PP)...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + 3 fine-mapping methods used.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> + 0 Credible Set SNPs identified.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> + 12 Credible Set SNPs identified.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + 0 Consensus SNPs identified.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving merged finemapping results ==&gt; /tmp/Rtmp7rpVnL/results/GWAS/Nalls23andMe_2019/BST1/Multi-finemap/1KGphase3_LD.Multi-finemap.tsv.gz</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving merged finemapping results ==&gt; /tmp/Rtmp0dbVNr/results/GWAS/Nalls23andMe_2019/BST1/Multi-finemap/1KGphase3_LD.Multi-finemap.tsv.gz</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + Fine-mapping with 'ABF, FINEMAP, SUSIE' completed:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────────────────────────────</span></span>
@@ -1078,7 +1072,7 @@ from all the locus-specific results:</p><ul><li><p><code>merged_dat</code> : A m
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + support_thresh = 2</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + Calculating mean Posterior Probability (mean.PP)...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + 3 fine-mapping methods used.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> + 0 Credible Set SNPs identified.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> + 12 Credible Set SNPs identified.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + 0 Consensus SNPs identified.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + Filling NAs in CS cols with 0.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + Filling NAs in PP cols with 0.</span>
@@ -1116,7 +1110,7 @@ from all the locus-specific results:</p><ul><li><p><code>merged_dat</code> : A m
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + Ensuring last track shows genomic units.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + Aligning xlimits for each subplot...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + Checking track heights...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> + echoplot:: Saving plot ==&gt; /tmp/Rtmp7rpVnL/results/GWAS/Nalls23andMe_2019/BST1/multiview.BST1.1KGphase3.1x.png</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> + echoplot:: Saving plot ==&gt; /tmp/Rtmp0dbVNr/results/GWAS/Nalls23andMe_2019/BST1/multiview.BST1.1KGphase3.1x.png</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Found more than one class "simpleUnit" in cache; using the first, from namespace 'hexbin'</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Also defined by 'ggbio'</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Recording all `finemap_locus` arguments.</span>
@@ -1149,9 +1143,9 @@ from all the locus-specific results:</p><ul><li><p><code>merged_dat</code> : A m
 <span class="r-out co"><span class="r-pr">#&gt;</span> ( grep ^'SNP' .../nalls2019.fullSS_subset.tsv; grep</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     -v ^'SNP' .../nalls2019.fullSS_subset.tsv | sort</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     -k2,2n</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     -k3,3n ) &gt; .../file11031276322_sorted.tsv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     -k3,3n ) &gt; .../file13259ad17dc8_sorted.tsv</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Constructing outputs</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Using existing bgzipped file: /tmp/Rtmp7rpVnL/nalls2019.fullSS_subset.tsv.bgz </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Using existing bgzipped file: /tmp/Rtmp0dbVNr/nalls2019.fullSS_subset.tsv.bgz </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Set force_new=TRUE to override this.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Tabix-indexing file using: Rsamtools</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Data successfully converted to bgzip-compressed, tabix-indexed format.</span>
@@ -1166,7 +1160,7 @@ from all the locus-specific results:</p><ul><li><p><code>merged_dat</code> : A m
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Processing query: 18:48682589-48684589</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Adding 'query' column to results.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Retrieved data with 7 rows</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving query ==&gt; /tmp/Rtmp7rpVnL/results/GWAS/Nalls23andMe_2019/MEX3C/MEX3C_Nalls23andMe_2019_subset.tsv.gz</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving query ==&gt; /tmp/Rtmp0dbVNr/results/GWAS/Nalls23andMe_2019/MEX3C/MEX3C_Nalls23andMe_2019_subset.tsv.gz</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + Query: 7 SNPs x 11 columns.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Standardizing summary statistics subset.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Standardizing main column names.</span>
@@ -1186,7 +1180,7 @@ from all the locus-specific results:</p><ul><li><p><code>merged_dat</code> : A m
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ++ Ensuring 1 SNP per row and per genomic coordinate.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ++ Removing extra whitespace</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + Standardized query: 7 SNPs x 15 columns.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ++ Saving standardized query ==&gt; /tmp/Rtmp7rpVnL/results/GWAS/Nalls23andMe_2019/MEX3C/MEX3C_Nalls23andMe_2019_subset.tsv.gz</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ++ Saving standardized query ==&gt; /tmp/Rtmp0dbVNr/results/GWAS/Nalls23andMe_2019/MEX3C/MEX3C_Nalls23andMe_2019_subset.tsv.gz</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────────────────────────────</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
@@ -1209,9 +1203,9 @@ from all the locus-specific results:</p><ul><li><p><code>merged_dat</code> : A m
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Chromosome format: 1</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Filtering query to 503 samples and returning ScanVcfParam object.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Retrieving data.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Time difference of 1.3 secs</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Time difference of 3.5 secs</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Removing 7 / 38 non-overlapping SNPs.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving VCF subset ==&gt; /tmp/Rtmp7rpVnL/VCF/Rtmp7rpVnL.chr18-48682662-48684103.ALL.chr18.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.bgz</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving VCF subset ==&gt; /tmp/Rtmp0dbVNr/VCF/Rtmp0dbVNr.chr18-48682662-48684103.ALL.chr18.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.bgz</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>converting NULL pointer to R NULL</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Time difference of 0.3 secs</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Retrieved data with 7 rows across 503 samples.</span>
@@ -1220,7 +1214,7 @@ from all the locus-specific results:</p><ul><li><p><code>merged_dat</code> : A m
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Time difference of 0 secs</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> 7 x 7 LD_matrix (sparse)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Converting obj to sparseMatrix.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving sparse LD matrix ==&gt; /tmp/Rtmp7rpVnL/results/GWAS/Nalls23andMe_2019/MEX3C/LD/MEX3C.1KGphase3_LD.RDS</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving sparse LD matrix ==&gt; /tmp/Rtmp0dbVNr/results/GWAS/Nalls23andMe_2019/MEX3C/LD/MEX3C.1KGphase3_LD.RDS</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Removing 1 temp files.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + FILTER:: Filtering by LD features.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
@@ -1248,8 +1242,6 @@ from all the locus-specific results:</p><ul><li><p><code>merged_dat</code> : A m
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Gathering method citations.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Preparing sample size column (N).</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using existing 'N' column.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Gathering method sources.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Gathering method citations.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Gathering method sources.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Gathering method citations.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="background-color: #FF55FF;">ABF</span></span>
@@ -1348,19 +1340,19 @@ from all the locus-specific results:</p><ul><li><p><code>merged_dat</code> : A m
 <span class="r-out co"><span class="r-pr">#&gt;</span>    3 -&gt; 0.0762</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    4 -&gt; 0.00952</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    5 -&gt; 0.000476</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0 configurations evaluated (0.000/100%)- 5 configurations evaluated (0.000/100%)- 7 configurations evaluated (0.000/100%)- 12 configurations evaluated (0.050/100%)- 12 configurations evaluated (0.100/100%)- 12 configurations evaluated (0.104/100%) : converged after 104 iterations</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Computing causal SNP statistics  : 8.333%- Computing causal SNP statistics  : done!   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Regional SNP heritability        : 1.93e-05 (SD: 6.98e-06 ; 95% CI: [7.23e-06,3.45e-05])</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0 configurations evaluated (0.000/100%)- 5 configurations evaluated (0.000/100%)- 7 configurations evaluated (0.000/100%)- 11 configurations evaluated (0.050/100%)- 13 configurations evaluated (0.100/100%)- 14 configurations evaluated (0.106/100%) : converged after 106 iterations</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Computing causal SNP statistics  : 7.143%- Computing causal SNP statistics  : done!   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Regional SNP heritability        : 1.93e-05 (SD: 7.15e-06 ; 95% CI: [7.39e-06,3.54e-05])</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Log10-BF of &gt;= one causal SNP    : 3.56</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Post-expected # of causal SNPs   : 1.09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Post-Pr(# of causal SNPs is k)   : </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   (0 -&gt; 0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1 -&gt; 0.915</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1 -&gt; 0.914</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    2 -&gt; 0.0853</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3 -&gt; 0.000204</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3 -&gt; 0.000407</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    4 -&gt; 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    5 -&gt; 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Computing credible sets          : - Writing causal configurations    : 8.333%- Writing causal SNP statistics    : 20.000%- Writing output                   : done!   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Computing credible sets          : - Writing causal configurations    : 7.143%- Writing causal SNP statistics    : 20.000%- Writing output                   : done!   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Run time                         : 0 hours, 0 minutes, 0 seconds</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> 2 data.cred* file(s) found in the same subfolder.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Selected file based on postPr_k: data.cred1</span>
@@ -1374,9 +1366,6 @@ from all the locus-specific results:</p><ul><li><p><code>merged_dat</code> : A m
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +++ Multi-finemap:: SUSIE +++</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using all default values for finemap_args$SUSIE</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: Rfast</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Install Rfast to speed up susieR even further:</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>    install.packages('Rfast')</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Preparing sample size column (N).</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using existing 'N' column.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + SUSIE:: sample_size=1,460,059</span>
@@ -1397,7 +1386,7 @@ from all the locus-specific results:</p><ul><li><p><code>merged_dat</code> : A m
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + 3 fine-mapping methods used.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + 0 Credible Set SNPs identified.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + 0 Consensus SNPs identified.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving merged finemapping results ==&gt; /tmp/Rtmp7rpVnL/results/GWAS/Nalls23andMe_2019/MEX3C/Multi-finemap/1KGphase3_LD.Multi-finemap.tsv.gz</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving merged finemapping results ==&gt; /tmp/Rtmp0dbVNr/results/GWAS/Nalls23andMe_2019/MEX3C/Multi-finemap/1KGphase3_LD.Multi-finemap.tsv.gz</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + Fine-mapping with 'ABF, FINEMAP, SUSIE' completed:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────────────────────────────</span></span>
@@ -1434,7 +1423,7 @@ from all the locus-specific results:</p><ul><li><p><code>merged_dat</code> : A m
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + Ensuring last track shows genomic units.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + Aligning xlimits for each subplot...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> + Checking track heights...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> + echoplot:: Saving plot ==&gt; /tmp/Rtmp7rpVnL/results/GWAS/Nalls23andMe_2019/MEX3C/multiview.MEX3C.1KGphase3.1x.png</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> + echoplot:: Saving plot ==&gt; /tmp/Rtmp0dbVNr/results/GWAS/Nalls23andMe_2019/MEX3C/multiview.MEX3C.1KGphase3.1x.png</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 1 rows containing missing values (`geom_text()`).</span>
 <span class="r-plt img"><img src="finemap_loci-1.png" alt="" width="700" height="433"></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 1 rows containing missing values (`geom_text()`).</span>
@@ -1448,7 +1437,7 @@ from all the locus-specific results:</p><ul><li><p><code>merged_dat</code> : A m
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────────────────────────────</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Returning results as nested list.</span>
 <span class="r-plt img"><img src="finemap_loci-2.png" alt="" width="700" height="433"></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #55FFFF;">All loci done in: </span><span style="color: #FFFFFF;">0.31 min</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #55FFFF;">All loci done in: </span><span style="color: #FFFFFF;">0.44 min</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
@@ -1464,7 +1453,7 @@ from all the locus-specific results:</p><ul><li><p><code>merged_dat</code> : A m
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
