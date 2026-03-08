@@ -1,3 +1,13 @@
+# echolocatoR 2.0.4
+
+## New features
+
+* Standardize `rworkflows.yml` with canonical template:
+  enable Docker on `ghcr.io`, set `write-all` permissions,
+  use `GITHUB_TOKEN`, remove `docker_user`/`docker_org`/`DOCKER_TOKEN`,
+  add `devel` branch trigger.
+* Remove tracked `.DS_Store` files.
+
 # echolocatoR 2.0.3
 
 ## New features
