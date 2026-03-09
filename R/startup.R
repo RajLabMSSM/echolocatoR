@@ -19,10 +19,18 @@ startup <- function(package="echolocatoR",
                     color2=cli::col_br_magenta,
                     color3=cli::col_cyan){
 
-  ref <- gsub("\\[|\\*","",
-              strsplit(
-                utils::citation("echolocatoR")$textVersion,"\\]"
-                )[[1]][1])
+  ref <- tryCatch({
+    cit <- utils::citation("echolocatoR")
+    tv <- cit$textVersion
+    if (!is.null(tv)) {
+      gsub("\\[|\\*", "", strsplit(tv, "\\]")[[1]][1])
+    } else {
+      ## bibentry format: use style="text" for a clean one-line citation
+      paste(format(cit, style = "text"), collapse = " ")
+    }
+  }, error = function(e) {
+    "Schilder et al. (2021) Bioinformatics, btab658"
+  })
   indent <- 5
   exdent <- 5
   width <- (cli::console_width()*.75) - indent - exdent

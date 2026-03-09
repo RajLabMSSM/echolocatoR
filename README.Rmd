@@ -410,7 +410,7 @@ Single- and multi-threaded downloads are now implemented via [`downloadR`](https
 <a href="https://bschilder.github.io/BMSchilder/" target="_blank">Brian
 M. Schilder, Bioinformatician II</a>  
 <a href="https://rajlab.org" target="_blank">Raj Lab</a>  
-<a href="https://icahn.mssm.edu/about/departments/neuroscience" target="_blank">Department
+<a href="https://icahn.mssm.edu/about/departments-offices/neuroscience" target="_blank">Department
 of Neuroscience, Icahn School of Medicine at Mount Sinai</a>  
 
 <hr>

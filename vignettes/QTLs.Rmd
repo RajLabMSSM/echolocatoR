@@ -28,7 +28,7 @@ This data is actually merged GWAS-QTL colocalization results,
 but it contains all of the necessary columns from the original eQTL
 summary stats that we need to perform eQTL fine-mapping.
 
-```{r}
+```{r, eval=FALSE}
 coloc_res <- echodata::get_Kunkle2019_coloc(return_path = TRUE)
 ```
 
@@ -37,8 +37,8 @@ coloc_res <- echodata::get_Kunkle2019_coloc(return_path = TRUE)
 Prepare a column mapping object for the summary statistics.
 We'll reuse this for both the `import_topSNPs` and `finemap_loci` steps.
 
-```{r}
-colmap <- echodata::construct_colmap( 
+```{r, eval=FALSE}
+colmap <- echodata::construct_colmap(
       CHR = "chr",
       POS = "pos",
       N = "qtl.N",
@@ -59,7 +59,7 @@ So we're just going to make one directly from the full summary stats file itself
 (*NOTE*: You can only use this approach if you can fit the entire file in memory).  
 - In this case, you'll want to make sure to set `grouping_vars=c("Locus","Gene")` so that you get top SNPs for each eGene-locus pair (not just one SNP per locus).  
 
-```{r  Prepare `top_SNPs` data.frame} 
+```{r  Prepare `top_SNPs` data.frame, eval=FALSE}
 topSNPs <- echodata::import_topSNPs(
   topSS = coloc_res$path,
   colmap = colmap,
@@ -70,7 +70,7 @@ head(topSNPs)
  
 ## Run fine-mapping pipeline  
  
-```{r}
+```{r, eval=FALSE}
 res <- echolocatoR::finemap_loci(fullSS_path = coloc_res$path,
                                  topSNPs = topSNPs,
                                  ## Let's just fine-map 1 locus for demo purposes

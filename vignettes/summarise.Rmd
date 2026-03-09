@@ -20,7 +20,7 @@ library(echolocatoR)
 
 Using pre-merged data for vignette speed. 
 
-```{r}
+```{r, eval=FALSE}
 merged_DT <- echodata::get_Nalls2019_merged()
 ```
 
@@ -31,7 +31,7 @@ It also prints the mean number of SNPs for each SNP group across all loci.
 **NOTE**: You will need to make sure to set `merge_finemapping_results(minimum_support=1)`
 in the above step to get accurate counts for all SNP groups.  
 
-```{r get_SNPgroup_counts()}
+```{r get_SNPgroup_counts(), eval=FALSE}
 snp_groups <- echodata::get_SNPgroup_counts(merged_DT = merged_DT)
 ```
 
@@ -39,7 +39,7 @@ snp_groups <- echodata::get_SNPgroup_counts(merged_DT = merged_DT)
 
 County the number of tool-specific and UCS Credible Set SNPs per locus.  
 
-```{r get_CS_counts()}
+```{r get_CS_counts(), eval=FALSE}
 UCS_counts <- echodata::get_CS_counts(merged_DT = merged_DT)
 knitr::kable(UCS_counts)
 ```
@@ -60,14 +60,14 @@ you can use those results to
 come up with a top QTL nominated gene for each locus 
 (potentially implicating that gene in your phenotype).   
 
-```{r}
-coloc_res <- echodata::get_Nalls2019_coloc() 
+```{r, eval=FALSE}
+coloc_res <- echodata::get_Nalls2019_coloc()
 ```
 
 
 ## Super summary plot
 
-```{r super_summary_plot(), fig.height=15, fig.width=15}
+```{r super_summary_plot(), fig.height=15, fig.width=15, eval=FALSE}
 super_plot <- echoannot::super_summary_plot(merged_DT = merged_DT, 
                                             coloc_results = coloc_res,
                                             plot_missense = FALSE)

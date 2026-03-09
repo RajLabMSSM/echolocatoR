@@ -98,25 +98,24 @@
 #' @param colmap Column name mappings in in \code{fullSS_path}. Must be a named
 #' list. Can use \link[echodata]{construct_colmap} to assist with this. This
 #' function can be used in two different ways:
-#' \itemize{
-#' \item{\code{munged=FALSE} : }{When \code{munged=FALSE},
+#' \describe{
+#' \item{\code{munged=FALSE}}{When \code{munged=FALSE},
 #'  you will need to provide the necessary column names to the
 #'  \code{colmap} argument (\emph{default}).}
-#'  \item{\code{munged=TRUE} : }{ Alternatively, instead of filling out
+#' \item{\code{munged=TRUE}}{Alternatively, instead of filling out
 #'  each argument in
 #' \link[echodata]{construct_colmap}, you can simply set \code{munged=TRUE}
 #'  if  \code{fullSS_path} has already been munged with
-#'  \link[MungeSumstats]{format_sumstats}.
-#'  }
+#'  \link[MungeSumstats]{format_sumstats}.}
 #' }
 #' @param plot_types Which kinds of plots to include.
 #' Options:
-#' \itemize{
+#' \describe{
 #' \item{"simple"}{Just plot the following tracks: GWAS,
 #' fine-mapping, gene models}
 #' \item{"fancy"}{Additionally plot XGR annotation tracks
 #' (XGR, Roadmap, Nott2019).}
-#' ' \item{"LD"}{LD heatmap showing the 10 SNPs surrounding the lead SNP.}
+#' \item{"LD"}{LD heatmap showing the 10 SNPs surrounding the lead SNP.}
 #' }
 #' @param remove_tmps Whether to remove any temporary files
 #'  (e.g. FINEMAP output files) after the pipeline is done running.
@@ -162,6 +161,75 @@
 #' @param sample_size [deprecated]
 #' @param PAINTOR_QTL_datasets [deprecated]
 #'
+#' @param LD_reference LD reference to use:
+#' \describe{
+#' \item{1KGphase1}{1000 Genomes Project Phase 1 (genome build: hg19).}
+#' \item{1KGphase3}{1000 Genomes Project Phase 3 (genome build: hg19).}
+#' \item{UKB}{Pre-computed LD from a British
+#' European-decent subset of UK Biobank.
+#' \emph{Genome build} : hg19}
+#' \item{<vcf_path>}{User-supplied path to a custom VCF file
+#' to compute LD matrix from.\cr
+#' \emph{Accepted formats}: \emph{.vcf} / \emph{.vcf.gz} / \emph{.vcf.bgz}\cr
+#' \emph{Genome build} : defined by user with \code{target_genome}.}
+#' \item{<matrix_path>}{User-supplied path to a pre-computed LD matrix.
+#' \emph{Accepted formats}: \emph{.rds} / \emph{.rda} / \emph{.csv} /
+#' \emph{.tsv} / \emph{.txt}\cr
+#' \emph{Genome build} : defined by user with \code{target_genome}.}
+#' }
+#' @param download_method Download method to use:
+#' \describe{
+#' \item{\code{"axel"}}{Multi-threaded}
+#' \item{\code{"wget"}}{Single-threaded}
+#' \item{\code{"download.file"}}{Single-threaded}
+#' \item{\code{"internal"}}{Single-threaded
+#' (passed to \link[utils]{download.file})}
+#' \item{\code{"wininet"}}{Single-threaded
+#' (passed to \link[utils]{download.file})}
+#' \item{\code{"libcurl"}}{Single-threaded
+#' (passed to \link[utils]{download.file})}
+#' \item{\code{"curl"}}{Single-threaded
+#' (passed to \link[utils]{download.file})}
+#' }
+#' @param compute_n How to compute per-SNP sample size (new column "N").\cr
+#' If the column "N" is already present in \code{dat}, this column
+#' will be used to extract per-SNP sample sizes
+#' and the argument \code{compute_n} will be ignored.\cr
+#' If the column "N" is \emph{not} present in \code{dat}, one of the following
+#' options can be supplied to \code{compute_n}:
+#' \describe{
+#' \item{\code{0}}{N will not be computed.}
+#' \item{\code{>0}}{If any number >0 is provided,
+#' that value will be set as N for every row.
+#' **Note**: Computing N this way is incorrect and should be avoided
+#' if at all possible.}
+#' \item{\code{"sum"}}{N will be computed as:
+#' cases (N_CAS) + controls (N_CON), so long as both columns are present.}
+#' \item{\code{"ldsc"}}{N will be computed as effective sample size:
+#' Neff =(N_CAS+N_CON)*(N_CAS/(N_CAS+N_CON)) / mean((N_CAS/(N_CAS+N_CON))(N_CAS+N_CON)==max(N_CAS+N_CON)).}
+#' \item{\code{"giant"}}{N will be computed as effective sample size:
+#' Neff = 2 / (1/N_CAS + 1/N_CON).}
+#' \item{\code{"metal"}}{N will be computed as effective sample size:
+#' Neff = 4 / (1/N_CAS + 1/N_CON).}
+#' }
+#' @param zoom Zoom into the center of the locus when plotting
+#' (without editing the fine-mapping results file).
+#' You can provide either:
+#' \itemize{
+#' \item The size of your plot window in terms of basepairs
+#' (e.g. \code{zoom=50000} for a 50kb window).
+#' \item How much you want to zoom in (e.g. \code{zoom="1x"}
+#' for the full locus, \code{zoom="2x"}
+#' for 2x zoom into the center of the locus, etc.).
+#' }
+#' You can pass a list of window sizes (e.g. \code{c(50000,100000,500000)})
+#' to automatically generate
+#' multiple views of each locus.
+#' This can even be a mix of different style inputs: e.g.
+#'  \code{c("1x","4.5x",25000)}.
+#' @param xgr_libnames Which XGR annotations to check overlap with.
+#' Passed to \code{echoplot::XGR_plot}. Set to \code{NULL} to skip.
+#'
 #' @family MAIN
 #' @inheritParams echodata::standardize
 #' @inheritParams echoconda::activate_env
@@ -178,6 +246,7 @@
 #' @importFrom echofinemap multifinemap
 #' @export
 #' @examples
+#' \dontrun{
 #' topSNPs <- echodata::topSNPs_Nalls2019
 #' fullSS_path <- echodata::example_fullSS(dataset = "Nalls2019")
 #'
@@ -190,6 +259,7 @@
 #'   fullSS_genome_build = "hg19",
 #'   bp_distance = 1000,
 #'   munged = TRUE)
+#' }
 finemap_locus <- function(#### Main args ####
                           locus,
                           fullSS_path,
@@ -270,7 +340,7 @@ finemap_locus <- function(#### Main args ####
                           QTL_prefixes = deprecated(),
                           vcf_folder = deprecated(),
                           probe_path = deprecated(),
-                          file_sep=deprecated,
+                          file_sep=deprecated(),
                           ## Deprecated colmap args
                           chrom_col=deprecated(),
                           chrom_type=deprecated(),

@@ -1,3 +1,8 @@
+# echolocatoR 2.0.5
+
+## Bug fixes
+* Local R CMD check fixes and compatibility updates.
+
 # echolocatoR 2.0.4
 
 ## New features

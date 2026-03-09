@@ -28,16 +28,15 @@ than the relative path.}
 \item{colmap}{Column name mappings in in \code{fullSS_path}. Must be a named
 list. Can use \link[echodata]{construct_colmap} to assist with this. This
 function can be used in two different ways:
-\itemize{
-\item{\code{munged=FALSE} : }{When \code{munged=FALSE},
+\describe{
+\item{\code{munged=FALSE}}{When \code{munged=FALSE},
  you will need to provide the necessary column names to the
  \code{colmap} argument (\emph{default}).}
- \item{\code{munged=TRUE} : }{ Alternatively, instead of filling out
+\item{\code{munged=TRUE}}{Alternatively, instead of filling out
  each argument in
 \link[echodata]{construct_colmap}, you can simply set \code{munged=TRUE}
  if  \code{fullSS_path} has already been munged with
- \link[MungeSumstats]{format_sumstats}.
- }
+ \link[MungeSumstats]{format_sumstats}.}
 }}
 
 \item{locus}{Locus name to fine-map (e.g. \code{"BIN1"}).

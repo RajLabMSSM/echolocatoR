@@ -4,7 +4,7 @@
 status](https://github.com/RajLabMSSM/echolocatoR/workflows/rworkflows/badge.svg)](https://github.com/RajLabMSSM/echolocatoR/actions)
 [![](https://img.shields.io/github/last-commit/RajLabMSSM/echolocatoR.svg)](https://github.com/RajLabMSSM/echolocatoR/commits/master)
 [![](https://img.shields.io/github/languages/code-size/RajLabMSSM/echolocatoR.svg)](https://github.com/RajLabMSSM/echolocatoR)
-[![](https://codecov.io/gh/RajLabMSSM/echolocatoR/branch/master/graph/badge.svg)](https://codecov.io/gh/RajLabMSSM/echolocatoR)
+[![](https://app.codecov.io/gh/RajLabMSSM/echolocatoR/branch/master/graph/badge.svg)](https://app.codecov.io/gh/RajLabMSSM/echolocatoR)
 [![License:
 GPL-3](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://cran.r-project.org/web/licenses/GPL-3)
 [![](https://img.shields.io/badge/doi-10.1093/bioinformatics/btab658-blue.svg)](https://doi.org/10.1093/bioinformatics/btab658)
@@ -721,7 +721,7 @@ Single- and multi-threaded downloads are now implemented via
 <a href="https://bschilder.github.io/BMSchilder/" target="_blank">Brian
 M. Schilder, Bioinformatician II</a>  
 <a href="https://rajlab.org" target="_blank">Raj Lab</a>  
-<a href="https://icahn.mssm.edu/about/departments/neuroscience" target="_blank">Department
+<a href="https://icahn.mssm.edu/about/departments-offices/neuroscience" target="_blank">Department
 of Neuroscience, Icahn School of Medicine at Mount Sinai</a>
 
 <hr>

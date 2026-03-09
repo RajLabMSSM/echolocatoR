@@ -2,9 +2,8 @@
 % Please edit documentation in R/echolocatoR-package.R, R/package.R
 \docType{package}
 \name{echolocatoR-package}
-\alias{echolocatoR}
 \alias{echolocatoR-package}
-\title{echolocatoR: Automated genomic fine-mapping}
+\title{echolocatoR: Automated Genomic Fine-Mapping}
 \description{
 Automated statistical and functional fine-mapping with extensive access to genome-wide datasets.
 

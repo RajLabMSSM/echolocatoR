@@ -47,6 +47,7 @@ if the argument is no longer used at all.}
 Semi-automatically check all deprecated args in a given function.
 }
 \examples{
+\dontrun{
 topSNPs <- echodata::topSNPs_Nalls2019
 fullSS_path <- echodata::example_fullSS()
 testthat::expect_error(
@@ -57,4 +58,5 @@ testthat::expect_error(
     chrom_col = "CHR",
     position_col = "BP")
 )
+}
 }

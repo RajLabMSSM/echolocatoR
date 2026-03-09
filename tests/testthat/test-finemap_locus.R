@@ -1,5 +1,16 @@
 test_that("finemap_locus works", {
 
+  testthat::skip_on_cran()
+  ## FINEMAP requires gcc on macOS; skip if not available
+  if (.Platform$OS.type != "windows" && echodata::get_os() == "osx") {
+    gcc_paths <- list.files("/usr/local/Cellar",
+                            pattern = "gcc@",
+                            full.names = TRUE)
+    if (length(gcc_paths) == 0) {
+      testthat::skip("gcc not installed via Homebrew (required for FINEMAP on macOS)")
+    }
+  }
+
   topSNPs <- echodata::topSNPs_Nalls2019
   fullSS_path <- echodata::example_fullSS(dataset = "Nalls2019")
 

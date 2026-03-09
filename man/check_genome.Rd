@@ -60,7 +60,9 @@ simply returns a standardized version of the user-provided
 genome build.
 }
 \examples{
+\dontrun{
 fullSS_path <- echodata::example_fullSS()
 build <- check_genome(fullSS_genome_build="hg19",
                       fullSS_path=fullSS_path)
+}
 }

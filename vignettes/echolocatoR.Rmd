@@ -29,7 +29,7 @@ full GWAS/QTL summary statistics using windows centered on each lead/index SNP.
 Most common tabular data formats (e.g. .tsv, .csv, .xlsx) are accepted.  
 
 
-```{r  Prepare `top_SNPs` data.frame} 
+```{r  Prepare `top_SNPs` data.frame, eval=FALSE}
 #### Load example top SNPs (pre-formatted) ####
 topSS <- echodata::topSNPs_Nalls2019_raw
 #### construct a column mapping object ####
@@ -63,7 +63,7 @@ fullSS_path <- MungeSumstats::format_sumstats(path = fullSS_path, ref_genome = "
 
 We have already munged the following example summary stats for you.
 
-```{r fullSS} 
+```{r fullSS, eval=FALSE}
 fullSS_path <- echodata::example_fullSS(dataset = "Nalls2019")
 ```
 
@@ -81,7 +81,7 @@ You can adjust this separately from `bp_distance` so that you don't have rerun t
  
 **Note**: Please use the full absolute paths (instead of relative paths) wherever possible (e.g. `results_dir`). This is especially important for the tool *FINEMAP*.
 
-```{r Run fine-mapping pipeline}
+```{r Run fine-mapping pipeline, eval=FALSE}
 results <- echolocatoR::finemap_loci(
  fullSS_path = fullSS_path,
  topSNPs = topSNPs,

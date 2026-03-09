@@ -20,3 +20,7 @@ package.json
 
 ^images$
 ^R_tmp$
+
+# macOS custom icon file (non-portable filename)
+^Icon\r$
+Icon\r

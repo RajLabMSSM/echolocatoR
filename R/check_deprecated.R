@@ -16,6 +16,7 @@
 #' @importFrom lifecycle deprecate_stop
 #' @importFrom utils getFromNamespace
 #' @examples
+#' \dontrun{
 #' topSNPs <- echodata::topSNPs_Nalls2019
 #' fullSS_path <- echodata::example_fullSS()
 #' testthat::expect_error(
@@ -26,6 +27,7 @@
 #'     chrom_col = "CHR",
 #'     position_col = "BP")
 #' )
+#' }
 check_deprecated <- function(fun="finemap_loci",
                              pkg="echolocatoR",
                              when="2.0.0",
@@ -127,8 +129,7 @@ check_deprecated <- function(fun="finemap_loci",
             messager("Reassigning deprecated argument:",nm,"-->",map[[nm]])
             assign(x = map[[nm]],
                    value = get(nm),
-                   inherits = TRUE,
-                   pos = 1L)
+                   envir = parent.frame(2L))
           } else {
             messager("Deprecated argument will be ignored:",nm)
           }

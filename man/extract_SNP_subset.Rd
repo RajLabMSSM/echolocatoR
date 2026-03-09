@@ -34,16 +34,15 @@ Can be named to indicate a specific gene within a QTL locus
 \item{colmap}{Column name mappings in in \code{fullSS_path}. Must be a named
 list. Can use \link[echodata]{construct_colmap} to assist with this. This
 function can be used in two different ways:
-\itemize{
-\item{\code{munged=FALSE} : }{When \code{munged=FALSE},
+\describe{
+\item{\code{munged=FALSE}}{When \code{munged=FALSE},
  you will need to provide the necessary column names to the
  \code{colmap} argument (\emph{default}).}
- \item{\code{munged=TRUE} : }{ Alternatively, instead of filling out
+\item{\code{munged=TRUE}}{Alternatively, instead of filling out
  each argument in
 \link[echodata]{construct_colmap}, you can simply set \code{munged=TRUE}
  if  \code{fullSS_path} has already been munged with
- \link[MungeSumstats]{format_sumstats}.
- }
+ \link[MungeSumstats]{format_sumstats}.}
 }}
 
 \item{fullSS_path}{Path to the full summary statistics file (GWAS or QTL)
@@ -67,18 +66,18 @@ At minimum, \code{topSNPs} should include the following columns:
 }}
 
 \item{LD_reference}{LD reference to use:
-\itemize{
-\item{"1KGphase1" : }{1000 Genomes Project Phase 1 (genome build: hg19).}
-\item{"1KGphase3" : }{1000 Genomes Project Phase 3 (genome build: hg19).}
-\item{"UKB" : }{Pre-computed LD from a British
+\describe{
+\item{1KGphase1}{1000 Genomes Project Phase 1 (genome build: hg19).}
+\item{1KGphase3}{1000 Genomes Project Phase 3 (genome build: hg19).}
+\item{UKB}{Pre-computed LD from a British
 European-decent subset of UK Biobank.
 \emph{Genome build} : hg19}
-\item{"<vcf_path>" : }{User-supplied path to a custom VCF file 
+\item{<vcf_path>}{User-supplied path to a custom VCF file
 to compute LD matrix from.\cr
 \emph{Accepted formats}: \emph{.vcf} / \emph{.vcf.gz} / \emph{.vcf.bgz}\cr
 \emph{Genome build} : defined by user with \code{target_genome}.}
-\item{"<matrix_path>" : }{User-supplied path to a pre-computed LD matrix   
-\emph{Accepted formats}:  \emph{.rds} / \emph{.rda} / \emph{.csv} / 
+\item{<matrix_path>}{User-supplied path to a pre-computed LD matrix.
+\emph{Accepted formats}: \emph{.rds} / \emph{.rda} / \emph{.csv} /
 \emph{.tsv} / \emph{.txt}\cr
 \emph{Genome build} : defined by user with \code{target_genome}.}
 }}
@@ -101,25 +100,25 @@ See \link[echoLD]{popDat_1KGphase1} and \link[echoLD]{popDat_1KGphase3}
 for full tables of their respective samples.}
 
 \item{compute_n}{How to compute per-SNP sample size (new column "N").\cr
-If the column "N" is already present in \code{dat}, this column 
+If the column "N" is already present in \code{dat}, this column
 will be used to extract per-SNP sample sizes
 and the argument \code{compute_n} will be ignored.\cr
-If the column "N" is \emph{not} present in \code{dat}, one of the following 
-options can be supplied to \code{compute_n}: 
-\itemize{
-\item{\code{0}: }{N will not be computed.}
-\item{\code{>0}: }{If any number >0 is provided,
+If the column "N" is \emph{not} present in \code{dat}, one of the following
+options can be supplied to \code{compute_n}:
+\describe{
+\item{\code{0}}{N will not be computed.}
+\item{\code{>0}}{If any number >0 is provided,
 that value will be set as N for every row.
 **Note**: Computing N this way is incorrect and should be avoided
 if at all possible.}
-\item{\code{"sum"}: }{N will be computed as:
-cases (N_CAS) + controls (N_CON), so long as both columns are present}.
-\item{\code{"ldsc"}: }{N will be computed as effective sample size:
-Neff =(N_CAS+N_CON)*(N_CAS/(N_CAS+N_CON)) / mean((N_CAS/(N_CAS+N_CON))(N_CAS+N_CON)==max(N_CAS+N_CON))}.
-\item{\code{"giant"}: }{N will be computed as effective sample size:
-Neff = 2 / (1/N_CAS + 1/N_CON)}.
-\item{\code{"metal"}: }{N will be computed as effective sample size:
-Neff = 4 / (1/N_CAS + 1/N_CON)}.
+\item{\code{"sum"}}{N will be computed as:
+cases (N_CAS) + controls (N_CON), so long as both columns are present.}
+\item{\code{"ldsc"}}{N will be computed as effective sample size:
+Neff =(N_CAS+N_CON)*(N_CAS/(N_CAS+N_CON)) / mean((N_CAS/(N_CAS+N_CON))(N_CAS+N_CON)==max(N_CAS+N_CON)).}
+\item{\code{"giant"}}{N will be computed as effective sample size:
+Neff = 2 / (1/N_CAS + 1/N_CON).}
+\item{\code{"metal"}}{N will be computed as effective sample size:
+Neff = 4 / (1/N_CAS + 1/N_CON).}
 }}
 
 \item{query_by}{Choose which method you want to use to extract
@@ -133,17 +132,18 @@ Methods include:
 coordinates with \emph{awk}.}
 }}
 
-\item{download_method}{\itemize{
-\item{\code{"axel"} : }{Multi-threaded}
-\item{\code{"wget"} : }{Single-threaded}
-\item{\code{"download.file"} : }{Single-threaded}
-\item{\code{"internal"} : }{Single-threaded 
+\item{download_method}{Download method to use:
+\describe{
+\item{\code{"axel"}}{Multi-threaded}
+\item{\code{"wget"}}{Single-threaded}
+\item{\code{"download.file"}}{Single-threaded}
+\item{\code{"internal"}}{Single-threaded
 (passed to \link[utils]{download.file})}
-\item{\code{"wininet"} : }{Single-threaded 
+\item{\code{"wininet"}}{Single-threaded
 (passed to \link[utils]{download.file})}
-\item{\code{"libcurl"} : }{Single-threaded 
+\item{\code{"libcurl"}}{Single-threaded
 (passed to \link[utils]{download.file})}
-\item{\code{"curl"} : }{Single-threaded 
+\item{\code{"curl"}}{Single-threaded
 (passed to \link[utils]{download.file})}
 }}
 

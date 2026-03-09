@@ -1,7 +1,8 @@
 Package: echolocatoR
 Type: Package
-Title: Automated genomic fine-mapping
-Version: 2.0.4
+Title: Automated Genomic Fine-Mapping
+Version: 2.0.5
+Date: 2026-03-08
 Authors@R: 
     c(person(given = "Brian",
            family = "Schilder",
@@ -70,6 +71,6 @@ Remotes:
   github::RajLabMSSM/echoplot,
   github::RajLabMSSM/echodeps,
   github::neurogenomics/rworkflows
-RoxygenNote: 7.2.2
+RoxygenNote: 7.3.3
 VignetteBuilder: knitr 
 Config/testthat/edition: 3
