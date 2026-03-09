@@ -51,3 +51,5 @@ vignettes/*.R
 *.knit.md
 # R Environment Variables
 .Renviron
+*.tbi
+Rplots.pdf

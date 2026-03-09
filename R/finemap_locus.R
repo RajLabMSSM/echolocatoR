@@ -545,9 +545,3 @@ finemap_locus <- function(#### Main args ####
               arguments=arguments
   ))
 }
-
-#### Deprecation function #####
-finemap_pipeline <- function(...){
-  .Deprecated("finemap_locus")
-  finemap_locus(...)
-}
