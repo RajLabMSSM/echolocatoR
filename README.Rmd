@@ -37,9 +37,9 @@ If you use ``r pkg``, or any of the _*echoverse*_ modules, please cite:
 ## Installation 
 
 ```R
-if(!require("remotes")) install.packages("remotes")
+if(!require("BiocManager")) install.packages("BiocManager")
 
-remotes::install_github("RajLabMSSM/`r pkg`")
+BiocManager::install("RajLabMSSM/`r pkg`")
 library(`r pkg`)
 ```
 
@@ -52,7 +52,7 @@ library(`r pkg`)
   updating its *echoverse* dependencies (and thus is unable to find new functions). 
   As *echoverse* stabilizes over time, this should happen less frequently. However, 
   in the meantime the solution is to simply rerun
-  `remotes::install_github("RajLabMSSM/echolocatoR")`
+  `BiocManager::install("RajLabMSSM/echolocatoR")`
   until all subpackages are fully updates. 
 - `susieR`: Sometimes an older version of `susieR` is installed from CRAN (e.g. 0.11.92), but `echofinemap` requires version >= 0.12.0. To get around this, you can install `susieR` directly from GitHub:  `devtools::install_github("stephenslab/susieR")`
 - System dependencies can sometimes cause issues when using different packages. I've tried to account for as many of these as possible automatically within the code, but using the

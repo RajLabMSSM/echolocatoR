@@ -48,9 +48,9 @@ cite:
 ## Installation
 
 ``` r
-if(!require("remotes")) install.packages("remotes")
+if(!require("BiocManager")) install.packages("BiocManager")
 
-remotes::install_github("RajLabMSSM/echolocatoR")
+BiocManager::install("RajLabMSSM/echolocatoR")
 library(echolocatoR)
 ```
 
@@ -64,7 +64,7 @@ library(echolocatoR)
   unable to find new functions). As *echoverse* stabilizes over time,
   this should happen less frequently. However, in the meantime the
   solution is to simply rerun
-  `remotes::install_github("RajLabMSSM/echolocatoR")` until all
+  `BiocManager::install("RajLabMSSM/echolocatoR")` until all
   subpackages are fully updates.
 - `susieR`: Sometimes an older version of `susieR` is installed from
   CRAN (e.g. 0.11.92), but `echofinemap` requires version \>= 0.12.0. To
