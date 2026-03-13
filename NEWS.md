@@ -1,3 +1,15 @@
+# echolocatoR 3.0.0
+
+## New features
+
+* Remove deprecated `finemap_pipeline()` wrapper.
+
+## Bug fixes
+
+* Fix Rd formatting and `\dontrun{}` example guards.
+* Add `Rplots.pdf` and `*.tbi` to `.gitignore`.
+* Remove tracked `.DS_Store` files.
+
 # echolocatoR 2.0.5
 
 ## Bug fixes
