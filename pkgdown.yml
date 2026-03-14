@@ -1,10 +1,9 @@
-pandoc: 2.19.2
-pkgdown: 2.0.7
+pandoc: '3.9'
+pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
-  QTLs: QTLs.html
   docker: docker.html
   echolocatoR: echolocatoR.html
+  QTLs: QTLs.html
   summarise: summarise.html
-last_built: 2023-01-20T15:16Z
-
+last_built: 2026-03-14T18:38Z
