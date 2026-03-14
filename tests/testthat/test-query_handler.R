@@ -1,5 +1,6 @@
 test_that("query_handler works", {
 
+  testthat::skip_on_os("windows")
   fullSS_path <- echodata::example_fullSS()
   topSNPs <- echodata::topSNPs_Nalls2019
   dataset_type <- "GWAS"

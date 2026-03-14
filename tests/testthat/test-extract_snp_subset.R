@@ -1,5 +1,6 @@
 test_that("extract_snp_subset works", {
 
+  testthat::skip_on_os("windows")
   subset_path <- echolocatoR:::construct_subset_path(dataset_type = "GWAS",
                                                      dataset_name = "Nalls",
                                                      locus = "BST1")
