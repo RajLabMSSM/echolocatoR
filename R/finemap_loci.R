@@ -262,6 +262,21 @@ finemap_loci <- function(#### Main args ####
   if(any(grepl("PAINTOR",finemap_methods, ignore.case = TRUE))){
     echofinemap:::PAINTOR_install()
   }
+  #### Check data.table can write compressed files ####
+  tryCatch({
+    tmp <- tempfile(fileext = ".csv.gz")
+    data.table::fwrite(data.table::data.table(x=1), tmp)
+    file.remove(tmp)
+  }, error = function(e){
+    if(grepl("zlib", conditionMessage(e), ignore.case = TRUE)){
+      stop("data.table cannot write compressed files (zlib missing). ",
+           "Install zlib for your OS:\n",
+           "  macOS: brew install zlib\n",
+           "  Ubuntu: sudo apt install zlib1g-dev\n",
+           "Then reinstall data.table: ",
+           "install.packages('data.table', type='source')")
+    }
+  })
   #### Parallise data.table functions ####
   data.table::setDTthreads(threads = nThread);
   #### Validate topSNPs ####
@@ -406,7 +421,8 @@ finemap_loci <- function(#### Main args ####
                                               finemap_dat)
       }
       cat('  \n')
-    }, error = set_tryCatch(use_tryCatch = use_tryCatch)) ## end tryCatch()
+    }, error = set_tryCatch(use_tryCatch = use_tryCatch,
+                            locus = locus)) ## end tryCatch()
     report_time(t1 = t1_locus,
                 prefix = paste("Locus",locus,"complete in:"))
     return(finemap_dat)

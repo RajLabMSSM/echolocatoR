@@ -23,5 +23,20 @@ check_topSNPs <- function(topSNPs,
                                       munge = TRUE,
                                       verbose = verbose,
                                       ...)
+  #### Validate required columns ####
+  required <- c("Locus","CHR","POS")
+  ## Also accept BP as alias for POS
+  if(!"POS" %in% colnames(topSNPs) && "BP" %in% colnames(topSNPs)){
+      data.table::setnames(topSNPs, "BP", "POS")
+  }
+  missing_cols <- setdiff(required, colnames(topSNPs))
+  if(length(missing_cols) > 0){
+      stop("topSNPs is missing required column(s): ",
+           paste(missing_cols, collapse=", "),
+           "\nRequired columns: Locus, CHR, POS",
+           "\nOptional columns: SNP (lead SNP RSID), Gene",
+           "\nFound columns: ",
+           paste(colnames(topSNPs), collapse=", "))
+  }
   return(topSNPs)
 }
