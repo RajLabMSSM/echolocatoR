@@ -1,7 +1,6 @@
 ---
-title: ""  
-author: "`r rworkflows::use_badges(add_doi = '10.1093/bioinformatics/btab658')`" 
-date: "<h5>README updated: <i>`r format( Sys.Date(), '%b-%d-%Y')`</i></h5>"
+title: ""
+author: "`r rworkflows::use_badges(add_doi = '10.1093/bioinformatics/btab658')`"
 output:
   github_document
 ---
