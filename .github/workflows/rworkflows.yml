@@ -18,6 +18,8 @@ jobs:
     runs-on: ${{ matrix.config.os }}
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
     container: ${{ matrix.config.cont }}
+    env:
+      _R_CHECK_FORCE_SUGGESTS_: false
     strategy:
       fail-fast: ${{ false }}
       matrix:
