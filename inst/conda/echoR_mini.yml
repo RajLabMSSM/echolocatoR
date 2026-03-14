@@ -1,0 +1,31 @@
+name: echoR_mini
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  # Python
+  - python>=3.11
+  - pandas-plink
+  - fastparquet
+  - pyarrow
+  - scipy
+  - scikit-learn
+  - tqdm
+  - bitarray
+  - networkx
+  - rpy2
+  - requests
+  # R
+  ## PolyFun can't find these r packages (e.g. ckmeans.1d.dp)
+  # - r-base>=4.0.0
+  # - r-ckmeans.1d.dp
+  # - r-lattice
+  # - r-stringi
+  # - r-matrixstats
+  # - r-susier
+  # - r-expm
+  # Command line (Linux/macOS only — not available on Windows conda-forge)
+  - htslib
+  - tabix
+  - wget
+  - pip
