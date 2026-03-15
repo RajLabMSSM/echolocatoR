@@ -76,14 +76,31 @@ Prints an actionable report with platform-specific fix commands.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">check_echoverse_setup</span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">check_echoverse_setup</span><span class="op">(</span></span>
+<span>  echoverse_pkgs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"echolocatoR"</span>, <span class="st">"echodata"</span>, <span class="st">"echotabix"</span>, <span class="st">"echoannot"</span>, <span class="st">"echoconda"</span>,</span>
+<span>    <span class="st">"echoLD"</span>, <span class="st">"echoplot"</span>, <span class="st">"echofinemap"</span>, <span class="st">"catalogueR"</span>, <span class="st">"downloadR"</span>, <span class="st">"echogithub"</span>,</span>
+<span>    <span class="st">"devoptera"</span>, <span class="st">"echodeps"</span>, <span class="st">"echoAI"</span>, <span class="st">"echoverseTemplate"</span><span class="op">)</span>,</span>
+<span>  key_deps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"data.table"</span>, <span class="st">"BiocManager"</span>, <span class="st">"reticulate"</span>, <span class="st">"susieR"</span>, <span class="st">"coloc"</span>,</span>
+<span>    <span class="st">"MungeSumstats"</span>, <span class="st">"VariantAnnotation"</span>, <span class="st">"rtracklayer"</span>, <span class="st">"GenomicRanges"</span>, <span class="st">"ggbio"</span>,</span>
+<span>    <span class="st">"basilisk"</span>, <span class="st">"Rsamtools"</span><span class="op">)</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
 
 
-<dl><dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
+<dl><dt id="arg-echoverse-pkgs">echoverse_pkgs<a class="anchor" aria-label="anchor" href="#arg-echoverse-pkgs"></a></dt>
+<dd><p>Character vector of echoverse package names to check.</p></dd>
+
+
+<dt id="arg-key-deps">key_deps<a class="anchor" aria-label="anchor" href="#arg-key-deps"></a></dt>
+<dd><p>Character vector of key non-echoverse dependency
+package names to check.</p></dd>
+
+
+<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
 <dd><p>Print detailed results. Default <code>TRUE</code>.</p></dd>
 
 </dl></div>

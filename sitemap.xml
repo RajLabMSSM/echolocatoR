@@ -11,7 +11,6 @@
 <url><loc>/reference/arg_list_handler.html</loc></url>
 <url><loc>/reference/arg_types.html</loc></url>
 <url><loc>/reference/batapply.html</loc></url>
-<url><loc>/reference/catalogueR.html</loc></url>
 <url><loc>/reference/check_deprecated.html</loc></url>
 <url><loc>/reference/check_echoverse_setup.html</loc></url>
 <url><loc>/reference/check_genome.html</loc></url>
@@ -19,11 +18,6 @@
 <url><loc>/reference/check_topSNPs.html</loc></url>
 <url><loc>/reference/construct_locus_dir.html</loc></url>
 <url><loc>/reference/construct_subset_path.html</loc></url>
-<url><loc>/reference/deprecated.html</loc></url>
-<url><loc>/reference/downloadR.html</loc></url>
-<url><loc>/reference/echoannot.html</loc></url>
-<url><loc>/reference/echoconda.html</loc></url>
-<url><loc>/reference/echodata.html</loc></url>
 <url><loc>/reference/echolocatoR-package.html</loc></url>
 <url><loc>/reference/extract_SNP_subset.html</loc></url>
 <url><loc>/reference/finemap_loci.html</loc></url>
@@ -31,7 +25,6 @@
 <url><loc>/reference/get_locus_dir.html</loc></url>
 <url><loc>/reference/get_study_dir.html</loc></url>
 <url><loc>/reference/index.html</loc></url>
-<url><loc>/reference/lfm.html</loc></url>
 <url><loc>/reference/message_parallel.html</loc></url>
 <url><loc>/reference/pvalues_to_symbols.html</loc></url>
 <url><loc>/reference/query_handler.html</loc></url>
