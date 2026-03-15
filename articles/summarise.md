@@ -255,6 +255,15 @@ super_plot <- echoannot::super_summary_plot(merged_DT = merged_DT,
 
 ![](summarise_files/figure-html/super_summary_plot()-1.png)
 
+## Next steps
+
+- Explore individual locus results:
+  [`vignette("explore_results")`](https://rajlabmssm.github.io/echolocatoR/articles/explore_results.md)
+- Visualize loci:
+  [`vignette("plotting")`](https://rajlabmssm.github.io/echolocatoR/articles/plotting.md)
+- Run the full pipeline:
+  [`vignette("echolocatoR")`](https://rajlabmssm.github.io/echolocatoR/articles/echolocatoR.md)
+
 ## Session info
 
 ``` r

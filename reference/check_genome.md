@@ -77,9 +77,8 @@ Character string indicating genome build.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-fullSS_path <- echodata::example_fullSS()
-build <- check_genome(fullSS_genome_build="hg19",
-                      fullSS_path=fullSS_path)
-} # }
+## When the build is already known, simply standardizes the name
+build <- check_genome(fullSS_genome_build = "hg19")
+print(build)
+#> [1] "GRCH37"
 ```

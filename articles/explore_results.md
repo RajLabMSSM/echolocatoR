@@ -235,6 +235,17 @@ knitr::kable(round(ld[1:5, 1:5], 3), caption = "LD matrix (top-left corner)")
 
 LD matrix (top-left corner) {.table}
 
+## Next steps
+
+- Visualize loci:
+  [`vignette("plotting")`](https://rajlabmssm.github.io/echolocatoR/articles/plotting.md)
+- Run the full pipeline:
+  [`vignette("echolocatoR")`](https://rajlabmssm.github.io/echolocatoR/articles/echolocatoR.md)
+- Summarise across loci:
+  [`vignette("summarise")`](https://rajlabmssm.github.io/echolocatoR/articles/summarise.md)
+- Learn about sub-packages:
+  [`vignette("echoverse_modules")`](https://rajlabmssm.github.io/echolocatoR/articles/echoverse_modules.md)
+
 ## Session info
 
 ``` r

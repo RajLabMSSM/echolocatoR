@@ -206,6 +206,17 @@ res <- echolocatoR::finemap_loci(fullSS_path = coloc_res$path,
                                  finemap_methods = c("ABF","FINEMAP","SUSIE") )
 ```
 
+## Next steps
+
+- Explore and interpret results:
+  [`vignette("explore_results")`](https://rajlabmssm.github.io/echolocatoR/articles/explore_results.md)
+- Visualize loci:
+  [`vignette("plotting")`](https://rajlabmssm.github.io/echolocatoR/articles/plotting.md)
+- Summarise across loci:
+  [`vignette("summarise")`](https://rajlabmssm.github.io/echolocatoR/articles/summarise.md)
+- GWAS fine-mapping (non-QTL):
+  [`vignette("echolocatoR")`](https://rajlabmssm.github.io/echolocatoR/articles/echolocatoR.md)
+
 ## Session info
 
 ``` r

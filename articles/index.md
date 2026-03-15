@@ -6,6 +6,8 @@
   started](https://rajlabmssm.github.io/echolocatoR/articles/echolocatoR.md):
 - [Exploring fine-mapping
   results](https://rajlabmssm.github.io/echolocatoR/articles/explore_results.md):
+- [Plotting fine-mapping
+  results](https://rajlabmssm.github.io/echolocatoR/articles/plotting.md):
 
 ### Advanced workflows
 

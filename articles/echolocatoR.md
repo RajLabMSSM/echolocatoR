@@ -202,7 +202,7 @@ We have already munged the following example summary stats for you.
 fullSS_path <- echodata::example_fullSS(dataset = "Nalls2019")
 ```
 
-    ## Writing file to ==> /tmp/RtmpXeV9UC/nalls2019.fullSS_subset.tsv
+    ## Writing file to ==> /tmp/RtmpAZ5ahv/nalls2019.fullSS_subset.tsv
 
 ### Run fine-mapping pipeline
 
@@ -277,6 +277,19 @@ knitr::kable(
 | rs4389574  |   4 | 15730398 |   0 | 0.5000000 |       2 | TRUE          |
 
 Consensus fine-mapped SNPs for the BST1 locus {.table}
+
+## Next steps
+
+- Explore and interpret results:
+  [`vignette("explore_results")`](https://rajlabmssm.github.io/echolocatoR/articles/explore_results.md)
+- Visualize loci:
+  [`vignette("plotting")`](https://rajlabmssm.github.io/echolocatoR/articles/plotting.md)
+- Summarise across loci:
+  [`vignette("summarise")`](https://rajlabmssm.github.io/echolocatoR/articles/summarise.md)
+- Fine-map QTL data:
+  [`vignette("QTLs")`](https://rajlabmssm.github.io/echolocatoR/articles/QTLs.md)
+- Learn about sub-packages:
+  [`vignette("echoverse_modules")`](https://rajlabmssm.github.io/echolocatoR/articles/echoverse_modules.md)
 
 ------------------------------------------------------------------------
 
