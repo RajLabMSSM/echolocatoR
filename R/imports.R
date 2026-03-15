@@ -1,48 +1,8 @@
-##' catalogueR
-##'
-##' catalogueR
-##' @import catalogueR
-##' @name catalogueR
-NULL
+## Selective imports for echoverse dependencies.
+## These replace the previous blanket @import directives
+## which caused pkgdown to list package names as documented objects.
 
-##' downloadR
-##'
-##' downloadR
-##' @import downloadR
-##' @name downloadR
-NULL
-
-##' echoannot
-##'
-##' echoannot
-##' @import echoannot
-##' @name echoannot
-NULL
-
-##' echoconda
-##'
-##' echoconda
-##' @import echoconda
-##' @name echoconda
-NULL
-
-##' echodata
-##'
-##' echodata
-##' @import echodata
-##' @name echodata
-NULL
-
-##' lfm
-##'
-##' lfm
-##' @importFrom echofinemap lfm
-##' @name lfm
-NULL
-
-##' deprecated
-##'
-##' deprecated
-##' @importFrom lifecycle deprecated
-##' @name deprecated
+#' @importFrom echoconda activate_env
+#' @importFrom echofinemap lfm
+#' @importFrom lifecycle deprecated
 NULL
