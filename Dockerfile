@@ -74,6 +74,34 @@ RUN --mount=type=secret,id=GITHUB_TOKEN \
     remotes::install_local(repos=repos, dependencies=TRUE, \
                            build_vignettes=FALSE, upgrade=TRUE, force=TRUE);'
 
+# ---- Install key Suggests deps not pulled by dependencies=TRUE ----
+# These are Suggests across echoverse modules that users commonly need
+# but may not get auto-installed. Pre-installing in Docker avoids
+# runtime surprises (addresses #140, #142, #151).
+RUN Rscript -e ' \
+    options(repos = BiocManager::repositories()); \
+    pkgs <- c( \
+      ## Bioconductor annotation/genome packages (large, slow to install) \
+      "BSgenome", "BSgenome.Hsapiens.UCSC.hg19", "BSgenome.Hsapiens.UCSC.hg38", \
+      "SNPlocs.Hsapiens.dbSNP144.GRCh37", "SNPlocs.Hsapiens.dbSNP144.GRCh38", \
+      "biomaRt", "motifbreakR", "MotifDb", "regioneR", "BiocParallel", \
+      "GenomicFiles", "Gviz", "ComplexHeatmap", \
+      ## Visualization \
+      "ggpubr", "ggrepel", "ggridges", "patchwork", "corrplot", \
+      "pheatmap", "heatmaply", "RColorBrewer", \
+      ## Fine-mapping extras \
+      "Rfast", "Ckmeans.1d.dp", "susieR", "coloc", \
+      ## Utilities \
+      "R.utils", "seqminer", "arrow", "LDlinkR", "reshape2" \
+    ); \
+    to_install <- pkgs[!sapply(pkgs, requireNamespace, quietly = TRUE)]; \
+    if (length(to_install) > 0) { \
+      message("Installing ", length(to_install), " Suggests packages..."); \
+      BiocManager::install(to_install, ask = FALSE, update = FALSE); \
+    } else { \
+      message("All key Suggests already installed."); \
+    }'
+
 # ---- Install genetics.binaRies (GCTA + plink + bcftools) ----
 RUN Rscript -e ' \
     if(!require("genetics.binaRies", quietly=TRUE)) \
@@ -103,10 +131,8 @@ RUN Rscript -e ' \
 # ---- Verify installation ----
 RUN Rscript -e ' \
     library(echolocatoR); \
-    message("echolocatoR ", packageVersion("echolocatoR"), " loaded successfully"); \
-    message("FINEMAP: ", tryCatch(echofinemap:::FINEMAP_find_executable(verbose=FALSE), error=function(e) "not found")); \
-    message("Conda: ", tryCatch(echoconda::find_conda(verbose=FALSE), error=function(e) "not found")); \
-    message("echoR_mini env: ", tryCatch(echoconda::env_exists("echoR_mini"), error=function(e) "not found")); \
+    res <- check_echoverse_setup(verbose = TRUE); \
+    if (!res$pass) warning("Some checks failed - see output above."); \
     '
 
 # ---- Clean up ----
