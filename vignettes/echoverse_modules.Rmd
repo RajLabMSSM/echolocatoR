@@ -1,0 +1,184 @@
+---
+title: "echoverse modules"
+author: "<h4>Author: <i>Brian M. Schilder</i></h4>"
+date: "<h4>Updated: <i>`r format( Sys.Date(), '%b-%d-%Y')`</i></h4>"
+output:
+  BiocStyle::html_document
+vignette: >
+    %\VignetteIndexEntry{echoverse modules}
+    %\usepackage[utf8]{inputenc}
+    %\VignetteEngine{knitr::rmarkdown}
+---
+
+
+```{r setup, include=TRUE}
+library(echolocatoR)
+```
+
+# Overview
+
+`echolocatoR` orchestrates a suite of modular R packages collectively
+called the **echoverse**. While `echolocatoR::finemap_loci()` runs the
+full pipeline automatically, each module can also be used independently
+for custom workflows.
+
+This vignette provides a quick reference for when to use each module.
+
+# Module reference
+
+## Level 1: Base packages
+
+These provide foundational utilities used by all other modules.
+
+### `echodata`
+
+**Purpose**: Data management, example datasets, column standardization.
+
+**Use independently when you want to**:
+
+- Load bundled fine-mapping results: `BST1`, `LRRK2`, `MEX3C`
+- Download full GWAS summary stats: `get_Nalls2019()`, `get_Kunkle2019()`
+- Standardize column names across different GWAS formats
+- Access the Fine-Mapping Portal: `portal_query()`
+
+```{r echodata-example}
+## Bundled fine-mapping results (no download needed)
+dat <- echodata::BST1
+cat("BST1 locus:", nrow(dat), "SNPs,", ncol(dat), "columns\n")
+```
+
+### `echogithub`
+
+**Purpose**: GitHub API utilities for downloading files and releases.
+
+**Use independently when you want to**:
+
+- Download files from GitHub repos programmatically
+- Access GitHub release assets
+
+### `downloadR`
+
+**Purpose**: File download helpers with caching.
+
+**Use independently when you want to**:
+
+- Download and cache large files with progress tracking
+- Upload data to Zenodo
+
+### `devoptera`
+
+**Purpose**: Developer utilities for the echoverse packages.
+
+## Level 2: Mid-level utilities
+
+### `echotabix`
+
+**Purpose**: Tabix-indexed file querying and liftover.
+
+**Use independently when you want to**:
+
+- Query tabix-indexed VCF or summary stats files by genomic region
+- Perform genome build liftover (hg19/hg38)
+- Convert between file formats
+
+### `echoLD`
+
+**Purpose**: LD (linkage disequilibrium) matrix computation.
+
+**Use independently when you want to**:
+
+- Compute LD matrices from 1000 Genomes Phase 3, UK Biobank, or custom VCFs
+- Filter variants by LD or MAF thresholds
+
+```{r echoLD-example}
+## Bundled LD matrix
+ld <- echodata::BST1_LD_matrix
+cat("LD matrix:", nrow(ld), "x", ncol(ld), "SNPs\n")
+```
+
+### `echoconda`
+
+**Purpose**: Conda environment management for external tools.
+
+**Use independently when you want to**:
+
+- Set up conda environments for FINEMAP, PolyFun, or other command-line tools
+- Manage Python dependencies from R via basilisk
+
+## Level 3: Analysis modules
+
+### `echofinemap`
+
+**Purpose**: Statistical fine-mapping methods.
+
+**Use independently when you want to**:
+
+- Run individual fine-mapping methods (ABF, SUSIE, FINEMAP, PolyFun+SUSIE)
+- Compare results across methods
+- See available methods: `echofinemap::lfm()`
+
+```{r echofinemap-example}
+## List available fine-mapping methods
+echofinemap::lfm()
+```
+
+### `echoannot`
+
+**Purpose**: Functional annotation and enrichment.
+
+**Use independently when you want to**:
+
+- Overlap fine-mapped SNPs with ROADMAP epigenomic annotations
+- Run GoShifter enrichment tests
+- Annotate with NOTT2019/CORCES2020 single-cell data
+- Create super summary plots
+
+### `echoplot`
+
+**Purpose**: Locus visualization.
+
+**Use independently when you want to**:
+
+- Create multi-track locus zoom plots
+- Visualize fine-mapping posterior probabilities alongside GWAS p-values
+- Overlay LD, gene tracks, and annotations
+
+### `catalogueR`
+
+**Purpose**: QTL colocalization via the eQTL Catalogue.
+
+**Use independently when you want to**:
+
+- Query the eQTL Catalogue for colocalization analysis
+- Access tissue/cell-type-specific QTL datasets
+
+## Level 4: Pipeline orchestrator
+
+### `echolocatoR`
+
+**Purpose**: Unified fine-mapping pipeline.
+
+This is the package you're using now. It calls all modules above in the
+correct order via `finemap_loci()` / `finemap_locus()`.
+
+# Choosing your approach
+
+| Scenario | Recommended approach |
+|----------|---------------------|
+| First-time fine-mapping | `echolocatoR::finemap_loci()` — handles everything |
+| Custom fine-mapping workflow | Use `echofinemap` directly with your own LD matrices |
+| Just need LD matrices | Use `echoLD::get_LD()` |
+| Just need annotations | Use `echoannot` functions directly |
+| Just need plots | Use `echoplot::plot_locus()` |
+| Querying large summary stats | Use `echotabix::query()` |
+| Post-hoc analysis of results | Use `echodata` to load + `echoannot` to annotate |
+
+# Session info
+
+<details>
+
+```{r Session Info, attr.output='style="max-height: 200px;"'}
+utils::sessionInfo()
+```
+
+</details>
