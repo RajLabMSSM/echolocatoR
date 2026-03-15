@@ -128,6 +128,13 @@ cat("SNPs in LD matrix:", ncol(ld), "\n")
 knitr::kable(round(ld[1:5, 1:5], 3), caption = "LD matrix (top-left corner)")
 ```
 
+# Next steps
+
+- Visualize loci: `vignette("plotting")`
+- Run the full pipeline: `vignette("echolocatoR")`
+- Summarise across loci: `vignette("summarise")`
+- Learn about sub-packages: `vignette("echoverse_modules")`
+
 # Session info
 
 <details>

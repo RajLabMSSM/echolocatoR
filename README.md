@@ -136,6 +136,29 @@ provides a containerized interface for Rstudio through your web browser.
 See [here for installation
 instructions](https://rajlabmssm.github.io/echolocatoR/articles/docker).
 
+## Quick start
+
+``` r
+library(echolocatoR)
+
+## Load bundled fine-mapping results for the BST1 locus
+dat <- echodata::BST1
+
+## View consensus fine-mapped SNPs (agreed upon by multiple methods)
+subset(dat, Consensus_SNP == TRUE,
+       select = c(SNP, CHR, POS, P, mean.PP, Support))
+
+## Visualize the locus
+echoplot::plot_locus(
+    dat = dat,
+    locus_dir = file.path(tempdir(), echodata::locus_dir),
+    LD_matrix = echodata::BST1_LD_matrix
+)
+```
+
+See `vignette("echolocatoR")` for the full pipeline, or
+`vignette("explore_results")` to learn how to interpret results.
+
 ## Documentation
 
 ### [Website](https://rajlabmssm.github.io/echolocatoR)

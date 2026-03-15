@@ -92,6 +92,13 @@ res <- echolocatoR::finemap_loci(fullSS_path = coloc_res$path,
 ```
 
 
+# Next steps
+
+- Explore and interpret results: `vignette("explore_results")`
+- Visualize loci: `vignette("plotting")`
+- Summarise across loci: `vignette("summarise")`
+- GWAS fine-mapping (non-QTL): `vignette("echolocatoR")`
+
 # Session info
 
 <details>

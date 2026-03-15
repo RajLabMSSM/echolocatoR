@@ -14,11 +14,9 @@
 #'
 #' @export
 #' @examples
-#' \dontrun{
-#' fullSS_path <- echodata::example_fullSS()
-#' build <- check_genome(fullSS_genome_build="hg19",
-#'                       fullSS_path=fullSS_path)
-#' }
+#' ## When the build is already known, simply standardizes the name
+#' build <- check_genome(fullSS_genome_build = "hg19")
+#' print(build)
 check_genome <- function(fullSS_genome_build=NULL,
                          munged=FALSE,
                          fullSS_path=NULL,

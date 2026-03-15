@@ -81,6 +81,7 @@ articles:
     contents:
       - echolocatoR
       - explore_results
+      - plotting
   - title: Advanced workflows
     contents:
       - QTLs

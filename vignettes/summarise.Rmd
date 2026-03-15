@@ -79,6 +79,12 @@ super_plot <- echoannot::super_summary_plot(merged_DT = merged_DT,
 ```
 
 
+# Next steps
+
+- Explore individual locus results: `vignette("explore_results")`
+- Visualize loci: `vignette("plotting")`
+- Run the full pipeline: `vignette("echolocatoR")`
+
 # Session info
 
 <details>

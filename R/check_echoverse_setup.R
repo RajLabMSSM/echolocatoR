@@ -19,7 +19,15 @@
 #' @export
 #' @examples
 #' \dontrun{
+#' ## Full diagnostic report
 #' results <- check_echoverse_setup()
+#'
+#' ## Quick check with a subset of packages
+#' results <- check_echoverse_setup(
+#'     echoverse_pkgs = c("echodata"),
+#'     key_deps = c("data.table"),
+#'     verbose = FALSE
+#' )
 #' }
 check_echoverse_setup <- function(
     echoverse_pkgs = c(

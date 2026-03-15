@@ -122,6 +122,14 @@ knitr::kable(
 )
 ```
 
+# Next steps
+
+- Explore and interpret results: `vignette("explore_results")`
+- Visualize loci: `vignette("plotting")`
+- Summarise across loci: `vignette("summarise")`
+- Fine-map QTL data: `vignette("QTLs")`
+- Learn about sub-packages: `vignette("echoverse_modules")`
+
 <hr>
 
 # Session info

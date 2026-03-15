@@ -1,0 +1,140 @@
+---
+title: "Plotting fine-mapping results"
+author: "<h4>Author: <i>Brian M. Schilder</i></h4>"
+date: "<h4>Updated: <i>`r format( Sys.Date(), '%b-%d-%Y')`</i></h4>"
+output:
+  BiocStyle::html_document
+vignette: >
+    %\VignetteIndexEntry{Plotting fine-mapping results}
+    %\usepackage[utf8]{inputenc}
+    %\VignetteEngine{knitr::rmarkdown}
+---
+
+
+```{r setup, include=TRUE}
+library(echolocatoR)
+
+can_plot <- tryCatch({
+    requireNamespace("echoplot", quietly = TRUE) &&
+    requireNamespace("ggplot2", quietly = TRUE) &&
+    requireNamespace("patchwork", quietly = TRUE)
+}, error = function(e) FALSE)
+```
+
+# Overview
+
+`echoplot` provides multi-track locus plots that combine GWAS
+association signals, fine-mapping posterior probabilities, LD structure,
+and gene models in a single figure. This vignette demonstrates common
+plotting workflows using bundled example data — **no internet
+connection is required**.
+
+For the full fine-mapping pipeline, see `vignette("echolocatoR")`.
+For interpreting results, see `vignette("explore_results")`.
+
+# Load example data
+
+```{r load-data}
+dat <- echodata::BST1
+LD_matrix <- echodata::BST1_LD_matrix
+locus_dir <- file.path(tempdir(), echodata::locus_dir)
+```
+
+# Basic locus plot
+
+The main function `echoplot::plot_locus()` creates a multi-panel figure
+with GWAS p-values, fine-mapping posterior probabilities, and gene tracks.
+SNPs are colored by LD r² with the lead SNP.
+
+```{r basic-plot, fig.height=8, fig.width=7, eval=can_plot}
+plt <- tryCatch(
+    echoplot::plot_locus(
+        dat = dat,
+        locus_dir = locus_dir,
+        LD_matrix = LD_matrix,
+        show_plot = FALSE,
+        save_plot = FALSE,
+        verbose = FALSE
+    ),
+    error = function(e) { message("plot_locus error: ", e$message); NULL }
+)
+if (!is.null(plt)) plt[["1x"]]
+```
+
+# Customizing the plot
+
+## Multiple zoom levels
+
+You can generate plots at different zoom levels to focus on the
+fine-mapped region:
+
+```{r zoom, fig.height=8, fig.width=7, eval=can_plot}
+plt_zoom <- tryCatch(
+    echoplot::plot_locus(
+        dat = dat,
+        locus_dir = locus_dir,
+        LD_matrix = LD_matrix,
+        zoom = c("1x", "4x"),
+        show_plot = FALSE,
+        save_plot = FALSE,
+        verbose = FALSE
+    ),
+    error = function(e) { message("plot_locus error: ", e$message); NULL }
+)
+if (!is.null(plt_zoom)) plt_zoom[["4x"]]
+```
+
+## Without LD coloring
+
+If you don't have an LD matrix, the plot still works — SNPs are
+shown without r² coloring:
+
+```{r no-ld, fig.height=8, fig.width=7, eval=can_plot}
+plt_nold <- tryCatch(
+    echoplot::plot_locus(
+        dat = dat,
+        locus_dir = locus_dir,
+        LD_matrix = NULL,
+        show_plot = FALSE,
+        save_plot = FALSE,
+        verbose = FALSE
+    ),
+    error = function(e) { message("plot_locus error: ", e$message); NULL }
+)
+if (!is.null(plt_nold)) plt_nold[["1x"]]
+```
+
+# Saving plots
+
+To save a plot to disk:
+
+```{r save-example, eval=FALSE}
+plt <- echoplot::plot_locus(
+    dat = dat,
+    locus_dir = locus_dir,
+    LD_matrix = LD_matrix,
+    save_plot = TRUE,
+    plot_format = "png",
+    dpi = 300,
+    height = 12,
+    width = 10,
+    show_plot = FALSE
+)
+```
+
+# Next steps
+
+- Fine-map your own loci: `vignette("echolocatoR")`
+- Explore results in detail: `vignette("explore_results")`
+- Summarise across loci: `vignette("summarise")`
+- Learn about sub-packages: `vignette("echoverse_modules")`
+
+# Session info
+
+<details>
+
+```{r Session Info, attr.output='style="max-height: 200px;"'}
+utils::sessionInfo()
+```
+
+</details>
