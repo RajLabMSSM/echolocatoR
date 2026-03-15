@@ -4,6 +4,9 @@
 #' system dependencies, external tools, and Python/conda environments.
 #' Prints an actionable report with platform-specific fix commands.
 #'
+#' @param echoverse_pkgs Character vector of echoverse package names to check.
+#' @param key_deps Character vector of key non-echoverse dependency
+#'   package names to check.
 #' @param verbose Print detailed results. Default \code{TRUE}.
 #' @returns A list (invisibly) with elements:
 #' \describe{
@@ -18,7 +21,20 @@
 #' \dontrun{
 #' results <- check_echoverse_setup()
 #' }
-check_echoverse_setup <- function(verbose = TRUE) {
+check_echoverse_setup <- function(
+    echoverse_pkgs = c(
+        "echolocatoR", "echodata", "echotabix", "echoannot",
+        "echoconda", "echoLD", "echoplot", "echofinemap",
+        "catalogueR", "downloadR", "echogithub", "devoptera",
+        "echodeps", "echoAI", "echoverseTemplate"
+    ),
+    key_deps = c(
+        "data.table", "BiocManager", "reticulate",
+        "susieR", "coloc", "MungeSumstats",
+        "VariantAnnotation", "rtracklayer", "GenomicRanges",
+        "ggbio", "basilisk", "Rsamtools"
+    ),
+    verbose = TRUE) {
 
     os <- get_os()
     results <- list(pass = TRUE)
@@ -31,22 +47,10 @@ check_echoverse_setup <- function(verbose = TRUE) {
     }
 
     ## ---- 1. echoverse packages ----
-    echoverse_pkgs <- c(
-        "echolocatoR", "echodata", "echotabix", "echoannot",
-        "echoconda", "echoLD", "echoplot", "echofinemap",
-        "catalogueR", "downloadR", "echogithub", "devoptera",
-        "echodeps", "echoAI", "echoverseTemplate"
-    )
     pkg_status <- check_packages(echoverse_pkgs, verbose = verbose)
     results$packages <- pkg_status
 
     ## ---- 2. Key non-echoverse dependencies ----
-    key_deps <- c(
-        "data.table", "BiocManager", "reticulate",
-        "susieR", "coloc", "MungeSumstats",
-        "VariantAnnotation", "rtracklayer", "GenomicRanges",
-        "ggbio", "basilisk", "Rsamtools"
-    )
     dep_status <- check_packages(key_deps, label = "Key dependencies",
                                  verbose = verbose)
     results$dependencies <- dep_status

@@ -4,9 +4,22 @@
 \alias{check_echoverse_setup}
 \title{Check echoverse setup}
 \usage{
-check_echoverse_setup(verbose = TRUE)
+check_echoverse_setup(
+  echoverse_pkgs = c("echolocatoR", "echodata", "echotabix", "echoannot", "echoconda",
+    "echoLD", "echoplot", "echofinemap", "catalogueR", "downloadR", "echogithub",
+    "devoptera", "echodeps", "echoAI", "echoverseTemplate"),
+  key_deps = c("data.table", "BiocManager", "reticulate", "susieR", "coloc",
+    "MungeSumstats", "VariantAnnotation", "rtracklayer", "GenomicRanges", "ggbio",
+    "basilisk", "Rsamtools"),
+  verbose = TRUE
+)
 }
 \arguments{
+\item{echoverse_pkgs}{Character vector of echoverse package names to check.}
+
+\item{key_deps}{Character vector of key non-echoverse dependency
+package names to check.}
+
 \item{verbose}{Print detailed results. Default \code{TRUE}.}
 }
 \value{
