@@ -419,7 +419,9 @@ check_external_tools <- function(verbose = TRUE) {
 
 #' @keywords internal
 check_github_token <- function(verbose = TRUE) {
-    token <- Sys.getenv("GITHUB_TOKEN", Sys.getenv("GITHUB_PAT", ""))
+    token <- Sys.getenv("GITHUB_TOKEN",
+                 Sys.getenv("GITHUB_PAT",
+                 Sys.getenv("GH_TOKEN", "")))
     ## Also check git credential store
     if (nchar(token) == 0) {
         token <- tryCatch(
