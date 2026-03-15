@@ -92,7 +92,9 @@ RUN Rscript -e ' \
       ## Fine-mapping extras \
       "Rfast", "Ckmeans.1d.dp", "susieR", "coloc", \
       ## Utilities \
-      "R.utils", "seqminer", "arrow", "LDlinkR", "reshape2" \
+      "R.utils", "seqminer", "arrow", "LDlinkR", "reshape2", \
+      ## Additional sub-package Suggests not pulled by dependencies=TRUE \
+      "haploR", "UpSetR" \
     ); \
     to_install <- pkgs[!sapply(pkgs, requireNamespace, quietly = TRUE)]; \
     if (length(to_install) > 0) { \
