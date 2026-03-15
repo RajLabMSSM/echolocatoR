@@ -12,6 +12,11 @@
 - [QTLs](https://rajlabmssm.github.io/echolocatoR/articles/QTLs.md):
 - [Summarise](https://rajlabmssm.github.io/echolocatoR/articles/summarise.md):
 
+### Reference
+
+- [echoverse
+  modules](https://rajlabmssm.github.io/echolocatoR/articles/echoverse_modules.md):
+
 ### Setup
 
 - [Docker/Singularity

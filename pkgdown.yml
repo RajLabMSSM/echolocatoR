@@ -4,6 +4,7 @@ pkgdown_sha: ~
 articles:
   docker: docker.html
   echolocatoR: echolocatoR.html
+  echoverse_modules: echoverse_modules.html
   explore_results: explore_results.html
   QTLs: QTLs.html
   summarise: summarise.html
