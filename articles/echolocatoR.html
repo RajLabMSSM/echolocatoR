@@ -55,6 +55,9 @@
       <a href="../articles/docker.html">Docker/Singularity Containers</a>
     </li>
     <li>
+      <a href="../articles/explore_results.html">Exploring fine-mapping results</a>
+    </li>
+    <li>
       <a href="../articles/QTLs.html">QTLs</a>
     </li>
     <li>
@@ -105,7 +108,7 @@ Updated: <i>Mar-15-2026</i><br>
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RajLabMSSM/echolocatoR" class="external-link">echolocatoR</a></span><span class="op">)</span> </span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RajLabMSSM/echolocatoR" class="external-link">echolocatoR</a></span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">──</span> <span style="color: #55FFFF; font-weight: bold;">🦇  🦇  🦇 e c h o l o c a t o R 🦇  🦇  🦇</span> <span style="color: #00BBBB;">─────────────────────────────────</span></span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
@@ -132,6 +135,11 @@ Updated: <i>Mar-15-2026</i><br>
 <span><span class="co">## <span style="color: #FF55FF;">     ▶</span></span></span>
 <span><span class="co">## <span style="color: #FF55FF;">     https://github.com/RajLabMSSM/echolocatoR/pulls</span></span></span>
 <span><span class="co">## Tip: Run check_echoverse_setup() to diagnose any issues.</span></span></code></pre>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">has_internet</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span></span>
+<span>    <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="fu">curl</span><span class="fu">::</span><span class="fu"><a href="https://jeroen.r-universe.dev/curl/reference/nslookup.html" class="external-link">nslookup</a></span><span class="op">(</span><span class="st">"github.com"</span>, error <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="full-pipeline">Full pipeline<a class="anchor" aria-label="anchor" href="#full-pipeline"></a>
 </h2>
@@ -142,19 +150,17 @@ Nalls et al. (2019).</p>
 </h3>
 <ul>
 <li>To enable rapid fine-mapping of many loci, you can create a
-<code>top_SNPs</code> data.frame<br>
-which contains the position of the lead/index SNP within each
-locus.</li>
+<code>top_SNPs</code> data.frame which contains the position of the
+lead/index SNP within each locus.</li>
 <li>
 <code><a href="../reference/finemap_loci.html">finemap_loci()</a></code> (see next step) will then use this info
-to extract subsets of the<br>
-full GWAS/QTL summary statistics using windows centered on each
-lead/index SNP.</li>
+to extract subsets of the full GWAS/QTL summary statistics using windows
+centered on each lead/index SNP.</li>
 <li>The <code>topSS</code> argument can either be a data.frame, or a
-path to a topSS file saved somehwere. Most common tabular data formats
+path to a topSS file saved somewhere. Most common tabular data formats
 (e.g. .tsv, .csv, .xlsx) are accepted.</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#### Load example top SNPs (pre-formatted) ####</span></span>
 <span><span class="va">topSS</span> <span class="op">&lt;-</span> <span class="fu">echodata</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/echodata/man/topSNPs_Nalls2019_raw.html" class="external-link">topSNPs_Nalls2019_raw</a></span></span>
 <span><span class="co">#### construct a column mapping object ####</span></span>
@@ -166,16 +172,93 @@ path to a topSS file saved somehwere. Most common tabular data formats
 <span><span class="va">topSNPs</span> <span class="op">&lt;-</span> <span class="fu">echodata</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/echodata/man/import_topSNPs.html" class="external-link">import_topSNPs</a></span><span class="op">(</span></span>
 <span>    topSS <span class="op">=</span> <span class="fu">echodata</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/echodata/man/topSNPs_Nalls2019_raw.html" class="external-link">topSNPs_Nalls2019_raw</a></span>,</span>
 <span>    colmap <span class="op">=</span> <span class="va">colmap</span>,</span>
-<span>    grouping_vars <span class="op">=</span> <span class="st">"Locus Number"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">topSNPs</span><span class="op">)</span></span></code></pre></div>
+<span>    grouping_vars <span class="op">=</span> <span class="st">"Locus Number"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Loading required namespace: MungeSumstats</span></span></code></pre>
+<pre><code><span><span class="co">## Renaming column: P, all studies ==&gt; P</span></span></code></pre>
+<pre><code><span><span class="co">## Renaming column: Beta, all studies ==&gt; Effect</span></span></code></pre>
+<pre><code><span><span class="co">## Renaming column: Nearest Gene ==&gt; Locus</span></span></code></pre>
+<pre><code><span><span class="co">## Renaming column: QTL Nominated Gene (nearest QTL) ==&gt; Gene</span></span></code></pre>
+<pre><code><span><span class="co">## [1] "+ Assigning Gene and Locus independently."</span></span></code></pre>
+<pre><code><span><span class="co">## Standardising column headers.</span></span></code></pre>
+<pre><code><span><span class="co">## First line of summary statistics file:</span></span></code></pre>
+<pre><code><span><span class="co">## SNP  CHR BP  Locus   Gene    Effect allele   Other allele    Effect allele frequency Effect  SE, all studies P   P, COJO, all studies    P, random effects, all studies  P, Conditional 23AndMe only P, 23AndMe only I2, all studies Freq1, previous studies Beta, previous studies  StdErr, previous studies    P, previous studies I2, previous studies    Freq1, new studies  Beta, new studies   StdErr, new studies P, new studies  I2, new studies Passes pooled 23andMe QC    Known GWAS locus within 1MB Failed final filtering and QC   Locus within 250KB  Locus Number    </span></span></code></pre>
+<pre><code><span><span class="co">## Returning unmapped column names without making them uppercase.</span></span></code></pre>
+<pre><code><span><span class="co">## + Mapping colnames from MungeSumstats ==&gt; echolocatoR</span></span></code></pre>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">topSNPs</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Key: &lt;Locus&gt;</span></span>
+<span><span class="co">##           SNP   CHR       POS   Locus    Gene     A2     A1   Freq  Effect</span></span>
+<span><span class="co">##        &lt;char&gt; &lt;num&gt;     &lt;num&gt;  &lt;char&gt;  &lt;char&gt; &lt;char&gt; &lt;char&gt;  &lt;num&gt;   &lt;num&gt;</span></span>
+<span><span class="co">## 1:  rs1941685    18  31304318   ASXL3    &lt;NA&gt;      t      g 0.4983  0.0531</span></span>
+<span><span class="co">## 2:  rs2280104     8  22525980    BIN3    BIN3      t      c 0.3604  0.0556</span></span>
+<span><span class="co">## 3: rs61169879    17  59917366   BRIP1   MED13      t      c 0.1641  0.0820</span></span>
+<span><span class="co">## 4:  rs4698412     4  15737348    BST1    BST1      a      g 0.5529  0.1035</span></span>
+<span><span class="co">## 5: rs11950533     5 134199105 C5orf24 TXNDC15      a      c 0.1020 -0.0916</span></span>
+<span><span class="co">## 6:  rs9568188    13  49927732  CAB39L  CAB39L      t      c 0.7397  0.0617</span></span>
+<span><span class="co">##    SE, all studies        P P, COJO, all studies P, random effects, all studies</span></span>
+<span><span class="co">##              &lt;num&gt;    &lt;num&gt;                &lt;num&gt;                          &lt;num&gt;</span></span>
+<span><span class="co">## 1:          0.0094 1.69e-08             1.61e-08                      1.690e-08</span></span>
+<span><span class="co">## 2:          0.0098 1.16e-08             1.40e-08                      1.860e-06</span></span>
+<span><span class="co">## 3:          0.0134 9.28e-10             9.40e-10                      6.210e-06</span></span>
+<span><span class="co">## 4:          0.0094 2.06e-28             9.73e-36                      1.680e-19</span></span>
+<span><span class="co">## 5:          0.0158 7.16e-09             6.73e-09                      2.680e-08</span></span>
+<span><span class="co">## 6:          0.0108 1.15e-08             1.11e-08                      2.458e-04</span></span>
+<span><span class="co">##    P, Conditional 23AndMe only P, 23AndMe only I2, all studies</span></span>
+<span><span class="co">##                          &lt;num&gt;           &lt;num&gt;           &lt;num&gt;</span></span>
+<span><span class="co">## 1:                    1.64e-08        1.60e-08             0.0</span></span>
+<span><span class="co">## 2:                    4.35e-02        4.94e-02             8.9</span></span>
+<span><span class="co">## 3:                    9.07e-07        2.05e-06            16.4</span></span>
+<span><span class="co">## 4:                    1.05e-07        1.15e-07            13.9</span></span>
+<span><span class="co">## 5:                    5.08e-04        4.22e-04             1.9</span></span>
+<span><span class="co">## 6:                    4.29e-06        4.41e-06            21.4</span></span>
+<span><span class="co">##    Freq1, previous studies Beta, previous studies StdErr, previous studies</span></span>
+<span><span class="co">##                      &lt;num&gt;                  &lt;num&gt;                    &lt;num&gt;</span></span>
+<span><span class="co">## 1:                  0.4978                 0.0507                   0.0113</span></span>
+<span><span class="co">## 2:                  0.3595                 0.0647                   0.0117</span></span>
+<span><span class="co">## 3:                  0.1641                 0.0849                   0.0163</span></span>
+<span><span class="co">## 4:                  0.5547                 0.1023                   0.0112</span></span>
+<span><span class="co">## 5:                  0.1008                -0.0986                   0.0190</span></span>
+<span><span class="co">## 6:                  0.7405                 0.0657                   0.0130</span></span>
+<span><span class="co">##    P, previous studies I2, previous studies Freq1, new studies</span></span>
+<span><span class="co">##                  &lt;num&gt;                &lt;num&gt;              &lt;num&gt;</span></span>
+<span><span class="co">## 1:            6.82e-06                  0.0             0.4995</span></span>
+<span><span class="co">## 2:            3.23e-08                 15.0             0.3626</span></span>
+<span><span class="co">## 3:            1.90e-07                  0.0             0.1641</span></span>
+<span><span class="co">## 4:            7.32e-20                 49.3             0.5485</span></span>
+<span><span class="co">## 5:            2.05e-07                 43.8             0.1048</span></span>
+<span><span class="co">## 6:            4.00e-07                 39.8             0.7380</span></span>
+<span><span class="co">##    Beta, new studies StdErr, new studies P, new studies I2, new studies</span></span>
+<span><span class="co">##                &lt;num&gt;               &lt;num&gt;          &lt;num&gt;           &lt;num&gt;</span></span>
+<span><span class="co">## 1:            0.0586              0.0171      6.147e-04            14.3</span></span>
+<span><span class="co">## 2:            0.0350              0.0177      4.724e-02             1.9</span></span>
+<span><span class="co">## 3:            0.0761              0.0236      1.242e-03            23.7</span></span>
+<span><span class="co">## 4:            0.1062              0.0170      4.160e-10            10.9</span></span>
+<span><span class="co">## 5:           -0.0756              0.0287      8.388e-03             0.0</span></span>
+<span><span class="co">## 6:            0.0526              0.0196      7.353e-03            22.3</span></span>
+<span><span class="co">##    Passes pooled 23andMe QC Known GWAS locus within 1MB</span></span>
+<span><span class="co">##                      &lt;char&gt;                       &lt;num&gt;</span></span>
+<span><span class="co">## 1:                        T                           0</span></span>
+<span><span class="co">## 2:                        T                           1</span></span>
+<span><span class="co">## 3:                        T                           0</span></span>
+<span><span class="co">## 4:                        T                           1</span></span>
+<span><span class="co">## 5:                        T                           0</span></span>
+<span><span class="co">## 6:                        T                           0</span></span>
+<span><span class="co">##    Failed final filtering and QC Locus within 250KB Locus Number</span></span>
+<span><span class="co">##                            &lt;num&gt;             &lt;char&gt;       &lt;char&gt;</span></span>
+<span><span class="co">## 1:                             0                  0           73</span></span>
+<span><span class="co">## 2:                             0                  0           39</span></span>
+<span><span class="co">## 3:                             0                  0           71</span></span>
+<span><span class="co">## 4:                             0                  0           20</span></span>
+<span><span class="co">## 5:                             0                  0           28</span></span>
+<span><span class="co">## 6:                             0                  0           53</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="path-to-full-summary-stats-file">Path to full summary stats file<a class="anchor" aria-label="anchor" href="#path-to-full-summary-stats-file"></a>
 </h3>
 <ul>
 <li><p>Since a full GWAS summary stats file would be too large to
-include within <em>echolocatoR</em>,<br>
-we instead provide an example subset of the full summary stats.</p></li>
+include within <em>echolocatoR</em>, we instead provide an example
+subset of the full summary stats.</p></li>
 <li><p>To simulate how you’d actually use your own full summary stats
 file, we will save our example dataset to your computer (you can change
 the path to wherever you like).</p></li>
@@ -190,8 +273,9 @@ provide most column mapping arguments in <code>finemap_loci</code> when
 <span><span class="va">fullSS_path</span> <span class="op">&lt;-</span> <span class="fu">MungeSumstats</span><span class="fu">::</span><span class="fu"><a href="https://al-murphy.github.io/MungeSumstats/reference/format_sumstats.html" class="external-link">format_sumstats</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">fullSS_path</span>, ref_genome <span class="op">=</span> <span class="st">"GRCH37"</span><span class="op">)</span></span></code></pre>
 <p>We have already munged the following example summary stats for
 you.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fullSS_path</span> <span class="op">&lt;-</span> <span class="fu">echodata</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/echodata/man/example_fullSS.html" class="external-link">example_fullSS</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="st">"Nalls2019"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Writing file to ==&gt; /tmp/RtmpnMtctD/nalls2019.fullSS_subset.tsv</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="run-fine-mapping-pipeline">Run fine-mapping pipeline<a class="anchor" aria-label="anchor" href="#run-fine-mapping-pipeline"></a>
@@ -202,32 +286,31 @@ you.</p>
 <ul>
 <li>
 <em>results_dir</em>: Where you want to store all of your
-results.<br>
-</li>
+results.</li>
 <li>
 <em>finemap_methods</em>: Which fine-mapping methods you want to
 run. For a full list of currently supported methods, run the function
-<code><a href="https://rdrr.io/pkg/echofinemap/man/lfm.html" class="external-link">echofinemap::lfm()</a></code>.<br>
-</li>
+<code><a href="https://rdrr.io/pkg/echofinemap/man/lfm.html" class="external-link">echofinemap::lfm()</a></code>.</li>
 <li>
 <em>bp_distance</em>: Controls window size. Specifically,
 <code>bp_distance</code> is the number of basepairs upstream/downstream
 you want to extract for each locus. For example, if you want a 2Mb
 window (+/- 1Mb from the lead/index SNP in <code>top_SNPs</code>), set
-<code>bp_distance=1e+06</code>.<br>
-</li>
+<code>bp_distance=1e+06</code>.</li>
 <li>
 <em>plot_zoom</em>: Zoom in/out from the center of each locus when
-producing the multiview plot.<br>
-You can adjust this separately from <code>bp_distance</code> so that you
-don’t have rerun the whole pipeline each time (locus subsets, LD
-matrices, and fine-mapping results are all automatically saved in
-locus-specific folders).</li>
+producing the multiview plot. You can adjust this separately from
+<code>bp_distance</code> so that you don’t have rerun the whole pipeline
+each time (locus subsets, LD matrices, and fine-mapping results are all
+automatically saved in locus-specific folders).</li>
 </ul>
 <p><strong>Note</strong>: Please use the full absolute paths (instead of
 relative paths) wherever possible (e.g. <code>results_dir</code>). This
 is especially important for the tool <em>FINEMAP</em>.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<p>The following call fine-maps two loci (BST1 and MEX3C) using three
+statistical fine-mapping methods. Depending on your machine and internet
+speed, this may take <strong>10-30 minutes per locus</strong>.</p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">echolocatoR</span><span class="fu">::</span><span class="fu"><a href="../reference/finemap_loci.html">finemap_loci</a></span><span class="op">(</span></span>
 <span> fullSS_path <span class="op">=</span> <span class="va">fullSS_path</span>,</span>
 <span> topSNPs <span class="op">=</span> <span class="va">topSNPs</span>,</span>
@@ -238,13 +321,73 @@ is especially important for the tool <em>FINEMAP</em>.</p>
 <span> bp_distance <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span> finemap_methods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ABF"</span>,<span class="st">"SUSIE"</span>,<span class="st">"FINEMAP"</span><span class="op">)</span>,</span>
 <span> munged <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="inspect-results">Inspect results<a class="anchor" aria-label="anchor" href="#inspect-results"></a>
+</h3>
+<p>The output of <code><a href="../reference/finemap_loci.html">finemap_loci()</a></code> is a named list of
+data.tables, one per locus. Each data.table contains the original GWAS
+summary statistics augmented with fine-mapping posterior probabilities
+and credible set assignments.</p>
+<p>Here we use the bundled BST1 example results to show what the output
+looks like:</p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">echodata</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/echodata/man/BST1.html" class="external-link">BST1</a></span></span>
+<span><span class="co">## Top fine-mapped SNPs (consensus across methods)</span></span>
+<span><span class="va">consensus</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">Consensus_SNP</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span></span>
+<span>    <span class="va">consensus</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SNP"</span>,<span class="st">"CHR"</span>,<span class="st">"POS"</span>,<span class="st">"P"</span>,<span class="st">"mean.PP"</span>,<span class="st">"Support"</span>,<span class="st">"Consensus_SNP"</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>    caption <span class="op">=</span> <span class="st">"Consensus fine-mapped SNPs for the BST1 locus"</span>,</span>
+<span>    row.names <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<caption>Consensus fine-mapped SNPs for the BST1 locus</caption>
+<thead><tr class="header">
+<th align="left">SNP</th>
+<th align="right">CHR</th>
+<th align="right">POS</th>
+<th align="right">P</th>
+<th align="right">mean.PP</th>
+<th align="right">Support</th>
+<th align="left">Consensus_SNP</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">rs4541502</td>
+<td align="right">4</td>
+<td align="right">15712787</td>
+<td align="right">0</td>
+<td align="right">0.7500001</td>
+<td align="right">3</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">rs34559912</td>
+<td align="right">4</td>
+<td align="right">15730146</td>
+<td align="right">0</td>
+<td align="right">0.5155283</td>
+<td align="right">2</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">rs4389574</td>
+<td align="right">4</td>
+<td align="right">15730398</td>
+<td align="right">0</td>
+<td align="right">0.5000000</td>
+<td align="right">2</td>
+<td align="left">TRUE</td>
+</tr>
+</tbody>
+</table>
 <hr>
 </div>
 </div>
 <div class="section level2">
 <h2 id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<details><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<details><div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre style="max-height: 200px;"><code><span><span class="co">## R Under development (unstable) (2026-03-12 r89607)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu</span></span>
@@ -350,20 +493,21 @@ is especially important for the tool <em>FINEMAP</em>.</p>
 <span><span class="co">## [151] cli_3.6.5                   compiler_4.6.0             </span></span>
 <span><span class="co">## [153] Rsamtools_2.27.1            rlang_1.1.7                </span></span>
 <span><span class="co">## [155] crayon_1.5.3                aws.signature_0.6.0        </span></span>
-<span><span class="co">## [157] plyr_1.8.9                  forcats_1.0.1              </span></span>
-<span><span class="co">## [159] fs_1.6.7                    stringi_1.8.7              </span></span>
-<span><span class="co">## [161] coloc_5.2.3                 echoannot_1.0.1            </span></span>
-<span><span class="co">## [163] viridisLite_0.4.3           BiocParallel_1.45.0        </span></span>
-<span><span class="co">## [165] Biostrings_2.79.5           lazyeval_0.2.2             </span></span>
-<span><span class="co">## [167] Matrix_1.7-4                downloadR_1.0.0            </span></span>
-<span><span class="co">## [169] echoplot_1.0.0              dir.expiry_1.19.0          </span></span>
-<span><span class="co">## [171] BSgenome_1.79.1             patchwork_1.3.2            </span></span>
-<span><span class="co">## [173] hms_1.1.4                   bit64_4.6.0-1              </span></span>
-<span><span class="co">## [175] ggplot2_4.0.2               KEGGREST_1.51.1            </span></span>
-<span><span class="co">## [177] SummarizedExperiment_1.41.1 haven_2.5.5                </span></span>
-<span><span class="co">## [179] memoise_2.0.1               snpStats_1.61.1            </span></span>
-<span><span class="co">## [181] bslib_0.10.0                bit_4.6.0                  </span></span>
-<span><span class="co">## [183] readxl_1.4.5</span></span></code></pre>
+<span><span class="co">## [157] ieugwasr_1.1.0              plyr_1.8.9                 </span></span>
+<span><span class="co">## [159] forcats_1.0.1               fs_1.6.7                   </span></span>
+<span><span class="co">## [161] stringi_1.8.7               coloc_5.2.3                </span></span>
+<span><span class="co">## [163] echoannot_1.0.1             viridisLite_0.4.3          </span></span>
+<span><span class="co">## [165] BiocParallel_1.45.0         Biostrings_2.79.5          </span></span>
+<span><span class="co">## [167] lazyeval_0.2.2              Matrix_1.7-4               </span></span>
+<span><span class="co">## [169] downloadR_1.0.0             echoplot_1.0.0             </span></span>
+<span><span class="co">## [171] dir.expiry_1.19.0           MungeSumstats_1.19.5       </span></span>
+<span><span class="co">## [173] BSgenome_1.79.1             patchwork_1.3.2            </span></span>
+<span><span class="co">## [175] hms_1.1.4                   bit64_4.6.0-1              </span></span>
+<span><span class="co">## [177] ggplot2_4.0.2               KEGGREST_1.51.1            </span></span>
+<span><span class="co">## [179] SummarizedExperiment_1.41.1 haven_2.5.5                </span></span>
+<span><span class="co">## [181] memoise_2.0.1               snpStats_1.61.1            </span></span>
+<span><span class="co">## [183] bslib_0.10.0                bit_4.6.0                  </span></span>
+<span><span class="co">## [185] readxl_1.4.5</span></span></code></pre>
 </details><p><br></p>
 </div>
   </div>

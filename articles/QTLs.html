@@ -55,6 +55,9 @@
       <a href="../articles/docker.html">Docker/Singularity Containers</a>
     </li>
     <li>
+      <a href="../articles/explore_results.html">Exploring fine-mapping results</a>
+    </li>
+    <li>
       <a href="../articles/QTLs.html">QTLs</a>
     </li>
     <li>
@@ -105,7 +108,7 @@ Updated: <i>Mar-15-2026</i><br>
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RajLabMSSM/echolocatoR" class="external-link">echolocatoR</a></span><span class="op">)</span> </span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RajLabMSSM/echolocatoR" class="external-link">echolocatoR</a></span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">──</span> <span style="color: #55FFFF; font-weight: bold;">🦇  🦇  🦇 e c h o l o c a t o R 🦇  🦇  🦇</span> <span style="color: #00BBBB;">─────────────────────────────────</span></span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
@@ -132,6 +135,11 @@ Updated: <i>Mar-15-2026</i><br>
 <span><span class="co">## <span style="color: #FF55FF;">     ▶</span></span></span>
 <span><span class="co">## <span style="color: #FF55FF;">     https://github.com/RajLabMSSM/echolocatoR/pulls</span></span></span>
 <span><span class="co">## Tip: Run check_echoverse_setup() to diagnose any issues.</span></span></code></pre>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">has_internet</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span></span>
+<span>    <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="fu">curl</span><span class="fu">::</span><span class="fu"><a href="https://jeroen.r-universe.dev/curl/reference/nslookup.html" class="external-link">nslookup</a></span><span class="op">(</span><span class="st">"github.com"</span>, error <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="qtl-pipeline">QTL pipeline<a class="anchor" aria-label="anchor" href="#qtl-pipeline"></a>
 </h2>
@@ -151,7 +159,7 @@ disease pathologies. Nat Genet 54, 4–17 (2022). <a href="https://doi.org/10.10
 <p>This data is actually merged GWAS-QTL colocalization results, but it
 contains all of the necessary columns from the original eQTL summary
 stats that we need to perform eQTL fine-mapping.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">coloc_res</span> <span class="op">&lt;-</span> <span class="fu">echodata</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/echodata/man/get_Kunkle2019_coloc.html" class="external-link">get_Kunkle2019_coloc</a></span><span class="op">(</span>return_path <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -160,7 +168,7 @@ stats that we need to perform eQTL fine-mapping.</p>
 <p>Prepare a column mapping object for the summary statistics. We’ll
 reuse this for both the <code>import_topSNPs</code> and
 <code>finemap_loci</code> steps.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">colmap</span> <span class="op">&lt;-</span> <span class="fu">echodata</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/echodata/man/construct_colmap.html" class="external-link">construct_colmap</a></span><span class="op">(</span></span>
 <span>      CHR <span class="op">=</span> <span class="st">"chr"</span>,</span>
 <span>      POS <span class="op">=</span> <span class="st">"pos"</span>,</span>
@@ -180,31 +188,91 @@ reuse this for both the <code>import_topSNPs</code> and
 <li>In this case, we don’t have a top SNPs file ready. So we’re just
 going to make one directly from the full summary stats file itself
 (<em>NOTE</em>: You can only use this approach if you can fit the entire
-file in memory).<br>
-</li>
+file in memory).</li>
 <li>In this case, you’ll want to make sure to set
 <code>grouping_vars=c("Locus","Gene")</code> so that you get top SNPs
 for each eGene-locus pair (not just one SNP per locus).</li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">topSNPs</span> <span class="op">&lt;-</span> <span class="fu">echodata</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/echodata/man/import_topSNPs.html" class="external-link">import_topSNPs</a></span><span class="op">(</span></span>
 <span>  topSS <span class="op">=</span> <span class="va">coloc_res</span><span class="op">$</span><span class="va">path</span>,</span>
 <span>  colmap <span class="op">=</span> <span class="va">colmap</span>,</span>
 <span>  <span class="co">## Important for QTLs: group by both Locus and Gene</span></span>
-<span>  grouping_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Locus"</span>,<span class="st">"Gene"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">topSNPs</span><span class="op">)</span></span></code></pre></div>
+<span>  grouping_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Locus"</span>,<span class="st">"Gene"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Loading required namespace: MungeSumstats</span></span></code></pre>
+<pre><code><span><span class="co">## Renaming column: chr ==&gt; CHR</span></span></code></pre>
+<pre><code><span><span class="co">## Renaming column: pos ==&gt; POS</span></span></code></pre>
+<pre><code><span><span class="co">## Renaming column: snp ==&gt; SNP</span></span></code></pre>
+<pre><code><span><span class="co">## Renaming column: qtl.pvalues ==&gt; P</span></span></code></pre>
+<pre><code><span><span class="co">## Renaming column: qtl.beta ==&gt; Effect</span></span></code></pre>
+<pre><code><span><span class="co">## Renaming column: qtl.varbeta ==&gt; StdErr</span></span></code></pre>
+<pre><code><span><span class="co">## Renaming column: qtl.MAF ==&gt; MAF</span></span></code></pre>
+<pre><code><span><span class="co">## Renaming column: gene ==&gt; Gene</span></span></code></pre>
+<pre><code><span><span class="co">## Renaming column: qtl.N ==&gt; N</span></span></code></pre>
+<pre><code><span><span class="co">## [1] "+ Assigning Gene and Locus independently."</span></span></code></pre>
+<pre><code><span><span class="co">## Standardising column headers.</span></span></code></pre>
+<pre><code><span><span class="co">## First line of summary statistics file:</span></span></code></pre>
+<pre><code><span><span class="co">## Locus    SNP V.df1   z.df1   r.df1   lABF.df1    V.df2   z.df2   r.df2   lABF.df2    internal.sum.lABF   SNP.PP.H4   gwas.pvalues    gwas.beta   gwas.varbeta    gwas.MAF    CHR POS A1  A2  gwas.N  gwas.type   s   Gene    P   Effect  StdErr  MAF QTL_chr QTL_pos N   qtl.type    N_cases N_controls  </span></span></code></pre>
+<pre><code><span><span class="co">## Returning unmapped column names without making them uppercase.</span></span></code></pre>
+<pre><code><span><span class="co">## + Mapping colnames from MungeSumstats ==&gt; echolocatoR</span></span></code></pre>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">topSNPs</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Key: &lt;Locus&gt;</span></span>
+<span><span class="co">##                     Locus        SNP      V.df1      z.df1     r.df1   lABF.df1</span></span>
+<span><span class="co">##                    &lt;char&gt;     &lt;char&gt;      &lt;num&gt;      &lt;num&gt;     &lt;num&gt;      &lt;num&gt;</span></span>
+<span><span class="co">## 1:  ABCA7_ENSG00000160953 rs76951864 0.00227529 -1.2138365 0.9461792 -0.7639979</span></span>
+<span><span class="co">## 2:   BIN1_ENSG00000136731  rs4663110 0.00021904  2.0405405 0.9945538 -0.5358563</span></span>
+<span><span class="co">## 3:    CR1_ENSG00000266094  rs1518110 0.00030276 -1.0977011 0.9924879 -1.8476694</span></span>
+<span><span class="co">## 4: INPP5D_ENSG00000168918  rs1881492 0.00036100  0.1631579 0.9910557 -2.3451794</span></span>
+<span><span class="co">## 5: MS4A6A_ENSG00000149476  rs6591611 0.00028900 -1.4176471 0.9928268 -1.4710500</span></span>
+<span><span class="co">## 6:  PILRA_ENSG00000106366  rs2227631 0.00020736 -0.1041667 0.9948427 -2.6282771</span></span>
+<span><span class="co">##          V.df2     z.df2     r.df2   lABF.df2 internal.sum.lABF    SNP.PP.H4</span></span>
+<span><span class="co">##          &lt;num&gt;     &lt;num&gt;     &lt;num&gt;      &lt;num&gt;             &lt;num&gt;        &lt;num&gt;</span></span>
+<span><span class="co">## 1: 0.007802613 -5.826752 0.2374864  3.8958871         3.1318892 6.231637e-08</span></span>
+<span><span class="co">## 2: 0.004149176  2.778507 0.4321435  1.3851521         0.8492958 1.013056e-25</span></span>
+<span><span class="co">## 3: 0.002913938 -3.976592 0.4592553  3.3237628         1.4760934 4.495411e-11</span></span>
+<span><span class="co">## 4: 0.012164546 -2.654756 0.1470877  0.4387679        -1.9064116 3.587352e-08</span></span>
+<span><span class="co">## 5: 0.015193274  2.675112 0.2112492  0.6372210        -0.8338290 8.201862e-13</span></span>
+<span><span class="co">## 6: 0.006858275  8.459513 0.5879401 20.5941901        17.9659130 9.907667e-01</span></span>
+<span><span class="co">##    gwas.pvalues gwas.beta gwas.varbeta gwas.MAF   CHR       POS     A1     A2</span></span>
+<span><span class="co">##           &lt;num&gt;     &lt;num&gt;        &lt;num&gt;    &lt;num&gt; &lt;num&gt;     &lt;num&gt; &lt;char&gt; &lt;char&gt;</span></span>
+<span><span class="co">## 1:      0.22500   -0.0579   0.00227529   0.1054    19    374604      A      G</span></span>
+<span><span class="co">## 2:      0.04153    0.0302   0.00021904   0.6262     2 127922463      T      C</span></span>
+<span><span class="co">## 3:      0.27270   -0.0191   0.00030276   0.7803     1 206944861      A      C</span></span>
+<span><span class="co">## 4:      0.87100    0.0031   0.00036100   0.7763     2 233406998      T      G</span></span>
+<span><span class="co">## 5:      0.15760   -0.0241   0.00028900   0.2207    11  60405172      A      C</span></span>
+<span><span class="co">## 6:      0.91860   -0.0015   0.00020736   0.4056     7 100769538      A      G</span></span>
+<span><span class="co">##    gwas.N gwas.type     s            Gene           P    Effect      StdErr</span></span>
+<span><span class="co">##     &lt;int&gt;    &lt;char&gt; &lt;num&gt;          &lt;char&gt;       &lt;num&gt;     &lt;num&gt;       &lt;num&gt;</span></span>
+<span><span class="co">## 1:  94437        cc  0.37 ENSG00000160953 8.31563e-09 -0.514691 0.007802613</span></span>
+<span><span class="co">## 2:  94437        cc  0.37 ENSG00000136731 7.93573e-05  0.178975 0.004149176</span></span>
+<span><span class="co">## 3:  94437        cc  0.37 ENSG00000266094 1.00516e-04 -0.214660 0.002913938</span></span>
+<span><span class="co">## 4:  94437        cc  0.37 ENSG00000168918 6.42575e-06 -0.292801 0.012164546</span></span>
+<span><span class="co">## 5:  94437        cc  0.37 ENSG00000149476 2.20256e-04  0.329737 0.015193274</span></span>
+<span><span class="co">## 6:  94437        cc  0.37 ENSG00000106366 5.45534e-17  0.700572 0.006858275</span></span>
+<span><span class="co">##       Freq QTL_chr   QTL_pos     N qtl.type N_cases N_controls</span></span>
+<span><span class="co">##      &lt;num&gt;  &lt;char&gt;     &lt;int&gt; &lt;int&gt;   &lt;char&gt;   &lt;int&gt;      &lt;int&gt;</span></span>
+<span><span class="co">## 1: 0.08770   chr19    374604    90    quant   34941      59496</span></span>
+<span><span class="co">## 2: 0.34385    chr2 127164887    90    quant   34941      59496</span></span>
+<span><span class="co">## 3: 0.25363    chr1 206771516    90    quant   34941      59496</span></span>
+<span><span class="co">## 4: 0.14447    chr2 232542288    90    quant   34941      59496</span></span>
+<span><span class="co">## 5: 0.18503   chr11  60637699    90    quant   34941      59496</span></span>
+<span><span class="co">## 6: 0.42796    chr7 101126257    90    quant   34941      59496</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="run-fine-mapping-pipeline">Run fine-mapping pipeline<a class="anchor" aria-label="anchor" href="#run-fine-mapping-pipeline"></a>
 </h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<p>The following call runs the full fine-mapping pipeline on QTL data.
+This is computationally expensive and may take <strong>10–30 minutes per
+locus</strong>.</p>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">echolocatoR</span><span class="fu">::</span><span class="fu"><a href="../reference/finemap_loci.html">finemap_loci</a></span><span class="op">(</span>fullSS_path <span class="op">=</span> <span class="va">coloc_res</span><span class="op">$</span><span class="va">path</span>,</span>
 <span>                                 topSNPs <span class="op">=</span> <span class="va">topSNPs</span>,</span>
 <span>                                 <span class="co">## Let's just fine-map 1 locus for demo purposes</span></span>
 <span>                                 loci <span class="op">=</span> <span class="va">topSNPs</span><span class="op">$</span><span class="va">Locus</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
 <span>                                 dataset_name <span class="op">=</span> <span class="st">"Kunkle_2019.microgliaQTL"</span>,</span>
 <span>                                 dataset_type <span class="op">=</span> <span class="st">"QTL"</span>,</span>
-<span>                                 bp_distance <span class="op">=</span> <span class="fl">1000</span>, </span>
+<span>                                 bp_distance <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>                                 colmap <span class="op">=</span> <span class="va">colmap</span>,</span>
 <span>                                 show_plot <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                                 finemap_methods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ABF"</span>,<span class="st">"FINEMAP"</span>,<span class="st">"SUSIE"</span><span class="op">)</span> <span class="op">)</span></span></code></pre></div>
@@ -213,7 +281,7 @@ for each eGene-locus pair (not just one SNP per locus).</li>
 <div class="section level2">
 <h2 id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<details><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<details><div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre style="max-height: 200px;"><code><span><span class="co">## R Under development (unstable) (2026-03-12 r89607)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu</span></span>
@@ -319,20 +387,21 @@ for each eGene-locus pair (not just one SNP per locus).</li>
 <span><span class="co">## [151] cli_3.6.5                   compiler_4.6.0             </span></span>
 <span><span class="co">## [153] Rsamtools_2.27.1            rlang_1.1.7                </span></span>
 <span><span class="co">## [155] crayon_1.5.3                aws.signature_0.6.0        </span></span>
-<span><span class="co">## [157] plyr_1.8.9                  forcats_1.0.1              </span></span>
-<span><span class="co">## [159] fs_1.6.7                    stringi_1.8.7              </span></span>
-<span><span class="co">## [161] coloc_5.2.3                 echoannot_1.0.1            </span></span>
-<span><span class="co">## [163] viridisLite_0.4.3           BiocParallel_1.45.0        </span></span>
-<span><span class="co">## [165] Biostrings_2.79.5           lazyeval_0.2.2             </span></span>
-<span><span class="co">## [167] Matrix_1.7-4                downloadR_1.0.0            </span></span>
-<span><span class="co">## [169] echoplot_1.0.0              dir.expiry_1.19.0          </span></span>
-<span><span class="co">## [171] BSgenome_1.79.1             patchwork_1.3.2            </span></span>
-<span><span class="co">## [173] hms_1.1.4                   bit64_4.6.0-1              </span></span>
-<span><span class="co">## [175] ggplot2_4.0.2               KEGGREST_1.51.1            </span></span>
-<span><span class="co">## [177] SummarizedExperiment_1.41.1 haven_2.5.5                </span></span>
-<span><span class="co">## [179] memoise_2.0.1               snpStats_1.61.1            </span></span>
-<span><span class="co">## [181] bslib_0.10.0                bit_4.6.0                  </span></span>
-<span><span class="co">## [183] readxl_1.4.5</span></span></code></pre>
+<span><span class="co">## [157] ieugwasr_1.1.0              plyr_1.8.9                 </span></span>
+<span><span class="co">## [159] forcats_1.0.1               fs_1.6.7                   </span></span>
+<span><span class="co">## [161] stringi_1.8.7               coloc_5.2.3                </span></span>
+<span><span class="co">## [163] echoannot_1.0.1             viridisLite_0.4.3          </span></span>
+<span><span class="co">## [165] BiocParallel_1.45.0         Biostrings_2.79.5          </span></span>
+<span><span class="co">## [167] lazyeval_0.2.2              Matrix_1.7-4               </span></span>
+<span><span class="co">## [169] downloadR_1.0.0             echoplot_1.0.0             </span></span>
+<span><span class="co">## [171] dir.expiry_1.19.0           MungeSumstats_1.19.5       </span></span>
+<span><span class="co">## [173] BSgenome_1.79.1             patchwork_1.3.2            </span></span>
+<span><span class="co">## [175] hms_1.1.4                   bit64_4.6.0-1              </span></span>
+<span><span class="co">## [177] ggplot2_4.0.2               KEGGREST_1.51.1            </span></span>
+<span><span class="co">## [179] SummarizedExperiment_1.41.1 haven_2.5.5                </span></span>
+<span><span class="co">## [181] memoise_2.0.1               snpStats_1.61.1            </span></span>
+<span><span class="co">## [183] bslib_0.10.0                bit_4.6.0                  </span></span>
+<span><span class="co">## [185] readxl_1.4.5</span></span></code></pre>
 </details>
 </div>
   </div>
