@@ -63,6 +63,31 @@ module independently to create your own custom workflows.
 
 ## Installation
 
+#### Prerequisites
+
+Before installing `echolocatoR`, make sure the following system
+libraries are available. These are needed to compile R packages that
+`echolocatoR` depends on.
+
+**macOS** (via [Homebrew](https://brew.sh)):
+
+``` bash
+brew install libxml2 openssl curl zlib gcc
+```
+
+**Ubuntu / Debian**:
+
+``` bash
+sudo apt-get install -y libxml2-dev libssl-dev libcurl4-openssl-dev \
+  zlib1g-dev gfortran
+```
+
+**Windows**: Install
+[Rtools](https://cran.r-project.org/bin/windows/Rtools/) matching your R
+version.
+
+#### Install
+
 ``` r
 
 if(!require("BiocManager")) install.packages("BiocManager")
@@ -71,30 +96,36 @@ BiocManager::install("RajLabMSSM/echolocatoR")
 library(echolocatoR)
 ```
 
-#### Installation troubleshooting
+#### Diagnose issues
 
-- Because `echolocatoR` now relies on many subpackages that rely on one
-  another, sometimes errors can occur when R tries to update one R
-  package before updating its *echoverse* dependencies (and thus is
-  unable to find new functions). As *echoverse* stabilizes over time,
-  this should happen less frequently. However, in the meantime the
-  solution is to simply rerun
+After installing, run the built-in diagnostic to check for any problems:
+
+``` r
+
+echolocatoR::check_echoverse_setup()
+```
+
+#### Troubleshooting
+
+- **Dependency ordering**: Because `echolocatoR` relies on many
+  subpackages that depend on one another, install errors can sometimes
+  occur when R tries to update one package before its *echoverse*
+  dependencies. The solution is to simply rerun
   `BiocManager::install("RajLabMSSM/echolocatoR")` until all subpackages
-  are fully updates.
-- `susieR`: Sometimes an older version of `susieR` is installed from
-  CRAN (e.g. 0.11.92), but `echofinemap` requires version \>= 0.12.0. To
-  get around this, you can install `susieR` directly from GitHub:
+  are fully updated.
+- **susieR version**: `echofinemap` requires `susieR` \>= 0.12.0, but
+  CRAN sometimes has an older version. Fix:
   `devtools::install_github("stephenslab/susieR")`
-- System dependencies can sometimes cause issues when using different
-  packages. I’ve tried to account for as many of these as possible
-  automatically within the code, but using the **Docker/Singularity**
-  provided below can further mitigate these issues.
-- The R package `XML` (which some *echoverse* subpackages depend on) has
-  some additional system dependencies that must be installed beforehand.
-  If `XML` does not install automatically, try installing `lbxml` on
-  your system using `brew install libxml2` (MacOS),
-  `sudo apt-get install libxml2` (Linux) or `conda install r-xml` if you
-  are running `echolocatoR` from within a conda environment.
+- **GitHub rate limiting**: Installing many GitHub-hosted packages can
+  trigger API rate limits. Set a GitHub Personal Access Token:
+  `Sys.setenv(GITHUB_TOKEN = "your_token_here")`. See [GitHub
+  docs](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+  for how to create one.
+- **Python / conda**: Some fine-mapping methods (PolyFun) and LD
+  reference panels (UKB) require Python and conda. Install
+  [Miniforge](https://github.com/conda-forge/miniforge) if you plan to
+  use these features. The conda environment `echoR_mini` will be created
+  automatically on first use.
 
 ### \[Optional\] [Docker/Singularity](https://rajlabmssm.github.io/echolocatoR/articles/docker)
 
@@ -144,6 +175,10 @@ toc <- echogithub::github_pages_vignettes(owner = "RajLabMSSM",
   - ### [docker](https://rajlabmssm.github.io/echolocatoR//articles/docker.html)
 
   - ### [echolocatoR](https://rajlabmssm.github.io/echolocatoR//articles/echolocatoR.html)
+
+  - ### [echoverse modules](https://rajlabmssm.github.io/echolocatoR//articles/echoverse_modules.html)
+
+  - ### [explore results](https://rajlabmssm.github.io/echolocatoR//articles/explore_results.html)
 
   - ### [finemapping portal](https://rajlabmssm.github.io/echolocatoR//articles/finemapping_portal.html)
 
