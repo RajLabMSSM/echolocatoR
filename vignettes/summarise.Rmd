@@ -1,80 +1,85 @@
 ---
 title: "Summarise"
-author: "<h4>Author: <i>Brian M. Schilder</i></h4>" 
+author: "<h4>Author: <i>Brian M. Schilder</i></h4>"
 date: "<h4>Updated: <i>`r format( Sys.Date(), '%b-%d-%Y')`</i></h4>"
 output:
   BiocStyle::html_document
 vignette: >
-    %\VignetteIndexEntry{summarise} 
+    %\VignetteIndexEntry{summarise}
     %\usepackage[utf8]{inputenc}
     %\VignetteEngine{knitr::rmarkdown}
 ---
 
-```{r setup, include = TRUE} 
-library(echolocatoR)  
+```{r setup, include = TRUE}
+library(echolocatoR)
+
+has_internet <- tryCatch(
+    !is.null(curl::nslookup("github.com", error = FALSE)),
+    error = function(e) FALSE
+)
 ```
 
-# Download data  
+# Download data
 
 # Summarise
 
-Using pre-merged data for vignette speed. 
+Using pre-merged data for vignette speed.
 
-```{r, eval=FALSE}
+```{r, eval=has_internet}
 merged_DT <- echodata::get_Nalls2019_merged()
 ```
 
 ## `get_SNPgroup_counts()`
 
-Get the number of SNPs for each SNP group per locus.  
-It also prints the mean number of SNPs for each SNP group across all loci.  
+Get the number of SNPs for each SNP group per locus.
+It also prints the mean number of SNPs for each SNP group across all loci.
 **NOTE**: You will need to make sure to set `merge_finemapping_results(minimum_support=1)`
-in the above step to get accurate counts for all SNP groups.  
+in the above step to get accurate counts for all SNP groups.
 
-```{r get_SNPgroup_counts(), eval=FALSE}
+```{r get_SNPgroup_counts(), eval=has_internet}
 snp_groups <- echodata::get_SNPgroup_counts(merged_DT = merged_DT)
 ```
 
-## `get_CS_counts()` 
+## `get_CS_counts()`
 
-County the number of tool-specific and UCS Credible Set SNPs per locus.  
+Count the number of tool-specific and UCS Credible Set SNPs per locus.
 
-```{r get_CS_counts(), eval=FALSE}
+```{r get_CS_counts(), eval=has_internet}
 UCS_counts <- echodata::get_CS_counts(merged_DT = merged_DT)
-knitr::kable(UCS_counts)
+knitr::kable(head(UCS_counts, 10))
 ```
 
 
-# Plot  
+# Plot
 
 - The following functions each return a list containing both the `...$plot` and the `...$data`
-used to make the plot.  
+used to make the plot.
 - Where available, `snp_filter` allows user to use any filtering argument (supplied as a string)
-to subset the data they want to use in the plot/data.  
+to subset the data they want to use in the plot/data.
 
 
 ## Colocalization results
 
-If you ran colocalization tests with `echolocatoR` (via `catalogueR`) 
-you can use those results to 
-come up with a top QTL nominated gene for each locus 
-(potentially implicating that gene in your phenotype).   
+If you ran colocalization tests with `echolocatoR` (via `catalogueR`)
+you can use those results to
+come up with a top QTL nominated gene for each locus
+(potentially implicating that gene in your phenotype).
 
-```{r, eval=FALSE}
+```{r, eval=has_internet}
 coloc_res <- echodata::get_Nalls2019_coloc()
 ```
 
 
 ## Super summary plot
 
-```{r super_summary_plot(), fig.height=15, fig.width=15, eval=FALSE}
-super_plot <- echoannot::super_summary_plot(merged_DT = merged_DT, 
+```{r super_summary_plot(), fig.height=10, fig.width=10, eval=has_internet}
+super_plot <- echoannot::super_summary_plot(merged_DT = merged_DT,
                                             coloc_results = coloc_res,
                                             plot_missense = FALSE)
 ```
 
 
-# Session info 
+# Session info
 
 <details>
 

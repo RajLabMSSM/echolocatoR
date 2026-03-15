@@ -1,26 +1,31 @@
 ---
-title: "QTLs" 
-author: "<h4>Author: <i>Brian M. Schilder</i></h4>" 
+title: "QTLs"
+author: "<h4>Author: <i>Brian M. Schilder</i></h4>"
 date: "<h4>Updated: <i>`r format( Sys.Date(), '%b-%d-%Y')`</i></h4>"
 output:
   BiocStyle::html_document
 vignette: >
-    %\VignetteIndexEntry{QTLs} 
+    %\VignetteIndexEntry{QTLs}
     %\usepackage[utf8]{inputenc}
     %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r setup, include=TRUE}
-library(echolocatoR) 
+library(echolocatoR)
+
+has_internet <- tryCatch(
+    !is.null(curl::nslookup("github.com", error = FALSE)),
+    error = function(e) FALSE
+)
 ```
 
- 
+
 # QTL pipeline
 
-- Here, we will use GWAS-eQTL colocalization results provided via the [*echolocatoR Fine-mapping Portal*](https://github.com/RajLabMSSM/Fine_Mapping_Shiny), 
-from the publication: 
+- Here, we will use GWAS-eQTL colocalization results provided via the [*echolocatoR Fine-mapping Portal*](https://github.com/RajLabMSSM/Fine_Mapping_Shiny),
+from the publication:
 
-> Lopes, K.d.P., Snijders, G.J.L., Humphrey, J. et al. Genetic analysis of the human microglial transcriptome across brain regions, aging and disease pathologies. Nat Genet 54, 4–17 (2022). [https://doi.org/10.1038/s41588-021-00976-y](https://doi.org/10.1038/s41588-021-00976-y) 
+> Lopes, K.d.P., Snijders, G.J.L., Humphrey, J. et al. Genetic analysis of the human microglial transcriptome across brain regions, aging and disease pathologies. Nat Genet 54, 4–17 (2022). [https://doi.org/10.1038/s41588-021-00976-y](https://doi.org/10.1038/s41588-021-00976-y)
 
 ## Import QTL data
 
@@ -28,7 +33,7 @@ This data is actually merged GWAS-QTL colocalization results,
 but it contains all of the necessary columns from the original eQTL
 summary stats that we need to perform eQTL fine-mapping.
 
-```{r, eval=FALSE}
+```{r import-qtl, eval=has_internet}
 coloc_res <- echodata::get_Kunkle2019_coloc(return_path = TRUE)
 ```
 
@@ -37,7 +42,7 @@ coloc_res <- echodata::get_Kunkle2019_coloc(return_path = TRUE)
 Prepare a column mapping object for the summary statistics.
 We'll reuse this for both the `import_topSNPs` and `finemap_loci` steps.
 
-```{r, eval=FALSE}
+```{r prepare-colmap, eval=has_internet}
 colmap <- echodata::construct_colmap(
       CHR = "chr",
       POS = "pos",
@@ -52,14 +57,14 @@ colmap <- echodata::construct_colmap(
 ```
 
 
-## Prepare `top_SNPs` data.frame   
+## Prepare `top_SNPs` data.frame
 
 - In this case, we don't have a top SNPs file ready.
-So we're just going to make one directly from the full summary stats file itself 
-(*NOTE*: You can only use this approach if you can fit the entire file in memory).  
-- In this case, you'll want to make sure to set `grouping_vars=c("Locus","Gene")` so that you get top SNPs for each eGene-locus pair (not just one SNP per locus).  
+So we're just going to make one directly from the full summary stats file itself
+(*NOTE*: You can only use this approach if you can fit the entire file in memory).
+- In this case, you'll want to make sure to set `grouping_vars=c("Locus","Gene")` so that you get top SNPs for each eGene-locus pair (not just one SNP per locus).
 
-```{r  Prepare `top_SNPs` data.frame, eval=FALSE}
+```{r Prepare top_SNPs data.frame, eval=has_internet}
 topSNPs <- echodata::import_topSNPs(
   topSS = coloc_res$path,
   colmap = colmap,
@@ -67,26 +72,29 @@ topSNPs <- echodata::import_topSNPs(
   grouping_vars = c("Locus","Gene"))
 head(topSNPs)
 ```
- 
-## Run fine-mapping pipeline  
- 
-```{r, eval=FALSE}
+
+## Run fine-mapping pipeline
+
+The following call runs the full fine-mapping pipeline on QTL data.
+This is computationally expensive and may take **10–30 minutes per locus**.
+
+```{r finemap-qtl, eval=FALSE}
 res <- echolocatoR::finemap_loci(fullSS_path = coloc_res$path,
                                  topSNPs = topSNPs,
                                  ## Let's just fine-map 1 locus for demo purposes
                                  loci = topSNPs$Locus[1],
                                  dataset_name = "Kunkle_2019.microgliaQTL",
                                  dataset_type = "QTL",
-                                 bp_distance = 1000, 
+                                 bp_distance = 1000,
                                  colmap = colmap,
                                  show_plot = TRUE,
                                  finemap_methods = c("ABF","FINEMAP","SUSIE") )
 ```
- 
+
 
 # Session info
 
-<details> 
+<details>
 
 ```{r Session Info, attr.output='style="max-height: 200px;"'}
 utils::sessionInfo()

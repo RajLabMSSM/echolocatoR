@@ -1,0 +1,139 @@
+---
+title: "Exploring fine-mapping results"
+author: "<h4>Author: <i>Brian M. Schilder</i></h4>"
+date: "<h4>Updated: <i>`r format( Sys.Date(), '%b-%d-%Y')`</i></h4>"
+output:
+  BiocStyle::html_document
+vignette: >
+    %\VignetteIndexEntry{Exploring fine-mapping results}
+    %\usepackage[utf8]{inputenc}
+    %\VignetteEngine{knitr::rmarkdown}
+---
+
+
+```{r setup, include=TRUE}
+library(echolocatoR)
+```
+
+# Overview
+
+This vignette demonstrates how to explore and interpret the fine-mapping
+results produced by `finemap_loci()`. All examples use bundled data
+included in `echodata`, so **no internet connection is required**.
+
+# Load example results
+
+`echodata` ships with pre-computed fine-mapping results for three
+Parkinson's disease loci from Nalls et al. (2019):
+
+```{r load-data}
+dat <- echodata::BST1
+dim(dat)
+```
+
+Each row is a SNP within the locus window. Key columns include:
+
+- **GWAS columns**: `SNP`, `CHR`, `POS`, `P`, `Effect`, `StdErr`, `MAF`
+- **Fine-mapping posterior probabilities**: `ABF.PP`, `SUSIE.PP`, `FINEMAP.PP`
+- **Credible set assignments**: `ABF.CS`, `SUSIE.CS`, `FINEMAP.CS`
+- **Consensus columns**: `Support` (number of methods placing SNP in a CS),
+  `Consensus_SNP`, `mean.PP`, `mean.CS`
+
+```{r show-columns}
+## Fine-mapping specific columns
+fm_cols <- c("SNP","P","ABF.PP","SUSIE.PP","FINEMAP.PP",
+             "Support","Consensus_SNP","mean.PP")
+knitr::kable(head(dat[order(dat$mean.PP, decreasing = TRUE), ..fm_cols], 10),
+             digits = 4, row.names = FALSE,
+             caption = "Top 10 SNPs by mean posterior probability")
+```
+
+# Consensus SNPs
+
+Consensus SNPs are those placed in a credible set by multiple fine-mapping
+methods. The `Support` column indicates how many methods agree:
+
+```{r consensus}
+consensus <- subset(dat, Consensus_SNP == TRUE)
+knitr::kable(
+    consensus[, c("SNP","POS","P","ABF.PP","SUSIE.PP","FINEMAP.PP",
+                   "Support","mean.PP")],
+    digits = 4, row.names = FALSE,
+    caption = "Consensus fine-mapped SNPs (BST1 locus)"
+)
+```
+
+# SNP group counts
+
+Summarise how many SNPs fall into each support level:
+
+```{r snp-groups}
+support_table <- table(Support = dat$Support)
+knitr::kable(as.data.frame(support_table),
+             caption = "SNP counts by support level")
+```
+
+# Credible sets
+
+Each fine-mapping method assigns SNPs to credible sets (CS). A value of
+`0` means the SNP is not in any CS; `1` = first CS, `2` = second CS, etc.
+
+```{r credible-sets}
+## Count SNPs in each method's credible sets
+cs_summary <- data.frame(
+    Method = c("ABF", "SUSIE", "FINEMAP"),
+    SNPs_in_CS = c(
+        sum(dat$ABF.CS > 0, na.rm = TRUE),
+        sum(dat$SUSIE.CS > 0, na.rm = TRUE),
+        sum(dat$FINEMAP.CS > 0, na.rm = TRUE)
+    )
+)
+knitr::kable(cs_summary, caption = "Number of SNPs in credible sets per method")
+```
+
+# Working with multiple loci
+
+`echodata` also bundles LRRK2 and MEX3C loci.
+You can combine them to simulate multi-locus analysis:
+
+```{r multi-loci}
+bst1 <- data.table::copy(echodata::BST1); bst1[, Locus := "BST1"]
+lrrk2 <- data.table::copy(echodata::LRRK2); lrrk2[, Locus := "LRRK2"]
+mex3c <- data.table::copy(echodata::MEX3C); mex3c[, Locus := "MEX3C"]
+shared_cols <- Reduce(intersect, list(colnames(bst1), colnames(lrrk2), colnames(mex3c)))
+all_loci <- rbind(bst1[, ..shared_cols], lrrk2[, ..shared_cols], mex3c[, ..shared_cols])
+## Consensus SNPs per locus
+consensus_per_locus <- do.call(rbind, lapply(
+    split(all_loci, all_loci$Locus),
+    function(x) data.frame(
+        Locus = x$Locus[1],
+        Total_SNPs = nrow(x),
+        Consensus_SNPs = sum(x$Consensus_SNP, na.rm = TRUE),
+        Min_P = min(x$P, na.rm = TRUE)
+    )
+))
+knitr::kable(consensus_per_locus, row.names = FALSE,
+             caption = "Summary across bundled loci")
+```
+
+# LD matrix
+
+A pre-computed LD matrix for BST1 is also available:
+
+```{r ld-matrix}
+ld <- echodata::BST1_LD_matrix
+cat("LD matrix dimensions:", dim(ld), "\n")
+cat("SNPs in LD matrix:", ncol(ld), "\n")
+## Show a small corner
+knitr::kable(round(ld[1:5, 1:5], 3), caption = "LD matrix (top-left corner)")
+```
+
+# Session info
+
+<details>
+
+```{r Session Info, attr.output='style="max-height: 200px;"'}
+utils::sessionInfo()
+```
+
+</details>

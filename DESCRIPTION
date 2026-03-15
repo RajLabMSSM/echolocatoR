@@ -61,7 +61,8 @@ Suggests:
     ggplot2,
     patchwork,
     XML,
-    xml2
+    xml2,
+    curl
 Remotes:
   github::RajLabMSSM/echoconda,
   github::RajLabMSSM/downloadR,
