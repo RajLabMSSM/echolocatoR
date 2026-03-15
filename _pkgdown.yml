@@ -1,0 +1,88 @@
+url: https://rajlabmssm.github.io/echolocatoR/
+
+template:
+  bootstrap: 5
+  bslib:
+    bg: "#1a2744"
+    fg: "#e8f4f4"
+    primary: "#4ecdc4"
+    secondary: "#3a8d8c"
+    success: "#2ee8d6"
+    info: "#5bc0be"
+    code-bg: "#162038"
+    code-color: "#b8e8e4"
+    border-color: "#2a4060"
+    link-color: "#4ecdc4"
+    link-hover-color: "#2ee8d6"
+    font-size-base: "1rem"
+  includes:
+    in_header: |
+      <style>
+      .navbar {
+        background-color: #162038 !important;
+        border-bottom: 2px solid #4ecdc4;
+      }
+      .navbar-brand, .nav-link { color: #e8f4f4 !important; }
+      .nav-link:hover { color: #2ee8d6 !important; }
+      .nav-link.active { color: #2ee8d6 !important; border-bottom: 2px solid #2ee8d6; }
+      pre {
+        background-color: #162038 !important;
+        color: #b8e8e4 !important;
+        border: 1px solid #2a4060;
+        border-radius: 6px;
+      }
+      code { color: #4ecdc4 !important; }
+      pre code { color: #b8e8e4 !important; }
+      .table { color: #e8f4f4 !important; }
+      .table-striped > tbody > tr:nth-of-type(odd) > * {
+        background-color: rgba(78, 205, 196, 0.05) !important;
+        color: #e8f4f4 !important;
+      }
+      .table-striped > tbody > tr:nth-of-type(even) > * {
+        background-color: transparent !important;
+        color: #e8f4f4 !important;
+      }
+      .table > thead { border-bottom: 2px solid #4ecdc4; }
+      h1, h2, h3, h4, h5, h6 { color: #4ecdc4 !important; }
+      a { color: #5bc0be; }
+      a:hover { color: #2ee8d6; }
+      .card { background-color: #1e3050; border-color: #2a4060; }
+      .footer { background-color: #162038 !important; border-top: 1px solid #2a4060; }
+      .page-header { border-bottom: 2px solid #3a8d8c; }
+      .sourceCode { background-color: #162038 !important; }
+      </style>
+
+navbar:
+  structure:
+    left: [intro, reference, articles, news]
+    right: [search, github]
+  components:
+    github:
+      icon: fa-github
+      href: https://github.com/RajLabMSSM/echolocatoR
+
+articles:
+  - title: Getting started
+    contents:
+      - echolocatoR
+      - explore_results
+  - title: Advanced workflows
+    contents:
+      - QTLs
+      - summarise
+  - title: Setup
+    contents:
+      - docker
+
+reference:
+  - title: Fine-mapping pipeline
+    desc: Core functions for running the fine-mapping pipeline
+    contents:
+      - finemap_loci
+      - finemap_locus
+  - title: Utilities
+    contents:
+      - check_echoverse_setup
+      - check_genome
+      - batapply
+      - check_deprecated
