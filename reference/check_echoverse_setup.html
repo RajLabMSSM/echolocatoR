@@ -12,13 +12,16 @@ Prints an actionable report with platform-specific fix commands."><style>
 .nav-link:hover { color: #2ee8d6 !important; }
 .nav-link.active { color: #2ee8d6 !important; border-bottom: 2px solid #2ee8d6; }
 pre {
-  background-color: #162038 !important;
-  color: #b8e8e4 !important;
-  border: 1px solid #2a4060;
-  border-radius: 6px;
+  background-color: #d6e4ee !important;
+  color: #1a2744 !important;
+  border: none !important;
+  border-radius: 12px;
+  margin: 0;
+  padding: 0.8em 1em;
 }
-code { color: #4ecdc4 !important; }
-pre code { color: #b8e8e4 !important; }
+code { color: #1a6b68 !important; border: none !important; }
+pre code { color: #1a2744 !important; border: none !important; background: transparent !important; }
+pre code span { border: none !important; background: transparent !important; }
 .table { color: #e8f4f4 !important; }
 .table-striped > tbody > tr:nth-of-type(odd) > * {
   background-color: rgba(78, 205, 196, 0.05) !important;
@@ -35,7 +38,19 @@ a:hover { color: #2ee8d6; }
 .card { background-color: #1e3050; border-color: #2a4060; }
 .footer { background-color: #162038 !important; border-top: 1px solid #2a4060; }
 .page-header { border-bottom: 2px solid #3a8d8c; }
-.sourceCode { background-color: #162038 !important; }
+.sourceCode {
+  background-color: #d6e4ee !important;
+  border: 1px solid #3a8d8c;
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+.sourceCode code span,
+.sourceCode code a {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
 </style></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
