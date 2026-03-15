@@ -51,12 +51,17 @@ Suggests:
     echodeps,
     echogithub,
     BiocStyle,
+    DescTools,
+    genetics.binaRies,
     remotes,
+    reticulate,
     rmarkdown,
     knitr,
     testthat (>= 3.0.0),
     ggplot2,
-    patchwork
+    patchwork,
+    XML,
+    xml2
 Remotes:
   github::RajLabMSSM/echoconda,
   github::RajLabMSSM/downloadR,

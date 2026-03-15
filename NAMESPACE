@@ -2,6 +2,7 @@
 
 export(batapply)
 export(check_deprecated)
+export(check_echoverse_setup)
 export(check_genome)
 export(finemap_loci)
 export(finemap_locus)

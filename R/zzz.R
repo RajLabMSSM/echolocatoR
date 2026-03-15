@@ -13,5 +13,8 @@
     )
   })
   all_msg <- c(msg_out, msg_err)
+  all_msg <- c(all_msg,
+    "Tip: Run check_echoverse_setup() to diagnose any issues."
+  )
   packageStartupMessage(paste(all_msg, collapse = "\n"))
 }
