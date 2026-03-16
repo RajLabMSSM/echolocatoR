@@ -67,7 +67,7 @@ Login using the credentials set during the Installation steps.
 utils::sessionInfo()
 ```
 
-    ## R Under development (unstable) (2026-03-12 r89607)
+    ## R Under development (unstable) (2026-03-15 r89629)
     ## Platform: x86_64-pc-linux-gnu
     ## Running under: Ubuntu 24.04.4 LTS
     ## 

@@ -120,6 +120,9 @@ Updated: <i>Mar-16-2026</i><br>
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RajLabMSSM/echolocatoR" class="external-link">echolocatoR</a></span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Registered S3 method overwritten by 'bit64':</span></span>
+<span><span class="co">##   method          from </span></span>
+<span><span class="co">##   print.bitstring tools</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">──</span> <span style="color: #55FFFF; font-weight: bold;">🦇  🦇  🦇 e c h o l o c a t o R 🦇  🦇  🦇</span> <span style="color: #00BBBB;">─────────────────────────────────</span></span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
@@ -146,7 +149,7 @@ Updated: <i>Mar-16-2026</i><br>
 <span><span class="co">## <span style="color: #FF55FF;">     ▶</span></span></span>
 <span><span class="co">## <span style="color: #FF55FF;">     https://github.com/RajLabMSSM/echolocatoR/pulls</span></span></span>
 <span><span class="co">## Tip: Run check_echoverse_setup() to diagnose any issues.</span></span></code></pre>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">has_internet</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span></span>
 <span>    <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="fu">curl</span><span class="fu">::</span><span class="fu"><a href="https://jeroen.r-universe.dev/curl/reference/nslookup.html" class="external-link">nslookup</a></span><span class="op">(</span><span class="st">"github.com"</span>, error <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="cn">FALSE</span></span>
@@ -171,7 +174,7 @@ centered on each lead/index SNP.</li>
 path to a topSS file saved somewhere. Most common tabular data formats
 (e.g. .tsv, .csv, .xlsx) are accepted.</li>
 </ul>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#### Load example top SNPs (pre-formatted) ####</span></span>
 <span><span class="va">topSS</span> <span class="op">&lt;-</span> <span class="fu">echodata</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/echodata/man/topSNPs_Nalls2019_raw.html" class="external-link">topSNPs_Nalls2019_raw</a></span></span>
 <span><span class="co">#### construct a column mapping object ####</span></span>
@@ -195,7 +198,7 @@ path to a topSS file saved somewhere. Most common tabular data formats
 <pre><code><span><span class="co">## SNP  CHR BP  Locus   Gene    Effect allele   Other allele    Effect allele frequency Effect  SE, all studies P   P, COJO, all studies    P, random effects, all studies  P, Conditional 23AndMe only P, 23AndMe only I2, all studies Freq1, previous studies Beta, previous studies  StdErr, previous studies    P, previous studies I2, previous studies    Freq1, new studies  Beta, new studies   StdErr, new studies P, new studies  I2, new studies Passes pooled 23andMe QC    Known GWAS locus within 1MB Failed final filtering and QC   Locus within 250KB  Locus Number    </span></span></code></pre>
 <pre><code><span><span class="co">## Returning unmapped column names without making them uppercase.</span></span></code></pre>
 <pre><code><span><span class="co">## + Mapping colnames from MungeSumstats ==&gt; echolocatoR</span></span></code></pre>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">topSNPs</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Key: &lt;Locus&gt;</span></span>
 <span><span class="co">##           SNP   CHR       POS   Locus    Gene     A2     A1   Freq  Effect</span></span>
@@ -284,9 +287,9 @@ provide most column mapping arguments in <code>finemap_loci</code> when
 <span><span class="va">fullSS_path</span> <span class="op">&lt;-</span> <span class="fu">MungeSumstats</span><span class="fu">::</span><span class="fu"><a href="https://al-murphy.github.io/MungeSumstats/reference/format_sumstats.html" class="external-link">format_sumstats</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">fullSS_path</span>, ref_genome <span class="op">=</span> <span class="st">"GRCH37"</span><span class="op">)</span></span></code></pre>
 <p>We have already munged the following example summary stats for
 you.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fullSS_path</span> <span class="op">&lt;-</span> <span class="fu">echodata</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/echodata/man/example_fullSS.html" class="external-link">example_fullSS</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="st">"Nalls2019"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Writing file to ==&gt; /tmp/Rtmp7OAdkv/nalls2019.fullSS_subset.tsv</span></span></code></pre>
+<pre><code><span><span class="co">## Writing file to ==&gt; /tmp/RtmpO9unEA/nalls2019.fullSS_subset.tsv</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="run-fine-mapping-pipeline">Run fine-mapping pipeline<a class="anchor" aria-label="anchor" href="#run-fine-mapping-pipeline"></a>
@@ -321,7 +324,7 @@ is especially important for the tool <em>FINEMAP</em>.</p>
 <p>The following call fine-maps two loci (BST1 and MEX3C) using three
 statistical fine-mapping methods. Depending on your machine and internet
 speed, this may take <strong>10-30 minutes per locus</strong>.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">echolocatoR</span><span class="fu">::</span><span class="fu"><a href="../reference/finemap_loci.html">finemap_loci</a></span><span class="op">(</span></span>
 <span> fullSS_path <span class="op">=</span> <span class="va">fullSS_path</span>,</span>
 <span> topSNPs <span class="op">=</span> <span class="va">topSNPs</span>,</span>
@@ -342,7 +345,7 @@ summary statistics augmented with fine-mapping posterior probabilities
 and credible set assignments.</p>
 <p>Here we use the bundled BST1 example results to show what the output
 looks like:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">echodata</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/echodata/man/BST1.html" class="external-link">BST1</a></span></span>
 <span><span class="co">## Top fine-mapped SNPs (consensus across methods)</span></span>
 <span><span class="va">consensus</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">Consensus_SNP</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -416,9 +419,9 @@ looks like:</p>
 <div class="section level2">
 <h2 id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<details><div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<details><div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre style="max-height: 200px;"><code><span><span class="co">## R Under development (unstable) (2026-03-12 r89607)</span></span>
+<pre style="max-height: 200px;"><code><span><span class="co">## R Under development (unstable) (2026-03-15 r89629)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu</span></span>
 <span><span class="co">## Running under: Ubuntu 24.04.4 LTS</span></span>
 <span><span class="co">## </span></span>

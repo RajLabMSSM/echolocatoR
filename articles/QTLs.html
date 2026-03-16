@@ -120,6 +120,9 @@ Updated: <i>Mar-16-2026</i><br>
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RajLabMSSM/echolocatoR" class="external-link">echolocatoR</a></span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Registered S3 method overwritten by 'bit64':</span></span>
+<span><span class="co">##   method          from </span></span>
+<span><span class="co">##   print.bitstring tools</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">──</span> <span style="color: #55FFFF; font-weight: bold;">🦇  🦇  🦇 e c h o l o c a t o R 🦇  🦇  🦇</span> <span style="color: #00BBBB;">─────────────────────────────────</span></span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
@@ -146,7 +149,7 @@ Updated: <i>Mar-16-2026</i><br>
 <span><span class="co">## <span style="color: #FF55FF;">     ▶</span></span></span>
 <span><span class="co">## <span style="color: #FF55FF;">     https://github.com/RajLabMSSM/echolocatoR/pulls</span></span></span>
 <span><span class="co">## Tip: Run check_echoverse_setup() to diagnose any issues.</span></span></code></pre>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">has_internet</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span></span>
 <span>    <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="fu">curl</span><span class="fu">::</span><span class="fu"><a href="https://jeroen.r-universe.dev/curl/reference/nslookup.html" class="external-link">nslookup</a></span><span class="op">(</span><span class="st">"github.com"</span>, error <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="cn">FALSE</span></span>
@@ -170,7 +173,7 @@ disease pathologies. Nat Genet 54, 4–17 (2022). <a href="https://doi.org/10.10
 <p>This data is actually merged GWAS-QTL colocalization results, but it
 contains all of the necessary columns from the original eQTL summary
 stats that we need to perform eQTL fine-mapping.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">coloc_res</span> <span class="op">&lt;-</span> <span class="fu">echodata</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/echodata/man/get_Kunkle2019_coloc.html" class="external-link">get_Kunkle2019_coloc</a></span><span class="op">(</span>return_path <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -179,7 +182,7 @@ stats that we need to perform eQTL fine-mapping.</p>
 <p>Prepare a column mapping object for the summary statistics. We’ll
 reuse this for both the <code>import_topSNPs</code> and
 <code>finemap_loci</code> steps.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">colmap</span> <span class="op">&lt;-</span> <span class="fu">echodata</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/echodata/man/construct_colmap.html" class="external-link">construct_colmap</a></span><span class="op">(</span></span>
 <span>      CHR <span class="op">=</span> <span class="st">"chr"</span>,</span>
 <span>      POS <span class="op">=</span> <span class="st">"pos"</span>,</span>
@@ -204,7 +207,7 @@ file in memory).</li>
 <code>grouping_vars=c("Locus","Gene")</code> so that you get top SNPs
 for each eGene-locus pair (not just one SNP per locus).</li>
 </ul>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">topSNPs</span> <span class="op">&lt;-</span> <span class="fu">echodata</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/echodata/man/import_topSNPs.html" class="external-link">import_topSNPs</a></span><span class="op">(</span></span>
 <span>  topSS <span class="op">=</span> <span class="va">coloc_res</span><span class="op">$</span><span class="va">path</span>,</span>
 <span>  colmap <span class="op">=</span> <span class="va">colmap</span>,</span>
@@ -226,7 +229,7 @@ for each eGene-locus pair (not just one SNP per locus).</li>
 <pre><code><span><span class="co">## Locus    SNP V.df1   z.df1   r.df1   lABF.df1    V.df2   z.df2   r.df2   lABF.df2    internal.sum.lABF   SNP.PP.H4   gwas.pvalues    gwas.beta   gwas.varbeta    gwas.MAF    CHR POS A1  A2  gwas.N  gwas.type   s   Gene    P   Effect  StdErr  MAF QTL_chr QTL_pos N   qtl.type    N_cases N_controls  </span></span></code></pre>
 <pre><code><span><span class="co">## Returning unmapped column names without making them uppercase.</span></span></code></pre>
 <pre><code><span><span class="co">## + Mapping colnames from MungeSumstats ==&gt; echolocatoR</span></span></code></pre>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">topSNPs</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Key: &lt;Locus&gt;</span></span>
 <span><span class="co">##                     Locus        SNP      V.df1      z.df1     r.df1   lABF.df1</span></span>
@@ -276,7 +279,7 @@ for each eGene-locus pair (not just one SNP per locus).</li>
 <p>The following call runs the full fine-mapping pipeline on QTL data.
 This is computationally expensive and may take <strong>10–30 minutes per
 locus</strong>.</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">echolocatoR</span><span class="fu">::</span><span class="fu"><a href="../reference/finemap_loci.html">finemap_loci</a></span><span class="op">(</span>fullSS_path <span class="op">=</span> <span class="va">coloc_res</span><span class="op">$</span><span class="va">path</span>,</span>
 <span>                                 topSNPs <span class="op">=</span> <span class="va">topSNPs</span>,</span>
 <span>                                 <span class="co">## Let's just fine-map 1 locus for demo purposes</span></span>
@@ -308,9 +311,9 @@ locus</strong>.</p>
 <div class="section level2">
 <h2 id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<details><div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<details><div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre style="max-height: 200px;"><code><span><span class="co">## R Under development (unstable) (2026-03-12 r89607)</span></span>
+<pre style="max-height: 200px;"><code><span><span class="co">## R Under development (unstable) (2026-03-15 r89629)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu</span></span>
 <span><span class="co">## Running under: Ubuntu 24.04.4 LTS</span></span>
 <span><span class="co">## </span></span>

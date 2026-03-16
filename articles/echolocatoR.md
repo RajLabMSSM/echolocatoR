@@ -5,6 +5,10 @@
 library(echolocatoR)
 ```
 
+    ## Registered S3 method overwritten by 'bit64':
+    ##   method          from 
+    ##   print.bitstring tools
+
     ## 
 
     ## ── 🦇  🦇  🦇 e c h o l o c a t o R 🦇  🦇  🦇 ─────────────────────────────────
@@ -202,7 +206,7 @@ We have already munged the following example summary stats for you.
 fullSS_path <- echodata::example_fullSS(dataset = "Nalls2019")
 ```
 
-    ## Writing file to ==> /tmp/Rtmp7OAdkv/nalls2019.fullSS_subset.tsv
+    ## Writing file to ==> /tmp/RtmpO9unEA/nalls2019.fullSS_subset.tsv
 
 ### Run fine-mapping pipeline
 
@@ -301,7 +305,7 @@ utils::sessionInfo()
 ```
 
 ```
-## R Under development (unstable) (2026-03-12 r89607)
+## R Under development (unstable) (2026-03-15 r89629)
 ## Platform: x86_64-pc-linux-gnu
 ## Running under: Ubuntu 24.04.4 LTS
 ## 

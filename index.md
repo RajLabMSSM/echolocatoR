@@ -504,6 +504,16 @@ Fine-mapping functions are now implemented via
 fm_methods <- echofinemap::required_cols(add_versions = FALSE, 
                                          embed_links = TRUE,
                                          verbose = FALSE)
+```
+
+``` R
+## Registered S3 method overwritten by 'bit64':
+##   method          from 
+##   print.bitstring tools
+```
+
+``` r
+
 knitr::kable(x = fm_methods)
 ```
 
@@ -734,7 +744,7 @@ Sinai](https://icahn.mssm.edu/about/departments-offices/neuroscience)
 utils::sessionInfo()
 ```
 
-    ## R Under development (unstable) (2026-03-12 r89607)
+    ## R Under development (unstable) (2026-03-15 r89629)
     ## Platform: x86_64-pc-linux-gnu
     ## Running under: Ubuntu 24.04.4 LTS
     ##
