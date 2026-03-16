@@ -202,7 +202,7 @@ We have already munged the following example summary stats for you.
 fullSS_path <- echodata::example_fullSS(dataset = "Nalls2019")
 ```
 
-    ## Writing file to ==> /tmp/RtmpAZ5ahv/nalls2019.fullSS_subset.tsv
+    ## Writing file to ==> /tmp/Rtmp7OAdkv/nalls2019.fullSS_subset.tsv
 
 ### Run fine-mapping pipeline
 

@@ -184,6 +184,8 @@ toc <- echogithub::github_pages_vignettes(owner = "RajLabMSSM",
 
   - ### [plot locus](https://rajlabmssm.github.io/echolocatoR//articles/plot_locus.html)
 
+  - ### [plotting](https://rajlabmssm.github.io/echolocatoR//articles/plotting.html)
+
   - ### [summarise](https://rajlabmssm.github.io/echolocatoR//articles/summarise.html)
 
 - ## 
