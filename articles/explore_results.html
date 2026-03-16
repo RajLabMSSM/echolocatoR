@@ -80,7 +80,7 @@ a:hover { color: #2ee8d6; }
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="../articles/echolocatoR.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="active nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
@@ -112,7 +112,7 @@ Author: <i>Brian M. Schilder</i><br>
 Updated: <i>Mar-16-2026</i><br>
 </h4></h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/RajLabMSSM/echolocatoR/blob/master/vignettes/explore_results.Rmd" class="external-link"><code>vignettes/explore_results.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/RajLabMSSM/echolocatoR/blob/HEAD/vignettes/explore_results.Rmd" class="external-link"><code>vignettes/explore_results.Rmd</code></a></small>
       <div class="d-none name"><code>explore_results.Rmd</code></div>
     </div>
 
@@ -120,13 +120,10 @@ Updated: <i>Mar-16-2026</i><br>
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RajLabMSSM/echolocatoR" class="external-link">echolocatoR</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Registered S3 method overwritten by 'bit64':</span></span>
-<span><span class="co">##   method          from </span></span>
-<span><span class="co">##   print.bitstring tools</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">──</span> <span style="color: #55FFFF; font-weight: bold;">🦇  🦇  🦇 e c h o l o c a t o R 🦇  🦇  🦇</span> <span style="color: #00BBBB;">─────────────────────────────────</span></span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">──</span> <span style="color: #55FFFF; font-weight: bold;">v3.0.0</span> <span style="color: #00BBBB;">──────────────────────────────────────────────────────────────────────</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">──</span> <span style="color: #55FFFF; font-weight: bold;">v2.0.5</span> <span style="color: #00BBBB;">──────────────────────────────────────────────────────────────────────</span></span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">────────────────────────────────────────────────────────────────────────────────</span></span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #55FFFF;">⠊⠉⠡⣀⣀⠊⠉⠡⣀⣀⠊⠉⠢⣀⡠⠊⠉⠢⣀⡠⠊⠉⠢⣀⡠⠊⠉⠢⣀⡠⠊⠉⠢⣀⡠⠊⠉⠢⣀⡠</span>                                    </span></span>
@@ -137,18 +134,17 @@ Updated: <i>Mar-16-2026</i><br>
 <span><span class="co">## <span style="color: #55FFFF;">⠊⠉⠡⣀⣀⠊⠉⠡⣀⣀⠊⠉⠢⣀⡠⠊⠉⠢⣀⡠⠊⠉⠢⣀⡠⠊⠉⠢⣀⡠⠊⠉⠢⣀⡠⠊⠉⠢⣀⡠</span>                                    </span></span>
 <span><span class="co">## <span style="color: #00BBBB;">ⓞ If you use </span><span style="color: #00BBBB; font-weight: bold;">echolocatoR</span><span style="color: #00BBBB;"> or any of the </span><span style="color: #00BBBB; font-style: italic;">echoverse</span><span style="color: #00BBBB;"> subpackages, please cite:</span>      </span></span>
 <span><span class="co">## <span style="color: #FF55FF;">     ▶ Brian M Schilder, Jack Humphrey, Towfique</span>                                </span></span>
-<span><span class="co">## <span style="color: #FF55FF;">     Raj (2021). echolocatoR: an automated</span>                                      </span></span>
+<span><span class="co">## <span style="color: #FF55FF;">     Raj (2021) echolocatoR: an automated</span>                                       </span></span>
 <span><span class="co">## <span style="color: #FF55FF;">     end-to-end statistical and functional</span>                                      </span></span>
-<span><span class="co">## <span style="color: #FF55FF;">     genomic fine-mapping pipeline.</span>                                             </span></span>
-<span><span class="co">## <span style="color: #FF55FF;">     Bioinformatics, btab658.</span>                                                   </span></span>
+<span><span class="co">## <span style="color: #FF55FF;">     genomic fine-mapping pipeline,</span>                                             </span></span>
+<span><span class="co">## <span style="color: #FF55FF;">     Bioinformatics; btab658,</span>                                                   </span></span>
 <span><span class="co">## <span style="color: #FF55FF;">     https://doi.org/10.1093/bioinformatics/btab658</span>                             </span></span>
 <span><span class="co">## <span style="color: #00BBBB;">ⓞ Please report any bugs/feature requests on GitHub:</span></span></span>
 <span><span class="co">## <span style="color: #FF55FF;">     ▶</span></span></span>
 <span><span class="co">## <span style="color: #FF55FF;">     https://github.com/RajLabMSSM/echolocatoR/issues</span></span></span>
 <span><span class="co">## <span style="color: #00BBBB;">ⓞ Contributions are welcome!:</span></span></span>
 <span><span class="co">## <span style="color: #FF55FF;">     ▶</span></span></span>
-<span><span class="co">## <span style="color: #FF55FF;">     https://github.com/RajLabMSSM/echolocatoR/pulls</span></span></span>
-<span><span class="co">## Tip: Run check_echoverse_setup() to diagnose any issues.</span></span></code></pre>
+<span><span class="co">## <span style="color: #FF55FF;">     https://github.com/RajLabMSSM/echolocatoR/pulls</span></span></span></code></pre>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
@@ -162,7 +158,7 @@ examples use bundled data included in <code>echodata</code>, so
 </h2>
 <p><code>echodata</code> ships with pre-computed fine-mapping results
 for three Parkinson’s disease loci from Nalls et al. (2019):</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">echodata</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/echodata/man/BST1.html" class="external-link">BST1</a></span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 6216   26</span></span></code></pre>
@@ -187,7 +183,7 @@ methods placing SNP in a CS), <code>Consensus_SNP</code>,
 <code>mean.PP</code>, <code>mean.CS</code>
 </li>
 </ul>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Fine-mapping specific columns</span></span>
 <span><span class="va">fm_cols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SNP"</span>,<span class="st">"P"</span>,<span class="st">"ABF.PP"</span>,<span class="st">"SUSIE.PP"</span>,<span class="st">"FINEMAP.PP"</span>,</span>
 <span>             <span class="st">"Support"</span>,<span class="st">"Consensus_SNP"</span>,<span class="st">"mean.PP"</span><span class="op">)</span></span>
@@ -326,7 +322,7 @@ methods placing SNP in a CS), <code>Consensus_SNP</code>,
 <p>Consensus SNPs are those placed in a credible set by multiple
 fine-mapping methods. The <code>Support</code> column indicates how many
 methods agree:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">consensus</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">Consensus_SNP</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span></span>
 <span>    <span class="va">consensus</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SNP"</span>,<span class="st">"POS"</span>,<span class="st">"P"</span>,<span class="st">"ABF.PP"</span>,<span class="st">"SUSIE.PP"</span>,<span class="st">"FINEMAP.PP"</span>,</span>
@@ -394,7 +390,7 @@ methods agree:</p>
 <h2 id="snp-group-counts">SNP group counts<a class="anchor" aria-label="anchor" href="#snp-group-counts"></a>
 </h2>
 <p>Summarise how many SNPs fall into each support level:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">support_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span>Support <span class="op">=</span> <span class="va">dat</span><span class="op">$</span><span class="va">Support</span><span class="op">)</span></span>
 <span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">support_table</span><span class="op">)</span>,</span>
 <span>             caption <span class="op">=</span> <span class="st">"SNP counts by support level"</span><span class="op">)</span></span></code></pre></div>
@@ -430,7 +426,7 @@ methods agree:</p>
 <p>Each fine-mapping method assigns SNPs to credible sets (CS). A value
 of <code>0</code> means the SNP is not in any CS; <code>1</code> = first
 CS, <code>2</code> = second CS, etc.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Count SNPs in each method's credible sets</span></span>
 <span><span class="va">cs_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>    Method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ABF"</span>, <span class="st">"SUSIE"</span>, <span class="st">"FINEMAP"</span><span class="op">)</span>,</span>
@@ -468,7 +464,7 @@ CS, <code>2</code> = second CS, etc.</p>
 </h2>
 <p><code>echodata</code> also bundles LRRK2 and MEX3C loci. You can
 combine them to simulate multi-locus analysis:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bst1</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/data.table/man/copy.html" class="external-link">copy</a></span><span class="op">(</span><span class="fu">echodata</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/echodata/man/BST1.html" class="external-link">BST1</a></span><span class="op">)</span>; <span class="va">bst1</span><span class="op">[</span>, <span class="va">Locus</span> <span class="op">:=</span> <span class="st">"BST1"</span><span class="op">]</span></span>
 <span><span class="va">lrrk2</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/data.table/man/copy.html" class="external-link">copy</a></span><span class="op">(</span><span class="fu">echodata</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/echodata/man/LRRK2.html" class="external-link">LRRK2</a></span><span class="op">)</span>; <span class="va">lrrk2</span><span class="op">[</span>, <span class="va">Locus</span> <span class="op">:=</span> <span class="st">"LRRK2"</span><span class="op">]</span></span>
 <span><span class="va">mex3c</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/data.table/man/copy.html" class="external-link">copy</a></span><span class="op">(</span><span class="fu">echodata</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/echodata/man/MEX3C.html" class="external-link">MEX3C</a></span><span class="op">)</span>; <span class="va">mex3c</span><span class="op">[</span>, <span class="va">Locus</span> <span class="op">:=</span> <span class="st">"MEX3C"</span><span class="op">]</span></span>
@@ -520,14 +516,14 @@ combine them to simulate multi-locus analysis:</p>
 <h2 id="ld-matrix">LD matrix<a class="anchor" aria-label="anchor" href="#ld-matrix"></a>
 </h2>
 <p>A pre-computed LD matrix for BST1 is also available:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ld</span> <span class="op">&lt;-</span> <span class="fu">echodata</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/echodata/man/BST1_LD_matrix.html" class="external-link">BST1_LD_matrix</a></span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"LD matrix dimensions:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">ld</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## LD matrix dimensions: 95 95</span></span></code></pre>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"SNPs in LD matrix:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">ld</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## SNPs in LD matrix: 95</span></span></code></pre>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Show a small corner</span></span>
 <span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">ld</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>, <span class="fl">3</span><span class="op">)</span>, caption <span class="op">=</span> <span class="st">"LD matrix (top-left corner)"</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
@@ -602,126 +598,121 @@ combine them to simulate multi-locus analysis:</p>
 <div class="section level2">
 <h2 id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<details><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<details><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre style="max-height: 200px;"><code><span><span class="co">## R Under development (unstable) (2026-03-15 r89629)</span></span>
-<span><span class="co">## Platform: x86_64-pc-linux-gnu</span></span>
-<span><span class="co">## Running under: Ubuntu 24.04.4 LTS</span></span>
+<pre style="max-height: 200px;"><code><span><span class="co">## R version 4.5.1 (2025-06-13)</span></span>
+<span><span class="co">## Platform: aarch64-apple-darwin20</span></span>
+<span><span class="co">## Running under: macOS Tahoe 26.3.1</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Matrix products: default</span></span>
-<span><span class="co">## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
-<span><span class="co">## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.26.so;  LAPACK version 3.12.0</span></span>
+<span><span class="co">## BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib </span></span>
+<span><span class="co">## LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## locale:</span></span>
-<span><span class="co">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span></span>
-<span><span class="co">##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span></span>
-<span><span class="co">##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span></span>
-<span><span class="co">##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span></span>
-<span><span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></span>
-<span><span class="co">## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span></span>
+<span><span class="co">## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## time zone: UTC</span></span>
-<span><span class="co">## tzcode source: system (glibc)</span></span>
+<span><span class="co">## time zone: America/New_York</span></span>
+<span><span class="co">## tzcode source: internal</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## attached base packages:</span></span>
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] echolocatoR_3.0.0 BiocStyle_2.39.0 </span></span>
+<span><span class="co">## [1] echolocatoR_2.0.5 BiocStyle_2.38.0 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##   [1] splines_4.6.0               aws.s3_0.3.22              </span></span>
-<span><span class="co">##   [3] BiocIO_1.21.0               bitops_1.0-9               </span></span>
+<span><span class="co">##   [1] splines_4.5.1               aws.s3_0.3.22              </span></span>
+<span><span class="co">##   [3] BiocIO_1.20.0               bitops_1.0-9               </span></span>
 <span><span class="co">##   [5] filelock_1.0.3              tibble_3.3.1               </span></span>
 <span><span class="co">##   [7] R.oo_1.27.1                 cellranger_1.1.0           </span></span>
-<span><span class="co">##   [9] basilisk.utils_1.23.1       graph_1.89.1               </span></span>
+<span><span class="co">##   [9] basilisk.utils_1.22.0       graph_1.88.1               </span></span>
 <span><span class="co">##  [11] rpart_4.1.24                XML_3.99-0.22              </span></span>
 <span><span class="co">##  [13] lifecycle_1.0.5             mixsqp_0.3-54              </span></span>
-<span><span class="co">##  [15] pals_1.10                   OrganismDbi_1.53.2         </span></span>
-<span><span class="co">##  [17] ensembldb_2.35.0            lattice_0.22-9             </span></span>
+<span><span class="co">##  [15] pals_1.10                   OrganismDbi_1.52.0         </span></span>
+<span><span class="co">##  [17] ensembldb_2.34.0            lattice_0.22-9             </span></span>
 <span><span class="co">##  [19] MASS_7.3-65                 backports_1.5.0            </span></span>
 <span><span class="co">##  [21] magrittr_2.0.4              Hmisc_5.2-5                </span></span>
 <span><span class="co">##  [23] openxlsx_4.2.8.1            sass_0.4.10                </span></span>
 <span><span class="co">##  [25] rmarkdown_2.30              jquerylib_0.1.4            </span></span>
 <span><span class="co">##  [27] yaml_2.3.12                 otel_0.2.0                 </span></span>
 <span><span class="co">##  [29] zip_2.3.3                   reticulate_1.45.0          </span></span>
-<span><span class="co">##  [31] ggbio_1.59.0                gld_2.6.8                  </span></span>
+<span><span class="co">##  [31] ggbio_1.58.0                gld_2.6.8                  </span></span>
 <span><span class="co">##  [33] mapproj_1.2.12              DBI_1.3.0                  </span></span>
 <span><span class="co">##  [35] RColorBrewer_1.1-3          maps_3.4.3                 </span></span>
 <span><span class="co">##  [37] abind_1.4-8                 expm_1.0-0                 </span></span>
-<span><span class="co">##  [39] GenomicRanges_1.63.1        purrr_1.2.1                </span></span>
-<span><span class="co">##  [41] R.utils_2.13.0              AnnotationFilter_1.35.0    </span></span>
-<span><span class="co">##  [43] biovizBase_1.59.0           BiocGenerics_0.57.0        </span></span>
+<span><span class="co">##  [39] GenomicRanges_1.62.1        purrr_1.2.1                </span></span>
+<span><span class="co">##  [41] R.utils_2.13.0              AnnotationFilter_1.34.0    </span></span>
+<span><span class="co">##  [43] biovizBase_1.58.0           BiocGenerics_0.56.0        </span></span>
 <span><span class="co">##  [45] RCurl_1.98-1.17             nnet_7.3-20                </span></span>
-<span><span class="co">##  [47] VariantAnnotation_1.57.1    IRanges_2.45.0             </span></span>
-<span><span class="co">##  [49] S4Vectors_0.49.0            echoLD_1.0.0               </span></span>
-<span><span class="co">##  [51] echofinemap_1.0.0           irlba_2.3.7                </span></span>
-<span><span class="co">##  [53] pkgdown_2.2.0               echodata_1.0.0             </span></span>
-<span><span class="co">##  [55] piggyback_0.1.5             codetools_0.2-20           </span></span>
-<span><span class="co">##  [57] DelayedArray_0.37.0         DT_0.34.0                  </span></span>
-<span><span class="co">##  [59] xml2_1.5.2                  tidyselect_1.2.1           </span></span>
-<span><span class="co">##  [61] UCSC.utils_1.7.1            farver_2.1.2               </span></span>
-<span><span class="co">##  [63] viridis_0.6.5               matrixStats_1.5.0          </span></span>
-<span><span class="co">##  [65] stats4_4.6.0                base64enc_0.1-6            </span></span>
-<span><span class="co">##  [67] Seqinfo_1.1.0               echotabix_1.0.1            </span></span>
-<span><span class="co">##  [69] GenomicAlignments_1.47.0    jsonlite_2.0.0             </span></span>
-<span><span class="co">##  [71] e1071_1.7-17                Formula_1.2-5              </span></span>
-<span><span class="co">##  [73] survival_3.8-6              systemfonts_1.3.2          </span></span>
-<span><span class="co">##  [75] ggnewscale_0.5.2            tools_4.6.0                </span></span>
-<span><span class="co">##  [77] ragg_1.5.1                  DescTools_0.99.60          </span></span>
-<span><span class="co">##  [79] Rcpp_1.1.1                  glue_1.8.0                 </span></span>
-<span><span class="co">##  [81] gridExtra_2.3               SparseArray_1.11.11        </span></span>
-<span><span class="co">##  [83] xfun_0.56                   MatrixGenerics_1.23.0      </span></span>
-<span><span class="co">##  [85] GenomeInfoDb_1.47.2         dplyr_1.2.0                </span></span>
-<span><span class="co">##  [87] withr_3.0.2                 BiocManager_1.30.27        </span></span>
-<span><span class="co">##  [89] fastmap_1.2.0               basilisk_1.23.0            </span></span>
-<span><span class="co">##  [91] boot_1.3-32                 digest_0.6.39              </span></span>
-<span><span class="co">##  [93] R6_2.6.1                    colorspace_2.1-2           </span></span>
-<span><span class="co">##  [95] textshaping_1.0.5           dichromat_2.0-0.1          </span></span>
-<span><span class="co">##  [97] RSQLite_2.4.6               cigarillo_1.1.0            </span></span>
-<span><span class="co">##  [99] R.methodsS3_1.8.2           utf8_1.2.6                 </span></span>
-<span><span class="co">## [101] tidyr_1.3.2                 generics_0.1.4             </span></span>
-<span><span class="co">## [103] data.table_1.18.2.1         rtracklayer_1.71.3         </span></span>
-<span><span class="co">## [105] class_7.3-23                httr_1.4.8                 </span></span>
-<span><span class="co">## [107] htmlwidgets_1.6.4           S4Arrays_1.11.1            </span></span>
-<span><span class="co">## [109] pkgconfig_2.0.3             gtable_0.3.6               </span></span>
-<span><span class="co">## [111] Exact_3.3                   blob_1.3.0                 </span></span>
-<span><span class="co">## [113] S7_0.2.1                    XVector_0.51.0             </span></span>
-<span><span class="co">## [115] echoconda_1.0.0             htmltools_0.5.9            </span></span>
-<span><span class="co">## [117] susieR_0.14.2               bookdown_0.46              </span></span>
-<span><span class="co">## [119] RBGL_1.87.0                 ProtGenerics_1.43.0        </span></span>
-<span><span class="co">## [121] scales_1.4.0                Biobase_2.71.0             </span></span>
-<span><span class="co">## [123] lmom_3.2                    png_0.1-8                  </span></span>
-<span><span class="co">## [125] knitr_1.51                  rstudioapi_0.18.0          </span></span>
-<span><span class="co">## [127] tzdb_0.5.0                  reshape2_1.4.5             </span></span>
-<span><span class="co">## [129] rjson_0.2.23                checkmate_2.3.4            </span></span>
-<span><span class="co">## [131] curl_7.0.0                  proxy_0.4-29               </span></span>
-<span><span class="co">## [133] cachem_1.1.0                stringr_1.6.0              </span></span>
-<span><span class="co">## [135] rootSolve_1.8.2.4           parallel_4.6.0             </span></span>
-<span><span class="co">## [137] foreign_0.8-91              AnnotationDbi_1.73.0       </span></span>
-<span><span class="co">## [139] restfulr_0.0.16             desc_1.4.3                 </span></span>
-<span><span class="co">## [141] pillar_1.11.1               grid_4.6.0                 </span></span>
-<span><span class="co">## [143] reshape_0.8.10              vctrs_0.7.1                </span></span>
-<span><span class="co">## [145] cluster_2.1.8.2             htmlTable_2.4.3            </span></span>
-<span><span class="co">## [147] evaluate_1.0.5              readr_2.2.0                </span></span>
-<span><span class="co">## [149] GenomicFeatures_1.63.1      mvtnorm_1.3-5              </span></span>
-<span><span class="co">## [151] cli_3.6.5                   compiler_4.6.0             </span></span>
-<span><span class="co">## [153] Rsamtools_2.27.1            rlang_1.1.7                </span></span>
-<span><span class="co">## [155] crayon_1.5.3                aws.signature_0.6.0        </span></span>
-<span><span class="co">## [157] plyr_1.8.9                  forcats_1.0.1              </span></span>
-<span><span class="co">## [159] fs_1.6.7                    stringi_1.8.7              </span></span>
-<span><span class="co">## [161] coloc_5.2.3                 echoannot_1.0.1            </span></span>
-<span><span class="co">## [163] viridisLite_0.4.3           BiocParallel_1.45.0        </span></span>
-<span><span class="co">## [165] Biostrings_2.79.5           lazyeval_0.2.2             </span></span>
-<span><span class="co">## [167] Matrix_1.7-4                downloadR_1.0.0            </span></span>
-<span><span class="co">## [169] echoplot_1.0.0              dir.expiry_1.19.0          </span></span>
-<span><span class="co">## [171] BSgenome_1.79.1             patchwork_1.3.2            </span></span>
-<span><span class="co">## [173] hms_1.1.4                   bit64_4.6.0-1              </span></span>
-<span><span class="co">## [175] ggplot2_4.0.2               KEGGREST_1.51.1            </span></span>
-<span><span class="co">## [177] SummarizedExperiment_1.41.1 haven_2.5.5                </span></span>
-<span><span class="co">## [179] memoise_2.0.1               snpStats_1.61.1            </span></span>
-<span><span class="co">## [181] bslib_0.10.0                bit_4.6.0                  </span></span>
-<span><span class="co">## [183] readxl_1.4.5</span></span></code></pre>
+<span><span class="co">##  [47] VariantAnnotation_1.56.0    IRanges_2.44.0             </span></span>
+<span><span class="co">##  [49] S4Vectors_0.48.0            echofinemap_1.0.0          </span></span>
+<span><span class="co">##  [51] echoLD_0.99.12              catalogueR_2.0.1           </span></span>
+<span><span class="co">##  [53] irlba_2.3.7                 pkgdown_2.2.0              </span></span>
+<span><span class="co">##  [55] echodata_1.0.0              piggyback_0.1.5            </span></span>
+<span><span class="co">##  [57] codetools_0.2-20            DelayedArray_0.36.0        </span></span>
+<span><span class="co">##  [59] DT_0.34.0                   xml2_1.5.2                 </span></span>
+<span><span class="co">##  [61] tidyselect_1.2.1            UCSC.utils_1.6.1           </span></span>
+<span><span class="co">##  [63] farver_2.1.2                viridis_0.6.5              </span></span>
+<span><span class="co">##  [65] matrixStats_1.5.0           stats4_4.5.1               </span></span>
+<span><span class="co">##  [67] base64enc_0.1-6             Seqinfo_1.0.0              </span></span>
+<span><span class="co">##  [69] echotabix_1.0.0             GenomicAlignments_1.46.0   </span></span>
+<span><span class="co">##  [71] jsonlite_2.0.0              e1071_1.7-17               </span></span>
+<span><span class="co">##  [73] Formula_1.2-5               survival_3.8-6             </span></span>
+<span><span class="co">##  [75] systemfonts_1.3.2           ggnewscale_0.5.2           </span></span>
+<span><span class="co">##  [77] tools_4.5.1                 ragg_1.5.1                 </span></span>
+<span><span class="co">##  [79] DescTools_0.99.60           Rcpp_1.1.1                 </span></span>
+<span><span class="co">##  [81] glue_1.8.0                  gridExtra_2.3              </span></span>
+<span><span class="co">##  [83] SparseArray_1.10.9          xfun_0.56                  </span></span>
+<span><span class="co">##  [85] MatrixGenerics_1.22.0       GenomeInfoDb_1.46.2        </span></span>
+<span><span class="co">##  [87] dplyr_1.2.0                 withr_3.0.2                </span></span>
+<span><span class="co">##  [89] BiocManager_1.30.27         fastmap_1.2.0              </span></span>
+<span><span class="co">##  [91] basilisk_1.22.0             boot_1.3-32                </span></span>
+<span><span class="co">##  [93] digest_0.6.39               R6_2.6.1                   </span></span>
+<span><span class="co">##  [95] colorspace_2.1-2            textshaping_1.0.5          </span></span>
+<span><span class="co">##  [97] dichromat_2.0-0.1           RSQLite_2.4.6              </span></span>
+<span><span class="co">##  [99] cigarillo_1.0.0             R.methodsS3_1.8.2          </span></span>
+<span><span class="co">## [101] utf8_1.2.6                  tidyr_1.3.2                </span></span>
+<span><span class="co">## [103] generics_0.1.4              data.table_1.18.2.1        </span></span>
+<span><span class="co">## [105] rtracklayer_1.70.1          class_7.3-23               </span></span>
+<span><span class="co">## [107] httr_1.4.8                  htmlwidgets_1.6.4          </span></span>
+<span><span class="co">## [109] S4Arrays_1.10.1             pkgconfig_2.0.3            </span></span>
+<span><span class="co">## [111] gtable_0.3.6                Exact_3.3                  </span></span>
+<span><span class="co">## [113] blob_1.3.0                  S7_0.2.1                   </span></span>
+<span><span class="co">## [115] XVector_0.50.0              echoconda_1.0.0            </span></span>
+<span><span class="co">## [117] htmltools_0.5.9             susieR_0.14.2              </span></span>
+<span><span class="co">## [119] bookdown_0.46               RBGL_1.86.0                </span></span>
+<span><span class="co">## [121] ProtGenerics_1.42.0         scales_1.4.0               </span></span>
+<span><span class="co">## [123] Biobase_2.70.0              lmom_3.2                   </span></span>
+<span><span class="co">## [125] png_0.1-8                   knitr_1.51                 </span></span>
+<span><span class="co">## [127] rstudioapi_0.18.0           reshape2_1.4.5             </span></span>
+<span><span class="co">## [129] tzdb_0.5.0                  rjson_0.2.23               </span></span>
+<span><span class="co">## [131] checkmate_2.3.4             curl_7.0.0                 </span></span>
+<span><span class="co">## [133] proxy_0.4-29                cachem_1.1.0               </span></span>
+<span><span class="co">## [135] stringr_1.6.0               rootSolve_1.8.2.4          </span></span>
+<span><span class="co">## [137] parallel_4.5.1              foreign_0.8-91             </span></span>
+<span><span class="co">## [139] AnnotationDbi_1.72.0        restfulr_0.0.16            </span></span>
+<span><span class="co">## [141] desc_1.4.3                  pillar_1.11.1              </span></span>
+<span><span class="co">## [143] grid_4.5.1                  reshape_0.8.10             </span></span>
+<span><span class="co">## [145] vctrs_0.7.1                 cluster_2.1.8.2            </span></span>
+<span><span class="co">## [147] htmlTable_2.4.3             evaluate_1.0.5             </span></span>
+<span><span class="co">## [149] readr_2.2.0                 GenomicFeatures_1.62.0     </span></span>
+<span><span class="co">## [151] mvtnorm_1.3-3               cli_3.6.5                  </span></span>
+<span><span class="co">## [153] compiler_4.5.1              Rsamtools_2.26.0           </span></span>
+<span><span class="co">## [155] rlang_1.1.7                 crayon_1.5.3               </span></span>
+<span><span class="co">## [157] aws.signature_0.6.0         plyr_1.8.9                 </span></span>
+<span><span class="co">## [159] forcats_1.0.1               fs_1.6.7                   </span></span>
+<span><span class="co">## [161] stringi_1.8.7               coloc_5.2.3                </span></span>
+<span><span class="co">## [163] echoannot_1.0.1             viridisLite_0.4.3          </span></span>
+<span><span class="co">## [165] BiocParallel_1.44.0         Biostrings_2.78.0          </span></span>
+<span><span class="co">## [167] lazyeval_0.2.2              Matrix_1.7-4               </span></span>
+<span><span class="co">## [169] downloadR_1.0.0             echoplot_0.99.9            </span></span>
+<span><span class="co">## [171] dir.expiry_1.18.0           BSgenome_1.78.0            </span></span>
+<span><span class="co">## [173] hms_1.1.4                   patchwork_1.3.2            </span></span>
+<span><span class="co">## [175] bit64_4.6.0-1               ggplot2_4.0.2              </span></span>
+<span><span class="co">## [177] KEGGREST_1.50.0             SummarizedExperiment_1.40.0</span></span>
+<span><span class="co">## [179] haven_2.5.5                 memoise_2.0.1              </span></span>
+<span><span class="co">## [181] snpStats_1.60.0             bslib_0.10.0               </span></span>
+<span><span class="co">## [183] bit_4.6.0                   readxl_1.4.5</span></span></code></pre>
 </details>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

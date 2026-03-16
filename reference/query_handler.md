@@ -125,4 +125,4 @@ query_handler(
 ## See also
 
 Other query functions:
-[`extract_snp_subset()`](https://rajlabmssm.github.io/echolocatoR/reference/extract_SNP_subset.md)
+[`extract_snp_subset()`](https://rajlabmssm.github.io/echolocatoR/reference/extract_snp_subset.md)

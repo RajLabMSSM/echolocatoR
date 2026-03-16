@@ -105,14 +105,14 @@ extract_snp_subset(
   \<vcf_path\>
 
   :   User-supplied path to a custom VCF file to compute LD matrix
-      from.\
-      *Accepted formats*: *.vcf* / *.vcf.gz* / *.vcf.bgz*\
+      from.  
+      *Accepted formats*: *.vcf* / *.vcf.gz* / *.vcf.bgz*  
       *Genome build* : defined by user with `target_genome`.
 
   \<matrix_path\>
 
   :   User-supplied path to a pre-computed LD matrix. *Accepted
-      formats*: *.rds* / *.rda* / *.csv* / *.tsv* / *.txt*\
+      formats*: *.rds* / *.rda* / *.csv* / *.tsv* / *.txt*  
       *Genome build* : defined by user with `target_genome`.
 
 - force_new_subset:
@@ -144,10 +144,10 @@ extract_snp_subset(
 
 - compute_n:
 
-  How to compute per-SNP sample size (new column "N").\
+  How to compute per-SNP sample size (new column "N").  
   If the column "N" is already present in `dat`, this column will be
   used to extract per-SNP sample sizes and the argument `compute_n` will
-  be ignored.\
+  be ignored.  
   If the column "N" is *not* present in `dat`, one of the following
   options can be supplied to `compute_n`:
 

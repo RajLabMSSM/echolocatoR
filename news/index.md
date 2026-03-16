@@ -61,7 +61,7 @@
 
 - Improve handling of `conditioned_snps` in various scenarios.
 - Fix GHA: [@master](https://github.com/master) –\>
-  [@v2](https://github.com/v2)\
+  [@v2](https://github.com/v2)  
 - Fix vignettes:
   - *plot_locus*
 - Fix
@@ -109,7 +109,7 @@
 ### New features
 
 - Split echolocatoR into task-specific sub-packages (“modules”). See
-  details [here](https://github.com/RajLabMSSM/echolocatoR/issues/62).\
+  details [here](https://github.com/RajLabMSSM/echolocatoR/issues/62).  
 - Collapse column-name mapping args into one argument:
   `construct_colmap`
 - Added a `NEWS.md` file to track changes to the package.

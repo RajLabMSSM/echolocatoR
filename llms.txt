@@ -1,19 +1,18 @@
 # Developer
 
-![](https://github.com/RajLabMSSM/echolocatoR/raw/master/inst/hex/hex.png "Hex sticker for echolocatoR")\
+![](https://github.com/RajLabMSSM/echolocatoR/raw/master/inst/hex/hex.png "Hex sticker for echolocatoR")  
 [![License:
 GPL-3](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://cran.r-project.org/web/licenses/GPL-3)
 [![](https://img.shields.io/badge/doi-10.1093/bioinformatics/btab658-blue.svg)](https://doi.org/10.1093/bioinformatics/btab658)
 [![](https://img.shields.io/badge/devel%20version-3.0.0-black.svg)](https://github.com/RajLabMSSM/echolocatoR)
 [![](https://img.shields.io/github/languages/code-size/RajLabMSSM/echolocatoR.svg)](https://github.com/RajLabMSSM/echolocatoR)
-[![](https://img.shields.io/github/last-commit/RajLabMSSM/echolocatoR.svg)](https://github.com/RajLabMSSM/echolocatoR/commits/master)\
+[![](https://img.shields.io/github/last-commit/RajLabMSSM/echolocatoR.svg)](https://github.com/RajLabMSSM/echolocatoR/commits/master)  
 [![R build
 status](https://github.com/RajLabMSSM/echolocatoR/workflows/rworkflows/badge.svg)](https://github.com/RajLabMSSM/echolocatoR/actions)
-[![](https://codecov.io/gh/RajLabMSSM/echolocatoR/branch/master/graph/badge.svg)](https://app.codecov.io/gh/RajLabMSSM/echolocatoR)\
-[![](https://codecov.io/gh/RajLabMSSM/echolocatoR/branch/master/graphs/icicle.svg "Codecov icicle graph")](https://app.codecov.io/gh/RajLabMSSM/echolocatoR/tree/master)\
+[![](https://codecov.io/gh/RajLabMSSM/echolocatoR/branch/master/graph/badge.svg)](https://app.codecov.io/gh/RajLabMSSM/echolocatoR)  
+[![](https://codecov.io/gh/RajLabMSSM/echolocatoR/branch/master/graphs/icicle.svg "Codecov icicle graph")](https://app.codecov.io/gh/RajLabMSSM/echolocatoR/tree/master)  
 
-#### \
-Authors: *Brian Schilder, Jack Humphrey, Towfique Raj*\
+#### Authors: *Brian Schilder, Jack Humphrey, Towfique Raj*
 
 ## `echolocatoR`: Automated statistical and functional fine-mapping with extensive access to genome-wide datasets.
 
@@ -29,7 +28,8 @@ module independently to create your own custom workflows.
 
 #### ***echoverse*** dependency graph
 
-![](./images/echoverse.png)
+![echoverse dependency
+graph](https://raw.githubusercontent.com/RajLabMSSM/echolocatoR/master/man/figures/echoverse.png)
 
 > Made with [`echodeps`](https://github.com/RajLabMSSM/echodeps), yet
 > another ***echoverse*** module. See [here for the interactive
@@ -89,7 +89,6 @@ version.
 #### Install
 
 ``` r
-
 if(!require("BiocManager")) install.packages("BiocManager")
 
 BiocManager::install("RajLabMSSM/echolocatoR")
@@ -101,7 +100,6 @@ library(echolocatoR)
 After installing, run the built-in diagnostic to check for any problems:
 
 ``` r
-
 echolocatoR::check_echoverse_setup()
 ```
 
@@ -135,6 +133,32 @@ provides a containerized interface for Rstudio through your web browser.
 See [here for installation
 instructions](https://rajlabmssm.github.io/echolocatoR/articles/docker).
 
+## Quick start
+
+``` r
+library(echolocatoR)
+
+## Load bundled fine-mapping results for the BST1 locus
+dat <- echodata::BST1
+
+## View consensus fine-mapped SNPs (agreed upon by multiple methods)
+subset(dat, Consensus_SNP == TRUE,
+       select = c(SNP, CHR, POS, P, mean.PP, Support))
+
+## Visualize the locus
+echoplot::plot_locus(
+    dat = dat,
+    locus_dir = file.path(tempdir(), echodata::locus_dir),
+    LD_matrix = echodata::BST1_LD_matrix
+)
+```
+
+See
+[`vignette("echolocatoR")`](https://rajlabmssm.github.io/echolocatoR/articles/echolocatoR.md)
+for the full pipeline, or
+[`vignette("explore_results")`](https://rajlabmssm.github.io/echolocatoR/articles/explore_results.md)
+to learn how to interpret results.
+
 ## Documentation
 
 ### [Website](https://rajlabmssm.github.io/echolocatoR)
@@ -152,7 +176,6 @@ welcome!
 ### All *echoverse* vignettes
 
 ``` r
-
 echoverse <- c('echolocatoR','echodata','echotabix',
                'echoannot','echoconda','echoLD',
                'echoplot','catalogueR','downloadR',
@@ -164,11 +187,7 @@ toc <- echogithub::github_pages_vignettes(owner = "RajLabMSSM",
                                           verbose = FALSE)
 ```
 
-- ## 
-
-  - [echolocatoR](https://rajlabmssm.github.io/echolocatoR/)
-
-  &nbsp;
+- ## 🦇 [echolocatoR](https://rajlabmssm.github.io/echolocatoR/)
 
   - ### [QTLs](https://rajlabmssm.github.io/echolocatoR//articles/QTLs.html)
 
@@ -184,95 +203,53 @@ toc <- echogithub::github_pages_vignettes(owner = "RajLabMSSM",
 
   - ### [plot locus](https://rajlabmssm.github.io/echolocatoR//articles/plot_locus.html)
 
-  - ### [plotting](https://rajlabmssm.github.io/echolocatoR//articles/plotting.html)
-
   - ### [summarise](https://rajlabmssm.github.io/echolocatoR//articles/summarise.html)
 
-- ## 
-
-  - [echodata](https://rajlabmssm.github.io/echodata/)
-
-  &nbsp;
+- ## 🦇 [echodata](https://rajlabmssm.github.io/echodata/)
 
   - ### [echodata](https://rajlabmssm.github.io/echodata//articles/echodata.html)
 
   - ### [echolocatoR Finemapping Portal](https://rajlabmssm.github.io/echodata//articles/echolocatoR_Finemapping_Portal.html)
 
-- ## 
-
-  - [echotabix](https://rajlabmssm.github.io/echotabix/)
-
-  &nbsp;
+- ## 🦇 [echotabix](https://rajlabmssm.github.io/echotabix/)
 
   - ### [echotabix](https://rajlabmssm.github.io/echotabix//articles/echotabix.html)
 
-- ## 
-
-  - [echoannot](https://rajlabmssm.github.io/echoannot/)
-
-  &nbsp;
+- ## 🦇 [echoannot](https://rajlabmssm.github.io/echoannot/)
 
   - ### [cell type specific epigenomics](https://rajlabmssm.github.io/echoannot//articles/cell_type_specific_epigenomics.html)
 
   - ### [echoannot](https://rajlabmssm.github.io/echoannot//articles/echoannot.html)
 
-- ## 
-
-  - [echoconda](https://rajlabmssm.github.io/echoconda/)
-
-  &nbsp;
+- ## 🦇 [echoconda](https://rajlabmssm.github.io/echoconda/)
 
   - ### [echoconda](https://rajlabmssm.github.io/echoconda//articles/echoconda.html)
 
-- ## 
-
-  - [echoLD](https://rajlabmssm.github.io/echoLD/)
-
-  &nbsp;
+- ## 🦇 [echoLD](https://rajlabmssm.github.io/echoLD/)
 
   - ### [echoLD](https://rajlabmssm.github.io/echoLD//articles/echoLD.html)
 
-- ## 
-
-  - [echoplot](https://rajlabmssm.github.io/echoplot/)
-
-  &nbsp;
+- ## 🦇 [echoplot](https://rajlabmssm.github.io/echoplot/)
 
   - ### [echoplot](https://rajlabmssm.github.io/echoplot//articles/echoplot.html)
 
-- ## 
-
-  - [catalogueR](https://rajlabmssm.github.io/catalogueR/)
-
-  &nbsp;
+- ## 🦇 [catalogueR](https://rajlabmssm.github.io/catalogueR/)
 
   - ### [catalogueR](https://rajlabmssm.github.io/catalogueR//articles/catalogueR.html)
 
   - ### [colocalize](https://rajlabmssm.github.io/catalogueR//articles/colocalize.html)
 
-- ## 
-
-  - [downloadR](https://rajlabmssm.github.io/downloadR/)
-
-  &nbsp;
+- ## 🦇 [downloadR](https://rajlabmssm.github.io/downloadR/)
 
   - ### [downloadR](https://rajlabmssm.github.io/downloadR//articles/downloadR.html)
 
-- ## 
-
-  - [echofinemap](https://rajlabmssm.github.io/echofinemap/)
-
-  &nbsp;
+- ## 🦇 [echofinemap](https://rajlabmssm.github.io/echofinemap/)
 
   - ### [echofinemap](https://rajlabmssm.github.io/echofinemap//articles/echofinemap.html)
 
   - ### [echoverseTemplate](https://rajlabmssm.github.io/echofinemap//articles/echoverseTemplate.html)
 
-- ## 
-
-  - [echodeps](https://rajlabmssm.github.io/echodeps/)
-
-  &nbsp;
+- ## 🦇 [echodeps](https://rajlabmssm.github.io/echodeps/)
 
   - ### [echodeps](https://rajlabmssm.github.io/echodeps//articles/echodeps.html)
 
@@ -280,11 +257,7 @@ toc <- echogithub::github_pages_vignettes(owner = "RajLabMSSM",
 
   - ### [my packages](https://rajlabmssm.github.io/echodeps//articles/my_packages.html)
 
-- ## 
-
-  - [echogithub](https://rajlabmssm.github.io/echolocatoR/NA)
-
-  &nbsp;
+- ## 🦇 [echogithub](https://rajlabmssm.github.io/echolocatoR/NA)
 
   - ### NA
 
@@ -304,11 +277,12 @@ disequilibrium panels, epigenomic and genome-wide annotations, QTL).
 
 ### Citation
 
-If you use `echolocatoR`, or any of the echoverse modules, please cite:
+If you use `echolocatoR`, or any of the **echoverse** modules, please
+cite:
 
-> Brian M Schilder, Jack Humphrey, Towfique Raj (2021). echolocatoR: an
+> Brian M Schilder, Jack Humphrey, Towfique Raj (2021) echolocatoR: an
 > automated end-to-end statistical and functional genomic fine-mapping
-> pipeline. Bioinformatics, btab658.
+> pipeline, *Bioinformatics*; btab658,
 > <https://doi.org/10.1093/bioinformatics/btab658>
 
 The elimination of data gathering and preprocessing steps enables rapid
@@ -319,7 +293,7 @@ results sharing. Therefore `echolocatoR` drastically reduces the
 barriers to identifying causal variants by making the entire
 fine-mapping pipeline rapid, robust and scalable.
 
-![](./images/echolocatoR_Fig1.png)
+![](https://raw.githubusercontent.com/RajLabMSSM/echolocatoR/master/man/figures/echolocatoR_Fig1.png)
 
 ## Literature
 
@@ -332,7 +306,7 @@ fine-mapping pipeline rapid, robust and scalable.
 > 2.  BM Schilder, T Raj (2021) Fine-Mapping of Parkinson’s Disease
 >     Susceptibility Loci Identifies Putative Causal Variants. Human
 >     Molecular Genetics, ddab294,
->     <https://doi.org/10.1093/hmg/ddab294>\
+>     <https://doi.org/10.1093/hmg/ddab294>  
 > 3.  K de Paiva Lopes, G JL Snijders, J Humphrey, A Allan, M Sneeboer,
 >     E Navarro, BM Schilder…T Raj (2022) Genetic analysis of the human
 >     microglial transcriptome across brain regions, aging and disease
@@ -402,7 +376,7 @@ v2.0. Here are some of the most notable ones (see **Details**):
   / vcf.gz / vcf.bgz) or pre-computed LD matrices with RSIDs as the
   row/col names (.rda / .rds / .csv / .tsv. / .txt / .csv.gz / tsv.gz /
   txt.gz).
-- **Expanded fine-mapping methods**: “ABF”,”COJO_conditional”,
+- **Expanded fine-mapping methods**: “ABF”, “COJO_conditional”,
   “COJO_joint” “COJO_stepwise”,“FINEMAP”,“PAINTOR” (including multi-GWAS
   and multi-ancestry fine-mapping),“POLYFUN_FINEMAP”
   ,“POLYFUN_SUSIE”,“SUSIE”
@@ -410,7 +384,7 @@ v2.0. Here are some of the most notable ones (see **Details**):
   to differing output formats across different versions, system
   dependency conflicts, and the fact that it can produce multiple
   Credible Sets. All of these have been fixed and the latest version of
-  `FINEMAP` can be run on all OS platforms.\
+  `FINEMAP` can be run on all OS platforms.  
 - **Debug mode**: Within
   [`finemap_loci()`](https://rajlabmssm.github.io/echolocatoR/reference/finemap_loci.md)
   I use a [`tryCatch()`](https://rdrr.io/r/base/conditions.html) when
@@ -429,14 +403,14 @@ returns a nested list containing grouped by locus names (e.g. `$BST1`,
 - `finemap_dat`: Fine-mapping results from all selected methods merged
   with the original summary statistics (i.e. **Multi-finemap results**).
 - `locus_plot`: A nested list containing one or more zoomed views of
-  locus plots.\
+  locus plots.  
 - `LD_matrix`: The post-processed LD matrix used for fine-mapping.
 - `LD_plot`: An LD plot (if used).
 - `locus_dir`: Locus directory results are saved in.
 - `arguments`: A record of the arguments supplied to `finemap_loci`.
 
 In addition, the following object summarizes the results from the
-locus-specific elements:\
+locus-specific elements:  
 - `merged_dat`: A merged `data.table` with all fine-mapping results from
 all loci.
 
@@ -451,20 +425,20 @@ are stored in the locus-specific *Multi-finemap* subfolders.
 
 - **Standardized GWAS/QTL summary statistics**: e.g.
   `SNP`,`CHR`,`POS`,`Effect`,`StdErr`. See `?finemap_loci()` for
-  descriptions of each.\
+  descriptions of each.  
 - **leadSNP**: The designated proxy SNP per locus, which is the SNP with
   the smallest p-value by default.
 - **\<tool\>.CS**: The 95% probability Credible Set (CS) to which a SNP
   belongs within a given fine-mapping tool’s results. If a SNP is not in
   any of the tool’s CS, it is assigned `NA` (or `0` for the purposes of
-  plotting).\
+  plotting).  
 - **\<tool\>.PP**: The posterior probability that a SNP is causal for a
-  given GWAS/QTL trait.\
+  given GWAS/QTL trait.  
 - **Support**: The total number of fine-mapping tools that include the
   SNP in its CS.
 - **Consensus_SNP**: By default, defined as a SNP that is included in
   the CS of more than `N` fine-mapping tool(s), i.e. `Support>1`
-  (default: `N=1`).\
+  (default: `N=1`).  
 - **mean.PP**: The mean SNP-wise PP across all fine-mapping tools used.
 - **mean.CS**: If mean PP is greater than the 95% probability threshold
   (`mean.PP>0.95`) then `mean.CS` is 1, else 0. This tends to be a very
@@ -491,29 +465,18 @@ Fine-mapping functions are now implemented via
   tools that for which there are missing necessary columns, and produces
   a message letting you know which columns are missing.
 - Note that some columns (e.g. `MAF`,`N`,`t-stat`) will be automatically
-  inferred if missing.\
-- For easy reference, we list the necessary columns here as well.\
+  inferred if missing.  
+- For easy reference, we list the necessary columns here as well.  
   See `?echodata::construct_colmap()` for descriptions of these
-  columns.\
+  columns.  
   All methods require the columns: `SNP`,`CHR`,`POS`,`Effect`,`StdErr`
 
-\
+  
 
 ``` r
-
 fm_methods <- echofinemap::required_cols(add_versions = FALSE, 
                                          embed_links = TRUE,
                                          verbose = FALSE)
-```
-
-``` R
-## Registered S3 method overwritten by 'bit64':
-##   method          from 
-##   print.bitstring tools
-```
-
-``` r
-
 knitr::kable(x = fm_methods)
 ```
 
@@ -532,21 +495,20 @@ knitr::kable(x = fm_methods)
 ## Datasets
 
 Datasets are now stored/retrieved via the following **echoverse**
-subpackages:\
+subpackages:  
 - [`echodata`](https://github.com/RajLabMSSM/echodata): Pre-computed
 fine-mapping results. Also handles the semi-automated standardization of
-summary statistics.\
+summary statistics.  
 - [`echoannot`](https://github.com/RajLabMSSM/echoannot): Annotates
 GWAS/QTL summary statistics using epigenomics, pre-compiled annotation
 matrices, and machine learning model predictions of variant-specific
-functional impacts.\
+functional impacts.  
 - [`catalogueR`](https://github.com/RajLabMSSM/catalogueR): Large
 compendium of fully standardized e/s/t-QTL summary statistics.
 
 For more detailed information about each dataset, use `?`:
 
 ``` r
-
 ### Examples ###
 
 library(echoannot)   
@@ -567,7 +529,7 @@ library(echodata)
 #### [eQTL Catalogue](https://www.ebi.ac.uk/eqtl/): `catalogueR::eQTL_Catalogue.query()`
 
 - API access to full summary statistics from many standardized e/s/t-QTL
-  datasets.\
+  datasets.  
 - Data access and colocalization tests facilitated through the
   [`catalogueR`](https://github.com/RajLabMSSM/catalogueR) R package.
 
@@ -657,7 +619,7 @@ Annotation enrichment functions are now implemented via
 
 - Genome-wide stratified LD score regression.
 - Inlccles 187-annotation baseline model from [Gazal et al.
-  2018](https://www.nature.com/articles/s41588-018-0231-8).\
+  2018](https://www.nature.com/articles/s41588-018-0231-8).  
 - You can alternatively supply a custom annotations matrix.
 
 ## LD reference panels
@@ -682,14 +644,14 @@ function `get_LD()`:
 
 ## Plotting
 
-Plotting functions are now implemented via:\
+Plotting functions are now implemented via:  
 - [`echoplot`](https://github.com/RajLabMSSM/echoplot): Multi-track
 locus plots with GWAS, fine-mapping results, and functional annotations
 (`plot_locus()`). Can also plot multi-GWAS/QTL and multi-ancestry
-results (`plot_locus_multi()`).\
+results (`plot_locus_multi()`).  
 - [`echoannot`](https://github.com/RajLabMSSM/echoannot): Study-level
 summary plots showing aggregted info across many loci at once
-([`super_summary_plot()`](https://rdrr.io/pkg/echoannot/man/super_summary_plot.html)).\
+([`super_summary_plot()`](https://rdrr.io/pkg/echoannot/man/super_summary_plot.html)).  
 - [`echoLD`](https://github.com/RajLabMSSM/echoLD): Plot an LD matrix
 using one of several differnt plotting methods (`plot_LD()`).
 
@@ -703,7 +665,7 @@ files (for rapid data subset extraction) are implemented via
   detects whether the GWAS summary statistics file you provided is
   already `tabix`-indexed, and it not, automatically performs all steps
   necessary to convert it (sorting, `bgzip`-compression, indexing)
-  across a wide variety of scenarios.\
+  across a wide variety of scenarios.  
 - [`echotabix::query()`](https://rdrr.io/pkg/echotabix/man/query.html)
   contains many different methods for making tabix queries
   (e.g. `Rtracklayer`,`echoconda`,`VariantAnnotation`,`seqminer`), each
@@ -730,8 +692,8 @@ Single- and multi-threaded downloads are now implemented via
 ------------------------------------------------------------------------
 
 [Brian M. Schilder, Bioinformatician
-II](https://bschilder.github.io/BMSchilder/)\
-[Raj Lab](https://rajlab.org)\
+II](https://bschilder.github.io/BMSchilder/)  
+[Raj Lab](https://rajlab.org)  
 [Department of Neuroscience, Icahn School of Medicine at Mount
 Sinai](https://icahn.mssm.edu/about/departments-offices/neuroscience)
 
@@ -740,128 +702,120 @@ Sinai](https://icahn.mssm.edu/about/departments-offices/neuroscience)
 # Session info
 
 ``` r
-
 utils::sessionInfo()
 ```
 
-    ## R Under development (unstable) (2026-03-15 r89629)
-    ## Platform: x86_64-pc-linux-gnu
-    ## Running under: Ubuntu 24.04.4 LTS
+    ## R version 4.5.1 (2025-06-13)
+    ## Platform: aarch64-apple-darwin20
+    ## Running under: macOS Tahoe 26.3.1
     ##
     ## Matrix products: default
-    ## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3
-    ## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.26.so;  LAPACK version 3.12.0
+    ## BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib
+    ## LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
     ##
     ## locale:
-    ##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C
-    ##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8
-    ##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8
-    ##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C
-    ##  [9] LC_ADDRESS=C               LC_TELEPHONE=C
-    ## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C
+    ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
     ##
-    ## time zone: UTC
-    ## tzcode source: system (glibc)
+    ## time zone: America/New_York
+    ## tzcode source: internal
     ##
     ## attached base packages:
     ## [1] stats     graphics  grDevices utils     datasets  methods   base
     ##
-    ## other attached packages:
-    ## [1] rworkflows_1.0.8 rmarkdown_2.30
-    ##
     ## loaded via a namespace (and not attached):
-    ##   [1] splines_4.6.0               aws.s3_0.3.22
-    ##   [3] BiocIO_1.21.0               bitops_1.0-9
+    ##   [1] splines_4.5.1               aws.s3_0.3.22
+    ##   [3] BiocIO_1.20.0               bitops_1.0-9
     ##   [5] filelock_1.0.3              cellranger_1.1.0
     ##   [7] tibble_3.3.1                R.oo_1.27.1
-    ##   [9] basilisk.utils_1.23.1       graph_1.89.1
+    ##   [9] basilisk.utils_1.22.0       graph_1.88.1
     ##  [11] rpart_4.1.24                XML_3.99-0.22
     ##  [13] lifecycle_1.0.5             httr2_1.2.2
     ##  [15] mixsqp_0.3-54               rprojroot_2.1.1
-    ##  [17] OrganismDbi_1.53.2          ensembldb_2.35.0
+    ##  [17] OrganismDbi_1.52.0          ensembldb_2.34.0
     ##  [19] lattice_0.22-9              MASS_7.3-65
     ##  [21] backports_1.5.0             magrittr_2.0.4
     ##  [23] Hmisc_5.2-5                 openxlsx_4.2.8.1
-    ##  [25] yaml_2.3.12                 dlstats_0.1.7
-    ##  [27] otel_0.2.0                  zip_2.3.3
-    ##  [29] ggbio_1.59.0                reticulate_1.45.0
-    ##  [31] gld_2.6.8                   DBI_1.3.0
-    ##  [33] RColorBrewer_1.1-3          abind_1.4-8
-    ##  [35] expm_1.0-0                  rvcheck_0.2.1
-    ##  [37] GenomicRanges_1.63.1        purrr_1.2.1
-    ##  [39] R.utils_2.13.0              AnnotationFilter_1.35.0
-    ##  [41] biovizBase_1.59.0           BiocGenerics_0.57.0
-    ##  [43] RCurl_1.98-1.17             nnet_7.3-20
-    ##  [45] yulab.utils_0.2.4           VariantAnnotation_1.57.1
-    ##  [47] rappdirs_0.3.4              IRanges_2.45.0
-    ##  [49] S4Vectors_0.49.0            echoLD_1.0.0
-    ##  [51] echofinemap_1.0.0           irlba_2.3.7
-    ##  [53] gitcreds_0.1.2              echodata_1.0.0
-    ##  [55] piggyback_0.1.5             codetools_0.2-20
-    ##  [57] DelayedArray_0.37.0         DT_0.34.0
-    ##  [59] xml2_1.5.2                  tidyselect_1.2.1
-    ##  [61] UCSC.utils_1.7.1            farver_2.1.2
-    ##  [63] viridis_0.6.5               matrixStats_1.5.0
-    ##  [65] stats4_4.6.0                base64enc_0.1-6
-    ##  [67] Seqinfo_1.1.0               echotabix_1.0.1
-    ##  [69] GenomicAlignments_1.47.0    jsonlite_2.0.0
-    ##  [71] e1071_1.7-17                Formula_1.2-5
-    ##  [73] survival_3.8-6              tools_4.6.0
-    ##  [75] DescTools_0.99.60           Rcpp_1.1.1
-    ##  [77] glue_1.8.0                  gridExtra_2.3
-    ##  [79] SparseArray_1.11.11         xfun_0.56
-    ##  [81] here_1.0.2                  MatrixGenerics_1.23.0
-    ##  [83] GenomeInfoDb_1.47.2         dplyr_1.2.0
-    ##  [85] withr_3.0.2                 BiocManager_1.30.27
-    ##  [87] fastmap_1.2.0               basilisk_1.23.0
-    ##  [89] boot_1.3-32                 digest_0.6.39
-    ##  [91] R6_2.6.1                    colorspace_2.1-2
-    ##  [93] dichromat_2.0-0.1           RSQLite_2.4.6
-    ##  [95] cigarillo_1.1.0             R.methodsS3_1.8.2
-    ##  [97] tidyr_1.3.2                 generics_0.1.4
-    ##  [99] renv_1.1.8                  data.table_1.18.2.1
-    ## [101] rtracklayer_1.71.3          class_7.3-23
-    ## [103] httr_1.4.8                  htmlwidgets_1.6.4
-    ## [105] S4Arrays_1.11.1             pkgconfig_2.0.3
-    ## [107] gtable_0.3.6                Exact_3.3
-    ## [109] blob_1.3.0                  S7_0.2.1
-    ## [111] XVector_0.51.0              echoconda_1.0.0
-    ## [113] htmltools_0.5.9             susieR_0.14.2
-    ## [115] RBGL_1.87.0                 ProtGenerics_1.43.0
-    ## [117] scales_1.4.0                Biobase_2.71.0
-    ## [119] lmom_3.2                    png_0.1-8
-    ## [121] knitr_1.51                  rstudioapi_0.18.0
-    ## [123] reshape2_1.4.5              tzdb_0.5.0
-    ## [125] rjson_0.2.23                checkmate_2.3.4
-    ## [127] badger_0.2.5                curl_7.0.0
-    ## [129] proxy_0.4-29                cachem_1.1.0
-    ## [131] stringr_1.6.0               rootSolve_1.8.2.4
-    ## [133] parallel_4.6.0              foreign_0.8-91
-    ## [135] AnnotationDbi_1.73.0        restfulr_0.0.16
-    ## [137] desc_1.4.3                  pillar_1.11.1
-    ## [139] grid_4.6.0                  reshape_0.8.10
-    ## [141] vctrs_0.7.1                 cluster_2.1.8.2
-    ## [143] htmlTable_2.4.3             evaluate_1.0.5
-    ## [145] readr_2.2.0                 GenomicFeatures_1.63.1
-    ## [147] mvtnorm_1.3-5               cli_3.6.5
-    ## [149] compiler_4.6.0              echogithub_1.0.0
-    ## [151] Rsamtools_2.27.1            rlang_1.1.7
-    ## [153] crayon_1.5.3                aws.signature_0.6.0
-    ## [155] forcats_1.0.1               plyr_1.8.9
-    ## [157] fs_1.6.7                    stringi_1.8.7
-    ## [159] coloc_5.2.3                 echoannot_1.0.1
-    ## [161] viridisLite_0.4.3           BiocParallel_1.45.0
-    ## [163] Biostrings_2.79.5           lazyeval_0.2.2
-    ## [165] gh_1.5.0                    Matrix_1.7-4
-    ## [167] downloadR_1.0.0             dir.expiry_1.19.0
-    ## [169] BSgenome_1.79.1             patchwork_1.3.2
-    ## [171] hms_1.1.4                   bit64_4.6.0-1
-    ## [173] ggplot2_4.0.2               KEGGREST_1.51.1
-    ## [175] haven_2.5.5                 SummarizedExperiment_1.41.1
-    ## [177] memoise_2.0.1               snpStats_1.61.1
-    ## [179] bit_4.6.0                   readxl_1.4.5
+    ##  [25] rmarkdown_2.30              yaml_2.3.12
+    ##  [27] dlstats_0.1.7               otel_0.2.0
+    ##  [29] zip_2.3.3                   ggbio_1.58.0
+    ##  [31] reticulate_1.45.0           gld_2.6.8
+    ##  [33] DBI_1.3.0                   RColorBrewer_1.1-3
+    ##  [35] abind_1.4-8                 expm_1.0-0
+    ##  [37] rvcheck_0.2.1               GenomicRanges_1.62.1
+    ##  [39] purrr_1.2.1                 R.utils_2.13.0
+    ##  [41] AnnotationFilter_1.34.0     biovizBase_1.58.0
+    ##  [43] BiocGenerics_0.56.0         RCurl_1.98-1.17
+    ##  [45] nnet_7.3-20                 yulab.utils_0.2.4
+    ##  [47] VariantAnnotation_1.56.0    rappdirs_0.3.4
+    ##  [49] rworkflows_1.0.8            IRanges_2.44.0
+    ##  [51] S4Vectors_0.48.0            echoLD_0.99.12
+    ##  [53] echofinemap_1.0.0           irlba_2.3.7
+    ##  [55] gitcreds_0.1.2              echodata_1.0.0
+    ##  [57] piggyback_0.1.5             codetools_0.2-20
+    ##  [59] DelayedArray_0.36.0         DT_0.34.0
+    ##  [61] xml2_1.5.2                  tidyselect_1.2.1
+    ##  [63] UCSC.utils_1.6.1            farver_2.1.2
+    ##  [65] viridis_0.6.5               matrixStats_1.5.0
+    ##  [67] stats4_4.5.1                base64enc_0.1-6
+    ##  [69] Seqinfo_1.0.0               echotabix_1.0.0
+    ##  [71] GenomicAlignments_1.46.0    jsonlite_2.0.0
+    ##  [73] e1071_1.7-17                Formula_1.2-5
+    ##  [75] survival_3.8-6              tools_4.5.1
+    ##  [77] DescTools_0.99.60           Rcpp_1.1.1
+    ##  [79] glue_1.8.0                  gridExtra_2.3
+    ##  [81] SparseArray_1.10.9          xfun_0.56
+    ##  [83] here_1.0.2                  MatrixGenerics_1.22.0
+    ##  [85] GenomeInfoDb_1.46.2         dplyr_1.2.0
+    ##  [87] withr_3.0.2                 BiocManager_1.30.27
+    ##  [89] fastmap_1.2.0               basilisk_1.22.0
+    ##  [91] boot_1.3-32                 digest_0.6.39
+    ##  [93] R6_2.6.1                    colorspace_2.1-2
+    ##  [95] dichromat_2.0-0.1           RSQLite_2.4.6
+    ##  [97] cigarillo_1.0.0             R.methodsS3_1.8.2
+    ##  [99] tidyr_1.3.2                 generics_0.1.4
+    ## [101] renv_1.1.8                  data.table_1.18.2.1
+    ## [103] rtracklayer_1.70.1          class_7.3-23
+    ## [105] httr_1.4.8                  htmlwidgets_1.6.4
+    ## [107] S4Arrays_1.10.1             pkgconfig_2.0.3
+    ## [109] gtable_0.3.6                Exact_3.3
+    ## [111] blob_1.3.0                  S7_0.2.1
+    ## [113] XVector_0.50.0              echoconda_1.0.0
+    ## [115] htmltools_0.5.9             susieR_0.14.2
+    ## [117] RBGL_1.86.0                 ProtGenerics_1.42.0
+    ## [119] scales_1.4.0                Biobase_2.70.0
+    ## [121] lmom_3.2                    png_0.1-8
+    ## [123] knitr_1.51                  rstudioapi_0.18.0
+    ## [125] reshape2_1.4.5              tzdb_0.5.0
+    ## [127] rjson_0.2.23                checkmate_2.3.4
+    ## [129] badger_0.2.5                curl_7.0.0
+    ## [131] proxy_0.4-29                cachem_1.1.0
+    ## [133] stringr_1.6.0               rootSolve_1.8.2.4
+    ## [135] parallel_4.5.1              foreign_0.8-91
+    ## [137] AnnotationDbi_1.72.0        restfulr_0.0.16
+    ## [139] desc_1.4.3                  pillar_1.11.1
+    ## [141] grid_4.5.1                  reshape_0.8.10
+    ## [143] vctrs_0.7.1                 cluster_2.1.8.2
+    ## [145] htmlTable_2.4.3             evaluate_1.0.5
+    ## [147] readr_2.2.0                 GenomicFeatures_1.62.0
+    ## [149] mvtnorm_1.3-3               cli_3.6.5
+    ## [151] compiler_4.5.1              echogithub_0.99.5
+    ## [153] Rsamtools_2.26.0            rlang_1.1.7
+    ## [155] crayon_1.5.3                aws.signature_0.6.0
+    ## [157] forcats_1.0.1               plyr_1.8.9
+    ## [159] fs_1.6.7                    stringi_1.8.7
+    ## [161] coloc_5.2.3                 echoannot_1.0.1
+    ## [163] viridisLite_0.4.3           BiocParallel_1.44.0
+    ## [165] Biostrings_2.78.0           lazyeval_0.2.2
+    ## [167] gh_1.5.0                    Matrix_1.7-4
+    ## [169] downloadR_1.0.0             dir.expiry_1.18.0
+    ## [171] BSgenome_1.78.0             patchwork_1.3.2
+    ## [173] hms_1.1.4                   bit64_4.6.0-1
+    ## [175] ggplot2_4.0.2               KEGGREST_1.50.0
+    ## [177] haven_2.5.5                 SummarizedExperiment_1.40.0
+    ## [179] memoise_2.0.1               snpStats_1.60.0
+    ## [181] bit_4.6.0                   readxl_1.4.5
 
-\
+  
 
 # Package index
 

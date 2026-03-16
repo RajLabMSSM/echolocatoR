@@ -12,7 +12,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/RajLabMSSM/echolocatoR/blob/master/inst/CITATION)
+[`inst/CITATION`](https://github.com/RajLabMSSM/echolocatoR/blob/HEAD/inst/CITATION)
 
 Brian M Schilder, Jack Humphrey, Towfique Raj (2021). echolocatoR: an
 automated end-to-end statistical and functional genomic fine-mapping
