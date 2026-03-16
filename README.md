@@ -28,7 +28,7 @@ module independently to create your own custom workflows.
 
 #### ***echoverse*** dependency graph
 
-<img src="https://github.com/RajLabMSSM/echolocatoR/raw/master/images/echoverse.png" height="400px" style="border-radius: 20px;">
+<img src="man/figures/echoverse.png" height="400px" style="border-radius: 20px;">
 
 > Made with [`echodeps`](https://github.com/RajLabMSSM/echodeps), yet
 > another ***echoverse*** module. See [here for the interactive
@@ -615,7 +615,7 @@ results sharing. Therefore `echolocatoR` drastically reduces the
 barriers to identifying causal variants by making the entire
 fine-mapping pipeline rapid, robust and scalable.
 
-<img src="https://github.com/RajLabMSSM/echolocatoR/raw/master/images/echolocatoR_Fig1.png" style="border-radius: 10px;">
+<img src="man/figures/echolocatoR_Fig1.png" style="border-radius: 10px;">
 
 ## Literature
 
